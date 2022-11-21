@@ -1,0 +1,22 @@
+{
+  "name": "node_dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "node",
+  "workspaceFolder": "/workspace",
+  "postStartCommand": "npm install && npm run dev",
+  "remoteUser": "node",
+  "remoteEnv": {
+    "PORT": "3000"
+  },
+  "extensions": [
+    "MS-CEINTL.vscode-language-pack-ja",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "dbaeumer.vscode-eslint",
+    "dsznajder.es7-react-js-snippets",
+    "foxundermoon.next-js",
+    "PulkitGangwar.nextjs-snippets",
+    "Divlo.vscode-styled-jsx-languageserver",
+    "Divlo.vscode-styled-jsx-syntax"
+  ]
+}
