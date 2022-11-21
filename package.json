@@ -1,5 +1,5 @@
 {
-  "name": "next-template",
+  "name": "node-app-template",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -11,6 +11,14 @@
     "prenexpress": "npx rimraf .nexpress && npx tsc -p nexpress/tsconfig.json",
     "dev:nexpress": "npm run prenexpress && npx cross-env NODE_ENV=\"development\" node .nexpress/main.js",
     "nexpress": "npm run build && node .nexpress/main.js",
+    "clean:nextron": "npx rimraf .main .renderer",
+    "nextron": "npx rimraf .next && npm run predist && npx electron .main/nextron/main.js",
+    "predist": "npm run clean:nextron -- dist/pack && npx tsc -p nextron/tsconfig.json",
+    "dist": "npm run build && npx next export -o .renderer && npx electron-builder",
+    "dist:linux": "npm run dist -- --linux & npm run clean:nextron",
+    "dist:win": "npm run dist -- --win & npm run clean:nextron",
+    "dist:mac": "npm run dist -- --mac & npm run clean:nextron",
+    "pack": "npm run dist -- --dir --win & npm run clean:nextron",
     "lint": "npx next lint"
   },
   "dependencies": {
@@ -20,6 +28,8 @@
     "cookies-next": "^2.1.1",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
+    "electron-is-dev": "^2.0.0",
+    "electron-next": "^3.1.5",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "helmet": "^6.0.0",
@@ -42,10 +52,83 @@
     "@typescript-eslint/parser": "^5.43.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
+    "electron": "^21.3.0",
+    "electron-builder": "^23.6.0",
     "eslint": "^8.28.0",
     "eslint-config-next": "^13.0.4",
     "rimraf": "^3.0.2",
     "sass": "^1.56.1",
     "typescript": "^4.9.3"
+  },
+  "build": {
+    "appId": "com.bizhermit.template",
+    "productName": "node-app-template",
+    "asar": true,
+    "extends": null,
+    "extraMetadata": {
+      "main": ".main/nextron/main.js"
+    },
+    "files": [
+      "!src",
+      "!nextron",
+      "!nexpress",
+      ".main/**/*",
+      ".renderer/**/*",
+      "public"
+    ],
+    "extraFiles": [
+      {
+        "from": "resources",
+        "to": "resources",
+        "filter": [
+          "**/*",
+          "!config.json"
+        ]
+      },
+      {
+        "from": "LICENSE",
+        "to": "LICENSE"
+      },
+      {
+        "from": "CREDIT",
+        "to": "CREDIT"
+      }
+    ],
+    "directories": {
+      "output": "dist/pack"
+    },
+    "win": {
+      "icon": "public/favicons/favicon.ico",
+      "target": {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    },
+    "mac": {
+      "icon": "public/favicons/favicon.ico",
+      "target": "dmg"
+    },
+    "linux": {
+      "icon": "public/favicons/favicon.ico",
+      "target": [
+        "deb",
+        "rpm",
+        "snap",
+        "AppImage"
+      ],
+      "category": "Development"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/favicons/favicon.ico",
+      "installerHeaderIcon": "public/favicons/favicon.ico"
+    }
+  },
+  "browser": {
+    "fs": false,
+    "path": false
   }
 }
