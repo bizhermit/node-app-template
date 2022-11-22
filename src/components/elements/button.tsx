@@ -1,6 +1,7 @@
 import Style from "@/styles/components/elements/button.module.scss";
-import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 import { attributesWithoutChildren, isReactNode } from "@/utilities/attributes";
+import { useForm } from "@/components/elements/form";
 
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
   $color?: Color;
@@ -9,13 +10,37 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
   onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => void;
-  children?: ReactNode;
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
   const ref = useRef<HTMLButtonElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   
+  const disabledRef = useRef(false);
+  const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
+    return disabledRef.current = action;
+  }, false);
+  const form = useForm();
+
+  const lock = () => {
+    setDisabled(true);
+  };
+  const unlock = () => {
+    setDisabled(false);
+  };
+
+  const click = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (props.disabled || disabledRef.current) return;
+    lock();
+    const res = props.onClick?.(unlock, e);
+    if (res == null) {
+      unlock();
+      return;
+    }
+  };
+
+  const submitDisabled = props.type === "submit" && props.formMethod !== "delete" && (form.hasError || form.disabled);
+
   const colorClassName = useMemo(() => {
     const color = props.$color || "main";
     if (props.$outline) {
@@ -24,14 +49,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
     return `c-${color}`;
   }, [props.$color, props.$outline]);
 
-  const click = (e: React.MouseEvent<HTMLButtonElement>) => {
-    props.onClick?.(() => {}, e);
-  };
-
   return (
     <button
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
+      disabled={props.disabled || submitDisabled || disabled}
       onClick={click}
     >
       <div

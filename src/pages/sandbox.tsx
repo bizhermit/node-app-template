@@ -2,24 +2,32 @@ import { NextPage } from "next";
 import Link from "next/link";
 import Button from "@/components/elements/button";
 import { VscCloudDownload } from "react-icons/vsc";
+import Form from "@/components/elements/form";
 
 const Page: NextPage = () => {
   return (
     <div className="flex-box">
       <span>sandbox</span>
       <Link href="/">index</Link>
-      <Button
-        className="mt-1 ml-2"
-        $round
-        $outline
-        $icon={<VscCloudDownload />}
-        $iconPosition="left"
-        onClick={() => {
-          console.log("click");
+      <Form
+        // $disabled
+        onSubmit={async () => {
+          await new Promise<void>(resolve => {
+            setTimeout(resolve, 2000);
+          })
         }}
       >
-        BUTTON
-      </Button>
+        <Button
+          className="mt-1 ml-2"
+          type="submit"
+          $round
+          $outline
+          $icon={<VscCloudDownload />}
+          $iconPosition="left"
+        >
+          BUTTON
+        </Button>
+      </Form>
     </div>
   );
 };

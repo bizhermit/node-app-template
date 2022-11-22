@@ -17,6 +17,10 @@
   &:not(:disabled) {
     cursor: pointer;
   }
+
+  &:disabled {
+    opacity: 0.6;
+  }
 }
 
 .main {
