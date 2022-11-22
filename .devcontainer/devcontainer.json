@@ -3,7 +3,7 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "node",
   "workspaceFolder": "/workspace",
-  "postStartCommand": "npm install && npm run dev",
+  "postStartCommand": "npm install",
   "remoteUser": "node",
   "remoteEnv": {
     "PORT": "3000"
