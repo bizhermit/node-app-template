@@ -1,0 +1,326 @@
+@use "var";
+
+// box
+
+.box {
+  box-sizing: border-box;
+}
+
+.flex-box {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+// margin
+
+.mr-auto {
+  margin-right: auto !important;
+}
+
+.ml-auto {
+  margin-left: auto !important;
+}
+
+@for $i from 0 through 9 {
+  .mt-#{$i} {
+    margin-top: $i * var.$base;
+  }
+
+  .mb-#{$i} {
+    margin-bottom: $i * var.$base;
+  }
+
+  .ml-#{$i} {
+    margin-left: $i * var.$base;
+  }
+
+  .mr-#{$i} {
+    margin-right: $i * var.$base;
+  }
+
+  .mx-#{$i} {
+    margin-left: $i * var.$base;
+    margin-right: $i * var.$base;
+  }
+
+  .my-#{$i} {
+    margin-top: $i * var.$base;
+    margin-bottom: $i * var.$base;
+  }
+
+  .m-#{$i} {
+    margin: $i * var.$base;
+  }
+
+  .mt-m#{$i} {
+    margin-top: -$i * var.$base;
+  }
+
+  .mb-m#{$i} {
+    margin-bottom: -$i * var.$base;
+  }
+
+  .ml-m#{$i} {
+    margin-left: -$i * var.$base;
+  }
+
+  .mr-m#{$i} {
+    margin-right: -$i * var.$base;
+  }
+
+  .mx-m#{$i} {
+    margin-left: -$i * var.$base;
+    margin-right: -$i * var.$base;
+  }
+
+  .my-m#{$i} {
+    margin-top: -$i * var.$base;
+    margin-bottom: -$i * var.$base;
+  }
+
+  .m-m#{$i} {
+    margin: -$i * var.$base;
+  }
+}
+
+// padding
+
+.pt-t {
+  padding-top: var(--text-padding-top);
+}
+
+@for $i from 0 through 9 {
+  .pt-#{$i} {
+    padding-top: $i * var.$base;
+  }
+
+  .pb-#{$i} {
+    padding-bottom: $i * var.$base;
+  }
+
+  .pl-#{$i} {
+    padding-left: $i * var.$base;
+  }
+
+  .pr-#{$i} {
+    padding-right: $i * var.$base;
+  }
+
+  .px-#{$i} {
+    padding-left: $i * var.$base;
+    padding-right: $i * var.$base;
+  }
+
+  .py-#{$i} {
+    padding-top: $i * var.$base;
+    padding-bottom: $i * var.$base;
+  }
+
+  .p-#{$i} {
+    padding: $i * var.$base;
+  }
+}
+
+// elevation
+
+@for $i from 0 through 9 {
+  .e-#{$i} {
+    @if $i ==0 {
+      box-shadow: none !important;
+    }
+
+    @else {
+      box-shadow: 0 1px ($i * 0.2rem) 0 var(--bgc-shadow) !important;
+    }
+  }
+
+  .es-#{$i} {
+    @if $i ==0 {
+      filter: drop-shadow(0 0 0 transparent) !important;
+    }
+
+    @else {
+      filter: drop-shadow(0 0.1rem ($i * 0.05rem) var(--bgc-shadow)) !important;
+    }
+  }
+}
+
+// radius
+
+@for $i from 0 through 9 {
+  .r-#{$i} {
+    border-radius: $i * 0.25rem !important;
+  }
+
+  .rtl-#{$i} {
+    border-top-left-radius: $i * 0.25rem !important;
+  }
+
+  .rtr-#{$i} {
+    border-top-right-radius: $i * 0.25rem !important;
+  }
+
+  .rbl-#{$i} {
+    border-bottom-left-radius: $i * 0.25rem !important;
+  }
+
+  .rbr-#{$i} {
+    border-bottom-right-radius: $i * 0.25rem !important;
+  }
+}
+
+// gap
+
+@for $i from 0 through 9 {
+  .gap-#{$i} {
+    gap: $i * var.$base;
+  }
+
+  .gap-r#{$i} {
+    row-gap: $i * var.$base;
+  }
+
+  .gap-c#{$i} {
+    column-gap: $i * var.$base;
+  }
+}
+
+// height/width
+
+.w-100 {
+  width: 100%;
+}
+
+.w-max100 {
+  max-width: 100%;
+}
+
+.w-min100 {
+  min-width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.h-max100 {
+  max-height: 100%;
+}
+
+.h-min100 {
+  min-height: 100%;
+}
+
+// text
+
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-center {
+  text-align: center;
+}
+
+.nowrap {
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.no-decoration {
+  text-decoration: none;
+}
+
+.xs {
+  font-size: var.$fontSize * 0.7;
+}
+
+.s {
+  font-size: var.$fontSize * 0.85;
+}
+
+.m {
+  font-size: var.$fontSize * 1;
+}
+
+.l {
+  font-size: var.$fontSize * 1.2;
+}
+
+.xl {
+  font-size: var.$fontSize * 1.5;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+// flex
+
+.flex-center {
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.flex-stretch {
+  justify-content: stretch !important;
+  align-items: stretch !important;
+}
+
+.flex-1 {
+  flex: 1 !important;
+  min-height: 0;
+}
+
+.flex-1_0_auto {
+  flex: 1 0 auto !important;
+  min-height: 0;
+}
+
+.flex-1_1_0 {
+  flex: 1 1 0 !important;
+  min-height: 0;
+}
+
+.flex-1_0_0 {
+  flex: 1 0 0 !important;
+  min-height: 0;
+}
+
+.flex-g1 {
+  flex-grow: 1 !important;
+  min-height: 0;
+}
+
+.flex-s1 {
+  flex-shrink: 1 !important;
+  min-height: 0;
+}
+
+.flex-b0 {
+  flex-basis: 0 !important;
+}
+
+.flex-none {
+  flex: none !important;
+}
+
+// border
+
+.border {
+  border: 1px solid var(--bgc-border);
+}
+
+// scroll
+
+.scroll {
+  overflow: auto;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
