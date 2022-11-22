@@ -44,6 +44,7 @@
   font-size: inherit;
   z-index: 1;
   resize: none;
+  max-width: 100%;
   @if $pad {
     padding: 0.3rem 0.6rem 0.2rem 0.6rem;
   }

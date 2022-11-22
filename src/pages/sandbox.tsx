@@ -4,7 +4,8 @@ import Button from "@/components/elements/button";
 import { VscCloudDownload } from "react-icons/vsc";
 import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Row from "@/components/templates/row";
 
 const Page: NextPage = () => {
   const [bind, setBind] = useState({});
@@ -22,24 +23,25 @@ const Page: NextPage = () => {
           })
         }}
       >
-        <TextBox
-          name="text-box"
-          $required
-        />
-        <TextBox
-          name="text-bot-length"
-          $length={5}
-        />
-        <Button
-          className="mt-1 ml-2"
-          type="submit"
-          // $round
-          $outline
-          $icon={<VscCloudDownload />}
-          $iconPosition="left"
-        >
-          BUTTON
-        </Button>
+        <Row className="gap-2" $hAlign="stretch">
+          <TextBox
+            name="text-box"
+            $required
+          />
+          <TextBox
+            name="text-bot-length"
+            $length={5}
+          />
+          <Button
+            type="submit"
+            // $round
+            $outline
+            $icon={<VscCloudDownload />}
+            $iconPosition="left"
+          >
+            BUTTON
+          </Button>
+        </Row>
       </Form>
     </div>
   );
