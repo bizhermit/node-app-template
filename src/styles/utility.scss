@@ -152,6 +152,14 @@
 
 // radius
 
+.r-max {
+  border-radius: 100%;
+}
+
+.r-min {
+  border-radius: 9999px;
+}
+
 @for $i from 0 through 9 {
   $val: $i * 0.25rem !important;
 

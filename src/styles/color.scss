@@ -23,21 +23,21 @@
 
 @each $key, $value in var.$colorMap {
   .c-#{$key} {
-    background-color: var(--bgc-#{$key}) !important;
+    background: var(--bgc-#{$key}) !important;
     color: var(--fgc-#{$key}) !important;
   }
 
   .c-#{$key}_r {
-    background-color: var(--fgc-#{$key}) !important;
+    background: var(--fgc-#{$key}) !important;
     color: var(--bgc-#{$key}) !important;
   }
 
   .bgc-#{$key} {
-    background-color: var(--bgc-#{$key}) !important;
+    background: var(--bgc-#{$key}) !important;
   }
 
   .bgc-#{$key}_r {
-    background-color: var(--fgc-#{$key}) !important;
+    background: var(--fgc-#{$key}) !important;
   }
 
   .fgc-#{$key} {

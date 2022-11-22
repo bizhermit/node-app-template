@@ -4,6 +4,7 @@
   --size: #{var.$size};
   --font-size: #{var.$fontSize};
   --text-padding-top: 0.2rem;
+  --radius: 0.5rem;
 }
 
 html {
@@ -13,7 +14,7 @@ html {
   height: 100%;
   width: 100%;
   font-size: 62.5%;
-  background-color: var(--bgc-base);
+  background: var(--bgc-base);
   color: var(--fgc-base);
 }
 

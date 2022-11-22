@@ -31,7 +31,7 @@ type FormContextProps = {
 };
 
 export const FormContext = createContext<FormContextProps>({
-  bind: {},
+  bind: undefined,
   disabled: false,
   readOnly: false,
   errors: {},
@@ -143,7 +143,7 @@ export default Form;
 
 type UseFormOptions<T = any, U = any> = {
   effect: (value: Nullable<T>) => void;
-  validations?: Array<FormItemValidation<Nullable<T>>>;
+  validations?: () => Array<FormItemValidation<Nullable<T>>>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
@@ -168,9 +168,10 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     if ("$defaultValue" in props) return props.$defaultValue;
     return undefined;
   })());
-  const [value, setValue] = useReducer((_state: Nullable<T>, action: Nullable<T>) => {
-    return valueRef.current = action;
-  }, valueRef.current);
+  const [value, setValueImpl] = useState(valueRef.current);
+  const setValue = (value: Nullable<T>) => {
+    setValueImpl(valueRef.current = value);
+  };
 
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<Nullable<T>>> = [];
@@ -181,7 +182,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       });
     }
     if (options?.validations) {
-      rets.push(...options.validations);
+      rets.push(...options.validations());
     }
     if (props?.$validations) {
       if (Array.isArray(props.$validations)) {
@@ -220,7 +221,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   const change = useCallback((value: Nullable<T>, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
     const before = valueRef.current;
-    valueRef.current = value;
+    setValue(value);
     const name = props?.name;
     if (name) {
       if (ctx.bind) {
@@ -242,7 +243,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const name = props?.name;
     if (props == null || name == null || ctx.bind == null || "$bind" in props || "$value" in props) return;
     const before = valueRef.current;
-    valueRef.current = ctx.bind[name];
+    setValue(ctx.bind[name]);
     if (!equals(valueRef.current, before)) {
       props.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
@@ -254,7 +255,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const name = props?.name;
     if (props == null || name == null || props.$bind == null || "$value" in props) return;
     const before = valueRef.current;
-    valueRef.current = props.$bind[name];
+    setValue(props.$bind[name]);
     if (!equals(valueRef.current, before)) {
       props.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
@@ -264,7 +265,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
-    valueRef.current = props.$value;
+    setValue(props.$value);
     options?.effect(valueRef.current);
     validation();
   }, [props?.$value]);
@@ -288,6 +289,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     editable: !disabled && !readOnly,
     change,
     valueRef,
+    value,
     validation,
     error,
     setError,

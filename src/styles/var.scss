@@ -46,6 +46,26 @@ $colorMap: (
       fgc: #fff,
     ),
   ),
+  "input": (
+    "light": (
+      bgc: #fff,
+      fgc: $lightFgc,
+    ),
+    "dark": (
+      bgc: rgb(50, 50, 53),
+      fgc: $darkFgc,
+    )
+  ),
+  "error": (
+    "light": (
+      bgc: rgb(255, 225, 225),
+      fgc: $lightFgc,
+    ),
+    "dark": (
+      bgc: rgb(70, 48, 48),
+      fgc: $darkFgc,
+    ),
+  ),
   "main": (
     "light": (
       bgc: #180614,
