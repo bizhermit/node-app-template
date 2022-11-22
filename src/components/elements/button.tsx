@@ -24,10 +24,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
     return `c-${color}`;
   }, [props.$color, props.$outline]);
 
+  const click = (e: React.MouseEvent<HTMLButtonElement>) => {
+    props.onClick?.(() => {}, e);
+  };
+
   return (
     <button
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
+      onClick={click}
     >
       <div
         className={`${Style.main} ${colorClassName}`}

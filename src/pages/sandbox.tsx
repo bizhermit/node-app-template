@@ -14,6 +14,9 @@ const Page: NextPage = () => {
         $outline
         $icon={<VscCloudDownload />}
         $iconPosition="left"
+        onClick={() => {
+          console.log("click");
+        }}
       >
         BUTTON
       </Button>
