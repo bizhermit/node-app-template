@@ -1,7 +1,7 @@
 import { attributes } from "@/utilities/attributes";
-import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, SetStateAction, useContext, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
+import React, { createContext, Dispatch, FormHTMLAttributes, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 
-export type FromItemValidation<T> = (value: T, bindData: Struct, index: number) => (boolean | string | null);
+export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null);
 
 export type FormItemProps<T = any, U = any> = {
   name?: string;
@@ -9,13 +9,13 @@ export type FormItemProps<T = any, U = any> = {
   $disabled?: boolean;
   $readOnly?: boolean;
   $required?: boolean;
-  $validations?: FromItemValidation<T> | Array<FromItemValidation<T>>;
+  $validations?: FormItemValidation<Nullable<T>> | Array<FormItemValidation<Nullable<T>>>;
   $placeholder?: string;
   $interlockValidation?: boolean;
   $tabIndex?: number;
   $defaultValue?: T;
   $value?: T;
-  onChange?: (after: T, before: T, data?: U) => void;
+  onChange?: (after: Nullable<T>, before: Nullable<T>, data?: U) => void;
 };
 
 type FormContextProps = {
@@ -30,7 +30,7 @@ type FormContextProps = {
   validation: () => void;
 };
 
-const FormContext = createContext<FormContextProps>({
+export const FormContext = createContext<FormContextProps>({
   bind: {},
   disabled: false,
   readOnly: false,
@@ -142,7 +142,11 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
 export default Form;
 
 type UseFormOptions<T = any, U = any> = {
-
+  effect: (value: Nullable<T>) => void;
+  validations?: Array<FormItemValidation<Nullable<T>>>;
+  preventRequiredValidation?: boolean;
+  interlockValidation?: boolean;
+  generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
 };
 
 const validationMessages = {
@@ -158,8 +162,135 @@ const equals = (v1: unknown, v2: unknown) => {
 export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: UseFormOptions<T, U>) => {
   const ctx = useContext(FormContext);
   const [error, setError] = useState("");
+  const valueRef = useRef<Nullable<T>>((() => {
+    if (props == null) return undefined;
+    if ("$value" in props) return props.$value;
+    if ("$defaultValue" in props) return props.$defaultValue;
+    return undefined;
+  })());
+  const [value, setValue] = useReducer((_state: Nullable<T>, action: Nullable<T>) => {
+    return valueRef.current = action;
+  }, valueRef.current);
+
+  const validations = useMemo(() => {
+    const rets: Array<FormItemValidation<Nullable<T>>> = [];
+    if (props?.$required && !options?.preventRequiredValidation) {
+      rets.push((v) => {
+        if (v == null || v === "") return validationMessages.required;
+        return "";
+      });
+    }
+    if (options?.validations) {
+      rets.push(...options.validations);
+    }
+    if (props?.$validations) {
+      if (Array.isArray(props.$validations)) {
+        rets.push(...props.$validations);
+      } else {
+        rets.push(props.$validations);
+      }
+    }
+    return rets;
+  }, []);
+
+  const validation = useCallback(() => {
+    const value = valueRef.current;
+    const msgs: Array<string> = [];
+    for (let i = 0, il = validations.length; i < il; i++) {
+      const result = validations[i](value, ctx.bind, i);
+      if (result == null || result === "" || result === false) {
+        continue;
+      }
+      if (typeof result === "string") msgs.push(result);
+      msgs.push(validationMessages.default);
+      break;
+    }
+    const msg = msgs[0] || "";
+    setError(msg);
+    const name = props?.name;
+    if (name) {
+      ctx.setErrors(cur => {
+        const ret = { ...cur };
+        ret[name] = msg;
+        return ret;
+      });
+    }
+  }, [validations]);
+
+  const change = useCallback((value: Nullable<T>, absolute?: boolean) => {
+    if (equals(valueRef.current, value) && !absolute) return;
+    const before = valueRef.current;
+    valueRef.current = value;
+    const name = props?.name;
+    if (name) {
+      if (ctx.bind) {
+        ctx.bind[name] = value;
+      }
+      if (props.$bind) {
+        props.$bind[name] = value;
+      }
+    }
+    if (props?.$interlockValidation || options?.interlockValidation) {
+      ctx.validation();
+    } else {
+      validation();
+    }
+    props?.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+  }, [ctx.bind, props?.onChange, validation]);
+
+  useEffect(() => {
+    const name = props?.name;
+    if (props == null || name == null || ctx.bind == null || "$bind" in props || "$value" in props) return;
+    const before = valueRef.current;
+    valueRef.current = ctx.bind[name];
+    if (!equals(valueRef.current, before)) {
+      props.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+    }
+    options?.effect(valueRef.current);
+    validation();
+  }, [ctx.bind]);
+
+  useEffect(() => {
+    const name = props?.name;
+    if (props == null || name == null || props.$bind == null || "$value" in props) return;
+    const before = valueRef.current;
+    valueRef.current = props.$bind[name];
+    if (!equals(valueRef.current, before)) {
+      props.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+    }
+    options?.effect(valueRef.current);
+    validation();
+  }, [props?.$bind]);
+
+  useEffect(() => {
+    if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
+    valueRef.current = props.$value;
+    options?.effect(valueRef.current);
+    validation();
+  }, [props?.$value]);
+
+  useEffect(() => {
+    if (props) {
+      ctx.mount(props, { validation });
+      return () => {
+        ctx.unmount(props);
+      };
+    }
+  }, [validation]);
+
+  const disabled = props?.$disabled || ctx.disabled;
+  const readOnly = props?.$readOnly || ctx.readOnly;
 
   return {
-    ...ctx
-  }
+    ...ctx,
+    disabled,
+    readOnly,
+    editable: !disabled && !readOnly,
+    change,
+    valueRef,
+    validation,
+    error,
+    setError,
+    effect: options?.effect,
+  };
 };
