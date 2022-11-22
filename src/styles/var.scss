@@ -1,0 +1,46 @@
+$base: 1rem;
+$size: 3.6rem;
+$fontSize: 1.6rem;
+
+$colorMap: (
+  "base": (
+    "light": (
+      bgc: rgb(244, 244, 251),
+      fgc: rgb(22, 22, 22),
+    ),
+    "dark": (
+      bgc: rgb(57, 57, 59),
+      fgc: rgb(244, 244, 244)
+    ),
+  ),
+  "border": (
+    "light": (
+      bgc: rgb(144, 144, 153),
+      fgc: rgb(244, 244, 251),
+    ),
+    "dark": (
+      bgc: rgb(128, 128, 132),
+      fgc: rgb(57, 57, 59)
+    ),
+  ),
+  "shadow": (
+    "light": (
+      bgc: rgba(0, 0, 0, 0.4),
+      fgc: rgba(224, 224, 229, 0.2),
+    ),
+    "dark": (
+      bgc: rgba(0, 0, 0, 0.6),
+      fgc: rgba(80, 80, 80, 0.5),
+    ),
+  ),
+  "pure": (
+    "light": (
+      bgc: #fff,
+      fgc: #000,
+    ),
+    "dark": (
+      bgc: #000,
+      fgc: #fff,
+    ),
+  ),
+);

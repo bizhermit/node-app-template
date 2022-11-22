@@ -1,0 +1,58 @@
+@use "var";
+
+@media (prefers-color-scheme: light) {
+  :root {
+    @each $key, $value in var.$colorMap {
+      --bgc-#{$key}: #{map-get(map-get($value, light), bgc)};
+      --fgc-#{$key}: #{map-get(map-get($value, light), fgc)};
+    }
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    @each $key, $value in var.$colorMap {
+      --bgc-#{$key}: #{map-get(map-get($value, dark), bgc)};
+      --fgc-#{$key}: #{map-get(map-get($value, dark), fgc)};
+    }
+  }
+
+  html {
+    color-scheme: dark;
+  }
+}
+
+@each $key, $value in var.$colorMap {
+  .c-#{$key} {
+    background-color: var(--bgc-#{$key}) !important;
+    color: var(--fgc-#{$key}) !important;
+  }
+
+  .c-#{$key}_r {
+    background-color: var(--fgc-#{$key}) !important;
+    color: var(--bgc-#{$key}) !important;
+  }
+
+  .bgc-#{$key} {
+    background-color: var(--bgc-#{$key}) !important;
+  }
+
+  .bgc-#{$key}_r {
+    background-color: var(--fgc-#{$key}) !important;
+  }
+
+  .fgc-#{$key} {
+    color: var(--fgc-#{$key}) !important;
+  }
+
+  .fgc-#{$key}_r {
+    color: var(--bgc-#{$key}) !important;
+  }
+
+  .bdc-#{$key} {
+    border-color: var(--bgc-#{$key}) !important;
+  }
+
+  .bdc-#{$key}_r {
+    border-color: var(--fgc-#{$key}) !important;
+  }
+}
