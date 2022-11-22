@@ -37,7 +37,8 @@ next-env.d.ts
 
 #
 .vscode
-.nexpress
-.main
-.renderer
-dist
+/.nexpress
+/.main
+/.renderer
+/dist
+/resources/config.json
