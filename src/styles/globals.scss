@@ -7,6 +7,7 @@
 }
 
 html {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
   height: 100%;
@@ -17,6 +18,7 @@ html {
 }
 
 body {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
   height: 100%;
@@ -25,8 +27,14 @@ body {
 }
 
 #__next {
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: auto;
 }
 
 h1,
