@@ -27,21 +27,24 @@ const Page: NextPage = () => {
           <TextBox
             name="text-box"
             $required
-            $placeholder="TextBoxgawegawegaweg gewagawgawgaewg"
+            $placeholder="TextBox"
             $messageDisplayMode="bottom"
           />
           <TextBox
             name="text-bot-length"
             $length={5}
-            $placeholder=" "
+            $placeholder="TextBox Tooltip"
             $messageDisplayMode="tooltip"
           />
           <Button
             type="submit"
+            $ignoreFormValidation
             // $round
             $outline
             $icon={<VscCloudDownload />}
-            $iconPosition="left"
+            $iconPosition="right"
+            // $fillLabel
+            style={{ width: 200 }}
           >
             BUTTON
           </Button>

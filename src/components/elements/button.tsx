@@ -9,7 +9,9 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick
   $outline?: boolean;
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
+  $fillLabel?: boolean;
   $onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => void;
+  $ignoreFormValidation?: boolean;
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
@@ -23,12 +25,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
   const lock = () => {
     setDisabled(disabledRef.current = true);
   };
+
   const unlock = () => {
     setDisabled(disabledRef.current = false);
   };
 
+  const submitDisabled = props.$ignoreFormValidation !== true
+  && props.type === "submit"
+  && props.formMethod !== "delete"
+  && (form.hasError || form.disabled)
+  ;
+
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (props.disabled || disabledRef.current) return;
+    if (props.disabled || disabledRef.current || submitDisabled) return;
     lock();
     const res = props.$onClick?.(unlock, e);
     if (res == null) {
@@ -36,8 +45,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
       return;
     }
   };
-
-  const submitDisabled = props.type === "submit" && props.formMethod !== "delete" && (form.hasError || form.disabled);
 
   const colorClassName = useMemo(() => {
     const color = props.$color || "main";
@@ -60,9 +67,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
         data-outline={props.$outline}
         data-icon={props.$icon != null && (props.$iconPosition || "left")}
       >
-        {props.$icon != null && props.$iconPosition !== "right" && props.$icon}
-        {isReactNode(props.children) ? props.children : <span className={Style.label}>{String(props.children)}</span>}
-        {props.$icon != null && props.$iconPosition === "right" && props.$icon}
+        {props.$icon != null && props.$iconPosition !== "right" &&
+          <div className={Style.icon}>{props.$icon}</div>
+        }
+        {isReactNode(props.children) ? props.children :
+          <span
+            className={Style.label}
+            data-fill={props.$fillLabel}
+          >
+            {String(props.children)}
+          </span>
+        }
+        {props.$icon != null && props.$iconPosition === "right" &&
+          <div className={Style.icon}>{props.$icon}</div>
+        }
       </div>
     </button>
   );

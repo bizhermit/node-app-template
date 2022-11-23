@@ -1,18 +1,15 @@
 .wrap {
   box-sizing: border-box;
-  display: inline-flex;
-  flex-flow: row nowrap;
-  justify-content: stretch;
-  align-items: stretch;
+  position: relative;
   padding: 0;
   flex: none;
-  min-height: var(--size);
+  height: var(--size);
   min-width: var(--size);
   overflow: visible;
   font-size: inherit;
   font-family: inherit;
-  background: unset;
-  border: unset;
+  background: none;
+  border: none;
 
   &:not(:disabled) {
     cursor: pointer;
@@ -31,6 +28,8 @@
   align-items: center;
   overflow: hidden;
   border-radius: var(--radius);
+  height: 100%;
+  width: 100%;
 
   &[data-round="true"] {
     border-radius: 9999px;
@@ -38,6 +37,11 @@
 
   &[data-outline="true"] {
     border: 1px solid var(--bgc-border);
+  }
+
+  >.label {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   &[data-icon="left"] {
@@ -57,4 +61,19 @@
   box-sizing: border-box;
   padding-top: var(--text-padding-top);
   text-overflow: ellipsis;
+
+  &[data-fill="true"] {
+    flex: 1 0 0;
+  }
+}
+
+.icon {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  min-width: var(--size);
+  height: 100%;
 }
