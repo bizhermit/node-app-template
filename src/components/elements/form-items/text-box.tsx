@@ -1,9 +1,8 @@
-import Style from "@/styles/components/elements/form-items/common.module.scss";
-import { FormItemProps, FormItemValidation, useForm } from "@/components/elements/form";
-import { inputAttributes } from "@/utilities/attributes";
-import React, { HTMLAttributes, useRef } from "react";
+import Style from "@/styles/components/elements/form-items/form-item.module.scss";
+import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import React, { useRef } from "react";
 
-export type TextBoxProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & FormItemProps<string> & {
+export type TextBoxProps = FormItemProps<string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $maxLength?: number;
@@ -43,11 +42,9 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
   });
 
   return (
-    <div
-      {...inputAttributes(props, Style.wrap)}
-      title={form.error}
-      data-editable={form.editable}
-      data-error={Boolean(form.error)}
+    <FormItemWrap
+      {...props}
+      $$form={form}
     >
       <input
         ref={iref}
@@ -62,7 +59,7 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         tabIndex={props.tabIndex}
         onChange={e => form.change(e.target.value)}
       />
-    </div>
+    </FormItemWrap>
   );
 });
 

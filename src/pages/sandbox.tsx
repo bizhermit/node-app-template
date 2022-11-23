@@ -27,10 +27,14 @@ const Page: NextPage = () => {
           <TextBox
             name="text-box"
             $required
+            $placeholder="TextBoxgawegawegaweg gewagawgawgaewg"
+            $messageDisplayMode="bottom"
           />
           <TextBox
             name="text-bot-length"
             $length={5}
+            $placeholder=" "
+            $messageDisplayMode="tooltip"
           />
           <Button
             type="submit"

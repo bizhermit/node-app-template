@@ -135,7 +135,7 @@
     }
 
     @else {
-      box-shadow: 0 1px ($i * 0.2rem) 0 var(--bgc-shadow) !important;
+      box-shadow: 0 0.1rem ($i * 0.2rem) 0 var(--bgc-shadow) !important;
     }
   }
 

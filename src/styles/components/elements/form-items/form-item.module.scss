@@ -1,0 +1,110 @@
+@mixin input($width: 100%, $pad: true) {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  height: var(--size);
+  width: $width;
+
+  @if $pad {
+    padding: 0.3rem 0.6rem 0.2rem 0.6rem;
+  }
+}
+
+.wrap {
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: visible;
+
+  &[data-editable="true"] {
+
+    >.main {
+      color: var(--fgc-input);
+
+      &::before {
+        box-sizing: border-box;
+        position: absolute;
+        content: "";
+        background: var(--bgc-input);
+        height: var(--size);
+        width: 100%;
+        border: 1px solid var(--bgc-border);
+        border-radius: var(--radius);
+        z-index: 0;
+        transition: background 0.2s;
+      }
+
+    }
+
+    &[data-error="true"] {
+      >.main {
+        color: var(--fgc-error);
+
+        &::before {
+          background: var(--bgc-error);
+        }
+      }
+    }
+  }
+}
+
+.main {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+.input {
+  @include input;
+}
+
+.placeholder {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 100%;
+  text-overflow: clip;
+  min-height: calc(var(--font-size) * 1.5);
+}
+
+.error {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: calc(var(--font-size) * 1.5);
+  font-size: calc(var(--font-size) * 0.85);
+
+  &[data-mode="tooltip"] {
+    position: absolute;
+    padding: calc(.5rem + var(--text-padding-top)) 1.5rem .5rem 1.5rem;
+    white-space: nowrap;
+    background: var(--bgc-error);
+    color: var(--fgc-error);
+    opacity: 0.9;
+    width: fit-content;
+    border-radius: var(--radius);
+    box-shadow: 0 .1rem .8rem 0 var(--bgc-shadow);
+  }
+
+  &[data-mode="bottom"] {
+    position: relative;
+    padding: var(--text-padding-top) .5rem 0 .5rem;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+}

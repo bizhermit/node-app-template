@@ -1,0 +1,19 @@
+.main {
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 99999;
+  visibility: hidden;
+}
+
+.mask {
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99998;
+  background: var(--bgc-mask);
+  color: var(--fgc-mask);
+  width: 100vw !important;
+  height: 100vh !important;
+  transition: opacity 0.1s;
+}

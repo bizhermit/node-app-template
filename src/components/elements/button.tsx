@@ -9,7 +9,7 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick
   $outline?: boolean;
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
-  onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => void;
+  $onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
@@ -32,7 +32,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (props.disabled || disabledRef.current) return;
     lock();
-    const res = props.onClick?.(unlock, e);
+    const res = props.$onClick?.(unlock, e);
     if (res == null) {
       unlock();
       return;

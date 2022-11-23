@@ -1,9 +1,13 @@
-import { attributes } from "@/utilities/attributes";
-import React, { createContext, Dispatch, FormHTMLAttributes, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
+import Tooltip from "@/components/elements/tooltip";
+import { attributes, inputAttributes } from "@/utilities/attributes";
+import React, { createContext, Dispatch, FC, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
+import Style from "@/styles/components/elements/form-items/form-item.module.scss";
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null);
 
-export type FormItemProps<T = any, U = any> = {
+export type FormItemMessageDisplayMode = "tooltip" | "bottom";
+
+export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   name?: string;
   $bind?: Struct;
   $disabled?: boolean;
@@ -15,7 +19,8 @@ export type FormItemProps<T = any, U = any> = {
   $tabIndex?: number;
   $defaultValue?: T;
   $value?: T;
-  onChange?: (after: Nullable<T>, before: Nullable<T>, data?: U) => void;
+  $messageDisplayMode?: FormItemMessageDisplayMode;
+  $onChange?: (after: Nullable<T>, before: Nullable<T>, data?: U) => void;
 };
 
 type FormContextProps = {
@@ -28,6 +33,7 @@ type FormContextProps = {
   mount: (itemProps: FormItemProps, mountItemProps: FormItemMountProps) => void;
   unmount: (itemProps: FormItemProps) => void;
   validation: () => void;
+  messageDisplayMode?: FormItemMessageDisplayMode;
 };
 
 export const FormContext = createContext<FormContextProps>({
@@ -40,6 +46,7 @@ export const FormContext = createContext<FormContextProps>({
   mount: () => { },
   unmount: () => { },
   validation: () => { },
+  messageDisplayMode: undefined,
 });
 
 type FormItemMountProps = {
@@ -50,6 +57,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> & 
   $bind?: Struct;
   $disabled?: boolean;
   $readOnly?: boolean;
+  $messageDisplayMode?: FormItemMessageDisplayMode;
   onSubmit?: ((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>) | boolean);
 };
 
@@ -129,6 +137,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       mount,
       unmount,
       validation,
+      messageDisplayMode: props.$messageDisplayMode ?? "tooltip",
     }}>
       <form
         {...attributes(props)}
@@ -236,8 +245,8 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     } else {
       validation();
     }
-    props?.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.onChange, validation]);
+    props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+  }, [ctx.bind, props?.$onChange, validation]);
 
   useEffect(() => {
     const name = props?.name;
@@ -245,7 +254,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const before = valueRef.current;
     setValue(ctx.bind[name]);
     if (!equals(valueRef.current, before)) {
-      props.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
     options?.effect(valueRef.current);
     validation();
@@ -257,7 +266,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const before = valueRef.current;
     setValue(props.$bind[name]);
     if (!equals(valueRef.current, before)) {
-      props.onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
     options?.effect(valueRef.current);
     validation();
@@ -294,5 +303,48 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     error,
     setError,
     effect: options?.effect,
+    messageDisplayMode: props?.$messageDisplayMode ?? ctx.messageDisplayMode,
   };
+};
+
+export const FormItemWrap: FC<FormItemProps & {
+  $$form: ReturnType<typeof useForm<any, any>>;
+  children: ReactNode;
+}> = (props) => {
+  const errorNode = (
+    <div
+      className={Style.error}
+      data-mode={props.$$form.messageDisplayMode}
+    >
+      {props.$$form.error}
+    </div>
+  );
+
+  return (
+    <div
+      {...inputAttributes(props, Style.wrap)}
+      data-editable={props.$$form.editable}
+      data-error={Boolean(props.$$form.error)}
+    >
+      {props.$placeholder &&
+        <div className={Style.placeholder}>
+          {props.$placeholder}
+        </div>
+      }
+      {props.$$form.messageDisplayMode === "tooltip" &&
+        <Tooltip className={Style.main}>
+          {props.children}
+          {errorNode}
+        </Tooltip>
+      }
+      {props.$$form.messageDisplayMode === "bottom" &&
+        <>
+          <div className={Style.main}>
+            {props.children}
+          </div>
+          {errorNode}
+        </>
+      }
+    </div>
+  );
 };

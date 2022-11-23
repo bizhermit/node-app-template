@@ -36,6 +36,16 @@ $colorMap: (
       fgc: rgba(80, 80, 80, 0.5),
     ),
   ),
+  "mask": (
+    "light": (
+      bgc: rgb(127, 127, 127, 0.3),
+      fgc: rgb(0, 0, 0),
+    ),
+    "dark": (
+      bgc: rgb(60, 60, 63, 0.3),
+      fgc: rgb(255, 255, 255),
+    )
+  ),
   "pure": (
     "light": (
       bgc: #fff,
