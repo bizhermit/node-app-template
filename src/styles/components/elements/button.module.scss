@@ -1,0 +1,95 @@
+.wrap {
+  box-sizing: border-box;
+  position: relative;
+  padding: 0;
+  flex: none;
+  height: var(--size);
+  min-width: var(--size);
+  overflow: visible;
+  font-size: inherit;
+  font-family: inherit;
+  background: none;
+  border: none;
+  border-radius: var(--radius);
+
+  &:not(:disabled) {
+    cursor: pointer;
+    
+    &:hover,
+    &:focus {
+      outline: solid;
+      outline-offset: 0rem;
+      animation: hover .8s infinite;
+
+      &:active {
+        animation: none;
+      }
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+@keyframes hover {
+  100% {
+    outline-color: transparent;
+    outline-offset: .6rem;
+  }
+}
+
+.main {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: var(--radius);
+  height: 100%;
+  width: 100%;
+  border: 1px solid var(--bgc-border);
+
+  &[data-round="true"] {
+    border-radius: 9999px;
+  }
+
+  >.label {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  &[data-icon="left"] {
+    >.label {
+      padding-left: .5rem;
+    }
+  }
+
+  &[data-icon="right"] {
+    >.label {
+      padding-right: .5rem;
+    }
+  }
+}
+
+.label {
+  box-sizing: border-box;
+  padding-top: var(--text-padding-top);
+  text-overflow: ellipsis;
+
+  &[data-fill="true"] {
+    flex: 1 0 0;
+  }
+}
+
+.icon {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  min-width: var(--size);
+  height: 100%;
+}

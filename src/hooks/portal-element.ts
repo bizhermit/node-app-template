@@ -6,7 +6,7 @@ const usePortalElement = (options?: {
   unmount?: (element: HTMLDivElement) => void;
 }) => {
   const idRef = useRef(options?.id || "");
-  const [element, setElement] = useState<HTMLDivElement>();
+  const [element, setElement] = useState<HTMLDivElement>(null!);
 
   useEffect(() => {
     let elem = element || document.getElementById(idRef.current) as HTMLDivElement;

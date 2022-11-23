@@ -4,19 +4,22 @@
   --size: #{var.$size};
   --font-size: #{var.$fontSize};
   --text-padding-top: 0.2rem;
+  --radius: 0.5rem;
 }
 
 html {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
   height: 100%;
   width: 100%;
   font-size: 62.5%;
-  background-color: var(--bgc-base);
+  background: var(--bgc-base);
   color: var(--fgc-base);
 }
 
 body {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
   height: 100%;
@@ -25,8 +28,14 @@ body {
 }
 
 #__next {
+  box-sizing: border-box;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: auto;
 }
 
 h1,

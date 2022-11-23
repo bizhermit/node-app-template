@@ -3,6 +3,8 @@ type Color = "base"
   | "shadow"
   | "pure"
   | "dull"
+  | "input"
+  | "error"
   | "main"
   | "main-light"
   | "main-dark"
@@ -17,3 +19,5 @@ type Color = "base"
   | "cool"
   | "pretty"
   ;
+
+type Size = "xs" | "s" | "m" | "l" | "xl";

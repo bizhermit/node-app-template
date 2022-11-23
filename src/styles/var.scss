@@ -2,6 +2,9 @@ $base: 1rem;
 $size: 3.6rem;
 $fontSize: 1.6rem;
 
+$lightFgc: rgb(22, 22, 22);
+$darkFgc: rgb(244, 244, 244);
+
 $colorMap: (
   "base": (
     "light": (
@@ -10,7 +13,7 @@ $colorMap: (
     ),
     "dark": (
       bgc: rgb(57, 57, 59),
-      fgc: rgb(244, 244, 244)
+      fgc: rgb(244, 244, 244),
     ),
   ),
   "border": (
@@ -33,6 +36,16 @@ $colorMap: (
       fgc: rgba(80, 80, 80, 0.5),
     ),
   ),
+  "mask": (
+    "light": (
+      bgc: rgba(127, 127, 127, 0.3),
+      fgc: rgb(0, 0, 0),
+    ),
+    "dark": (
+      bgc: rgba(60, 60, 63, 0.3),
+      fgc: rgb(255, 255, 255),
+    )
+  ),
   "pure": (
     "light": (
       bgc: #fff,
@@ -41,6 +54,36 @@ $colorMap: (
     "dark": (
       bgc: #000,
       fgc: #fff,
+    ),
+  ),
+  "input": (
+    "light": (
+      bgc: #fff,
+      fgc: $lightFgc,
+    ),
+    "dark": (
+      bgc: rgb(50, 50, 53),
+      fgc: $darkFgc,
+    )
+  ),
+  "error": (
+    "light": (
+      bgc: rgb(255, 225, 225),
+      fgc: $lightFgc,
+    ),
+    "dark": (
+      bgc: rgb(70, 48, 48),
+      fgc: $darkFgc,
+    ),
+  ),
+  "main": (
+    "light": (
+      bgc: #180614,
+      fgc: $darkFgc,
+    ),
+    "dark": (
+      bgc: #eaf4fc,
+      fgc: $lightFgc,
     ),
   ),
 );

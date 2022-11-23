@@ -135,7 +135,7 @@
     }
 
     @else {
-      box-shadow: 0 1px ($i * 0.2rem) 0 var(--bgc-shadow) !important;
+      box-shadow: 0 0.1rem ($i * 0.2rem) 0 var(--bgc-shadow) !important;
     }
   }
 
@@ -151,6 +151,14 @@
 }
 
 // radius
+
+.r-max {
+  border-radius: 100%;
+}
+
+.r-min {
+  border-radius: 9999px;
+}
 
 @for $i from 0 through 9 {
   $val: $i * 0.25rem !important;
