@@ -17,7 +17,7 @@ const Row = React.forwardRef<HTMLButtonElement, RowProps>((props, ref) => {
       data-v={props.$vAlign || "middle"}
       data-nowrap={props.$nowrap}
     />
-  )
+  );
 });
 
 export default Row;

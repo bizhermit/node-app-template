@@ -1,5 +1,5 @@
 import Popup from "@/components/elements/popup";
-import React, { FC, HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useReducer, useRef, useState } from "react";
+import React, { HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
 
 type TooltipProps = HTMLAttributes<HTMLDivElement> & {
   $showDelay?: number;
@@ -23,7 +23,7 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => 
       pageY: e.pageY + cursorMargin,
     };
   }, []);
-  
+
   const enter = (e: React.MouseEvent<HTMLDivElement>) => {
     mousePosition.current = {
       pageX: e.pageX + cursorMargin,

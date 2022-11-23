@@ -1,5 +1,5 @@
 import Style from "@/styles/components/elements/button.module.scss";
-import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
+import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren, isReactNode } from "@/utilities/attributes";
 import { useForm } from "@/components/elements/form";
 
@@ -15,18 +15,16 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
   const ref = useRef<HTMLButtonElement>(null!);
   useImperativeHandle($ref, () => ref.current);
-  
+
   const disabledRef = useRef(false);
-  const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
-    return disabledRef.current = action;
-  }, false);
+  const [disabled, setDisabled] = useState(false);
   const form = useForm();
 
   const lock = () => {
-    setDisabled(true);
+    setDisabled(disabledRef.current = true);
   };
   const unlock = () => {
-    setDisabled(false);
+    setDisabled(disabledRef.current = false);
   };
 
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {

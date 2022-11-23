@@ -44,6 +44,7 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
   return (
     <FormItemWrap
       {...props}
+      ref={ref}
       $$form={form}
     >
       <input

@@ -1,11 +1,12 @@
 import usePortalElement from "@/hooks/portal-element";
-import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useReducer, useRef } from "react";
+import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Style from "@/styles/components/elements/popup.module.scss";
 import { attributes, convertSizeNumToStr } from "@/utilities/attributes";
 
 const defaultAnimationDuration = 150;
 const defaultAnimationInterval = 10;
+
 type Position = {
   x: "inner" | "outer" | "center" | "inner-left" | "inner-right" | "outer-left" | "outer-right";
   y: "inner" | "outer" | "center" | "inner-top" | "inner-bottom" | "outer-top" | "outer-bottom";
@@ -35,9 +36,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   });
 
   const showedRef = useRef(false);
-  const [showed, setShowed] = useReducer((_: boolean, action: boolean) => {
-    return showedRef.current = action;
-  }, showedRef.current);
+  const [showed, setShowed] = useState(showedRef.current);
 
   const click = (e: React.MouseEvent) => {
     if (props.$preventClickEvent) {
@@ -205,7 +204,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           break;
         default:
           ref.current.style.removeProperty("width");
-          ref.current.style.removeProperty("height")
+          ref.current.style.removeProperty("height");
           break;
       }
       const func = () => {

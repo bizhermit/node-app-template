@@ -1,6 +1,6 @@
 import Tooltip from "@/components/elements/tooltip";
 import { attributes, inputAttributes } from "@/utilities/attributes";
-import React, { createContext, Dispatch, FC, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
+import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 import Style from "@/styles/components/elements/form-items/form-item.module.scss";
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null);
@@ -307,10 +307,10 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   };
 };
 
-export const FormItemWrap: FC<FormItemProps & {
+export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $$form: ReturnType<typeof useForm<any, any>>;
   children: ReactNode;
-}> = (props) => {
+}>((props, ref) => {
   const errorNode = (
     <div
       className={Style.error}
@@ -323,6 +323,7 @@ export const FormItemWrap: FC<FormItemProps & {
   return (
     <div
       {...inputAttributes(props, Style.wrap)}
+      ref={ref}
       data-editable={props.$$form.editable}
       data-error={Boolean(props.$$form.error)}
     >
@@ -347,4 +348,4 @@ export const FormItemWrap: FC<FormItemProps & {
       }
     </div>
   );
-};
+});
