@@ -1,4 +1,5 @@
 import Popup from "@/components/elements/popup";
+import { attributesWithoutChildren } from "@/utilities/attributes";
 import React, { HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
 
 type TooltipProps = HTMLAttributes<HTMLDivElement> & {
@@ -47,7 +48,7 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => 
   return (
     <>
       <div
-        {...props}
+        {...attributesWithoutChildren(props)}
         ref={ref}
         onMouseEnter={enter}
         onMouseLeave={leave}

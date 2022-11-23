@@ -51,13 +51,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
     if (props.$outline) {
       return `bgc-pure fgc-${color}_r bdc-${color}`;
     }
-    return `c-${color}`;
+    return `c-${color} bdc-${color}`;
   }, [props.$color, props.$outline]);
 
   return (
     <button
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
+      type={props.type ?? "button"}
       disabled={props.disabled || submitDisabled || disabled}
       onClick={click}
     >

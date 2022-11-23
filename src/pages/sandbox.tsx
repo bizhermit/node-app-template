@@ -38,13 +38,18 @@ const Page: NextPage = () => {
           />
           <Button
             type="submit"
-            $ignoreFormValidation
+            // $ignoreFormValidation
             // $round
-            $outline
+            // $outline
             $icon={<VscCloudDownload />}
             $iconPosition="right"
             // $fillLabel
             style={{ width: 200 }}
+          >
+            BUTTON
+          </Button>
+          <Button
+            $outline
           >
             BUTTON
           </Button>

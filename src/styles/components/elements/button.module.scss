@@ -10,13 +10,32 @@
   font-family: inherit;
   background: none;
   border: none;
+  border-radius: var(--radius);
 
   &:not(:disabled) {
     cursor: pointer;
+    
+    &:hover,
+    &:focus {
+      outline: solid;
+      outline-offset: 0rem;
+      animation: hover .8s infinite;
+
+      &:active {
+        animation: none;
+      }
+    }
   }
 
   &:disabled {
     opacity: 0.6;
+  }
+}
+
+@keyframes hover {
+  100% {
+    outline-color: transparent;
+    outline-offset: .6rem;
   }
 }
 
@@ -30,13 +49,10 @@
   border-radius: var(--radius);
   height: 100%;
   width: 100%;
+  border: 1px solid var(--bgc-border);
 
   &[data-round="true"] {
     border-radius: 9999px;
-  }
-
-  &[data-outline="true"] {
-    border: 1px solid var(--bgc-border);
   }
 
   >.label {
@@ -45,13 +61,13 @@
   }
 
   &[data-icon="left"] {
-    > .label {
+    >.label {
       padding-left: .5rem;
     }
   }
 
   &[data-icon="right"] {
-    > .label {
+    >.label {
       padding-right: .5rem;
     }
   }
