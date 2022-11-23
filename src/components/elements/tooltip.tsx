@@ -2,6 +2,7 @@ import Popup from "@/components/elements/popup";
 import React, { HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
 
 type TooltipProps = HTMLAttributes<HTMLDivElement> & {
+  $disabled?: boolean;
   $showDelay?: number;
   children: ReactNode | [ReactNode] | [ReactNode, ReactNode];
 };
@@ -25,6 +26,7 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => 
   }, []);
 
   const enter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (props.$disabled) return;
     mousePosition.current = {
       pageX: e.pageX + cursorMargin,
       pageY: e.pageY + cursorMargin,

@@ -333,7 +333,10 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
         </div>
       }
       {props.$$form.messageDisplayMode === "tooltip" &&
-        <Tooltip className={Style.main}>
+        <Tooltip
+          className={Style.main}
+          $disabled={!Boolean(props.$$form.error)}
+        >
           {props.children}
           {errorNode}
         </Tooltip>
