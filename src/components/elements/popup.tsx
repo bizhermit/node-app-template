@@ -215,7 +215,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           }
           o = Math.min(1, o + oStep);
           ref.current.style.opacity = String(o);
-          if (mref.current) ref.current.style.opacity = String(o);
+          if (mref.current) mref.current.style.opacity = String(o);
           switch (aDirection) {
             case "horizontal":
               w += wStep;

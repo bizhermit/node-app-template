@@ -15,8 +15,7 @@
   &:not(:disabled) {
     cursor: pointer;
     
-    &:hover,
-    &:focus {
+    &:hover {
       outline: solid;
       outline-offset: 0rem;
       animation: hover .8s infinite;
@@ -49,7 +48,7 @@
   border-radius: var(--radius);
   height: 100%;
   width: 100%;
-  border: 1px solid var(--bgc-border);
+  border: 2px solid var(--bgc-border);
 
   &[data-round="true"] {
     border-radius: 9999px;
@@ -75,7 +74,7 @@
 
 .label {
   box-sizing: border-box;
-  padding-top: var(--text-padding-top);
+  padding-top: var(--padding-top-text);
   text-overflow: ellipsis;
 
   &[data-fill="true"] {

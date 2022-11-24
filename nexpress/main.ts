@@ -11,7 +11,6 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 
 const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
-console.log(isDev, process.env.NODE_ENV)
 dotenv.config({
   debug: isDev,
 });
