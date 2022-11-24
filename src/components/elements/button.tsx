@@ -31,10 +31,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
   };
 
   const submitDisabled = props.$ignoreFormValidation !== true
-  && props.type === "submit"
-  && props.formMethod !== "delete"
-  && (form.hasError || form.disabled)
-  ;
+    && props.type === "submit"
+    && props.formMethod !== "delete"
+    && (form.hasError || form.disabled);
 
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (props.disabled || disabledRef.current || submitDisabled) return;

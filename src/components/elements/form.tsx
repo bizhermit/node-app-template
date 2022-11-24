@@ -2,6 +2,7 @@ import Tooltip from "@/components/elements/tooltip";
 import { attributes, inputAttributes } from "@/utilities/attributes";
 import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 import Style from "@/styles/components/elements/form-items/form-item.module.scss";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null);
 
@@ -335,7 +336,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
       {props.$$form.messageDisplayMode === "tooltip" &&
         <Tooltip
           className={Style.main}
-          $disabled={!Boolean(props.$$form.error)}
+          $disabled={StringUtils.isNotEmpty(props.$$form.error)}
         >
           {props.children}
           {errorNode}

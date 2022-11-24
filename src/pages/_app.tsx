@@ -7,6 +7,7 @@ import { LayoutProvider } from "@/components/providers/layout";
 import NavigationContainer from "@/components/elements/navigation-container";
 import Menu from "@/components/elements/menu";
 import { AiOutlineCodeSandbox } from "react-icons/ai";
+import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -15,9 +16,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       <IconContext.Provider value={{ size: "2rem" }}>
         <NavigationContainer
           className="w-100 h-100"
-          $navigationMode="minimize"
-          // $navigationPosition="top"
-          $footerVisible="always"
+        // $navigationMode="manual"
+        // $navigationPosition="top"
+        // $footerVisible="always"
         >
           <div>Header</div>
           {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
@@ -25,15 +26,20 @@ const App = ({ Component, pageProps }: AppProps) => {
             <span className="pt-t">Navigation</span>
             <Menu
               className="flex-1"
-              // $direction="horizontal"
+              $direction="horizontal"
               style={{ width: 200 }}
               $items={[{
+                key: "index",
+                label: "Index",
+                icon: <MdOutlinePowerSettingsNew />,
+                pathname: "/",
+              }, {
                 key: "sandbox",
                 label: "SandBox",
                 icon: <AiOutlineCodeSandbox />,
                 pathname: "/sandbox",
               },
-              ...ArrayUtils.generateArray(10, idx => {
+              ...ArrayUtils.generateArray(5, idx => {
                 return {
                   key: `item-${idx}`,
                   label: `Item-${idx}`,
@@ -42,13 +48,13 @@ const App = ({ Component, pageProps }: AppProps) => {
                     return {
                       key: `item-${idx}-${cidx}`,
                       label: `Item-${idx}-${cidx}`,
+                      icon: <span>{cidx}</span>,
                     };
                   }),
                 };
               })
               ]}
             />
-          {/* </div> */}
           </>
           <Component {...pageProps} />
           <div>foot</div>

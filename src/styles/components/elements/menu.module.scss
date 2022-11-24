@@ -105,6 +105,12 @@
 }
 
 nav {
+  .content {
+    &[data-selected="true"] {
+      background: var(--fgc-main);
+      color: var(--bgc-main);
+    }
+  }
 
   &[data-pos="left"],
   &[data-pos="right"] {
@@ -119,6 +125,8 @@ nav {
   &[data-pos="bottom"] {
     .content {
       padding-left: 0 !important;
+      background: var(--bgc-main);
+      color: var(--fgc-main);
     }
 
     >.wrap {
@@ -133,8 +141,10 @@ nav {
     }
 
     .root {
-      bottom: 0;
-      align-items: flex-end;
+      &[data-direction="horizontal"] {
+        bottom: 0;
+        align-items: flex-end;
+      }
 
       >.item {
         bottom: 0;

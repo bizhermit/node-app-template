@@ -9,7 +9,7 @@ const Page: NextPage = () => {
       <div className="p-1">index</div>
       <Link href="/sandbox">sandbox</Link>
       {ArrayUtils.generateArray(100, idx => {
-        return <Row key={idx}>{idx}</Row>
+        return <Row key={idx}>{idx}</Row>;
       })}
     </div>
   );

@@ -23,7 +23,6 @@ const NavigationContext = createContext<NavigationContextProps>({
   navigationMode: "visible",
 });
 
-
 export const useNavigation = () => {
   return useContext(NavigationContext);
 };
@@ -44,7 +43,6 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
   const navRef = useRef<HTMLElement>(null!);
   const maskRef = useRef<HTMLDivElement>(null!);
   const [showedNav, setShowedNav] = useState(false);
-  const [showedMask, setShowedMask] = useState(false);
   const [navMode, setNavMode] = useState<NavigationMode>(() => {
     if (props.$navigationMode === "auto") return "visible";
     return props.$navigationMode ?? "visible";
@@ -63,14 +61,15 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
       nav: hasHeader ? 1 : 0,
       main: hasHeader ? 2 : 1,
       footer: hasFooter ? 3 : undefined,
-    }
+    };
   }, []);
 
   const click = (e: React.MouseEvent) => {
-    const elem = e.target as HTMLElement;
-    console.log(elem);
-    const tagName = elem.tagName;
-    if (tagName === "UL") toggleNav(false);
+    if (navPosition === "top" || navPosition === "bottom") {
+      const elem = e.target as HTMLElement;
+      const tagName = elem.tagName;
+      if (tagName === "UL") toggleNav(false);
+    }
   };
 
   const mouseEnter = () => {
@@ -147,7 +146,10 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
         navigationPosition: navPosition,
       }}
     >
-      <div {...attributesWithoutChildren(props, Style.wrap)}>
+      <div
+        {...attributesWithoutChildren(props, Style.wrap)}
+        ref={ref}
+      >
         {childCtx.header != null &&
           <HeaderTag
             className={Style.header}
@@ -192,8 +194,6 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
             <div
               ref={maskRef}
               className={Style.mask}
-              data-navshow={showedNav}
-              data-show={showedMask}
               onClick={() => toggleNav(false)}
             />
           }

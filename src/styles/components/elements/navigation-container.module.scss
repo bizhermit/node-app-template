@@ -44,9 +44,18 @@
 }
 
 .header {
+  min-height: var(--size);
+  background: var(--bgc-main);
+  color: var(--fgc-main);
+
   &[data-pos="right"] {
     flex-direction: row-reverse;
   }
+}
+
+.footer {
+  background: var(--bgc-dull);
+  color: var(--fgc-dull);
 }
 
 .body {
@@ -92,12 +101,12 @@
   position: relative;
   display: flex;
   flex-wrap: nowrap;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: stretch;
   flex: none;
-  background: var(--bgc-base);
-  color: var(--fgc-base);
   z-index: 2;
+  background: var(--bgc-main);
+  color: var(--fgc-main);
 
   &[data-pos="left"],
   &[data-pos="right"] {
