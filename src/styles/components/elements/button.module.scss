@@ -15,8 +15,7 @@
   &:not(:disabled) {
     cursor: pointer;
     
-    &:hover,
-    &:focus {
+    &:hover {
       outline: solid;
       outline-offset: 0rem;
       animation: hover .8s infinite;
