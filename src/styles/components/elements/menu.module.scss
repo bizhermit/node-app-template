@@ -1,0 +1,27 @@
+.group {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+
+  &.root {
+    overflow: auto;
+  }
+}
+
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.item {
+  box-sizing: border-box;
+}
+
+.children {
+  box-sizing: border-box;
+}

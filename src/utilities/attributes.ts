@@ -30,8 +30,8 @@ export const isReactNode = (node: ReactNode) => {
   return !(t === "string" || t === "number" || t === "boolean");
 };
 
-export const convertSizeNumToStr = (value?: string | number | null) => {
-  if (value == null) return "unset";
+export const convertSizeNumToStr = (value?: string | number | null, nullValue?: string) => {
+  if (value == null) return nullValue ?? "unset";
   if (typeof value === "string") return value;
   return `${value / 10}rem`;
 };
