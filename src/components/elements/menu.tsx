@@ -1,6 +1,10 @@
-import React, { CSSProperties, FC, HTMLAttributes, Key, ReactNode } from "react";
+import React, { CSSProperties, FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import Style from "@/styles/components/elements/menu.module.scss";
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren, isReactNode } from "@/utilities/attributes";
+import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
+import useAccordionEffect from "@/hooks/accordion";
+import { useRouter } from "next/router";
+import { useNavigation } from "@/components/elements/navigation-container";
 
 export type MenuItemProps = {
   key?: Key;
@@ -15,33 +19,36 @@ export type MenuItemProps = {
 
 type Direction = "vertical" | "horizontal";
 
-export type MenuProps = HTMLAttributes<HTMLUListElement> & {
+export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   $items?: Array<MenuItemProps>;
   $direction?: Direction;
 };
 
-const Menu = React.forwardRef<HTMLUListElement, MenuProps>((props, ref) => {
+const Menu = React.forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
   return (
-    <MenuGroup
-      {...props}
-      className={`${Style.root}${props.className ? ` ${props.className}` : ""}`}
-      $direction={props.$direction || "vertical"}
+    <div
+      {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
-    />
+    >
+      <MenuGroup
+        className={Style.root}
+        $items={props.$items}
+        $direction={props.$direction || "vertical"}
+      />
+    </div>
   );
 });
 
-const MenuGroup = React.forwardRef<HTMLUListElement, MenuProps & {
+const MenuGroup: FC<MenuProps & {
   $items?: Array<MenuItemProps>;
   $nestLevel?: number;
   $direction?: Direction;
   $toggleParent?: (open?: boolean) => void;
-}>((props, ref) => {
+}> = (props) => {
   if (props.$items == null || props.$items.length === 0) return <></>;
   return (
     <ul
-      {...attributesWithoutChildren(props, Style.group)}
-      ref={ref}
+      {...attributesWithoutChildren(props, Style.list)}
       data-direction={props.$direction}
     >
       {props.$items.map((item, index) =>
@@ -54,27 +61,82 @@ const MenuGroup = React.forwardRef<HTMLUListElement, MenuProps & {
       )}
     </ul>
   );
-});
+};
 
 const MenuItem: FC<MenuItemProps & {
   nestLevel: number;
   toggleParent?: (open?: boolean) => void;
 }> = (props) => {
+  const router = useRouter();
+  const nav = useNavigation();
+  const [showItems, setShowItems] = useState(false);
+  const ref = useRef<HTMLDivElement>(null!);
 
-  const toggle = () => {
-
+  const click = () => {
+    setShowItems(c => !c);
+    if (props.pathname) nav.toggle(false);
+    props.onClick?.(props);
   };
 
+  const keydown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      click();
+    }
+  };
+
+  const toggle = useCallback((open?: boolean) => {
+    if (open == null) {
+      setShowItems(c => !c);
+      return;
+    }
+    setShowItems(open);
+    if (open) props.toggleParent?.(open);
+  }, []);
+
+  useEffect(() => {
+    if (props.nestLevel > 0 && router.pathname === props.pathname) {
+      props.toggleParent?.(true);
+    }
+  }, []);
+
+  useAccordionEffect({
+    elementRef: ref,
+    open: showItems,
+  });
+
+  const selectable = Boolean(router.pathname) || (props.items?.length ?? 0) > 0 || props.onClick != null;
+
   return (
-    <li className={Style.wrap}>
+    <li className={Style.item}>
       <div
-        className={`${Style.item}${props.className ? ` ${props.className}` : ""}`}
-        style={props.style}
+        className={`${Style.content}${props.className ? ` ${props.className}` : ""}`}
+        style={{ paddingLeft: `calc(1.5rem * ${props.nestLevel})`, ...props.style }}
+        onClick={click}
+        onKeyDown={keydown}
+        data-selectable={selectable}
+        data-nest={props.nestLevel ?? 0}
+        data-selected={router.pathname === props.pathname}
+        tabIndex={selectable ? 0 : undefined}
       >
-        <div className={Style.icon}></div>
-        <span>{props.label}</span>
+        {props.icon &&
+          <div className={Style.icon}>
+            {props.icon}
+          </div>
+        }
+        <div className={Style.node}>
+          {isReactNode(props.label) ? props.label :
+            <span className={Style.label}>{props.label}</span>
+          }
+        </div>
+        {props.items == null || props.items.length === 0 ? <></> :
+          <div className={Style.toggle}>
+            {showItems ? <VscChromeMinimize /> : <VscAdd />}
+          </div>
+        }
       </div>
       <div
+        ref={ref}
         className={Style.children}
       >
         <MenuGroup

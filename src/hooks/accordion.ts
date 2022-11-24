@@ -36,20 +36,25 @@ const useAccordionEffect = (props: Props, deps: Array<any> = []) => {
     const aInterval = props.animationInterval ?? defaultAnimationInterval;
     const aDirection = props.direction || "vertical";
     const defaultMin = "0";
-    const changeOpacity = props.changeOpacity == null ?
-      props.minVisible !== true :
-      props.changeOpacity !== false;
+    const changeOpacity = props.changeOpacity === true;
 
     if (props.open) {
       const end = () => {
         if (!props.elementRef.current) return;
+        props.elementRef.current.style.removeProperty("overflow");
+        props.elementRef.current.style.removeProperty("opacity");
         if (aDirection === "horizontal") {
           props.elementRef.current.style.width = convertSizeNumToStr(props.max);
+          props.elementRef.current.style.overflowX = "hidden";
         } else {
           props.elementRef.current.style.height = convertSizeNumToStr(props.max);
+          props.elementRef.current.style.overflowY = "hidden";
         }
-        if (alive) props.elementRef.current.style.removeProperty("overflow");
-        props.elementRef.current.style.removeProperty("opacity");
+        setTimeout(() => {
+          if (!props.elementRef.current) return;
+          props.elementRef.current.style.removeProperty("overflow-x");
+          props.elementRef.current.style.removeProperty("overflow-y");
+        }, aInterval * 2);
         props.onToggled?.(props.open);
       };
       props.onToggle?.(props.open);
@@ -77,34 +82,34 @@ const useAccordionEffect = (props: Props, deps: Array<any> = []) => {
         props.elementRef.current.style.height = convertSizeNumToStr(props.min, defaultMin);
       }
 
-      let s = aDirection === "horizontal" ?
+      let size = aDirection === "horizontal" ?
         props.elementRef.current.offsetWidth :
         props.elementRef.current.offsetHeight;
-      let o = 0;
+      let opacity = 0;
       const func = () => {
         setTimeout(() => {
           if (!alive) {
             end();
             return;
           }
-          s += step;
-          if (s > max) {
+          size += step;
+          if (size > max) {
             end();
             return;
           }
           if (aDirection === "horizontal") {
-            props.elementRef.current.style.width = `${s}px`;
+            props.elementRef.current.style.width = `${size}px`;
           } else {
-            props.elementRef.current.style.height = `${s}px`;
+            props.elementRef.current.style.height = `${size}px`;
           }
-          o = Math.min(1, o + oStep);
+          opacity = Math.min(1, opacity + oStep);
           if (changeOpacity) {
-            props.elementRef.current.style.opacity = String(o);
+            props.elementRef.current.style.opacity = String(opacity);
           }
           props.onToggling?.({
             open: props.open,
-            size: s,
-            opacity: o,
+            size,
+            opacity,
           });
           func();
         }, aInterval);
@@ -116,10 +121,10 @@ const useAccordionEffect = (props: Props, deps: Array<any> = []) => {
         if (props.minVisible !== true) {
           props.elementRef.current.style.display = "none";
           props.elementRef.current.style.removeProperty("visibility");
-          props.elementRef.current.style.overflow = "hidden";
-          if (changeOpacity) {
-            props.elementRef.current.style.opacity = "0";
-          }
+        }
+        props.elementRef.current.style.overflow = "hidden";
+        if (changeOpacity) {
+          props.elementRef.current.style.opacity = "0";
         }
         if (aDirection === "horizontal") {
           props.elementRef.current.style.width = convertSizeNumToStr(props.min, defaultMin);
@@ -160,33 +165,33 @@ const useAccordionEffect = (props: Props, deps: Array<any> = []) => {
         props.elementRef.current.style.height = current;
       }
 
-      let s = max, o = 1;
+      let size = max, opacity = 1;
       const func = () => {
         setTimeout(() => {
           if (!alive) {
             end();
             return;
           }
-          s -= step;
-          if (s < min) {
+          size -= step;
+          if (size < min) {
             end();
             return;
           }
           if (aDirection === "horizontal") {
-            props.elementRef.current.style.width = `${s}px`;
+            props.elementRef.current.style.width = `${size}px`;
           } else {
-            props.elementRef.current.style.height = `${s}px`;
+            props.elementRef.current.style.height = `${size}px`;
           }
           if (count++ > opacityStartCount) {
-            o = Math.max(0, o - oStep);
+            opacity = Math.max(0, opacity - oStep);
           }
           if (changeOpacity) {
-            props.elementRef.current.style.opacity = String(o);
+            props.elementRef.current.style.opacity = String(opacity);
           }
           props.onToggling?.({
             open: props.open,
-            size: s,
-            opacity: o,
+            size,
+            opacity,
           });
           func();
         }, aInterval);

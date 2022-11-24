@@ -13,7 +13,7 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: stretch;
-  align-items: stretch;
+  align-items: center;
   overflow: hidden;
   flex: none;
   z-index: 1;
@@ -26,7 +26,7 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: stretch;
-    align-items: stretch;
+    align-items: center;
     overflow: hidden;
     flex: 1;
   }
@@ -38,6 +38,7 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    user-select: none;
     height: var(--size);
     width: var(--size);
   }
@@ -58,8 +59,8 @@
   flex-wrap: nowrap;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
-  z-index: 0;
+  overflow: visible;
+  z-index: 2;
   transition: padding 0.2s;
 
   &[data-pos="left"] {
@@ -101,8 +102,9 @@
   &[data-pos="left"],
   &[data-pos="right"] {
     flex-direction: column;
-    overflow: auto;
     height: 100%;
+    max-width: 100%;
+    overflow: auto;
 
     &[data-mode="minimize"],
     &[data-mode="manual"] {
@@ -122,10 +124,24 @@
   &[data-pos="top"],
   &[data-pos="bottom"] {
     flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    height: var(--size);
+    width: 100%;
+    max-height: 100%;
     overflow: visible;
+
+    &[data-mode="minimize"],
+    &[data-mode="manual"] {
+      position: absolute;
+      left: 0;
+    }
+  }
+
+  &[data-pos="top"] {
+    top: 0;
+  }
+
+  &[data-pos="bottom"] {
+    bottom: 0;
+    align-items: flex-end;
   }
 }
 
@@ -146,10 +162,9 @@
   flex-flow: column nowrap;
   justify-content: stretch;
   align-items: stretch;
-  flex: 1 0 auto;
+  flex: 1 1 0;
   overflow: auto;
   z-index: 0;
-  background: var(--bgc-pure);
 }
 
 .main {
@@ -157,7 +172,6 @@
   position: relative;
   overflow: auto;
   z-index: 0;
-  flex: 1 0 auto;
   min-height: 0;
   min-width: 0;
 

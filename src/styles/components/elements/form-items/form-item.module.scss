@@ -91,7 +91,7 @@
 
   &[data-mode="tooltip"] {
     position: absolute;
-    padding: calc(.5rem + var(--text-padding-top)) 1.5rem .5rem 1.5rem;
+    padding: calc(.5rem + var(--padding-top-text)) 1.5rem .5rem 1.5rem;
     white-space: nowrap;
     background: var(--bgc-error);
     color: var(--fgc-error);
@@ -103,7 +103,7 @@
 
   &[data-mode="bottom"] {
     position: relative;
-    padding: var(--text-padding-top) .5rem 0 .5rem;
+    padding: var(--padding-top-text) .5rem 0 .5rem;
     overflow-wrap: break-word;
     max-width: 100%;
   }

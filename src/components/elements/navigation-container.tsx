@@ -1,5 +1,5 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
-import React, { createContext, HTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Style from "@/styles/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/utilities/attributes";
@@ -22,6 +22,11 @@ const NavigationContext = createContext<NavigationContextProps>({
   navigationPosition: "left",
   navigationMode: "visible",
 });
+
+
+export const useNavigation = () => {
+  return useContext(NavigationContext);
+};
 
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   $navigationPosition?: NavigationPosition;
@@ -61,6 +66,13 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     }
   }, []);
 
+  const click = (e: React.MouseEvent) => {
+    const elem = e.target as HTMLElement;
+    console.log(elem);
+    const tagName = elem.tagName;
+    if (tagName === "UL") toggleNav(false);
+  };
+
   const mouseEnter = () => {
     if (navMode !== "minimize") return;
     setShowedNav(true);
@@ -83,7 +95,6 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     elementRef: navRef,
     open: navMode === "visible" || showedNav,
     direction: (navPosition === "top" || navPosition === "bottom") ? "vertical" : "horizontal",
-    changeOpacity: false,
     minVisible: navMode === "minimize",
     min: navMode === "manual" ? undefined :
       typeof document === "undefined" ? 0 :
@@ -108,6 +119,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
 
   useEffect(() => {
     if (props.$navigationMode && props.$navigationMode !== "auto") return;
+    if (navPosition === "top" || navPosition === "bottom") return;
     if (layout.mobile) {
       setNavMode("manual");
       setShowedNav(false);
@@ -170,6 +182,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
             data-mode={navMode}
             data-pos={navPosition}
             data-show={showedNav}
+            onClick={click}
             onMouseEnter={mouseEnter}
             onMouseLeave={mouseLeave}
           >

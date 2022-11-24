@@ -15,23 +15,23 @@ const App = ({ Component, pageProps }: AppProps) => {
       <IconContext.Provider value={{ size: "2rem" }}>
         <NavigationContainer
           className="w-100 h-100"
-          $navigationMode="auto"
-          $navigationPosition="right"
+          $navigationMode="manual"
+          $navigationPosition="top"
           $footerVisible="always"
         >
-          <div>head</div>
+          <div>Header</div>
           {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
           <>
-            <span>nav</span>
+            <span className="pt-t">Navigation</span>
             <Menu
-              style={{ width: "20rem" }}
-              // $direction="column"
+              className="flex-1"
+              $direction="horizontal"
+              style={{ width: 200 }}
               $items={[{
                 key: "sandbox",
                 label: "SandBox",
                 icon: <AiOutlineCodeSandbox />,
                 pathname: "/sandbox",
-                className: "bgc-pure"
               },
               ...ArrayUtils.generateArray(10, idx => {
                 return {

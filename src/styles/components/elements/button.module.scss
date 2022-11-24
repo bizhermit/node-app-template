@@ -75,7 +75,7 @@
 
 .label {
   box-sizing: border-box;
-  padding-top: var(--text-padding-top);
+  padding-top: var(--padding-top-text);
   text-overflow: ellipsis;
 
   &[data-fill="true"] {
