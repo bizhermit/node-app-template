@@ -1,11 +1,11 @@
 import { NextPage } from "next";
-import Link from "next/link";
 import Button from "@/components/elements/button";
 import { VscCloudDownload } from "react-icons/vsc";
 import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
 import { useState } from "react";
 import Row from "@/components/templates/row";
+import NextLink from "@/components/elements/link";
 
 const Page: NextPage = () => {
   const [bind] = useState({});
@@ -13,7 +13,7 @@ const Page: NextPage = () => {
   return (
     <div className="flex-box">
       <span>sandbox</span>
-      <Link href="/">index</Link>
+      <NextLink href="/">index</NextLink>
       <Form
         // $disabled
         $bind={bind}

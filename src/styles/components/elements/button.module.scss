@@ -49,7 +49,7 @@
   border-radius: var(--radius);
   height: 100%;
   width: 100%;
-  border: 1px solid var(--bgc-border);
+  border: 2px solid var(--bgc-border);
 
   &[data-round="true"] {
     border-radius: 9999px;
