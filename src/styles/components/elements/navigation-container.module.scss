@@ -17,7 +17,6 @@
   overflow: hidden;
   flex: none;
   z-index: 1;
-  background: silver;
   padding: 0;
   margin: 0;
 
@@ -96,8 +95,9 @@
   justify-content: start;
   align-items: stretch;
   flex: none;
+  background: var(--bgc-base);
+  color: var(--fgc-base);
   z-index: 2;
-  background-color: blue;
 
   &[data-pos="left"],
   &[data-pos="right"] {

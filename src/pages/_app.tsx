@@ -15,8 +15,8 @@ const App = ({ Component, pageProps }: AppProps) => {
       <IconContext.Provider value={{ size: "2rem" }}>
         <NavigationContainer
           className="w-100 h-100"
-          $navigationMode="manual"
-          $navigationPosition="top"
+          $navigationMode="minimize"
+          // $navigationPosition="top"
           $footerVisible="always"
         >
           <div>Header</div>
@@ -25,7 +25,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <span className="pt-t">Navigation</span>
             <Menu
               className="flex-1"
-              $direction="horizontal"
+              // $direction="horizontal"
               style={{ width: 200 }}
               $items={[{
                 key: "sandbox",
@@ -37,6 +37,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                 return {
                   key: `item-${idx}`,
                   label: `Item-${idx}`,
+                  icon: <span>{idx}</span>,
                   items: ArrayUtils.generateArray(10, cidx => {
                     return {
                       key: `item-${idx}-${cidx}`,
