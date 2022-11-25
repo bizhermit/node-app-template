@@ -4,7 +4,9 @@ import { NextPage } from "next";
 import { CSSProperties } from "react";
 
 const colors: Array<Color> = [
-  "base"
+  "base",
+  "pure",
+  "dull",
 ];
 const style: CSSProperties = {
   width: 200
@@ -15,9 +17,10 @@ const Page: NextPage = () => {
     <div className="flex-box">
       {colors.map(color => {
         return (
-          <Row key={color} className="p-1 gap-1">
+          <Row key={color} className="pt-1 px-1 gap-1">
             <Button $color={color} style={style}>{color}</Button>
             <Button $color={color} $outline style={style}>{color}</Button>
+            <span className={`pt-t fgc-${color}`}>{color}</span>
           </Row>
         );
       })}

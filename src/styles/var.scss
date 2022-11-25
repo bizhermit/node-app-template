@@ -2,18 +2,20 @@ $base: 1rem;
 $size: 3.6rem;
 $fontSize: 1.6rem;
 
+$lightBgc: rgb(244, 244, 251);
 $lightFgc: rgb(22, 22, 22);
+$darkBgc: rgb(57, 57, 59);
 $darkFgc: rgb(244, 244, 244);
 
 $colorMap: (
   "base": (
     "light": (
-      bgc: rgb(244, 244, 251),
-      fgc: rgb(22, 22, 22),
+      bgc: $lightBgc,
+      fgc: $lightFgc,
     ),
     "dark": (
-      bgc: rgb(57, 57, 59),
-      fgc: rgb(244, 244, 244),
+      bgc: $darkBgc,
+      fgc: $darkFgc,
     ),
   ),
   "pure": (
@@ -24,6 +26,16 @@ $colorMap: (
     "dark": (
       bgc: #000,
       fgc: #fff,
+    ),
+  ),
+  "dull": (
+    "light": (
+      bgc: rgb(250, 250, 255),
+      fgc: rgb(100, 100, 100),
+    ),
+    "dark": (
+      bgc: rgb(62, 62, 65),
+      fgc: rgb(200, 200, 200),
     ),
   ),
   "border": (
