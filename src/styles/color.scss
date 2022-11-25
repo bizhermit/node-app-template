@@ -2,27 +2,38 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    @each $key, $value in var.$colorMap {
+
+    @each $key,
+    $value in var.$colorMap {
       $val: map-get($value, light);
       --bgc-#{$key}: #{$val};
       $invert: invert(darken($val, 30%));
-      @if lightness($invert) > 50 {
+
+      @if lightness($invert)>50 {
         --fgc-#{$key}: #{lighten($invert, 100%)};
-      } @else {
+      }
+
+      @else {
         --fgc-#{$key}: #{darken($invert, 100%)};
       }
     }
   }
 }
+
 @media (prefers-color-scheme: dark) {
   :root {
-    @each $key, $value in var.$colorMap {
+
+    @each $key,
+    $value in var.$colorMap {
       $val: map-get($value, dark);
       --bgc-#{$key}: #{$val};
       $invert: invert(darken($val, 30%));
-      @if lightness($invert) > 50 {
+
+      @if lightness($invert)>50 {
         --fgc-#{$key}: #{lighten($invert, 100%)};
-      } @else {
+      }
+
+      @else {
         --fgc-#{$key}: #{darken($invert, 100%)};
       }
     }
@@ -33,7 +44,8 @@
   }
 }
 
-@each $key, $value in var.$colorMap {
+@each $key,
+$value in var.$colorMap {
   .c-#{$key} {
     background: var(--bgc-#{$key}) !important;
     color: var(--fgc-#{$key}) !important;
