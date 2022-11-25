@@ -107,8 +107,8 @@
 nav {
   .content {
     &[data-selected="true"] {
-      background: var(--fgc-main);
-      color: var(--bgc-main);
+      background: var(--bgc-base);
+      color: var(--fgc-base);
     }
   }
 

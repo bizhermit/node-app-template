@@ -8,7 +8,7 @@ import NavigationContainer from "@/components/elements/navigation-container";
 import Menu from "@/components/elements/menu";
 import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import { TbComponents } from "react-icons/tb";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -26,34 +26,29 @@ const App = ({ Component, pageProps }: AppProps) => {
             <span className="pt-t">Navigation</span>
             <Menu
               className="flex-1"
-              $direction="horizontal"
+              // $direction="horizontal"
               style={{ width: 200 }}
               $items={[{
                 key: "index",
-                label: "Index",
                 icon: <MdOutlinePowerSettingsNew />,
+                label: "Index",
                 pathname: "/",
               }, {
                 key: "sandbox",
-                label: "SandBox",
                 icon: <AiOutlineCodeSandbox />,
-                pathname: "/sandbox",
-              },
-              ...ArrayUtils.generateArray(5, idx => {
-                return {
-                  key: `item-${idx}`,
-                  label: `Item-${idx}`,
-                  icon: <span>{idx}</span>,
-                  items: ArrayUtils.generateArray(10, cidx => {
-                    return {
-                      key: `item-${idx}-${cidx}`,
-                      label: `Item-${idx}-${cidx}`,
-                      icon: <span>{cidx}</span>,
-                    };
-                  }),
-                };
-              })
-              ]}
+                label: "SandBox",
+                items: [{
+                  key: "elements",
+                  icon: <TbComponents />,
+                  label: "Elements",
+                  items: [{
+                    key: "button",
+                    label: "Button",
+                    icon: "B",
+                    pathname: "/sandbox/elements/button"
+                  }]
+                }]
+              }]}
             />
           </>
           <Component {...pageProps} />

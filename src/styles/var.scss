@@ -16,6 +16,16 @@ $colorMap: (
       fgc: rgb(244, 244, 244),
     ),
   ),
+  "pure": (
+    "light": (
+      bgc: #fff,
+      fgc: #000,
+    ),
+    "dark": (
+      bgc: #000,
+      fgc: #fff,
+    ),
+  ),
   "border": (
     "light": (
       bgc: rgb(144, 144, 153),
@@ -46,16 +56,6 @@ $colorMap: (
       fgc: rgb(255, 255, 255),
     )
   ),
-  "pure": (
-    "light": (
-      bgc: #fff,
-      fgc: #000,
-    ),
-    "dark": (
-      bgc: #000,
-      fgc: #fff,
-    ),
-  ),
   "input": (
     "light": (
       bgc: #fff,
@@ -78,12 +78,13 @@ $colorMap: (
   ),
   "main": (
     "light": (
-      bgc: #343a40,
-      fgc: $darkFgc,
+      bgc: rgb(211, 211, 214),
+      fgc: $lightFgc,
     ),
     "dark": (
-      bgc: #1b2328,
+      bgc: rgb(35, 35, 38),
       fgc: $darkFgc,
     ),
   ),
+  
 );
