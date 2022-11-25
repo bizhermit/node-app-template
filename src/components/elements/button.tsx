@@ -46,11 +46,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
   };
 
   const colorClassName = useMemo(() => {
+    const color = props.$color || "border";
     if (props.$outline) {
-      if (!props.$color) return "";
-      return `fgc-${props.$color}_r bdc-${props.$color}`;
+      if (props.$color == null) return "";
+      return `fgc-${color} bdc-${color}`;
     }
-    const color = props.$color || "main";
     return `c-${color} bdc-${color}`;
   }, [props.$color, props.$outline]);
 

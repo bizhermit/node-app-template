@@ -23,7 +23,6 @@ const App = ({ Component, pageProps }: AppProps) => {
           <div>Header</div>
           {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
           <>
-            <span className="pt-t">Navigation</span>
             <Menu
               className="flex-1"
               // $direction="horizontal"

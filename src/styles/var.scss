@@ -2,101 +2,69 @@ $base: 1rem;
 $size: 3.6rem;
 $fontSize: 1.6rem;
 
-$lightBgc: rgb(244, 244, 251);
-$lightFgc: rgb(22, 22, 22);
-$darkBgc: rgb(57, 57, 59);
-$darkFgc: rgb(244, 244, 244);
-
 $colorMap: (
   "base": (
-    "light": (
-      bgc: $lightBgc,
-      fgc: $lightFgc,
-    ),
-    "dark": (
-      bgc: $darkBgc,
-      fgc: $darkFgc,
-    ),
+    "light": rgb(244, 244, 251),
+    "dark": rgb(57, 57, 59),
   ),
   "pure": (
-    "light": (
-      bgc: #fff,
-      fgc: #000,
-    ),
-    "dark": (
-      bgc: #000,
-      fgc: #fff,
-    ),
+    "light": #fff,
+    "dark": #000,
   ),
   "dull": (
-    "light": (
-      bgc: rgb(250, 250, 255),
-      fgc: rgb(100, 100, 100),
-    ),
-    "dark": (
-      bgc: rgb(62, 62, 65),
-      fgc: rgb(200, 200, 200),
-    ),
+    "light": rgb(250, 250, 255),
+    "dark": rgb(62, 62, 65),
   ),
   "border": (
-    "light": (
-      bgc: rgb(144, 144, 153),
-      fgc: rgb(244, 244, 251),
-    ),
-    "dark": (
-      bgc: rgb(128, 128, 132),
-      fgc: rgb(57, 57, 59)
-    ),
+    "light": rgb(144, 144, 153),
+    "dark": rgb(128, 128, 132),
   ),
   "shadow": (
-    "light": (
-      bgc: rgba(0, 0, 0, 0.4),
-      fgc: rgba(224, 224, 229, 0.2),
-    ),
-    "dark": (
-      bgc: rgba(0, 0, 0, 0.6),
-      fgc: rgba(80, 80, 80, 0.5),
-    ),
+    "light": rgba(0, 0, 0, 0.4),
+    "dark": rgba(0, 0, 0, 0.6),
   ),
   "mask": (
-    "light": (
-      bgc: rgba(127, 127, 127, 0.3),
-      fgc: rgb(0, 0, 0),
-    ),
-    "dark": (
-      bgc: rgba(60, 60, 63, 0.3),
-      fgc: rgb(255, 255, 255),
-    )
+    "light": rgba(127, 127, 127, 0.3),
+    "dark": rgba(60, 60, 63, 0.3),
   ),
   "input": (
-    "light": (
-      bgc: #fff,
-      fgc: $lightFgc,
-    ),
-    "dark": (
-      bgc: rgb(50, 50, 53),
-      fgc: $darkFgc,
-    )
+    "light": #fff,
+    "dark": rgb(50, 50, 53),
   ),
   "error": (
-    "light": (
-      bgc: rgb(255, 225, 225),
-      fgc: $lightFgc,
-    ),
-    "dark": (
-      bgc: rgb(70, 48, 48),
-      fgc: $darkFgc,
-    ),
+    "light": rgb(255, 225, 225),
+    "dark": rgb(70, 48, 48),
   ),
   "main": (
-    "light": (
-      bgc: rgb(211, 211, 214),
-      fgc: $lightFgc,
-    ),
-    "dark": (
-      bgc: rgb(35, 35, 38),
-      fgc: $darkFgc,
-    ),
+    "light": rgb(211, 211, 214),
+    "dark": rgb(35, 35, 38),
   ),
-  
+  "primary": (
+    "light": rgb(64, 140, 64),
+    "dark": rgb(40, 142, 40),
+  ),
+  "secondary": (
+    "light": rgb(55, 95, 185),
+    "dark": rgb(59, 105, 195),
+  ),
+  "tertiary": (
+    "light": rgb(91, 130, 145),
+    "dark": rgb(78, 111, 131),
+  ),
+  "warning": (
+    "light": rgb(208, 176, 0),
+    "dark": rgb(180, 180, 0),
+  ),
+  "danger": (
+    "light": rgb(208, 55, 55),
+    "dark": rgb(200, 63, 61),
+  ),
+  "cool": (
+    "light": rgb(18, 200, 220),
+    "dark": rgb(15, 190, 210),
+  ),
+  "pretty": (
+    "light": rgb(250, 151, 220),
+    "dark": rgb(230, 131, 200),
+  ),
 );
