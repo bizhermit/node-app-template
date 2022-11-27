@@ -4,6 +4,7 @@ import { attributesWithoutChildren, isReactNode } from "@/utilities/attributes";
 import { useForm } from "@/components/elements/form";
 
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
+  $size?: Size;
   $color?: Color;
   $round?: boolean;
   $outline?: boolean;
@@ -61,6 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
       type={props.type ?? "button"}
       disabled={props.disabled || submitDisabled || disabled}
       onClick={click}
+      data-size={props.$size || "m"}
     >
       <div
         className={`${Style.main} ${colorClassName}`}
