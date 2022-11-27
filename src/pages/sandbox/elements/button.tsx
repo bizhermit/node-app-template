@@ -1,4 +1,6 @@
 import Button from "@/components/elements/button";
+import Form from "@/components/elements/form";
+import TextBox from "@/components/elements/form-items/text-box";
 import Row from "@/components/templates/row";
 import { NextPage } from "next";
 import { CSSProperties } from "react";
@@ -33,17 +35,56 @@ const style: CSSProperties = {
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box">
+    <div className="flex-box p-1">
+      <h1>Button</h1>
       <section>
-        <caption>Size</caption>
-        <Row className="gap-2 p-1">
+        <h2>click event</h2>
+        <Row className="gap-1">
+          <Button
+            $onClick={(_, e) => {
+              console.log("click sync", e);
+            }}
+          >
+            click sync
+          </Button>
+          <Button
+            $onClick={async (unlock, e) => {
+              console.log("click async", e);
+              setTimeout(() => {
+                unlock();
+              }, 2000);
+            }}
+          >
+            click async
+          </Button>
+        </Row>
+      </section>
+      <section>
+        <h2>Form Button</h2>
+        <Form
+          onSubmit={() => {
+            console.log("submit");
+          }}
+          // $bind={{}}
+        >
+          <Row className="gap-1">
+            <TextBox $required name="text-box" />
+            <Button type="submit">submit</Button>
+            <Button type="button">button</Button>
+            <Button type="reset">reset</Button>
+          </Row>
+        </Form>
+      </section>
+      <section>
+        <h2>size</h2>
+        <Row className="gap-1">
           <Button $size="xs">X Small</Button>
           <Button $size="s">Small</Button>
           <Button $size="m">Medium</Button>
           <Button $size="l">Large</Button>
           <Button $size="xl">X Large</Button>
         </Row>
-        <Row className="gap-2 p-1">
+        <Row className="gap-1">
           <Button $icon={<VscCloudDownload size="1.6rem" />} $size="xs">X Small</Button>
           <Button $icon={<VscCloudDownload size="1.8rem" />} $size="s">Small</Button>
           <Button $icon={<VscCloudDownload />} $size="m">Medium</Button>
@@ -52,8 +93,8 @@ const Page: NextPage = () => {
         </Row>
       </section>
       <section>
-        <caption>Color</caption>
-        <Row className="pt-1 px-1 gap-1">
+        <h2>color</h2>
+        <Row className="pt-1 gap-1">
           <Button style={style}>button</Button>
           <Button $outline style={style}>outline</Button>
           <span className={`pt-t fgc-base`}>color</span>
@@ -61,7 +102,7 @@ const Page: NextPage = () => {
         </Row>
         {colors.map(color => {
           return (
-            <Row key={color} className="pt-1 px-1 gap-1">
+            <Row key={color} className="pt-1 gap-1">
               <Button $color={color} style={style}>{color}</Button>
               <Button $color={color} $outline style={style}>{color}</Button>
               <span className={`pt-t fgc-${color}`}>{color}</span>
