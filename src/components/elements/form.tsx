@@ -104,19 +104,19 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       return;
     }
     if (typeof props.onSubmit === "boolean") {
-      if (!props.onSubmit) {
+      if (props.onSubmit !== true) {
         e.preventDefault();
       }
       setDisabled(false);
       return;
     }
     const ret = props.onSubmit(e);
-    if (ret == null || ret === true) {
+    if (ret === true) {
       setDisabled(false);
       return;
     }
     e.preventDefault();
-    if (ret === false) {
+    if (ret == null || ret === false) {
       setDisabled(false);
       return;
     }
@@ -288,6 +288,10 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       };
     }
   }, [validation]);
+
+  useEffect(() => {
+    validation();
+  }, []);
 
   const disabled = props?.$disabled || ctx.disabled;
   const readOnly = props?.$readOnly || ctx.readOnly;

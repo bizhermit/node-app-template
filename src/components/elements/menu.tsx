@@ -133,7 +133,7 @@ const MenuItem: FC<MenuItemProps & {
     >
       {props.icon &&
         <div className={Style.icon}>
-          {props.icon}
+          {isReactNode(props.icon) ? props.icon : <span className="pt-t">{props.icon}</span>}
         </div>
       }
       <div className={Style.node}>

@@ -4,6 +4,7 @@ import { attributesWithoutChildren, isReactNode } from "@/utilities/attributes";
 import { useForm } from "@/components/elements/form";
 
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
+  $size?: Size;
   $color?: Color;
   $round?: boolean;
   $outline?: boolean;
@@ -46,11 +47,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
   };
 
   const colorClassName = useMemo(() => {
+    const color = props.$color || "border";
     if (props.$outline) {
-      if (!props.$color) return "";
-      return `fgc-${props.$color}_r bdc-${props.$color}`;
+      if (props.$color == null) return "";
+      return `fgc-${color} bdc-${color}`;
     }
-    const color = props.$color || "main";
     return `c-${color} bdc-${color}`;
   }, [props.$color, props.$outline]);
 
@@ -61,6 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
       type={props.type ?? "button"}
       disabled={props.disabled || submitDisabled || disabled}
       onClick={click}
+      data-size={props.$size || "m"}
     >
       <div
         className={`${Style.main} ${colorClassName}`}

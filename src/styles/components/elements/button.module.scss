@@ -1,10 +1,16 @@
+$buttonSize: (
+  xs: 0.7,
+  s: 0.85,
+  m: 1,
+  l: 1.2,
+  xl: 1.4,
+);
+
 .wrap {
   box-sizing: border-box;
   position: relative;
   padding: 0;
   flex: none;
-  height: var(--size);
-  min-width: var(--size);
   overflow: visible;
   font-size: inherit;
   font-family: inherit;
@@ -29,6 +35,25 @@
   &:disabled {
     opacity: 0.6;
   }
+
+  @each $key, $value in $buttonSize {
+    &[data-size="#{$key}"] {
+      height: calc(var(--size) * #{$value});
+      min-width: calc(var(--size) * #{$value});
+      font-size: calc(var(--font-size) * #{$value});
+
+      >.main {
+        >.label {
+          padding-left: 1.2rem * $value;
+          padding-right: 1.2rem * $value;
+        }
+      
+        >.icon {
+          min-width: calc(var(--size) * #{$value});
+        }
+      }
+    }
+  }
 }
 
 @keyframes hover {
@@ -48,26 +73,21 @@
   border-radius: var(--radius);
   height: 100%;
   width: 100%;
-  border: 2px solid var(--bgc-border);
+  border: 0.15rem solid var(--bgc-border);
 
   &[data-round="true"] {
     border-radius: 9999px;
   }
 
-  >.label {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
   &[data-icon="left"] {
     >.label {
-      padding-left: .5rem;
+      padding-left: 0 !important;
     }
   }
 
   &[data-icon="right"] {
     >.label {
-      padding-right: .5rem;
+      padding-right: 0 !important;
     }
   }
 }
@@ -89,6 +109,5 @@
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  min-width: var(--size);
   height: 100%;
 }
