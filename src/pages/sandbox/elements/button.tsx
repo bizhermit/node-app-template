@@ -60,7 +60,7 @@ const Page: NextPage = () => {
         </Row>
       </section>
       <section>
-        <h2>Form Button</h2>
+        <h2>form button</h2>
         <Form
           onSubmit={() => {
             console.log("submit");
@@ -84,7 +84,7 @@ const Page: NextPage = () => {
           <Button $size="l">Large</Button>
           <Button $size="xl">X Large</Button>
         </Row>
-        <Row className="gap-1">
+        <Row className="gap-1 mt-1">
           <Button $icon={<VscCloudDownload size="1.6rem" />} $size="xs">X Small</Button>
           <Button $icon={<VscCloudDownload size="1.8rem" />} $size="s">Small</Button>
           <Button $icon={<VscCloudDownload />} $size="m">Medium</Button>

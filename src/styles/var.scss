@@ -4,8 +4,8 @@ $fontSize: 1.6rem;
 
 $lightMainColor: rgb(211, 211, 214);
 $darkMainColor: rgb(35, 35, 38);
-$lightSubColor: rgb(225, 225, 201);
-$darkSubColor: rgb(95, 95, 71);
+$lightSubColor: rgb(70, 100, 140);
+$darkSubColor: rgb(60, 90, 130);
 
 $colorMap: (
   "base": (
@@ -45,24 +45,24 @@ $colorMap: (
     "dark": $darkMainColor,
   ),
   "main-light": (
-    "light": lighten($lightMainColor, 5%),
-    "dark": lighten($darkMainColor, 5%),
+    "light": lighten($lightMainColor, 6%),
+    "dark": lighten($darkMainColor, 6%),
   ),
   "main-dark": (
-    "light": darken($lightMainColor, 5%),
-    "dark": darken($darkMainColor, 5%),
+    "light": darken($lightMainColor, 6%),
+    "dark": darken($darkMainColor, 6%),
   ),
   "sub": (
     "light": $lightSubColor,
     "dark": $darkSubColor,
   ),
   "sub-light": (
-    "light": lighten($lightSubColor, 5%),
-    "dark": lighten($darkSubColor, 5%),
+    "light": lighten($lightSubColor, 6%),
+    "dark": lighten($darkSubColor, 6%),
   ),
   "sub-dark": (
-    "light": darken($lightSubColor, 5%),
-    "dark": darken($darkSubColor, 5%),
+    "light": darken($lightSubColor, 6%),
+    "dark": darken($darkSubColor, 6%),
   ),
   "primary": (
     "light": rgb(64, 140, 64),
