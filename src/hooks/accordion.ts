@@ -43,6 +43,7 @@ const useAccordionEffect = (props: Props, deps: Array<any> = []) => {
         if (!props.elementRef.current) return;
         props.elementRef.current.style.removeProperty("overflow");
         props.elementRef.current.style.removeProperty("opacity");
+        props.elementRef.current.style.removeProperty("display");
         if (aDirection === "horizontal") {
           props.elementRef.current.style.width = convertSizeNumToStr(props.max);
           props.elementRef.current.style.overflowX = "hidden";

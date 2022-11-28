@@ -152,7 +152,10 @@ const MenuItem: FC<MenuItemProps & {
   return (
     <li className={Style.item}>
       {props.pathname == null ? node :
-        <NextLink $noDecoration href={props.pathname}>
+        <NextLink
+          $noDecoration
+          href={props.pathname}
+        >
           {node}
         </NextLink>
       }
