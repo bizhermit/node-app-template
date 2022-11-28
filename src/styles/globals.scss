@@ -3,6 +3,7 @@
 :root {
   --size: #{var.$size};
   --font-size: #{var.$fontSize};
+  --icon-size: #{var.$iconSize};
   --padding-top-text: 0.2rem;
   --radius: 0.5rem;
   --nav-size: #{var.$size};
@@ -47,4 +48,9 @@ h4,
 h5,
 h6 {
   margin-block: unset;
+}
+
+.react-icon {
+  height: var(--icon-size);
+  width: var(--icon-size);
 }
