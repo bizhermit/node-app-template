@@ -11,7 +11,7 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
-  $onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => void;
+  $onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);
   $ignoreFormValidation?: boolean;
 };
 
@@ -31,19 +31,23 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
     setDisabled(disabledRef.current = false);
   };
 
-  const submitDisabled = props.$ignoreFormValidation !== true
-    && props.type === "submit"
-    && props.formMethod !== "delete"
-    && (form.hasError || form.disabled);
+  const submitDisabled = props.$ignoreFormValidation !== true && (
+    (props.type === "submit" && props.formMethod !== "delete" && (form.hasError || form.disabled)) ||
+    (props.type === "reset" && (form.disabled || form.readOnly))
+  );
 
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (props.disabled || disabledRef.current || submitDisabled) return;
+    if (props.disabled || disabledRef.current || submitDisabled) {
+      e.preventDefault();
+      return false;
+    }
     lock();
     const res = props.$onClick?.(unlock, e);
-    if (res == null) {
+    if (res == null || typeof res === "boolean") {
       unlock();
-      return;
+      return res ?? false;
     }
+    return false;
   };
 
   const colorClassName = useMemo(() => {

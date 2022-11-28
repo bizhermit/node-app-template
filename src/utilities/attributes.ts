@@ -18,13 +18,6 @@ export const attributesWithoutChildren = (props: Struct, ...classNames: Array<st
   return ret;
 };
 
-export const inputAttributes = (props: Struct, ...classNames: Array<string>) => {
-  const ret = attributesWithoutChildren(props, ...classNames);
-  if ("tabIndex" in ret) delete ret.tabIndex;
-  if ("name" in ret) delete ret.name;
-  return ret;
-};
-
 export const isReactNode = (node: ReactNode) => {
   const t = typeof node;
   return !(t === "string" || t === "number" || t === "boolean");

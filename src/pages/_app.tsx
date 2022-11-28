@@ -41,10 +41,15 @@ const App = ({ Component, pageProps }: AppProps) => {
                   icon: <TbComponents />,
                   label: "Elements",
                   items: [{
+                    key: "form",
+                    label: "Form",
+                    icon: "F",
+                    pathname: "/sandbox/elements/form",
+                  }, {
                     key: "button",
                     label: "Button",
                     icon: "B",
-                    pathname: "/sandbox/elements/button"
+                    pathname: "/sandbox/elements/button",
                   }]
                 }]
               }]}

@@ -1,5 +1,5 @@
 import Tooltip from "@/components/elements/tooltip";
-import { attributes, inputAttributes } from "@/utilities/attributes";
+import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
 import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 import Style from "@/styles/components/elements/form-items/form-item.module.scss";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
@@ -8,7 +8,20 @@ export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, ind
 
 export type FormItemMessageDisplayMode = "tooltip" | "bottom";
 
-export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+type InputOmitProps = "name"
+  | "defaultValue"
+  | "defaultChecked"
+  | "onChange";
+
+const inputAttributes = (props: Struct, ...classNames: Array<string>) => {
+  const ret = attributesWithoutChildren(props, ...classNames);
+  if ("name" in ret) delete ret.name;
+  if ("tabIndex" in ret) delete ret.placeholder;
+  if ("placeholder" in ret) delete ret.placeholder;
+  return ret;
+};
+
+export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;
   $disabled?: boolean;
@@ -17,7 +30,6 @@ export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement
   $validations?: FormItemValidation<Nullable<T>> | Array<FormItemValidation<Nullable<T>>>;
   $placeholder?: string;
   $interlockValidation?: boolean;
-  $tabIndex?: number;
   $defaultValue?: T;
   $value?: T;
   $messageDisplayMode?: FormItemMessageDisplayMode;
@@ -31,8 +43,8 @@ type FormContextProps = {
   errors: Struct;
   hasError: boolean;
   setErrors: Dispatch<SetStateAction<Struct>>;
-  mount: (itemProps: FormItemProps, mountItemProps: FormItemMountProps) => void;
-  unmount: (itemProps: FormItemProps) => void;
+  mount: (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => string;
+  unmount: (name: string) => void;
   validation: () => void;
   messageDisplayMode?: FormItemMessageDisplayMode;
 };
@@ -44,7 +56,7 @@ export const FormContext = createContext<FormContextProps>({
   errors: {},
   hasError: false,
   setErrors: () => { },
-  mount: () => { },
+  mount: () => "",
   unmount: () => { },
   validation: () => { },
   messageDisplayMode: undefined,
@@ -52,14 +64,16 @@ export const FormContext = createContext<FormContextProps>({
 
 type FormItemMountProps = {
   validation: () => void;
+  change: (value: Nullable<any>, absolute?: boolean) => void;
 };
 
-export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> & {
+export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset"> & {
   $bind?: Struct;
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
-  onSubmit?: ((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>) | boolean);
+  $onSubmit?: (((formData: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+  $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
 };
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
@@ -70,17 +84,17 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
     return disabledRef.current = action;
   }, false);
-  const items = useRef<Struct<FormItemMountProps>>({});
+  const items = useRef<Struct<FormItemMountProps & { props: FormItemProps; options: UseFormOptions; }>>({});
   const [errors, setErrors] = useState<Struct>({});
 
-  const mount = (itemProps: FormItemProps, mountItemProps: FormItemMountProps) => {
-    if (!itemProps.name) return;
-    items.current[itemProps.name] = mountItemProps;
+  const mount = (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
+    const name = itemProps.name ?? StringUtils.generateUuidV4();
+    items.current[name] = { ...mountItemProps, props: itemProps, options, };
+    return name;
   };
 
-  const unmount = (itemProps: FormItemProps) => {
-    if (!itemProps.name) return;
-    delete items.current[itemProps.name];
+  const unmount = (name: string) => {
+    delete items.current[name];
   };
 
   const hasError = useMemo(() => {
@@ -99,27 +113,69 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       return;
     }
     setDisabled(true);
-    if (props.onSubmit == null) {
+    if (props.$onSubmit == null) {
       setDisabled(false);
       return;
     }
-    if (typeof props.onSubmit === "boolean") {
-      if (props.onSubmit !== true) {
+    if (typeof props.$onSubmit === "boolean") {
+      if (props.$onSubmit !== true) {
         e.preventDefault();
       }
       setDisabled(false);
       return;
     }
-    const ret = props.onSubmit(e);
-    if (ret === true) {
+    const ret = props.$onSubmit(new FormData(e.currentTarget), e);
+    if (ret == null || typeof ret === "boolean") {
+      if (ret !== true) {
+        e.preventDefault();
+      }
       setDisabled(false);
       return;
     }
     e.preventDefault();
-    if (ret == null || ret === false) {
+    if ("then" in ret) {
+      ret.then(() => {
+        setDisabled(false);
+      });
+    }
+  };
+
+  const resetItems = () => {
+    setTimeout(() => {
+      Object.keys(items.current).forEach(name => {
+        const item = items.current[name];
+        item.options.effect(item.props.$defaultValue);
+        item.change(item.props.$defaultValue);
+      });
+    }, 0);
+  };
+
+  const reset = (e: React.FormEvent<HTMLFormElement>) => {
+    if (props.$disabled || disabledRef.current) {
+      e.preventDefault();
+      return;
+    }
+    setDisabled(true);
+    if (props.$onReset == null || typeof props.$onReset === "boolean") {
+      if (props.$onReset === false) {
+        e.preventDefault();
+      } else {
+        resetItems();
+      }
       setDisabled(false);
       return;
     }
+    const ret = props.$onReset(e);
+    if (ret == null || typeof ret === "boolean") {
+      if (ret === false) {
+        e.preventDefault();
+      } else {
+        resetItems();
+      }
+      setDisabled(false);
+      return;
+    }
+    e.preventDefault();
     if ("then" in ret) {
       ret.then(() => {
         setDisabled(false);
@@ -143,6 +199,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       <form
         {...attributes(props)}
         onSubmit={submit}
+        onReset={reset}
       >
       </form>
     </FormContext.Provider>
@@ -282,14 +339,18 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     if (props) {
-      ctx.mount(props, { validation });
+      const name = ctx.mount(props, {
+        validation,
+        change,
+      }, options ?? { effect: () => { } });
       return () => {
-        ctx.unmount(props);
+        ctx.unmount(name);
       };
     }
   }, [validation]);
 
   useEffect(() => {
+    options?.effect(valueRef.current);
     validation();
   }, []);
 
