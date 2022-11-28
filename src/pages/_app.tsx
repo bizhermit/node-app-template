@@ -13,7 +13,7 @@ import { TbComponents } from "react-icons/tb";
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider>
-      <IconContext.Provider value={{ size: "2rem" }}>
+      <IconContext.Provider value={{ className: "react-icon" }}>
         <NavigationContainer
           className="w-100 h-100"
         // $navigationMode="manual"

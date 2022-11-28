@@ -85,11 +85,11 @@ const Page: NextPage = () => {
           <Button $size="xl">X Large</Button>
         </Row>
         <Row className="gap-1 mt-1">
-          <Button $icon={<VscCloudDownload size="1.6rem" />} $size="xs">X Small</Button>
-          <Button $icon={<VscCloudDownload size="1.8rem" />} $size="s">Small</Button>
+          <Button $icon={<VscCloudDownload />} $size="xs">X Small</Button>
+          <Button $icon={<VscCloudDownload />} $size="s">Small</Button>
           <Button $icon={<VscCloudDownload />} $size="m">Medium</Button>
-          <Button $icon={<VscCloudDownload size="2.5rem" />} $size="l">Large</Button>
-          <Button $icon={<VscCloudDownload size="3rem" />} $size="xl">X Large</Button>
+          <Button $icon={<VscCloudDownload />} $size="l">Large</Button>
+          <Button $icon={<VscCloudDownload />} $size="xl">X Large</Button>
         </Row>
       </section>
       <section>
