@@ -55,6 +55,7 @@ const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) =>
       ref={ref}
       $$form={form}
       $preventFieldLayout
+      $clickable
       $mainProps={{
         className: Style.main,
         onClick: click,
@@ -69,13 +70,10 @@ const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) =>
           type="hidden"
         />
       }
-      <div
-        className={Style.body}
-        data-disabled={form.disabled}
-        data-readonly={form.readOnly}
-      >
+      <div className={Style.body}>
         <div
           className={`${Style.box} bdc-${color}`}
+          data-editable={form.editable}
         />
         <div
           className={`${Style.check} ${props.$outline ? `bdc-${color}` : `bdc-${color}_r bgc-${color}`}`}
@@ -83,9 +81,7 @@ const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) =>
         />
       </div>
       {props.children &&
-        <div className={Style.children}>
-          <LabelText>{props.children}</LabelText>
-        </div>
+        <LabelText>{props.children}</LabelText>
       }
     </FormItemWrap>
   );

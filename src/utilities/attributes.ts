@@ -1,7 +1,7 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
 
-export const attributes = (props: Struct, ...classNames: Array<string>) => {
+export const attributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret: Struct = {
     ...props,
     className: StringUtils.join(" ", ...classNames, props.className),
@@ -12,7 +12,7 @@ export const attributes = (props: Struct, ...classNames: Array<string>) => {
   return ret;
 };
 
-export const attributesWithoutChildren = (props: Struct, ...classNames: Array<string>) => {
+export const attributesWithoutChildren = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributes(props, ...classNames);
   if ("children" in ret) delete ret.children;
   return ret;

@@ -6,9 +6,11 @@ import { NextPage } from "next";
 const Page: NextPage = () => {
   return (
     <div className="flex-box flex-start p-1">
-      <CheckBox
-      // $messageDisplayMode="bottom"
-      />
+      <Row>
+        <CheckBox>editable</CheckBox>
+        <CheckBox $readOnly>readOnly</CheckBox>
+        <CheckBox $disabled>disabled</CheckBox>
+      </Row>
       <CheckBox
         $placeholder="CheckBox"
       >
@@ -24,7 +26,7 @@ const Page: NextPage = () => {
           <Row key={color}>
             <CheckBox $color={color} $defaultValue />
             <CheckBox $color={color} $outline $defaultValue />
-            <span className={`pt-t c-${color}`}>{color}</span>
+            <span className={`pt-t px-1 c-${color}`}>{color}</span>
           </Row>
         );
       })}

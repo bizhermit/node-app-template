@@ -6,10 +6,18 @@
   justify-content: flex-start;
   align-items: stretch;
   overflow: visible;
+}
+
+.main {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
 
   &[data-editable="true"] {
-
-    >.main {
+    &[data-field="true"] {
       color: var(--fgc-input);
 
       &::before {
@@ -25,10 +33,7 @@
         transition: background 0.2s;
       }
 
-    }
-
-    &[data-error="true"] {
-      >.main {
+      &[data-error="true"] {
         color: var(--fgc-error);
 
         &::before {
@@ -36,19 +41,19 @@
         }
       }
     }
+
+    &[data-clickable="true"] {
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.6;
   }
 }
 
-.main {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: stretch;
-  align-items: stretch;
-}
-
-@mixin input($width: 100%, $pad: true) {
+@mixin input($flex: 1, $pad: true) {
   box-sizing: border-box;
   border: none;
   background: transparent;
@@ -58,7 +63,8 @@
   z-index: 1;
   resize: none;
   height: var(--size);
-  width: $width;
+  min-width: var(--size);
+  flex: $flex;
 
   @if $pad {
     padding: 0.3rem 0.6rem 0.2rem 0.6rem;
