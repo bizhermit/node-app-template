@@ -11,6 +11,7 @@ export type FormItemMessageDisplayMode = "tooltip" | "bottom";
 type InputOmitProps = "name"
   | "defaultValue"
   | "defaultChecked"
+  | "color"
   | "onChange";
 
 const inputAttributes = (props: Struct, ...classNames: Array<string>) => {
@@ -375,7 +376,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
 export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $$form: ReturnType<typeof useForm<any, any>>;
-  $editableLayout?: boolean;
+  $preventFieldLayout?: boolean;
   $mainProps?: HTMLAttributes<HTMLDivElement>;
   children: ReactNode;
 }>((props, ref) => {
@@ -392,7 +393,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
     <div
       {...inputAttributes(props, Style.wrap)}
       ref={ref}
-      data-editable={props.$$form.editable && props.$editableLayout !== false}
+      data-editable={props.$$form.editable && props.$preventFieldLayout !== true}
       data-error={Boolean(props.$$form.error)}
     >
       {props.$placeholder &&

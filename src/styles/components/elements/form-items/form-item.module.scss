@@ -1,20 +1,3 @@
-@mixin input($width: 100%, $pad: true) {
-  box-sizing: border-box;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  z-index: 1;
-  resize: none;
-  height: var(--size);
-  width: $width;
-
-  @if $pad {
-    padding: 0.3rem 0.6rem 0.2rem 0.6rem;
-  }
-}
-
 .wrap {
   box-sizing: border-box;
   position: relative;
@@ -36,7 +19,7 @@
         background: var(--bgc-input);
         height: var(--size);
         width: 100%;
-        border: 1px solid var(--bgc-border);
+        border: 0.1rem solid var(--bgc-border);
         border-radius: var(--radius);
         z-index: 0;
         transition: background 0.2s;
@@ -63,6 +46,23 @@
   flex-flow: row nowrap;
   justify-content: stretch;
   align-items: stretch;
+}
+
+@mixin input($width: 100%, $pad: true) {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  height: var(--size);
+  width: $width;
+
+  @if $pad {
+    padding: 0.3rem 0.6rem 0.2rem 0.6rem;
+  }
 }
 
 .input {

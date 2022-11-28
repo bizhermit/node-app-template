@@ -2,6 +2,7 @@ import Style from "@/styles/components/elements/button.module.scss";
 import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren, isReactNode } from "@/utilities/attributes";
 import { useForm } from "@/components/elements/form";
+import LabelText from "@/pages/sandbox/elements/label-text";
 
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
   $size?: Size;
@@ -77,14 +78,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
         {props.$icon != null && props.$iconPosition !== "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }
-        {isReactNode(props.children) ? props.children :
-          <span
-            className={Style.label}
-            data-fill={props.$fillLabel}
-          >
-            {String(props.children)}
-          </span>
-        }
+        <LabelText className={Style.label} data-fill={props.$fillLabel}>{String(props.children)}</LabelText>
         {props.$icon != null && props.$iconPosition === "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }

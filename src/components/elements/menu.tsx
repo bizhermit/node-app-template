@@ -1,11 +1,12 @@
 import React, { CSSProperties, FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "@/styles/components/elements/menu.module.scss";
-import { attributes, attributesWithoutChildren, isReactNode } from "@/utilities/attributes";
+import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import useAccordionEffect from "@/hooks/accordion";
 import { useRouter } from "next/router";
 import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
+import LabelText from "@/pages/sandbox/elements/label-text";
 
 export type MenuItemProps = {
   key?: Key;
@@ -133,13 +134,11 @@ const MenuItem: FC<MenuItemProps & {
     >
       {props.icon &&
         <div className={Style.icon}>
-          {isReactNode(props.icon) ? props.icon : <span className="pt-t">{props.icon}</span>}
+          <LabelText>{props.icon}</LabelText>
         </div>
       }
       <div className={Style.node}>
-        {isReactNode(props.label) ? props.label :
-          <span className={Style.label}>{props.label}</span>
-        }
+        <LabelText className={Style.label}>{props.label}</LabelText>
       </div>
       {props.items == null || props.items.length === 0 ? <></> :
         <div className={Style.toggle}>

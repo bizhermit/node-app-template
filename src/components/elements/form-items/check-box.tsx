@@ -1,11 +1,13 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { ReactNode, useRef } from "react";
 import Style from "@/styles/components/elements/form-items/check-box.module.scss";
+import LabelText from "@/pages/sandbox/elements/label-text";
 
 export type CheckBoxProps = FormItemProps<string | number | boolean> & {
   $checkedValue?: string | number | boolean;
   $uncheckedValue?: string | number | boolean;
   $color?: Color;
+  $outline?: boolean;
   children?: ReactNode;
 };
 
@@ -45,12 +47,14 @@ const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) =>
     if (e.key === "Enter" || e.key === " ") toggleCheck();
   };
 
+  const color = props.$color || "sub";
+
   return (
     <FormItemWrap
       {...props}
       ref={ref}
       $$form={form}
-      $editableLayout={false}
+      $preventFieldLayout
       $mainProps={{
         className: Style.main,
         onClick: click,
@@ -71,10 +75,18 @@ const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) =>
         data-readonly={form.readOnly}
       >
         <div
+          className={`${Style.box} bdc-${color}`}
+        />
+        <div
+          className={`${Style.check} ${props.$outline ? `bdc-${color}` : `bdc-${color}_r bgc-${color}`}`}
           data-checked={form.value === checkedValue}
-          className={`${Style.box} bgc-${props.color || "main"} bdc-${props.color || "main"}_r`}
         />
       </div>
+      {props.children &&
+        <div className={Style.children}>
+          <LabelText>{props.children}</LabelText>
+        </div>
+      }
     </FormItemWrap>
   );
 });

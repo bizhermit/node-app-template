@@ -1,5 +1,5 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { ReactNode } from "react";
+import { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
 
 export const attributes = (props: Struct, ...classNames: Array<string>) => {
   const ret: Struct = {
@@ -18,9 +18,13 @@ export const attributesWithoutChildren = (props: Struct, ...classNames: Array<st
   return ret;
 };
 
-export const isReactNode = (node: ReactNode) => {
+export const isNotReactNode = (node: ReactNode): node is string | number | boolean => {
   const t = typeof node;
-  return !(t === "string" || t === "number" || t === "boolean");
+  return t === "string" || t === "number" || t === "boolean";
+};
+
+export const isReactNode = (node: ReactNode): node is ReactElement | ReactFragment | ReactPortal | null | undefined => {
+  return !isNotReactNode(node);
 };
 
 export const convertSizeNumToStr = (value?: string | number | null, nullValue?: string) => {
