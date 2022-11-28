@@ -2,33 +2,11 @@ import Button from "@/components/elements/button";
 import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
 import Row from "@/components/templates/row";
+import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 import { CSSProperties } from "react";
 import { VscCloudDownload } from "react-icons/vsc";
 
-const colors: Array<Color> = [
-  "base",
-  "pure",
-  "dull",
-  "border",
-  "shadow",
-  "mask",
-  "input",
-  "error",
-  "main",
-  "main-light",
-  "main-dark",
-  "sub",
-  "sub-light",
-  "sub-dark",
-  "primary",
-  "secondary",
-  "tertiary",
-  "warning",
-  "danger",
-  "cool",
-  "pretty",
-];
 const style: CSSProperties = {
   width: 200
 };

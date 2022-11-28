@@ -11,9 +11,10 @@ export type FormItemMessageDisplayMode = "tooltip" | "bottom";
 type InputOmitProps = "name"
   | "defaultValue"
   | "defaultChecked"
+  | "color"
   | "onChange";
 
-const inputAttributes = (props: Struct, ...classNames: Array<string>) => {
+const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
   if ("name" in ret) delete ret.name;
   if ("tabIndex" in ret) delete ret.placeholder;
@@ -59,7 +60,7 @@ export const FormContext = createContext<FormContextProps>({
   mount: () => "",
   unmount: () => { },
   validation: () => { },
-  messageDisplayMode: undefined,
+  messageDisplayMode: "tooltip",
 });
 
 type FormItemMountProps = {
@@ -211,6 +212,7 @@ export default Form;
 type UseFormOptions<T = any, U = any> = {
   effect: (value: Nullable<T>) => void;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
+  validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
@@ -259,7 +261,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       }
     }
     return rets;
-  }, []);
+  }, [props?.$required, ...(options?.validationsDeps ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -366,6 +368,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     valueRef,
     value,
     validation,
+    hasValidator: validations.length > 0,
     error,
     setError,
     effect: options?.effect,
@@ -375,9 +378,13 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
 export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $$form: ReturnType<typeof useForm<any, any>>;
+  $preventFieldLayout?: boolean;
+  $className?: string;
+  $clickable?: boolean;
+  $mainProps?: HTMLAttributes<HTMLDivElement>;
   children: ReactNode;
 }>((props, ref) => {
-  const errorNode = (
+  const errorNode = Boolean(props.$$form.error) && (
     <div
       className={Style.error}
       data-mode={props.$$form.messageDisplayMode}
@@ -386,34 +393,44 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
     </div>
   );
 
+  const attrs = {
+    ...attributes(props.$mainProps ?? {}, Style.main),
+    "data-editable": props.$$form.editable,
+    "data-field": props.$preventFieldLayout !== true,
+    "data-disabled": props.$$form.disabled,
+    "data-error": Boolean(props.$$form.error),
+    "data-clickable": props.$clickable,
+  };
+
   return (
     <div
-      {...inputAttributes(props, Style.wrap)}
+      {...inputAttributes(props, Style.wrap, props.$className)}
       ref={ref}
-      data-editable={props.$$form.editable}
-      data-error={Boolean(props.$$form.error)}
     >
       {props.$placeholder &&
         <div className={Style.placeholder}>
           {props.$placeholder}
         </div>
       }
-      {props.$$form.messageDisplayMode === "tooltip" &&
-        <Tooltip
-          className={Style.main}
-          $disabled={StringUtils.isEmpty(props.$$form.error)}
-        >
-          {props.children}
-          {errorNode}
-        </Tooltip>
-      }
-      {props.$$form.messageDisplayMode === "bottom" &&
-        <>
-          <div className={Style.main}>
+      {props.$$form.hasValidator ?
+        (props.$$form.messageDisplayMode === "bottom" ?
+          <>
+            <div {...attrs}>
+              {props.children}
+            </div>
+            {errorNode}
+          </>
+          : <Tooltip
+            {...attrs}
+            $disabled={StringUtils.isEmpty(props.$$form.error)}
+          >
             {props.children}
-          </div>
-          {errorNode}
-        </>
+            {errorNode}
+          </Tooltip>
+        ) :
+        <div {...attrs}>
+          {props.children}
+        </div>
       }
     </div>
   );

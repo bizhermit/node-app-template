@@ -45,6 +45,12 @@ const App = ({ Component, pageProps }: AppProps) => {
                     label: "Form",
                     icon: "F",
                     pathname: "/sandbox/elements/form",
+                    items: [{
+                      key: "check-box",
+                      label: "CheckBox",
+                      icon: "C",
+                      pathname: "/sandbox/elements/form-items/check-box",
+                    }]
                   }, {
                     key: "button",
                     label: "Button",
