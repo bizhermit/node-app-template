@@ -3,7 +3,7 @@ import { attributes } from "@/utilities/attributes";
 import React, { HTMLAttributes, LegacyRef } from "react";
 
 export type RowProps = HTMLAttributes<HTMLDivElement> & {
-  $hAlign?: "left" | "center" | "right" | "stretch";
+  $hAlign?: "left" | "center" | "right" | "stretch" | "around" | "between" | "evenly";
   $vAlign?: "top" | "middle" | "bottom" | "stretch";
   $nowrap?: boolean;
 };

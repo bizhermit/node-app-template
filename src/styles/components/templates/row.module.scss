@@ -1,5 +1,6 @@
 .wrap {
   box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -20,6 +21,18 @@
     justify-content: stretch;
   }
 
+  &[data-h="around"] {
+    justify-content: space-around;
+  }
+
+  &[data-h="between"] {
+    justify-content: space-between;
+  }
+
+  &[data-h="evenly"] {
+    justify-content: space-evenly;
+  }
+
   &[data-v="top"] {
     align-items: flex-start;
   }
@@ -36,7 +49,7 @@
     align-items: stretch;
   }
 
-  &[data-wrap="true"] {
+  &[data-nowrap="true"] {
     flex-wrap: nowrap;
   }
 }
