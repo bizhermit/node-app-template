@@ -50,6 +50,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                     label: "Button",
                     icon: "B",
                     pathname: "/sandbox/elements/button",
+                  }, {
+                    key: "link",
+                    label: "NextLink",
+                    icon: "L",
+                    pathname: "/sandbox/elements/link",
                   }]
                 }]
               }]}
