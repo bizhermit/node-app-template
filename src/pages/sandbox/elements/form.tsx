@@ -1,5 +1,6 @@
 import Button from "@/components/elements/button";
 import Form from "@/components/elements/form";
+import CheckBox from "@/components/elements/form-items/check-box";
 import TextBox from "@/components/elements/form-items/text-box";
 import Row from "@/components/templates/row";
 import { NextPage } from "next";
@@ -27,23 +28,38 @@ const Page: NextPage = () => {
             // return false;
           }}
         >
-          <TextBox
-            name="text-box"
-            $placeholder="form item"
-            $required
-            // $defaultValue="fuga"
-            $onChange={(a, b) => {
-              console.log(b, "->", a);
-            }}
-          />
-          <TextBox
-            $placeholder="no form item"
-            $required
-            // $defaultValue="hoge"
-            $onChange={(a, b) => {
-              console.log(b, "->", a);
-            }}
-          />
+          <section>
+            <h3>form item</h3>
+            <Row>
+              <TextBox
+                name="text-box"
+                $required
+                // $defaultValue="fuga"
+                $onChange={(a, b) => {
+                  console.log(b, "->", a);
+                }}
+              />
+              <CheckBox
+                name="check-box"
+                $required
+              />
+            </Row>
+          </section>
+          <section>
+            <h3>no form item</h3>
+            <Row>
+              <TextBox
+                $required
+                // $defaultValue="hoge"
+                $onChange={(a, b) => {
+                  console.log(b, "->", a);
+                }}
+              />
+              <CheckBox
+                $required
+              />
+            </Row>
+          </section>
           <Row className="gap-1">
             <Button type="submit">submit</Button>
             <Button type="reset">reset</Button>

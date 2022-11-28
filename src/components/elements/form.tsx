@@ -212,6 +212,7 @@ export default Form;
 type UseFormOptions<T = any, U = any> = {
   effect: (value: Nullable<T>) => void;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
+  validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
@@ -260,7 +261,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       }
     }
     return rets;
-  }, []);
+  }, [props?.$required, ...(options?.validationsDeps ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
