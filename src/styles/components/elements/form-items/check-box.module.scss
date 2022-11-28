@@ -1,0 +1,70 @@
+.main {
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.body {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  height: var(--size);
+  width: var(--size);
+}
+
+.box {
+  box-sizing: border-box;
+
+  &::before {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
+    background-color: var(--bgc-input);
+    border: var(--input-border);
+    border-radius: var(--radius);
+    transition: background-color 0.1s;
+  }
+
+  &::after {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    top: 15%;
+    left: 35%;
+    width: 30%;
+    height: 50%;
+    border-bottom-width: 0.25rem;
+    border-bottom-style: solid;
+    border-bottom-color: inherit;
+    border-right-width: 0.25rem;
+    border-right-style: solid;
+    border-right-color: inherit;
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+
+  &[data-checked="true"] {
+    &::before {
+      background-color: inherit;
+    }
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.children {
+  padding-top: 0.2rem;
+  font-size: var(--fsize);
+  user-select: none;
+
+  >.label {
+    padding-left: .2rem;
+    padding-right: 1rem;
+  }
+}

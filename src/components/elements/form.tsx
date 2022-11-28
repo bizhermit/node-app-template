@@ -59,7 +59,7 @@ export const FormContext = createContext<FormContextProps>({
   mount: () => "",
   unmount: () => { },
   validation: () => { },
-  messageDisplayMode: undefined,
+  messageDisplayMode: "tooltip",
 });
 
 type FormItemMountProps = {
@@ -375,6 +375,8 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
 export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $$form: ReturnType<typeof useForm<any, any>>;
+  $editableLayout?: boolean;
+  $mainProps?: HTMLAttributes<HTMLDivElement>;
   children: ReactNode;
 }>((props, ref) => {
   const errorNode = (
@@ -390,7 +392,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
     <div
       {...inputAttributes(props, Style.wrap)}
       ref={ref}
-      data-editable={props.$$form.editable}
+      data-editable={props.$$form.editable && props.$editableLayout !== false}
       data-error={Boolean(props.$$form.error)}
     >
       {props.$placeholder &&
@@ -400,7 +402,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
       }
       {props.$$form.messageDisplayMode === "tooltip" &&
         <Tooltip
-          className={Style.main}
+          {...attributes(props.$mainProps ?? {}, Style.main)}
           $disabled={StringUtils.isEmpty(props.$$form.error)}
         >
           {props.children}
@@ -409,7 +411,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
       }
       {props.$$form.messageDisplayMode === "bottom" &&
         <>
-          <div className={Style.main}>
+          <div {...attributes(props.$mainProps ?? {}, Style.main)}>
             {props.children}
           </div>
           {errorNode}
