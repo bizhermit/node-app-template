@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Style from "@/styles/components/elements/menu.module.scss";
+import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import useAccordionEffect from "@/hooks/accordion";
