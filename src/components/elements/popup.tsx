@@ -1,7 +1,7 @@
 import usePortalElement from "@/hooks/portal-element";
 import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Style from "@/styles/components/elements/popup.module.scss";
+import Style from "$/components/elements/popup.module.scss";
 import { attributes, convertSizeNumToStr } from "@/utilities/attributes";
 
 const defaultAnimationDuration = 150;

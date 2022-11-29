@@ -1,6 +1,6 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { ReactNode, useRef } from "react";
-import Style from "@/styles/components/elements/form-items/check-box.module.scss";
+import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/pages/sandbox/elements/label-text";
 
 export type CheckBoxProps = FormItemProps<string | number | boolean> & {
@@ -47,7 +47,7 @@ const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) =>
     if (e.key === "Enter" || e.key === " ") toggleCheck();
   };
 
-  const color = props.$color || "sub";
+  const color = props.$color || "main";
 
   return (
     <FormItemWrap

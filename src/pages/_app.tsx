@@ -1,8 +1,8 @@
 import type { AppProps } from "next/app";
 import { IconContext } from "react-icons";
-import "@/styles/globals.scss";
-import "@/styles/color.scss";
-import "@/styles/utility.scss";
+import "$/globals.scss";
+import "$/color.scss";
+import "$/utility.scss";
 import { LayoutProvider } from "@/components/providers/layout";
 import NavigationContainer from "@/components/elements/navigation-container";
 import Menu from "@/components/elements/menu";
