@@ -29,12 +29,14 @@ export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement
   $readOnly?: boolean;
   $required?: boolean;
   $validations?: FormItemValidation<Nullable<T>> | Array<FormItemValidation<Nullable<T>>>;
-  $placeholder?: string;
   $interlockValidation?: boolean;
   $defaultValue?: T;
-  $value?: T;
-  $messageDisplayMode?: FormItemMessageDisplayMode;
+  $value?: Nullable<T>;
+  $messagePosition?: FormItemMessageDisplayMode;
   $onChange?: (after: Nullable<T>, before: Nullable<T>, data?: U) => void;
+  $tag?: ReactNode;
+  $tagPosition?: "top" | "placeholder";
+  $color?: Color;
 };
 
 type FormContextProps = {
@@ -372,7 +374,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     error,
     setError,
     effect: options?.effect,
-    messageDisplayMode: props?.$messageDisplayMode ?? ctx.messageDisplayMode,
+    messageDisplayMode: props?.$messagePosition ?? ctx.messageDisplayMode,
   };
 };
 
@@ -394,7 +396,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   );
 
   const attrs = {
-    ...attributes(props.$mainProps ?? {}, Style.main),
+    ...attributes(props.$mainProps ?? {}, Style.main, props.$color ? `bdc-${props.$color}` : ""),
     "data-editable": props.$$form.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$$form.disabled,
@@ -402,17 +404,23 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
     "data-clickable": props.$clickable,
   };
 
+  const tagPlaceholder = props.$$form.editable && props.$tag != null && props.$tagPosition === "placeholder";
+
   return (
     <div
       {...inputAttributes(props, Style.wrap, props.$className)}
       ref={ref}
+      data-tagpad={tagPlaceholder}
     >
-      {props.$placeholder &&
-        <div className={Style.placeholder}>
-          {props.$placeholder}
+      {props.$tag &&
+        <div
+          className={`${Style.tag}${props.$color ? ` fgc-${props.$color}` : ""}`}
+          data-pos={!tagPlaceholder ? "top" : props.$tagPosition || "top"}
+        >
+          {props.$tag}
         </div>
       }
-      {props.$$form.hasValidator ?
+      {props.$$form.hasValidator && props.$$form.editable ?
         (props.$$form.messageDisplayMode === "bottom" ?
           <>
             <div {...attrs}>

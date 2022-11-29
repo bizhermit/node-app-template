@@ -1,3 +1,5 @@
+$tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
+
 .wrap {
   box-sizing: border-box;
   position: relative;
@@ -6,6 +8,59 @@
   justify-content: flex-start;
   align-items: stretch;
   overflow: visible;
+
+  &[data-tagpad="true"] {
+    padding-top: $tagHeight;
+  }
+
+  &:focus-within,
+  &[data-has="true"] {
+    >.tag {
+      &[data-pos="placeholder"] {
+        top: 0;
+        left: 0;
+        padding-top: 0;
+        height: $tagHeight;
+        opacity: 1;
+      }
+    }
+  }
+
+  &[data-round="true"] {
+    >.main {
+      &::before {
+        border-radius: 9999px !important;
+      }
+
+      >.input {
+        padding-left: calc(var(--size) / 2);
+        padding-right: calc(var(--size) / 2);
+      }
+    }
+  }
+}
+
+.tag {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 100%;
+  text-overflow: clip;
+  height: $tagHeight;
+  
+  &[data-pos="placeholder"] {
+    position: absolute;
+    top: calc($tagHeight);
+    padding-top: calc(var(--padding-top-text) + 0.1rem);
+    height: var(--size);
+    left: 1rem;
+    z-index: 1;
+    transition: left 0.5s, top 0.5s, height 0.5s, padding-top 0.5s, opacity 0.5s;
+    opacity: 0.6;
+  }
 }
 
 .main {
@@ -15,6 +70,7 @@
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
+  border-color: var(--bgc-border);
 
   &[data-editable="true"] {
     &[data-field="true"] {
@@ -25,9 +81,11 @@
         position: absolute;
         content: "";
         background: var(--bgc-input);
-        height: var(--size);
+        height: 100%;
         width: 100%;
-        border: 0.1rem solid var(--bgc-border);
+        border-width: 0.1rem;
+        border-style: solid;
+        border-color: inherit;
         border-radius: var(--radius);
         z-index: 0;
         transition: background 0.2s;
@@ -67,23 +125,12 @@
   flex: $flex;
 
   @if $pad {
-    padding: 0.3rem 0.6rem 0.2rem 0.6rem;
+    padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
   }
 }
 
 .input {
   @include input;
-}
-
-.placeholder {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  align-items: center;
-  max-width: 100%;
-  text-overflow: clip;
-  min-height: calc(var(--font-size) * 1.5);
 }
 
 .error {

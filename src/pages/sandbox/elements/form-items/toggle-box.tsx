@@ -1,5 +1,5 @@
 import ToggleBox from "@/components/elements/form-items/toggle-box";
-import Row from "@/components/templates/row";
+import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 
@@ -12,7 +12,7 @@ const Page: NextPage = () => {
         <ToggleBox $disabled>disabled</ToggleBox>
       </Row>
       <ToggleBox
-        $placeholder="ToggleBox"
+        $tag="ToggleBox"
       >
         トグルボックス
       </ToggleBox>

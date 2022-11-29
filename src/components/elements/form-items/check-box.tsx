@@ -1,20 +1,23 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { ReactNode, useRef } from "react";
+import React, { FunctionComponent, ReactElement, ReactNode, useRef } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/pages/sandbox/elements/label-text";
 
-export type CheckBoxProps = FormItemProps<string | number | boolean> & {
-  $checkedValue?: string | number | boolean;
-  $uncheckedValue?: string | number | boolean;
-  $color?: Color;
+export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
+  $checkedValue?: T;
+  $uncheckedValue?: T;
   $outline?: boolean;
   children?: ReactNode;
 };
 
-const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) => {
+interface CheckBoxFC extends FunctionComponent {
+  <T extends string | number | boolean = boolean>(attrs: CheckBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T extends string | number | boolean = boolean>(props: CheckBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
-  const checkedValue = props.$checkedValue ?? true;
-  const uncheckedValue = props.$uncheckedValue ?? false;
+  const checkedValue = (props.$checkedValue ?? true) as T;
+  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
 
   const form = useForm(props, {
     effect: (v) => {

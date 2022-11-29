@@ -2,7 +2,7 @@ import Button from "@/components/elements/button";
 import Form from "@/components/elements/form";
 import CheckBox from "@/components/elements/form-items/check-box";
 import TextBox from "@/components/elements/form-items/text-box";
-import Row from "@/components/templates/row";
+import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useState } from "react";
 
