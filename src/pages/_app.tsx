@@ -75,6 +75,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                     label: "NextLink",
                     icon: "L",
                     pathname: "/sandbox/elements/link",
+                  }, {
+                    key: "link",
+                    label: "LoadingBar",
+                    icon: "L",
+                    pathname: "/sandbox/elements/loading-bar",
                   }]
                 }]
               }]}
