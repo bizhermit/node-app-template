@@ -1,0 +1,47 @@
+.wrap {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: fit-content;
+  overflow: visible;
+}
+
+.border {
+  box-sizing: border-box;
+  display: block;
+  height: 0.1rem;
+  border-radius: 9999px;
+  width: 100%;
+}
+
+.children {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+
+  &[data-align="left"] {
+    justify-content: flex-start;
+    padding-left: 5%;
+  }
+
+  &[data-align="center"] {
+    justify-content: center;
+  }
+
+  &[data-align="right"] {
+    justify-content: flex-end;
+    padding-right: 5%;
+  }
+}
+
+.text {
+  background: var(--bgc-base);
+  padding: 0 1rem;
+}
