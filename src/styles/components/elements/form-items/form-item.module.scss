@@ -154,7 +154,8 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
     box-shadow: 0 .1rem .8rem 0 var(--bgc-shadow);
   }
 
-  &[data-mode="bottom"] {
+  &[data-mode="bottom"],
+  &[data-mode="bottom-hide"] {
     position: relative;
     padding: var(--padding-top-text) .5rem 0 .5rem;
     overflow-wrap: break-word;
