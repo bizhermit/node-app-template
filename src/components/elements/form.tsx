@@ -6,7 +6,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null);
 
-export type FormItemMessageDisplayMode = "tooltip" | "bottom";
+export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide";
 
 type InputOmitProps = "name"
   | "defaultValue"
@@ -49,7 +49,7 @@ type FormContextProps = {
   mount: (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => string;
   unmount: (name: string) => void;
   validation: () => void;
-  messageDisplayMode?: FormItemMessageDisplayMode;
+  messageDisplayMode: FormItemMessageDisplayMode;
 };
 
 export const FormContext = createContext<FormContextProps>({
@@ -386,7 +386,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $mainProps?: HTMLAttributes<HTMLDivElement>;
   children: ReactNode;
 }>((props, ref) => {
-  const errorNode = Boolean(props.$$form.error) && (
+  const errorNode = (Boolean(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
       data-mode={props.$$form.messageDisplayMode}
@@ -421,7 +421,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
         </div>
       }
       {props.$$form.hasValidator && props.$$form.editable ?
-        (props.$$form.messageDisplayMode === "bottom" ?
+        (props.$$form.messageDisplayMode.startsWith("bottom") ?
           <>
             <div {...attrs}>
               {props.children}
