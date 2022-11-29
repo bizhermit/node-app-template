@@ -44,12 +44,21 @@ const App = ({ Component, pageProps }: AppProps) => {
                     key: "form",
                     label: "Form",
                     icon: "F",
-                    pathname: "/sandbox/elements/form",
                     items: [{
+                      key: "form",
+                      label: "Form",
+                      icon: "F",
+                      pathname: "/sandbox/elements/form",
+                    }, {
                       key: "check-box",
                       label: "CheckBox",
                       icon: "C",
                       pathname: "/sandbox/elements/form-items/check-box",
+                    }, {
+                      key: "toggle-box",
+                      label: "ToggleBox",
+                      icon: "T",
+                      pathname: "/sandbox/elements/form-items/toggle-box"
                     }]
                   }, {
                     key: "button",
