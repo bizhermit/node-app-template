@@ -77,7 +77,7 @@ const ToggleBox = React.forwardRef<HTMLDivElement, ToggleBoxProps>((props, ref) 
           data-checked={form.value === checkedValue}
         />
         <div
-          className={`${Style.check} bdc-${color}`}
+          className={`${Style.handle} bdc-${color}`}
           data-checked={form.value === checkedValue}
         />
       </div>

@@ -1,3 +1,5 @@
+@use "$/animation.scss";
+
 .wrap {
   box-sizing: border-box;
   display: flex;
@@ -55,24 +57,17 @@
     cursor: pointer;
 
     &:hover {
-      outline: solid;
-      outline-offset: 0rem;
-      animation: hover .8s infinite;
+      @include animation.hover;
       z-index: 1;
 
       &:active {
-        animation: none;
+        @include animation.hoverActive;
       }
     }
   }
 }
 
-@keyframes hover {
-  100% {
-    outline-color: transparent;
-    outline-offset: .6rem;
-  }
-}
+@include animation.hoverAnimation;
 
 .icon,
 .toggle {

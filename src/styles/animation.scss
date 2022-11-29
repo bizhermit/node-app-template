@@ -1,0 +1,18 @@
+@mixin hover {
+  outline: solid;
+  outline-offset: 0rem;
+  animation: hover 1s infinite;
+}
+
+@mixin hoverActive {
+  animation: none;
+}
+
+@mixin hoverAnimation {
+  @keyframes hover {
+    100% {
+      outline-color: transparent;
+      outline-offset: .6rem;
+    }
+  }
+}
