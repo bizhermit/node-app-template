@@ -1,3 +1,4 @@
+import LoadingBar from "@/components/elements/loading-bar";
 import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
@@ -10,8 +11,9 @@ const Page: NextPage = () => {
         <h2>color</h2>
         {colors.map(color => {
           return (
-            <Row key={color}>
-              
+            <Row key={color} className="p-1">
+              <LoadingBar $color={color} />
+              <span>{color}</span>
             </Row>
           );
         })}
