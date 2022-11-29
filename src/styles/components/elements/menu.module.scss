@@ -120,8 +120,8 @@ nav {
   &[data-pos="bottom"] {
     .content {
       padding-left: 0 !important;
-      background: var(--bgc-main);
-      color: var(--fgc-main);
+      background: var(--bgc-nav);
+      color: var(--fgc-nav);
     }
 
     >.wrap {

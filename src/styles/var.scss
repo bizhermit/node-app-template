@@ -3,7 +3,7 @@ $size: 3.6rem;
 $fontSize: 1.6rem;
 $iconSize: 2.0rem;
 
-$lightMainColor: rgb(211, 211, 214);
+$lightMainColor: rgb(199, 215, 224);
 $darkMainColor: rgb(35, 35, 38);
 $lightSubColor: rgb(70, 100, 140);
 $darkSubColor: rgb(60, 90, 130);
@@ -40,6 +40,10 @@ $colorMap: (
   "error": (
     "light": rgb(255, 225, 225),
     "dark": rgb(70, 48, 48),
+  ),
+  "nav": (
+    "light": rgb(52, 58, 64),
+    "dark": rgb(27, 35, 40),
   ),
   "main": (
     "light": $lightMainColor,

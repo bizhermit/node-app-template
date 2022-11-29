@@ -47,7 +47,7 @@ const CheckBox = React.forwardRef<HTMLDivElement, CheckBoxProps>((props, ref) =>
     if (e.key === "Enter" || e.key === " ") toggleCheck();
   };
 
-  const color = props.$color || "sub";
+  const color = props.$color || "main";
 
   return (
     <FormItemWrap
