@@ -1,7 +1,7 @@
 import Button from "@/components/elements/button";
 import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
-import Row from "@/components/templates/row";
+import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 import { CSSProperties } from "react";

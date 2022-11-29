@@ -6,7 +6,6 @@ import LabelText from "@/pages/sandbox/elements/label-text";
 export type CheckBoxProps = FormItemProps<string | number | boolean> & {
   $checkedValue?: string | number | boolean;
   $uncheckedValue?: string | number | boolean;
-  $color?: Color;
   $outline?: boolean;
   children?: ReactNode;
 };

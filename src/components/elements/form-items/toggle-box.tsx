@@ -3,10 +3,9 @@ import React, { ReactNode, useRef } from "react";
 import Style from "$/components/elements/form-items/toggle-box.module.scss";
 import LabelText from "@/pages/sandbox/elements/label-text";
 
-export type ToggleBoxProps = FormItemProps<string | number | boolean> & {
-  $checkedValue?: string | number | boolean;
-  $uncheckedValue?: string | number | boolean;
-  $color?: Color;
+export type ToggleBoxProps<T extends string | number | boolean = boolean> = FormItemProps<T> & {
+  $checkedValue?: T;
+  $uncheckedValue?: T;
   $outline?: boolean;
   children?: ReactNode;
 };

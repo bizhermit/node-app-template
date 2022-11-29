@@ -1,5 +1,5 @@
 import NextLink from "@/components/elements/link";
-import Row from "@/components/templates/row";
+import Row from "@/components/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 

@@ -1,5 +1,5 @@
 import CheckBox from "@/components/elements/form-items/check-box";
-import Row from "@/components/templates/row";
+import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 
@@ -12,7 +12,7 @@ const Page: NextPage = () => {
         <CheckBox $disabled>disabled</CheckBox>
       </Row>
       <CheckBox
-        $placeholder="CheckBox"
+        $tag="CheckBox"
       >
         チェックボックス
       </CheckBox>

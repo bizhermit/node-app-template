@@ -1,12 +1,13 @@
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export type TextBoxProps = FormItemProps<string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $maxLength?: number;
   $minLength?: number;
+  $round?: boolean;
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
@@ -46,6 +47,8 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
       {...props}
       ref={ref}
       $$form={form}
+      data-round={props.$round}
+      data-has={Boolean(form.value)}
     >
       <input
         ref={iref}
@@ -56,8 +59,8 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         disabled={form.disabled}
         readOnly={form.readOnly}
         maxLength={props.$maxLength}
-        minLength={props.$minLength}
         tabIndex={props.tabIndex}
+        defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
       />
     </FormItemWrap>
