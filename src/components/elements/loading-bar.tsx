@@ -1,4 +1,4 @@
-import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
+import { attributes } from "@/utilities/attributes";
 import React, { createContext, FC, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/loading-bar.module.scss";
 import usePortalElement from "@/hooks/portal-element";
