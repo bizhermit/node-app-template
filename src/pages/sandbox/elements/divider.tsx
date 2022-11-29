@@ -1,4 +1,5 @@
 import Divider from "@/components/elements/divider";
+import TextBox from "@/components/elements/form-items/text-box";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 
@@ -10,12 +11,16 @@ const Page: NextPage = () => {
         <h2>divider</h2>
         <Divider className="p-1" />
         <Divider className="p-1" $height={3} />
+        <Divider className="p-1" $align="right" />
       </section>
       <section>
         <h2>text</h2>
         <Divider className="p-1" $align="left">left</Divider>
         <Divider className="p-1" $align="center">center</Divider>
         <Divider className="p-1" $align="right">right</Divider>
+        <Divider>
+          <TextBox placeholder="react node" />
+        </Divider>
       </section>
       <section>
         <h2>color</h2>

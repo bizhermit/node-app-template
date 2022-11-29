@@ -12,6 +12,8 @@ export type DividerProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
+  const align = props.children ? props.$align || "center" : undefined;
+
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
@@ -20,14 +22,19 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
       <div
         className={`${Style.border} bgc-${props.$color || "border"}`}
         style={{ height: convertSizeNumToStr(props.$height, "") }}
+        data-short={align === "left"}
       />
       {props.children &&
-        <div
-          className={Style.children}
-          data-align={props.$align || "center"}
-        >
-          <LabelText className={Style.text}>{props.children}</LabelText>
-        </div>
+        <>
+          <div className={Style.children}>
+            <LabelText className={Style.text}>{props.children}</LabelText>
+          </div>
+          <div
+            className={`${Style.border} bgc-${props.$color || "border"}`}
+            style={{ height: convertSizeNumToStr(props.$height, "") }}
+            data-short={align === "right"}
+          />
+        </>
       }
     </div>
   );

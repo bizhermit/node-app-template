@@ -1,7 +1,10 @@
 .wrap {
   box-sizing: border-box;
   position: relative;
-  display: block;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   min-height: fit-content;
   overflow: visible;
@@ -9,39 +12,29 @@
 
 .border {
   box-sizing: border-box;
-  display: block;
-  height: 0.1rem;
+  display: inline-block;
+  min-height: 0.1rem;
   border-radius: 9999px;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  
+  &[data-short="true"] {
+    flex: none;
+    width: 5%;
+  }
 }
 
 .children {
   box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  left: 0;
   height: 100%;
-  width: 100%;
+  width: fit-content;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-
-  &[data-align="left"] {
-    justify-content: flex-start;
-    padding-left: 5%;
-  }
-
-  &[data-align="center"] {
-    justify-content: center;
-  }
-
-  &[data-align="right"] {
-    justify-content: flex-end;
-    padding-right: 5%;
-  }
+  justify-content: center;
+  flex: none;
 }
 
 .text {
-  background: var(--bgc-base);
-  padding: 0 1rem;
+  padding: var(--padding-top-text) 1rem 0 1rem;
 }
