@@ -11,7 +11,7 @@
   "homepage": "https://bizhermit.com",
   "scripts": {
     "clean": "npx rimraf .next",
-    "dev": "npx next dev",
+    "dev": "npx next dev -p 3003",
     "build": "npx next build",
     "next": "npm run clean && npm run build && npx next start",
     "export": "npm run clean && npm run build && npx rimraf dist/out && npx next export -o dist/out",

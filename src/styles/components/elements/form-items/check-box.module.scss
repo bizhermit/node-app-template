@@ -1,3 +1,27 @@
+@use "$/animation.scss";
+
+.main {
+  &[data-editable="true"] {
+    &:hover {
+      .box {
+        &::before {
+          @include animation.hover;
+        }
+      }
+
+      &:active {
+        .box {
+          &::before {
+            @include animation.hoverActive;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include animation.hoverAnimation;
+
 .body {
   box-sizing: border-box;
   position: relative;
