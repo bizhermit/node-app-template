@@ -9,85 +9,88 @@ import Menu from "@/components/elements/menu";
 import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbComponents } from "react-icons/tb";
+import { LoadingBarProvider } from "@/components/elements/loading-bar";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider>
       <IconContext.Provider value={{ className: "react-icon" }}>
-        <NavigationContainer
-          className="w-100 h-100"
-        // $navigationMode="manual"
-        // $navigationPosition="top"
-        // $footerVisible="always"
-        >
-          <div>Header</div>
-          {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
-          <>
-            <Menu
-              className="flex-1"
-              // $direction="horizontal"
-              style={{ width: 200 }}
-              $items={[{
-                key: "index",
-                icon: <MdOutlinePowerSettingsNew />,
-                label: "Index",
-                pathname: "/",
-              }, {
-                key: "sandbox",
-                icon: <AiOutlineCodeSandbox />,
-                label: "SandBox",
-                items: [{
-                  key: "elements",
-                  icon: <TbComponents />,
-                  label: "Elements",
+        <LoadingBarProvider>
+          <NavigationContainer
+            className="w-100 h-100"
+          // $navigationMode="manual"
+          // $navigationPosition="top"
+          // $footerVisible="always"
+          >
+            <div>Header</div>
+            {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
+            <>
+              <Menu
+                className="flex-1"
+                // $direction="horizontal"
+                style={{ width: 200 }}
+                $items={[{
+                  key: "index",
+                  icon: <MdOutlinePowerSettingsNew />,
+                  label: "Index",
+                  pathname: "/",
+                }, {
+                  key: "sandbox",
+                  icon: <AiOutlineCodeSandbox />,
+                  label: "SandBox",
                   items: [{
-                    key: "form",
-                    label: "Form",
-                    icon: "F",
+                    key: "elements",
+                    icon: <TbComponents />,
+                    label: "Elements",
                     items: [{
                       key: "form",
                       label: "Form",
                       icon: "F",
-                      pathname: "/sandbox/elements/form",
+                      items: [{
+                        key: "form",
+                        label: "Form",
+                        icon: "F",
+                        pathname: "/sandbox/elements/form",
+                      }, {
+                        key: "check-box",
+                        label: "CheckBox",
+                        icon: "C",
+                        pathname: "/sandbox/elements/form-items/check-box",
+                      }, {
+                        key: "toggle-box",
+                        label: "ToggleBox",
+                        icon: "T",
+                        pathname: "/sandbox/elements/form-items/toggle-box",
+                      }, {
+                        key: "text-box",
+                        label: "TextBox",
+                        icon: "T",
+                        pathname: "/sandbox/elements/form-items/text-box",
+                      }]
                     }, {
-                      key: "check-box",
-                      label: "CheckBox",
-                      icon: "C",
-                      pathname: "/sandbox/elements/form-items/check-box",
+                      key: "button",
+                      label: "Button",
+                      icon: "B",
+                      pathname: "/sandbox/elements/button",
                     }, {
-                      key: "toggle-box",
-                      label: "ToggleBox",
-                      icon: "T",
-                      pathname: "/sandbox/elements/form-items/toggle-box",
+                      key: "link",
+                      label: "NextLink",
+                      icon: "L",
+                      pathname: "/sandbox/elements/link",
                     }, {
-                      key: "text-box",
-                      label: "TextBox",
-                      icon: "T",
-                      pathname: "/sandbox/elements/form-items/text-box",
+                      key: "link",
+                      label: "LoadingBar",
+                      icon: "L",
+                      pathname: "/sandbox/elements/loading-bar",
                     }]
-                  }, {
-                    key: "button",
-                    label: "Button",
-                    icon: "B",
-                    pathname: "/sandbox/elements/button",
-                  }, {
-                    key: "link",
-                    label: "NextLink",
-                    icon: "L",
-                    pathname: "/sandbox/elements/link",
-                  }, {
-                    key: "link",
-                    label: "LoadingBar",
-                    icon: "L",
-                    pathname: "/sandbox/elements/loading-bar",
                   }]
-                }]
-              }]}
-            />
-          </>
-          <Component {...pageProps} />
-          <div>foot</div>
-        </NavigationContainer>
+                }]}
+              />
+            </>
+            <Component {...pageProps} />
+            <div>foot</div>
+          </NavigationContainer>
+        </LoadingBarProvider>
       </IconContext.Provider>
     </LayoutProvider>
   );
