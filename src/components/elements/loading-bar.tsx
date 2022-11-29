@@ -1,4 +1,4 @@
-import { attributes } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/utilities/attributes";
 import React, { createContext, FC, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/loading-bar.module.scss";
 import usePortalElement from "@/hooks/portal-element";
@@ -7,17 +7,18 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type LoadingBarProps = HTMLAttributes<HTMLDivElement> & {
   $color?: Color;
+  $reverseColor?: boolean;
   $fixed?: boolean;
 };
 
 const LoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>((props, ref) => {
   return (
     <div
-      {...attributes(props, Style.wrap)}
+      {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
       data-fixed={props.$fixed}
     >
-      <div className={`${Style.bar} bgc-${props.$color || "main"}`} />
+      <div className={`${Style.bar} bgc-${props.$color || "main"}${props.$reverseColor ? "_r" : ""}`} />
     </div>
   );
 });

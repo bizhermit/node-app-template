@@ -35,10 +35,16 @@ const Page: NextPage = () => {
         <h2>color</h2>
         {colors.map(color => {
           return (
-            <Row key={color} className="p-1">
-              <LoadingBar $color={color} />
-              <span>{color}</span>
-            </Row>
+            <div>
+              <Row key={color} className="p-1 mt-1">
+                <LoadingBar $color={color} />
+                <span>{color}</span>
+              </Row>
+              <Row key={color} className={`p-1 c-${color}`}>
+                <LoadingBar $color={color} $reverseColor />
+                <span>{color} reverse</span>
+              </Row>
+            </div>
           );
         })}
       </section>

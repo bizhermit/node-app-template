@@ -78,11 +78,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                       icon: "L",
                       pathname: "/sandbox/elements/link",
                     }, {
-                      key: "link",
+                      key: "loading-bar",
                       label: "LoadingBar",
                       icon: "L",
                       pathname: "/sandbox/elements/loading-bar",
-                    }]
+                    }, {
+                      key: "divider",
+                      label: "Divider",
+                      icon: "D",
+                      pathname: "/sandbox/elements/divider"
+                    }],
                   }]
                 }]}
               />
