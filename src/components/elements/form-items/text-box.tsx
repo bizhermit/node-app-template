@@ -1,4 +1,4 @@
-import Style from "@/styles/components/elements/form-items/form-item.module.scss";
+import Style from "$/components/elements/form-items/form-item.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { useRef } from "react";
 

@@ -1,4 +1,4 @@
-import Style from "@/styles/components/elements/button.module.scss";
+import Style from "$/components/elements/button.module.scss";
 import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren } from "@/utilities/attributes";
 import { useForm } from "@/components/elements/form";

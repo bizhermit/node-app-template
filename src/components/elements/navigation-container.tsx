@@ -1,6 +1,6 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
 import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import Style from "@/styles/components/elements/navigation-container.module.scss";
+import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/utilities/attributes";
 import useAccordionEffect from "@/hooks/accordion";
