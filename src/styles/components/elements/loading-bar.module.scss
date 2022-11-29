@@ -1,3 +1,78 @@
+$bar1Width: 25%;
+$bar2Width: 15%;
+
 .wrap {
   box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0.5rem;
+  width: 100%;
+  z-index: 999;
+  overflow: hidden;
+
+  &[data-fixed="true"] {
+    position: fixed;
+    z-index: 99999;
+  }
+}
+
+.bar {
+
+  &::before,
+  &::after {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    top: 0;
+    height: 100%;
+    border-radius: 9999px;
+    animation-timing-function: ease-in-out;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    background: inherit;
+    left: 0;
+  }
+
+  &::before {
+    width: #{$bar1Width};
+    left: -#{$bar1Width};
+    animation-name: bar1;
+  }
+
+  &::after {
+    width: #{$bar2Width};
+    left: -#{$bar2Width};
+    animation-name: bar2;
+    animation-delay: 1.2s;
+  }
+}
+
+@keyframes bar1 {
+  0% {
+    left: -#{$bar1Width};
+  }
+
+  70% {
+    left: #{$bar1Width + 100%};
+  }
+
+  100% {
+    left: #{$bar1Width + 100%};
+  }
+}
+
+@keyframes bar2 {
+  0% {
+    left: -#{$bar2Width};
+  }
+
+  70% {
+    left: #{$bar2Width + 100%};
+  }
+
+  100% {
+    left: #{$bar2Width + 100%};
+  }
 }
