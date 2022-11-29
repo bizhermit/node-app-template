@@ -26,7 +26,10 @@ const Page: NextPage = () => {
         <h2>color</h2>
         {colors.map(color => {
           return (
-            <Divider key={color} $color={color} className="py-1 px-1">{color}</Divider>
+            <div key={color}>
+              <Divider $color={color} className="py-1 px-1">{color}</Divider>
+              <Divider $color={color} $reverseColor className="py-1 px-1">{`${color} reverse`}</Divider>
+            </div>
           );
         })}
       </section>
