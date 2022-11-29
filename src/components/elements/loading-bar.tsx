@@ -7,6 +7,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type LoadingBarProps = HTMLAttributes<HTMLDivElement> & {
   $color?: Color;
+  $reverseColor?: boolean;
   $fixed?: boolean;
 };
 
@@ -17,7 +18,7 @@ const LoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>((props, ref
       ref={ref}
       data-fixed={props.$fixed}
     >
-      <div className={`${Style.bar} bgc-${props.$color || "main"}`} />
+      <div className={`${Style.bar} bgc-${props.$color || "main"}${props.$reverseColor ? "_r" : ""}`} />
     </div>
   );
 });
