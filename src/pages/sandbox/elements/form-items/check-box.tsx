@@ -2,8 +2,11 @@ import CheckBox from "@/components/elements/form-items/check-box";
 import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
+import { useState } from "react";
 
 const Page: NextPage = () => {
+  const [value, setValue] = useState(0);
+
   return (
     <div className="flex-box flex-start p-1">
       <Row>
@@ -18,6 +21,12 @@ const Page: NextPage = () => {
       </CheckBox>
       <CheckBox
         $outline
+        $checkedValue={1}
+        $uncheckedValue={0}
+        $value={value}
+        $onChange={v => {
+          setValue(v!);
+        }}
       >
         outline
       </CheckBox>

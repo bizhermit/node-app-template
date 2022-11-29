@@ -1,6 +1,6 @@
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 export type TextBoxProps = FormItemProps<string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";

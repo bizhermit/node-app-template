@@ -1,19 +1,23 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { ReactNode, useRef } from "react";
+import React, { FunctionComponent, ReactElement, ReactNode, useRef } from "react";
 import Style from "$/components/elements/form-items/toggle-box.module.scss";
 import LabelText from "@/pages/sandbox/elements/label-text";
 
-export type ToggleBoxProps<T extends string | number | boolean = boolean> = FormItemProps<T> & {
+export type ToggleBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
   $checkedValue?: T;
   $uncheckedValue?: T;
   $outline?: boolean;
   children?: ReactNode;
 };
 
-const ToggleBox = React.forwardRef<HTMLDivElement, ToggleBoxProps>((props, ref) => {
+interface ToggleBoxFC extends FunctionComponent {
+  <T extends string | number | boolean = boolean>(attrs: ToggleBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(<T extends string | number | boolean = boolean>(props: ToggleBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
-  const checkedValue = props.$checkedValue ?? true;
-  const uncheckedValue = props.$uncheckedValue ?? false;
+  const checkedValue = (props.$checkedValue ?? true) as T;
+  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
 
   const form = useForm(props, {
     effect: (v) => {
