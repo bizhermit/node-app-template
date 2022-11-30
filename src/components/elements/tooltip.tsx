@@ -9,6 +9,7 @@ type TooltipProps = HTMLAttributes<HTMLDivElement> & {
     x?: "outer" | "outer-left" | "outer-right",
     y?: "outer" | "outer-top" | "outer-bottom",
   },
+  $animationDuration?: number;
   children: ReactNode | [ReactNode] | [ReactNode, ReactNode];
 };
 
@@ -23,20 +24,20 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => 
   const [showed, setShowed] = useState(false);
   const mousePosition = useRef<MousePosition | undefined>();
   const posX = props.$position?.x || "outer";
-  const posY = props.$position?.y || "outer-top";
+  const posY = props.$position?.y || "outer";
 
   const move = useCallback((e: MouseEvent) => {
     mousePosition.current = {
-      pageX: e.pageX + cursorMargin,
-      pageY: e.pageY - cursorMargin,
+      pageX: e.pageX,
+      pageY: e.pageY,
     };
   }, []);
 
   const enter = (e: React.MouseEvent<HTMLDivElement>) => {
     if (props.$disabled) return;
     mousePosition.current = {
-      pageX: e.pageX + cursorMargin,
-      pageY: e.pageY + cursorMargin,
+      pageX: e.pageX,
+      pageY: e.pageY,
     };
     window.addEventListener("mousemove", move);
     setTimeout(() => {
@@ -70,7 +71,13 @@ const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => 
             }
           }}
           $anchor={mousePosition.current}
-          $position={{ x: posX, y: posY }}
+          $position={{
+            x: posX,
+            y: posY,
+            marginX: cursorMargin,
+            marginY: cursorMargin,
+          }}
+          $animationDuration={props.$animationDuration ?? 40}
         >
           {props.children[1]}
         </Popup>

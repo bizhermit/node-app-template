@@ -135,6 +135,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
 
 .error {
   box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
@@ -143,7 +144,6 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   font-size: calc(var(--font-size) * 0.85);
 
   &[data-mode="tooltip"] {
-    position: absolute;
     padding: calc(.5rem + var(--padding-top-text)) 1.5rem .5rem 1.5rem;
     white-space: nowrap;
     background: var(--c-error);
@@ -156,7 +156,6 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
 
   &[data-mode="bottom"],
   &[data-mode="bottom-hide"] {
-    position: relative;
     padding: var(--padding-top-text) .5rem 0 .5rem;
     overflow-wrap: break-word;
     max-width: 100%;
