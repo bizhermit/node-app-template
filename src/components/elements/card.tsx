@@ -57,6 +57,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     elementRef: bref,
     open: opened || !props.$accordion,
     direction: props.$direction || "vertical",
+    onToggled: props.$onToggled
   });
 
   const childCtx = (() => {
