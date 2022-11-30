@@ -8,7 +8,7 @@ import useToggleAnimation from "@/hooks/toggle-animation";
 const defaultAnimationDuration = 150;
 const defaultAnimationInterval = 10;
 
-type Position = {
+export type PopupPosition = {
   x?: "inner" | "outer" | "center" | "inner-left" | "inner-right" | "outer-left" | "outer-right";
   y?: "inner" | "outer" | "center" | "inner-top" | "inner-bottom" | "outer-top" | "outer-bottom";
   absolute?: boolean;
@@ -18,7 +18,7 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $show?: boolean;
   $mask?: boolean;
   $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number };
-  $position?: Position;
+  $position?: PopupPosition;
   $animationDirection?: "vertical" | "horizontal" | "none";
   $animationDuration?: number;
   $animationInterval?: number;
