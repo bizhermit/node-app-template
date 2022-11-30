@@ -19,7 +19,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           <NavigationContainer
             className="w-100 h-100"
           // $navigationMode="manual"
-          // $navigationPosition="top"
+          // $navigationPosition="right"
           // $footerVisible="always"
           >
             <div>Header</div>

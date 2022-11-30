@@ -39,7 +39,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
     const aInterval = props.animationInterval ?? defaultAnimationInterval;
     const aDirection = props.direction || "none";
     const defaultMin = "0";
-    const changeOpacity = props.changeOpacity === true;
+    const changeOpacity = props.changeOpacity === true || aDirection === "none";
     let params: T = {} as T;
 
     if (props.open) {

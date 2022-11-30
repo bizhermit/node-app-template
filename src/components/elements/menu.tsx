@@ -119,6 +119,7 @@ const MenuItem: FC<MenuItemProps & {
   useToggleAnimation({
     elementRef: ref,
     open: showItems,
+    direction: "vertical",
   });
 
   const node = (

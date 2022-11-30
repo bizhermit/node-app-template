@@ -17,6 +17,11 @@
   flex-flow: column nowrap;
   justify-content: stretch;
   align-items: stretch;
+  z-index: 0;
+
+  &:hover {
+    z-index: 1;
+  }
 
   &[data-direction="horizontal"] {
     &.root {
@@ -39,6 +44,11 @@
   align-items: stretch;
   overflow: visible;
   flex: 1 0 auto;
+  z-index: 0;
+  
+  &:hover {
+    z-index: 1;
+  }
 }
 
 .content {
