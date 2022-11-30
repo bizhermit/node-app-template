@@ -2,15 +2,28 @@ import React, { HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState 
 import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
+import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
+import LabelText from "@/pages/sandbox/elements/label-text";
 
 type ReactNodeArray = Array<ReactNode>;
+type IconPosition = "start" | "end" | "none";
 export type CardProps = HTMLAttributes<HTMLDivElement> & {
   $color?: Color;
+  $headerAlign?: "start" | "center" | "end";
+  $footerAlign?: "start" | "center" | "end";
   $accordion?: boolean;
-  $accordionDirection?: "vertical" | "horizontal";
+  $disabled?: boolean;
+  $openedIcon?: ReactNode;
+  $closedIcon?: ReactNode;
+  $iconPosition?: IconPosition | {
+    header?: IconPosition;
+    footer?: IconPosition;
+  };
+  $direction?: "vertical" | "horizontal";
   $defaultOpened?: boolean;
   $opened?: boolean;
   $preventDefaultMounted?: boolean;
+  $toggleTriger?: "header" | "footer" | "h&f";
   $onToggle?: (open: boolean) => void;
   $onToggled?: (open: boolean) => void;
   children?: ReactNode | [ReactNode] | [ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode];
@@ -43,7 +56,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   useToggleAnimation({
     elementRef: bref,
     open: opened,
-    direction: props.$accordionDirection || "vertical",
+    direction: props.$direction || "vertical",
   });
 
   const childCtx = useMemo(() => {
@@ -59,14 +72,53 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     };
   }, []);
 
+  const toggleTriger = (() => {
+    if (props.$accordion == null || props.$disabled) return { header: false, footer: false };
+    if (props.$toggleTriger === "h&f") return { header: true, footer: true };
+    if (props.$toggleTriger === "footer") return { header: false, footer: true };
+    return { header: true, footer: false };
+  })();
+
+  const iconNode = (
+    <div className={Style.icon}>
+      {opened ?
+        props.$openedIcon ?? <VscChromeMinimize /> :
+        props.$closedIcon ?? <VscAdd />
+      }
+    </div>
+  );
+
+  const iconPosCtx = (() => {
+    if (props.$iconPosition == null) return { header: "start", footer: "start" };
+    if (typeof props.$iconPosition === "string") return { header: props.$iconPosition, footer: props.$iconPosition };
+    return {
+      header: props.$iconPosition.header || "start",
+      footer: props.$iconPosition.footer || "start",
+    };
+  })();
+
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
+      data-direction={props.$direction || "vertical"}
     >
       {childCtx.header != null &&
-        <div className={Style.header}>
-          {(props.children as ReactNodeArray)[childCtx.header]}
+        <div
+          className={`${Style.header} c-${props.$color}`}
+          data-accordion={toggleTriger.header}
+          data-icon={iconPosCtx.header}
+          onClick={toggleTriger.header ? toggle : undefined}
+        >
+          {toggleTriger.header && iconNode}
+          <div
+            className={Style.content}
+            data-align={props.$headerAlign || "start"}
+          >
+            <LabelText className={Style.text}>
+              {(props.children as ReactNodeArray)[childCtx.header]}
+            </LabelText>
+          </div>
         </div>
       }
       <div
@@ -79,8 +131,21 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
         }
       </div>
       {childCtx.footer != null &&
-        <div className={Style.footer}>
-          {(props.children as ReactNodeArray)[childCtx.footer]}
+        <div
+          className={`${Style.footer} c-${props.$color}`}
+          data-accordion={toggleTriger.footer}
+          data-icon={iconPosCtx.footer}
+          onClick={toggleTriger.footer ? toggle : undefined}
+        >
+          {toggleTriger.footer && iconNode}
+          <div
+            className={Style.content}
+            data-align={props.$footerAlign || "start"}
+          >
+            <LabelText className={Style.text}>
+              {(props.children as ReactNodeArray)[childCtx.footer]}
+            </LabelText>
+          </div>
         </div>
       }
     </div>
