@@ -102,8 +102,8 @@
 nav {
   .content {
     &[data-selected="true"] {
-      background: var(--bgc-base);
-      color: var(--fgc-base);
+      background: var(--c-base);
+      color: var(--c-base_);
     }
   }
 
@@ -120,8 +120,8 @@ nav {
   &[data-pos="bottom"] {
     .content {
       padding-left: 0 !important;
-      background: var(--bgc-nav);
-      color: var(--fgc-nav);
+      background: var(--c-nav);
+      color: var(--c-nav_);
     }
 
     >.wrap {

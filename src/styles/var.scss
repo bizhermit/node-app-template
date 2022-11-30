@@ -3,23 +3,30 @@ $size: 3.6rem;
 $fontSize: 1.6rem;
 $iconSize: 2.0rem;
 
+$baseColor: (
+  "light": rgb(244, 244, 251),
+  "light_r": rgb(20, 20, 22),
+  "dark": rgb(57, 57, 59),
+  "dark_r": rgb(250, 250, 250),
+);
 $lightMainColor: rgb(120, 128, 165);
 $darkMainColor: rgb(120, 128, 155);
 $lightSubColor: rgb(164, 170, 180);
 $darkSubColor: rgb(114, 114, 120);
 
 $colorMap: (
-  "base": (
-    "light": rgb(244, 244, 251),
-    "dark": rgb(57, 57, 59),
-  ),
+  "base": $baseColor,
   "pure": (
     "light": #fff,
-    "dark": #000,
+    "light_r": #000,
+    "dark": #fff,
+    "dark_r": #000,
   ),
   "dull": (
     "light": rgb(250, 250, 255),
-    "dark": rgb(62, 62, 65),
+    "light_r": rgb(100, 100, 102),
+    "dark": rgb(200, 200, 202),
+    "dark_r": rgb(62, 62, 65),
   ),
   "border": (
     "light": rgb(144, 144, 153),
@@ -31,15 +38,21 @@ $colorMap: (
   ),
   "mask": (
     "light": rgba(127, 127, 127, 0.3),
+    "light_r": map-get($baseColor, light_r),
     "dark": rgba(60, 60, 63, 0.3),
+    "dark_r": map-get($baseColor, dark_r),
   ),
   "input": (
     "light": #fff,
+    "light_r": map-get($baseColor, light_r),
     "dark": rgb(50, 50, 53),
+    "dark_r": map-get($baseColor, dark_r),
   ),
   "error": (
     "light": rgb(255, 225, 225),
+    "light_r": map-get($baseColor, light_r),
     "dark": rgb(70, 48, 48),
+    "dark_r": map-get($baseColor, dark_r),
   ),
   "nav": (
     "light": rgb(52, 58, 64),

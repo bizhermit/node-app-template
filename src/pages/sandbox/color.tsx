@@ -1,0 +1,33 @@
+import Row from "@/components/elements/row";
+import { colors } from "@/utilities/sandbox";
+import { NextPage } from "next";
+
+const Page: NextPage = () => {
+  return (
+    <div className="flex-box flex-stretch p-1 w-100">
+      {colors.map(color => {
+        return (
+          <Row key={color} className="w-100">
+            <div className={`flex-1 p-1 c-${color}`}>
+              <span>c-{color}</span>
+            </div>
+            <div className={`flex-1 p-1 fgc-${color}`}>
+              <span>fgc-{color}</span>
+            </div>
+            <div className={`flex-1 p-1 bgc-${color}`}>
+              <span>bgc-{color}</span>
+            </div>
+            <div className={`flex-1 p-1`}>
+              <span className={`bdc-${color}`} style={{ border: "3px solid"}}>bdc-{color}</span>
+            </div>
+            <div className={`flex-1 p-1 c-${color}`}>
+              <span className={`bdc-${color}_r`} style={{ border: "3px solid"}}>bdc-{color}_r</span>
+            </div>
+          </Row>
+        )
+      })}
+    </div>
+  );
+};
+
+export default Page;

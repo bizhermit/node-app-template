@@ -39,6 +39,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                   icon: <AiOutlineCodeSandbox />,
                   label: "SandBox",
                   items: [{
+                    key: "color",
+                    icon: "C",
+                    label: "Color",
+                    pathname: "/sandbox/color",
+                  }, {
                     key: "elements",
                     icon: <TbComponents />,
                     label: "Elements",

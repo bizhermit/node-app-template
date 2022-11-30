@@ -45,10 +45,10 @@ const useAccordionEffect = (props: Props, deps: Array<any> = []) => {
         props.elementRef.current.style.removeProperty("opacity");
         props.elementRef.current.style.removeProperty("display");
         if (aDirection === "horizontal") {
-          props.elementRef.current.style.width = convertSizeNumToStr(props.max);
+          props.elementRef.current.style.width = convertSizeNumToStr(props.max, "unset");
           props.elementRef.current.style.overflowX = "hidden";
         } else {
-          props.elementRef.current.style.height = convertSizeNumToStr(props.max);
+          props.elementRef.current.style.height = convertSizeNumToStr(props.max, "unset");
           props.elementRef.current.style.overflowY = "hidden";
         }
         setTimeout(() => {
@@ -65,9 +65,9 @@ const useAccordionEffect = (props: Props, deps: Array<any> = []) => {
       }
       props.elementRef.current.style.visibility = "unset";
       if (aDirection === "horizontal") {
-        props.elementRef.current.style.width = convertSizeNumToStr(props.max);
+        props.elementRef.current.style.width = convertSizeNumToStr(props.max, "unset");
       } else {
-        props.elementRef.current.style.height = convertSizeNumToStr(props.max);
+        props.elementRef.current.style.height = convertSizeNumToStr(props.max, "unset");
       }
 
       const max = aDirection === "horizontal" ?

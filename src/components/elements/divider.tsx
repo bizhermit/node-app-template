@@ -9,6 +9,7 @@ export type DividerProps = HTMLAttributes<HTMLDivElement> & {
   $height?: number | string;
   children?: ReactNode;
   $align?: "left" | "center" | "right";
+  $shortWidth?: number | string;
 };
 
 const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
@@ -22,7 +23,10 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
     >
       <div
         className={`${Style.border} ${colorClassName}`}
-        style={{ height: convertSizeNumToStr(props.$height, "") }}
+        style={{
+          height: convertSizeNumToStr(props.$height, ""),
+          width: align === "left" ? convertSizeNumToStr(props.$shortWidth) : undefined,
+        }}
         data-short={align === "left"}
       />
       {props.children &&
@@ -32,7 +36,10 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
           </div>
           <div
             className={`${Style.border} ${colorClassName}`}
-            style={{ height: convertSizeNumToStr(props.$height, "") }}
+            style={{
+              height: convertSizeNumToStr(props.$height, ""),
+              width: align === "right" ? convertSizeNumToStr(props.$shortWidth) : undefined,
+            }}
             data-short={align === "right"}
           />
         </>

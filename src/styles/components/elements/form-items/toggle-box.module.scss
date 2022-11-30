@@ -53,7 +53,7 @@ $animationTime: 0.3s;
 
   &[data-editable="true"] {
     &[data-checked="false"] {
-      background: var(--bgc-input) !important;
+      background: var(--c-input) !important;
     }
   }
 
@@ -83,7 +83,7 @@ $animationTime: 0.3s;
     border-width: 0.1rem;
     border-style: solid;
     border-color: inherit;
-    background: var(--bgc-input);
+    background: var(--c-input);
     transition: border-width 0.1s, outline 0.1s;
   }
 

@@ -137,7 +137,7 @@
     }
 
     @else {
-      box-shadow: 0 0.1rem ($i * 0.2rem) 0 var(--bgc-shadow) !important;
+      box-shadow: 0 0.1rem ($i * 0.2rem) 0 var(--c-shadow) !important;
     }
   }
 
@@ -147,7 +147,7 @@
     }
 
     @else {
-      filter: drop-shadow(0 0.1rem ($i * 0.05rem) var(--bgc-shadow)) !important;
+      filter: drop-shadow(0 0.1rem ($i * 0.05rem) var(--c-shadow)) !important;
     }
   }
 }
@@ -331,7 +331,7 @@
 // border
 
 .border {
-  border: 1px solid var(--bgc-border) !important;
+  border: 1px solid var(--c-border) !important;
 }
 
 // scroll
