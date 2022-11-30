@@ -55,6 +55,9 @@
   .bgc-#{$key} {
     background: var(--c-#{$key}) !important;
   }
+  .bgc-#{$key}_r {
+    background: var(--c-#{$key}_) !important;
+  }
   .fgc-#{$key} {
     @if $hasR {
       color: var(--c-#{$key}_) !important;
