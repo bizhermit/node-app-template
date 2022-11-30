@@ -8,17 +8,19 @@ import useToggleAnimation from "@/hooks/toggle-animation";
 const defaultAnimationDuration = 150;
 const defaultAnimationInterval = 10;
 
-type Position = {
+export type PopupPosition = {
   x?: "inner" | "outer" | "center" | "inner-left" | "inner-right" | "outer-left" | "outer-right";
   y?: "inner" | "outer" | "center" | "inner-top" | "inner-bottom" | "outer-top" | "outer-bottom";
   absolute?: boolean;
+  marginX?: number;
+  marginY?: number;
 };
 
 export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $show?: boolean;
   $mask?: boolean;
   $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number };
-  $position?: Position;
+  $position?: PopupPosition;
   $animationDirection?: "vertical" | "horizontal" | "none";
   $animationDuration?: number;
   $animationInterval?: number;
@@ -74,6 +76,8 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         let posX = props.$position?.x || "center";
         let posY = props.$position?.y || "center";
         const posAbs = props.$position?.absolute === true;
+        const marginX = props.$position?.marginX ?? 0;
+        const marginY = props.$position?.marginY ?? 0;
         let rect = {
           top: 0, bottom: 0, left: 0, right: 0,
           width: 0, height: 0,
@@ -95,6 +99,16 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           const anchor = props.$anchor;
           rect.top = rect.bottom = anchor.pageY;
           rect.left = rect.right = anchor.pageX;
+        }
+        if (marginX) {
+          rect.width += marginX * 2
+          rect.left -= marginX;
+          rect.right += marginX;
+        }
+        if (marginY) {
+          rect.height += marginY * 2;
+          rect.top -= marginY;
+          rect.bottom += marginY;
         }
 
         switch (posX) {
