@@ -2,7 +2,7 @@ import React, { CSSProperties, FC, HTMLAttributes, Key, ReactNode, useCallback, 
 import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
-import useAccordionEffect from "@/hooks/accordion";
+import useToggleAnimation from "@/hooks/toggle-animation";
 import { useRouter } from "next/router";
 import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
@@ -116,7 +116,7 @@ const MenuItem: FC<MenuItemProps & {
     }
   }, []);
 
-  useAccordionEffect({
+  useToggleAnimation({
     elementRef: ref,
     open: showItems,
   });

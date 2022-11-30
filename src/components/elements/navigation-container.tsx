@@ -3,7 +3,7 @@ import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContex
 import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/utilities/attributes";
-import useAccordionEffect from "@/hooks/accordion";
+import useToggleAnimation from "@/hooks/toggle-animation";
 
 export type NavigationPosition = "left" | "right" | "top" | "bottom";
 
@@ -90,7 +90,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     setShowedNav(open);
   }, []);
 
-  useAccordionEffect({
+  useToggleAnimation({
     elementRef: navRef,
     open: navMode === "visible" || showedNav,
     direction: (navPosition === "top" || navPosition === "bottom") ? "vertical" : "horizontal",

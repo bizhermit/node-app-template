@@ -28,7 +28,7 @@ type Props<T extends Struct = {}> = {
 const defaultAnimationTime = 150;
 const defaultAnimationInterval = 10;
 
-const useAccordionEffect = <T extends Struct = {}>(props: Props<T>, deps: Array<any> = []) => {
+const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<any> = []) => {
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -320,6 +320,8 @@ const useAccordionEffect = <T extends Struct = {}>(props: Props<T>, deps: Array<
       props.destructor?.(props.open, params);
     };
   }, [props.open, ...deps]);
+
+  return props.open;
 };
 
-export default useAccordionEffect;
+export default useToggleAnimation;

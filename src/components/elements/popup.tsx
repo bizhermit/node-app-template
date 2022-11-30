@@ -3,7 +3,7 @@ import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
 import { attributes, convertSizeNumToStr } from "@/utilities/attributes";
-import useAccordionEffect from "@/hooks/accordion";
+import useToggleAnimation from "@/hooks/toggle-animation";
 
 const defaultAnimationDuration = 150;
 const defaultAnimationInterval = 10;
@@ -52,7 +52,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     setShowed(props.$show === true);
   }, [props.$show]);
 
-  useAccordionEffect({
+  useToggleAnimation({
     elementRef: ref,
     open: showed,
     changeOpacity: true,
