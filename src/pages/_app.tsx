@@ -19,7 +19,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           <NavigationContainer
             className="w-100 h-100"
           // $navigationMode="manual"
-          // $navigationPosition="top"
+          // $navigationPosition="right"
           // $footerVisible="always"
           >
             <div>Header</div>
@@ -92,6 +92,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Divider",
                       icon: "D",
                       pathname: "/sandbox/elements/divider"
+                    }, {
+                      key: "popup",
+                      label: "Popup",
+                      icon: "P",
+                      pathname: "/sandbox/elements/popup",
                     }],
                   }]
                 }]}
