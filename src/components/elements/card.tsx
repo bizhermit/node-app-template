@@ -55,11 +55,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 
   useToggleAnimation({
     elementRef: bref,
-    open: opened,
+    open: opened || !props.$accordion,
     direction: props.$direction || "vertical",
   });
 
-  const childCtx = useMemo(() => {
+  const childCtx = (() => {
     if (!Array.isArray(props.children)) {
       return { body: -1 };
     }
@@ -70,7 +70,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
       body: hasHeader ? 1 : 0,
       footer: hasFooter ? 2 : undefined,
     };
-  }, []);
+  })();
 
   const toggleTriger = (() => {
     if (props.$accordion == null || props.$disabled) return { header: false, footer: false };

@@ -1,36 +1,44 @@
 import Card from "@/components/elements/card";
 import Divider from "@/components/elements/divider";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
+import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
+  const [opened, setOpened] = useState(true);
 
   return (
     <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
-      <div>
+      <Row className="gap-1">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-      </div>
-      <Divider className="py-1" />
+        <ToggleBox
+          $tag="opened"
+          $value={opened}
+          $onChange={v => setOpened(v!)}
+        />
+      </Row>
+      <Divider />
       <Card
         className="w-100"
+        // $opened={opened}
         $accordion
         $disabled={disabled}
         $color="main"
         $iconPosition={{
-          header: "both",
-          footer: "both",
+          header: "end",
+          footer: "start",
         }}
-        $headerAlign="end"
-        $footerAlign="start"
+        $headerAlign="start"
+        $footerAlign="end"
         $toggleTriger="h&f"
       >
-        Header
+        <></>
         <div className="flex-box flex-center p-3 w-100 c-pure">
           Content
         </div>
