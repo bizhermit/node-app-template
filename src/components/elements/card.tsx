@@ -6,7 +6,7 @@ import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import LabelText from "@/pages/sandbox/elements/label-text";
 
 type ReactNodeArray = Array<ReactNode>;
-type IconPosition = "start" | "end" | "none";
+type IconPosition = "start" | "end" | "both" | "none";
 export type CardProps = HTMLAttributes<HTMLDivElement> & {
   $color?: Color;
   $headerAlign?: "start" | "center" | "end";
@@ -88,7 +88,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     </div>
   );
 
-  const iconPosCtx = (() => {
+  const iconPosCtx: { header: IconPosition; footer: IconPosition; } = (() => {
+    if (!props.$accordion) return { header: "none", footer: "none" };
     if (props.$iconPosition == null) return { header: "start", footer: "start" };
     if (typeof props.$iconPosition === "string") return { header: props.$iconPosition, footer: props.$iconPosition };
     return {
@@ -107,10 +108,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
         <div
           className={`${Style.header} c-${props.$color}`}
           data-accordion={toggleTriger.header}
-          data-icon={iconPosCtx.header}
+          data-icon={toggleTriger.header ? iconPosCtx.header : "none"}
           onClick={toggleTriger.header ? toggle : undefined}
         >
-          {toggleTriger.header && iconNode}
+          {toggleTriger.header && (iconPosCtx.header === "start" || iconPosCtx.header === "both") && iconNode}
           <div
             className={Style.content}
             data-align={props.$headerAlign || "start"}
@@ -119,6 +120,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
               {(props.children as ReactNodeArray)[childCtx.header]}
             </LabelText>
           </div>
+          {toggleTriger.header && (iconPosCtx.header === "end" || iconPosCtx.header === "both") && iconNode}
         </div>
       }
       <div
@@ -134,10 +136,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
         <div
           className={`${Style.footer} c-${props.$color}`}
           data-accordion={toggleTriger.footer}
-          data-icon={iconPosCtx.footer}
+          data-icon={toggleTriger.footer ? iconPosCtx.footer : "none"}
           onClick={toggleTriger.footer ? toggle : undefined}
         >
-          {toggleTriger.footer && iconNode}
+          {toggleTriger.footer && (iconPosCtx.footer === "start" || iconPosCtx.footer === "both") && iconNode}
           <div
             className={Style.content}
             data-align={props.$footerAlign || "start"}
@@ -146,6 +148,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
               {(props.children as ReactNodeArray)[childCtx.footer]}
             </LabelText>
           </div>
+          {toggleTriger.footer && (iconPosCtx.footer === "end" || iconPosCtx.footer === "both") && iconNode}
         </div>
       }
     </div>

@@ -22,13 +22,16 @@ const Page: NextPage = () => {
         $accordion
         $disabled={disabled}
         $color="main"
-        // $iconPosition="end"
-        // $headerAlign="center"
-        // $footerAlign="center"
+        $iconPosition={{
+          header: "both",
+          footer: "both",
+        }}
+        $headerAlign="end"
+        $footerAlign="start"
         $toggleTriger="h&f"
       >
         Header
-        <div className="p-3">
+        <div className="flex-box flex-center p-3 w-100 c-pure">
           Content
         </div>
         Footer
@@ -41,7 +44,7 @@ const Page: NextPage = () => {
         $direction="horizontal"
       >
         Header
-        <div className="p-3">
+        <div className="flex-box flex-center p-3 h-100 c-pure">
           Content
         </div>
         Footer
