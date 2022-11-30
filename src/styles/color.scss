@@ -5,15 +5,17 @@
 
     @each $key, $value in var.$colorMap {
       $val: map-get($value, light);
-      --bgc-#{$key}: #{$val};
-      $invert: invert(darken($val, 30%));
-
-      @if lightness($invert)>50 {
-        --fgc-#{$key}: #{lighten($invert, 100%)};
-      }
-
-      @else {
-        --fgc-#{$key}: #{darken($invert, 100%)};
+      $val_r: map-get($value, light_r);
+      --c-#{$key}: #{$val};
+      @if $val_r == null {
+        $invert: invert(darken($val, 30%));
+        @if lightness($invert)>50 {
+          --c-#{$key}_: #{lighten($invert, 100%)};
+        } @else {
+          --c-#{$key}_: #{darken($invert, 100%)};
+        }
+      } @else {
+        --c-#{$key}_: #{$val_r};
       }
     }
   }
@@ -24,15 +26,17 @@
 
     @each $key, $value in var.$colorMap {
       $val: map-get($value, dark);
-      --bgc-#{$key}: #{$val};
-      $invert: invert(darken($val, 30%));
-
-      @if lightness($invert)>50 {
-        --fgc-#{$key}: #{lighten($invert, 100%)};
-      }
-
-      @else {
-        --fgc-#{$key}: #{darken($invert, 100%)};
+      $val_r: map-get($value, dark_r);
+      --c-#{$key}: #{$val};
+      @if $val_r == null {
+        $invert: invert(darken($val, 30%));
+        @if lightness($invert)>50 {
+          --c-#{$key}_: #{lighten($invert, 100%)};
+        } @else {
+          --c-#{$key}_: #{darken($invert, 100%)};
+        }
+      } @else {
+        --c-#{$key}_: #{$val_r};
       }
     }
   }
@@ -43,37 +47,32 @@
 }
 
 @each $key, $value in var.$colorMap {
+  $hasR: map-get($value, "light_r") != null;
   .c-#{$key} {
-    background: var(--bgc-#{$key}) !important;
-    color: var(--fgc-#{$key}) !important;
+    background: var(--c-#{$key}) !important;
+    color: var(--c-#{$key}_) !important;
   }
-
-  .c-#{$key}_r {
-    background: var(--fgc-#{$key}) !important;
-    color: var(--bgc-#{$key}) !important;
-  }
-
   .bgc-#{$key} {
-    background: var(--bgc-#{$key}) !important;
+    background: var(--c-#{$key}) !important;
   }
-
   .bgc-#{$key}_r {
-    background: var(--fgc-#{$key}) !important;
+    background: var(--c-#{$key}_) !important;
   }
-
   .fgc-#{$key} {
-    color: var(--bgc-#{$key}) !important;
+    @if $hasR {
+      color: var(--c-#{$key}_) !important;
+    } @else {
+      color: var(--c-#{$key}) !important;
+    }
   }
-
-  .fgc-#{$key}_r {
-    color: var(--fgc-#{$key}) !important;
-  }
-
   .bdc-#{$key} {
-    border-color: var(--bgc-#{$key}) !important;
+    @if $hasR {
+      border-color: var(--c-#{$key}_) !important;
+    } @else {
+      border-color: var(--c-#{$key}) !important;
+    }
   }
-
   .bdc-#{$key}_r {
-    border-color: var(--fgc-#{$key}) !important;
+    border-color: var(--c-#{$key}_) !important;
   }
 }

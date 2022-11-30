@@ -62,8 +62,8 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       showedRef.current = true;
       const end = () => {
         if (!ref.current) return;
-        ref.current.style.height = convertSizeNumToStr(props.style?.height);
-        ref.current.style.width = convertSizeNumToStr(props.style?.width);
+        ref.current.style.height = convertSizeNumToStr(props.style?.height, "unset");
+        ref.current.style.width = convertSizeNumToStr(props.style?.width, "unset");
         ref.current.style.removeProperty("overflow");
         ref.current.style.removeProperty("opacity");
         if (!mref.current) return;
@@ -72,8 +72,8 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       ref.current.style.removeProperty("display");
       ref.current.style.opacity = "0";
       ref.current.style.visibility = "unset";
-      ref.current.style.height = convertSizeNumToStr(props.style?.height);
-      ref.current.style.width = convertSizeNumToStr(props.style?.width);
+      ref.current.style.height = convertSizeNumToStr(props.style?.height, "unset");
+      ref.current.style.width = convertSizeNumToStr(props.style?.width, "unset");
       if (mref.current) {
         mref.current.style.removeProperty("display");
         mref.current.style.opacity = "0";
@@ -250,8 +250,8 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         ref.current.style.display = "none";
         ref.current.style.removeProperty("visibility");
         ref.current.style.opacity = "0";
-        ref.current.style.height = convertSizeNumToStr(props.style?.height);
-        ref.current.style.width = convertSizeNumToStr(props.style?.width);
+        ref.current.style.height = convertSizeNumToStr(props.style?.height, "unset");
+        ref.current.style.width = convertSizeNumToStr(props.style?.width, "unset");
         if (!mref.current) return;
         mref.current.style.opacity = "0";
         mref.current.style.display = "none";

@@ -45,8 +45,8 @@
 
 .header {
   min-height: var(--size);
-  background: var(--bgc-nav);
-  color: var(--fgc-nav);
+  background: var(--c-nav);
+  color: var(--c-nav_);
 
   &[data-pos="right"] {
     flex-direction: row-reverse;
@@ -54,8 +54,8 @@
 }
 
 .footer {
-  background: var(--bgc-nav);
-  color: var(--fgc-nav);
+  background: var(--c-nav);
+  color: var(--c-nav_);
 }
 
 .body {
@@ -105,8 +105,8 @@
   align-items: stretch;
   flex: none;
   z-index: 2;
-  background: var(--bgc-nav);
-  color: var(--fgc-nav);
+  background: var(--c-nav);
+  color: var(--c-nav_);
 
   &[data-pos="left"],
   &[data-pos="right"] {
@@ -161,7 +161,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background: var(--bgc-mask);
+  background: var(--c-mask);
   z-index: 1;
 }
 

@@ -11,8 +11,8 @@
   top: 0;
   left: 0;
   z-index: 99998;
-  background: var(--bgc-mask);
-  color: var(--fgc-mask);
+  background: var(--c-mask);
+  color: var(--c-mask_);
   width: 100vw !important;
   height: 100vh !important;
   transition: opacity 0.1s;
