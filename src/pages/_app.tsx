@@ -14,7 +14,7 @@ import { LoadingBarProvider } from "@/components/elements/loading-bar";
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider>
-      <IconContext.Provider value={{ className: "react-icon" }}>
+      <IconContext.Provider value={{ className: "react-icon", size: "auto" }}>
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
