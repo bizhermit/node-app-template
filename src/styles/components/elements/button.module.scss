@@ -50,8 +50,10 @@ $buttonSize: (
           min-width: calc(var(--size) * #{$value});
 
           >:global(.react-icon) {
-            height: calc(var(--icon-size) * #{$value}) !important;
-            width: calc(var(--icon-size) * #{$value}) !important;
+            &[height="auto"] {
+              height: calc(var(--icon-size) * #{$value}) !important;
+              width: calc(var(--icon-size) * #{$value}) !important;
+            }
           }
         }
       }
