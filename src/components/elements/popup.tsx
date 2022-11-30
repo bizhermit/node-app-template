@@ -22,7 +22,7 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $animationInterval?: number;
   $preventClickEvent?: boolean;
   $closeWhenClick?: boolean;
-  $onToggle?: (show?: boolean) => void;
+  $onToggle?: (show: boolean) => void;
 };
 
 const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
@@ -41,7 +41,6 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const click = (e: React.MouseEvent) => {
     if (props.$preventClickEvent) {
       e.stopPropagation();
-      e.preventDefault();
     }
   };
 

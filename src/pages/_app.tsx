@@ -92,6 +92,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Divider",
                       icon: "D",
                       pathname: "/sandbox/elements/divider"
+                    }, {
+                      key: "popup",
+                      label: "Popup",
+                      icon: "P",
+                      pathname: "/sandbox/elements/popup",
                     }],
                   }]
                 }]}
