@@ -10,6 +10,7 @@ const defaultAnimationInterval = 10;
 type Position = {
   x: "inner" | "outer" | "center" | "inner-left" | "inner-right" | "outer-left" | "outer-right";
   y: "inner" | "outer" | "center" | "inner-top" | "inner-bottom" | "outer-top" | "outer-bottom";
+  absolute?: boolean;
 };
 
 export type PopupProps = HTMLAttributes<HTMLDivElement> & {
@@ -86,6 +87,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
 
       let posX = props.$position?.x || "center";
       let posY = props.$position?.y || "center";
+      const posAbs = props.$position?.absolute === true;
       let rect = {
         top: 0, bottom: 0, left: 0, right: 0,
         width: 0, height: 0,
@@ -112,7 +114,10 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       switch (posX) {
         case "center":
           ref.current.style.removeProperty("right");
-          ref.current.style.left = (rect.left + rect.width / 2 - wMax / 2) + "px";
+          ref.current.style.left = (posAbs ?
+            rect.left + rect.width / 2 - wMax / 2 :
+            Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2), document.body.clientWidth - ref.current.offsetWidth)
+          ) + "px";
           break;
         case "inner":
           if (document.body.clientWidth - rect.left < wMax && rect.left > document.body.clientWidth - rect.right) {
@@ -125,11 +130,17 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           break;
         case "inner-left":
           ref.current.style.removeProperty("right");
-          ref.current.style.left = rect.left + "px";
+          ref.current.style.left = (posAbs ?
+            rect.left :
+            Math.min(rect.left, document.body.clientWidth - ref.current.offsetWidth)
+          ) + "px";
           break;
         case "inner-right":
           ref.current.style.removeProperty("left");
-          ref.current.style.right = (document.body.clientWidth - rect.right) + "px";
+          ref.current.style.right = (posAbs ?
+            document.body.clientWidth - rect.right :
+            Math.min(document.body.clientWidth - rect.right, document.body.clientWidth - ref.current.offsetWidth)
+          ) + "px";
           break;
         case "outer":
           if (document.body.clientWidth - rect.right < wMax && rect.left > document.body.clientWidth - rect.right) {
@@ -142,18 +153,27 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           break;
         case "outer-left":
           ref.current.style.removeProperty("left");
-          ref.current.style.right = (document.body.clientWidth - rect.left) + "px";
+          ref.current.style.right = (posAbs ?
+            document.body.clientWidth - rect.left :
+            Math.min(document.body.clientWidth - rect.right, document.body.clientWidth - ref.current.offsetWidth)
+          ) + "px";
           break;
         case "outer-right":
           ref.current.style.removeProperty("right");
-          ref.current.style.left = rect.right + "px";
+          ref.current.style.left = (posAbs ?
+            rect.right :
+            Math.min(rect.left, document.body.clientWidth - ref.current.offsetWidth)
+          ) + "px";
           break;
         default: break;
       }
       switch (posY) {
         case "center":
           ref.current.style.removeProperty("bottom");
-          ref.current.style.top = (rect.top + rect.height / 2 - hMax / 2) + "px";
+          ref.current.style.top = (posAbs ?
+            rect.top + rect.height / 2 - hMax / 2 :
+            Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2), document.body.clientHeight - ref.current.offsetHeight)
+          ) + "px";
           break;
         case "inner":
           if (document.body.clientHeight - rect.top < hMax && rect.top > document.body.clientHeight - rect.bottom) {
@@ -166,11 +186,17 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           break;
         case "inner-top":
           ref.current.style.removeProperty("bottom");
-          ref.current.style.top = rect.top + "px";
+          ref.current.style.top = (posAbs ?
+            rect.top :
+            Math.min(rect.top, document.body.clientHeight - ref.current.offsetHeight)
+          ) + "px";
           break;
         case "inner-bottom":
           ref.current.style.removeProperty("top");
-          ref.current.style.bottom = (document.body.clientHeight - rect.bottom) + "px";
+          ref.current.style.bottom = (posAbs ?
+            document.body.clientHeight - rect.bottom :
+            Math.min(document.body.clientHeight - rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
+          ) + "px";
           break;
         case "outer":
           if (document.body.clientHeight - rect.bottom < hMax && rect.top > document.body.clientHeight - rect.bottom) {
@@ -183,11 +209,17 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           break;
         case "outer-top":
           ref.current.style.removeProperty("top");
-          ref.current.style.bottom = (document.body.clientHeight - rect.top) + "px";
+          ref.current.style.bottom = (posAbs ?
+            document.body.clientHeight - rect.top :
+            Math.min(document.body.clientHeight - rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
+          ) + "px";
           break;
         case "outer-bottom":
           ref.current.style.removeProperty("bottom");
-          ref.current.style.top = rect.bottom + "px";
+          ref.current.style.top = (posAbs ?
+            rect.bottom :
+            Math.min(rect.top, document.body.clientHeight - ref.current.offsetHeight)
+          ) + "px";
           break;
         default: break;
       }

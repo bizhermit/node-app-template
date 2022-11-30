@@ -13,6 +13,7 @@ const Page: NextPage = () => {
   return (
     <div className="flex-box flex-center w-100 h-100">
       <Button
+        // className="mr-auto mb-auto"
         ref={anchorRef}
         $onClick={() => {
           setShow(true);
@@ -25,18 +26,20 @@ const Page: NextPage = () => {
         $onToggle={(v) => {
           setShow(v);
         }}
-        $closeWhenClick
         $mask
+        $closeWhenClick
         $preventClickEvent
         $anchor={anchorRef}
         $position={{
           x: "center",
-          y: "center",
+          y: "inner-bottom",
+          // absolute: true,
         }}
       >
         <div className="flex-box">
           <Form className="flex-box flex-stretch p-1 gap-1 border">
-            <TextBox />
+            <TextBox style={{ width: 300 }} />
+            <TextBox style={{ width: 300 }} />
             <Row $hAlign="center" className="gap-1 w-100">
               <Button type="submit">submit</Button>
               <Button
