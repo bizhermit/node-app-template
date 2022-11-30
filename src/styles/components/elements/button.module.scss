@@ -71,7 +71,7 @@ $buttonSize: (
   border-radius: var(--radius);
   height: 100%;
   width: 100%;
-  border: 0.15rem solid var(--bgc-border);
+  border: 0.15rem solid var(--c-border);
 
   &[data-round="true"] {
     border-radius: 9999px;

@@ -70,17 +70,17 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
-  border-color: var(--bgc-border);
+  border-color: var(--c-border);
 
   &[data-editable="true"] {
     &[data-field="true"] {
-      color: var(--fgc-input);
+      color: var(--c-input_);
 
       &::before {
         box-sizing: border-box;
         position: absolute;
         content: "";
-        background: var(--bgc-input);
+        background: var(--c-input);
         height: 100%;
         width: 100%;
         border-width: 0.1rem;
@@ -92,10 +92,10 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
       }
 
       &[data-error="true"] {
-        color: var(--fgc-error);
+        color: var(--c-error_);
 
         &::before {
-          background: var(--bgc-error);
+          background: var(--c-error);
         }
       }
     }
@@ -146,12 +146,12 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
     position: absolute;
     padding: calc(.5rem + var(--padding-top-text)) 1.5rem .5rem 1.5rem;
     white-space: nowrap;
-    background: var(--bgc-error);
-    color: var(--fgc-error);
+    background: var(--c-error);
+    color: var(--c-error_);
     opacity: 0.9;
     width: fit-content;
     border-radius: var(--radius);
-    box-shadow: 0 .1rem .8rem 0 var(--bgc-shadow);
+    box-shadow: 0 .1rem .8rem 0 var(--c-shadow);
   }
 
   &[data-mode="bottom"],
