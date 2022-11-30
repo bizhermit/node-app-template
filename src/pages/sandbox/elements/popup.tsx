@@ -31,10 +31,12 @@ const Page: NextPage = () => {
         $preventClickEvent
         $anchor={anchorRef}
         $position={{
-          x: "center",
-          y: "inner-bottom",
+          // x: "center",
+          // y: "center",
           // absolute: true,
         }}
+        // $animationDirection="horizontal"
+        // $animationDirection="vertical"
       >
         <div className="flex-box">
           <Form className="flex-box flex-stretch p-1 gap-1 border">
