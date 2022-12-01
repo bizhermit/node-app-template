@@ -72,6 +72,7 @@ const Page: NextPage = () => {
               onClick: (props) => {
                 console.log(props);
               },
+              defaultOpen: true,
               items: [{
                 key: 1,
                 attributes: {

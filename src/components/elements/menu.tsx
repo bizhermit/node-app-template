@@ -17,8 +17,9 @@ export type MenuItemProps = {
   icon?: ReactNode;
   items?: Array<MenuItemProps>;
   attributes?: ItemAttributes;
-  $openedIcon?: ReactNode;
-  $closedIcon?: ReactNode;
+  openedIcon?: ReactNode;
+  closedIcon?: ReactNode;
+  defaultOpen?: boolean;
   onClick?: (props: AddonMenuItemProps, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 };
 type AddonMenuItemProps = MenuItemProps & { nestLevel: number; };
@@ -60,7 +61,7 @@ const MenuGroup: FC<MenuProps & {
   $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
   $defaultClosedIcon?: ReactNode;
-  $toggleParent?: (open?: boolean) => void;
+  $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
   if (props.$items == null || props.$items.length === 0) return <></>;
@@ -90,12 +91,12 @@ const MenuItem: FC<MenuItemProps & {
   $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
   $defaultClosedIcon?: ReactNode;
-  $toggleParent?: (open?: boolean) => void;
+  $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
   const router = useRouter();
   const nav = useNavigation();
-  const [showItems, setShowItems] = useState(false);
+  const [showItems, setShowItems] = useState(props.defaultOpen ?? false);
   const ref = useRef<HTMLDivElement>(null!);
   const attrs = {
     ...props.$itemDefaultAttributes,
@@ -123,7 +124,8 @@ const MenuItem: FC<MenuItemProps & {
     }
   };
 
-  const toggle = useCallback((open?: boolean) => {
+  const toggle = useCallback((open?: boolean, mountInit?: boolean) => {
+    if (open && mountInit && props.defaultOpen === false) return;
     if (open == null) {
       setShowItems(c => !c);
       return;
@@ -134,7 +136,7 @@ const MenuItem: FC<MenuItemProps & {
 
   useEffect(() => {
     if (props.nestLevel > 0 && selected) {
-      props.$toggleParent?.(true);
+      props.$toggleParent?.(true, true);
     }
   }, []);
 
@@ -167,8 +169,8 @@ const MenuItem: FC<MenuItemProps & {
       {props.items == null || props.items.length === 0 ? <></> :
         <div className={Style.toggle}>
           {showItems ?
-            props.$openedIcon ?? props.$defaultOpenedIcon ?? <VscChromeMinimize /> :
-            props.$closedIcon ?? props.$defaultClosedIcon ?? <VscAdd />
+            props.openedIcon ?? props.$defaultOpenedIcon ?? <VscChromeMinimize /> :
+            props.closedIcon ?? props.$defaultClosedIcon ?? <VscAdd />
           }
         </div>
       }
@@ -194,8 +196,8 @@ const MenuItem: FC<MenuItemProps & {
           $nestLevel={props.nestLevel + 1}
           $toggleParent={toggle}
           $itemDefaultAttributes={attrs}
-          $defaultOpenedIcon={props.$openedIcon ?? props.$defaultOpenedIcon}
-          $defaultClosedIcon={props.$closedIcon ?? props.$defaultClosedIcon}
+          $defaultOpenedIcon={props.openedIcon ?? props.$defaultOpenedIcon}
+          $defaultClosedIcon={props.closedIcon ?? props.$defaultClosedIcon}
         />
       </div>
     </li>
