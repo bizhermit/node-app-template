@@ -2,7 +2,7 @@ import Style from "$/components/elements/button.module.scss";
 import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren } from "@/utilities/attributes";
 import { useForm } from "@/components/elements/form";
-import LabelText from "@/pages/sandbox/elements/label-text";
+import LabelText from "@/components/elements/label-text";
 
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
   $size?: Size;

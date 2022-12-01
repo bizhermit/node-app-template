@@ -31,8 +31,8 @@ const Page: NextPage = () => {
         $preventClickEvent
         $anchor={anchorRef}
         $position={{
-          // x: "center",
-          // y: "center",
+          x: "outer-left",
+          y: "center",
           // absolute: true,
         }}
         // $animationDirection="horizontal"

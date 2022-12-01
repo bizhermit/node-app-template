@@ -1,7 +1,7 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, ReactNode, useRef } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
-import LabelText from "@/pages/sandbox/elements/label-text";
+import LabelText from "@/components/elements/label-text";
 
 export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
   $checkedValue?: T;

@@ -6,7 +6,7 @@ import useToggleAnimation from "@/hooks/toggle-animation";
 import { useRouter } from "next/router";
 import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
-import LabelText from "@/pages/sandbox/elements/label-text";
+import LabelText from "@/components/elements/label-text";
 
 type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick" | "onKeyDown">;
 
