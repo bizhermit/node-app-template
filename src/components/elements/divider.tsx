@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, ReactNode } from "react";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/utilities/attributes";
 import Style from "$/components/elements/divider.module.scss";
-import LabelText from "@/pages/sandbox/elements/label-text";
+import LabelText from "@/components/elements/label-text";
 
 export type DividerProps = HTMLAttributes<HTMLDivElement> & {
   $color?: Color;

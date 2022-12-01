@@ -3,7 +3,7 @@ import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
-import LabelText from "@/pages/sandbox/elements/label-text";
+import LabelText from "@/components/elements/label-text";
 
 type ReactNodeArray = Array<ReactNode>;
 type IconPosition = "start" | "end" | "both" | "none";
