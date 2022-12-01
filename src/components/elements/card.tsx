@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import React, { HTMLAttributes, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
@@ -52,7 +52,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     setOpened(props.$opened);
   }, [props.$opened]);
 
-  const initToggleAnimationStyle = useToggleAnimation({
+  const toggleAnimationInitStyle = useToggleAnimation({
     elementRef: bref,
     open: opened || !props.$accordion,
     direction: props.$direction || "vertical",
@@ -125,7 +125,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
       }
       <div
         className={Style.body}
-        style={initToggleAnimationStyle}
+        style={toggleAnimationInitStyle}
         ref={bref}
       >
         {(mounted.current || opened) &&

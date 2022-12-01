@@ -23,8 +23,11 @@ const useLayout = () => {
   return useContext(LayoutContext);
 };
 
-export const LayoutProvider: FC<{ children?: ReactNode; }> = ({ children }) => {
-  const [windowSize, setWindowSize] = useState<WindowSizeValue>(WindowSize.m);
+export const LayoutProvider: FC<{
+  initWindowSize?: WindowSizeValue;
+  children?: ReactNode;
+}> = ({ initWindowSize, children }) => {
+  const [windowSize, setWindowSize] = useState<WindowSizeValue>(initWindowSize ?? WindowSize.m);
 
   const resizeWindow = useCallback(() => {
     const cw = document.body.clientWidth;

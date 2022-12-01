@@ -3,7 +3,7 @@ import { IconContext } from "react-icons";
 import "$/globals.scss";
 import "$/color.scss";
 import "$/utility.scss";
-import { LayoutProvider } from "@/components/providers/layout";
+import { LayoutProvider, WindowSize } from "@/components/providers/layout";
 import NavigationContainer from "@/components/elements/navigation-container";
 import Menu from "@/components/elements/menu";
 import { AiOutlineCodeSandbox } from "react-icons/ai";
@@ -13,14 +13,16 @@ import { LoadingBarProvider } from "@/components/elements/loading-bar";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <LayoutProvider>
+    <LayoutProvider initWindowSize={WindowSize.xl}>
       <IconContext.Provider value={{ className: "react-icon", size: "auto" }}>
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
-          // $navigationMode="manual"
-          // $navigationPosition="right"
-          // $footerVisible="always"
+            // $navigationMode="manual"
+            // $navigationMode="minimize"
+            // $navigationMode="visible"
+            // $navigationPosition="right"
+            // $footerVisible="always"
           >
             <div>Header</div>
             {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
@@ -107,6 +109,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Card",
                       icon: "C",
                       pathname: "/sandbox/elements/card",
+                    }, {
+                      key: "menu",
+                      label: "Menu",
+                      icon: "M",
+                      pathname: "/sandbox/elements/menu",
                     }],
                   }]
                 }]}

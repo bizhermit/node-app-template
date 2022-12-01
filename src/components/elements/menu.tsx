@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
@@ -8,15 +8,19 @@ import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
 import LabelText from "@/pages/sandbox/elements/label-text";
 
+type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick" | "onKeyDown">;
+
 export type MenuItemProps = {
   key?: Key;
-  className?: string;
-  style?: CSSProperties;
   pathname?: string;
   label?: ReactNode;
   icon?: ReactNode;
   items?: Array<MenuItemProps>;
-  onClick?: (props: AddonMenuItemProps) => void;
+  attributes?: ItemAttributes;
+  openedIcon?: ReactNode;
+  closedIcon?: ReactNode;
+  defaultOpen?: boolean;
+  onClick?: (props: AddonMenuItemProps, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 };
 type AddonMenuItemProps = MenuItemProps & { nestLevel: number; };
 
@@ -25,6 +29,9 @@ type Direction = "vertical" | "horizontal";
 export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   $items?: Array<MenuItemProps>;
   $direction?: Direction;
+  $itemDefaultAttributes?: ItemAttributes;
+  $defaultOpenedIcon?: ReactNode;
+  $defaultClosedIcon?: ReactNode;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean;
 };
 
@@ -37,6 +44,9 @@ const Menu = React.forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
       <MenuGroup
         className={Style.root}
         $items={props.$items}
+        $itemDefaultAttributes={props.$itemDefaultAttributes}
+        $defaultOpenedIcon={props.$defaultOpenedIcon}
+        $defaultClosedIcon={props.$defaultClosedIcon}
         $direction={props.$direction || "vertical"}
         $judgeSelected={props.$judgeSelected}
       />
@@ -48,7 +58,10 @@ const MenuGroup: FC<MenuProps & {
   $items?: Array<MenuItemProps>;
   $nestLevel?: number;
   $direction?: Direction;
-  $toggleParent?: (open?: boolean) => void;
+  $itemDefaultAttributes?: ItemAttributes;
+  $defaultOpenedIcon?: ReactNode;
+  $defaultClosedIcon?: ReactNode;
+  $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
   if (props.$items == null || props.$items.length === 0) return <></>;
@@ -62,6 +75,9 @@ const MenuGroup: FC<MenuProps & {
           {...item}
           key={item.key ?? index}
           nestLevel={props.$nestLevel ?? 0}
+          $itemDefaultAttributes={props.$itemDefaultAttributes}
+          $defaultOpenedIcon={props.$defaultOpenedIcon}
+          $defaultClosedIcon={props.$defaultClosedIcon}
           $toggleParent={props.$toggleParent}
           $judgeSelected={props.$judgeSelected}
         />
@@ -70,38 +86,64 @@ const MenuGroup: FC<MenuProps & {
   );
 };
 
-const MenuItem: FC<MenuItemProps & {
+type MenuItemPropsImpl = MenuItemProps & {
   nestLevel: number;
-  $toggleParent?: (open?: boolean) => void;
+  $itemDefaultAttributes?: ItemAttributes;
+  $defaultOpenedIcon?: ReactNode;
+  $defaultClosedIcon?: ReactNode;
+  $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
-}> = (props) => {
+};
+
+const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string) => {
+  if (props.$judgeSelected == null) {
+    return routerPathname === props.pathname;
+  }
+  return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
+};
+
+const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const router = useRouter();
   const nav = useNavigation();
-  const [showItems, setShowItems] = useState(false);
   const ref = useRef<HTMLDivElement>(null!);
+  const attrs = {
+    ...props.$itemDefaultAttributes,
+    ...props.attributes
+  };
 
   const selected = useMemo(() => {
-    if (props.$judgeSelected == null) {
-      return router.pathname === props.pathname;
-    }
-    return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
+    return judgeSelected(props, router.pathname);
   }, [router.pathname, props.$judgeSelected]);
   const selectable = Boolean(router.pathname) || (props.items?.length ?? 0) > 0 || props.onClick != null;
 
-  const click = () => {
+  const [showItems, setShowItems] = useState(() => {
+    if (props.defaultOpen != null) return props.defaultOpen;
+    const func = (p: AddonMenuItemProps) => {
+      if (p !== props && judgeSelected({...p, $judgeSelected: props.$judgeSelected }, router.pathname)) return true;
+      if (p.items == null || p.items.length === 0) return false;
+      for (let i = 0, il = p.items.length; i < il; i++) {
+        if (func({...p.items[i], nestLevel: p.nestLevel + 1})) return true;
+      }
+      return false;
+    };
+    return func(props);
+  });
+
+  const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     setShowItems(c => !c);
     if (props.pathname) nav.toggle(false);
-    props.onClick?.(props);
+    props.onClick?.(props, e);
   };
 
-  const keydown = (e: React.KeyboardEvent) => {
+  const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      click();
+      click(e);
     }
   };
 
-  const toggle = useCallback((open?: boolean) => {
+  const toggle = useCallback((open?: boolean, mountInit?: boolean) => {
+    if (open && mountInit && props.defaultOpen === false) return;
     if (open == null) {
       setShowItems(c => !c);
       return;
@@ -112,11 +154,11 @@ const MenuItem: FC<MenuItemProps & {
 
   useEffect(() => {
     if (props.nestLevel > 0 && selected) {
-      props.$toggleParent?.(true);
+      props.$toggleParent?.(true, true);
     }
   }, []);
 
-  useToggleAnimation({
+  const toggleAnimationInitStyle = useToggleAnimation({
     elementRef: ref,
     open: showItems,
     direction: "vertical",
@@ -124,8 +166,9 @@ const MenuItem: FC<MenuItemProps & {
 
   const node = (
     <div
-      className={`${Style.content}${props.className ? ` ${props.className}` : ""}`}
-      style={{ paddingLeft: `calc(1.5rem * ${props.nestLevel})`, ...props.style }}
+      {...attrs}
+      className={`${Style.content}${attrs.className ? ` ${attrs.className}` : ""}`}
+      style={{ ...attrs.style, paddingLeft: `calc(1.5rem * ${props.nestLevel})` }}
       onClick={click}
       onKeyDown={keydown}
       data-selectable={selectable}
@@ -143,7 +186,10 @@ const MenuItem: FC<MenuItemProps & {
       </div>
       {props.items == null || props.items.length === 0 ? <></> :
         <div className={Style.toggle}>
-          {showItems ? <VscChromeMinimize /> : <VscAdd />}
+          {showItems ?
+            props.openedIcon ?? props.$defaultOpenedIcon ?? <VscChromeMinimize /> :
+            props.closedIcon ?? props.$defaultClosedIcon ?? <VscAdd />
+          }
         </div>
       }
     </div>
@@ -162,11 +208,15 @@ const MenuItem: FC<MenuItemProps & {
       <div
         ref={ref}
         className={Style.children}
+        style={toggleAnimationInitStyle}
       >
         <MenuGroup
           $items={props.items}
           $nestLevel={props.nestLevel + 1}
           $toggleParent={toggle}
+          $itemDefaultAttributes={attrs}
+          $defaultOpenedIcon={props.openedIcon ?? props.$defaultOpenedIcon}
+          $defaultClosedIcon={props.closedIcon ?? props.$defaultClosedIcon}
         />
       </div>
     </li>
