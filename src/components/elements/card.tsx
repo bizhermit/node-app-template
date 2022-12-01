@@ -22,7 +22,7 @@ export type CardProps = HTMLAttributes<HTMLDivElement> & {
   $direction?: "vertical" | "horizontal";
   $defaultOpened?: boolean;
   $opened?: boolean;
-  $preventDefaultMounted?: boolean;
+  $defaultMount?: boolean;
   $toggleTriger?: "header" | "footer" | "h&f";
   $onToggle?: (open: boolean) => void;
   $onToggled?: (open: boolean) => void;
@@ -32,7 +32,7 @@ export type CardProps = HTMLAttributes<HTMLDivElement> & {
 const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   const bref = useRef<HTMLDivElement>(null!);
   const [opened, setOpened] = useState(props.$accordion ? (props.$opened ?? props.$defaultOpened ?? true) : true);
-  const mounted = useRef(props.$accordion ? (props.$preventDefaultMounted ?? true) : true);
+  const mounted = useRef(props.$accordion ? (props.$defaultMount ?? false) : true);
 
   const toggle = () => {
     if (!props.$accordion) return;
@@ -47,13 +47,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
 
   useEffect(() => {
     if (!props.$accordion) return;
-    if (props.$opened != null) {
-      if (props.$opened) mounted.current = true;
-      setOpened(props.$opened);
-    }
+    if (props.$opened == null) return;
+    if (props.$opened) mounted.current = true;
+    setOpened(props.$opened);
   }, [props.$opened]);
 
-  useToggleAnimation({
+  const initToggleAnimationStyle = useToggleAnimation({
     elementRef: bref,
     open: opened || !props.$accordion,
     direction: props.$direction || "vertical",
@@ -74,7 +73,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   })();
 
   const toggleTriger = (() => {
-    if (props.$accordion == null || props.$disabled) return { header: false, footer: false };
+    if (!props.$accordion || props.$disabled) return { header: false, footer: false };
     if (props.$toggleTriger === "h&f") return { header: true, footer: true };
     if (props.$toggleTriger === "footer") return { header: false, footer: true };
     return { header: true, footer: false };
@@ -126,11 +125,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
       }
       <div
         className={Style.body}
+        style={initToggleAnimationStyle}
         ref={bref}
       >
-        {childCtx.body === -1 ?
-          props.children :
-          (props.children as ReactNodeArray)[childCtx.body]
+        {(mounted.current || opened) &&
+          (childCtx.body === -1 ?
+            props.children :
+            (props.children as ReactNodeArray)[childCtx.body]
+          )
         }
       </div>
       {childCtx.footer != null &&

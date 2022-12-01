@@ -13,7 +13,7 @@
     "clean": "npx rimraf .next",
     "dev": "npx next dev -p 3003",
     "build": "npx next build",
-    "next": "npm run clean && npm run build && npx next start",
+    "next": "npm run clean && npm run build && npx next start -p 3003",
     "export": "npm run clean && npm run build && npx rimraf dist/out && npx next export -o dist/out",
     "prenexpress": "npm run clean && npx rimraf .nexpress && npx tsc -p nexpress/tsconfig.json",
     "dev:nexpress": "npm run prenexpress && npx cross-env NODE_ENV=\"development\" node .nexpress/main.js",
