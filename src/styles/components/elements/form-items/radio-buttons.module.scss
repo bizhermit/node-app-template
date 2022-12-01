@@ -1,11 +1,16 @@
 @use "$/animation";
 
 .main {
-  gap: 1rem;
-
   &[data-editable="true"] {
     >.item {
       cursor: pointer;
+      user-select: none;
+
+      >.box {
+        &::before {
+          background: var(--c-input);
+        }
+      }
 
       &:hover {
         >.box {
@@ -23,6 +28,16 @@
         }
       }
     }
+  }
+
+  &[data-direction="horizontal"] {
+    .label {
+      padding-right: 1rem
+    }
+  }
+  
+  &[data-direction="vertical"] {
+    flex-direction: column;
   }
 }
 
@@ -56,7 +71,6 @@
     width: 50%;
     top: 25%;
     left: 25%;
-    background: var(--c-input);
   }
 }
 

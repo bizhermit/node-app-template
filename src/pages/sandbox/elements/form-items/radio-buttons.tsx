@@ -85,6 +85,8 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <RadioButtons
+        name="radio-buttons"
+        $bind={bind}
         $disabled={disabled}
         $readOnly={readOnly}
         $source={ArrayUtils.generateArray(5, idx => {
@@ -93,6 +95,9 @@ const Page: NextPage = () => {
             label: `item${idx}`,
           };
         })}
+        $onChange={(a, b, data) => {
+          console.log(a, b, data);
+        }}
       />
     </div>
   );

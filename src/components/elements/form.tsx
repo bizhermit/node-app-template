@@ -147,7 +147,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     setTimeout(() => {
       Object.keys(items.current).forEach(name => {
         const item = items.current[name];
-        item.options.effect(item.props.$defaultValue);
+        item.options.effect?.(item.props.$defaultValue);
         item.change(item.props.$defaultValue);
       });
     }, 0);
@@ -212,7 +212,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
 export default Form;
 
 type UseFormOptions<T = any, U = any> = {
-  effect: (value: Nullable<T>) => void;
+  effect?: (value: Nullable<T>) => void;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
@@ -318,7 +318,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     if (!equals(valueRef.current, before)) {
       props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
-    options?.effect(valueRef.current);
+    options?.effect?.(valueRef.current);
     validation();
   }, [ctx.bind]);
 
@@ -330,14 +330,14 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     if (!equals(valueRef.current, before)) {
       props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
-    options?.effect(valueRef.current);
+    options?.effect?.(valueRef.current);
     validation();
   }, [props?.$bind]);
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
     setValue(props.$value);
-    options?.effect(valueRef.current);
+    options?.effect?.(valueRef.current);
     validation();
   }, [props?.$value]);
 
@@ -354,7 +354,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   }, [validation]);
 
   useEffect(() => {
-    options?.effect(valueRef.current);
+    options?.effect?.(valueRef.current);
     validation();
   }, []);
 
@@ -383,7 +383,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $preventFieldLayout?: boolean;
   $className?: string;
   $clickable?: boolean;
-  $mainProps?: HTMLAttributes<HTMLDivElement>;
+  $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
   children: ReactNode;
 }>((props, ref) => {
   const errorNode = (Boolean(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
