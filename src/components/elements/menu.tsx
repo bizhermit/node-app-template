@@ -125,7 +125,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
         if (func({...p.items[i], nestLevel: p.nestLevel + 1})) return true;
       }
       return false;
-    }
+    };
     return func(props);
   });
 

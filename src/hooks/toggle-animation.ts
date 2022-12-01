@@ -111,7 +111,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
       }
 
       let sMax = oMax;
-      let sStep = oStep
+      let sStep = oStep;
       switch (aDirection) {
         case "horizontal":
           sMax = props.elementRef.current.offsetWidth;

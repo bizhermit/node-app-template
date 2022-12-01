@@ -2,7 +2,7 @@ import usePortalElement from "@/hooks/portal-element";
 import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
-import { attributes, convertSizeNumToStr } from "@/utilities/attributes";
+import { attributes } from "@/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 
 const defaultAnimationDuration = 150;
@@ -101,7 +101,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           rect.left = rect.right = anchor.pageX;
         }
         if (marginX) {
-          rect.width += marginX * 2
+          rect.width += marginX * 2;
           rect.left -= marginX;
           rect.right += marginX;
         }
@@ -262,7 +262,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       }
       props.$destructor?.(open);
     },
-  })
+  });
 
   if (!showedRef.current && !showed) return <></>;
   if (portal == null) return <></>;
