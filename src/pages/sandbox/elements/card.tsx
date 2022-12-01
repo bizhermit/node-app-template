@@ -31,13 +31,13 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <Card
-        className="w-100"
+        className="w-100 r-2 e-4"
         // $opened={opened}
         $defaultOpened={false}
         // $defaultMount
         $accordion={accordion}
         $disabled={disabled}
-        $color="main"
+        // $color="primary"
         $iconPosition={{
           header: "end",
           footer: "start",
@@ -48,10 +48,10 @@ const Page: NextPage = () => {
       >
         <></>
         <Content />
-        {/* Footer */}
+        Footer
       </Card>
       <Card
-        className="flex-1"
+        className="flex-1 e-1 r-1"
         $color="main"
         // $opened={opened}
         $defaultOpened={false}
