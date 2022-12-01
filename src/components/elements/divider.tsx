@@ -24,7 +24,7 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
       <div
         className={`${Style.border} ${colorClassName}`}
         style={{
-          height: convertSizeNumToStr(props.$height, ""),
+          height: convertSizeNumToStr(props.$height) || undefined,
           width: align === "left" ? convertSizeNumToStr(props.$shortWidth) : undefined,
         }}
         data-short={align === "left"}
@@ -37,7 +37,7 @@ const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
           <div
             className={`${Style.border} ${colorClassName}`}
             style={{
-              height: convertSizeNumToStr(props.$height, ""),
+              height: convertSizeNumToStr(props.$height) || undefined,
               width: align === "right" ? convertSizeNumToStr(props.$shortWidth) : undefined,
             }}
             data-short={align === "right"}

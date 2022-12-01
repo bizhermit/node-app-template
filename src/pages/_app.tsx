@@ -102,6 +102,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Tooltip",
                       icon: "T",
                       pathname: "/sandbox/elements/tooltip",
+                    }, {
+                      key: "card",
+                      label: "Card",
+                      icon: "C",
+                      pathname: "/sandbox/elements/card",
                     }],
                   }]
                 }]}

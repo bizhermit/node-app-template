@@ -1,6 +1,6 @@
 import { convertSizeNumToStr } from "@/utilities/attributes";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
-import { CSSProperties, MutableRefObject, useEffect, useRef } from "react";
+import { CSSProperties, MutableRefObject, useEffect, useMemo, useRef } from "react";
 
 type Props<T extends Struct = {}> = {
   disabled?: boolean;
@@ -43,7 +43,6 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
     let params: T = {} as T;
 
     if (props.open) {
-      initialized.current = true;
       const end = () => {
         if (props.elementRef.current) {
           props.elementRef.current.style.removeProperty("overflow");
@@ -91,6 +90,12 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
           props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width);
           props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height);
           break;
+      }
+
+      if (!initialized.current) {
+        end();
+        initialized.current = true;
+        return;
       }
 
       const count = Math.round(aTime / aInterval);
@@ -321,7 +326,33 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
     };
   }, [props.open, ...deps]);
 
-  return props.open;
+  return useMemo<CSSProperties>(() => {
+    const aDirection = props.direction || "none";
+    const defaultMin = "0";
+    const changeOpacity = props.changeOpacity === true || aDirection === "none";
+
+    const ret: CSSProperties = {};
+    if (!props.open) {
+      if (props.minVisible !== true) {
+        ret.display = "none";
+      }
+      ret.overflow = "hidden";
+      if (changeOpacity) {
+        ret.opacity = 0;
+      }
+      switch (aDirection) {
+        case "horizontal":
+          ret.width = convertSizeNumToStr(props.min, defaultMin);
+          break;
+        case "vertical":
+          ret.height = convertSizeNumToStr(props.min, defaultMin);
+          break;
+        default:
+          break;
+      }
+    }
+    return ret;
+  }, []);
 };
 
 export default useToggleAnimation;
