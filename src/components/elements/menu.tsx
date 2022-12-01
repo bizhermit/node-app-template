@@ -86,17 +86,25 @@ const MenuGroup: FC<MenuProps & {
   );
 };
 
-const MenuItem: FC<MenuItemProps & {
+type MenuItemPropsImpl = MenuItemProps & {
   nestLevel: number;
   $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
   $defaultClosedIcon?: ReactNode;
   $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
-}> = (props) => {
+};
+
+const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string) => {
+  if (props.$judgeSelected == null) {
+    return routerPathname === props.pathname;
+  }
+  return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
+};
+
+const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const router = useRouter();
   const nav = useNavigation();
-  const [showItems, setShowItems] = useState(props.defaultOpen ?? false);
   const ref = useRef<HTMLDivElement>(null!);
   const attrs = {
     ...props.$itemDefaultAttributes,
@@ -104,12 +112,22 @@ const MenuItem: FC<MenuItemProps & {
   };
 
   const selected = useMemo(() => {
-    if (props.$judgeSelected == null) {
-      return router.pathname === props.pathname;
-    }
-    return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
+    return judgeSelected(props, router.pathname);
   }, [router.pathname, props.$judgeSelected]);
   const selectable = Boolean(router.pathname) || (props.items?.length ?? 0) > 0 || props.onClick != null;
+
+  const [showItems, setShowItems] = useState(() => {
+    if (props.defaultOpen != null) return props.defaultOpen;
+    const func = (p: AddonMenuItemProps) => {
+      if (p !== props && judgeSelected({...p, $judgeSelected: props.$judgeSelected }, router.pathname)) return true;
+      if (p.items == null || p.items.length === 0) return false;
+      for (let i = 0, il = p.items.length; i < il; i++) {
+        if (func({...p.items[i], nestLevel: p.nestLevel + 1})) return true;
+      }
+      return false;
+    }
+    return func(props);
+  });
 
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     setShowItems(c => !c);
@@ -140,7 +158,7 @@ const MenuItem: FC<MenuItemProps & {
     }
   }, []);
 
-  useToggleAnimation({
+  const toggleAnimationInitStyle = useToggleAnimation({
     elementRef: ref,
     open: showItems,
     direction: "vertical",
@@ -190,6 +208,7 @@ const MenuItem: FC<MenuItemProps & {
       <div
         ref={ref}
         className={Style.children}
+        style={toggleAnimationInitStyle}
       >
         <MenuGroup
           $items={props.items}
