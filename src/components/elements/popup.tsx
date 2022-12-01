@@ -155,14 +155,14 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
             ref.current.style.removeProperty("left");
             ref.current.style.right = (posAbs ?
               document.body.clientWidth - rect.left :
-              Math.min(document.body.clientWidth - rect.right, document.body.clientWidth - ref.current.offsetWidth)
+              Math.min(document.body.clientWidth - rect.left, document.body.clientWidth - ref.current.offsetWidth)
             ) + "px";
             break;
           case "outer-right":
             ref.current.style.removeProperty("right");
             ref.current.style.left = (posAbs ?
               rect.right :
-              Math.min(rect.left, document.body.clientWidth - ref.current.offsetWidth)
+              Math.min(rect.right, document.body.clientWidth - ref.current.offsetWidth)
             ) + "px";
             break;
           default: break;
@@ -211,14 +211,14 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
             ref.current.style.removeProperty("top");
             ref.current.style.bottom = (posAbs ?
               document.body.clientHeight - rect.top :
-              Math.min(document.body.clientHeight - rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
+              Math.min(document.body.clientHeight - rect.top, document.body.clientHeight - ref.current.offsetHeight)
             ) + "px";
             break;
           case "outer-bottom":
             ref.current.style.removeProperty("bottom");
             ref.current.style.top = (posAbs ?
               rect.bottom :
-              Math.min(rect.top, document.body.clientHeight - ref.current.offsetHeight)
+              Math.min(rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
             ) + "px";
             break;
           default: break;
