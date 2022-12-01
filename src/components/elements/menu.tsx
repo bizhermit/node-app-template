@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
@@ -17,6 +17,8 @@ export type MenuItemProps = {
   icon?: ReactNode;
   items?: Array<MenuItemProps>;
   attributes?: ItemAttributes;
+  $openedIcon?: ReactNode;
+  $closedIcon?: ReactNode;
   onClick?: (props: AddonMenuItemProps, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 };
 type AddonMenuItemProps = MenuItemProps & { nestLevel: number; };
@@ -27,6 +29,8 @@ export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   $items?: Array<MenuItemProps>;
   $direction?: Direction;
   $itemDefaultAttributes?: ItemAttributes;
+  $defaultOpenedIcon?: ReactNode;
+  $defaultClosedIcon?: ReactNode;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean;
 };
 
@@ -40,6 +44,8 @@ const Menu = React.forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
         className={Style.root}
         $items={props.$items}
         $itemDefaultAttributes={props.$itemDefaultAttributes}
+        $defaultOpenedIcon={props.$defaultOpenedIcon}
+        $defaultClosedIcon={props.$defaultClosedIcon}
         $direction={props.$direction || "vertical"}
         $judgeSelected={props.$judgeSelected}
       />
@@ -52,6 +58,8 @@ const MenuGroup: FC<MenuProps & {
   $nestLevel?: number;
   $direction?: Direction;
   $itemDefaultAttributes?: ItemAttributes;
+  $defaultOpenedIcon?: ReactNode;
+  $defaultClosedIcon?: ReactNode;
   $toggleParent?: (open?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
@@ -67,6 +75,8 @@ const MenuGroup: FC<MenuProps & {
           key={item.key ?? index}
           nestLevel={props.$nestLevel ?? 0}
           $itemDefaultAttributes={props.$itemDefaultAttributes}
+          $defaultOpenedIcon={props.$defaultOpenedIcon}
+          $defaultClosedIcon={props.$defaultClosedIcon}
           $toggleParent={props.$toggleParent}
           $judgeSelected={props.$judgeSelected}
         />
@@ -78,6 +88,8 @@ const MenuGroup: FC<MenuProps & {
 const MenuItem: FC<MenuItemProps & {
   nestLevel: number;
   $itemDefaultAttributes?: ItemAttributes;
+  $defaultOpenedIcon?: ReactNode;
+  $defaultClosedIcon?: ReactNode;
   $toggleParent?: (open?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
@@ -154,7 +166,10 @@ const MenuItem: FC<MenuItemProps & {
       </div>
       {props.items == null || props.items.length === 0 ? <></> :
         <div className={Style.toggle}>
-          {showItems ? <VscChromeMinimize /> : <VscAdd />}
+          {showItems ?
+            props.$openedIcon ?? props.$defaultOpenedIcon ?? <VscChromeMinimize /> :
+            props.$closedIcon ?? props.$defaultClosedIcon ?? <VscAdd />
+          }
         </div>
       }
     </div>
@@ -179,6 +194,8 @@ const MenuItem: FC<MenuItemProps & {
           $nestLevel={props.nestLevel + 1}
           $toggleParent={toggle}
           $itemDefaultAttributes={attrs}
+          $defaultOpenedIcon={props.$openedIcon ?? props.$defaultOpenedIcon}
+          $defaultClosedIcon={props.$closedIcon ?? props.$defaultClosedIcon}
         />
       </div>
     </li>

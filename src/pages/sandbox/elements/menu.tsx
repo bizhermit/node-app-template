@@ -6,6 +6,7 @@ import Popup from "@/components/elements/popup";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useRef, useState } from "react";
+import { VscArrowDown, VscArrowLeft } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const buttonRef = useRef<HTMLButtonElement>(null!);
@@ -52,6 +53,8 @@ const Page: NextPage = () => {
             $itemDefaultAttributes={{
               className: "c-base"
             }}
+            $defaultClosedIcon={<VscArrowLeft />}
+            $defaultOpenedIcon={<VscArrowDown />}
             $items={[{
               key: 1,
               label: `item 1`,
