@@ -73,6 +73,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "TextBox",
                         icon: "T",
                         pathname: "/sandbox/elements/form-items/text-box",
+                      }, {
+                        key: "radio-buttons",
+                        label: "RadioButtons",
+                        icon: "R",
+                        pathname: "/sandbox/elements/form-items/radio-buttons",
                       }]
                     }, {
                       key: "button",
