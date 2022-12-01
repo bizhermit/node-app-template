@@ -32,8 +32,10 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (props.disabled) return;
-    if (props.elementRef.current == null) return;
+    if (props.disabled || props.elementRef.current == null) {
+      initialized.current = true;
+      return;
+    }
     let alive = true;
     const aTime = props.animationTime ?? defaultAnimationTime;
     const aInterval = props.animationInterval ?? defaultAnimationInterval;
