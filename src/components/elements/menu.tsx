@@ -8,15 +8,16 @@ import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
 import LabelText from "@/pages/sandbox/elements/label-text";
 
+type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick" | "onKeyDown">;
+
 export type MenuItemProps = {
   key?: Key;
-  className?: string;
-  style?: CSSProperties;
   pathname?: string;
   label?: ReactNode;
   icon?: ReactNode;
   items?: Array<MenuItemProps>;
-  onClick?: (props: AddonMenuItemProps) => void;
+  attributes?: ItemAttributes;
+  onClick?: (props: AddonMenuItemProps, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 };
 type AddonMenuItemProps = MenuItemProps & { nestLevel: number; };
 
@@ -25,6 +26,7 @@ type Direction = "vertical" | "horizontal";
 export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   $items?: Array<MenuItemProps>;
   $direction?: Direction;
+  $itemDefaultAttributes?: ItemAttributes;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean;
 };
 
@@ -37,6 +39,7 @@ const Menu = React.forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
       <MenuGroup
         className={Style.root}
         $items={props.$items}
+        $itemDefaultAttributes={props.$itemDefaultAttributes}
         $direction={props.$direction || "vertical"}
         $judgeSelected={props.$judgeSelected}
       />
@@ -48,6 +51,7 @@ const MenuGroup: FC<MenuProps & {
   $items?: Array<MenuItemProps>;
   $nestLevel?: number;
   $direction?: Direction;
+  $itemDefaultAttributes?: ItemAttributes;
   $toggleParent?: (open?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
@@ -62,6 +66,7 @@ const MenuGroup: FC<MenuProps & {
           {...item}
           key={item.key ?? index}
           nestLevel={props.$nestLevel ?? 0}
+          $itemDefaultAttributes={props.$itemDefaultAttributes}
           $toggleParent={props.$toggleParent}
           $judgeSelected={props.$judgeSelected}
         />
@@ -72,6 +77,7 @@ const MenuGroup: FC<MenuProps & {
 
 const MenuItem: FC<MenuItemProps & {
   nestLevel: number;
+  $itemDefaultAttributes?: ItemAttributes;
   $toggleParent?: (open?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
@@ -79,6 +85,10 @@ const MenuItem: FC<MenuItemProps & {
   const nav = useNavigation();
   const [showItems, setShowItems] = useState(false);
   const ref = useRef<HTMLDivElement>(null!);
+  const attrs = {
+    ...props.$itemDefaultAttributes,
+    ...props.attributes
+  };
 
   const selected = useMemo(() => {
     if (props.$judgeSelected == null) {
@@ -88,16 +98,16 @@ const MenuItem: FC<MenuItemProps & {
   }, [router.pathname, props.$judgeSelected]);
   const selectable = Boolean(router.pathname) || (props.items?.length ?? 0) > 0 || props.onClick != null;
 
-  const click = () => {
+  const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     setShowItems(c => !c);
     if (props.pathname) nav.toggle(false);
-    props.onClick?.(props);
+    props.onClick?.(props, e);
   };
 
-  const keydown = (e: React.KeyboardEvent) => {
+  const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      click();
+      click(e);
     }
   };
 
@@ -124,8 +134,9 @@ const MenuItem: FC<MenuItemProps & {
 
   const node = (
     <div
-      className={`${Style.content}${props.className ? ` ${props.className}` : ""}`}
-      style={{ paddingLeft: `calc(1.5rem * ${props.nestLevel})`, ...props.style }}
+      {...attrs}
+      className={`${Style.content}${attrs.className ? ` ${attrs.className}` : ""}`}
+      style={{ ...attrs.style, paddingLeft: `calc(1.5rem * ${props.nestLevel})` }}
       onClick={click}
       onKeyDown={keydown}
       data-selectable={selectable}
@@ -167,6 +178,7 @@ const MenuItem: FC<MenuItemProps & {
           $items={props.items}
           $nestLevel={props.nestLevel + 1}
           $toggleParent={toggle}
+          $itemDefaultAttributes={attrs}
         />
       </div>
     </li>
