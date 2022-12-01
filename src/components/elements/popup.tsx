@@ -54,7 +54,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     setShowed(props.$show === true);
   }, [props.$show]);
 
-  useToggleAnimation({
+  const toggleAnimationInitStyle = useToggleAnimation({
     elementRef: ref,
     open: showed,
     changeOpacity: true,
@@ -272,6 +272,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       <div
         {...attributes(props, Style.main)}
         ref={ref}
+        style={toggleAnimationInitStyle}
         data-show={props.$show}
         data-showed={showed}
         onClick={click}

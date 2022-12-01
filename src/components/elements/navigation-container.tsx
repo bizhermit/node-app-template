@@ -90,13 +90,13 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     setShowedNav(open);
   }, []);
 
-  useToggleAnimation({
+  const toggleAnimationInitStyle = useToggleAnimation({
     elementRef: navRef,
     open: navMode === "visible" || showedNav,
     direction: (navPosition === "top" || navPosition === "bottom") ? "vertical" : "horizontal",
     minVisible: navMode === "minimize",
     min: navMode === "manual" ? undefined :
-      typeof document === "undefined" ? 0 :
+      typeof document === "undefined" ? "3.6rem" :
         getComputedStyle(document.documentElement).getPropertyValue("--nav-size") || "0",
     onToggle: () => {
       if (!maskRef.current) return;
@@ -181,6 +181,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
           <NavTag
             ref={navRef}
             className={Style.nav}
+            style={toggleAnimationInitStyle}
             data-mode={navMode}
             data-pos={navPosition}
             data-show={showedNav}

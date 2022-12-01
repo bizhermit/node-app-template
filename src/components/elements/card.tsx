@@ -52,7 +52,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     setOpened(props.$opened);
   }, [props.$opened]);
 
-  const initToggleAnimationStyle = useToggleAnimation({
+  const toggleAnimationInitStyle = useToggleAnimation({
     elementRef: bref,
     open: opened || !props.$accordion,
     direction: props.$direction || "vertical",
@@ -125,7 +125,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
       }
       <div
         className={Style.body}
-        style={initToggleAnimationStyle}
+        style={toggleAnimationInitStyle}
         ref={bref}
       >
         {(mounted.current || opened) &&
