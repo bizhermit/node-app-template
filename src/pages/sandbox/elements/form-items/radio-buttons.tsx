@@ -1,7 +1,9 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
+import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -82,6 +84,16 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <RadioButtons
+        $disabled={disabled}
+        $readOnly={readOnly}
+        $source={ArrayUtils.generateArray(5, idx => {
+          return {
+            value: idx,
+            label: `item${idx}`,
+          };
+        })}
+      />
     </div>
   );
 };

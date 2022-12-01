@@ -1,0 +1,81 @@
+@use "$/animation";
+
+.main {
+  gap: 1rem;
+
+  &[data-editable="true"] {
+    >.item {
+      cursor: pointer;
+
+      &:hover {
+        >.box {
+          &::before {
+            @include animation.hover;
+          }
+        }
+
+        &:active {
+          >.box {
+            &::before {
+              @include animation.hoverActive;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include animation.hoverAnimation;
+
+.item {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: var(--size);
+  min-height: var(--size);
+}
+
+.box {
+  box-sizing: border-box;
+  position: relative;
+  height: var(--size);
+  width: var(--size);
+
+  &::before {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    border-width: 0.1rem;
+    border-style: solid;
+    border-color: inherit;
+    border-radius: 9999px;
+    height: 50%;
+    width: 50%;
+    top: 25%;
+    left: 25%;
+    background: var(--c-input);
+  }
+}
+
+.check {
+  box-sizing: border-box;
+  position: absolute;
+  height: calc(var(--size) * 0.3);
+  width: calc(var(--size) * 0.3);
+  border-radius: 9999px;
+  top: 35%;
+  left: 35%;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  &[data-selected="true"] {
+    opacity: 1;
+  }
+}
+
+.label {
+  box-sizing: border-box;
+}

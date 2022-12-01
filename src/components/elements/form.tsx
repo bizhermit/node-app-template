@@ -225,7 +225,7 @@ const validationMessages = {
   required: "値を入力してください。",
 } as const;
 
-const equals = (v1: unknown, v2: unknown) => {
+export const equals = (v1: unknown, v2: unknown) => {
   if (v1 == null && v2 == null) return true;
   return v1 === v2;
 };
