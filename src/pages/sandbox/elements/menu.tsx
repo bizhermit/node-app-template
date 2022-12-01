@@ -84,7 +84,7 @@ const Page: NextPage = () => {
                 attributes: {
                   // className: "c-primary",
                 },
-                label: `item parent`,
+                label: <Row className="w-100" $hAlign="center">Parent</Row>,
                 icon: "P",
                 onClick: (props) => {
                   console.log(props);
