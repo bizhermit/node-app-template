@@ -1,0 +1,34 @@
+$size: 0.5rem;
+
+.main {
+  box-sizing: border-box;
+  position: absolute;
+  flex: none;
+  background: transparent;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.x {
+  height: 100%;
+  width: #{$size};
+  right: 0;
+  top: 0;
+  cursor: col-resize;
+}
+
+.y {
+  width: 100%;
+  height: #{$size};
+  left: 0;
+  bottom: 0;
+  cursor: row-resize;
+}
+
+.xy {
+  width: #{$size};
+  height: #{$size};
+  right: 0;
+  bottom: 0;
+  cursor: nwse-resize;
+}
