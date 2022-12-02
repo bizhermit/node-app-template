@@ -308,7 +308,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       validation();
     }
     props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.$onChange, validation]);
+  }, [ctx.bind, props?.$bind, props?.$onChange, validation]);
 
   useEffect(() => {
     const name = props?.name;
