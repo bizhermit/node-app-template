@@ -71,9 +71,10 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
 
   const { nodes, selectedItem } = useMemo(() => {
     let selectedItem: Struct | undefined = undefined;
+    const appearance = props.$appearance || "check";
     const nodes = source.map(item => {
       const v = item[vdn] as T;
-      const l = item[ldn] as ReactNode
+      const l = item[ldn] as ReactNode;
       const c = (item[cdn] as string) || props.$color;
       const selected = equals(v, form.value);
       if (selected) selectedItem = item;
@@ -85,17 +86,23 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
           tabIndex={0}
           onClick={form.editable ? () => select(v) : undefined}
           onKeyDown={form.editable ? (e) => keydown(e, v) : undefined}
+          data-appearance={appearance}
         >
-          <div
-            className={`${Style.box} bdc-${c || "border"}`}
-          >
+          {appearance === "check" &&
             <div
-              className={`${Style.check} bgc-${c || "base_r"}`}
-              data-selected={selected}
-            />
-          </div>
+              className={`${Style.box} bdc-${c || "border"}`}
+            >
+              <div
+                className={`${Style.check} bgc-${c || "input_r"}`}
+                data-selected={selected}
+              />
+            </div>
+          }
           <div
-            className={Style.label}
+            className={`${Style.label} ${appearance === "button" ?
+              `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
+              `fgc-${c}`
+            }`}
           >
             <LabelText>{l}</LabelText>
           </div>
@@ -103,7 +110,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       );
     });
     return { nodes, selectedItem };
-  }, [source, form.editable, form.value]);
+  }, [source, form.editable, form.value, props.$appearance]);
 
   useEffect(() => {
     if (selectedItem == null && source.length > 0) {
