@@ -42,12 +42,6 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
     form.change(value);
   };
 
-  const keydown = (e: React.KeyboardEvent<HTMLDivElement>, value: T) => {
-    if (e.key === " " || e.key === "Enter") {
-      select(value);
-    }
-  };
-
   const moveFocus = (next?: boolean) => {
     const aelem = document.activeElement;
     if (aelem == null) return;
