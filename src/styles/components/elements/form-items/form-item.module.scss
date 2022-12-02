@@ -111,7 +111,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   }
 }
 
-@mixin input($flex: 1, $pad: true) {
+.input {
   box-sizing: border-box;
   border: none;
   background: transparent;
@@ -122,15 +122,8 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   resize: none;
   height: var(--size);
   min-width: var(--size);
-  flex: $flex;
-
-  @if $pad {
-    padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
-  }
-}
-
-.input {
-  @include input;
+  flex: 1;
+  padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
 }
 
 .error {
