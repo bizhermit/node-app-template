@@ -98,8 +98,7 @@ $buttonSize: (
   text-overflow: ellipsis;
 
   &[data-fill="true"] {
-    flex: 1 0 0;
-    flex-basis: 0;
+    flex: 1 0 0rem;
   }
 }
 

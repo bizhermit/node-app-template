@@ -50,8 +50,6 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
     if (e.key === "Enter" || e.key === " ") toggleCheck();
   };
 
-  const color = props.$color || "main";
-
   return (
     <FormItemWrap
       {...props}
@@ -75,11 +73,11 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
       }
       <div className={Style.body}>
         <div
-          className={`${Style.box} bdc-${color}`}
+          className={`${Style.box} bdc-${props.$color || "border"}`}
           data-editable={form.editable}
         />
         <div
-          className={`${Style.check} ${props.$outline ? `bdc-${color}` : `bdc-${color}_r bgc-${color}`}`}
+          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "border"}_r bgc-${props.$color || "main"}`}`}
           data-checked={form.value === checkedValue}
         />
       </div>

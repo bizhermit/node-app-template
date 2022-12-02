@@ -9,7 +9,7 @@ export type RadioButtonsProps<T extends string | number = string | number> = Omi
   $valueDataName?: string;
   $colorDataName?: string;
   $direction?: "horizontal" | "vertical";
-  $appearance?: "check" | "button";
+  $appearance?: "point" | "check" | "button";
   $source?: LoadableArray<Struct>;
   $preventSourceMemorize?: boolean;
 };
@@ -71,7 +71,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
 
   const { nodes, selectedItem } = useMemo(() => {
     let selectedItem: Struct | undefined = undefined;
-    const appearance = props.$appearance || "check";
+    const appearance = props.$appearance || "point";
     const nodes = source.map(item => {
       const v = item[vdn] as T;
       const l = item[ldn] as ReactNode;
@@ -88,7 +88,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
           onKeyDown={form.editable ? (e) => keydown(e, v) : undefined}
           data-appearance={appearance}
         >
-          {appearance === "check" &&
+          {(appearance === "point" || appearance === "check") &&
             <div
               className={`${Style.box} bdc-${c || "border"}`}
             >

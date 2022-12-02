@@ -50,8 +50,6 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
     if (e.key === "Enter" || e.key === " ") toggleCheck();
   };
 
-  const color = props.$color || "main";
-
   return (
     <FormItemWrap
       {...props}
@@ -75,12 +73,12 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
       }
       <div className={Style.body}>
         <div
-          className={`${Style.box} bdc-${color} bgc-${color}`}
+          className={`${Style.box} bdc-${props.$color || "border"} bgc-${props.$color || "main"}`}
           data-editable={form.editable}
           data-checked={form.value === checkedValue}
         />
         <div
-          className={`${Style.handle} bdc-${color}`}
+          className={`${Style.handle} bdc-${props.$color || "border"}`}
           data-checked={form.value === checkedValue}
         />
       </div>

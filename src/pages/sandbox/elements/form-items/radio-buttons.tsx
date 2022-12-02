@@ -13,7 +13,7 @@ import { VscAccount, VscActivateBreakpoints, VscArchive } from "react-icons/vsc"
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [appearance, setAppearance] = useState<"check" | "button">("check");
+  const [appearance, setAppearance] = useState<"point" | "check" | "button">("point");
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
@@ -31,9 +31,10 @@ const Page: NextPage = () => {
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
-        <RadioButtons<"check" | "button">
+        <RadioButtons<"point" | "check" | "button">
           $tag="appearance"
           $source={[
+            { value: "point", label: "Point" },
             { value: "check", label: "Check" },
             { value: "button", label: "Button" }
           ]}
