@@ -100,6 +100,7 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <RadioButtons
+        style={{ width: 500 }}
         $appearance={appearance}
         $disabled={disabled}
         $readOnly={readOnly}
@@ -151,6 +152,52 @@ const Page: NextPage = () => {
           })}
         />
       </Form>
+      <Row $vAlign="top" className="gap-1">
+        <RadioButtons
+          style={{ width: 200 }}
+          $appearance={appearance}
+          $readOnly={readOnly}
+          $disabled={disabled}
+          $direction="vertical"
+          $source={ArrayUtils.generateArray(3, idx => {
+            return {
+              value: idx,
+              label: `item${idx}`,
+            };
+          })}
+        />
+        <RadioButtons
+          $appearance={appearance}
+          $readOnly={readOnly}
+          $disabled={disabled}
+          $direction="vertical"
+          $source={colors.map(color => {
+            return {
+              value: color,
+              label: color,
+              color,
+            };
+          })}
+        />
+        <RadioButtons
+          style={{ width: 500 }}
+          $appearance={appearance}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $color="danger"
+          $direction="vertical"
+          $source={[{
+            value: 0,
+            label: <VscAccount />
+          }, {
+            value: 1,
+            label: <VscActivateBreakpoints />
+          }, {
+            value: 2,
+            label: <VscArchive />
+          }]}
+        />
+      </Row>
     </div>
   );
 };
