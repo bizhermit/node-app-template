@@ -1,4 +1,4 @@
-import { CSSProperties, FC, ReactNode } from "react";
+import { CSSProperties, FC } from "react";
 import Style from "$/components/elements/resizer.module.scss";
 import { releaseCursor, setCursor } from "@/utilities/attributes";
 
@@ -10,7 +10,6 @@ export type ResizerProps = {
   reverse?: boolean;
   resizing?: () => void;
   resized?: () => void;
-  children?: ReactNode;
 } & Struct;
 
 const Resizer: FC<ResizerProps> = (props) => {

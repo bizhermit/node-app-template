@@ -1,4 +1,10 @@
-$size: 0.5rem;
+$size: 0.8rem;
+
+@mixin pseudoBase {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+}
 
 .main {
   box-sizing: border-box;
@@ -7,6 +13,13 @@ $size: 0.5rem;
   background: transparent;
   z-index: 999;
   overflow: hidden;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+
+  &:hover,
+  &:active {
+    opacity: 1;
+  }
 }
 
 .x {
@@ -15,6 +28,15 @@ $size: 0.5rem;
   right: 0;
   top: 0;
   cursor: col-resize;
+
+  &::before {
+    @include pseudoBase();
+    width: 0.05rem;
+    height: 100%;
+    right: 0.25rem;
+    top: 0;
+    background: var(--c-border);
+  }
 }
 
 .y {
@@ -23,6 +45,15 @@ $size: 0.5rem;
   left: 0;
   bottom: 0;
   cursor: row-resize;
+
+  &::before {
+    @include pseudoBase();
+    width: 100%;
+    height: 0.05rem;
+    left: 0;
+    bottom: 0.25rem;
+    background: var(--c-border);
+  }
 }
 
 .xy {
@@ -31,4 +62,24 @@ $size: 0.5rem;
   right: 0;
   bottom: 0;
   cursor: nwse-resize;
+
+  &::before,
+  &::after {
+    @include pseudoBase();
+    width: 0.05rem;
+    height: 141%;
+    background: var(--c-border);
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+  }
+
+  &::before {
+    bottom: -0.05rem;
+    right: 0.8rem;
+  }
+
+  &::after {
+    bottom: -0.1rem;
+    right: 0.6rem;
+  }
 }

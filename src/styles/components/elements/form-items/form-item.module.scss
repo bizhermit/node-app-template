@@ -70,7 +70,8 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   flex-flow: row nowrap;
   justify-content: stretch;
   align-items: center;
-  flex: 1 1 0;
+  flex: 1 1 auto;
+  min-height: 0;
   border-color: var(--c-border);
 
   &[data-editable="true"] {
