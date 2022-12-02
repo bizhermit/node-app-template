@@ -2,8 +2,6 @@
 $animationTime: 0.3s;
 
 .main {
-  align-items: center !important;
-  
   &[data-editable="true"] {
     &:hover {
       .handle {

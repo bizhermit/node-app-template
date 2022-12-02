@@ -87,6 +87,7 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <TextArea
+        style={{ height: 400 }}
         $tag="useState"
         $disabled={disabled}
         $readOnly={readOnly}
