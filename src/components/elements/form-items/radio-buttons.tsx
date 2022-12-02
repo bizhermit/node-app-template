@@ -3,6 +3,7 @@ import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo }
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
+import { pressPositiveKey } from "@/utilities/attributes";
 
 export type RadioButtonsProps<T extends string | number = string | number> = Omit<FormItemProps<T, { afterData: Struct; beforeData: Struct; }>, "$tagPosition"> & {
   $labelDataName?: string;
@@ -59,10 +60,12 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       case "ArrowRight":
       case "ArrowDown":
         moveFocus(true);
+        e.preventDefault();
         break;
       case "ArrowLeft":
       case "ArrowUp":
         moveFocus(false);
+        e.preventDefault();
         break;
       default:
         break;
@@ -85,7 +88,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
           data-selected={selected}
           tabIndex={0}
           onClick={form.editable ? () => select(v) : undefined}
-          onKeyDown={form.editable ? (e) => keydown(e, v) : undefined}
+          onKeyDown={form.editable ? e => pressPositiveKey(e, () => select(v)) : undefined}
           data-appearance={appearance}
         >
           {(appearance === "point" || appearance === "check" || appearance === "check-outline") &&

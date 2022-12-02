@@ -1,5 +1,5 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
+import React, { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
 
 export const attributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret: Struct = {
@@ -35,4 +35,12 @@ export const convertSizeNumToStr = (value?: string | number | null, nullValue?: 
   }
   if (typeof value === "string") return value;
   return `${value / 10}rem`;
+};
+
+export const pressPositiveKey = <T extends HTMLElement = HTMLElement>(e: React.KeyboardEvent<T>, func: (e: React.KeyboardEvent<T>) => (void | boolean)) => {
+  if (e.key === " " || e.key === "Enter") {
+    if (func(e) !== true) {
+      e.preventDefault();
+    }
+  }
 };

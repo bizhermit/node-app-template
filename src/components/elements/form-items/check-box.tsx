@@ -2,6 +2,7 @@ import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form
 import React, { FunctionComponent, ReactElement, ReactNode, useRef } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/components/elements/label-text";
+import { pressPositiveKey } from "@/utilities/attributes";
 
 export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
   $checkedValue?: T;
@@ -47,7 +48,7 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
   };
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!form.editable) return;
-    if (e.key === "Enter" || e.key === " ") toggleCheck();
+    pressPositiveKey(e, () => toggleCheck());
   };
 
   return (
