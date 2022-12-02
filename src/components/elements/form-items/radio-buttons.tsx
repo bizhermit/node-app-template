@@ -9,7 +9,7 @@ export type RadioButtonsProps<T extends string | number = string | number> = Omi
   $valueDataName?: string;
   $colorDataName?: string;
   $direction?: "horizontal" | "vertical";
-  $appearance?: "point" | "check" | "button";
+  $appearance?: "point" | "check" | "check-outline" | "button";
   $source?: LoadableArray<Struct>;
   $preventSourceMemorize?: boolean;
 };
@@ -88,12 +88,12 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
           onKeyDown={form.editable ? (e) => keydown(e, v) : undefined}
           data-appearance={appearance}
         >
-          {(appearance === "point" || appearance === "check") &&
+          {(appearance === "point" || appearance === "check" || appearance === "check-outline") &&
             <div
               className={`${Style.box} bdc-${c || "border"}`}
             >
               <div
-                className={`${Style.check} bgc-${c || "input_r"}`}
+                className={`${Style.check} ${appearance === "check-outline" ? `bdc-${c || "main"}` : `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`}`}
                 data-selected={selected}
               />
             </div>

@@ -127,6 +127,78 @@
       justify-content: center;
     }
   }
+
+  &[data-appearance="point"] {
+    >.box {
+      &::before {
+        box-sizing: border-box;
+        position: absolute;
+        content: "";
+        border-width: 0.1rem;
+        border-style: solid;
+        border-color: inherit;
+        border-radius: 9999px;
+        height: 50%;
+        width: 50%;
+        top: 25%;
+        left: 25%;
+      }
+
+      >.check {
+        height: calc(var(--size) * 0.3);
+        width: calc(var(--size) * 0.3);
+        top: 35%;
+        left: 35%;
+      }
+    }
+  }
+
+  &[data-appearance="check"],
+  &[data-appearance="check-outline"] {
+    >.box {
+      &::before {
+        box-sizing: border-box;
+        position: absolute;
+        content: "";
+        border-width: 0.1rem;
+        border-style: solid;
+        border-color: inherit;
+        border-radius: 9999px;
+        height: 70%;
+        width: 70%;
+        top: 15%;
+        left: 15%;
+      }
+
+      >.check {
+        height: calc(var(--size) * 0.7);
+        width: calc(var(--size) * 0.7);
+        top: 15%;
+        left: 15%;
+
+        &::before {
+          box-sizing: border-box;
+          position: absolute;
+          content: "";
+          top: 14%;
+          left: 32%;
+          width: 37%;
+          height: 60%;
+          border-bottom-width: 0.25rem;
+          border-bottom-style: solid;
+          border-bottom-color: inherit;
+          border-right-width: 0.25rem;
+          border-right-style: solid;
+          border-right-color: inherit;
+          transform: rotate(45deg);
+        }
+      }
+    }
+
+    >.label {
+      padding-left: 0.5rem;
+    }
+  }
 }
 
 .box {
@@ -135,30 +207,12 @@
   height: var(--size);
   width: var(--size);
   flex: none;
-
-  &::before {
-    box-sizing: border-box;
-    position: absolute;
-    content: "";
-    border-width: 0.1rem;
-    border-style: solid;
-    border-color: inherit;
-    border-radius: 9999px;
-    height: 50%;
-    width: 50%;
-    top: 25%;
-    left: 25%;
-  }
 }
 
 .check {
   box-sizing: border-box;
   position: absolute;
-  height: calc(var(--size) * 0.3);
-  width: calc(var(--size) * 0.3);
   border-radius: 9999px;
-  top: 35%;
-  left: 35%;
   opacity: 0;
   transition: opacity 0.2s;
 
