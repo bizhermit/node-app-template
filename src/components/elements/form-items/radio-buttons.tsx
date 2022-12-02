@@ -96,7 +96,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
               className={`${Style.box} bdc-${c || "border"}`}
             >
               <div
-                className={`${Style.check} ${appearance === "check-outline" ? `bdc-${c || "main"}` : `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`}`}
+                className={`${Style.check} ${appearance === "check-outline" ? `bdc-${c || "input"}` : `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`}`}
                 data-selected={selected}
               />
             </div>
