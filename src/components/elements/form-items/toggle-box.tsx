@@ -1,5 +1,5 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode, useRef } from "react";
+import React, { FunctionComponent, ReactElement, ReactNode } from "react";
 import Style from "$/components/elements/form-items/toggle-box.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/utilities/attributes";
