@@ -4,6 +4,7 @@ import { attributesWithoutChildren } from "@/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
+import Resizer from "@/components/elements/resizer";
 
 type ReactNodeArray = Array<ReactNode>;
 type IconPosition = "start" | "end" | "both" | "none";
@@ -26,6 +27,7 @@ export type CardProps = HTMLAttributes<HTMLDivElement> & {
   $toggleTriger?: "header" | "footer" | "h&f";
   $onToggle?: (open: boolean) => void;
   $onToggled?: (open: boolean) => void;
+  $resize?: boolean | "x" | "y" | "xy";
   children?: ReactNode | [ReactNode] | [ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode];
 };
 
@@ -153,6 +155,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
           </div>
           {toggleTriger.footer && (iconPosCtx.footer === "end" || iconPosCtx.footer === "both") && iconNode}
         </div>
+      }
+      {props.$resize &&
+        <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
       }
     </div>
   );

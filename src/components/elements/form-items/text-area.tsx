@@ -1,11 +1,13 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { useRef } from "react";
 import Style from "$/components/elements/form-items/text-area.module.scss";
+import Resizer from "@/components/elements/resizer";
 
 export type TextAreaProps = FormItemProps<string> & {
   $length?: number;
   $maxLength?: number;
   $minLength?: number;
+  $resize?: boolean | "x" | "y" | "xy";
 };
 
 const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) => {
@@ -59,6 +61,9 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
       />
+      {props.$resize &&
+        <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
+      }
     </FormItemWrap>
   );
 });

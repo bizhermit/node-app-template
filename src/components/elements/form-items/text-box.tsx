@@ -1,5 +1,6 @@
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import Resizer from "@/components/elements/resizer";
 import React, { useRef } from "react";
 
 export type TextBoxProps = FormItemProps<string> & {
@@ -8,6 +9,7 @@ export type TextBoxProps = FormItemProps<string> & {
   $maxLength?: number;
   $minLength?: number;
   $round?: boolean;
+  $resize?: boolean;
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
@@ -63,6 +65,7 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
       />
+      {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
 });

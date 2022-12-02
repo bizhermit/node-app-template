@@ -50,25 +50,35 @@ const Page: NextPage = () => {
         <Content />
         Footer
       </Card>
-      <Card
-        className="flex-1 e-1 r-1"
-        $color="main"
-        // $opened={opened}
-        $defaultOpened={false}
-        // $defaultMount
-        $accordion={accordion}
-        $disabled={disabled}
-        $direction="horizontal"
-        // $footerAlign="center"
-        $toggleTriger="h&f"
-        $iconPosition={{
-          footer: "end"
-        }}
-      >
-        あいうえお
-        <Content />
-        ん
-      </Card>
+      <Row className="flex-1 gap-2" $vAlign="stretch">
+        <Card
+          className="e-1 r-1"
+          $color="main"
+          // $opened={opened}
+          $defaultOpened={false}
+          // $defaultMount
+          $accordion={accordion}
+          $disabled={disabled}
+          $direction="horizontal"
+          // $footerAlign="center"
+          $toggleTriger="h&f"
+          $iconPosition={{
+            footer: "end"
+          }}
+        >
+          あいうえお
+          <Content />
+          ん
+        </Card>
+        <Card
+          $color="main"
+          $resize
+          // $resize="xy"
+        >
+          Resize
+          <Content />
+        </Card>
+      </Row>
     </div>
   );
 };
