@@ -17,6 +17,9 @@ const Page: NextPage = () => {
             <div className={`flex-1 p-1 bgc-${color}`}>
               <span>bgc-{color}</span>
             </div>
+            <div className={`flex-1 p-1 bgc-${color}_r`}>
+              <span>bgc-{color}_r</span>
+            </div>
             <div className={`flex-1 p-1`}>
               <span className={`bdc-${color}`} style={{ border: "3px solid"}}>bdc-{color}</span>
             </div>

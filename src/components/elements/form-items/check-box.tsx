@@ -2,6 +2,7 @@ import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form
 import React, { FunctionComponent, ReactElement, ReactNode, useRef } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/components/elements/label-text";
+import { pressPositiveKey } from "@/utilities/attributes";
 
 export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
   $checkedValue?: T;
@@ -15,14 +16,10 @@ interface CheckBoxFC extends FunctionComponent {
 }
 
 const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T extends string | number | boolean = boolean>(props: CheckBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const iref = useRef<HTMLInputElement>(null!);
   const checkedValue = (props.$checkedValue ?? true) as T;
   const uncheckedValue = (props.$uncheckedValue ?? false) as T;
 
   const form = useForm(props, {
-    effect: (v) => {
-      if (iref.current) iref.current.value = String(v ?? "");
-    },
     preventRequiredValidation: true,
     validations: () => {
       if (!props.$required) return [];
@@ -47,10 +44,8 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
   };
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!form.editable) return;
-    if (e.key === "Enter" || e.key === " ") toggleCheck();
+    pressPositiveKey(e, () => toggleCheck());
   };
-
-  const color = props.$color || "main";
 
   return (
     <FormItemWrap
@@ -59,6 +54,7 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
       $$form={form}
       $preventFieldLayout
       $clickable
+      $useHidden
       $mainProps={{
         className: Style.main,
         onClick: click,
@@ -66,20 +62,13 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
         tabIndex: props.tabIndex ?? 0,
       }}
     >
-      {props.name &&
-        <input
-          ref={iref}
-          name={props.name}
-          type="hidden"
-        />
-      }
       <div className={Style.body}>
         <div
-          className={`${Style.box} bdc-${color}`}
+          className={`${Style.box} bdc-${props.$color || "border"}`}
           data-editable={form.editable}
         />
         <div
-          className={`${Style.check} ${props.$outline ? `bdc-${color}` : `bdc-${color}_r bgc-${color}`}`}
+          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "border"}_r bgc-${props.$color || "main"}`}`}
           data-checked={form.value === checkedValue}
         />
       </div>
