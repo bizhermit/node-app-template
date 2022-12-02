@@ -20,7 +20,7 @@ const Page: NextPage = () => {
       <section>
         <h2>readonly/disabled</h2>
         <Row className="gap-1">
-          <TextBox $tag="editable" />
+          <TextBox $tag="editable" $resize />
           <TextBox $tag="readOnly" $readOnly />
           <TextBox $tag="disabled" $disabled />
         </Row>
