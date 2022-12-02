@@ -87,7 +87,6 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <TextArea
-        style={{ height: 400 }}
         $tag="useState"
         $disabled={disabled}
         $readOnly={readOnly}
@@ -95,6 +94,7 @@ const Page: NextPage = () => {
         $onChange={v => setValue(v)}
         $required
         $messagePosition="bottom"
+        $resize
       />
       <TextArea
         name="text-area-bind"
@@ -103,6 +103,7 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         $required
+        $resize="x"
       />
       <Form
         $bind={formBind}
@@ -113,8 +114,10 @@ const Page: NextPage = () => {
           name="text-area-form-bind"
           $tag="form bind"
           $required
+          $resize="y"
         />
       </Form>
+      <textarea />
     </div>
   );
 };
