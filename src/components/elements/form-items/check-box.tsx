@@ -16,14 +16,10 @@ interface CheckBoxFC extends FunctionComponent {
 }
 
 const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T extends string | number | boolean = boolean>(props: CheckBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const iref = useRef<HTMLInputElement>(null!);
   const checkedValue = (props.$checkedValue ?? true) as T;
   const uncheckedValue = (props.$uncheckedValue ?? false) as T;
 
   const form = useForm(props, {
-    effect: (v) => {
-      if (iref.current) iref.current.value = String(v ?? "");
-    },
     preventRequiredValidation: true,
     validations: () => {
       if (!props.$required) return [];
@@ -58,6 +54,7 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
       $$form={form}
       $preventFieldLayout
       $clickable
+      $useHidden
       $mainProps={{
         className: Style.main,
         onClick: click,
@@ -65,13 +62,6 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
         tabIndex: props.tabIndex ?? 0,
       }}
     >
-      {props.name &&
-        <input
-          ref={iref}
-          name={props.name}
-          type="hidden"
-        />
-      }
       <div className={Style.body}>
         <div
           className={`${Style.box} bdc-${props.$color || "border"}`}

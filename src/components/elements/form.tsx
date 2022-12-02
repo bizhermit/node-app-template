@@ -384,6 +384,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $className?: string;
   $clickable?: boolean;
   $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
+  $useHidden?: boolean;
   children: ReactNode;
 }>((props, ref) => {
   const errorNode = (Boolean(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
@@ -419,6 +420,13 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
         >
           {props.$tag}
         </div>
+      }
+      {props.$useHidden && props.name &&
+        <input
+          name={props.name}
+          type="hidden"
+          value={String(props.$$form.value ?? "")}
+        />
       }
       {props.$$form.hasValidator && props.$$form.editable ?
         (props.$$form.messageDisplayMode.startsWith("bottom") ?

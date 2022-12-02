@@ -33,7 +33,7 @@ const Page: NextPage = () => {
       {colors.map(color => {
         return (
           <Row key={color}>
-            <CheckBox $color={color} $defaultValue />
+            <CheckBox $color={color} $defaultValue name={color} />
             <CheckBox $color={color} $outline $defaultValue />
             <span className={`pt-t px-1 c-${color}`}>{color}</span>
           </Row>

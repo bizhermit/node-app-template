@@ -121,6 +121,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       ref={ref}
       $$form={form}
       $preventFieldLayout
+      $useHidden
       $mainProps={{
         className: Style.main,
         onKeyDown: keydownMain,
