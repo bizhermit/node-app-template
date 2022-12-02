@@ -1,6 +1,8 @@
 @use "$/animation";
 
 .main {
+  align-items: center !important;
+
   &[data-editable="true"] {
     &:hover {
       .box {
