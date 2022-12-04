@@ -1,0 +1,44 @@
+.input {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  height: var(--size);
+  min-width: var(--size);
+  flex: 1;
+  padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
+}
+
+.buttons {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: none;
+  min-height: 100%;
+  height: var(--size);
+  width: var(--size);
+  z-index: 2;
+}
+
+.button {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  overflow: hidden;
+  cursor: pointer;
+
+  > :global(.react-icon) {
+    height: 1.2rem;
+    width: 1.2rem;
+  }
+}
