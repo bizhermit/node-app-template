@@ -83,7 +83,12 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "TextArea",
                         icon: "T",
                         pathname: "/sandbox/elements/form-items/text-area",
-                      }]
+                      }, {
+                        key: "number-box",
+                        label: "NumberBox",
+                        icon: "N",
+                        pathname: "/sandbox/elements/form-items/number-box",
+                    }]
                     }, {
                       key: "button",
                       label: "Button",
