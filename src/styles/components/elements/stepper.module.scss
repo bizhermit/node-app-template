@@ -1,28 +1,153 @@
 @use "$/mixins";
 
+$done: main-light;
+$current: main;
+$future: pure;
+
 .wrap {
   box-sizing: border-box;
   display: flex;
   flex-flow: row nowrap;
   justify-content: stretch;
   align-items: stretch;
+  min-height: var(--size);
 
   @include mixins.scrollOverlay;
-  overflow-y: hidden;
+  overflow-y: visible;
+
+  &[data-appearance="arrow"] {
+    padding: 0 calc(var(--size) / 4);
+  }
 }
 
 .step {
   box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 0 0;
+  min-width: calc(var(--size) * 1.5);
+  cursor: default;
+  overflow: visible;
+
+  &[data-appearance="line"] {
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+  }
+
+  &[data-appearance="arrow"] {
+    flex-flow: row nowrap;
+    justify-content: center;
+  }
+
+  &:first-child {
+    .line {
+      &::before {
+        display: none;
+      }
+    }
+
+    .arrow {
+      &::before {
+        clip-path: none;
+      }
+    }
+  }
+
+  &:last-child {
+    .line {
+      &::after {
+        display: none;
+      }
+    }
+  }
 }
 
-.arrow {
+.label {
   box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  z-index: 1;
+  overflow: hidden;
+  max-width: 100%;
+  text-align: center;
 }
 
 .line {
   box-sizing: border-box;
+  position: relative;
+  height: var(--size);
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+
+  &::before,
+  &::after {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    height: 0.4rem;
+    width: calc(50% - var(--size) / 2 + 0.1rem);
+    background: var(--c-border);
+    top: calc(50% - 0.2rem);
+    z-index: 0;
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+  }
 }
 
 .point {
   box-sizing: border-box;
+  height: var(--size);
+  width: var(--size);
+  border-radius: 9999px;
+  border: 0.3rem solid var(--c-border);
+  z-index: 1;
+  transition: background 0.2s;
+}
+
+.arrow {
+  box-sizing: border-box;
+  position: absolute;
+  height: 100%;
+  width: calc(100% - var(--size) / 2 - 0.2rem);
+  top: 0;
+  left: calc(var(--size) / 4 + 0.1rem);
+  z-index: 0;
+  overflow: visible;
+  transition: background 0.2s;
+
+  &::before,
+  &::after {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: calc(var(--size) * 0.5);
+    top: 0;
+    background: inherit;
+  }
+
+  &::before {
+    left: calc(var(--size) * -0.5 + 0.1rem);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 90% 50%);
+  }
+
+  &::after {
+    right: calc(var(--size) * -0.5 + 0.1rem);
+    clip-path: polygon(0% 0%, 10% 0%, 100% 50%, 10% 100%, 0% 100%);
+  }
 }

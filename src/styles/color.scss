@@ -65,6 +65,9 @@
       color: var(--c-#{$key}) !important;
     }
   }
+  .fgc-#{$key}_r {
+    color: var(--c-#{$key}_) !important;
+  }
   .bdc-#{$key} {
     @if $hasR {
       border-color: var(--c-#{$key}_) !important;

@@ -6,10 +6,10 @@ import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { ReactNode, useMemo, useState } from "react";
 
-const maxStep = 20;
+const maxStep = 10;
 
 const Page: NextPage = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(3);
 
 
   return (
@@ -20,14 +20,19 @@ const Page: NextPage = () => {
           $value={step}
           $onChange={v => setStep(v ?? 0)}
           $min={0}
-          $max={maxStep}
+          $max={maxStep - 1}
         />
       </Row>
       <Divider />
       <Stepper
         className="w-100"
-        $step={0}
+        $step={step}
         $appearance="line"
+        $color={{
+          // done: "base",
+          // current: "danger",
+          // future: "warning",
+        }}
       >
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
@@ -38,7 +43,12 @@ const Page: NextPage = () => {
       <Stepper
         className="w-100"
         $appearance="arrow"
-        $step={0}
+        $step={step}
+        $color={{
+          // done: "cool",
+          // current: "primary",
+          // future: "secondary",
+        }}
       >
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
