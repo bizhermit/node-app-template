@@ -72,6 +72,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   align-items: center;
   flex: 1 1 auto;
   min-height: 0;
+  min-width: 0;
   border-color: var(--c-border);
 
   &[data-editable="true"] {

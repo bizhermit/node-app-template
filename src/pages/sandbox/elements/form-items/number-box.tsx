@@ -105,6 +105,10 @@ const Page: NextPage = () => {
         $required
         $max={10}
         $min={5}
+        $float={1}
+        $step={0.5}
+        $hideButtons
+        $preventThousandSeparate
       />
       <Form
         $bind={formBind}

@@ -5,6 +5,7 @@ import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
+import Resizer from "@/components/elements/resizer";
 
 type NumberBoxProps = FormItemProps<number> & {
   $max?: number;
@@ -201,7 +202,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         onBlur={blur}
         onKeyDown={keydown}
       />
-      {form.editable &&
+      {form.editable && !props.$hideButtons &&
         <div
           className={Style.buttons}
         >
@@ -219,6 +220,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
           </div>
         </div>
       }
+      {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
 });

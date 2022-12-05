@@ -1,3 +1,5 @@
+@use "$/animation";
+
 .input {
   box-sizing: border-box;
   border: none;
@@ -8,7 +10,7 @@
   z-index: 1;
   resize: none;
   height: var(--size);
-  min-width: var(--size);
+  min-width: 0;
   flex: 1;
   padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
   text-align: right;
@@ -21,10 +23,11 @@
   flex-flow: column nowrap;
   justify-content: stretch;
   align-items: stretch;
-  flex: none;
   min-height: 100%;
   height: var(--size);
   width: var(--size);
+  min-width: 0;
+  flex: 0 1 auto;
   z-index: 2;
 }
 
@@ -38,9 +41,32 @@
   overflow: hidden;
   cursor: pointer;
   user-select: none;
+  transition: background 0.1s, color 0.1s;
 
   > :global(.react-icon) {
     height: 1.2rem;
     width: 1.2rem;
   }
+
+  &:hover {
+    @include animation.hover;
+  }
+  &:active {
+    @include animation.hoverActive;
+    outline: none;
+    background: var(--c-border);
+    color: var(--c-border_);
+  }
+
+  &:first-child {
+    border-top-right-radius: var(--radius);
+    padding-top: 5%;
+  }
+
+  &:last-child {
+    border-bottom-right-radius: var(--radius);
+    padding-bottom: 5%;
+  }
 }
+
+@include animation.hoverAnimation;
