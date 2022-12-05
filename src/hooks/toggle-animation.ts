@@ -160,14 +160,14 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
           oCount += oStep;
           switch (aDirection) {
             case "horizontal":
-              props.elementRef.current.style.width = convertSizeNumToStr(sCount)!;
+              props.elementRef.current.style.width = sCount + "px";
               if (sCount > sMax) {
                 end();
                 return;
               }
               break;
             case "vertical":
-              props.elementRef.current.style.height = convertSizeNumToStr(sCount)!;
+              props.elementRef.current.style.height = sCount + "px";
               if (sCount > sMax) {
                 end();
                 return;
@@ -287,14 +287,14 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
           }
           switch (aDirection) {
             case "horizontal":
-              props.elementRef.current.style.width = convertSizeNumToStr(sCount)!;
+              props.elementRef.current.style.width = sCount + "px";
               if (sCount < sMin) {
                 end();
                 return;
               }
               break;
             case "vertical":
-              props.elementRef.current.style.height = convertSizeNumToStr(sCount)!;
+              props.elementRef.current.style.height = sCount + "px";
               if (sCount < sMin) {
                 end();
                 return;

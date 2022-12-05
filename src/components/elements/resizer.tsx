@@ -23,7 +23,7 @@ const Resizer: FC<ResizerProps> = (props) => {
     let move: VoidFunc;
     if (props.direction === "x") {
       const moveImpl = (x: number) => {
-        pelem.style.width = convertSizeNumToStr((x - posX) * (reverse ? -1 : 1) + lastX)!;
+        pelem.style.width = ((x - posX) * (reverse ? -1 : 1) + lastX) + "px";
         props.resizing?.();
       };
       cursor = "col-resize";
@@ -34,7 +34,7 @@ const Resizer: FC<ResizerProps> = (props) => {
       }
     } else if (props.direction === "y") {
       const moveImpl = (y: number) => {
-        pelem.style.height = convertSizeNumToStr((y - posY) * (reverse ? -1 : 1) + lastY)!;
+        pelem.style.height = ((y - posY) * (reverse ? -1 : 1) + lastY) + "px";
         props.resizing?.();
       };
       cursor = "row-resize";
@@ -45,8 +45,8 @@ const Resizer: FC<ResizerProps> = (props) => {
       }
     } else {
       const moveImpl = (x: number, y: number) => {
-        pelem.style.width = convertSizeNumToStr((x - posX) * (reverse ? -1 : 1) + lastX)!;
-        pelem.style.height = convertSizeNumToStr((y - posY) * (reverse ? -1 : 1) + lastY)!;
+        pelem.style.width = ((x - posX) * (reverse ? -1 : 1) + lastX) + "px";
+        pelem.style.height = ((y - posY) * (reverse ? -1 : 1) + lastY) + "px";
         props.resizing?.();
       };
       cursor = "nwse-resize";
@@ -56,10 +56,21 @@ const Resizer: FC<ResizerProps> = (props) => {
         move = ((e: MouseEvent) => moveImpl(e.clientX, e.clientY)) as VoidFunc;
       }
     }
+    const endImpl = () => {
+      const width = pelem.style.width;
+      if (width) {
+        pelem.style.width = convertSizeNumToStr(parseFloat(width))!;
+      }
+      const height = pelem.style.height;
+      if (height) {
+        pelem.style.height = convertSizeNumToStr(parseFloat(height))!;
+      }
+    };
     if (isTouch) {
       const end = () => {
         window.removeEventListener("touchmove", move);
         window.removeEventListener("touchend", end);
+        endImpl();
         props.resized?.();
       };
       window.addEventListener("touchend", end);
@@ -70,6 +81,7 @@ const Resizer: FC<ResizerProps> = (props) => {
         window.removeEventListener("mousemove", move);
         window.removeEventListener("mouseup", end);
         releaseCursor();
+        endImpl();
         props.resized?.();
       };
       window.addEventListener("mouseup", end);
