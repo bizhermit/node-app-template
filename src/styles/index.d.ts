@@ -8,15 +8,15 @@ type SystemColor = "base"
   | "input"
   | "error"
   | "nav"
-  ;
-
-type Color = SystemColor
   | "main"
   | "main-light"
   | "main-dark"
   | "sub"
   | "sub-light"
   | "sub-dark"
+  ;
+
+type Color = SystemColor
   | "primary"
   | "secondary"
   | "tertiary"

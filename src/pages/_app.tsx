@@ -130,6 +130,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Menu",
                       icon: "M",
                       pathname: "/sandbox/elements/menu",
+                    }, {
+                      key: "stepper",
+                      label: "Stepper",
+                      icon: "S",
+                      pathname: "/sandbox/elements/stepper",
                     }],
                   }]
                 }]}
