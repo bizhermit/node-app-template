@@ -4,15 +4,17 @@ $fontSize: 1.6rem;
 $iconSize: 2.0rem;
 
 $baseColor: (
-  "light": rgb(244, 244, 251),
+  "light": rgb(240, 240, 247),
   "light_r": rgb(20, 20, 22),
   "dark": rgb(57, 57, 59),
   "dark_r": rgb(250, 250, 250),
 );
 $lightMainColor: rgb(16, 87, 121);
 $darkMainColor: rgb(16, 87, 121);
-$lightSubColor: rgb(254, 244, 244);
-$darkSubColor: rgb(254, 244, 244);
+$lightSubColor: rgb(228, 187, 203);
+$darkSubColor: rgb(228, 187, 203);
+$lightenRate: 10%;
+$darkenRate: 10%;
 
 $colorMap: (
   "base": $baseColor,
@@ -69,24 +71,24 @@ $colorMap: (
     "dark": $darkMainColor,
   ),
   "main-light": (
-    "light": lighten($lightMainColor, 6%),
-    "dark": lighten($darkMainColor, 6%),
+    "light": lighten($lightMainColor, $lightenRate),
+    "dark": lighten($darkMainColor, $lightenRate),
   ),
   "main-dark": (
-    "light": darken($lightMainColor, 6%),
-    "dark": darken($darkMainColor, 6%),
+    "light": darken($lightMainColor, $darkenRate),
+    "dark": darken($darkMainColor, $darkenRate),
   ),
   "sub": (
     "light": $lightSubColor,
     "dark": $darkSubColor,
   ),
   "sub-light": (
-    "light": lighten($lightSubColor, 6%),
-    "dark": lighten($darkSubColor, 6%),
+    "light": lighten($lightSubColor, $lightenRate),
+    "dark": lighten($darkSubColor, $lightenRate),
   ),
   "sub-dark": (
-    "light": darken($lightSubColor, 6%),
-    "dark": darken($darkSubColor, 6%),
+    "light": darken($lightSubColor, $darkenRate),
+    "dark": darken($darkSubColor, $darkenRate),
   ),
   "primary": (
     "light": rgb(64, 140, 64),

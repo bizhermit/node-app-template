@@ -23,3 +23,11 @@ export const colors: Array<Color> = [
   "cool",
   "pretty",
 ];
+
+export const sizes: Array<Size> = [
+  "xs",
+  "s",
+  "m",
+  "l",
+  "xl",
+];
