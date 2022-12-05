@@ -66,11 +66,8 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
               props.elementRef.current.style.overflowY = "hidden";
               break;
           }
-          setTimeout(() => {
-            if (!props.elementRef.current) return;
-            props.elementRef.current.style.removeProperty("overflow-x");
-            props.elementRef.current.style.removeProperty("overflow-y");
-          }, aInterval * 2);
+          props.elementRef.current.style.removeProperty("overflow-x");
+          props.elementRef.current.style.removeProperty("overflow-y");
         }
         props.onToggled?.(props.open, params);
       };

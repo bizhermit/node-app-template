@@ -10,6 +10,7 @@ import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbComponents } from "react-icons/tb";
 import { LoadingBarProvider } from "@/components/elements/loading-bar";
+import { convertSizeNumToStr } from "@/utilities/attributes";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -18,11 +19,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
-          // $navigationMode="manual"
-          // $navigationMode="minimize"
-          // $navigationMode="visible"
-          // $navigationPosition="right"
-          // $footerVisible="always"
+            // $navigationMode="manual"
+            $navigationMode="minimize"
+            // $navigationMode="visible"
+            // $navigationPosition="right"
+            // $footerVisible="always"
           >
             <div>Header</div>
             {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
@@ -30,7 +31,7 @@ const App = ({ Component, pageProps }: AppProps) => {
               <Menu
                 className="flex-1"
                 // $direction="horizontal"
-                style={{ width: 200 }}
+                style={{ width: convertSizeNumToStr(220) }}
                 $items={[{
                   key: "index",
                   icon: <MdOutlinePowerSettingsNew />,
