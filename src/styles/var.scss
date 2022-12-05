@@ -9,10 +9,10 @@ $baseColor: (
   "dark": rgb(57, 57, 59),
   "dark_r": rgb(250, 250, 250),
 );
-$lightMainColor: rgb(120, 128, 165);
-$darkMainColor: rgb(120, 128, 155);
-$lightSubColor: rgb(164, 170, 180);
-$darkSubColor: rgb(114, 114, 120);
+$lightMainColor: rgb(16, 87, 121);
+$darkMainColor: rgb(16, 87, 121);
+$lightSubColor: rgb(254, 244, 244);
+$darkSubColor: rgb(254, 244, 244);
 
 $colorMap: (
   "base": $baseColor,
@@ -53,6 +53,12 @@ $colorMap: (
     "light_r": map-get($baseColor, light_r),
     "dark": rgb(70, 48, 48),
     "dark_r": map-get($baseColor, dark_r),
+  ),
+  "scroll": (
+    "light": rgba(100, 100, 105, 0.3),
+    "light_r": rgba(210, 210, 215, 0.5),
+    "dark": rgba(200, 200, 205, 0.3),
+    "dark_r": rgba(200, 200, 205, 0.3),
   ),
   "nav": (
     "light": rgb(52, 58, 64),

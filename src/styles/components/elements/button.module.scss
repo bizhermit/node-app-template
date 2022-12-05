@@ -1,4 +1,4 @@
-@use "$/animation";
+@use "$/mixins";
 $buttonSize: (
   xs: 0.7,
   s: 0.85,
@@ -22,10 +22,10 @@ $buttonSize: (
     cursor: pointer;
     
     &:hover {
-      @include animation.hover;
+      @include mixins.hover;
 
       &:active {
-        @include animation.hoverActive;
+        @include mixins.hoverActive;
       }
     }
   }
@@ -61,7 +61,7 @@ $buttonSize: (
   }
 }
 
-@include animation.hoverAnimation;
+@include mixins.hoverAnimation;
 
 .main {
   box-sizing: border-box;

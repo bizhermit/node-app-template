@@ -1,4 +1,4 @@
-@use "$/animation";
+@use "$/mixins";
 
 .input {
   box-sizing: border-box;
@@ -49,11 +49,11 @@
   }
 
   &:hover {
-    @include animation.hover;
+    @include mixins.hover;
   }
 
   &:active {
-    @include animation.hoverActive;
+    @include mixins.hoverActive;
     outline: none;
     background: var(--c-border);
     color: var(--c-border_);
@@ -70,4 +70,4 @@
   }
 }
 
-@include animation.hoverAnimation;
+@include mixins.hoverAnimation;

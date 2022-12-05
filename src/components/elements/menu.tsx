@@ -119,10 +119,10 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const [showItems, setShowItems] = useState(() => {
     if (props.defaultOpen != null) return props.defaultOpen;
     const func = (p: AddonMenuItemProps) => {
-      if (p !== props && judgeSelected({...p, $judgeSelected: props.$judgeSelected }, router.pathname)) return true;
+      if (p !== props && judgeSelected({ ...p, $judgeSelected: props.$judgeSelected }, router.pathname)) return true;
       if (p.items == null || p.items.length === 0) return false;
       for (let i = 0, il = p.items.length; i < il; i++) {
-        if (func({...p.items[i], nestLevel: p.nestLevel + 1})) return true;
+        if (func({ ...p.items[i], nestLevel: p.nestLevel + 1 })) return true;
       }
       return false;
     };
@@ -184,14 +184,13 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       <div className={Style.node}>
         <LabelText className={Style.label}>{props.label}</LabelText>
       </div>
-      {props.items == null || props.items.length === 0 ? <></> :
-        <div className={Style.toggle}>
-          {showItems ?
+      <div className={Style.toggle}>
+        {props.items == null || props.items.length === 0 ? <></> :
+          showItems ?
             props.openedIcon ?? props.$defaultOpenedIcon ?? <VscChromeMinimize /> :
             props.closedIcon ?? props.$defaultClosedIcon ?? <VscAdd />
-          }
-        </div>
-      }
+        }
+      </div>
     </div>
   );
 

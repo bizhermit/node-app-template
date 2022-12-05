@@ -1,4 +1,4 @@
-@use "$/animation";
+@use "$/mixins";
 $animationTime: 0.3s;
 
 .main {
@@ -6,14 +6,14 @@ $animationTime: 0.3s;
     &:hover {
       .handle {
         &::before {
-          @include animation.hover;
+          @include mixins.hover;
         }
       }
 
       &:active {
         .handle {
           &::before {
-            @include animation.hoverActive;
+            @include mixins.hoverActive;
           }
         }
       }
@@ -21,7 +21,7 @@ $animationTime: 0.3s;
   }
 }
 
-@include animation.hoverAnimation;
+@include mixins.hoverAnimation;
 
 .body {
   box-sizing: border-box;

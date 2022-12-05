@@ -1,3 +1,5 @@
+@use "$/mixins";
+
 .wrap {
   box-sizing: border-box;
   display: flex;
@@ -107,13 +109,13 @@
   z-index: 2;
   background: var(--c-nav);
   color: var(--c-nav_);
+  @include mixins.scrollOverlay(var(--c-scroll_));
 
   &[data-pos="left"],
   &[data-pos="right"] {
     flex-direction: column;
     height: 100%;
     max-width: 100%;
-    overflow: auto;
 
     &[data-mode="minimize"],
     &[data-mode="manual"] {

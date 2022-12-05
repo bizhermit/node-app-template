@@ -1,12 +1,16 @@
-type Color = "base"
+type SystemColor = "base"
   | "pure"
   | "dull"
   | "border"
   | "shadow"
   | "mask"
+  | "scroll"
   | "input"
   | "error"
   | "nav"
+  ;
+
+type Color = SystemColor
   | "main"
   | "main-light"
   | "main-dark"

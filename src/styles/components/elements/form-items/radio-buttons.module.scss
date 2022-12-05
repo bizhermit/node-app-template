@@ -1,4 +1,4 @@
-@use "$/animation";
+@use "$/mixins";
 
 .main {
   &[data-editable="true"] {
@@ -17,14 +17,14 @@
 
         >.box {
           &::before {
-            @include animation.hover;
+            @include mixins.hover;
           }
         }
 
         &:active {
           >.box {
             &::before {
-              @include animation.hoverActive;
+              @include mixins.hoverActive;
             }
           }
         }
@@ -32,10 +32,10 @@
 
       &[data-appearance="button"] {
         &:hover {
-          @include animation.hover;
+          @include mixins.hover;
 
           &:active {
-            @include animation.hoverActive;
+            @include mixins.hoverActive;
           }
         }
 
@@ -104,7 +104,7 @@
   }
 }
 
-@include animation.hoverAnimation;
+@include mixins.hoverAnimation;
 
 .item {
   box-sizing: border-box;
