@@ -135,6 +135,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Stepper",
                       icon: "S",
                       pathname: "/sandbox/elements/stepper",
+                    }, {
+                      key: "badge",
+                      label: "Badge",
+                      icon: "B",
+                      pathname: "/sandbox/elements/badge",
                     }],
                   }]
                 }]}
