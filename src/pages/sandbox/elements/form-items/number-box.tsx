@@ -65,21 +65,21 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setValue(10);
+            setValue(1001);
           }}
         >
           set state value
         </Button>
         <Button
           $onClick={() => {
-            setBind({ "number-box-bind": 11 });
+            setBind({ "number-box-bind": 1001 });
           }}
         >
           set bind
         </Button>
         <Button
           $onClick={() => {
-            setFormBind({ "number-box-form-bind": 12 });
+            setFormBind({ "number-box-form-bind": 1001 });
           }}
         >
           set form bind
@@ -103,6 +103,8 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         $required
+        $max={10}
+        $min={5}
       />
       <Form
         $bind={formBind}

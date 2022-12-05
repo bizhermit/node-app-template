@@ -1,12 +1,14 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { ChangeEvent, useRef } from "react";
+import React, { useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
-import { numFormat } from "@bizhermit/basic-utils/dist/number-utils";
+import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
+import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
+import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 
 type NumberBoxProps = FormItemProps<number> & {
   $max?: number;
-  $min?: null;
+  $min?: number;
   $sign?: "only-positive" | "only-negative";
   $float?: number;
   $preventThousandSeparate?: boolean;
@@ -19,18 +21,24 @@ type NumberBoxProps = FormItemProps<number> & {
 const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);
 
-  const toString = (v: number) => {
+  const toString = (v?: Nullable<number>) => {
     if (props.$preventThousandSeparate) return String(v ?? "");
     return numFormat(v, { fpad: props.$float ?? 0 }) ?? "";
   };
 
-  const replaceFormatted = (v?: Nullable<number>) => {
-    // if (iref.current) iref.current.value = val == null ? "" : toString(v);
+  const renderFormattedValue = () => {
+    if (!iref.current) return;
+    iref.current.value = toString(form.valueRef.current);
+  };
+
+  const renderNumberValue = () => {
+    if (!iref.current) return;
+    iref.current.value = String(form.valueRef.current ?? "");
   };
 
   const form = useForm(props, {
-    effect: (v) => {
-      replaceFormatted(v);
+    effect: () => {
+      renderFormattedValue();
     },
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<number>>> = [];
@@ -58,28 +66,77 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
     },
   });
 
-  const change = (e: ChangeEvent<HTMLInputElement>) => {
-    const v = e.target.value;
-    console.log(v);
+  const changeImpl = (value?: string, preventCommit?: boolean): Nullable<number> => {
+    if (isEmpty(value)) {
+      if (preventCommit !== true) form.change(undefined);
+      return undefined;
+    }
+    let num = form.valueRef.current;
+    const float = props.$float ?? 0;
+    const revert = () => {
+      if (iref.current) renderNumberValue();
+      return num;
+    };
+    switch (props.$sign) {
+      case "only-positive":
+        if (float > 0) {
+          if (!new RegExp(`^[+-]?([0-9]*|0)(\.[0-9]{0,${float}})?$`).test(value)) return revert();
+          num = Number(value);
+        } else {
+          if (!/^[+-]?[0-9]*$/.test(value)) return revert();
+          if (/^[+-]?[0-9]*|0$/.test(value)) num = Math.max(0, Number(value));
+        }
+        break;
+      case "only-negative":
+        if (float > 0) {
+          if (!new RegExp(`^[-]?([0-9]*|0)(\.[0-9]{0,${float}})?$`).test(value)) return revert();
+          num = Number(value);
+        } else {
+          if (!/^[-]?[0-9]*$/.test(value)) return revert();
+          if (/^[-]?[0-9]*|0$/.test(value)) num = Math.min(0, Number(value));
+        }
+        break;
+      default:
+        if (float > 0) {
+          if (!new RegExp(`^[+-]?([0-9]*|0)(\.[0-9]{0,${float}})?$`).test(value)) return revert();
+          num = Number(value);
+        } else {
+          if (!/^[+-]?[0-9]*$/.test(value)) return revert();
+          if (/^[+-]?[0-9]*|0$/.test(value)) num = Number(value);
+        }
+        break;
+    }
+    if (preventCommit !== true) form.change(num);
+    return num;
   };
 
-  const incrementValue = (format?: boolean) => {
-    // const v = changeValue(String(add(nbuf.current ?? 0, attrs.$incrementInterval ?? 1)));
-    // if (!format || StringUtils.isEmpty(v)) iref.current.value = v;
-    // else iref.current.value = toString(Number(v));
-    // set.current(nbuf.current);
+  const steppedValue = (value: number) => {
+    let val = value;
+    if (props.$max != null) val = Math.min(val, props.$max);
+    if (props.$min != null) val = Math.max(val, props.$min);
+    return val;
   };
 
-  const decrementValue = (format?: boolean) => {
-    // const v = changeValue(String(minus(nbuf.current ?? 0, attrs.$incrementInterval ?? 1)));
-    // if (!format || StringUtils.isEmpty(v)) iref.current.value = v;
-    // else iref.current.value = toString(Number(v));
-    // set.current(nbuf.current);
+  const incrementValue = (format?: boolean, ctr?: boolean) => {
+    const num = changeImpl(String(ctr ? (props.$max ?? 0) :
+      form.valueRef.current == null ? (props.$min ?? 0) :
+        steppedValue(add(form.valueRef.current ?? 0, props.$step ?? 1))), true)!;
+    form.change(num);
+    if (format) renderFormattedValue();
+    else renderNumberValue();
   };
 
-  const mousedown = (increment: boolean) => {
-    if (increment) incrementValue(true);
-    else decrementValue(true);
+  const decrementValue = (format?: boolean, ctr?: boolean) => {
+    const num = changeImpl(String((ctr || form.valueRef.current == null) ? (props.$min ?? 0) :
+      steppedValue(minus(form.valueRef.current ?? 0, props.$step ?? 1))), true)!;
+    form.change(num);
+    if (format) renderFormattedValue();
+    else renderNumberValue();
+  };
+
+  const mousedown = (increment: boolean, ctr: boolean) => {
+    if (increment) incrementValue(true, ctr);
+    else decrementValue(true, ctr);
     let roop = true;
     const end = () => {
       roop = false;
@@ -89,8 +146,8 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
     const func = async () => {
       setTimeout(() => {
         if (roop) {
-          if (increment) incrementValue(true);
-          else decrementValue(true);
+          if (increment) incrementValue(true, ctr);
+          else decrementValue(true, ctr);
           func();
         }
       }, 30);
@@ -101,21 +158,12 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
   const keydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case "ArrowUp":
-        if (props.$preventKeydownIncrement) return;
-        if (form.editable) incrementValue();
+        if (props.$preventKeydownIncrement || !form.editable) return;
+        incrementValue(false, e.ctrlKey);
         break;
       case "ArrowDown":
-        if (props.$preventKeydownIncrement) return;
-        if (form.editable) decrementValue();
-        break;
-      case "Enter":
-        // if (form.editable) set.current(nbuf.current);
-        break;
-      case "Tab":
-        // if (form.editable) set.current(nbuf.current);
-        break;
-      case "Escape":
-        // iref.current.value = ibuf.current = String(NumberUtils.removeThousandsSeparator(toString(nbuf.current = buf.current)) ?? "");
+        if (props.$preventKeydownIncrement || !form.editable) return;
+        decrementValue(false, e.ctrlKey);
         break;
       default:
         break;
@@ -124,12 +172,11 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
 
   const focus = () => {
     if (!form.editable) return;
-    // iref.current.value = ibuf.current = iref.current.value?.replace(/,/g, "") ?? "";
+    renderNumberValue();
   };
 
   const blur = () => {
-    // set.current(nbuf.current);
-    // if (iref.current) iref.current.value = toString(nbuf.current);
+    renderFormattedValue();
   };
 
   return (
@@ -148,8 +195,8 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         disabled={form.disabled}
         readOnly={form.readOnly}
         tabIndex={props.tabIndex}
-        defaultValue={form.value ?? ""}
-        onChange={change}
+        defaultValue={toString(form.value)}
+        onChange={e => changeImpl(e.target.value)}
         onFocus={focus}
         onBlur={blur}
         onKeyDown={keydown}
@@ -160,13 +207,13 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         >
           <div
             className={Style.button}
-            onMouseDown={() => mousedown(true)}
+            onMouseDown={e => mousedown(true, e.ctrlKey)}
           >
             <VscTriangleUp />
           </div>
           <div
             className={Style.button}
-            onMouseDown={() => mousedown(false)}
+            onMouseDown={e => mousedown(false, e.ctrlKey)}
           >
             <VscTriangleDown />
           </div>
