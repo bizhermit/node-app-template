@@ -99,19 +99,24 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
       typeof document === "undefined" ? "3.6rem" :
         getComputedStyle(document.documentElement).getPropertyValue("--nav-size") || "0",
     onToggle: () => {
-      if (!maskRef.current) return;
-      maskRef.current.style.removeProperty("display");
+      if (maskRef.current) {
+        maskRef.current.style.removeProperty("display");
+      }
+      if (navPosition === "left" || navPosition === "right") navRef.current.scrollLeft = 0;
+      else navRef.current.scrollTop = 0;
     },
     onToggling: (context) => {
-      if (!maskRef.current) return;
-      maskRef.current.style.opacity = String(context.opacity);
+      if (maskRef.current) {
+        maskRef.current.style.opacity = String(context.opacity);
+      }
     },
     onToggled: (open) => {
-      if (!maskRef.current) return;
-      if (open) {
-        maskRef.current.style.removeProperty("display");
-      } else {
-        maskRef.current.style.display = "none";
+      if (maskRef.current) {
+        if (open) {
+          maskRef.current.style.removeProperty("display");
+        } else {
+          maskRef.current.style.display = "none";
+        }
       }
     },
   }, [navMode]);

@@ -31,7 +31,7 @@ const App = ({ Component, pageProps }: AppProps) => {
               <Menu
                 className="flex-1"
                 // $direction="horizontal"
-                style={{ width: convertSizeNumToStr(220) }}
+                style={{ width: convertSizeNumToStr(230) }}
                 $items={[{
                   key: "index",
                   icon: <MdOutlinePowerSettingsNew />,
