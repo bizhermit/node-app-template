@@ -29,9 +29,9 @@ export const isReactNode = (node: ReactNode): node is ReactElement | ReactFragme
 
 export const convertSizeNumToStr = (value?: string | number | null, nullValue?: string | (() => void)) => {
   if (value == null) {
-    if (nullValue == null || typeof nullValue === "string") return nullValue ?? "";
+    if (nullValue == null || typeof nullValue === "string") return nullValue ?? undefined;
     nullValue();
-    return "";
+    return undefined;
   }
   if (typeof value === "string") return value;
   return `${value / 10}rem`;

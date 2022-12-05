@@ -95,6 +95,8 @@ const Page: NextPage = () => {
         $required
         $messagePosition="bottom"
         $resize
+        $width={300}
+        $height={300}
       />
       <TextArea
         name="text-area-bind"

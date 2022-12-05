@@ -21,10 +21,10 @@ const Page: NextPage = () => {
               <span>bgc-{color}_r</span>
             </div>
             <div className={`flex-1 p-1`}>
-              <span className={`bdc-${color}`} style={{ border: "3px solid"}}>bdc-{color}</span>
+              <span className={`bdc-${color}`} style={{ border: "0.3rem solid"}}>bdc-{color}</span>
             </div>
             <div className={`flex-1 p-1 c-${color}`}>
-              <span className={`bdc-${color}_r`} style={{ border: "3px solid"}}>bdc-{color}_r</span>
+              <span className={`bdc-${color}_r`} style={{ border: "0.3rem solid"}}>bdc-{color}_r</span>
             </div>
           </Row>
         )

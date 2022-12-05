@@ -139,15 +139,17 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   &[data-mode="bottom-hide"] {
     padding: 0 .5rem;
     max-width: fit-content;
+
+    >.text {
+      &[data-nowrap="true"] {
+        width: 0;
+        white-space: nowrap;
+        overflow: visible;
+      }
+    }
   }
 }
 
 .text {
   padding-top: var(padding-top-text);
-
-  &[data-nowrap="true"] {
-    width: 0;
-    white-space: nowrap;
-    overflow: visible;
-  }
 }

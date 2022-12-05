@@ -6,6 +6,7 @@ import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
+import { convertSizeNumToStr } from "@/utilities/attributes";
 
 type NumberBoxProps = FormItemProps<number> & {
   $max?: number;
@@ -18,7 +19,12 @@ type NumberBoxProps = FormItemProps<number> & {
   $hideButtons?: boolean;
   $resize?: boolean;
   $inputMode?: "numeric" | "decimal";
+  $width?: number | string;
+  $maxWidth?: number | string;
+  $minWidth?: number | string;
 };
+
+const defaultWidth = 120;
 
 const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);
@@ -191,6 +197,13 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
       $$form={form}
       $useHidden
       data-has={Boolean(form.value)}
+      $mainProps={{
+        style: {
+          width: convertSizeNumToStr(props.$width ?? defaultWidth),
+          maxWidth: convertSizeNumToStr(props.$maxWidth),
+          minWidth: convertSizeNumToStr(props.$minWidth),
+        },
+      }}
     >
       <input
         ref={iref}
@@ -205,7 +218,6 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         onFocus={focus}
         onBlur={blur}
         onKeyDown={keydown}
-        size={4}
         inputMode={props.$inputMode || (props.$float ? "decimal" : "numeric")}
       />
       {form.editable && !props.$hideButtons &&

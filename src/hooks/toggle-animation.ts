@@ -52,17 +52,17 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
           props.elementRef.current.style.removeProperty("display");
           switch (aDirection) {
             case "horizontal":
-              props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width ?? props.max);
+              props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width ?? props.max, "")!;
               props.elementRef.current.style.overflowX = "hidden";
               break;
             case "vertical":
-              props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height ?? props.max);
+              props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height ?? props.max, "")!;
               props.elementRef.current.style.overflowY = "hidden";
               break;
             default:
-              props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width ?? props.max);
+              props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width ?? props.max, "")!;
               props.elementRef.current.style.overflowX = "hidden";
-              props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height ?? props.max);
+              props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height ?? props.max, "")!;
               props.elementRef.current.style.overflowY = "hidden";
               break;
           }
@@ -81,16 +81,16 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
       props.elementRef.current.style.visibility = "unset";
       switch (aDirection) {
         case "horizontal":
-          props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width ?? props.max);
-          props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height);
+          props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width ?? props.max, "")!;
+          props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height, "")!;
           break;
         case "vertical":
-          props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height ?? props.max);
-          props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width);
+          props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height ?? props.max, "")!;
+          props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width, "")!;
           break;
         default:
-          props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width);
-          props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height);
+          props.elementRef.current.style.width = convertSizeNumToStr(props.style?.width, "")!;
+          props.elementRef.current.style.height = convertSizeNumToStr(props.style?.height, "")!;
           break;
       }
 
@@ -130,10 +130,10 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
       props.elementRef.current.style.overflow = "hidden";
       switch (aDirection) {
         case "horizontal":
-          props.elementRef.current.style.width = convertSizeNumToStr(props.min, defaultMin);
+          props.elementRef.current.style.width = convertSizeNumToStr(props.min, defaultMin)!;
           break;
         case "vertical":
-          props.elementRef.current.style.height = convertSizeNumToStr(props.min, defaultMin);
+          props.elementRef.current.style.height = convertSizeNumToStr(props.min, defaultMin)!;
           break;
         default:
           break;
@@ -160,14 +160,14 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
           oCount += oStep;
           switch (aDirection) {
             case "horizontal":
-              props.elementRef.current.style.width = `${sCount}px`;
+              props.elementRef.current.style.width = convertSizeNumToStr(sCount)!;
               if (sCount > sMax) {
                 end();
                 return;
               }
               break;
             case "vertical":
-              props.elementRef.current.style.height = `${sCount}px`;
+              props.elementRef.current.style.height = convertSizeNumToStr(sCount)!;
               if (sCount > sMax) {
                 end();
                 return;
@@ -206,10 +206,10 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
           }
           switch (aDirection) {
             case "horizontal":
-              props.elementRef.current.style.width = convertSizeNumToStr(props.min, defaultMin);
+              props.elementRef.current.style.width = convertSizeNumToStr(props.min, defaultMin)!;
               break;
             case "vertical":
-              props.elementRef.current.style.height = convertSizeNumToStr(props.min, defaultMin);
+              props.elementRef.current.style.height = convertSizeNumToStr(props.min, defaultMin)!;
               break;
             default:
               break;
@@ -259,13 +259,13 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
       switch (aDirection) {
         case "horizontal":
           current = props.elementRef.current.style.width;
-          props.elementRef.current.style.width = convertSizeNumToStr(props.min, defaultMin);
+          props.elementRef.current.style.width = convertSizeNumToStr(props.min, defaultMin)!;
           sMin = props.elementRef.current.offsetWidth;
           props.elementRef.current.style.width = current;
           break;
         case "vertical":
           current = props.elementRef.current.style.height;
-          props.elementRef.current.style.height = convertSizeNumToStr(props.min, defaultMin);
+          props.elementRef.current.style.height = convertSizeNumToStr(props.min, defaultMin)!;
           sMin = props.elementRef.current.offsetHeight;
           props.elementRef.current.style.height = current;
           break;
@@ -287,14 +287,14 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
           }
           switch (aDirection) {
             case "horizontal":
-              props.elementRef.current.style.width = `${sCount}px`;
+              props.elementRef.current.style.width = convertSizeNumToStr(sCount)!;
               if (sCount < sMin) {
                 end();
                 return;
               }
               break;
             case "vertical":
-              props.elementRef.current.style.height = `${sCount}px`;
+              props.elementRef.current.style.height = convertSizeNumToStr(sCount)!;
               if (sCount < sMin) {
                 end();
                 return;
