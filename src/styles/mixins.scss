@@ -1,0 +1,36 @@
+@mixin hover {
+  outline: solid;
+  outline-offset: 0rem;
+  animation: hover 1s infinite;
+}
+
+@mixin hoverActive {
+  animation: none;
+}
+
+@mixin hoverAnimation {
+  @keyframes hover {
+    100% {
+      outline-color: transparent;
+      outline-offset: .6rem;
+    }
+  }
+}
+
+@mixin scrollOverlay($thumbColor: var(--c-scroll), $noOverflow: false) {
+  @if $noOverflow == false {
+    overflow: auto;
+    overflow: overlay;
+  }
+
+  &::-webkit-scrollbar {
+    height: 0.5rem !important;
+    width: 0.5rem !important;
+    background: transparent !important;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.2rem;
+    background: $thumbColor;
+  }
+}

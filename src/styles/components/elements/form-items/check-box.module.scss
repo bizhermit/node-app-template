@@ -1,18 +1,18 @@
-@use "$/animation";
+@use "$/mixins";
 
 .main {
   &[data-editable="true"] {
     &:hover {
       .box {
         &::before {
-          @include animation.hover;
+          @include mixins.hover;
         }
       }
 
       &:active {
         .box {
           &::before {
-            @include animation.hoverActive;
+            @include mixins.hoverActive;
           }
         }
       }
@@ -20,7 +20,7 @@
   }
 }
 
-@include animation.hoverAnimation;
+@include mixins.hoverAnimation;
 
 .body {
   box-sizing: border-box;

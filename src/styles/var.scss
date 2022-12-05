@@ -54,6 +54,12 @@ $colorMap: (
     "dark": rgb(70, 48, 48),
     "dark_r": map-get($baseColor, dark_r),
   ),
+  "scroll": (
+    "light": rgba(100, 100, 105, 0.3),
+    "light_r": rgba(210, 210, 215, 0.5),
+    "dark": rgba(200, 200, 205, 0.3),
+    "dark_r": rgba(200, 200, 205, 0.3),
+  ),
   "nav": (
     "light": rgb(52, 58, 64),
     "dark": rgb(27, 35, 40),

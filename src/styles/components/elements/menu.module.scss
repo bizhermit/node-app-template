@@ -1,4 +1,4 @@
-@use "$/animation";
+@use "$/mixins";
 
 .wrap {
   box-sizing: border-box;
@@ -67,17 +67,17 @@
     cursor: pointer;
 
     &:hover {
-      @include animation.hover;
+      @include mixins.hover;
       z-index: 1;
 
       &:active {
-        @include animation.hoverActive;
+        @include mixins.hoverActive;
       }
     }
   }
 }
 
-@include animation.hoverAnimation;
+@include mixins.hoverAnimation;
 
 .icon,
 .toggle {

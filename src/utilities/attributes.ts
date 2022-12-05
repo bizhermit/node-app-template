@@ -40,7 +40,7 @@ export const convertSizeNumToStr = (value?: string | number | null, nullValue?: 
 const pxPerRem = () => {
   if (typeof window === "undefined") return 10;
   return Number(parseFloat(getComputedStyle(document.documentElement).fontSize));
-}
+};
 
 export const convertPxToRemNum = (value?: number) => {
   if (value == null) return undefined;
@@ -50,7 +50,7 @@ export const convertPxToRemNum = (value?: number) => {
 export const convertRemToPxNum = (value?: number) => {
   if (value == null) return undefined;
   return value * pxPerRem();
-}
+};
 
 export const pressPositiveKey = <T extends HTMLElement = HTMLElement>(e: React.KeyboardEvent<T>, func: (e: React.KeyboardEvent<T>) => (void | boolean)) => {
   if (e.key === " " || e.key === "Enter") {

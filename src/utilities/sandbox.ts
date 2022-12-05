@@ -5,6 +5,7 @@ export const colors: Array<Color> = [
   "border",
   "shadow",
   "mask",
+  "scroll",
   "input",
   "error",
   "nav",
