@@ -29,13 +29,28 @@ export const isReactNode = (node: ReactNode): node is ReactElement | ReactFragme
 
 export const convertSizeNumToStr = (value?: string | number | null, nullValue?: string | (() => void)) => {
   if (value == null) {
-    if (nullValue == null || typeof nullValue === "string") return nullValue ?? "";
+    if (nullValue == null || typeof nullValue === "string") return nullValue ?? undefined;
     nullValue();
-    return "";
+    return undefined;
   }
   if (typeof value === "string") return value;
-  return `${value / 10}rem`;
+  return `${convertPxToRemNum(value)!}rem`;
 };
+
+const pxPerRem = () => {
+  if (typeof window === "undefined") return 10;
+  return Number(parseFloat(getComputedStyle(document.documentElement).fontSize));
+}
+
+export const convertPxToRemNum = (value?: number) => {
+  if (value == null) return undefined;
+  return value / pxPerRem();
+};
+
+export const convertRemToPxNum = (value?: number) => {
+  if (value == null) return undefined;
+  return value * pxPerRem();
+}
 
 export const pressPositiveKey = <T extends HTMLElement = HTMLElement>(e: React.KeyboardEvent<T>, func: (e: React.KeyboardEvent<T>) => (void | boolean)) => {
   if (e.key === " " || e.key === "Enter") {

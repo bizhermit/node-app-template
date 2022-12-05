@@ -44,6 +44,9 @@ const Page: NextPage = () => {
             placeholder="no tag / placeholder"
             $disabled={disabled}
             $readOnly={readOnly}
+            $width={300}
+            $maxWidth={400}
+            $resize
           />
           <TextBox
             $tag="Tag"

@@ -1,7 +1,7 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
-import TextArea from "@/components/elements/form-items/text-area";
+import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
@@ -10,7 +10,7 @@ import { useState } from "react";
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<string>>();
+  const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
 
@@ -65,28 +65,28 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setValue("set");
+            setValue(1001);
           }}
         >
           set state value
         </Button>
         <Button
           $onClick={() => {
-            setBind({ "text-area-bind": "set" });
+            setBind({ "number-box-bind": 1001 });
           }}
         >
           set bind
         </Button>
         <Button
           $onClick={() => {
-            setFormBind({ "text-area-form-bind": "set" });
+            setFormBind({ "number-box-form-bind": 1001 });
           }}
         >
           set form bind
         </Button>
       </Row>
       <Divider />
-      <TextArea
+      <NumberBox
         $tag="useState"
         $disabled={disabled}
         $readOnly={readOnly}
@@ -94,32 +94,34 @@ const Page: NextPage = () => {
         $onChange={v => setValue(v)}
         $required
         $messagePosition="bottom"
+        // $messageWrap
         $resize
-        $width={300}
-        $height={300}
       />
-      <TextArea
-        name="text-area-bind"
+      <NumberBox
+        name="number-box-bind"
         $bind={bind}
         $tag="bind"
         $disabled={disabled}
         $readOnly={readOnly}
         $required
-        $resize="x"
+        $max={10}
+        $min={5}
+        $float={1}
+        $step={0.5}
+        $hideButtons
+        $preventThousandSeparate
       />
       <Form
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
       >
-        <TextArea
-          name="text-area-form-bind"
+        <NumberBox
+          name="number-box-form-bind"
           $tag="form bind"
           $required
-          $resize="y"
         />
       </Form>
-      <textarea />
     </div>
   );
 };

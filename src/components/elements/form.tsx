@@ -33,6 +33,7 @@ export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement
   $defaultValue?: T;
   $value?: Nullable<T>;
   $messagePosition?: FormItemMessageDisplayMode;
+  $messageWrap?: boolean;
   $onChange?: (after: Nullable<T>, before: Nullable<T>, data?: U) => void;
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
@@ -50,6 +51,7 @@ type FormContextProps = {
   unmount: (name: string) => void;
   validation: () => void;
   messageDisplayMode: FormItemMessageDisplayMode;
+  messageWrap?: boolean;
 };
 
 export const FormContext = createContext<FormContextProps>({
@@ -75,6 +77,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
+  $messageWrap?: boolean;
   $onSubmit?: (((formData: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
 };
@@ -198,6 +201,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       unmount,
       validation,
       messageDisplayMode: props.$messageDisplayMode ?? "tooltip",
+      messageWrap: props.$messageWrap,
     }}>
       <form
         {...attributes(props)}
@@ -375,6 +379,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     setError,
     effect: options?.effect,
     messageDisplayMode: props?.$messagePosition ?? ctx.messageDisplayMode,
+    messageWrap: props?.$messageWrap ?? ctx.messageWrap,
   };
 };
 
@@ -392,7 +397,12 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
       className={Style.error}
       data-mode={props.$$form.messageDisplayMode}
     >
-      {props.$$form.error}
+      <span
+        className={Style.text}
+        data-nowrap={!props.$$form.messageWrap}
+      >
+        {props.$$form.error}
+      </span>
     </div>
   );
 

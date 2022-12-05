@@ -1,0 +1,14 @@
+.input {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  height: var(--size);
+  min-width: 0;
+  flex: 1;
+  padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
+}

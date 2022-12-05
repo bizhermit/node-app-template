@@ -18,11 +18,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
-            // $navigationMode="manual"
-            // $navigationMode="minimize"
-            // $navigationMode="visible"
-            // $navigationPosition="right"
-            // $footerVisible="always"
+          // $navigationMode="manual"
+          // $navigationMode="minimize"
+          // $navigationMode="visible"
+          // $navigationPosition="right"
+          // $footerVisible="always"
           >
             <div>Header</div>
             {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
@@ -83,6 +83,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "TextArea",
                         icon: "T",
                         pathname: "/sandbox/elements/form-items/text-area",
+                      }, {
+                        key: "number-box",
+                        label: "NumberBox",
+                        icon: "N",
+                        pathname: "/sandbox/elements/form-items/number-box",
                       }]
                     }, {
                       key: "button",

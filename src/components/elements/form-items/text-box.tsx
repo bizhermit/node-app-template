@@ -1,6 +1,7 @@
-import Style from "$/components/elements/form-items/form-item.module.scss";
+import Style from "$/components/elements/form-items/text-box.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
+import { convertSizeNumToStr } from "@/utilities/attributes";
 import React, { useRef } from "react";
 
 export type TextBoxProps = FormItemProps<string> & {
@@ -10,6 +11,9 @@ export type TextBoxProps = FormItemProps<string> & {
   $minLength?: number;
   $round?: boolean;
   $resize?: boolean;
+  $width?: number | string;
+  $maxWidth?: number | string;
+  $minWidth?: number | string;
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
@@ -51,6 +55,13 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
       $$form={form}
       data-round={props.$round}
       data-has={Boolean(form.value)}
+      $mainProps={{
+        style: {
+          width: convertSizeNumToStr(props.$width),
+          maxWidth: convertSizeNumToStr(props.$maxWidth),
+          minWidth: convertSizeNumToStr(props.$minWidth),
+        },
+      }}
     >
       <input
         ref={iref}
