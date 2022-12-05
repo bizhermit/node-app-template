@@ -107,7 +107,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         }
         break;
     }
-    if (preventCommit !== true) form.change(num);
+    if (num != null && !isNaN(num!) && preventCommit !== true) form.change(num);
     return num;
   };
 
