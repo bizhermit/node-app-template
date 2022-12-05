@@ -50,7 +50,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   max-width: 100%;
   text-overflow: clip;
   height: $tagHeight;
-  
+
   &[data-pos="placeholder"] {
     position: absolute;
     top: calc($tagHeight);
