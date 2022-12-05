@@ -1,8 +1,7 @@
 @use "$/mixins";
 
-$done: main-light;
-$current: main;
-$future: pure;
+$lineWidth: 0.15rem;
+$arrowMargin: 0.15rem;
 
 .wrap {
   box-sizing: border-box;
@@ -10,13 +9,33 @@ $future: pure;
   flex-flow: row nowrap;
   justify-content: stretch;
   align-items: stretch;
-  min-height: var(--size);
+  min-height: var(--point-size);
 
   @include mixins.scrollOverlay;
   overflow-y: visible;
 
   &[data-appearance="arrow"] {
-    padding: 0 calc(var(--size) / 4);
+    padding: 0 calc(var(--point-size) / 4);
+  }
+
+  &[data-size="xs"] {
+    --point-size: calc(var(--size) * 0.7);
+  }
+
+  &[data-size="s"] {
+    --point-size: calc(var(--size) * 0.85);
+  }
+
+  &[data-size="m"] {
+    --point-size: var(--size);
+  }
+
+  &[data-size="l"] {
+    --point-size: calc(var(--size) * 1.2);
+  }
+
+  &[data-size="xl"] {
+    --point-size: calc(var(--size) * 1.4);
   }
 }
 
@@ -26,7 +45,7 @@ $future: pure;
   display: flex;
   align-items: center;
   flex: 1 0 0;
-  min-width: calc(var(--size) * 1.5);
+  min-width: calc(var(--point-size) * 1.5);
   cursor: default;
   overflow: visible;
 
@@ -75,12 +94,13 @@ $future: pure;
   overflow: hidden;
   max-width: 100%;
   text-align: center;
+  transition: color 0.2s;
 }
 
 .line {
   box-sizing: border-box;
   position: relative;
-  height: var(--size);
+  height: var(--point-size);
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
@@ -93,10 +113,10 @@ $future: pure;
     box-sizing: border-box;
     position: absolute;
     content: "";
-    height: 0.4rem;
-    width: calc(50% - var(--size) / 2 + 0.1rem);
+    height: #{$lineWidth * 2};
+    width: calc(50% - var(--point-size) / 2 + 0.1rem);
     background: var(--c-border);
-    top: calc(50% - 0.2rem);
+    top: calc(50% - #{$lineWidth});
     z-index: 0;
   }
 
@@ -111,10 +131,10 @@ $future: pure;
 
 .point {
   box-sizing: border-box;
-  height: var(--size);
-  width: var(--size);
+  height: var(--point-size);
+  width: var(--point-size);
   border-radius: 9999px;
-  border: 0.3rem solid var(--c-border);
+  border: 0.25rem solid var(--c-border);
   z-index: 1;
   transition: background 0.2s;
 }
@@ -123,9 +143,9 @@ $future: pure;
   box-sizing: border-box;
   position: absolute;
   height: 100%;
-  width: calc(100% - var(--size) / 2 - 0.2rem);
+  width: calc(100% - var(--point-size) / 2 - #{$arrowMargin * 2});
   top: 0;
-  left: calc(var(--size) / 4 + 0.1rem);
+  left: calc(var(--point-size) / 4 + #{$arrowMargin});
   z-index: 0;
   overflow: visible;
   transition: background 0.2s;
@@ -136,18 +156,18 @@ $future: pure;
     position: absolute;
     content: "";
     height: 100%;
-    width: calc(var(--size) * 0.5);
+    width: calc(var(--point-size) * 0.5);
     top: 0;
     background: inherit;
   }
 
   &::before {
-    left: calc(var(--size) * -0.5 + 0.1rem);
+    left: calc(var(--point-size) * -0.5 + 0.1rem);
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 90% 50%);
   }
 
   &::after {
-    right: calc(var(--size) * -0.5 + 0.1rem);
+    right: calc(var(--point-size) * -0.5 + 0.1rem);
     clip-path: polygon(0% 0%, 10% 0%, 100% 50%, 10% 100%, 0% 100%);
   }
 }

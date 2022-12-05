@@ -13,6 +13,7 @@ export type StepperProps = HTMLAttributes<HTMLDivElement> & {
     current?: Color;
     future?: Color;
   };
+  $size?: Size;
   children: [ReactNode, ...Array<ReactNode>];
 };
 
@@ -46,6 +47,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>((props, $ref) => 
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
       data-appearance={appearance}
+      data-size={props.$size || "m"}
     >
       {props.children.map((step, index) => {
         const state = getStateText(index);
