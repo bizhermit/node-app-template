@@ -94,6 +94,7 @@ const Page: NextPage = () => {
         $onChange={v => setValue(v)}
         $required
         $messagePosition="bottom"
+        // $messageWrap
         $resize
       />
       <NumberBox

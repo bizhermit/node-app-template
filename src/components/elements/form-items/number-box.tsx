@@ -17,6 +17,7 @@ type NumberBoxProps = FormItemProps<number> & {
   $preventKeydownIncrement?: boolean;
   $hideButtons?: boolean;
   $resize?: boolean;
+  $inputMode?: "numeric" | "decimal";
 };
 
 const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) => {
@@ -119,17 +120,18 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
   };
 
   const incrementValue = (format?: boolean, ctr?: boolean) => {
-    const num = changeImpl(String(ctr ? (props.$max ?? 0) :
-      form.valueRef.current == null ? (props.$min ?? 0) :
-        steppedValue(add(form.valueRef.current ?? 0, props.$step ?? 1))), true)!;
+    const num = changeImpl(String(form.valueRef.current == null ? (ctr ? props.$max : props.$min ?? 0) :
+      ((ctr && props.$max != null) ? props.$max :
+        steppedValue(add(form.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
     form.change(num);
     if (format) renderFormattedValue();
     else renderNumberValue();
   };
 
   const decrementValue = (format?: boolean, ctr?: boolean) => {
-    const num = changeImpl(String((ctr || form.valueRef.current == null) ? (props.$min ?? 0) :
-      steppedValue(minus(form.valueRef.current ?? 0, props.$step ?? 1))), true)!;
+    const num = changeImpl(String(form.valueRef.current == null ? (props.$min ?? 0) :
+      ((ctr && props.$min != null) ? props.$min :
+        steppedValue(minus(form.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
     form.change(num);
     if (format) renderFormattedValue();
     else renderNumberValue();
@@ -161,10 +163,12 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
       case "ArrowUp":
         if (props.$preventKeydownIncrement || !form.editable) return;
         incrementValue(false, e.ctrlKey);
+        e.preventDefault();
         break;
       case "ArrowDown":
         if (props.$preventKeydownIncrement || !form.editable) return;
         decrementValue(false, e.ctrlKey);
+        e.preventDefault();
         break;
       default:
         break;
@@ -201,6 +205,8 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         onFocus={focus}
         onBlur={blur}
         onKeyDown={keydown}
+        size={4}
+        inputMode={props.$inputMode || (props.$float ? "decimal" : "numeric")}
       />
       {form.editable && !props.$hideButtons &&
         <div

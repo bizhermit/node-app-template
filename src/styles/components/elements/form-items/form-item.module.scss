@@ -125,7 +125,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   font-size: calc(var(--font-size) * 0.85);
 
   &[data-mode="tooltip"] {
-    padding: calc(.5rem + var(--padding-top-text)) 1.5rem .5rem 1.5rem;
+    padding: .5rem 1.5rem .5rem 1.5rem;
     white-space: nowrap;
     background: var(--c-error);
     color: var(--c-error_);
@@ -137,8 +137,17 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
 
   &[data-mode="bottom"],
   &[data-mode="bottom-hide"] {
-    padding: var(--padding-top-text) .5rem 0 .5rem;
-    overflow-wrap: break-word;
-    max-width: 100%;
+    padding: 0 .5rem;
+    max-width: fit-content;
+  }
+}
+
+.text {
+  padding-top: var(padding-top-text);
+
+  &[data-nowrap="true"] {
+    width: 0;
+    white-space: nowrap;
+    overflow: visible;
   }
 }
