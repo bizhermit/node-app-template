@@ -65,21 +65,21 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setValue(1);
+            setValue(10);
           }}
         >
           set state value
         </Button>
         <Button
           $onClick={() => {
-            setBind({ "slider-bind": 2 });
+            setBind({ "slider-bind": 50 });
           }}
         >
           set bind
         </Button>
         <Button
           $onClick={() => {
-            setFormBind({ "slider-form-bind": 3 });
+            setFormBind({ "slider-form-bind": 100 });
           }}
         >
           set form bind
