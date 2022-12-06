@@ -89,6 +89,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "NumberBox",
                         icon: "N",
                         pathname: "/sandbox/elements/form-items/number-box",
+                      }, {
+                        key: "slider",
+                        label: "Slider",
+                        icon: "S",
+                        pathname: "/sandbox/elements/form-items/slider",
                       }]
                     }, {
                       key: "button",
