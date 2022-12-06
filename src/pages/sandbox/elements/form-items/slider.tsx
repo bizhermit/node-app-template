@@ -92,6 +92,7 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $value={value}
         $onChange={v => setValue(v!)}
+        $width={200}
       />
       <Slider
         $tag="bind"
@@ -99,6 +100,7 @@ const Page: NextPage = () => {
         $bind={bind}
         $readOnly={readOnly}
         $disabled={disabled}
+        $step={10}
       />
       <Form
         $bind={formBind}

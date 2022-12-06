@@ -24,6 +24,7 @@
   box-sizing: border-box;
   position: relative;
   height: var(--size);
+  min-width: 0;
   flex: 1;
 }
 
