@@ -4,6 +4,7 @@ import Form from "@/components/elements/form";
 import Slider from "@/components/elements/form-items/slider";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -112,6 +113,17 @@ const Page: NextPage = () => {
           name="slider-form-bind"
         />
       </Form>
+      {colors.map(color => {
+        return (
+          <Slider
+            key={color}
+            $color={color}
+            $defaultValue={50}
+            className="w-100"
+            $width="100%"
+          />
+        );
+      })}
     </div>
   );
 };
