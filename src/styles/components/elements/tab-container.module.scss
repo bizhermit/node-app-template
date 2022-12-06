@@ -8,9 +8,20 @@
   &[data-pos="top"] {
     flex-direction: column;
   }
-  
+
   &[data-pos="bottom"] {
     flex-direction: column-reverse;
+  }
+
+  &[data-pos="top"],
+  &[data-pos="bottom"] {
+    >.header {
+      flex-direction: row;
+
+      .tab {
+        padding: 0 1rem;
+      }
+    }
   }
 
   &[data-pos="left"] {
@@ -20,18 +31,45 @@
   &[data-pos="right"] {
     flex-direction: row-reverse;
   }
+
+  &[data-pos="left"],
+  &[data-pos="right"] {
+    >.header {
+      flex-direction: row;
+      writing-mode: vertical-rl;
+
+      .tab {
+        padding: 1rem 0;
+      }
+    }
+  }
 }
 
 .header {
   box-sizing: border-box;
   flex: none;
-  background: blue;
   min-width: var(--size);
   min-height: var(--size);
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+
+.tab {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+
+  &:not([data-selected="true"]) {
+    cursor: pointer;
+  }
 }
 
 .body {
   box-sizing: border-box;
   flex: 1;
-  background: red;
 }

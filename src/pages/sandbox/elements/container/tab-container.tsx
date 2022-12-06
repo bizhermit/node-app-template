@@ -1,7 +1,7 @@
 import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import Row from "@/components/elements/row";
-import TabContainer from "@/components/elements/tab-container";
+import TabContainer, { TabContent } from "@/components/elements/tab-container";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -28,7 +28,18 @@ const Page: NextPage = () => {
         className="flex-1 w-100"
         $tabPosition={position}
       >
-
+        <TabContent
+          key="tab1"
+          label="Tab 1"
+        >
+          <h1>Tab 1</h1>
+        </TabContent>
+        <TabContent
+          key="tab2"
+          label="Tab 2"
+        >
+          <h1>Tab 2</h1>
+        </TabContent>
       </TabContainer>
     </div>
   );
