@@ -37,14 +37,7 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
     const range = max - min;
 
     const moveImpl = (cx: number) => {
-      const relativePos = cx - clientX;
-      const num = Math.round(range * relativePos / width);
-      const v = Math.min(max, Math.max(min, cVal + num));
-      form.change(v);
-      // console.log(num);
-      // num = Math.round(min.current + (max.current - min.current) * (Math.min(Math.max(0, cx - pos + lpos), maxLeft) / maxLeft));
-      // attrs.$changing?.(num);
-      // optimizeHadbleLeft(num);
+      form.change(Math.min(max, Math.max(min, cVal + Math.round(range * (cx - clientX) / width))));
     };
     if (isTouch) {
       const move = (e: TouchEvent) => moveImpl(e.touches[0].clientX);
@@ -65,6 +58,24 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
     }
   };
 
+  const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!form.editable) return;
+    switch (e.key) {
+      case "ArrowLeft":
+        if (e.ctrlKey) form.change(min);
+        else form.change(Math.max(min, (form.value ?? min) - (props.$step ?? 1)));
+        e.preventDefault();
+        break;
+      case "ArrowRight":
+        if (e.ctrlKey) form.change(max);
+        else form.change(Math.min(max, (form.value ?? min) + (props.$step ?? 1)));
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <FormItemWrap
       {...props}
@@ -79,6 +90,8 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
           maxWidth: convertSizeNumToStr(props.$maxWidth),
           minWidth: convertSizeNumToStr(props.$minWidth),
         },
+        onKeyDown: keydown,
+        tabIndex: props.tabIndex ?? 0,
       }}
     >
       <div
