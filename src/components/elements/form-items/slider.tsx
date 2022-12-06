@@ -1,7 +1,7 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { useMemo, useRef } from "react";
 import Style from "$/components/elements/form-items/slider.module.scss";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { attributes, convertSizeNumToStr } from "@/utilities/attributes";
 
 export type SliderProps = FormItemProps<number> & {
   $max?: number;
@@ -19,15 +19,51 @@ const defaultMin = 0;
 const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
   const max = props.$max ?? defaultMax;
   const min = props.$min ?? defaultMin;
+  const railRef = useRef<HTMLDivElement>(null!);
 
   const form = useForm(props, {
-
+    preventRequiredValidation: true,
   });
 
   const rate = useMemo(() => {
     if (form.value == null) return "0%";
     return Math.round((form.value - min) * 100 / (max - min)) + "%";
   }, [form.value]);
+
+  const changeStart = (clientX: number, isTouch?: boolean) => {
+    if (!form.editable || railRef.current == null) return;
+    const width = railRef.current.clientWidth;
+    const cVal = form.value ?? min;
+    const range = max - min;
+
+    const moveImpl = (cx: number) => {
+      const relativePos = cx - clientX;
+      const num = Math.round(range * relativePos / width);
+      const v = Math.min(max, Math.max(min, cVal + num));
+      form.change(v);
+      // console.log(num);
+      // num = Math.round(min.current + (max.current - min.current) * (Math.min(Math.max(0, cx - pos + lpos), maxLeft) / maxLeft));
+      // attrs.$changing?.(num);
+      // optimizeHadbleLeft(num);
+    };
+    if (isTouch) {
+      const move = (e: TouchEvent) => moveImpl(e.touches[0].clientX);
+      const end = () => {
+        window.removeEventListener("touchmove", move);
+        window.removeEventListener("touchend", end);
+      };
+      window.addEventListener("touchend", end);
+      window.addEventListener("touchmove", move);
+    } else {
+      const move = (e: MouseEvent) => moveImpl(e.clientX);
+      const end = () => {
+        window.removeEventListener("mousemove", move);
+        window.removeEventListener("mouseup", end);
+      };
+      window.addEventListener("mouseup", end);
+      window.addEventListener("mousemove", move);
+    }
+  };
 
   return (
     <FormItemWrap
@@ -54,10 +90,15 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
             style={{ width: rate }}
           />
         </div>
-        <div className={Style.rail}>
+        <div
+          ref={railRef}
+          className={Style.rail}
+        >
           <div
             className={Style.handle}
             style={{ left: rate }}
+            onMouseDown={e => changeStart(e.clientX)}
+            onTouchStart={e => changeStart(e.touches[0].clientX, true)}
           />
         </div>
       </div>

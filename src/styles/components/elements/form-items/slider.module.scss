@@ -5,10 +5,10 @@
     .handle {
       &:hover {
         @include mixins.hover;
+      }
 
-        &:active {
-          @include mixins.hoverActive;
-        }
+      &:active {
+        @include mixins.hoverActive;
       }
     }
 
@@ -44,7 +44,7 @@
   border-radius: 9999px;
   border: 0.15rem solid var(--c-border);
   background: var(--c-input);
-  z-index: 3;
+  user-select: none;
 }
 
 .bar {
