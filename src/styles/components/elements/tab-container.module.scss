@@ -1,0 +1,37 @@
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  flex-wrap: nowrap;
+
+  &[data-pos="top"] {
+    flex-direction: column;
+  }
+  
+  &[data-pos="bottom"] {
+    flex-direction: column-reverse;
+  }
+
+  &[data-pos="left"] {
+    flex-direction: row;
+  }
+
+  &[data-pos="right"] {
+    flex-direction: row-reverse;
+  }
+}
+
+.header {
+  box-sizing: border-box;
+  flex: none;
+  background: blue;
+  min-width: var(--size);
+  min-height: var(--size);
+}
+
+.body {
+  box-sizing: border-box;
+  flex: 1;
+  background: red;
+}

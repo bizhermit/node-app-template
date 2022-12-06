@@ -96,6 +96,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                         pathname: "/sandbox/elements/form-items/slider",
                       }]
                     }, {
+                      key: "container",
+                      label: "Container",
+                      icon: "C",
+                      items: [{
+                        key: "tab",
+                        label: "Tab",
+                        icon: "T",
+                        pathname: "/sandbox/elements/container/tab-container",
+                      }]
+                    }, {
                       key: "button",
                       label: "Button",
                       icon: "B",
