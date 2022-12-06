@@ -5,6 +5,8 @@
 }
 
 @mixin hoverActive {
+  outline: solid;
+  outline-offset: 0.1rem;
   animation: none;
 }
 
