@@ -36,6 +36,7 @@ const Page: NextPage = () => {
       <TabContainer
         className={`w-100${tabScroll ? " flex-1_1_0" : ""}`}
         $tabPosition={position}
+        // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected
       >
@@ -43,7 +44,7 @@ const Page: NextPage = () => {
           key="tab1"
           label="Tab 1"
         >
-          <div className="box c-pure h-100 px-1">
+          <div className="box h-100 px-1">
             <h1>Tab 1</h1>
             {ArrayUtils.generateArray(10, (idx) => (
               <Row key={idx}>

@@ -9,11 +9,13 @@ export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children">
   $defaultMount?: boolean;
   $unmountDeselected?: boolean;
   $color?: Color;
+  $bodyColor?: Color;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
 const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props, ref) => {
   const color = props.$color || "main";
+  const bodyColor = props.$bodyColor || "base";
 
   const [key, setKey] = useState(() => {
     if (props.$defaultKey != null) return props.$defaultKey;
@@ -41,6 +43,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
       bodys.push(
         <Content
           key={child.key}
+          color={bodyColor}
           selected={selected}
           defaultMount={props.$defaultMount ?? false}
           unmountDeselected={props.$unmountDeselected ?? false}
@@ -62,7 +65,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
         {tabs}
       </div>
       <div className={`${Style.divider} bgc-${color}`} />
-      <div className={Style.body}>
+      <div className={`${Style.body} c-${bodyColor}`}>
         {bodys}
       </div>
     </div>
@@ -73,6 +76,7 @@ const Content: FC<{
   selected: boolean;
   defaultMount: boolean;
   unmountDeselected: boolean;
+  color?: Color;
   children: ReactNode;
 }> = (props) => {
   const mounted = useRef(props.selected || props.defaultMount);
@@ -91,7 +95,7 @@ const Content: FC<{
 
   return (
     <div
-      className={Style.content}
+      className={`${Style.content} c-${props.color}`}
       data-preselected={props.selected}
       data-selected={selected}
     >
