@@ -1,3 +1,4 @@
+import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
@@ -5,16 +6,17 @@ import Row from "@/components/elements/row";
 import TabContainer, { TabContent } from "@/components/elements/tab-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
-import { useState } from "react";
+import { Key, useState } from "react";
 import { VscBrowser } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
   const [tabScroll, setTabScroll] = useState(true);
+  const [key, setKey] = useState<Key>();
 
   return (
     <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
-      <Row>
+      <Row $vAlign="bottom" className="gap-1">
         <RadioButtons
           $tag="tab position"
           $source={[
@@ -31,6 +33,10 @@ const Page: NextPage = () => {
           $value={tabScroll}
           $onChange={v => setTabScroll(v!)}
         />
+
+        <Button $onClick={() => setKey("tab1")}>Tab 1</Button>
+        <Button $onClick={() => setKey("tab2")}>Tab 2</Button>
+        <Button $onClick={() => setKey("tab3")}>Tab 3</Button>
       </Row>
       <Divider />
       <TabContainer
@@ -39,6 +45,10 @@ const Page: NextPage = () => {
         // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected
+        $key={key}
+        $onChange={(key) => {
+          setKey(key);
+        }}
       >
         <TabContent
           key="tab1"

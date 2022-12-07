@@ -6,6 +6,8 @@ import LabelText from "@/components/elements/label-text";
 export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
   $tabPosition?: "top" | "left" | "right" | "bottom";
   $defaultKey?: Key;
+  $key?: Key;
+  $onChange?: (key: Key) => void;
   $defaultMount?: boolean;
   $unmountDeselected?: boolean;
   $color?: Color;
@@ -54,6 +56,16 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
     }
     return { tabs, bodys };
   })();
+
+  useEffect(() => {
+    if (props.$key != null) {
+      setKey(props.$key);
+    }
+  }, [props.$key]);
+
+  useEffect(() => {
+    props.$onChange?.(key!);
+  }, [key]);
 
   return (
     <div
