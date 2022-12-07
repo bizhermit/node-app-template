@@ -29,6 +29,7 @@ const Page: NextPage = () => {
       <TabContainer
         className="flex-1 w-100"
         $tabPosition={position}
+        // $defaultMount
       >
         <TabContent
           key="tab1"
