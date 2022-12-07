@@ -309,7 +309,7 @@
 }
 
 .flex-1_1_0 {
-  flex: 1 1 0 !important;
+  flex: 1 1 0rem !important;
   min-height: 0;
 }
 
@@ -344,7 +344,7 @@
 
 // scroll
 
-.scroll {
+.scroll-auto {
   overflow: auto !important;
 }
 

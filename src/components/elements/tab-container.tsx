@@ -7,6 +7,7 @@ export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children">
   $tabPosition?: "top" | "left" | "right" | "bottom";
   $defaultKey?: Key;
   $defaultMount?: boolean;
+  $unmountDeselected?: boolean;
   $color?: Color;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
@@ -42,6 +43,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
           key={child.key}
           selected={selected}
           defaultMount={props.$defaultMount ?? false}
+          unmountDeselected={props.$unmountDeselected ?? false}
         >
           {child}
         </Content>
@@ -70,13 +72,20 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
 const Content: FC<{
   selected: boolean;
   defaultMount: boolean;
+  unmountDeselected: boolean;
   children: ReactNode;
 }> = (props) => {
   const mounted = useRef(props.selected || props.defaultMount);
   const [selected, setSelected] = useState(props.selected);
 
   useEffect(() => {
-    if (props.selected) mounted.current = true;
+    if (props.selected) {
+      mounted.current = true;
+    } else {
+      if (props.unmountDeselected) {
+        mounted.current = false;
+      }
+    }
     setSelected(props.selected);
   }, [props.selected]);
 
