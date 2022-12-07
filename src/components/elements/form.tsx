@@ -355,7 +355,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
         ctx.unmount(name);
       };
     }
-  }, [validation]);
+  }, [validation, change]);
 
   useEffect(() => {
     options?.effect?.(valueRef.current);

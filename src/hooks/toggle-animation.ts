@@ -330,7 +330,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
     const defaultMin = "0";
     const changeOpacity = props.changeOpacity === true || aDirection === "none";
 
-    const ret: CSSProperties = {};
+    const ret: CSSProperties = {...props.style};
     if (!props.open) {
       if (props.minVisible !== true) {
         ret.display = "none";
