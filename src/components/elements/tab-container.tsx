@@ -88,7 +88,7 @@ const Content: FC<{
   selected: boolean;
   defaultMount: boolean;
   unmountDeselected: boolean;
-  color?: Color;
+  color: Color;
   children: ReactNode;
 }> = (props) => {
   const mounted = useRef(props.selected || props.defaultMount);

@@ -104,6 +104,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "Tab",
                         icon: "T",
                         pathname: "/sandbox/elements/container/tab-container",
+                      }, {
+                        key: "slide",
+                        label: "Slide",
+                        icon: "S",
+                        pathname: "/sandbox/elements/container/slide-container",
                       }]
                     }, {
                       key: "button",
