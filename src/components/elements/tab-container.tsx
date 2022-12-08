@@ -93,25 +93,24 @@ const Content: FC<{
   children: ReactNode;
 }> = (props) => {
   const ref = useRef<HTMLDivElement>(null!);
-  const mounted = useRef(props.selected || props.defaultMount);
   const [selected, setSelected] = useState(props.selected);
+  const [mounted, setMounted] = useState(props.selected || props.defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
     if (e.currentTarget.getAttribute("data-selected") !== "true") {
       e.currentTarget.style.visibility = "hidden";
       e.currentTarget.style.opacity = "0";
+      if (props.unmountDeselected) {
+        setMounted(false);
+      }
     }
   };
 
   useEffect(() => {
     if (props.selected) {
-      mounted.current = true;
+      setMounted(true);
       ref.current?.style.removeProperty("opacity");
       ref.current?.style.removeProperty("visibility");
-    } else {
-      if (props.unmountDeselected) {
-        mounted.current = false;
-      }
     }
     setSelected(props.selected);
   }, [props.selected]);
@@ -124,7 +123,7 @@ const Content: FC<{
       data-selected={selected}
       onTransitionEnd={transitionEnd}
     >
-      {mounted.current && props.children}
+      {mounted && props.children}
     </div>
   );
 };
