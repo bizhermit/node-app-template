@@ -1,8 +1,8 @@
 .main {
   box-sizing: border-box;
   position: fixed;
-  z-index: 99999;
   visibility: hidden;
+  z-index: inherit;
 }
 
 .mask {
@@ -10,8 +10,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 99998;
   background: var(--c-mask);
   width: 100vw !important;
   height: 100vh !important;
+  z-index: inherit;
 }

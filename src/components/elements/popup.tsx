@@ -26,31 +26,57 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $animationInterval?: number;
   $preventClickEvent?: boolean;
   $closeWhenClick?: boolean;
+  $zIndex?: number;
   $onToggle?: (show: boolean) => void;
   $onToggled?: (show: boolean) => void;
   $destructor?: (open: boolean) => void;
 };
 
+const baseZIndex = 10000000;
+
 const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const mref = useRef<HTMLDivElement>(null!);
+  const zIndex = useRef<number>(0);
+  const updateZIndex = useRef(() => {});
+  const removeZIndex = useRef(() => {});
   const portal = usePortalElement({
     mount: (elem) => {
+      const z = props.$zIndex ?? baseZIndex;
       elem.classList.add("popup-root");
+      elem.setAttribute("data-z", String(z));
+      updateZIndex.current = () => {
+        let max = z;
+        document.querySelectorAll(`.popup-root[data-z="${z}"]`).forEach(rootElem => {
+          if (rootElem === elem) return;
+          max = Math.max(max, Number((rootElem as HTMLElement).style.zIndex ?? 0));
+        });
+        elem.style.zIndex = String(zIndex.current = max + 1);
+      };
+      removeZIndex.current = () => {
+        zIndex.current = 0;
+        elem.style.removeProperty("z-index");
+      };
     },
   });
 
   const showedRef = useRef(false);
   const [showed, setShowed] = useState(showedRef.current);
 
-  const click = (e: React.MouseEvent) => {
+  const click = (e: React.MouseEvent<HTMLDivElement>) => {
     if (props.$preventClickEvent) {
       e.stopPropagation();
     }
+    updateZIndex.current();
   };
 
   useEffect(() => {
+    if (props.$show) {
+      updateZIndex.current();
+    } else {
+      removeZIndex.current();
+    }
     setShowed(props.$show === true);
   }, [props.$show]);
 
@@ -230,12 +256,23 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         }
       }
       props.$onToggle?.(open);
-      const closeListener = () => {
-        setShowed(false);
+      const closeListener = (e: MouseEvent) => {
+        let elem = e.target as HTMLElement;
+        while(elem != null) {
+          if (ref.current === elem) break;
+          if (elem.classList.contains("popup-root")) {
+            const z = Number(elem.style.zIndex ?? 0);
+            if (z > zIndex.current) break;
+          }
+          elem = elem.parentElement as HTMLElement;
+        }
+        if (elem == null) {
+          setShowed(false);
+        }
       };
       if (props.$closeWhenClick) {
         if (open) {
-          window.addEventListener("click", closeListener);
+          window.addEventListener("click", closeListener, true);
         }
       }
       return {
@@ -257,8 +294,8 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       props.$onToggled?.(open);
     },
     destructor: (open, params) => {
-      if (open) {
-        window.removeEventListener("click", params.closeListener);
+      if (params.closeListener != null) {
+        window.removeEventListener("click", params.closeListener, true);
       }
       props.$destructor?.(open);
     },
@@ -268,7 +305,12 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   if (portal == null) return <></>;
   return createPortal(
     <>
-      {props.$mask && <div ref={mref} className={Style.mask} />}
+      {props.$mask &&
+        <div
+          ref={mref}
+          className={Style.mask}
+        />
+      }
       <div
         {...attributes(props, Style.main)}
         ref={ref}
