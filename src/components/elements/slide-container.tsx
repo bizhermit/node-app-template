@@ -13,6 +13,7 @@ export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children
   $defaultMount?: boolean;
   $unmountDeselected?: boolean;
   $bodyColor?: Color;
+  $overlap?: boolean;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
@@ -26,6 +27,7 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
     const current = props.$index ?? 0;
     for (let i = 0, il = children.length; i < il; i++) {
       const child = children[i]!;
+      const overlap = child.props?.overlap ?? props.$overlap ?? false;
       breadcrumbs.push(
         <div
           key={i}
@@ -39,6 +41,7 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
         <Content
           key={child.key}
           color={bodyColor}
+          overlap={overlap}
           defaultMount={props.$defaultMount ?? false}
           unmountDeselected={props.$unmountDeselected ?? true}
           index={i}
@@ -79,6 +82,7 @@ const Content: FC<{
   defaultMount: boolean;
   unmountDeselected: boolean;
   color: Color;
+  overlap: boolean;
   children: ReactNode;
 }> = (props) => {
   const ref = useRef<HTMLDivElement>(null!);
@@ -111,6 +115,7 @@ const Content: FC<{
       ref={ref}
       className={`${Style.content} c-${props.color}`}
       data-state={state}
+      data-overlap={props.overlap}
       onTransitionEnd={transitionEnd}
     >
       {mounted && props.children}
@@ -121,6 +126,7 @@ const Content: FC<{
 export const SlideContent: FC<{
   label?: ReactNode;
   labelClick?: VoidFunc;
+  overlap?: boolean;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;

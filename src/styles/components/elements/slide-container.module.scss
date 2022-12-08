@@ -15,12 +15,22 @@
         &[data-state="previous"] {
           left: -100%;
         }
+
         &[data-state="current"] {
           left: 0%;
         }
+
         &[data-state="next"],
         &[data-state="after"] {
           left: 100%;
+        }
+
+        &[data-overlap="true"] {
+
+          &[data-state="before"],
+          &[data-state="previous"] {
+            left: 0%;
+          }
         }
       }
     }
@@ -36,12 +46,22 @@
         &[data-state="previous"] {
           left: 100%;
         }
+
         &[data-state="current"] {
           left: 0%;
         }
+
         &[data-state="next"],
         &[data-state="after"] {
           left: -100%;
+        }
+
+        &[data-overlap="true"] {
+
+          &[data-state="before"],
+          &[data-state="previous"] {
+            left: 0%;
+          }
         }
       }
     }
@@ -57,12 +77,22 @@
         &[data-state="previous"] {
           top: -100%;
         }
+
         &[data-state="current"] {
           top: 0%;
         }
+
         &[data-state="next"],
         &[data-state="after"] {
           top: 100%;
+        }
+
+        &[data-overlap="true"] {
+
+          &[data-state="before"],
+          &[data-state="previous"] {
+            top: 0%;
+          }
         }
       }
     }
@@ -78,12 +108,22 @@
         &[data-state="previous"] {
           top: 100%;
         }
+
         &[data-state="current"] {
           top: 0%;
         }
+
         &[data-state="next"],
         &[data-state="after"] {
           top: -100%;
+        }
+
+        &[data-overlap="true"] {
+
+          &[data-state="before"],
+          &[data-state="previous"] {
+            top: 0%;
+          }
         }
       }
     }
@@ -113,7 +153,7 @@
 
   &:not([data-state="current"]) {
     max-height: 100% !important;
-    pointer-events: none !important; 
+    pointer-events: none !important;
     overflow: hidden Im !important;
   }
 }

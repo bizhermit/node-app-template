@@ -13,6 +13,7 @@ const Page: NextPage = () => {
   const [destination, setDestination] = useState<SlideDirection>(null!);
   const [scroll, setScroll] = useState(true);
   const [index, setIndex] = useState(0);
+  const [overlap, setOverlap] = useState(false);
 
   return (
     <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
@@ -29,11 +30,15 @@ const Page: NextPage = () => {
           $onChange={v => setDestination(v!)}
         />
         <ToggleBox
+          $tag="overlap"
+          $value={overlap}
+          $onChange={(v) => setOverlap(v!)}
+        />
+        <ToggleBox
           $tag="scroll"
           $value={scroll}
           $onChange={v => setScroll(v!)}
         />
-
         <Button $onClick={() => setIndex(0)}>0</Button>
         <Button $onClick={() => setIndex(1)}>1</Button>
         <Button $onClick={() => setIndex(2)}>2</Button>
@@ -43,12 +48,13 @@ const Page: NextPage = () => {
         className={`w-100${scroll ? " flex-1_1_0" : ""}`}
         $direction={destination}
         $index={index}
+        $overlap={overlap}
         // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected
       >
         <SlideContent label="Tab 1">
-          <div className="box h-100 px-1 c-primary">
+          <div className="box h-min100 px-1 c-primary">
             <h1>Tab 1</h1>
             {ArrayUtils.generateArray(10, (idx) => (
               <Row key={idx}>
@@ -58,7 +64,7 @@ const Page: NextPage = () => {
           </div>
         </SlideContent>
         <SlideContent label="Tab 2">
-          <div className="box w-100 h-100 px-1 c-secondary">
+          <div className="box w-100 h-min100 px-1 c-secondary">
             <h1>Tab 2</h1>
             {ArrayUtils.generateArray(15, (idx) => (
               <Row key={idx}>
@@ -68,7 +74,7 @@ const Page: NextPage = () => {
           </div>
         </SlideContent>
         <SlideContent label={<Row><VscBrowser /><span>Tab3</span></Row>}>
-          <div className="box w-100 h-100 c-tertiary">
+          <div className="box w-100 h-min100 c-tertiary p-1">
             <h1>Tab 3</h1>
             {ArrayUtils.generateArray(20, (idx) => (
               <Row key={idx}>
