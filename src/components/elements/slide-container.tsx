@@ -29,18 +29,20 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
     for (let i = 0, il = children.length; i < il; i++) {
       const child = children[i]!;
       const overlap = child.props?.overlap ?? props.$overlap ?? false;
-      breadcrumbs.push(
-        <div
-          key={i}
-          className={Style.tab}
-          data-visible={i <= current}
-        >
-          <LabelText>{child?.props.label}</LabelText>
-        </div>
-      );
+      if (props.$breadcrumbs) {
+        breadcrumbs.push(
+          <div
+            key={i}
+            className={Style.breadcrumb}
+            data-visible={i <= current}
+          >
+            <LabelText>{child?.props.label}</LabelText>
+          </div>
+        );
+      }
       bodys.push(
         <Content
-          key={child.key}
+          key={i}
           color={bodyColor}
           overlap={overlap}
           defaultMount={props.$defaultMount ?? false}
@@ -61,7 +63,11 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
       ref={ref}
       data-direction={props.$direction || "horizontal"}
     >
-      {props.$breadcrumbs && <div className={Style.header}></div>}
+      {props.$breadcrumbs &&
+        <div className={Style.header}>
+          {breadcrumbs}
+        </div>
+      }
       <div className={`${Style.body} c-${bodyColor}`}>
         {bodys}
       </div>
