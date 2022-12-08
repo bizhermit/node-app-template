@@ -39,8 +39,8 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   useImperativeHandle($ref, () => ref.current);
   const mref = useRef<HTMLDivElement>(null!);
   const zIndex = useRef<number>(0);
-  const updateZIndex = useRef(() => {});
-  const removeZIndex = useRef(() => {});
+  const updateZIndex = useRef(() => { });
+  const removeZIndex = useRef(() => { });
   const portal = usePortalElement({
     mount: (elem) => {
       const z = props.$zIndex ?? baseZIndex;
@@ -69,6 +69,14 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       e.stopPropagation();
     }
     updateZIndex.current();
+  };
+
+  const keydownMask1 = (e: React.KeyboardEvent) => {
+    if (e.shiftKey && e.key === "Tab") e.preventDefault();
+  };
+
+  const keydownMask2 = (e: React.KeyboardEvent) => {
+    if (!e.shiftKey && e.key === "Tab") e.preventDefault();
   };
 
   useEffect(() => {
@@ -258,7 +266,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       props.$onToggle?.(open);
       const closeListener = (e: MouseEvent) => {
         let elem = e.target as HTMLElement;
-        while(elem != null) {
+        while (elem != null) {
           if (ref.current === elem) break;
           if (elem.classList.contains("popup-root")) {
             const z = Number(elem.style.zIndex ?? 0);
@@ -308,7 +316,9 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       {props.$mask &&
         <div
           ref={mref}
-          className={Style.mask}
+          className={Style.mask1}
+          tabIndex={0}
+          onKeyDown={keydownMask1}
         />
       }
       <div
@@ -319,6 +329,13 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         data-showed={showed}
         onClick={click}
       />
+      {props.$mask &&
+        <div
+          className={Style.mask2}
+          tabIndex={0}
+          onKeyDown={keydownMask2}
+        />
+      }
     </>
     , portal);
 });

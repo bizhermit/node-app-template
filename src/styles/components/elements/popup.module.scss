@@ -5,7 +5,8 @@
   z-index: inherit;
 }
 
-.mask {
+.mask1,
+.mask2 {
   box-sizing: border-box;
   position: fixed;
   top: 0;
@@ -14,4 +15,9 @@
   width: 100vw !important;
   height: 100vh !important;
   z-index: inherit;
+}
+
+.mask2 {
+  background: transparent !important;
+  z-index: 0 !important;
 }

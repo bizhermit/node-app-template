@@ -30,8 +30,8 @@ const Component: FC = () => {
         $onToggle={(v) => {
           setShow(v);
         }}
-        // $mask
-        // $closeWhenClick
+        $mask
+        $closeWhenClick
         $preventClickEvent
         $anchor={anchorRef}
         $position={{
