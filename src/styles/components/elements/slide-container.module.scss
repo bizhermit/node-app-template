@@ -30,13 +30,60 @@
     >.body {
       >.content {
         top: 0;
-        left: -100%;
         transition: left 0.8s;
 
         &[data-state="before"],
-        &[data-state="previous"],
+        &[data-state="previous"] {
+          left: 100%;
+        }
         &[data-state="current"] {
           left: 0%;
+        }
+        &[data-state="next"],
+        &[data-state="after"] {
+          left: -100%;
+        }
+      }
+    }
+  }
+
+  &[data-direction="vertical"] {
+    >.body {
+      >.content {
+        left: 0;
+        transition: top 0.5s;
+
+        &[data-state="before"],
+        &[data-state="previous"] {
+          top: -100%;
+        }
+        &[data-state="current"] {
+          top: 0%;
+        }
+        &[data-state="next"],
+        &[data-state="after"] {
+          top: 100%;
+        }
+      }
+    }
+  }
+
+  &[data-direction="vertical-reverse"] {
+    >.body {
+      >.content {
+        left: 0;
+        transition: top 0.5s;
+
+        &[data-state="before"],
+        &[data-state="previous"] {
+          top: 100%;
+        }
+        &[data-state="current"] {
+          top: 0%;
+        }
+        &[data-state="next"],
+        &[data-state="after"] {
+          top: -100%;
         }
       }
     }
