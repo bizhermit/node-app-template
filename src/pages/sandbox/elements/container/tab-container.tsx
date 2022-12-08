@@ -56,6 +56,12 @@ const Page: NextPage = () => {
         >
           <div className="box h-100 px-1">
             <h1>Tab 1</h1>
+            <Button
+              $outline
+              $onClick={() => {
+                alert("tab1");
+              }}
+            />
             {ArrayUtils.generateArray(10, (idx) => (
               <Row key={idx}>
                 <h2>piyo {idx}</h2>
@@ -69,6 +75,12 @@ const Page: NextPage = () => {
         >
           <div className="box w-100 h-100 px-1">
             <h1>Tab 2</h1>
+            <Button
+              $outline
+              $onClick={() => {
+                alert("tab2");
+              }}
+            />
             {ArrayUtils.generateArray(15, (idx) => (
               <Row key={idx}>
                 <h2>fuga {idx}</h2>
@@ -81,6 +93,12 @@ const Page: NextPage = () => {
           label={<Row><VscBrowser /><span>Tab3</span></Row>}
         >
           <h1>Tab 3</h1>
+          <Button
+            $outline
+            $onClick={() => {
+              alert("tab3");
+            }}
+          />
           {ArrayUtils.generateArray(20, (idx) => (
             <Row key={idx}>
               <h2>hoge {idx}</h2>
