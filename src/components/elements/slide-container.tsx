@@ -14,6 +14,7 @@ export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children
   $unmountDeselected?: boolean;
   $bodyColor?: Color;
   $overlap?: boolean;
+  $breadcrumbs?: boolean
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
@@ -60,7 +61,7 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
       ref={ref}
       data-direction={props.$direction || "horizontal"}
     >
-      <div className={Style.header}></div>
+      {props.$breadcrumbs && <div className={Style.header}></div>}
       <div className={`${Style.body} c-${bodyColor}`}>
         {bodys}
       </div>

@@ -5,6 +5,15 @@
   align-items: stretch;
   flex-wrap: nowrap;
 
+  &[data-direction="horizontal"],
+  &[data-direction="horizontal-reverse"] {
+    flex-direction: column;
+
+    >.header {
+      height: var(--size);
+    }
+  }
+
   &[data-direction="horizontal"] {
     >.body {
       >.content {
@@ -132,6 +141,13 @@
 
 .header {
   box-sizing: border-box;
+  flex: none;
+  min-width: var(--size);
+  min-height: var(--size);
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  flex-wrap: nowrap;
 }
 
 .body {

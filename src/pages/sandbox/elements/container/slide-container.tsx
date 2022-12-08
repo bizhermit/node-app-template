@@ -14,6 +14,7 @@ const Page: NextPage = () => {
   const [scroll, setScroll] = useState(true);
   const [index, setIndex] = useState(0);
   const [overlap, setOverlap] = useState(false);
+  const [breadcrumbs, setBreadcrumbs] = useState(false);
 
   return (
     <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
@@ -35,6 +36,11 @@ const Page: NextPage = () => {
           $onChange={(v) => setOverlap(v!)}
         />
         <ToggleBox
+          $tag="breadcrumbs"
+          $value={breadcrumbs}
+          $onChange={v => setBreadcrumbs(v!)}
+        />
+        <ToggleBox
           $tag="scroll"
           $value={scroll}
           $onChange={v => setScroll(v!)}
@@ -49,6 +55,7 @@ const Page: NextPage = () => {
         $direction={destination}
         $index={index}
         $overlap={overlap}
+        $breadcrumbs={breadcrumbs}
         // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected
@@ -74,14 +81,14 @@ const Page: NextPage = () => {
           </div>
         </SlideContent>
         <SlideContent label={<Row><VscBrowser /><span>Tab3</span></Row>}>
-          <div className="box w-100 h-min100 c-tertiary p-1">
+          {/* <div className="box w-100 h-min100 c-tertiary p-1"> */}
             <h1>Tab 3</h1>
             {ArrayUtils.generateArray(20, (idx) => (
               <Row key={idx}>
                 <h2>hoge {idx}</h2>
               </Row>
             ))}
-          </div>
+          {/* </div> */}
         </SlideContent>
       </SlideContainer>
     </div>
