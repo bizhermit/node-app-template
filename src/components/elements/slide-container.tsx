@@ -13,13 +13,18 @@ export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children
 };
 
 const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((props, ref) => {
+  const bodyColor = props.$bodyColor || "base";
+
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
       data-dest={props.$destination}
     >
-
+      <div className={Style.header}></div>
+      <div className={`${Style.body} c-${bodyColor}`}>
+        {/* {bodys} */}
+      </div>
     </div>
   );
 });
