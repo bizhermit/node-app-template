@@ -11,6 +11,7 @@ import { VscBrowser } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const [destination, setDestination] = useState<SlideDirection>(null!);
+  const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
   const [scroll, setScroll] = useState(true);
   const [index, setIndex] = useState(0);
   const [overlap, setOverlap] = useState(false);
@@ -31,14 +32,25 @@ const Page: NextPage = () => {
           $onChange={v => setDestination(v!)}
         />
         <ToggleBox
-          $tag="overlap"
-          $value={overlap}
-          $onChange={(v) => setOverlap(v!)}
-        />
-        <ToggleBox
           $tag="breadcrumbs"
           $value={breadcrumbs}
           $onChange={v => setBreadcrumbs(v!)}
+        />
+        <RadioButtons
+          $tag="breadcrumbs position"
+          $source={[
+            { value: "top", label: "top" },
+            { value: "left", label: "left" },
+            { value: "right", label: "right" },
+            { value: "bottom", label: "bottom" },
+          ]}
+          $value={position}
+          $onChange={v => setPosition(v!)}
+        />
+        <ToggleBox
+          $tag="overlap"
+          $value={overlap}
+          $onChange={(v) => setOverlap(v!)}
         />
         <ToggleBox
           $tag="scroll"
@@ -56,6 +68,7 @@ const Page: NextPage = () => {
         $index={index}
         $overlap={overlap}
         $breadcrumbs={breadcrumbs}
+        $breadcrumbsPosition={position}
         // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected

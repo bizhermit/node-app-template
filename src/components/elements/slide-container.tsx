@@ -15,6 +15,7 @@ export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children
   $bodyColor?: Color;
   $overlap?: boolean;
   $breadcrumbs?: boolean
+  $breadcrumbsPosition?: "top" | "left" | "bottom" | "right";
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
@@ -62,9 +63,10 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
       data-direction={props.$direction || "horizontal"}
+      data-pos={props.$breadcrumbsPosition || "top"}
     >
       {props.$breadcrumbs &&
-        <div className={Style.header}>
+        <div className={Style.breadcrumbs}>
           {breadcrumbs}
         </div>
       }
