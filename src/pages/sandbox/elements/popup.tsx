@@ -4,9 +4,13 @@ import TextBox from "@/components/elements/form-items/text-box";
 import Popup from "@/components/elements/popup";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
-import { useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 
 const Page: NextPage = () => {
+  return <Component />;
+};
+
+const Component: FC = () => {
   const [show, setShow] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null!);
 
@@ -38,7 +42,7 @@ const Page: NextPage = () => {
         // $animationDirection="horizontal"
         // $animationDirection="vertical"
       >
-        <div className="flex-box">
+        <div className="flex-box c-pure">
           <Form className="flex-box flex-stretch p-1 gap-1 border">
             <TextBox style={{ width: 300 }} />
             <TextBox style={{ width: 300 }} />
@@ -53,10 +57,11 @@ const Page: NextPage = () => {
               </Button>
             </Row>
           </Form>
+          <Component />
         </div>
       </Popup>
     </div>
-  );
+  )
 };
 
 export default Page;
