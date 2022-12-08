@@ -223,6 +223,7 @@
 
   &:not([data-selected="true"]) {
     max-height: 100% !important;
+    pointer-events: none !important;
     overflow: hidden !important;
   }
 }

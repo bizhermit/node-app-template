@@ -1,5 +1,5 @@
 import { attributesWithoutChildren } from "@/utilities/attributes";
-import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/tab-container.module.scss";
 import LabelText from "@/components/elements/label-text";
 
@@ -20,6 +20,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
   const bodyColor = props.$bodyColor || "base";
 
   const [key, setKey] = useState(() => {
+    if (props.$key != null) return props.$key;
     if (props.$defaultKey != null) return props.$defaultKey;
     const firstContent = Array.isArray(props.children) ? props.children[0] : props.children!;
     return firstContent.key;
@@ -96,15 +97,17 @@ const Content: FC<{
   const [selected, setSelected] = useState(props.selected);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (!props.selected) {
-      e.currentTarget.style.display = "none";
+    if (e.currentTarget.getAttribute("data-selected") !== "true") {
+      e.currentTarget.style.visibility = "hidden";
+      e.currentTarget.style.opacity = "0";
     }
   };
 
   useEffect(() => {
     if (props.selected) {
       mounted.current = true;
-      ref.current?.style.removeProperty("display");
+      ref.current?.style.removeProperty("opacity");
+      ref.current?.style.removeProperty("visibility");
     } else {
       if (props.unmountDeselected) {
         mounted.current = false;
