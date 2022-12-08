@@ -91,12 +91,20 @@ const Content: FC<{
   color?: Color;
   children: ReactNode;
 }> = (props) => {
+  const ref = useRef<HTMLDivElement>(null!);
   const mounted = useRef(props.selected || props.defaultMount);
   const [selected, setSelected] = useState(props.selected);
+
+  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (!props.selected) {
+      e.currentTarget.style.display = "none";
+    }
+  };
 
   useEffect(() => {
     if (props.selected) {
       mounted.current = true;
+      ref.current?.style.removeProperty("display");
     } else {
       if (props.unmountDeselected) {
         mounted.current = false;
@@ -107,9 +115,11 @@ const Content: FC<{
 
   return (
     <div
+      ref={ref}
       className={`${Style.content} c-${props.color}`}
       data-preselected={props.selected}
       data-selected={selected}
+      onTransitionEnd={transitionEnd}
     >
       {mounted.current && props.children}
     </div>
