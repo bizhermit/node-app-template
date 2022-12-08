@@ -3,14 +3,14 @@ import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import SlideContainer, { SlideContent } from "@/components/elements/slide-container";
+import SlideContainer, { SlideContent, SlideDirection } from "@/components/elements/slide-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { Key, useState } from "react";
 import { VscBrowser } from "react-icons/vsc";
 
 const Page: NextPage = () => {
-  const [destination, setDestination] = useState<"right" | "bottom" | "top" | "left">(null!);
+  const [destination, setDestination] = useState<SlideDirection>(null!);
   const [scroll, setScroll] = useState(true);
   const [index, setIndex] = useState(0);
 
@@ -20,10 +20,10 @@ const Page: NextPage = () => {
         <RadioButtons
           $tag="slide destination"
           $source={[
-            { value: "right", label: "right" },
-            { value: "bottom", label: "bottom" },
-            { value: "top", label: "top" },
-            { value: "left", label: "left" },
+            { value: "horizontal", label: "horizontal" },
+            { value: "horizontal-reverse", label: "horizontal-reverse" },
+            { value: "vertical", label: "vertical" },
+            { value: "vertical-reverse", label: "vertical-reverse" },
           ]}
           $value={destination}
           $onChange={v => setDestination(v!)}
@@ -41,14 +41,14 @@ const Page: NextPage = () => {
       <Divider />
       <SlideContainer
         className={`w-100${scroll ? " flex-1_1_0" : ""}`}
-        $destination={destination}
+        $direction={destination}
         $index={index}
         // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected
       >
         <SlideContent label="Tab 1">
-          <div className="box h-100 px-1">
+          <div className="box h-100 px-1 c-primary">
             <h1>Tab 1</h1>
             {ArrayUtils.generateArray(10, (idx) => (
               <Row key={idx}>
@@ -58,7 +58,7 @@ const Page: NextPage = () => {
           </div>
         </SlideContent>
         <SlideContent label="Tab 2">
-          <div className="box w-100 h-100 px-1">
+          <div className="box w-100 h-100 px-1 c-secondary">
             <h1>Tab 2</h1>
             {ArrayUtils.generateArray(15, (idx) => (
               <Row key={idx}>
@@ -68,12 +68,14 @@ const Page: NextPage = () => {
           </div>
         </SlideContent>
         <SlideContent label={<Row><VscBrowser /><span>Tab3</span></Row>}>
-          <h1>Tab 3</h1>
-          {ArrayUtils.generateArray(20, (idx) => (
-            <Row key={idx}>
-              <h2>hoge {idx}</h2>
-            </Row>
-          ))}
+          <div className="box w-100 h-100 c-tertiary">
+            <h1>Tab 3</h1>
+            {ArrayUtils.generateArray(20, (idx) => (
+              <Row key={idx}>
+                <h2>hoge {idx}</h2>
+              </Row>
+            ))}
+          </div>
         </SlideContent>
       </SlideContainer>
     </div>

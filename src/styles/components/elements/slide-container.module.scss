@@ -4,6 +4,43 @@
   justify-content: stretch;
   align-items: stretch;
   flex-wrap: nowrap;
+
+  &[data-direction="horizontal"] {
+    >.body {
+      >.content {
+        top: 0;
+        transition: left 0.8s;
+
+        &[data-state="before"],
+        &[data-state="previous"] {
+          left: -100%;
+        }
+        &[data-state="current"] {
+          left: 0%;
+        }
+        &[data-state="next"],
+        &[data-state="after"] {
+          left: 100%;
+        }
+      }
+    }
+  }
+
+  &[data-direction="horizontal-reverse"] {
+    >.body {
+      >.content {
+        top: 0;
+        left: -100%;
+        transition: left 0.8s;
+
+        &[data-state="before"],
+        &[data-state="previous"],
+        &[data-state="current"] {
+          left: 0%;
+        }
+      }
+    }
+  }
 }
 
 .header {
@@ -26,4 +63,10 @@
   flex: none;
   z-index: 0;
   overflow: auto;
+
+  &:not([data-state="current"]) {
+    max-height: 100% !important;
+    pointer-events: none !important; 
+    overflow: hidden Im !important;
+  }
 }
