@@ -10,7 +10,7 @@ import { useState } from "react";
 import { VscBrowser } from "react-icons/vsc";
 
 const Page: NextPage = () => {
-  const [destination, setDestination] = useState<SlideDirection>(null!);
+  const [direction, setDirection] = useState<SlideDirection>(null!);
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
   const [scroll, setScroll] = useState(true);
   const [index, setIndex] = useState(0);
@@ -28,8 +28,8 @@ const Page: NextPage = () => {
             { value: "vertical", label: "vertical" },
             { value: "vertical-reverse", label: "vertical-reverse" },
           ]}
-          $value={destination}
-          $onChange={v => setDestination(v!)}
+          $value={direction}
+          $onChange={v => setDirection(v!)}
         />
         <ToggleBox
           $tag="breadcrumbs"
@@ -66,7 +66,39 @@ const Page: NextPage = () => {
       <Divider />
       <SlideContainer
         className={`w-100${scroll ? " flex-1_1_0" : ""}`}
-        $direction={destination}
+        onWheel={(e) => {
+          switch (direction) {
+            case "vertical":
+              if (e.deltaY > 0) {
+                setIndex(c => Math.min(c + 1, 9));
+              } else if (e.deltaY < 0) {
+                setIndex(c => Math.max(c - 1, 0));
+              }
+              break;
+            case "vertical-reverse":
+              if (e.deltaY > 0) {
+                setIndex(c => Math.max(c - 1, 0));
+              } else if (e.deltaY < 0) {
+                setIndex(c => Math.min(c + 1, 9));
+              }
+              break;
+            case "horizontal-reverse":
+              if (e.deltaX > 0) {
+                setIndex(c => Math.max(c - 1, 0));
+              } else if (e.deltaX < 0) {
+                setIndex(c => Math.min(c + 1, 9));
+              }
+              break;
+            default:
+              if (e.deltaX > 0) {
+                setIndex(c => Math.min(c + 1, 9));
+              } else if (e.deltaX < 0) {
+                setIndex(c => Math.max(c - 1, 0));
+              }
+              break;
+          }
+        }}
+        $direction={direction}
         $index={index}
         $overlap={overlap}
         $breadcrumbs={breadcrumbs}
