@@ -119,6 +119,10 @@ const Content: FC<{
     <div
       ref={ref}
       className={`${Style.content} c-${props.color}`}
+      style={{
+        opacity: 0,
+        visibility: "hidden",
+      }}
       data-preselected={props.selected}
       data-selected={selected}
       onTransitionEnd={transitionEnd}

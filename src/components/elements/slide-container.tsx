@@ -52,6 +52,7 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
       bodys.push(
         <Content
           key={i}
+          current={props.$index}
           color={bodyColor}
           overlap={overlap}
           defaultMount={props.$defaultMount ?? false}
@@ -117,9 +118,15 @@ const Breadcrumb: FC<{
     <div
       ref={ref}
       className={Style.breadcrumb}
+      style={{
+        width: 0,
+        height: 0,
+        visibility: "hidden",
+        opacity: 0,
+        padding: 0,
+      }}
       data-state={state}
       onTransitionEnd={transitionEnd}
-      style={{ width: 0, height: 0, visibility: "hidden", opacity: 0, padding: 0 }}
     >
       <LabelText>{props.children}</LabelText>
     </div>
@@ -127,6 +134,7 @@ const Breadcrumb: FC<{
 };
 
 const Content: FC<{
+  current: number;
   state: SlideState;
   defaultMount: boolean;
   unmountDeselected: boolean;
@@ -156,12 +164,16 @@ const Content: FC<{
       ref.current?.style.removeProperty("visibility");
     }
     setState(props.state);
-  }, [props.state]);
+  }, [props.state, props.current]);
 
   return (
     <div
       ref={ref}
       className={`${Style.content} c-${props.color}`}
+      style={{
+        opacity: 0,
+        visibility: "hidden",
+      }}
       data-state={state}
       data-overlap={props.overlap}
       onTransitionEnd={transitionEnd}
