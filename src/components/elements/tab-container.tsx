@@ -12,6 +12,7 @@ export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children">
   $unmountDeselected?: boolean;
   $color?: Color;
   $bodyColor?: Color;
+  $overlap?: boolean;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
@@ -48,6 +49,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
           key={child.key}
           color={bodyColor}
           selected={selected}
+          overlap={child.props?.overlap ?? props.$overlap ?? false}
           defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
           unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? false}
         >
@@ -90,6 +92,7 @@ const Content: FC<{
   defaultMount: boolean;
   unmountDeselected: boolean;
   color: Color;
+  overlap: boolean;
   children: ReactNode;
 }> = (props) => {
   const ref = useRef<HTMLDivElement>(null!);
@@ -99,7 +102,8 @@ const Content: FC<{
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
     if (e.currentTarget.getAttribute("data-selected") !== "true") {
       e.currentTarget.style.visibility = "hidden";
-      e.currentTarget.style.opacity = "0";
+      e.currentTarget.style.removeProperty("top");
+      e.currentTarget.style.removeProperty("left");
       if (props.unmountDeselected) {
         setMounted(false);
       }
@@ -109,8 +113,12 @@ const Content: FC<{
   useEffect(() => {
     if (props.selected) {
       setMounted(true);
-      ref.current?.style.removeProperty("opacity");
       ref.current?.style.removeProperty("visibility");
+    } else {
+      if (props.overlap) {
+        ref.current.style.top = "0";
+        ref.current.style.left = "0";
+      }
     }
     setSelected(props.selected);
   }, [props.selected]);
@@ -120,11 +128,11 @@ const Content: FC<{
       ref={ref}
       className={`${Style.content} c-${props.color}`}
       style={{
-        opacity: 0,
         visibility: "hidden",
       }}
       data-preselected={props.selected}
       data-selected={selected}
+      data-overlap={props.overlap}
       onTransitionEnd={transitionEnd}
     >
       {mounted && props.children}
@@ -135,6 +143,7 @@ const Content: FC<{
 export const TabContent: FC<{
   key: Key;
   label: ReactNode;
+  overlap?: boolean;
   defaultMount?: boolean;
   unmountDeselected?: boolean;
   children?: ReactNode;

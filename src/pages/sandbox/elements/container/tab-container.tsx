@@ -13,6 +13,7 @@ const Page: NextPage = () => {
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
   const [tabScroll, setTabScroll] = useState(true);
   const [key, setKey] = useState<Key>();
+  const [overlap, setOverlap] = useState(false);
 
   return (
     <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
@@ -29,11 +30,15 @@ const Page: NextPage = () => {
           $onChange={v => setPosition(v!)}
         />
         <ToggleBox
+          $tag="overlap"
+          $value={overlap}
+          $onChange={(v) => setOverlap(v!)}
+        />
+        <ToggleBox
           $tag="tab scroll"
           $value={tabScroll}
           $onChange={v => setTabScroll(v!)}
         />
-
         <Button $onClick={() => setKey("tab1")}>Tab 1</Button>
         <Button $onClick={() => setKey("tab2")}>Tab 2</Button>
         <Button $onClick={() => setKey("tab3")}>Tab 3</Button>
@@ -42,6 +47,7 @@ const Page: NextPage = () => {
       <TabContainer
         className={`w-100${tabScroll ? " flex-1_1_0" : ""}`}
         $tabPosition={position}
+        $overlap={overlap}
         // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected

@@ -86,7 +86,7 @@
     >.body {
       >.content {
         top: 0;
-        transition: left 0.8s;
+        transition: left 0.8s, opacity 0.8s;
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -117,7 +117,7 @@
     >.body {
       >.content {
         top: 0;
-        transition: left 0.8s;
+        transition: left 0.8s, opacity 0.8s;
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -148,7 +148,7 @@
     >.body {
       >.content {
         left: 0;
-        transition: top 0.5s;
+        transition: top 0.5s, opacity 0.5s;
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -179,7 +179,7 @@
     >.body {
       >.content {
         left: 0;
-        transition: top 0.5s;
+        transition: top 0.5s, opacity 0.5s;
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -255,10 +255,13 @@
   height: 100%;
   flex: none;
   z-index: 0;
+  opacity: 0.99;
   overflow: auto;
 
   &[data-state="current"] {
     position: relative;
+    z-index: 1;
+    opacity: 1;
   }
 
   &:not([data-state="current"]) {

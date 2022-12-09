@@ -38,7 +38,6 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
     for (let i = 0, il = children.length; i < il; i++) {
       const state = calcState(i, current);
       const child = children[i]!;
-      const overlap = child.props?.overlap ?? props.$overlap ?? false;
       if (props.$breadcrumbs) {
         breadcrumbs.push(
           <Breadcrumb
@@ -54,7 +53,7 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
           key={i}
           current={props.$index}
           color={bodyColor}
-          overlap={overlap}
+          overlap={child.props?.overlap ?? props.$overlap ?? false}
           defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
           unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? true}
           state={state}
@@ -150,7 +149,6 @@ const Content: FC<{
     const state = e.currentTarget.getAttribute("data-state") as SlideState;
     if (state !== "current") {
       e.currentTarget.style.visibility = "hidden";
-      e.currentTarget.style.opacity = "0";
       if (props.unmountDeselected) {
         setMounted(false);
       }
@@ -160,7 +158,6 @@ const Content: FC<{
   useEffect(() => {
     if (props.state === "current") {
       setMounted(true);
-      ref.current?.style.removeProperty("opacity");
       ref.current?.style.removeProperty("visibility");
     }
     setState(props.state);
@@ -171,7 +168,6 @@ const Content: FC<{
       ref={ref}
       className={`${Style.content} c-${props.color}`}
       style={{
-        opacity: 0,
         visibility: "hidden",
       }}
       data-state={state}
@@ -185,7 +181,6 @@ const Content: FC<{
 
 export const SlideContent: FC<{
   label?: ReactNode;
-  labelClick?: VoidFunc;
   overlap?: boolean;
   defaultMount?: boolean;
   unmountDeselected?: boolean;
