@@ -3,7 +3,7 @@ import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import SplitContainer, { SplitDirection } from "@/components/elements/split-container";
+import SplitContainer, { SplitContent, SplitDirection } from "@/components/elements/split-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { useState } from "react";
@@ -66,20 +66,26 @@ const Page: NextPage = () => {
             </Row>
           ))}
         </div>
-        <div className="box w-100 h-100 px-1 c-secondary">
-          <h1>Content2 2</h1>
-          <Button
-            $outline
-            $onClick={() => {
-              alert("content2");
-            }}
-          />
-          {ArrayUtils.generateArray(15, (idx) => (
-            <Row key={idx}>
-              <h2>fuga {idx}</h2>
-            </Row>
-          ))}
-        </div>
+        <SplitContent
+          defaultSize="40%"
+          minSize="10%"
+          maxSize="80%"
+        >
+          <div className="box w-100 h-100 px-1 c-secondary">
+            <h1>Content2 2</h1>
+            <Button
+              $outline
+              $onClick={() => {
+                alert("content2");
+              }}
+            />
+            {ArrayUtils.generateArray(15, (idx) => (
+              <Row key={idx}>
+                <h2>fuga {idx}</h2>
+              </Row>
+            ))}
+          </div>
+        </SplitContent>
       </SplitContainer>
     </div>
   );

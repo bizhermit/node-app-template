@@ -24,12 +24,30 @@ const SplitContainer = React.forwardRef<HTMLDivElement, SplitContainerProps>((pr
 
   useEffect(() => {
     const defaultSize = child1.props.defaultSize;
+    const maxSize = child1.props.maxSize;
+    const minSize = child1.props.minSize;
     if (direction === "horizontal") {
       child1Ref.current.style.removeProperty("height");
+      child1Ref.current.style.removeProperty("max-height");
+      child1Ref.current.style.removeProperty("min-height");
       child1Ref.current.style.width = convertSizeNumToStr(defaultSize) ?? "50%";
+      if (maxSize != null) {
+        child1Ref.current.style.maxWidth = convertSizeNumToStr(maxSize)!;
+      }
+      if (minSize != null) {
+        child1Ref.current.style.minWidth = convertSizeNumToStr(minSize)!;
+      }
     } else {
       child1Ref.current.style.removeProperty("width");
+      child1Ref.current.style.removeProperty("max-width");
+      child1Ref.current.style.removeProperty("min-width");
       child1Ref.current.style.height = convertSizeNumToStr(defaultSize) ?? "50%";
+      if (maxSize != null) {
+        child1Ref.current.style.maxHeight = convertSizeNumToStr(maxSize)!;
+      }
+      if(minSize != null) {
+        child1Ref.current.style.minHeight = convertSizeNumToStr(minSize)!;
+      }
     }
   }, [direction]);
 
@@ -65,6 +83,8 @@ const SplitContainer = React.forwardRef<HTMLDivElement, SplitContainerProps>((pr
 
 export const SplitContent: FC<{
   defaultSize?: number | string;
+  minSize?: number | string;
+  maxSize?: number | string;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;
