@@ -6,7 +6,7 @@ import Row from "@/components/elements/row";
 import SlideContainer, { SlideContent, SlideDirection } from "@/components/elements/slide-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
-import { Key, useState } from "react";
+import { useState } from "react";
 import { VscBrowser } from "react-icons/vsc";
 
 const Page: NextPage = () => {
@@ -57,9 +57,11 @@ const Page: NextPage = () => {
           $value={scroll}
           $onChange={v => setScroll(v!)}
         />
-        <Button $onClick={() => setIndex(0)}>0</Button>
-        <Button $onClick={() => setIndex(1)}>1</Button>
-        <Button $onClick={() => setIndex(2)}>2</Button>
+        {ArrayUtils.generateArray(10, idx => {
+          return (
+            <Button key={idx} $onClick={() => setIndex(idx)}>{idx}</Button>
+          )
+        })}
       </Row>
       <Divider />
       <SlideContainer
@@ -69,13 +71,13 @@ const Page: NextPage = () => {
         $overlap={overlap}
         $breadcrumbs={breadcrumbs}
         $breadcrumbsPosition={position}
-        // $bodyColor="pure"
-        // $defaultMount
-        // $unmountDeselected
+      // $bodyColor="pure"
+      // $defaultMount
+      // $unmountDeselected
       >
-        <SlideContent label="Tab 1">
+        <SlideContent label="Slide 0">
           <div className="box h-min100 px-1 c-primary">
-            <h1>Tab 1</h1>
+            <h1>Slide 0</h1>
             {ArrayUtils.generateArray(10, (idx) => (
               <Row key={idx}>
                 <h2>piyo {idx}</h2>
@@ -83,9 +85,9 @@ const Page: NextPage = () => {
             ))}
           </div>
         </SlideContent>
-        <SlideContent label="Tab 2">
+        <SlideContent label="Slide 1">
           <div className="box w-100 h-min100 px-1 c-secondary">
-            <h1>Tab 2</h1>
+            <h1>Slide 1</h1>
             {ArrayUtils.generateArray(15, (idx) => (
               <Row key={idx}>
                 <h2>fuga {idx}</h2>
@@ -93,15 +95,36 @@ const Page: NextPage = () => {
             ))}
           </div>
         </SlideContent>
-        <SlideContent label={<Row><VscBrowser /><span>Tab3</span></Row>}>
+        <SlideContent label={<Row $nowrap><VscBrowser /><span>Slide2</span></Row>}>
           {/* <div className="box w-100 h-min100 c-tertiary p-1"> */}
-            <h1>Tab 3</h1>
-            {ArrayUtils.generateArray(20, (idx) => (
-              <Row key={idx}>
-                <h2>hoge {idx}</h2>
-              </Row>
-            ))}
+          <h1>Slide 2</h1>
+          {ArrayUtils.generateArray(20, (idx) => (
+            <Row key={idx}>
+              <h2>hoge {idx}</h2>
+            </Row>
+          ))}
           {/* </div> */}
+        </SlideContent>
+        <SlideContent label="Slide 3">
+          <h1>Slide 3</h1>
+        </SlideContent>
+        <SlideContent label="Slide 4">
+          <h1>Slide 4</h1>
+        </SlideContent>
+        <SlideContent label="Slide 5">
+          <h1>Slide 5</h1>
+        </SlideContent>
+        <SlideContent label="Slide 6">
+          <h1>Slide 6</h1>
+        </SlideContent>
+        <SlideContent label="Slide 7">
+          <h1>Slide 7</h1>
+        </SlideContent>
+        <SlideContent label="Slide 8">
+          <h1>Slide 8</h1>
+        </SlideContent>
+        <SlideContent label="Slide 9">
+          <h1>Slide 9</h1>
         </SlideContent>
       </SlideContainer>
     </div>
