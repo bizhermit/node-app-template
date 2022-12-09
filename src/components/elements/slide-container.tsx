@@ -19,6 +19,14 @@ export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
+const calcState = (index: number, current: number): SlideState => {
+  if (index === current) return "current";
+  if (index === current - 1) return "previous";
+  if (index === current + 1) return "next";
+  if (index < current) return "before";
+  return "after";
+};
+
 const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((props, ref) => {
   const bodyColor = props.$bodyColor || "base";
 
@@ -28,17 +36,17 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
     const bodys: Array<ReactNode> = [];
     const current = props.$index ?? 0;
     for (let i = 0, il = children.length; i < il; i++) {
+      const state = calcState(i, current);
       const child = children[i]!;
       const overlap = child.props?.overlap ?? props.$overlap ?? false;
       if (props.$breadcrumbs) {
         breadcrumbs.push(
-          <div
+          <Breadcrumb
             key={i}
-            className={Style.breadcrumb}
-            data-visible={i <= current}
+            state={state}
           >
-            <LabelText>{child?.props.label}</LabelText>
-          </div>
+            {child?.props.label}
+          </Breadcrumb>
         );
       }
       bodys.push(
@@ -48,8 +56,7 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
           overlap={overlap}
           defaultMount={props.$defaultMount ?? false}
           unmountDeselected={props.$unmountDeselected ?? true}
-          index={i}
-          current={current}
+          state={state}
         >
           {child}
         </Content>
@@ -77,17 +84,50 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
   );
 });
 
-const calcState = (index: number, current: number): SlideState => {
-  if (index === current) return "current";
-  if (index === current - 1) return "previous";
-  if (index === current + 1) return "next";
-  if (index < current) return "before";
-  return "after";
+const Breadcrumb: FC<{
+  state: SlideState;
+  children?: ReactNode;
+}> = (props) => {
+  const ref = useRef<HTMLDivElement>(null!);
+  const [state, setState] = useState<SlideState>(props.state);
+
+  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    const state = e.currentTarget.getAttribute("data-state") as SlideState;
+    if (state === "next" || state === "after") {
+      e.currentTarget.style.visibility = "hidden";
+      e.currentTarget.style.opacity = "0";
+      e.currentTarget.style.width = "0";
+      e.currentTarget.style.height = "0";
+      e.currentTarget.style.padding = "0";
+    }
+  };
+
+  useEffect(() => {
+    if (props.state === "current" || props.state === "before" || props.state === "previous") {
+      ref.current?.style.removeProperty("opacity");
+      ref.current?.style.removeProperty("visibility");
+      ref.current?.style.removeProperty("width");
+      ref.current?.style.removeProperty("height");
+      ref.current?.style.removeProperty("padding");
+    }
+    setState(props.state);
+  }, [props.state]);
+
+  return (
+    <div
+      ref={ref}
+      className={Style.breadcrumb}
+      data-state={state}
+      onTransitionEnd={transitionEnd}
+      style={{ width: 0, height: 0, visibility: "hidden", opacity: 0, padding: 0 }}
+    >
+      <LabelText>{props.children}</LabelText>
+    </div>
+  );
 };
 
 const Content: FC<{
-  index: number;
-  current: number;
+  state: SlideState;
   defaultMount: boolean;
   unmountDeselected: boolean;
   color: Color;
@@ -95,7 +135,7 @@ const Content: FC<{
   children: ReactNode;
 }> = (props) => {
   const ref = useRef<HTMLDivElement>(null!);
-  const [state, setState] = useState<SlideState>(calcState(props.index, props.current));
+  const [state, setState] = useState<SlideState>(props.state);
   const [mounted, setMounted] = useState(state === "current" || props.defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
@@ -110,14 +150,13 @@ const Content: FC<{
   };
 
   useEffect(() => {
-    const newState = calcState(props.index, props.current);
-    if (newState === "current") {
+    if (props.state === "current") {
       setMounted(true);
       ref.current?.style.removeProperty("opacity");
       ref.current?.style.removeProperty("visibility");
     }
-    setState(newState);
-  }, [props.current]);
+    setState(props.state);
+  }, [props.state]);
 
   return (
     <div
