@@ -109,6 +109,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "Slide",
                         icon: "S",
                         pathname: "/sandbox/elements/container/slide-container",
+                      }, {
+                        key: "split",
+                        label: "Split",
+                        icon: "S",
+                        pathname: "/sandbox/elements/container/split-container",
                       }]
                     }, {
                       key: "button",
