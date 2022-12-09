@@ -1,5 +1,5 @@
 import { attributesWithoutChildren } from "@/utilities/attributes";
-import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/tab-container.module.scss";
 import LabelText from "@/components/elements/label-text";
 
