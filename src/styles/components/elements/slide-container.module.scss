@@ -264,6 +264,11 @@
     opacity: 1;
   }
 
+  &[data-state="next"],
+  &[data-state="after"] {
+    z-index: 2;
+  }
+
   &:not([data-state="current"]) {
     max-height: 100% !important;
     pointer-events: none !important;
