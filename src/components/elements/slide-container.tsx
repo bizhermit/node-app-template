@@ -55,8 +55,8 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
           current={props.$index}
           color={bodyColor}
           overlap={overlap}
-          defaultMount={props.$defaultMount ?? false}
-          unmountDeselected={props.$unmountDeselected ?? true}
+          defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
+          unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? true}
           state={state}
         >
           {child}
@@ -187,6 +187,8 @@ export const SlideContent: FC<{
   label?: ReactNode;
   labelClick?: VoidFunc;
   overlap?: boolean;
+  defaultMount?: boolean;
+  unmountDeselected?: boolean;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;

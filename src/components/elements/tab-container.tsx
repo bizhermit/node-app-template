@@ -48,8 +48,8 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
           key={child.key}
           color={bodyColor}
           selected={selected}
-          defaultMount={props.$defaultMount ?? false}
-          unmountDeselected={props.$unmountDeselected ?? false}
+          defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
+          unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? false}
         >
           {child}
         </Content>
@@ -135,6 +135,8 @@ const Content: FC<{
 export const TabContent: FC<{
   key: Key;
   label: ReactNode;
+  defaultMount?: boolean;
+  unmountDeselected?: boolean;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;
