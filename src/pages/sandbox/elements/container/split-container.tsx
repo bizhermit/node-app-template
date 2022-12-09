@@ -13,6 +13,8 @@ const Page: NextPage = () => {
   const [reverse, setReverse] = useState(false);
   const [scroll, setScroll] = useState(true);
   const [disabled, setDisabled] = useState(false);
+  const [hide1, setHide1] = useState(false);
+  const [hide2, setHide2] = useState(false);
 
   return (
     <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
@@ -41,6 +43,16 @@ const Page: NextPage = () => {
           $value={scroll}
           $onChange={v => setScroll(v!)}
         />
+        <ToggleBox
+          $tag="hide1"
+          $value={hide1}
+          $onChange={v => setHide1(v!)}
+        />
+        <ToggleBox
+          $tag="hide2"
+          $value={hide2}
+          $onChange={v => setHide2(v!)}
+        />
       </Row>
       <Divider />
       <SplitContainer
@@ -48,6 +60,8 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $direction={direction}
         $reverse={reverse}
+        $hide1={hide1}
+        $hide2={hide2}
       // $bodyColor="pure"
       // $defaultMount
       // $unmountDeselected

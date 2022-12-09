@@ -67,3 +67,15 @@ $handleSize: 0.5rem;
 .content0 {
   flex: 1;
 }
+
+.content1 {
+  &:only-child {
+    flex: 1;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+}
