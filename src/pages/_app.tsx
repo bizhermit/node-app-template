@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           <NavigationContainer
             className="w-100 h-100"
             // $navigationMode="manual"
-            $navigationMode="minimize"
+            // $navigationMode="minimize"
             // $navigationMode="visible"
             // $navigationPosition="right"
             // $footerVisible="always"
@@ -104,6 +104,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "Tab",
                         icon: "T",
                         pathname: "/sandbox/elements/container/tab-container",
+                      }, {
+                        key: "slide",
+                        label: "Slide",
+                        icon: "S",
+                        pathname: "/sandbox/elements/container/slide-container",
                       }]
                     }, {
                       key: "button",

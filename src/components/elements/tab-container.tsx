@@ -12,6 +12,7 @@ export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children">
   $unmountDeselected?: boolean;
   $color?: Color;
   $bodyColor?: Color;
+  $overlap?: boolean;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
@@ -20,6 +21,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
   const bodyColor = props.$bodyColor || "base";
 
   const [key, setKey] = useState(() => {
+    if (props.$key != null) return props.$key;
     if (props.$defaultKey != null) return props.$defaultKey;
     const firstContent = Array.isArray(props.children) ? props.children[0] : props.children!;
     return firstContent.key;
@@ -47,8 +49,9 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
           key={child.key}
           color={bodyColor}
           selected={selected}
-          defaultMount={props.$defaultMount ?? false}
-          unmountDeselected={props.$unmountDeselected ?? false}
+          overlap={child.props?.overlap ?? props.$overlap ?? false}
+          defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
+          unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? false}
         >
           {child}
         </Content>
@@ -88,26 +91,33 @@ const Content: FC<{
   selected: boolean;
   defaultMount: boolean;
   unmountDeselected: boolean;
-  color?: Color;
+  color: Color;
+  overlap: boolean;
   children: ReactNode;
 }> = (props) => {
   const ref = useRef<HTMLDivElement>(null!);
-  const mounted = useRef(props.selected || props.defaultMount);
   const [selected, setSelected] = useState(props.selected);
+  const [mounted, setMounted] = useState(props.selected || props.defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (!props.selected) {
-      e.currentTarget.style.display = "none";
+    if (e.currentTarget.getAttribute("data-selected") !== "true") {
+      e.currentTarget.style.visibility = "hidden";
+      e.currentTarget.style.removeProperty("top");
+      e.currentTarget.style.removeProperty("left");
+      if (props.unmountDeselected) {
+        setMounted(false);
+      }
     }
   };
 
   useEffect(() => {
     if (props.selected) {
-      mounted.current = true;
-      ref.current?.style.removeProperty("display");
+      setMounted(true);
+      ref.current?.style.removeProperty("visibility");
     } else {
-      if (props.unmountDeselected) {
-        mounted.current = false;
+      if (props.overlap) {
+        ref.current.style.top = "0";
+        ref.current.style.left = "0";
       }
     }
     setSelected(props.selected);
@@ -117,11 +127,15 @@ const Content: FC<{
     <div
       ref={ref}
       className={`${Style.content} c-${props.color}`}
+      style={{
+        visibility: "hidden",
+      }}
       data-preselected={props.selected}
       data-selected={selected}
+      data-overlap={props.overlap}
       onTransitionEnd={transitionEnd}
     >
-      {mounted.current && props.children}
+      {mounted && props.children}
     </div>
   );
 };
@@ -129,6 +143,9 @@ const Content: FC<{
 export const TabContent: FC<{
   key: Key;
   label: ReactNode;
+  overlap?: boolean;
+  defaultMount?: boolean;
+  unmountDeselected?: boolean;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;
