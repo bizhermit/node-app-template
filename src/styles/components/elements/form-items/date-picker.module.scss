@@ -64,6 +64,20 @@ $width7: 14.285%;
       overflow-x: visible;
       flex: 1;
       z-index: 0;
+
+      >.cell {
+        height: calc(var(--size) * 0.75);
+      }
+      padding: calc(var(--size) * 2.75) 0;
+    }
+
+    >.date {
+      >.cell {
+        &[data-state="before"],
+        &[data-state="after"] {
+          display: none;
+        }
+      }
     }
   }
 
@@ -168,6 +182,8 @@ $width7: 14.285%;
   }
 }
 
+.year,
+.month,
 .date {
   box-sizing: border-box;
   position: relative;

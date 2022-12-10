@@ -1,5 +1,5 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { Key, ReactNode, useEffect, useMemo, useState } from "react";
+import React, { Key, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { VscCalendar, VscChevronLeft, VscChevronRight, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
@@ -63,6 +63,9 @@ const today = new Date();
 const threshold = 2;
 
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
+  const yearElemRef = useRef<HTMLDivElement>(null!);
+  const monthElemRef = useRef<HTMLDivElement>(null!);
+  const dayElemRef = useRef<HTMLDivElement>(null!);
   const type = props.$type ?? "date";
   const multiable = props.$multiable === true;
   const [mode, setMode] = useState<DatePickerMode>(() => {
@@ -329,19 +332,27 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   }, [form.value]);
 
   useEffect(() => {
-    if (mode !== "list") return;
-    // TODO: scroll
-  }, []);
+    if (mode !== "list" || yearElemRef.current == null) return;
+    const elem = yearElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
+    if (elem == null) return;
+    yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - yearElemRef.current.clientHeight / 2;
+  }, [mode]);
 
   useEffect(() => {
-    if (mode !== "list") return;
-    // TODO: scroll
-  }, [monthNodes]);
+    if (mode !== "list" || monthElemRef.current == null) return;
+    const elem = monthElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
+    if (elem == null) return;
+    monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - monthElemRef.current.clientHeight / 2;
+  }, [mode, monthNodes]);
 
   useEffect(() => {
-    if (mode !== "list") return;
-    // TODO: scroll
-  }, [dayNodes]);
+    if (mode !== "list" || dayElemRef.current == null) return;
+    const elem = dayElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
+    console.log(elem);
+    if (elem == null) return;
+    dayElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - dayElemRef.current.clientHeight / 2;
+    console.log(dayElemRef.current.scrollTop);
+  }, [mode, dayNodes]);
 
   useEffect(() => {
     const date = getLatestDate();
@@ -371,10 +382,16 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       >
         {mode === "list" &&
           <>
-            <div className={Style.year}>
+            <div
+              ref={yearElemRef}
+              className={Style.year}
+            >
               {yearNodes}
             </div>
-            <div className={Style.month}>
+            <div
+              ref={monthElemRef}
+              className={Style.month}
+            >
               {monthNodes}
             </div>
           </>
@@ -439,6 +456,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           </>
         }
         <div
+          ref={dayElemRef}
           className={Style.date}
           data-rows={dayNodes.length % 7}
         >
