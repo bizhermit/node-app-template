@@ -1,3 +1,4 @@
+@use "$/mixins";
 $width7: 14.285%;
 
 .main {
@@ -5,7 +6,7 @@ $width7: 14.285%;
   width: 30rem;
   height: 22rem;
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible;
   background: var(--c-input);
   color: var(--c-input_);
 }
@@ -13,7 +14,7 @@ $width7: 14.285%;
 .content {
   box-sizing: border-box;
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
 
   &[data-mode="list"] {
     >.date {
@@ -24,17 +25,20 @@ $width7: 14.285%;
   &[data-mode="calendar"] {
     >.date {
       flex-flow: row wrap;
+      overflow: visible;
 
       &[data-rows="4"] {
         >.cell {
           height: 25%;
         }
       }
+
       &[data-rows="5"] {
         >.cell {
           height: 20%;
         }
       }
+
       &[data-rows="6"] {
         >.cell {
           height: 16.66%;
@@ -51,8 +55,28 @@ $width7: 14.285%;
         }
 
         &[data-selected="true"] {
-          background: var(--c-main);
-          color: var(--c-main_);
+          color: var(--c-selected_);
+          z-index: 0;
+
+          &::before {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: -1;
+            background: var(--c-selected);
+          }
+        }
+
+        &:hover {
+          @include mixins.hover;
+
+          &:active {
+            @include mixins.hoverActive;
+          }
         }
       }
     }
@@ -81,6 +105,7 @@ $width7: 14.285%;
 
 .cell {
   box-sizing: border-box;
+  position: relative;
   flex: none;
   display: flex;
   flex-flow: row nowrap;
@@ -111,7 +136,18 @@ $width7: 14.285%;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
 }
+
+@include mixins.hoverAnimation;
 
 .positive,
 .negative {

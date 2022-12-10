@@ -1,5 +1,5 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import React, { Key, ReactNode, useEffect, useMemo, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { VscCalendar, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
@@ -137,21 +137,32 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
     };
-    while (cursor.getMonth() < month) {
-      const dateStr = dateFormat(cursor)!;
-      const selected = isSelected(cursor);
-      nodes.push(
+    const generateCellNode = (key: Key, dateStr: string, selected: boolean, state: string, label: ReactNode) => {
+      return (
         <div
-          key={`b${cursor.getDate()}`}
+          key={key}
           className={Style.cell}
-          data-state="before"
+          data-state={state}
           data-selected={selected}
           onClick={() => {
             select(dateStr, selected);
           }}
         >
-          {cursor.getDate()}
+          {label}
         </div>
+      )
+    };
+    while (cursor.getMonth() < month) {
+      const dateStr = dateFormat(cursor)!;
+      const selected = isSelected(cursor);
+      nodes.push(
+        generateCellNode(
+          `b${cursor.getDate()}`,
+          dateStr,
+          selected,
+          "before",
+          cursor.getDate()
+        )
       );
       DatetimeUtils.addDay(cursor, 1);
     }
@@ -159,17 +170,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       const dateStr = dateFormat(cursor)!;
       const selected = isSelected(cursor);
       nodes.push(
-        <div
-          key={cursor.getDate()}
-          className={Style.cell}
-          data-state="current"
-          data-selected={selected}
-          onClick={() => {
-            select(dateStr, selected);
-          }}
-        >
-          {cursor.getDate()}
-        </div>
+        generateCellNode(
+          cursor.getDate(),
+          dateStr,
+          selected,
+          "current",
+          cursor.getDate()
+        )
       );
       DatetimeUtils.addDay(cursor, 1);
     }
@@ -177,20 +184,17 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       const dateStr = dateFormat(cursor)!;
       const selected = isSelected(cursor);
       nodes.push(
-        <div
-          key={`a${cursor.getDate()}`}
-          className={Style.cell}
-          data-state="after"
-          data-selected={selected}
-          onClick={() => {
-            select(dateStr, selected);
-          }}
-        >
-          {cursor.getDate()}
-        </div>
+        generateCellNode(
+          `a${cursor.getDate()}`,
+          dateStr,
+          selected,
+          "after",
+          cursor.getDate()
+        )
       );
       DatetimeUtils.addDay(cursor, 1);
     }
+    console.log(days);
     return nodes;
   }, [month, year, days]);
 
@@ -209,6 +213,22 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     }
     return nodes;
   }, [props.$firstWeek]);
+
+  const clear = () => {
+    if (multiable) {
+      form.change([]);
+      return;
+    }
+    form.change(undefined);
+  };
+
+  const selectToday = () => {
+    if (multiable) {
+      form.change([convertDateToValue(today)]);
+      return;
+    }
+    form.change(convertDateToValue(today));
+  };
 
   const toggleMode = () => {
     if (type === "year") return;
@@ -276,11 +296,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       >
         <div
           className={Style.clear}
+          onClick={clear}
         >
           <VscClose />
         </div>
         <div
           className={Style.today}
+          onClick={selectToday}
         >
           <VscRecord />
         </div>
