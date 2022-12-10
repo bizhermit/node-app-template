@@ -94,6 +94,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "Slider",
                         icon: "S",
                         pathname: "/sandbox/elements/form-items/slider",
+                      }, {
+                        key: "date-picker",
+                        label: "DatePicker",
+                        icon: "DP",
+                        pathname: "/sandbox/elements/form-items/date-picker",
+                      }, {
+                        key: "date-box",
+                        label: "DateBox",
+                        icon: "D",
+                        pathname: "/sandbox/elements/form-items/date-box",
                       }]
                     }, {
                       key: "container",
