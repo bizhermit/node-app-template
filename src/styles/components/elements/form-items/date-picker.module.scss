@@ -25,8 +25,35 @@ $width7: 14.285%;
     >.date {
       flex-flow: row wrap;
 
+      &[data-rows="4"] {
+        >.cell {
+          height: 25%;
+        }
+      }
+      &[data-rows="5"] {
+        >.cell {
+          height: 20%;
+        }
+      }
+      &[data-rows="6"] {
+        >.cell {
+          height: 16.66%;
+        }
+      }
+
       >.cell {
         width: #{$width7};
+        cursor: pointer;
+
+        &[data-state="before"],
+        &[data-state="after"] {
+          opacity: 0.5;
+        }
+
+        &[data-selected="true"] {
+          background: var(--c-main);
+          color: var(--c-main_);
+        }
       }
     }
   }

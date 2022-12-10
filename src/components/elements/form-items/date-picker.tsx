@@ -8,27 +8,46 @@ import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 
 type DatePickerMode = "calendar" | "list";
 
-export type DatePickerCommonProps<T> = {
+export type DatePickerCommonProps = {
   $type?: "date" | "month" | "year";
   $mode?: DatePickerMode;
-  $multiable?: boolean;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
 };
 
-type DatePickerStringProps = FormItemProps<Array<string>> & {
-  $typeof?: "string";
-} & DatePickerCommonProps<string>;
+type DatePickerStringProps =
+  (FormItemProps<string> & {
+    $typeof?: "string";
+    $multiable?: false;
+  }) |
+  (FormItemProps<Array<string>> & {
+    $typeof?: "string";
+    $multiable: true;
+  });
 
-type DatePickerNumberProps = FormItemProps<Array<number>> & {
-  $typeof: "number";
-} & DatePickerCommonProps<number>;
+type DatePickerNumberProps =
+  (FormItemProps<number> & {
+    $typeof: "number";
+    $multiable?: false;
+  }) |
+  (FormItemProps<Array<number>> & {
+    $typeof: "number";
+    $multiable: true;
+  });
 
-type DatePickerDateProps = FormItemProps<Array<Date>> & {
-  $typeof: "date";
-} & DatePickerCommonProps<Date>;
+type DatePickerDateProps =
+  (FormItemProps<Array<Date>> & {
+    $typeof: "date";
+    $multiable?: false;
+  }) |
+  (FormItemProps<Array<Date>> & {
+    $typeof: "date";
+    $multiable: true;
+  });
 
-export type DatePickerProps = DatePickerStringProps | DatePickerNumberProps | DatePickerDateProps;
+export type DatePickerProps =
+  (DatePickerStringProps | DatePickerNumberProps | DatePickerDateProps)
+  & DatePickerCommonProps;
 
 const today = new Date();
 const threshold = 2;
@@ -62,22 +81,29 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     }
   };
 
-  const form = useForm<Array<string | number | Date | any>>(props, {
+  const form = useForm<string | number | Date | Array<string | number | Date> | any>(props, {
 
   });
 
+  const getArrayValue = () => {
+    const v = form.valueRef.current;
+    if (v == null) return [];
+    if (Array.isArray(v)) return v;
+    return [v];
+  };
+
   const yearNodes = useMemo(() => {
-    if (year == null) return <></>;
-    return <></>;
+    if (year == null) return [];
+    return [];
   }, [year]);
 
   const monthNodes = useMemo(() => {
-    if (month == null) return <></>;
-    return <></>;
+    if (month == null) return [];
+    return [];
   }, [month, year]);
 
   const dayNodes = useMemo(() => {
-    if (year == null || month == null) return <></>;
+    if (year == null || month == null) return [];
     const nodes = [];
     const cursor = new Date(year, month, 1);
     const firstWeek = props.$firstWeek ?? 0;
@@ -85,12 +111,44 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     let beforeLength = (startWeek - firstWeek + 7) % 7 || 7;
     if (beforeLength < threshold) beforeLength += 7;
     DatetimeUtils.addDay(cursor, beforeLength * -1);
+    let findCount = 0;
+    const isSelected = (date: Date) => {
+      if (days.length === findCount) return false;
+      const ret = days.find(v => DatetimeUtils.equalDate(v, date)) != null;
+      if (ret) findCount++;
+      return ret;
+    };
+    const select = (dateStr: string, selected: boolean) => {
+      const date = convertDate(dateStr)!;
+      if (!multiable) {
+        form.change(convertDateToValue(date));
+        return;
+      }
+      if (selected) {
+        const vals = [...getArrayValue()];
+        const index = vals.findIndex(v => DatetimeUtils.equalDate(convertDate(v), date));
+        vals.splice(index, 1);
+        form.change(vals);
+        return;
+      }
+      const vals = [...getArrayValue()];
+      vals.push(convertDateToValue(date));
+      form.change(vals.sort((d1, d2) => {
+        return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
+      }));
+    };
     while (cursor.getMonth() < month) {
+      const dateStr = dateFormat(cursor)!;
+      const selected = isSelected(cursor);
       nodes.push(
         <div
           key={`b${cursor.getDate()}`}
           className={Style.cell}
           data-state="before"
+          data-selected={selected}
+          onClick={() => {
+            select(dateStr, selected);
+          }}
         >
           {cursor.getDate()}
         </div>
@@ -98,11 +156,17 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       DatetimeUtils.addDay(cursor, 1);
     }
     while (cursor.getMonth() === month) {
+      const dateStr = dateFormat(cursor)!;
+      const selected = isSelected(cursor);
       nodes.push(
         <div
           key={cursor.getDate()}
           className={Style.cell}
           data-state="current"
+          data-selected={selected}
+          onClick={() => {
+            select(dateStr, selected);
+          }}
         >
           {cursor.getDate()}
         </div>
@@ -110,11 +174,17 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       DatetimeUtils.addDay(cursor, 1);
     }
     for (let i = 0, il = (7 - nodes.length % 7); i < il; i++) {
+      const dateStr = dateFormat(cursor)!;
+      const selected = isSelected(cursor);
       nodes.push(
         <div
           key={`a${cursor.getDate()}`}
           className={Style.cell}
           data-state="after"
+          data-selected={selected}
+          onClick={() => {
+            select(dateStr, selected);
+          }}
         >
           {cursor.getDate()}
         </div>
@@ -149,11 +219,16 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   };
 
   useEffect(() => {
-    setDays(form.value?.map(v => convertDate(v)!) ?? []);
+    setDays(
+      getArrayValue()
+        .map(v => convertDate(v)!)
+        .filter(v => v != null)
+      ?? []
+    );
   }, [form.value]);
 
   useEffect(() => {
-    const vals = form.value ?? [];
+    const vals = getArrayValue();
     const date = convertDate(vals[vals.length - 1]);
     if (date == null) {
       setYear(today.getFullYear());
@@ -182,13 +257,16 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         <div>
 
         </div>
-        <div
-          className={Style.week}
-        >
-          {weekNodes}
-        </div>
+        {mode === "calendar" &&
+          <div
+            className={Style.week}
+          >
+            {weekNodes}
+          </div>
+        }
         <div
           className={Style.date}
+          data-rows={dayNodes.length % 7}
         >
           {dayNodes}
         </div>

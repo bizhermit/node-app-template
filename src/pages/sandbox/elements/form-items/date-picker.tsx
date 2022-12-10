@@ -102,6 +102,7 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         $required
+        $multiable
       />
       <Form
         $bind={formBind}
