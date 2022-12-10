@@ -119,7 +119,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     const val = vals[vals.length - 1];
     if (val == null) return undefined;
     return convertDate(val);
-  }
+  };
 
   const yearNodes = useMemo(() => {
     if (year == null) return [];
@@ -162,7 +162,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     if (year == null || month == null) return [];
     const nodes = [];
     const cursor = new Date(year, month, 1);
-    let findCount = 0;
+    let findCount = 0, findToday = false;
+    const isToday = (date: Date) => {
+      if (findToday) return false;
+      return findToday = DatetimeUtils.equalDate(date, today);
+    };
     const isSelected = (date: Date) => {
       if (days.length === findCount) return false;
       const ret = days.find(v => DatetimeUtils.equalDate(v, date)) != null;
@@ -188,22 +192,25 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
     };
-    const generateCellNode = (key: Key, dateStr: string, selected: boolean, state: string, label: ReactNode) => {
+    const generateCellNode = (key: Key, date: Date, state: string) => {
+      const dateStr = dateFormat(cursor)!;
+      const selected = isSelected(cursor);
       return (
         <div
           key={key}
           className={Style.cell}
           data-state={state}
           data-selected={selected}
+          data-today={isToday(date)}
           onClick={form.editable ?
             () => {
               select(dateStr, selected);
             } : undefined
           }
         >
-          {label}
+          {date.getDate()}
         </div>
-      )
+      );
     };
     if (mode === "calendar") {
       let beforeLength = (cursor.getDay() - (props.$firstWeek ?? 0) + 7) % 7 || 7;
@@ -211,45 +218,33 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       DatetimeUtils.addDay(cursor, beforeLength * -1);
       const m = cursor.getMonth();
       while (cursor.getMonth() === m) {
-        const dateStr = dateFormat(cursor)!;
-        const selected = isSelected(cursor);
         nodes.push(
           generateCellNode(
             `b${cursor.getDate()}`,
-            dateStr,
-            selected,
-            "before",
-            cursor.getDate()
+            cursor,
+            "before"
           )
         );
         DatetimeUtils.addDay(cursor, 1);
       }
     }
     while (cursor.getMonth() === month) {
-      const dateStr = dateFormat(cursor)!;
-      const selected = isSelected(cursor);
       nodes.push(
         generateCellNode(
           cursor.getDate(),
-          dateStr,
-          selected,
+          cursor,
           "current",
-          cursor.getDate()
         )
       );
       DatetimeUtils.addDay(cursor, 1);
     }
     if (mode === "calendar") {
       for (let i = 0, il = (7 - nodes.length % 7); i < il; i++) {
-        const dateStr = dateFormat(cursor)!;
-        const selected = isSelected(cursor);
         nodes.push(
           generateCellNode(
             `a${cursor.getDate()}`,
-            dateStr,
-            selected,
+            cursor,
             "after",
-            cursor.getDate()
           )
         );
         DatetimeUtils.addDay(cursor, 1);
@@ -299,6 +294,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   };
 
   const clear = () => {
+    setYear(today.getFullYear());
+    setMonth(today.getMonth());
     if (multiable) {
       form.change([]);
       return;
@@ -307,6 +304,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   };
 
   const selectToday = () => {
+    setYear(today.getFullYear());
+    setMonth(today.getMonth());
     if (multiable) {
       form.change([convertDateToValue(today)]);
       return;
@@ -348,10 +347,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   useEffect(() => {
     if (mode !== "list" || dayElemRef.current == null) return;
     const elem = dayElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
-    console.log(elem);
     if (elem == null) return;
     dayElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - dayElemRef.current.clientHeight / 2;
-    console.log(dayElemRef.current.scrollTop);
   }, [mode, dayNodes]);
 
   useEffect(() => {
@@ -363,7 +360,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       setYear(date.getFullYear());
       setMonth(date.getMonth());
     }
-  }, []);
+  }, [props.$value, props.$bind, form.bind]);
 
   return (
     <FormItemWrap
@@ -458,55 +455,57 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         <div
           ref={dayElemRef}
           className={Style.date}
-          data-rows={dayNodes.length % 7}
+          data-rows={Math.round(dayNodes.length / 7)}
         >
           {dayNodes}
         </div>
       </div>
-      {form.editable &&
-        <div
-          className={Style.buttons}
-        >
+      <div
+        className={Style.buttons}
+      >
+        {form.editable &&
+          <>
+            <div
+              className={Style.clear}
+              onClick={clear}
+            >
+              <VscClose />
+            </div>
+            <div
+              className={Style.today}
+              onClick={selectToday}
+            >
+              <VscRecord />
+            </div>
+          </>
+        }
+        {props.$onClickNegative != null &&
           <div
-            className={Style.clear}
-            onClick={clear}
+            className={Style.negative}
+            onClick={props.$onClickNegative}
           >
-            <VscClose />
+            キャンセル
           </div>
+        }
+        {props.$onClickPositive != null &&
           <div
-            className={Style.today}
-            onClick={selectToday}
+            className={Style.positive}
+            onClick={() => {
+              props.$onClickPositive?.(form.value as never);
+            }}
           >
-            <VscRecord />
+            OK
           </div>
-          {props.$onClickNegative != null &&
-            <div
-              className={Style.negative}
-              onClick={props.$onClickNegative}
-            >
-              キャンセル
-            </div>
-          }
-          {props.$onClickPositive != null &&
-            <div
-              className={Style.positive}
-              onClick={() => {
-                props.$onClickPositive?.(form.value as never);
-              }}
-            >
-              OK
-            </div>
-          }
-          {type !== "year" && !multiable &&
-            <div
-              className={Style.switch}
-              onClick={toggleMode}
-            >
-              {mode === "list" ? <VscCalendar /> : <VscListFlat />}
-            </div>
-          }
-        </div>
-      }
+        }
+        {type !== "year" && !multiable &&
+          <div
+            className={Style.switch}
+            onClick={toggleMode}
+          >
+            {mode === "list" ? <VscCalendar /> : <VscListFlat />}
+          </div>
+        }
+      </div>
     </FormItemWrap>
   );
 });

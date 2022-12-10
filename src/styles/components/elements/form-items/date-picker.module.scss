@@ -125,7 +125,7 @@ $width7: 14.285%;
   justify-content: center;
   align-items: center;
   flex: none;
-  height: var(--size);
+  height: calc(var(--size) * 0.8);
 
   &[data-reverse="true"] {
     flex-direction: row-reverse;
@@ -136,9 +136,10 @@ $width7: 14.285%;
   box-sizing: border-box;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
+  justify-content: stretch;
+  align-items: stretch;
   flex: 1;
+  height: 100%;
   padding-top: var(--padding-top-text);
 }
 
@@ -149,7 +150,7 @@ $width7: 14.285%;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  height: var(--size);
+  height: 100%;
   width: calc(var(--size) * 0.8);
   cursor: pointer;
 
@@ -175,10 +176,12 @@ $width7: 14.285%;
   flex-flow: row nowrap;
   justify-content: stretch;
   align-items: stretch;
+  flex: none;
   font-size: calc(var(--font-size) * 0.8);
 
   >.cell {
     width: #{$width7};
+    padding: 0;
   }
 }
 
@@ -203,11 +206,19 @@ $width7: 14.285%;
   justify-content: center;
   align-items: center;
   padding-top: var(--padding-top-text);
+  line-height: 1.2rem;
+  border-width: 0.1rem;
+  border-style: solid;
+  border-color: transparent;
 
   &[data-selected="true"] {
     background: var(--c-selected);
     color: var(--c-selected_);
     z-index: 0;
+  }
+
+  &[data-today="true"] {
+    border-color: var(--c-border);
   }
 }
 
@@ -217,10 +228,9 @@ $width7: 14.285%;
   flex-flow: row nowrap;
   justify-content: stretch;
   align-items: stretch;
-  height: var(--size);
+  height: calc(var(--size) * 0.8);
   flex: none;
   width: 100%;
-  user-select: none;
 }
 
 .clear,
