@@ -51,7 +51,7 @@ h6 {
 }
 
 .react-icon {
-  &[height="auto"] {
+  &[height="0"] {
     height: var(--icon-size);
     width: var(--icon-size);
   }
