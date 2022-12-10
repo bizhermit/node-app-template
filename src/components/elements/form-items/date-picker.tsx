@@ -1,5 +1,5 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { VscCalendar, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
@@ -13,6 +13,7 @@ export type DatePickerCommonProps<T> = {
   $mode?: DatePickerMode;
   $multiable?: boolean;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
 };
 
 type DatePickerStringProps = FormItemProps<Array<string>> & {
@@ -43,6 +44,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const [year, setYear] = useState<number>();
   const [month, setMonth] = useState<number>();
   const [days, setDays] = useState<Array<Date>>([]);
+  const weekTexts = useMemo(() => {
+    if (props.$weekTexts == null || props.$weekTexts === "ja") return DatetimeUtils.Week.ja;
+    if (props.$weekTexts === "en") return DatetimeUtils.Week.en;
+    if (props.$weekTexts.length !== 7) return DatetimeUtils.Week.ja;
+    return props.$weekTexts;
+  }, [props.$weekTexts]);
 
   const convertDateToValue = (date: Date) => {
     switch (props.$typeof) {
@@ -117,6 +124,22 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     return nodes;
   }, [month, year, days]);
 
+  const weekNodes = useMemo(() => {
+    const nodes = [];
+    for (let i = 0; i < 7; i++) {
+      const week = (i + (props.$firstWeek ?? 0)) % 7;
+      nodes.push(
+        <div
+          key={week}
+          className={Style.cell}
+        >
+          {weekTexts[week]}
+        </div>
+      );
+    }
+    return nodes;
+  }, [props.$firstWeek]);
+
   const toggleMode = () => {
     if (type === "year") return;
     setMode(cur => {
@@ -159,8 +182,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         <div>
 
         </div>
-        <div>
-
+        <div
+          className={Style.week}
+        >
+          {weekNodes}
         </div>
         <div
           className={Style.date}

@@ -32,6 +32,19 @@ $width7: 14.285%;
   }
 }
 
+.week {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  font-size: calc(var(--font-size) * 0.8);
+
+  >.cell {
+    width: #{$width7};
+  }
+}
+
 .date {
   box-sizing: border-box;
   display: flex;
