@@ -8,6 +8,7 @@ export const colors: Array<Color> = [
   "scroll",
   "input",
   "error",
+  "selected",
   "nav",
   "main",
   "main-light",

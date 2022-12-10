@@ -56,6 +56,10 @@ $colorMap: (
     "dark": rgb(70, 48, 48),
     "dark_r": map-get($baseColor, dark_r),
   ),
+  "selected": (
+    "light": rgb(200, 220, 255),
+    "dark": rgb(80, 80, 110),
+  ),
   "scroll": (
     "light": rgba(100, 100, 105, 0.3),
     "light_r": rgba(210, 210, 215, 0.5),
