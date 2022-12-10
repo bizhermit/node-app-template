@@ -1,5 +1,5 @@
 import Button from "@/components/elements/button";
-import DateBox from "@/components/elements/date-box";
+import DateBox from "@/components/elements/form-items/date-box";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import ToggleBox from "@/components/elements/form-items/toggle-box";

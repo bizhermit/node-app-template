@@ -1,5 +1,6 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React from "react";
+import Style from "$/components/elements/form-items/date-picker.module.scss";
 
 type DatePickerCommonProps<T> = {
 };
@@ -30,6 +31,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       ref={ref}
       $preventFieldLayout
       $useHidden
+      $mainProps={{
+        className: Style.main
+      }}
     >
 
     </FormItemWrap>
