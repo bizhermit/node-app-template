@@ -17,6 +17,8 @@ export type DatePickerCommonProps = {
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
   $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
   $onClickNegative?: () => void;
+  $min?: string | number | Date;
+  $max?: string | number | Date;
 };
 
 type DatePickerStringProps =
@@ -90,6 +92,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     if (props.$weekTexts.length !== 7) return DatetimeUtils.Week.ja;
     return props.$weekTexts;
   }, [props.$weekTexts]);
+  const minDate = useMemo(() => {
+    return convertDate(props.$min) ?? new Date(1900, 0, 1);
+  }, [props.$min]);
+  const maxDate = useMemo(() => {
+    return convertDate(props.$max) ?? new Date(2100, 0, 0);
+  }, [props.$max]);
 
   const convertDateToValue = (date: Date) => {
     switch (props.$typeof) {
@@ -102,9 +110,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     }
   };
 
-  const form = useForm<string | number | Date | Array<string | number | Date> | any>(props, {
-
-  });
+  const form = useForm<string | number | Date | Array<string | number | Date> | any>(props);
 
   const getArrayValue = () => {
     const v = form.valueRef.current;
@@ -123,21 +129,24 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
 
   const yearNodes = useMemo(() => {
     if (year == null) return [];
-    return ArrayUtils.generateArray(200, num => {
-      const y = num + 1900;
-      return (
+    const min = minDate.getFullYear();
+    const max = maxDate.getFullYear();
+    const nodes = [];
+    for (let i = min; i <= max; i++) {
+      nodes.push(
         <div
-          key={y}
+          key={i}
           className={Style.cell}
-          data-selected={y === year}
+          data-selected={i === year}
           onClick={() => {
-            setYear(y);
+            setYear(i);
           }}
         >
-          {y}
+          {i}
         </div>
       );
-    });
+    }
+    return nodes;
   }, [year, form.editable]);
 
   const monthNodes = useMemo(() => {
