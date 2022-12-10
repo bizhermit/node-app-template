@@ -15,7 +15,7 @@ const Page: NextPage = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-<div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -72,7 +72,7 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setBind({ "date-picker-bind": "2022-12-10" });
+            setBind({ "date-picker-bind": ["2022-12-10", "2022-12-12", "2022-12-13"] });
           }}
         >
           set bind
@@ -86,35 +86,44 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
-      <DatePicker
-        $tag="useState"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        $value={value}
-        $onChange={v => setValue(v)}
-        $required
-        $messagePosition="bottom"
-      />
-      <DatePicker
-        name="date-picker-bind"
-        $bind={bind}
-        $tag="bind"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        $required
-        $multiable
-      />
-      <Form
-        $bind={formBind}
-        $disabled={disabled}
-        $readOnly={readOnly}
-      >
+      <Row className="gap-1" $vAlign="top">
         <DatePicker
-          name="date-picker-form-bind"
-          $tag="form bind"
+          $tag="useState"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $value={value}
+          $onChange={v => setValue(v)}
           $required
+          $messagePosition="bottom"
+          $onClickPositive={(value) => {
+            console.log("positive", value);
+          }}
+          $onClickNegative={() => {
+            console.log("negative");
+          }}
         />
-      </Form>
+        <DatePicker
+          name="date-picker-bind"
+          $bind={bind}
+          $tag="bind"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $required
+          $multiable
+          $monthTexts="en"
+        />
+        <Form
+          $bind={formBind}
+          $disabled={disabled}
+          $readOnly={readOnly}
+        >
+          <DatePicker
+            name="date-picker-form-bind"
+            $tag="form bind"
+            $required
+          />
+        </Form>
+      </Row>
     </div>
   );
 };

@@ -4,25 +4,72 @@ $width7: 14.285%;
 .main {
   flex-direction: column !important;
   width: 30rem;
-  height: 22rem;
+  height: 24rem;
   border-radius: var(--radius);
   overflow: visible;
   background: var(--c-input);
   color: var(--c-input_);
+
+  &[data-editable="true"] {
+    >.content {
+
+      >.yearmonth {
+        user-select: none;
+      }
+
+      >.year,
+      >.month,
+      >.date {
+        &:hover {
+          z-index: 1;
+        }
+
+        >.cell {
+          cursor: pointer;
+
+          &:hover {
+            @include mixins.hover;
+            z-index: 1;
+
+            &:active {
+              @include mixins.hoverActive;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .content {
   box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: stretch;
+  align-items: stretch;
   flex: 1;
+  min-height: 0;
+  width: 100%;
   overflow: visible;
 
   &[data-mode="list"] {
+    flex-direction: row;
+
+    >.year,
+    >.month,
     >.date {
+      height: 100%;
       flex-flow: column nowrap;
+      overflow-y: auto;
+      overflow-x: visible;
+      flex: 1;
+      z-index: 0;
     }
   }
 
   &[data-mode="calendar"] {
+    flex-direction: column;
+
     >.date {
       flex-flow: row wrap;
       overflow: visible;
@@ -47,40 +94,65 @@ $width7: 14.285%;
 
       >.cell {
         width: #{$width7};
-        cursor: pointer;
 
         &[data-state="before"],
         &[data-state="after"] {
           opacity: 0.5;
         }
-
-        &[data-selected="true"] {
-          color: var(--c-selected_);
-          z-index: 0;
-
-          &::before {
-            box-sizing: border-box;
-            position: absolute;
-            content: "";
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            z-index: -1;
-            background: var(--c-selected);
-          }
-        }
-
-        &:hover {
-          @include mixins.hover;
-
-          &:active {
-            @include mixins.hoverActive;
-          }
-        }
       }
     }
   }
+}
+
+.yearmonth {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  height: var(--size);
+
+  &[data-reverse="true"] {
+    flex-direction: row-reverse;
+  }
+}
+
+.label {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding-top: var(--padding-top-text);
+}
+
+.prev,
+.next {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  height: var(--size);
+  width: calc(var(--size) * 0.8);
+  cursor: pointer;
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+.text {
+  box-sizing: border-box;
+  text-align: center;
+  flex: 1;
+  padding-top: var(--padding-top-text);
 }
 
 .week {
@@ -98,9 +170,12 @@ $width7: 14.285%;
 
 .date {
   box-sizing: border-box;
+  position: relative;
   display: flex;
   justify-content: stretch;
   align-items: stretch;
+  flex: 1;
+  z-index: 0;
 }
 
 .cell {
@@ -112,6 +187,12 @@ $width7: 14.285%;
   justify-content: center;
   align-items: center;
   padding-top: var(--padding-top-text);
+
+  &[data-selected="true"] {
+    background: var(--c-selected);
+    color: var(--c-selected_);
+    z-index: 0;
+  }
 }
 
 .buttons {
@@ -161,4 +242,8 @@ $width7: 14.285%;
 .switch {
   width: var(--size);
   flex: none;
+}
+
+.switch {
+  margin-left: auto;
 }

@@ -2,47 +2,57 @@ import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form
 import React, { Key, ReactNode, useEffect, useMemo, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { VscCalendar, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
+import { VscCalendar, VscChevronLeft, VscChevronRight, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
+import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 
 type DatePickerMode = "calendar" | "list";
+const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
 export type DatePickerCommonProps = {
   $type?: "date" | "month" | "year";
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
   $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
+  $onClickNegative?: () => void;
 };
 
 type DatePickerStringProps =
   (FormItemProps<string> & {
     $typeof?: "string";
     $multiable?: false;
+    $onClickPositive?: (value: Nullable<string>) => void;
   }) |
   (FormItemProps<Array<string>> & {
     $typeof?: "string";
     $multiable: true;
+    $onClickPositive?: (value: Array<Nullable<string>>) => void;
   });
 
 type DatePickerNumberProps =
   (FormItemProps<number> & {
     $typeof: "number";
     $multiable?: false;
+    $onClickPositive?: (value: Nullable<number>) => void;
   }) |
   (FormItemProps<Array<number>> & {
     $typeof: "number";
     $multiable: true;
+    $onClickPositive?: (value: Array<Nullable<number>>) => void;
   });
 
 type DatePickerDateProps =
-  (FormItemProps<Array<Date>> & {
+  (FormItemProps<Date> & {
     $typeof: "date";
     $multiable?: false;
+    $onClickPositive?: (value: Nullable<Date>) => void;
   }) |
   (FormItemProps<Array<Date>> & {
     $typeof: "date";
     $multiable: true;
+    $onClickPositive?: (value: Array<Nullable<Date>>) => void;
   });
 
 export type DatePickerProps =
@@ -63,6 +73,14 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const [year, setYear] = useState<number>();
   const [month, setMonth] = useState<number>();
   const [days, setDays] = useState<Array<Date>>([]);
+  const monthTexts = useMemo(() => {
+    if (props.$monthTexts == null || props.$monthTexts === "num") return monthTextsNum;
+    if (props.$monthTexts === "en") return DatetimeUtils.Month.En;
+    if (props.$monthTexts === "en-s") return DatetimeUtils.Month.en;
+    if (props.$monthTexts === "ja") return DatetimeUtils.Month.Ja;
+    if (props.$monthTexts.length !== 12) return monthTextsNum;
+    return props.$monthTexts;
+  }, [props.$monthTexts]);
   const weekTexts = useMemo(() => {
     if (props.$weekTexts == null || props.$weekTexts === "ja") return DatetimeUtils.Week.ja;
     if (props.$weekTexts === "en") return DatetimeUtils.Week.en;
@@ -92,25 +110,55 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     return [v];
   };
 
+  const getLatestDate = () => {
+    if (multiable) return undefined;
+    const vals = getArrayValue();
+    const val = vals[vals.length - 1];
+    if (val == null) return undefined;
+    return convertDate(val);
+  }
+
   const yearNodes = useMemo(() => {
     if (year == null) return [];
-    return [];
-  }, [year]);
+    return ArrayUtils.generateArray(200, num => {
+      const y = num + 1900;
+      return (
+        <div
+          key={y}
+          className={Style.cell}
+          data-selected={y === year}
+          onClick={() => {
+            setYear(y);
+          }}
+        >
+          {y}
+        </div>
+      );
+    });
+  }, [year, form.editable]);
 
   const monthNodes = useMemo(() => {
     if (month == null) return [];
-    return [];
-  }, [month, year]);
+    return ArrayUtils.generateArray(12, num => {
+      return (
+        <div
+          key={num}
+          className={Style.cell}
+          data-selected={month === num}
+          onClick={() => {
+            setMonth(num);
+          }}
+        >
+          {monthTexts[num]}
+        </div>
+      );
+    });
+  }, [month, year, form.editable]);
 
   const dayNodes = useMemo(() => {
     if (year == null || month == null) return [];
     const nodes = [];
     const cursor = new Date(year, month, 1);
-    const firstWeek = props.$firstWeek ?? 0;
-    const startWeek = cursor.getDay();
-    let beforeLength = (startWeek - firstWeek + 7) % 7 || 7;
-    if (beforeLength < threshold) beforeLength += 7;
-    DatetimeUtils.addDay(cursor, beforeLength * -1);
     let findCount = 0;
     const isSelected = (date: Date) => {
       if (days.length === findCount) return false;
@@ -144,27 +192,35 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           className={Style.cell}
           data-state={state}
           data-selected={selected}
-          onClick={() => {
-            select(dateStr, selected);
-          }}
+          onClick={form.editable ?
+            () => {
+              select(dateStr, selected);
+            } : undefined
+          }
         >
           {label}
         </div>
       )
     };
-    while (cursor.getMonth() < month) {
-      const dateStr = dateFormat(cursor)!;
-      const selected = isSelected(cursor);
-      nodes.push(
-        generateCellNode(
-          `b${cursor.getDate()}`,
-          dateStr,
-          selected,
-          "before",
-          cursor.getDate()
-        )
-      );
-      DatetimeUtils.addDay(cursor, 1);
+    if (mode === "calendar") {
+      let beforeLength = (cursor.getDay() - (props.$firstWeek ?? 0) + 7) % 7 || 7;
+      if (beforeLength < threshold) beforeLength += 7;
+      DatetimeUtils.addDay(cursor, beforeLength * -1);
+      const m = cursor.getMonth();
+      while (cursor.getMonth() === m) {
+        const dateStr = dateFormat(cursor)!;
+        const selected = isSelected(cursor);
+        nodes.push(
+          generateCellNode(
+            `b${cursor.getDate()}`,
+            dateStr,
+            selected,
+            "before",
+            cursor.getDate()
+          )
+        );
+        DatetimeUtils.addDay(cursor, 1);
+      }
     }
     while (cursor.getMonth() === month) {
       const dateStr = dateFormat(cursor)!;
@@ -180,23 +236,24 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       );
       DatetimeUtils.addDay(cursor, 1);
     }
-    for (let i = 0, il = (7 - nodes.length % 7); i < il; i++) {
-      const dateStr = dateFormat(cursor)!;
-      const selected = isSelected(cursor);
-      nodes.push(
-        generateCellNode(
-          `a${cursor.getDate()}`,
-          dateStr,
-          selected,
-          "after",
-          cursor.getDate()
-        )
-      );
-      DatetimeUtils.addDay(cursor, 1);
+    if (mode === "calendar") {
+      for (let i = 0, il = (7 - nodes.length % 7); i < il; i++) {
+        const dateStr = dateFormat(cursor)!;
+        const selected = isSelected(cursor);
+        nodes.push(
+          generateCellNode(
+            `a${cursor.getDate()}`,
+            dateStr,
+            selected,
+            "after",
+            cursor.getDate()
+          )
+        );
+        DatetimeUtils.addDay(cursor, 1);
+      }
     }
-    console.log(days);
     return nodes;
-  }, [month, year, days]);
+  }, [month, year, days, form.editable]);
 
   const weekNodes = useMemo(() => {
     const nodes = [];
@@ -213,6 +270,30 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     }
     return nodes;
   }, [props.$firstWeek]);
+
+  const prevYear = () => {
+    if (year == null) return;
+    setYear(year - 1);
+  };
+
+  const nextYear = () => {
+    if (year == null) return;
+    setYear(year + 1);
+  };
+
+  const prevMonth = () => {
+    if (month == null || year == null) return;
+    const m = month - 1;
+    if (m < 0) setYear(year - 1);
+    setMonth((m + 12) % 12);
+  };
+
+  const nextMonth = () => {
+    if (month == null || year == null) return;
+    const m = month + 1;
+    if (m >= 12) setYear(year + 1);
+    setMonth(m % 12);
+  };
 
   const clear = () => {
     if (multiable) {
@@ -248,8 +329,22 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   }, [form.value]);
 
   useEffect(() => {
-    const vals = getArrayValue();
-    const date = convertDate(vals[vals.length - 1]);
+    if (mode !== "list") return;
+    // TODO: scroll
+  }, []);
+
+  useEffect(() => {
+    if (mode !== "list") return;
+    // TODO: scroll
+  }, [monthNodes]);
+
+  useEffect(() => {
+    if (mode !== "list") return;
+    // TODO: scroll
+  }, [dayNodes]);
+
+  useEffect(() => {
+    const date = getLatestDate();
     if (date == null) {
       setYear(today.getFullYear());
       setMonth(today.getMonth());
@@ -274,15 +369,74 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         className={Style.content}
         data-mode={mode}
       >
-        <div>
-
-        </div>
+        {mode === "list" &&
+          <>
+            <div className={Style.year}>
+              {yearNodes}
+            </div>
+            <div className={Style.month}>
+              {monthNodes}
+            </div>
+          </>
+        }
         {mode === "calendar" &&
-          <div
-            className={Style.week}
-          >
-            {weekNodes}
-          </div>
+          <>
+            <div
+              className={Style.yearmonth}
+              data-reverse={props.$monthTexts === "en" || props.$monthTexts === "en-s"}
+            >
+              <div className={Style.label}>
+                {form.editable &&
+                  <div
+                    className={Style.prev}
+                    onClick={prevYear}
+                  >
+                    <VscChevronLeft />
+                  </div>
+                }
+                <span className={Style.text}>
+                  {year ?? 0}
+                </span>
+                {form.editable &&
+                  <div
+                    className={Style.next}
+                    onClick={nextYear}
+                  >
+                    <VscChevronRight />
+                  </div>
+                }
+              </div>
+              {(props.$monthTexts == null || props.$monthTexts === "num") &&
+                <span>/</span>
+              }
+              <div className={Style.label}>
+                {form.editable &&
+                  <div
+                    className={Style.prev}
+                    onClick={prevMonth}
+                  >
+                    <VscChevronLeft />
+                  </div>
+                }
+                <span className={Style.text}>
+                  {monthTexts[month ?? 0]}
+                </span>
+                {form.editable &&
+                  <div
+                    className={Style.next}
+                    onClick={nextMonth}
+                  >
+                    <VscChevronRight />
+                  </div>
+                }
+              </div>
+            </div>
+            <div
+              className={Style.week}
+            >
+              {weekNodes}
+            </div>
+          </>
         }
         <div
           className={Style.date}
@@ -291,40 +445,50 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           {dayNodes}
         </div>
       </div>
-      <div
-        className={Style.buttons}
-      >
+      {form.editable &&
         <div
-          className={Style.clear}
-          onClick={clear}
+          className={Style.buttons}
         >
-          <VscClose />
-        </div>
-        <div
-          className={Style.today}
-          onClick={selectToday}
-        >
-          <VscRecord />
-        </div>
-        <div
-          className={Style.negative}
-        >
-          キャンセル
-        </div>
-        <div
-          className={Style.positive}
-        >
-          OK
-        </div>
-        {type !== "year" && !multiable &&
           <div
-            className={Style.switch}
-            onClick={toggleMode}
+            className={Style.clear}
+            onClick={clear}
           >
-            {mode === "list" ? <VscCalendar /> : <VscListFlat />}
+            <VscClose />
           </div>
-        }
-      </div>
+          <div
+            className={Style.today}
+            onClick={selectToday}
+          >
+            <VscRecord />
+          </div>
+          {props.$onClickNegative != null &&
+            <div
+              className={Style.negative}
+              onClick={props.$onClickNegative}
+            >
+              キャンセル
+            </div>
+          }
+          {props.$onClickPositive != null &&
+            <div
+              className={Style.positive}
+              onClick={() => {
+                props.$onClickPositive?.(form.value as never);
+              }}
+            >
+              OK
+            </div>
+          }
+          {type !== "year" && !multiable &&
+            <div
+              className={Style.switch}
+              onClick={toggleMode}
+            >
+              {mode === "list" ? <VscCalendar /> : <VscListFlat />}
+            </div>
+          }
+        </div>
+      }
     </FormItemWrap>
   );
 });

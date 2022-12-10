@@ -435,7 +435,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
         <input
           name={props.name}
           type="hidden"
-          value={JSON.stringify(props.$$form.value)}
+          value={JSON.stringify(props.$$form.value ?? "")}
         />
       }
       {props.$$form.hasValidator && props.$$form.editable ?
