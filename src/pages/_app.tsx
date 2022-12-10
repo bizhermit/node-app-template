@@ -15,7 +15,7 @@ import { convertSizeNumToStr } from "@/utilities/attributes";
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
-      <IconContext.Provider value={{ className: "react-icon", size: "auto" }}>
+      <IconContext.Provider value={{ className: "react-icon", size: "0" }}>
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
