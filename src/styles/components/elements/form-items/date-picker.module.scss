@@ -245,6 +245,10 @@ $width7: 14.285%;
   height: calc(var(--size) * 0.8);
   flex: none;
   width: 100%;
+  
+  &:hover {
+    z-index: 1;
+  }
 }
 
 .clear,
