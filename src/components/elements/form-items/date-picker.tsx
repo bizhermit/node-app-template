@@ -8,8 +8,8 @@ import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import LabelText from "@/components/elements/label-text";
 
-type DatePickerMode = "calendar" | "list";
 type DatePickerType = "date" | "month" | "year";
+type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
 export type DatePickerCommonProps = {
@@ -27,7 +27,7 @@ export type DatePickerCommonProps = {
     name: string;
     position: "before" | "after";
     disallowSame?: boolean;
-  }
+  };
 };
 
 type DatePickerStringProps =
