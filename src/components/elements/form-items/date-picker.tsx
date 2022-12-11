@@ -355,7 +355,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
 
   useEffect(() => {
     if (mode !== "list" || dayElemRef.current == null) return;
-    const elem = dayElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
+    const elem = (
+      dayElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
+      ?? dayElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
+    ) as HTMLDivElement;
     if (elem == null) return;
     dayElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - dayElemRef.current.clientHeight / 2;
   }, [mode, dayNodes]);
