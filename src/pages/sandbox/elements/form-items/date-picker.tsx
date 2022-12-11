@@ -7,6 +7,7 @@ import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useState } from "react";
 import TextBox from "@/components/elements/form-items/text-box";
+import RadioButtons from "@/components/elements/form-items/radio-buttons";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -14,6 +15,7 @@ const Page: NextPage = () => {
   const [value, setValue] = useState<Nullable<string>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState<Struct>({ "pair-date": "2022-12-11" });
+  const [type, setType] = useState<"date" | "month" | "year">("date");
 
   return (
     <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
@@ -27,6 +29,16 @@ const Page: NextPage = () => {
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
+        />
+        <RadioButtons
+          $tag="type"
+          $value={type}
+          $onChange={v => setType(v!)}
+          $source={[
+            { value: "date", label: "date" },
+            { value: "month", label: "month" },
+            { value: "year", label: "year" },
+          ]}
         />
       </Row>
       <Row className="gap-1">
@@ -101,6 +113,7 @@ const Page: NextPage = () => {
           $tag="useState"
           $disabled={disabled}
           $readOnly={readOnly}
+          $type={type}
           $value={value}
           $onChange={v => setValue(v)}
           $required
@@ -120,9 +133,10 @@ const Page: NextPage = () => {
           $tag="bind"
           $disabled={disabled}
           $readOnly={readOnly}
+          $type={type}
           $required
           $multiable
-          $monthTexts="en"
+          $monthTexts="en-s"
           $max="2022-12-10"
         />
         <Form
@@ -135,6 +149,7 @@ const Page: NextPage = () => {
             name="date-picker-form-bind"
             $tag="form bind"
             $required
+            $type={type}
             $rangePair={{
               name: "pair-date",
               position: "after",

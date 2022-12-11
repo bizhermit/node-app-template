@@ -537,6 +537,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   }, [mode, dayNodes]);
 
   useEffect(() => {
+    if (type === "year") {
+      setMode("list");
+    }
+  }, [type]);
+
+  useEffect(() => {
     const date = getLatestDate();
     if (date == null) {
       setYear(today.getFullYear());
@@ -574,12 +580,14 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             >
               {yearNodes}
             </div>
-            <div
-              ref={monthElemRef}
-              className={Style.month}
-            >
-              {monthNodes}
-            </div>
+            {type !== "year" &&
+              <div
+                ref={monthElemRef}
+                className={Style.month}
+              >
+                {monthNodes}
+              </div>
+            }
           </>
         }
         {mode === "calendar" &&
@@ -615,51 +623,60 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
                   {yearNodes}
                 </div>
               </div>
-              {(props.$monthTexts == null || props.$monthTexts === "num") &&
-                <span>/</span>
+              {(props.$monthTexts == null || props.$monthTexts === "num") && type === "date" && <span>/</span>}
+              {type === "date" &&
+                <div className={Style.label}>
+                  <div
+                    className={Style.prev}
+                    onClick={prevMonth}
+                  >
+                    <VscChevronLeft />
+                  </div>
+                  <span
+                    className={Style.text}
+                    onClick={clickMonth}
+                  >
+                    {monthTexts[month ?? 0]}
+                  </span>
+                  <div
+                    className={Style.next}
+                    onClick={nextMonth}
+                  >
+                    <VscChevronRight />
+                  </div>
+                  <div
+                    ref={monthElemRef}
+                    className={Style.month}
+                    data-show={showMonth}
+                  >
+                    {monthNodes}
+                  </div>
+                </div>
               }
-              <div className={Style.label}>
-                <div
-                  className={Style.prev}
-                  onClick={prevMonth}
-                >
-                  <VscChevronLeft />
-                </div>
-                <span
-                  className={Style.text}
-                  onClick={clickMonth}
-                >
-                  {monthTexts[month ?? 0]}
-                </span>
-                <div
-                  className={Style.next}
-                  onClick={nextMonth}
-                >
-                  <VscChevronRight />
-                </div>
-                <div
-                  ref={monthElemRef}
-                  className={Style.month}
-                  data-show={showMonth}
-                >
-                  {monthNodes}
-                </div>
+            </div>
+            {type === "date" &&
+              <div
+                className={Style.week}
+              >
+                {weekNodes}
               </div>
-            </div>
-            <div
-              className={Style.week}
-            >
-              {weekNodes}
-            </div>
+            }
+            {type === "month" &&
+              <div className={Style.month}>
+                {monthNodes}
+              </div>
+            }
           </>
         }
-        <div
-          ref={dayElemRef}
-          className={Style.date}
-          data-rows={Math.round(dayNodes.length / 7)}
-        >
-          {dayNodes}
-        </div>
+        {type === "date" &&
+          <div
+            ref={dayElemRef}
+            className={Style.date}
+            data-rows={Math.round(dayNodes.length / 7)}
+          >
+            {dayNodes}
+          </div>
+        }
       </div>
       <div
         className={Style.buttons}
