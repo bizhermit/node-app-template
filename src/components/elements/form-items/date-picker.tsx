@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
 import React, { Key, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
@@ -110,7 +110,28 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     }
   };
 
-  const form = useForm<string | number | Date | Array<string | number | Date> | any>(props);
+  const form = useForm<string | number | Date | Array<string | number | Date> | any>(props, {
+    preventRequiredValidation: multiable,
+    validations: () => {
+      const validations: Array<FormItemValidation<any>> = [];
+      if (multiable) {
+        if (props.$required) {
+          validations.push(v => {
+            if (v == null) return formValidationMessages.required;
+            if (!Array.isArray(v)) {
+              return formValidationMessages.typeMissmatch;
+            }
+            if (v.length === 0 || v[0] === null) {
+              return formValidationMessages.required;
+            }
+            return "";
+          });
+        }
+      }
+      return validations;
+    },
+    validationsDeps: [multiable],
+  });
 
   const getArrayValue = () => {
     const v = form.valueRef.current;

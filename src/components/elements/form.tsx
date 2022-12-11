@@ -224,9 +224,10 @@ type UseFormOptions<T = any, U = any> = {
   generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
 };
 
-const validationMessages = {
+export const formValidationMessages = {
   default: "入力エラーです。",
   required: "値を入力してください。",
+  typeMissmatch: "型が不適切です。",
 } as const;
 
 export const equals = (v1: unknown, v2: unknown) => {
@@ -252,7 +253,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const rets: Array<FormItemValidation<Nullable<T>>> = [];
     if (props?.$required && !options?.preventRequiredValidation) {
       rets.push((v) => {
-        if (v == null || v === "") return validationMessages.required;
+        if (v == null || v === "") return formValidationMessages.required;
         return "";
       });
     }
@@ -278,7 +279,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
         continue;
       }
       if (typeof result === "string") msgs.push(result);
-      msgs.push(validationMessages.default);
+      msgs.push(formValidationMessages.default);
       break;
     }
     const msg = msgs[0] || "";
