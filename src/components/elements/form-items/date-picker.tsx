@@ -6,6 +6,7 @@ import { VscCalendar, VscChevronLeft, VscChevronRight, VscClose, VscListFlat, Vs
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import LabelText from "@/components/elements/label-text";
 
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
@@ -17,8 +18,15 @@ export type DatePickerCommonProps = {
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
   $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
   $onClickNegative?: () => void;
+  $positiveText?: ReactNode;
+  $negativeText?: ReactNode;
   $min?: string | number | Date;
   $max?: string | number | Date;
+  $rangePair?: {
+    name: string;
+    position: "before" | "after";
+    disallowSame?: boolean;
+  }
 };
 
 type DatePickerStringProps =
@@ -112,6 +120,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
 
   const form = useForm<string | number | Date | Array<string | number | Date> | any>(props, {
     preventRequiredValidation: multiable,
+    interlockValidation: props.$rangePair != null,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (multiable) {
@@ -128,9 +137,55 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           });
         }
       }
+      const rangePair = props.$rangePair;
+      if (rangePair != null) {
+        const compare = (date: Date, pairDate: Date) => {
+          if (rangePair.disallowSame !== true && DatetimeUtils.equalDate(date, pairDate)) {
+            return "";
+          }
+          if (rangePair.position === "before") {
+            if (!DatetimeUtils.isBefore(pairDate, date)) return "日付の前後関係が不適切です。";
+          }
+          if (!DatetimeUtils.isAfter(pairDate, date)) return "日付の前後関係が不適切です。";
+          return "";
+        };
+        if (multiable) {
+          validations.push((v, d) => {
+            if (d == null) return "";
+            const pairValue = d[rangePair.name];
+            if (pairValue == null || Array.isArray(pairValue)) return "";
+            const pairDate = convertDate(pairValue);
+            if (pairDate == null) return "";
+            if (v == null || !Array.isArray(v)) return "";
+            for (let i = 0, il = v.length; i < il; i++) {
+              const date = convertDate(v[i]);
+              if (date == null) continue;
+              const ret = compare(date, pairDate);
+              if (ret) return ret;
+            }
+            return "";
+          });
+        } else {
+          validations.push((v, d) => {
+            if (d == null) return "";
+            const date = convertDate(v);
+            if (date == null) return "";
+            const pairValue = d[rangePair.name];
+            if (pairValue == null || Array.isArray(pairValue)) return "";
+            const pairDate = convertDate(pairValue);
+            if (pairDate == null) return "";
+            return compare(date, pairDate);
+          });
+        }
+      }
       return validations;
     },
-    validationsDeps: [multiable],
+    validationsDeps: [
+      multiable,
+      props.$rangePair?.name,
+      props.$rangePair?.position,
+      props.$rangePair?.disallowSame,
+    ],
   });
 
   const getArrayValue = () => {
@@ -517,7 +572,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             className={Style.negative}
             onClick={props.$onClickNegative}
           >
-            キャンセル
+            <LabelText>{props.$negativeText ?? "キャンセル"}</LabelText>
           </div>
         }
         {props.$onClickPositive != null &&
@@ -527,7 +582,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
               props.$onClickPositive?.(form.value as never);
             }}
           >
-            OK
+            <LabelText>{props.$positiveText ?? "OK"}</LabelText>
           </div>
         }
         {type !== "year" && !multiable &&

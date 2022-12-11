@@ -6,13 +6,14 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useState } from "react";
+import TextBox from "@/components/elements/form-items/text-box";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [value, setValue] = useState<Nullable<string>>();
   const [bind, setBind] = useState({});
-  const [formBind, setFormBind] = useState({});
+  const [formBind, setFormBind] = useState<Struct>({ "pair-date": "2022-12-11" });
 
   return (
     <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
@@ -58,7 +59,11 @@ const Page: NextPage = () => {
         <Button
           $outline
           $onClick={() => {
-            setFormBind({});
+            setFormBind(cur => {
+              return {
+                "pair-date": cur["pair-date"],
+              };
+            });
           }}
         >
           clear form bind
@@ -79,7 +84,12 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setFormBind({ "date-picker-form-bind": "2022-12-10" });
+            setFormBind(cur => {
+              return {
+                ...cur,
+                "date-picker-form-bind": "2022-12-10",
+              };
+            });
           }}
         >
           set form bind
@@ -98,9 +108,11 @@ const Page: NextPage = () => {
           $onClickPositive={(value) => {
             console.log("positive", value);
           }}
-          $onClickNegative={() => {
-            console.log("negative");
-          }}
+          // $onClickNegative={() => {
+          //   console.log("negative");
+          // }}
+          $min="2020-01-01"
+          $max="2025-12-31"
         />
         <DatePicker
           name="date-picker-bind"
@@ -113,6 +125,7 @@ const Page: NextPage = () => {
           $monthTexts="en"
         />
         <Form
+          className="flex-box"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}
@@ -121,6 +134,14 @@ const Page: NextPage = () => {
             name="date-picker-form-bind"
             $tag="form bind"
             $required
+            $rangePair={{
+              name: "pair-date",
+              position: "after",
+            }}
+          />
+          <TextBox
+            name="pair-date"
+            placeholder="range pair date"
           />
         </Form>
       </Row>

@@ -10,6 +10,11 @@ $width7: 14.285%;
   background: var(--c-input);
   color: var(--c-input_);
 
+  &[data-error="true"] {
+    background: var(--c-error);
+    color: var(--c-error_);
+  }
+
   &[data-editable="true"] {
     >.content {
 
@@ -276,7 +281,6 @@ $width7: 14.285%;
 
 .positive,
 .negative {
-  padding-top: var(--padding-top-text);
   flex: 1;
   font-size: calc(var(--font-size) * 0.9);
 }
