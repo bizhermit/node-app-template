@@ -30,15 +30,21 @@ $width7: 14.285%;
         }
 
         >.cell {
-          cursor: pointer;
+          &[data-selectable="true"] {
+            cursor: pointer;
 
-          &:hover {
-            @include mixins.hover;
-            z-index: 1;
+            &:hover {
+              @include mixins.hover;
+              z-index: 1;
 
-            &:active {
-              @include mixins.hoverActive;
+              &:active {
+                @include mixins.hoverActive;
+              }
             }
+          }
+          &[data-selectable="false"] {
+            cursor: not-allowed;
+            opacity: 0.2;
           }
         }
       }
@@ -73,11 +79,13 @@ $width7: 14.285%;
       >.cell {
         height: calc(var(--size) * 0.75);
       }
+
       padding: calc(var(--size) * 2.75) 0;
     }
 
     >.date {
       >.cell {
+
         &[data-state="before"],
         &[data-state="after"] {
           display: none;
@@ -250,7 +258,7 @@ $width7: 14.285%;
   height: calc(var(--size) * 0.8);
   flex: none;
   width: 100%;
-  
+
   &:hover {
     z-index: 1;
   }

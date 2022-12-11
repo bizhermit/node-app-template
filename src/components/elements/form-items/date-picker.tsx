@@ -154,8 +154,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           });
         }
       }
-      const maxTime = convertDate(props.$max)?.getTime();
-      const minTime = convertDate(props.$min)?.getTime();
+      const maxTime = convertDate(maxDate)?.getTime();
+      const minTime = convertDate(minDate)?.getTime();
       if (maxTime != null && minTime != null) {
         const maxDateStr = toStr(maxTime);
         const minDateStr = toStr(minTime);
@@ -240,8 +240,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     },
     validationsDeps: [
       multiable,
-      props.$max,
-      props.$min,
+      maxDate,
+      minDate,
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
@@ -318,6 +318,17 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       if (ret) findCount++;
       return ret;
     };
+    let afterMin = false;
+    let beforeMax = true;
+    const isInRange = (date: Date) => {
+      if (!afterMin && !DatetimeUtils.isBeforeDate(minDate, date)) {
+        afterMin = true;
+      }
+      if (beforeMax && DatetimeUtils.isAfterDate(maxDate, date)) {
+        beforeMax = false;
+      }
+      return afterMin && beforeMax;
+    };
     const select = (dateStr: string, selected: boolean) => {
       const date = convertDate(dateStr)!;
       if (!multiable) {
@@ -340,14 +351,16 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     const generateCellNode = (key: Key, date: Date, state: string) => {
       const dateStr = dateFormat(cursor)!;
       const selected = isSelected(cursor);
+      const inRange = isInRange(date);
       return (
         <div
           key={key}
           className={Style.cell}
           data-state={state}
+          data-selectable={inRange}
           data-selected={selected}
           data-today={isToday(date)}
-          onClick={form.editable ?
+          onClick={(form.editable && inRange) ?
             () => {
               select(dateStr, selected);
             } : undefined
@@ -396,7 +409,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       }
     }
     return nodes;
-  }, [month, year, days, form.editable]);
+  }, [month, year, days, form.editable, minDate, maxDate]);
 
   const weekNodes = useMemo(() => {
     const nodes = [];
@@ -448,7 +461,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     form.change(undefined);
   };
 
+  const todayIsInRange = useMemo(() => {
+    return !DatetimeUtils.isAfterDate(today, minDate) && !DatetimeUtils.isBeforeDate(today, maxDate);
+  }, [minDate, maxDate]);
+
   const selectToday = () => {
+    if (!todayIsInRange) return;
     setYear(today.getFullYear());
     setMonth(today.getMonth());
     if (multiable) {
@@ -619,12 +637,14 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             >
               <VscClose />
             </div>
-            <div
-              className={Style.today}
-              onClick={selectToday}
-            >
-              <VscRecord />
-            </div>
+            {todayIsInRange &&
+              <div
+                className={Style.today}
+                onClick={selectToday}
+              >
+                <VscRecord />
+              </div>
+            }
           </>
         }
         {props.$onClickNegative != null &&

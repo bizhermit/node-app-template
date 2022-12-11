@@ -111,8 +111,8 @@ const Page: NextPage = () => {
           // $onClickNegative={() => {
           //   console.log("negative");
           // }}
-          // $min="2022-12-12"
-          $max="2022-12-12"
+          $min="2022-12-3"
+          $max="2022-12-14"
         />
         <DatePicker
           name="date-picker-bind"
@@ -123,7 +123,7 @@ const Page: NextPage = () => {
           $required
           $multiable
           $monthTexts="en"
-          $max="2022-12-12"
+          $max="2022-12-10"
         />
         <Form
           className="flex-box"
