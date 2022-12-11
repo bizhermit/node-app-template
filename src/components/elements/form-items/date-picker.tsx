@@ -413,7 +413,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       }
     }
     return nodes;
-  }, [month, year, days, form.editable, minDate, maxDate]);
+  }, [month, year, days, form.editable, minDate, maxDate, mode]);
 
   const weekNodes = useMemo(() => {
     const nodes = [];
@@ -482,9 +482,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   }, [minDate, maxDate]);
 
   const selectToday = () => {
-    if (!todayIsInRange) return;
     setYear(today.getFullYear());
     setMonth(today.getMonth());
+    if (!todayIsInRange) return;
     if (multiable) {
       form.change([convertDateToValue(today, props.$typeof)]);
       return;
@@ -672,14 +672,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             >
               <VscClose />
             </div>
-            {todayIsInRange &&
-              <div
-                className={Style.today}
-                onClick={selectToday}
-              >
-                <VscRecord />
-              </div>
-            }
+            <div
+              className={Style.today}
+              onClick={selectToday}
+            >
+              <VscRecord />
+            </div>
           </>
         }
         {props.$onClickNegative != null &&
