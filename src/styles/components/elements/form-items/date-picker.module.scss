@@ -210,11 +210,25 @@ $width7: 14.285%;
   border-width: 0.1rem;
   border-style: solid;
   border-color: transparent;
+  border-radius: var(--radius);
 
   &[data-selected="true"] {
-    background: var(--c-selected);
     color: var(--c-selected_);
     z-index: 0;
+
+    &::before {
+      $pad: 0.1rem;
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      z-index: -1;
+      top: #{$pad};
+      left: #{$pad};
+      height: calc(100% - $pad * 2);
+      width: calc(100% - $pad * 2);
+      background: var(--c-selected);
+      border-radius: var(--radius);
+    }
   }
 
   &[data-today="true"] {
