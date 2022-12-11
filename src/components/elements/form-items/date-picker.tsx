@@ -137,7 +137,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const [showYear, setShowYear] = useState(false);
   const [showMonth, setShowMonth] = useState(false);
 
-  const form = useForm<string | number | Date | Array<string | number | Date> | any>(props, {
+  const form = useForm<string | number | Date | Array<string | number | Date> | any>({
+    ...props,
+    $messagePosition: props.$messagePosition ?? "bottom-hide",
+  }, {
     preventRequiredValidation: multiable,
     interlockValidation: props.$rangePair != null,
     validations: () => {
@@ -177,8 +180,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         }
       })())?.getTime();
       if (maxTime != null && minTime != null) {
-        const maxDateStr = toStr(maxTime);
-        const minDateStr = toStr(minTime);
+        const maxDateStr = toStr(maxTime, type);
+        const minDateStr = toStr(minTime, type);
         const compare = (v: any) => {
           const time = convertDate(v)?.getTime();
           if (time == null) return "";
@@ -716,6 +719,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       <div
         className={Style.content}
         data-mode={mode}
+        data-type={type}
         onClick={() => {
           setShowYear(false);
           setShowMonth(false);
