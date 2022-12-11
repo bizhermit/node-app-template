@@ -134,6 +134,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const maxDate = useMemo(() => {
     return convertDate(props.$max) ?? new Date(2100, 0, 0);
   }, [props.$max]);
+  const [showYear, setShowYear] = useState(false);
+  const [showMonth, setShowMonth] = useState(false);
 
   const form = useForm<string | number | Date | Array<string | number | Date> | any>(props, {
     preventRequiredValidation: multiable,
@@ -274,6 +276,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           key={i}
           className={Style.cell}
           data-selected={i === year}
+          data-selectable="true"
           onClick={() => {
             setYear(i);
           }}
@@ -292,6 +295,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         <div
           key={num}
           className={Style.cell}
+          data-selectable="true"
           data-selected={month === num}
           onClick={() => {
             setMonth(num);
@@ -437,6 +441,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     setYear(year + 1);
   };
 
+  const clickYear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowMonth(false);
+    setShowYear(true);
+  };
+
   const prevMonth = () => {
     if (month == null || year == null) return;
     const m = month - 1;
@@ -449,6 +459,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     const m = month + 1;
     if (m >= 12) setYear(year + 1);
     setMonth(m % 12);
+  };
+
+  const clickMonth = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowYear(false);
+    setShowMonth(true);
   };
 
   const clear = () => {
@@ -478,10 +494,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
 
   const toggleMode = () => {
     if (type === "year") return;
-    setMode(cur => {
-      if (cur === "calendar") return "list";
-      return "calendar";
-    });
+    if (mode === "calendar") {
+      setMode("list");
+      setShowYear(false);
+      setShowMonth(false);
+      return;
+    }
+    setMode("calendar");
   };
 
   useEffect(() => {
@@ -494,18 +513,18 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   }, [form.value]);
 
   useEffect(() => {
-    if (mode !== "list" || yearElemRef.current == null) return;
+    if (yearElemRef.current == null || (mode === "calendar" && !showYear)) return;
     const elem = yearElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
     if (elem == null) return;
     yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - yearElemRef.current.clientHeight / 2;
-  }, [mode]);
+  }, [mode, showYear]);
 
   useEffect(() => {
-    if (mode !== "list" || monthElemRef.current == null) return;
+    if (monthElemRef.current == null || (mode === "calendar" && !showMonth)) return;
     const elem = monthElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
     if (elem == null) return;
     monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - monthElemRef.current.clientHeight / 2;
-  }, [mode, monthNodes]);
+  }, [mode, monthNodes, showMonth]);
 
   useEffect(() => {
     if (mode !== "list" || dayElemRef.current == null) return;
@@ -542,6 +561,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       <div
         className={Style.content}
         data-mode={mode}
+        onClick={() => {
+          setShowYear(false);
+          setShowMonth(false);
+        }}
       >
         {mode === "list" &&
           <>
@@ -566,49 +589,61 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
               data-reverse={props.$monthTexts === "en" || props.$monthTexts === "en-s"}
             >
               <div className={Style.label}>
-                {form.editable &&
-                  <div
-                    className={Style.prev}
-                    onClick={prevYear}
-                  >
-                    <VscChevronLeft />
-                  </div>
-                }
-                <span className={Style.text}>
+                <div
+                  className={Style.prev}
+                  onClick={prevYear}
+                >
+                  <VscChevronLeft />
+                </div>
+                <span
+                  className={Style.text}
+                  onClick={clickYear}
+                >
                   {year ?? 0}
                 </span>
-                {form.editable &&
-                  <div
-                    className={Style.next}
-                    onClick={nextYear}
-                  >
-                    <VscChevronRight />
-                  </div>
-                }
+                <div
+                  className={Style.next}
+                  onClick={nextYear}
+                >
+                  <VscChevronRight />
+                </div>
+                <div
+                  ref={yearElemRef}
+                  className={Style.year}
+                  data-show={showYear}
+                >
+                  {yearNodes}
+                </div>
               </div>
               {(props.$monthTexts == null || props.$monthTexts === "num") &&
                 <span>/</span>
               }
               <div className={Style.label}>
-                {form.editable &&
-                  <div
-                    className={Style.prev}
-                    onClick={prevMonth}
-                  >
-                    <VscChevronLeft />
-                  </div>
-                }
-                <span className={Style.text}>
+                <div
+                  className={Style.prev}
+                  onClick={prevMonth}
+                >
+                  <VscChevronLeft />
+                </div>
+                <span
+                  className={Style.text}
+                  onClick={clickMonth}
+                >
                   {monthTexts[month ?? 0]}
                 </span>
-                {form.editable &&
-                  <div
-                    className={Style.next}
-                    onClick={nextMonth}
-                  >
-                    <VscChevronRight />
-                  </div>
-                }
+                <div
+                  className={Style.next}
+                  onClick={nextMonth}
+                >
+                  <VscChevronRight />
+                </div>
+                <div
+                  ref={monthElemRef}
+                  className={Style.month}
+                  data-show={showMonth}
+                >
+                  {monthNodes}
+                </div>
               </div>
             </div>
             <div
@@ -665,7 +700,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             <LabelText>{props.$positiveText ?? "OK"}</LabelText>
           </div>
         }
-        {type !== "year" && !multiable &&
+        {type !== "year" && !multiable && form.editable &&
           <div
             className={Style.switch}
             onClick={toggleMode}

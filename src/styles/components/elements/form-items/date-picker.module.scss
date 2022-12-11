@@ -24,7 +24,9 @@ $width7: 14.285%;
 
       >.year,
       >.month,
-      >.date {
+      >.date,
+      >.yearmonth>.label>.year,
+      >.yearmonth>.label>.month {
         &:hover {
           z-index: 1;
         }
@@ -42,6 +44,7 @@ $width7: 14.285%;
               }
             }
           }
+
           &[data-selectable="false"] {
             cursor: not-allowed;
             opacity: 0.2;
@@ -147,13 +150,41 @@ $width7: 14.285%;
 
 .label {
   box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-flow: row nowrap;
   justify-content: stretch;
   align-items: stretch;
   flex: 1;
   height: 100%;
-  padding-top: var(--padding-top-text);
+  overflow: visible;
+  cursor: pointer;
+  user-select: none;
+
+  >.year,
+  >.month {
+    position: absolute;
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+    z-index: 2;
+    background: var(--c-input);
+    border-radius: var(--radius);
+    overflow: auto;
+    transition: height 0.5s;
+    height: 0rem;
+
+    &[data-show="true"] {
+      height: 20rem;
+    }
+
+    >.cell {
+      height: calc(var(--size) * 0.75);
+    }
+  }
 }
 
 .prev,
@@ -166,6 +197,7 @@ $width7: 14.285%;
   height: 100%;
   width: calc(var(--size) * 0.8);
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     @include mixins.hover;
@@ -181,6 +213,10 @@ $width7: 14.285%;
   text-align: center;
   flex: 1;
   padding-top: var(--padding-top-text);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .week {
@@ -258,6 +294,7 @@ $width7: 14.285%;
   height: calc(var(--size) * 0.8);
   flex: none;
   width: 100%;
+  user-select: none;
 
   &:hover {
     z-index: 1;
