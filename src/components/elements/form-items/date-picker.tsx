@@ -9,10 +9,11 @@ import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import LabelText from "@/components/elements/label-text";
 
 type DatePickerMode = "calendar" | "list";
+type DatePickerType = "date" | "month" | "year";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
 export type DatePickerCommonProps = {
-  $type?: "date" | "month" | "year";
+  $type?: DatePickerType;
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
@@ -72,6 +73,33 @@ export type DatePickerProps =
 const today = new Date();
 const threshold = 2;
 
+const convertDateToValue = (date: Date, $typeof: "string" | "number" | "date" | undefined) => {
+  switch ($typeof) {
+    case "date":
+      return date;
+    case "number":
+      return date?.getTime();
+    default:
+      return dateFormat(date);
+  }
+};
+
+const toStr = (time?: number, type?: DatePickerType) => {
+  if (time == null) return "";
+  if (type === "year") return dateFormat(time, "yyyy年");
+  if (type === "month") return dateFormat(time, "yyyy/MM");
+  return dateFormat(time, "yyyy/MM/dd");
+};
+
+const multiValidationIterator = (v: any, func: (value: string | number | Date) => string) => {
+  if (v == null || !Array.isArray(v)) return "";
+  for (let i = 0, il = v.length; i < il; i++) {
+    const ret = func(v[i]);
+    if (ret) return ret;
+  }
+  return "";
+};
+
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
   const yearElemRef = useRef<HTMLDivElement>(null!);
   const monthElemRef = useRef<HTMLDivElement>(null!);
@@ -107,17 +135,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     return convertDate(props.$max) ?? new Date(2100, 0, 0);
   }, [props.$max]);
 
-  const convertDateToValue = (date: Date) => {
-    switch (props.$typeof) {
-      case "date":
-        return date;
-      case "number":
-        return date?.getTime();
-      default:
-        return dateFormat(date);
-    }
-  };
-
   const form = useForm<string | number | Date | Array<string | number | Date> | any>(props, {
     preventRequiredValidation: multiable,
     interlockValidation: props.$rangePair != null,
@@ -137,9 +154,57 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           });
         }
       }
+      const maxTime = convertDate(props.$max)?.getTime();
+      const minTime = convertDate(props.$min)?.getTime();
+      if (maxTime != null && minTime != null) {
+        const maxDateStr = toStr(maxTime);
+        const minDateStr = toStr(minTime);
+        const compare = (v: any) => {
+          const time = convertDate(v)?.getTime();
+          if (time == null) return "";
+          if (time < minTime || maxTime < time) return `${minDateStr}～${maxDateStr}の範囲で入力してください。`;
+          return "";
+        };
+        if (multiable) {
+          validations.push(v => multiValidationIterator(v, compare));
+        } else {
+          validations.push(compare);
+        }
+      } else {
+        if (maxTime != null) {
+          const maxDateStr = toStr(maxTime);
+          const compare = (v: any) => {
+            const time = convertDate(v)?.getTime();
+            if (time == null) return "";
+            if (time > maxTime) return `${maxDateStr}以前で入力してください。`;
+            return "";
+          };
+          if (multiable) {
+            validations.push(v => multiValidationIterator(v, compare));
+          } else {
+            validations.push(compare);
+          }
+        }
+        if (minTime != null) {
+          const minDateStr = toStr(minTime);
+          const compare = (v: any) => {
+            const time = convertDate(v)?.getTime();
+            if (time == null) return "";
+            if (time < minTime) return `${minDateStr}以降で入力してください。`;
+            return "";
+          };
+          if (multiable) {
+            validations.push(v => multiValidationIterator(v, compare));
+          } else {
+            validations.push(compare);
+          }
+        }
+      }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const compare = (date: Date, pairDate: Date) => {
+        const compare = (value: string | number | Date | any, pairDate: Date) => {
+          const date = convertDate(value);
+          if (date == null) return "";
           if (rangePair.disallowSame !== true && DatetimeUtils.equalDate(date, pairDate)) {
             return "";
           }
@@ -149,32 +214,25 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           if (!DatetimeUtils.isAfter(pairDate, date)) return "日付の前後関係が不適切です。";
           return "";
         };
+        const getPairDate = (data: Struct) => {
+          if (data == null) return undefined;
+          const pairValue = data[rangePair.name];
+          if (pairValue == null || Array.isArray(pairValue)) return undefined;
+          return convertDate(pairValue);
+        };
         if (multiable) {
           validations.push((v, d) => {
             if (d == null) return "";
-            const pairValue = d[rangePair.name];
-            if (pairValue == null || Array.isArray(pairValue)) return "";
-            const pairDate = convertDate(pairValue);
+            const pairDate = convertDate(getPairDate(d));
             if (pairDate == null) return "";
-            if (v == null || !Array.isArray(v)) return "";
-            for (let i = 0, il = v.length; i < il; i++) {
-              const date = convertDate(v[i]);
-              if (date == null) continue;
-              const ret = compare(date, pairDate);
-              if (ret) return ret;
-            }
-            return "";
+            return multiValidationIterator(v, (val) => compare(val, pairDate));
           });
         } else {
           validations.push((v, d) => {
             if (d == null) return "";
-            const date = convertDate(v);
-            if (date == null) return "";
-            const pairValue = d[rangePair.name];
-            if (pairValue == null || Array.isArray(pairValue)) return "";
-            const pairDate = convertDate(pairValue);
+            const pairDate = getPairDate(d);
             if (pairDate == null) return "";
-            return compare(date, pairDate);
+            return compare(v, pairDate);
           });
         }
       }
@@ -182,6 +240,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     },
     validationsDeps: [
       multiable,
+      props.$max,
+      props.$min,
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
@@ -261,7 +321,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     const select = (dateStr: string, selected: boolean) => {
       const date = convertDate(dateStr)!;
       if (!multiable) {
-        form.change(convertDateToValue(date));
+        form.change(convertDateToValue(date, props.$typeof));
         return;
       }
       if (selected) {
@@ -272,7 +332,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         return;
       }
       const vals = [...getArrayValue()];
-      vals.push(convertDateToValue(date));
+      vals.push(convertDateToValue(date, props.$typeof));
       form.change(vals.sort((d1, d2) => {
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
@@ -392,10 +452,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     setYear(today.getFullYear());
     setMonth(today.getMonth());
     if (multiable) {
-      form.change([convertDateToValue(today)]);
+      form.change([convertDateToValue(today, props.$typeof)]);
       return;
     }
-    form.change(convertDateToValue(today));
+    form.change(convertDateToValue(today, props.$typeof));
   };
 
   const toggleMode = () => {
