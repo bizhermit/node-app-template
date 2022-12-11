@@ -165,7 +165,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         </div>
       );
     });
-  }, [month, year, form.editable]);
+  }, [month, year, form.editable, monthTexts]);
 
   const dayNodes = useMemo(() => {
     if (year == null || month == null) return [];
