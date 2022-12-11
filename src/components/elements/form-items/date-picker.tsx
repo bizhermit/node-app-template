@@ -662,7 +662,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
      ) as HTMLDivElement;
     if (elem == null) return;
     yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - yearElemRef.current.clientHeight / 2;
-  }, [mode, showYear]);
+  }, [mode, showYear, form.editable]);
 
   useEffect(() => {
     if (monthElemRef.current == null || (mode === "calendar" && !showMonth)) return;
@@ -672,7 +672,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - monthElemRef.current.clientHeight / 2;
-  }, [mode, monthNodes, showMonth]);
+  }, [mode, monthNodes, showMonth, form.editable]);
 
   useEffect(() => {
     if (mode !== "list" || dayElemRef.current == null) return;
@@ -682,7 +682,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     dayElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - dayElemRef.current.clientHeight / 2;
-  }, [mode, dayNodes]);
+  }, [mode, dayNodes, form.editable]);
 
   useEffect(() => {
     if (type === "year") {
