@@ -1,5 +1,5 @@
-type ParamsType = string | number | boolean | null | undefined;
-type Params = Struct<ParamsType | Array<ParamsType>>;
+// type ParamsType = string | number | boolean | null | undefined;
+// type Params = Struct<ParamsType | Array<ParamsType>>;
 
 export type Api = Struct<{
   get?: any;
@@ -8,16 +8,16 @@ export type Api = Struct<{
   delete?: any;
 }>;
 
-type Props = {
-  baseUrl?: string;
-};
+// type Props = {
+//   baseUrl?: string;
+// };
 
-type Options = {
-  silent?: boolean;
-};
+// type Options = {
+//   silent?: boolean;
+// };
 
-const useApi = <A extends Api>(props?: Props) => {
+// const useApi = <A extends Api>(props?: Props) => {
 
-};
+// };
 
-export default useApi;
+// export default useApi;
