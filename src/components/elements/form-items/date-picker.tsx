@@ -156,8 +156,26 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           });
         }
       }
-      const maxTime = convertDate(maxDate)?.getTime();
-      const minTime = convertDate(minDate)?.getTime();
+      const maxTime = convertDate((() => {
+        switch (type) {
+          case "year":
+            return DatetimeUtils.getLastDateAtYear(maxDate);
+          case "month":
+            return DatetimeUtils.getLastDateAtMonth(maxDate);
+          default:
+            return maxDate;
+        }
+      })())?.getTime();
+      const minTime = convertDate((() => {
+        switch (type) {
+          case "year":
+            return DatetimeUtils.getFirstDateAtYear(minDate);
+          case "month":
+            return DatetimeUtils.getFirstDateAtMonth(minDate);
+          default:
+            return minDate;
+        }
+      })())?.getTime();
       if (maxTime != null && minTime != null) {
         const maxDateStr = toStr(maxTime);
         const minDateStr = toStr(minTime);
@@ -244,6 +262,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       multiable,
       maxDate,
       minDate,
+      type,
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
@@ -286,18 +305,76 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       );
     }
     return nodes;
-  }, [year, form.editable]);
+  }, [
+    year, form.editable,
+    type === "year" ? days : undefined,
+    type === "year" ? maxDate : undefined,
+    type === "year" ? minDate : undefined,
+  ]);
 
   const monthNodes = useMemo(() => {
-    if (month == null) return [];
+    if (year == null || month == null || type === "year") return [];
+    let findCount = 0, findToday = false;
+    const isToday = (date: Date) => {
+      if (findToday) return false;
+      return findToday = DatetimeUtils.equalYearMonth(date, today);
+    };
+    const isSelected = (date: Date) => {
+      if (days.length === findCount) return false;
+      const ret = days.find(v => DatetimeUtils.equalYearMonth(v, date)) != null;
+      if (ret) findCount++;
+      return ret;
+    };
+    let afterMin = false;
+    let beforeMax = true;
+    const minFirstDate = DatetimeUtils.getFirstDateAtMonth(minDate);
+    const maxLastDate = DatetimeUtils.getLastDateAtMonth(maxDate);
+    const isInRange = (date: Date) => {
+      if (type !== "month") return true;
+      if (!afterMin && !DatetimeUtils.isBeforeDate(minFirstDate, date)) {
+        afterMin = true;
+      }
+      if (beforeMax && DatetimeUtils.isAfterDate(maxLastDate, date)) {
+        beforeMax = false;
+      }
+      return afterMin && beforeMax;
+    };
+    const select = (date: Date, selected: boolean) => {
+      if (!multiable) {
+        form.change(convertDateToValue(date, props.$typeof));
+        return;
+      }
+      if (selected) {
+        const vals = [...getArrayValue()];
+        const index = vals.findIndex(v => DatetimeUtils.equalYearMonth(convertDate(v), date));
+        vals.splice(index, 1);
+        form.change(vals);
+        return;
+      }
+      const vals = [...getArrayValue()];
+      vals.push(convertDateToValue(date, props.$typeof));
+      form.change(vals.sort((d1, d2) => {
+        return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
+      }));
+    };
     return ArrayUtils.generateArray(12, num => {
+      const cursor = new Date(year, num, 1);
+      const selected = type === "month" ? isSelected(cursor) : month === num;
+      const inRange = isInRange(cursor);
       return (
         <div
           key={num}
           className={Style.cell}
-          data-selectable="true"
-          data-selected={month === num}
+          data-selectable={inRange}
+          data-selected={selected}
+          data-today={isToday(cursor)}
           onClick={() => {
+            if (type === "month") {
+              if (form.editable && inRange) {
+                select(cursor, selected);
+              }
+              return;
+            }
             setMonth(num);
           }}
         >
@@ -305,10 +382,15 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         </div>
       );
     });
-  }, [month, year, form.editable, monthTexts]);
+  }, [
+    month, year, form.editable, monthTexts,
+    type === "month" ? days : undefined,
+    type === "month" ? maxDate : undefined,
+    type === "month" ? minDate : undefined,
+  ]);
 
   const dayNodes = useMemo(() => {
-    if (year == null || month == null) return [];
+    if (year == null || month == null || type !== "date") return [];
     const nodes = [];
     const cursor = new Date(year, month, 1);
     let findCount = 0, findToday = false;
@@ -413,9 +495,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       }
     }
     return nodes;
-  }, [month, year, days, form.editable, minDate, maxDate, mode]);
+  }, [month, year, days, form.editable, minDate, maxDate, mode, type]);
 
   const weekNodes = useMemo(() => {
+    if (type === "date") return [];
     const nodes = [];
     for (let i = 0; i < 7; i++) {
       const week = (i + (props.$firstWeek ?? 0)) % 7;
@@ -429,7 +512,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       );
     }
     return nodes;
-  }, [props.$firstWeek]);
+  }, [props.$firstWeek, type]);
 
   const prevYear = () => {
     if (year == null) return;
@@ -478,18 +561,38 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   };
 
   const todayIsInRange = useMemo(() => {
+    if (type === "year") {
+      return true;
+    }
+    if (type === "month") {
+      const minFirstDate = DatetimeUtils.getFirstDateAtMonth(minDate);
+      const maxLastDate = DatetimeUtils.getLastDateAtMonth(maxDate);
+      return !DatetimeUtils.isAfterDate(today, minFirstDate) && !DatetimeUtils.isBeforeDate(today, maxLastDate);
+    }
     return !DatetimeUtils.isAfterDate(today, minDate) && !DatetimeUtils.isBeforeDate(today, maxDate);
-  }, [minDate, maxDate]);
+  }, [minDate, maxDate, type]);
 
   const selectToday = () => {
     setYear(today.getFullYear());
     setMonth(today.getMonth());
     if (!todayIsInRange) return;
+    let date: Date;
+    switch (type) {
+      case "year":
+        date = DatetimeUtils.getFirstDateAtYear(DatetimeUtils.copy(today));
+        break;
+      case "month":
+        date = DatetimeUtils.getFirstDateAtMonth(DatetimeUtils.copy(today));
+        break;
+      default:
+        date = DatetimeUtils.copy(today);
+        break;
+    }
     if (multiable) {
-      form.change([convertDateToValue(today, props.$typeof)]);
+      form.change([convertDateToValue(date, props.$typeof)]);
       return;
     }
-    form.change(convertDateToValue(today, props.$typeof));
+    form.change(convertDateToValue(date, props.$typeof));
   };
 
   const toggleMode = () => {

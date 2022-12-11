@@ -124,8 +124,8 @@ const Page: NextPage = () => {
           // $onClickNegative={() => {
           //   console.log("negative");
           // }}
-          $min="2022-12-3"
-          $max="2022-12-14"
+          $min="2022-10"
+          // $max="2022-12-14"
         />
         <DatePicker
           name="date-picker-bind"
