@@ -288,15 +288,51 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     if (year == null) return [];
     const min = minDate.getFullYear();
     const max = maxDate.getFullYear();
+    let findCount = 0, findToday = false;
+    const isToday = (num: number) => {
+      if (findToday) return false;
+      return findToday = num === today.getFullYear();
+    };
+    const isSelected = (num: number) => {
+      if (days.length === findCount) return false;
+      const ret = days.find(v => convertDate(v)?.getFullYear() === num) != null;
+      if (ret) findCount++;
+      return ret;
+    };
+    const select = (num: number, selected: boolean) => {
+      if (!multiable) {
+        form.change(convertDateToValue(new Date(num, 0, 1), props.$typeof));
+        return;
+      }
+      if (selected) {
+        const vals = [...getArrayValue()];
+        const index = vals.findIndex(v => convertDate(v)?.getFullYear() === num);
+        vals.splice(index, 1);
+        form.change(vals);
+        return;
+      }
+      const vals = [...getArrayValue()];
+      vals.push(convertDateToValue(new Date(num, 0, 1), props.$typeof));
+      form.change(vals.sort((d1, d2) => {
+        return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
+      }));
+    };
     const nodes = [];
     for (let i = min; i <= max; i++) {
+      const selected = type === "year" ? isSelected(i) : year === i;
       nodes.push(
         <div
           key={i}
           className={Style.cell}
-          data-selected={i === year}
+          data-selected={selected}
           data-selectable="true"
+          data-today={isToday(i)}
           onClick={() => {
+            if (type === "year") {
+              if (form.editable) {
+                select(i, selected);
+              }
+            }
             setYear(i);
           }}
         >
@@ -617,14 +653,20 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
 
   useEffect(() => {
     if (yearElemRef.current == null || (mode === "calendar" && !showYear)) return;
-    const elem = yearElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
+    const elem = (
+      yearElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
+      ?? yearElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
+     ) as HTMLDivElement;
     if (elem == null) return;
     yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - yearElemRef.current.clientHeight / 2;
   }, [mode, showYear]);
 
   useEffect(() => {
     if (monthElemRef.current == null || (mode === "calendar" && !showMonth)) return;
-    const elem = monthElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`) as HTMLDivElement;
+    const elem = (
+      monthElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
+      ?? monthElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
+    ) as HTMLDivElement;
     if (elem == null) return;
     monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - monthElemRef.current.clientHeight / 2;
   }, [mode, monthNodes, showMonth]);
@@ -642,6 +684,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   useEffect(() => {
     if (type === "year") {
       setMode("list");
+    } else {
+      if (multiable) {
+        setMode("calendar");
+      }
     }
   }, [type]);
 
