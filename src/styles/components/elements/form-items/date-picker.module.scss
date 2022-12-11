@@ -17,10 +17,7 @@ $width7: 14.285%;
 
   &[data-editable="true"] {
     >.content {
-
-      >.yearmonth {
-        user-select: none;
-      }
+      user-select: none;
 
       >.year,
       >.month,
@@ -34,7 +31,6 @@ $width7: 14.285%;
         >.cell {
           &[data-selectable="true"] {
             cursor: pointer;
-            user-select: none;
 
             &:hover {
               @include mixins.hover;
@@ -79,12 +75,11 @@ $width7: 14.285%;
       overflow-x: visible;
       flex: 1;
       z-index: 0;
+      padding: calc(var(--size) * 2.75) 0;
 
       >.cell {
         height: calc(var(--size) * 0.75);
       }
-
-      padding: calc(var(--size) * 2.75) 0;
     }
 
     >.date {
@@ -169,24 +164,19 @@ $width7: 14.285%;
   height: 100%;
   overflow: visible;
   cursor: pointer;
-  user-select: none;
 
   >.year,
   >.month {
     position: absolute;
-    width: 100%;
-    height: fit-content;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: stretch;
-    align-items: stretch;
     z-index: 2;
     background: var(--c-input);
     border-radius: var(--radius);
-    overflow: auto;
-    transition: height 0.5s;
     height: 0rem;
+    width: 100%;
     overflow: hidden;
+    transition: height 0.5s;
 
     &[data-show="true"] {
       height: 20rem;
@@ -311,6 +301,10 @@ $width7: 14.285%;
   &:hover {
     z-index: 1;
   }
+
+  &:empty {
+    display: none;
+  }
 }
 
 .clear,
@@ -344,12 +338,13 @@ $width7: 14.285%;
 }
 
 .clear,
-.today,
-.switch {
+.today {
   width: var(--size);
   flex: none;
 }
 
 .switch {
+  width: var(--size);
+  flex: none;
   margin-left: auto;
 }

@@ -537,7 +537,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   }, [month, year, days, form.editable, minDate, maxDate, mode, type]);
 
   const weekNodes = useMemo(() => {
-    if (type === "date") return [];
+    if (type !== "date") return [];
     const nodes = [];
     for (let i = 0; i < 7; i++) {
       const week = (i + (props.$firstWeek ?? 0)) % 7;
