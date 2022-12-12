@@ -20,6 +20,7 @@ export type DatePickerCommonProps = DateInputPorps & {
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
   $negativeText?: ReactNode;
+  $skipValidation?: boolean;
 };
 
 type DatePickerStringProps =
@@ -121,6 +122,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     preventRequiredValidation: multiable,
     interlockValidation: props.$rangePair != null,
     validations: () => {
+      if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
       if (multiable) {
         if (props.$required) {
@@ -202,6 +204,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
       judgeValid,
+      props.$skipValidation,
     ],
   });
 

@@ -403,6 +403,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           $min={minDate}
           $validDays={props.$validDays}
           $validDaysMode={props.$validDaysMode}
+          $skipValidation
           $onClickPositive={(value) => {
             form.change(value);
             setShowPicker(false);
