@@ -1,0 +1,101 @@
+@use "$/mixins";
+
+.inputs {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+
+  &[data-input="false"] {
+    cursor: pointer;
+
+    >.y,
+    >.m,
+    >.d {
+      cursor: inherit;
+    }
+  }
+
+  &:focus-within {
+    >.sep {
+      color: inherit
+    }
+  }
+}
+
+.y,
+.m,
+.d {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  height: var(--size);
+  min-width: 0;
+  padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
+  text-align: center;
+  flex: none;
+}
+
+.y {
+  width: 5rem;
+  margin-left: 0.5rem;
+}
+
+.m {
+  width: 2.8rem;
+}
+
+.d {
+  width: 2.8rem;
+  margin-right: 0.5rem;
+}
+
+.sep {
+  box-sizing: border-box;
+  flex: none;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  padding-top: var(--padding-top-text);
+  cursor: inherit;
+
+  &[data-has="false"] {
+    color: transparent;
+  }
+}
+
+.picker,
+.clear {
+  box-sizing: border-box;
+  height: var(--size);
+  width: calc(var(--size) * 0.9);
+  border-radius: var(--radius);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    z-index: 2;
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+@include mixins.hoverAnimation;

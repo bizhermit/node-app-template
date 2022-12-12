@@ -1,0 +1,386 @@
+@use "$/mixins";
+$width7: 14.285%;
+
+.main {
+  flex-direction: column !important;
+  width: 32rem;
+  height: 26rem;
+  border-radius: var(--radius);
+  overflow: visible;
+  background: var(--c-input);
+  color: var(--c-input_);
+
+  &[data-error="true"] {
+    background: var(--c-error);
+    color: var(--c-error_);
+  }
+
+  &[data-editable="true"] {
+    >.content {
+      user-select: none;
+
+      >.year,
+      >.month,
+      >.date,
+      >.yearmonth>.label>.year,
+      >.yearmonth>.label>.month {
+        &:hover {
+          z-index: 1;
+        }
+
+        >.cell {
+          &[data-selectable="true"] {
+            cursor: pointer;
+
+            &:hover {
+              @include mixins.hover;
+              z-index: 1;
+
+              &:active {
+                @include mixins.hoverActive;
+              }
+            }
+          }
+
+          &[data-selectable="false"] {
+            cursor: not-allowed;
+            opacity: 0.2;
+          }
+        }
+      }
+    }
+  }
+}
+
+.content {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: visible;
+
+  &[data-mode="list"] {
+    flex-direction: row;
+
+    >.year,
+    >.month,
+    >.date {
+      height: 100%;
+      flex-flow: column nowrap;
+      justify-content: center;
+      overflow-y: auto;
+      overflow-x: visible;
+      flex: 1;
+      z-index: 0;
+      padding: calc(var(--size) * 2.85) 0;
+
+      >.cell {
+        height: calc(var(--size) * 0.75);
+      }
+    }
+
+    >.date {
+      >.cell {
+
+        &[data-state="before"],
+        &[data-state="after"] {
+          display: none;
+        }
+
+        &[data-week="0"],
+        &[data-week="6"] {
+          &::after {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 0.3rem;
+          }
+        }
+
+        &[data-week="0"] {
+          &::after {
+            background: var(--c-sunday);
+          }
+        }
+
+        &[data-week="6"] {
+          &::after {
+            background: var(--c-saturday);
+          }
+        }
+      }
+    }
+  }
+
+  &[data-mode="calendar"] {
+    flex-direction: column;
+
+    >.month {
+      flex-flow: row wrap;
+
+      >.cell {
+        width: 25%;
+        height: 33.33%;
+      }
+    }
+
+    >.date {
+      flex-flow: row wrap;
+      overflow: visible;
+
+      &[data-rows="4"] {
+        >.cell {
+          height: 25%;
+        }
+      }
+
+      &[data-rows="5"] {
+        >.cell {
+          height: 20%;
+        }
+      }
+
+      &[data-rows="6"] {
+        >.cell {
+          height: 16.66%;
+        }
+      }
+
+      >.cell {
+        width: #{$width7};
+
+        &[data-state="before"],
+        &[data-state="after"] {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
+
+.yearmonth {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  height: calc(var(--size) * 0.8);
+
+  &[data-reverse="true"] {
+    flex-direction: row-reverse;
+  }
+}
+
+.label {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 1;
+  height: 100%;
+  overflow: visible;
+  cursor: pointer;
+
+  >.year,
+  >.month {
+    position: absolute;
+    display: flex;
+    flex-flow: column nowrap;
+    z-index: 2;
+    background: var(--c-input);
+    border-radius: var(--radius);
+    height: 0rem;
+    width: 100%;
+    overflow: hidden;
+    transition: height 0.5s;
+
+    &[data-show="true"] {
+      height: 20rem;
+      overflow: auto;
+    }
+
+    >.cell {
+      height: calc(var(--size) * 0.75);
+    }
+  }
+}
+
+.prev,
+.next {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: calc(var(--size) * 0.8);
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+.text {
+  box-sizing: border-box;
+  text-align: center;
+  flex: 1;
+  padding-top: var(--padding-top-text);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.week {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: none;
+  font-size: calc(var(--font-size) * 0.8);
+
+  >.cell {
+    width: #{$width7};
+    border-radius: 0;
+
+    &[data-week="0"] {
+      background: var(--c-sunday);
+      color: var(--c-sunday_);
+    }
+
+    &[data-week="6"] {
+      background: var(--c-saturday);
+      color: var(--c-saturday_);
+    }
+  }
+}
+
+.year,
+.month,
+.date {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 1;
+  z-index: 0;
+}
+
+.cell {
+  box-sizing: border-box;
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding-top: var(--padding-top-text);
+  line-height: 1.2rem;
+  border-width: 0.1rem;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: var(--radius);
+
+  &[data-selected="true"] {
+    color: var(--c-selected_);
+    z-index: 0;
+
+    &::before {
+      $pad: 0.1rem;
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      z-index: -1;
+      top: #{$pad};
+      left: #{$pad};
+      height: calc(100% - $pad * 2);
+      width: calc(100% - $pad * 2);
+      background: var(--c-selected);
+      border-radius: var(--radius);
+    }
+  }
+
+  &[data-today="true"] {
+    border-color: var(--c-border);
+  }
+}
+
+.buttons {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  height: calc(var(--size) * 0.8);
+  flex: none;
+  width: 100%;
+  user-select: none;
+
+  &:hover {
+    z-index: 1;
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
+.clear,
+.today,
+.switch,
+.positive,
+.negative {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+@include mixins.hoverAnimation;
+
+.positive,
+.negative {
+  flex: 1;
+  font-size: calc(var(--font-size) * 0.9);
+}
+
+.clear,
+.today {
+  width: var(--size);
+  flex: none;
+}
+
+.switch {
+  width: var(--size);
+  flex: none;
+  margin-left: auto;
+}
