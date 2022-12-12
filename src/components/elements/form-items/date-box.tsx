@@ -1,6 +1,5 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-box.module.scss";
@@ -8,18 +7,9 @@ import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
 import { VscCalendar, VscClose } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
+import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, convertToMaxTime, getMinDate, convertToMinTime, maxDateValidation, minDateValidation, rangeDateValidation, DateValue } from "@/components/elements/form-items/date-input-utils";
 
-type DateBoxType = "date" | "month" | "year";
-
-type DateBoxCommonProps = {
-  $type?: DateBoxType;
-  $min?: string | number | Date;
-  $max?: string | number | Date;
-  $rangePair?: {
-    name: string;
-    position: "before" | "after";
-    disallowSame?: boolean;
-  }
+type DateBoxCommonProps = DateInputPorps & {
   $disallowInput?: boolean;
 };
 
@@ -39,24 +29,6 @@ export type DateBoxProps = (DateBoxStringProps | DateBoxNumberProps | DateBoxDat
 
 const today = new Date();
 
-const convertDateToValue = (date: Date, $typeof: "string" | "number" | "date" | undefined) => {
-  switch ($typeof) {
-    case "date":
-      return date;
-    case "number":
-      return date?.getTime();
-    default:
-      return dateFormat(date);
-  }
-};
-
-const toStr = (time?: number, type?: DateBoxType) => {
-  if (time == null) return "";
-  if (type === "year") return dateFormat(time, "yyyy年");
-  if (type === "month") return dateFormat(time, "yyyy/MM");
-  return dateFormat(time, "yyyy/MM/dd");
-};
-
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
   return /^[0-9]+$/.test(value);
@@ -65,11 +37,14 @@ const isNumericOrEmpty = (value?: string): value is string => {
 const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   const type = props.$type ?? "date";
   const minDate = useMemo(() => {
-    return convertDate(props.$min) ?? new Date(1900, 0, 1);
+    return getMinDate(props);
   }, [props.$min]);
   const maxDate = useMemo(() => {
-    return convertDate(props.$max) ?? new Date(2100, 0, 0);
+    return getMaxDate(props);
   }, [props.$max]);
+  const judgeValid = useMemo(() => {
+    return getJudgeValidDateFunc(props);
+  }, [props.$validDays, props.$validDaysMode]);
 
   const yref = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
@@ -79,7 +54,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   const cacheD = useRef<number>();
   const [showPicker, setShowPicker] = useState(false);
 
-  const setInputValues = (value?: string | number | Date) => {
+  const setInputValues = (value?: DateValue) => {
     const date = convertDate(value);
     if (date == null) {
       cacheY.current = cacheM.current = cacheD.current = undefined;
@@ -93,89 +68,34 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     if (dref.current) dref.current.value = String(cacheD.current || "");
   };
 
-  const form = useForm<string | number | Date | any>(props, {
+  const form = useForm<DateValue | any>(props, {
     interlockValidation: props.$rangePair != null,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
-      const maxTime = convertDate((() => {
-        switch (type) {
-          case "year":
-            return DatetimeUtils.getLastDateAtYear(maxDate);
-          case "month":
-            return DatetimeUtils.getLastDateAtMonth(maxDate);
-          default:
-            return maxDate;
-        }
-      })())?.getTime();
-      const minTime = convertDate((() => {
-        switch (type) {
-          case "year":
-            return DatetimeUtils.getFirstDateAtYear(minDate);
-          case "month":
-            return DatetimeUtils.getFirstDateAtMonth(minDate);
-          default:
-            return minDate;
-        }
-      })())?.getTime();
+      const maxTime = convertToMaxTime(maxDate, type);
+      const minTime = convertToMinTime(minDate, type);
       if (maxTime != null && minTime != null) {
-        const maxDateStr = toStr(maxTime, type);
-        const minDateStr = toStr(minTime, type);
-        const compare = (v: any) => {
-          const time = convertDate(v)?.getTime();
-          if (time == null) return "";
-          if (time < minTime || maxTime < time) return `${minDateStr}～${maxDateStr}の範囲で入力してください。`;
-          return "";
-        };
-        validations.push(compare);
+        validations.push(rangeDateValidation(minTime, maxTime, type));
       } else {
         if (maxTime != null) {
-          const maxDateStr = toStr(maxTime);
-          const compare = (v: any) => {
-            const time = convertDate(v)?.getTime();
-            if (time == null) return "";
-            if (time > maxTime) return `${maxDateStr}以前で入力してください。`;
-            return "";
-          };
-          validations.push(compare);
+          validations.push(maxDateValidation(maxTime, type));
         }
         if (minTime != null) {
-          const minDateStr = toStr(minTime);
-          const compare = (v: any) => {
-            const time = convertDate(v)?.getTime();
-            if (time == null) return "";
-            if (time < minTime) return `${minDateStr}以降で入力してください。`;
-            return "";
-          };
-          validations.push(compare);
+          validations.push(minDateValidation(minTime, type));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const compare = (value: string | number | Date | any, pairDate: Date) => {
+        const { validation } = dateContextValidation(rangePair);
+        validations.push(validation);
+      }
+      if (props.$validDays) {
+        const judge = (value: DateValue | null) => {
           const date = convertDate(value);
           if (date == null) return "";
-          if (rangePair.disallowSame !== true && DatetimeUtils.equalDate(date, pairDate)) {
-            return "";
-          }
-          if (rangePair.position === "before") {
-            if (!DatetimeUtils.isBeforeDate(date, pairDate)) return "日付の前後関係が不適切です。";
-            return "";
-          }
-          if (!DatetimeUtils.isAfterDate(date, pairDate)) return "日付の前後関係が不適切です。";
-          return "";
+          return judgeValid(date) ? "" : "選択可能な日付ではありません。";
         };
-        const getPairDate = (data: Struct) => {
-          if (data == null) return undefined;
-          const pairValue = data[rangePair.name];
-          if (pairValue == null || Array.isArray(pairValue)) return undefined;
-          return convertDate(pairValue);
-        };
-        validations.push((v, d) => {
-          if (d == null) return "";
-          const pairDate = getPairDate(d);
-          if (pairDate == null) return "";
-          return compare(v, pairDate);
-        });
+        validations.push(judge);
       }
       return validations;
     },
@@ -186,6 +106,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
+      judgeValid,
     ],
   });
 
