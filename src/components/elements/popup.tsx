@@ -25,7 +25,7 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $animationDuration?: number;
   $animationInterval?: number;
   $preventClickEvent?: boolean;
-  $unmountWhenHid?: boolean;
+  $preventUnmount?: boolean;
   $closeWhenClick?: boolean;
   $zIndex?: number;
   $onToggle?: (show: boolean) => void;
@@ -300,7 +300,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         mref.current.style.opacity = "1";
       } else {
         removeZIndex.current();
-        if (props.$unmountWhenHid) setMount(false);
+        if (props.$preventUnmount !== true) setMount(false);
         if (!mref.current) return;
         mref.current.style.opacity = "0";
         mref.current.style.display = "none";

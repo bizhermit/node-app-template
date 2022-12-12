@@ -395,7 +395,6 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         $animationDuration={50}
         $closeWhenClick
         $preventClickEvent
-        $unmountWhenHid
       >
         <DatePicker
           $value={form.value || today}
