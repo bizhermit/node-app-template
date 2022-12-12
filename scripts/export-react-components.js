@@ -41,3 +41,6 @@ const impl = (basePath = root, nest = 0) => {
 };
 
 impl();
+
+fse.copySync(path.join(root, "src"), path.join(root, "dist"))
+fse.removeSync(path.join(root, "src"));
