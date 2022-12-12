@@ -115,12 +115,12 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     const m = type !== "year" ? cacheM.current : 1;
     const d = type === "date" ? cacheD.current : 1;
     if (y == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
-      setInputValues(undefined);
+      form.change(undefined);
       return;
     }
     const date = convertDate(`${y}-${m}-${d}`);
     if (date == null) {
-      setInputValues(undefined);
+      form.change(undefined);
       return;
     }
     form.change(convertDateToValue(date, props.$typeof));
@@ -133,7 +133,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       e.currentTarget.value = String(cacheY.current || "");
       return;
     }
-    cacheY.current = Number(v);
+    cacheY.current = isEmpty(v) ? undefined : Number(v);
     if (v.length === 4) mref.current?.focus();
   };
 
@@ -144,7 +144,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       e.currentTarget.value = String(cacheM.current || "");
       return;
     }
-    cacheM.current = Number(v);
+    cacheM.current = isEmpty(v) ? undefined : Number(v);
     if (v.length === 2 || !(v === "1" || v === "2")) dref.current?.focus();
   };
 
@@ -155,7 +155,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       e.currentTarget.value = String(cacheD.current || "");
       return;
     }
-    cacheD.current = Number(v);
+    cacheD.current = isEmpty(v) ? undefined : Number(v);
   };
 
   const updown = (y = 0, m = 0, d = 0) => {
@@ -281,6 +281,10 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     picker();
   };
 
+  const focus = () => {
+    (dref.current ?? mref.current ?? yref.current)?.focus();
+  };
+
   useEffect(() => {
     setInputValues(form.value);
   }, [form.value, type]);
@@ -402,9 +406,11 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           $onClickPositive={(value) => {
             form.change(value);
             setShowPicker(false);
+            focus();
           }}
           $onClickNegative={() => {
             setShowPicker(false);
+            focus();
           }}
         />
       </Popup>
