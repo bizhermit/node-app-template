@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": ".",
+    "outDir": "./dist/libs/react-components",
+    "declaration": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "jsx": "react-jsx"
+  },
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "/scripts",
+    "/dist",
+    "/nexpress",
+    "/nextron",
+    "/.*",
+    "/src/pages/**/*",
+    "/src/hooks/api.*",
+    "/src/utilities/sandbox.*"
+  ],
+}
