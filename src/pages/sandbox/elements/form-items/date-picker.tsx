@@ -137,7 +137,7 @@ const Page: NextPage = () => {
           $required
           $multiable
           $monthTexts="en-s"
-          $max="2022-12-10"
+          // $max="2022-12-10"
         />
         <Form
           className="flex-box"
@@ -158,6 +158,7 @@ const Page: NextPage = () => {
           <TextBox
             name="pair-date"
             placeholder="range pair date"
+            $interlockValidation
           />
         </Form>
       </Row>

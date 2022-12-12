@@ -654,24 +654,32 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     );
   }, [form.value]);
 
-  useEffect(() => {
+  const scrollToSelectedYear = () => {
     if (yearElemRef.current == null || (mode === "calendar" && !showYear)) return;
     const elem = (
       yearElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
       ?? yearElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
-     ) as HTMLDivElement;
+    ) as HTMLDivElement;
     if (elem == null) return;
-    yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - yearElemRef.current.clientHeight / 2;
-  }, [mode, showYear, form.editable]);
+    yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - 100;
+  };
 
   useEffect(() => {
+    scrollToSelectedYear();
+  }, [mode, showYear, form.editable]);
+
+  const scrollToSelectedMonth = () => {
     if (monthElemRef.current == null || (mode === "calendar" && !showMonth)) return;
     const elem = (
       monthElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
       ?? monthElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
     ) as HTMLDivElement;
     if (elem == null) return;
-    monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - monthElemRef.current.clientHeight / 2;
+    monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - 100;
+  };
+
+  useEffect(() => {
+    scrollToSelectedMonth();
   }, [mode, monthNodes, showMonth, form.editable]);
 
   useEffect(() => {
@@ -713,17 +721,17 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       $preventFieldLayout
       $useHidden
       $mainProps={{
-        className: Style.main
+        className: Style.main,
+        onClick: () => {
+          setShowYear(false);
+          setShowMonth(false);
+        },
       }}
     >
       <div
         className={Style.content}
         data-mode={mode}
         data-type={type}
-        onClick={() => {
-          setShowYear(false);
-          setShowMonth(false);
-        }}
       >
         {mode === "list" &&
           <>
