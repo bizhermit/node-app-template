@@ -263,6 +263,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
 
   const picker = () => {
     if (!form.editable) return;
+    if (showPicker) return;
     setShowPicker(true);
   };
 
