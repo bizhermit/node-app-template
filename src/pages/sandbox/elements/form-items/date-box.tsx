@@ -6,6 +6,7 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useState } from "react";
+import RadioButtons from "@/components/elements/form-items/radio-buttons";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -13,9 +14,11 @@ const Page: NextPage = () => {
   const [value, setValue] = useState<Nullable<string>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const [type, setType] = useState<"date" | "month" | "year">("date");
+  const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-<div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -26,6 +29,21 @@ const Page: NextPage = () => {
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
+        />
+        <RadioButtons
+          $tag="type"
+          $value={type}
+          $onChange={v => setType(v!)}
+          $source={[
+            { value: "date", label: "date" },
+            { value: "month", label: "month" },
+            { value: "year", label: "year" },
+          ]}
+        />
+        <ToggleBox
+          $tag="disallow input"
+          $value={disallowInput}
+          $onChange={v => setDisallowInput(v!)}
         />
       </Row>
       <Row className="gap-1">
@@ -72,14 +90,14 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setBind({ "date-picker-bind": "2022-12-10" });
+            setBind({ "date-box-bind": "2022-12-10" });
           }}
         >
           set bind
         </Button>
         <Button
           $onClick={() => {
-            setFormBind({ "date-picker-form-bind": "2022-12-10" });
+            setFormBind({ "date-box-form-bind": "2022-12-10" });
           }}
         >
           set form bind
@@ -87,21 +105,25 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <DateBox
+        $type={type}
         $tag="useState"
         $disabled={disabled}
         $readOnly={readOnly}
         $value={value}
         $onChange={v => setValue(v)}
         $required
+        $disallowInput={disallowInput}
         $messagePosition="bottom"
       />
       <DateBox
-        name="date-picker-bind"
+        $type={type}
+        name="date-box-bind"
         $bind={bind}
         $tag="bind"
         $disabled={disabled}
         $readOnly={readOnly}
         $required
+        $disallowInput={disallowInput}
       />
       <Form
         $bind={formBind}
@@ -109,9 +131,11 @@ const Page: NextPage = () => {
         $readOnly={readOnly}
       >
         <DateBox
-          name="date-picker-form-bind"
+          $type={type}
+          name="date-box-form-bind"
           $tag="form bind"
           $required
+          $disallowInput={disallowInput}
         />
       </Form>
     </div>

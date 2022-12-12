@@ -19,7 +19,7 @@ export type PopupPosition = {
 export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $show?: boolean;
   $mask?: boolean;
-  $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number };
+  $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number } | "parent";
   $position?: PopupPosition;
   $animationDirection?: "vertical" | "horizontal" | "none";
   $animationDuration?: number;
@@ -37,6 +37,7 @@ const baseZIndex = 10000000;
 const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
+  const aref = useRef<HTMLDivElement>(null!);
   const mref = useRef<HTMLDivElement>(null!);
   const zIndex = useRef<number>(0);
   const updateZIndex = useRef(() => { });
@@ -120,6 +121,9 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           rect = document.body.getBoundingClientRect();
           if (posX.startsWith("outer")) posX = "center";
           if (posY.startsWith("outer")) posY = "center";
+        } else if (props.$anchor === "parent") {
+          const anchor = aref.current?.parentElement as HTMLElement;
+          rect = anchor.getBoundingClientRect();
         } else if ("current" in props.$anchor) {
           const anchor = props.$anchor.current;
           if (anchor == null) {
@@ -311,33 +315,38 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
 
   if (!showedRef.current && !showed) return <></>;
   if (portal == null) return <></>;
-  return createPortal(
+  return (
     <>
-      {props.$mask &&
-        <div
-          ref={mref}
-          className={Style.mask1}
-          tabIndex={0}
-          onKeyDown={keydownMask1}
-        />
-      }
-      <div
-        {...attributes(props, Style.main)}
-        ref={ref}
-        style={toggleAnimationInitStyle}
-        data-show={props.$show}
-        data-showed={showed}
-        onClick={click}
-      />
-      {props.$mask &&
-        <div
-          className={Style.mask2}
-          tabIndex={0}
-          onKeyDown={keydownMask2}
-        />
-      }
+      {props.$anchor === "parent" && <div ref={aref} />}
+      {createPortal(
+        <>
+          {props.$mask &&
+            <div
+              ref={mref}
+              className={Style.mask1}
+              tabIndex={0}
+              onKeyDown={keydownMask1}
+            />
+          }
+          <div
+            {...attributes(props, Style.main)}
+            ref={ref}
+            style={toggleAnimationInitStyle}
+            data-show={props.$show}
+            data-showed={showed}
+            onClick={click}
+          />
+          {props.$mask &&
+            <div
+              className={Style.mask2}
+              tabIndex={0}
+              onKeyDown={keydownMask2}
+            />
+          }
+        </>
+        , portal)}
     </>
-    , portal);
+  );
 });
 
 export default Popup;

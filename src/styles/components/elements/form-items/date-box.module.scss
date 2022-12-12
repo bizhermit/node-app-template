@@ -1,0 +1,58 @@
+.y,
+.m,
+.d {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  height: var(--size);
+  min-width: 0;
+  padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
+  text-align: center;
+  flex: none;
+}
+
+.y {
+  width: 4.8rem;
+  margin-left: 1rem;
+}
+
+.m {
+  width: 2.8rem;
+}
+
+.d {
+  width: 2.8rem;
+  margin-right: 1rem;
+}
+
+.sep {
+  box-sizing: border-box;
+  flex: none;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  padding-top: var(--padding-top-text);
+}
+
+.picker,
+.clear {
+  box-sizing: border-box;
+  height: 100%;
+  width: var(--size);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+}
