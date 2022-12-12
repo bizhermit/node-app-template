@@ -2,12 +2,12 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import React, { cache, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-box.module.scss";
 import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
 import { VscCalendar, VscClose } from "react-icons/vsc";
-import StringUtils, { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
+import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 
 type DateBoxType = "date" | "month" | "year";
 
@@ -159,7 +159,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           }
           if (rangePair.position === "before") {
             if (!DatetimeUtils.isBeforeDate(date, pairDate)) return "日付の前後関係が不適切です。";
-            return ""
+            return "";
           }
           if (!DatetimeUtils.isAfterDate(date, pairDate)) return "日付の前後関係が不適切です。";
           return "";
@@ -196,12 +196,12 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     if (y == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
       setInputValues(undefined);
       return;
-    };
+    }
     const date = convertDate(`${y}-${m}-${d}`);
     if (date == null) {
       setInputValues(undefined);
       return;
-    };
+    }
     form.change(convertDateToValue(date, props.$typeof));
   };
 
@@ -355,7 +355,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     e.currentTarget.select();
   };
 
-  const clickInputs = (e: React.MouseEvent) => {
+  const clickInputs = () => {
     if (!props.$disallowInput) return;
     picker();
   };
