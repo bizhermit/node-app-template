@@ -654,7 +654,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     );
   }, [form.value]);
 
-  const scrollToSelectedYear = () => {
+  useEffect(() => {
     if (yearElemRef.current == null || (mode === "calendar" && !showYear)) return;
     const elem = (
       yearElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
@@ -662,13 +662,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - 100;
-  };
-
-  useEffect(() => {
-    scrollToSelectedYear();
   }, [mode, showYear, form.editable]);
 
-  const scrollToSelectedMonth = () => {
+  useEffect(() => {
     if (monthElemRef.current == null || (mode === "calendar" && !showMonth)) return;
     const elem = (
       monthElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
@@ -676,10 +672,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - 100;
-  };
-
-  useEffect(() => {
-    scrollToSelectedMonth();
   }, [mode, monthNodes, showMonth, form.editable]);
 
   useEffect(() => {
