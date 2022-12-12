@@ -397,6 +397,8 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           $type={type}
           $max={maxDate}
           $min={minDate}
+          $validDays={props.$validDays}
+          $validDaysMode={props.$validDaysMode}
           $onClickPositive={(value) => {
             form.change(value);
             setShowPicker(false);
