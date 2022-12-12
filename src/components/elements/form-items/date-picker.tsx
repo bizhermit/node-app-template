@@ -664,7 +664,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - 100;
-  }, [mode, showYear, form.editable]);
+  }, [mode, yearNodes, showYear, form.editable]);
 
   useEffect(() => {
     if (monthElemRef.current == null || (mode === "calendar" && !showMonth)) return;

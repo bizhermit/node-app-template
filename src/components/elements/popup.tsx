@@ -2,7 +2,7 @@ import usePortalElement from "@/hooks/portal-element";
 import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
-import { attributes, convertSizeNumToStr } from "@/utilities/attributes";
+import { attributes, attributesWithoutChildren, convertSizeNumToStr } from "@/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 
 const defaultAnimationDuration = 150;
@@ -25,6 +25,7 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $animationDuration?: number;
   $animationInterval?: number;
   $preventClickEvent?: boolean;
+  $unmountWhenHid?: boolean;
   $closeWhenClick?: boolean;
   $zIndex?: number;
   $onToggle?: (show: boolean) => void;
@@ -64,6 +65,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
 
   const showedRef = useRef(false);
   const [showed, setShowed] = useState(showedRef.current);
+  const [mount, setMount] = useState(showed);
 
   const click = (e: React.MouseEvent<HTMLDivElement>) => {
     if (props.$preventClickEvent) {
@@ -81,7 +83,9 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   };
 
   useEffect(() => {
-    setShowed(props.$show === true);
+    const show = props.$show === true;
+    if (show) setMount(true);
+    setShowed(show);
   }, [props.$show]);
 
   const toggleAnimationInitStyle = useToggleAnimation({
@@ -296,6 +300,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         mref.current.style.opacity = "1";
       } else {
         removeZIndex.current();
+        if (props.$unmountWhenHid) setMount(false);
         if (!mref.current) return;
         mref.current.style.opacity = "0";
         mref.current.style.display = "none";
@@ -326,13 +331,15 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
             />
           }
           <div
-            {...attributes(props, Style.main)}
+            {...attributesWithoutChildren(props, Style.main)}
             ref={ref}
             style={toggleAnimationInitStyle}
             data-show={props.$show}
             data-showed={showed}
             onClick={click}
-          />
+          >
+            {mount && props.children}
+          </div>
           {props.$mask &&
             <div
               className={Style.mask2}

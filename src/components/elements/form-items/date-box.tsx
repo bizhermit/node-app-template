@@ -339,9 +339,16 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     e.currentTarget.select();
   };
 
+  const clickInputs = (e: React.MouseEvent) => {
+    if (!props.$disallowInput) return;
+    picker();
+  };
+
   useEffect(() => {
     setInputValues(form.value);
   }, [form.value, type]);
+
+  const hasData = Boolean(form.value);
 
   return (
     <FormItemWrap
@@ -349,57 +356,73 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       $$form={form}
       ref={ref}
       $useHidden
-      data-has={Boolean(form.value)}
+      data-has={hasData}
       $mainProps={{
         onBlur: blur,
       }}
     >
-      <input
-        ref={yref}
-        className={Style.y}
-        type="text"
-        disabled={props.$disallowInput || form.disabled}
-        readOnly={props.$disallowInput || form.readOnly}
-        maxLength={4}
-        defaultValue={cacheY.current || ""}
-        onChange={changeY}
-        onFocus={focusInput}
-        onKeyDown={keydownY}
-      />
-      {type !== "year" &&
-        <>
-          <span className={Style.sep}>/</span>
-          <input
-            ref={mref}
-            className={Style.m}
-            type="text"
-            disabled={props.$disallowInput || form.disabled}
-            readOnly={props.$disallowInput || form.readOnly}
-            maxLength={2}
-            defaultValue={cacheM.current || ""}
-            onChange={changeM}
-            onFocus={focusInput}
-            onKeyDown={keydownM}
-          />
-        </>
-      }
-      {type === "date" &&
-        <>
-          <span className={Style.sep}>/</span>
-          <input
-            ref={dref}
-            className={Style.d}
-            type="text"
-            disabled={props.$disallowInput || form.disabled}
-            readOnly={props.$disallowInput || form.readOnly}
-            maxLength={2}
-            defaultValue={cacheD.current || ""}
-            onChange={changeD}
-            onFocus={focusInput}
-            onKeyDown={keydownD}
-          />
-        </>
-      }
+      <div
+        className={Style.inputs}
+        onClick={clickInputs}
+        data-input={!props.$disallowInput}
+      >
+        <input
+          ref={yref}
+          className={Style.y}
+          type="text"
+          disabled={props.$disallowInput || form.disabled}
+          readOnly={props.$disallowInput || form.readOnly}
+          maxLength={4}
+          defaultValue={cacheY.current || ""}
+          onChange={changeY}
+          onFocus={focusInput}
+          onKeyDown={keydownY}
+        />
+        {type !== "year" &&
+          <>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+            >
+              /
+            </span>
+            <input
+              ref={mref}
+              className={Style.m}
+              type="text"
+              disabled={props.$disallowInput || form.disabled}
+              readOnly={props.$disallowInput || form.readOnly}
+              maxLength={2}
+              defaultValue={cacheM.current || ""}
+              onChange={changeM}
+              onFocus={focusInput}
+              onKeyDown={keydownM}
+            />
+          </>
+        }
+        {type === "date" &&
+          <>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+            >
+              /
+            </span>
+            <input
+              ref={dref}
+              className={Style.d}
+              type="text"
+              disabled={props.$disallowInput || form.disabled}
+              readOnly={props.$disallowInput || form.readOnly}
+              maxLength={2}
+              defaultValue={cacheD.current || ""}
+              onChange={changeD}
+              onFocus={focusInput}
+              onKeyDown={keydownD}
+            />
+          </>
+        }
+      </div>
       {form.editable &&
         <>
           {!props.$disallowInput &&
@@ -430,6 +453,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         $animationDuration={50}
         $closeWhenClick
         $preventClickEvent
+        $unmountWhenHid
       >
         <DatePicker
           $value={form.value || today}

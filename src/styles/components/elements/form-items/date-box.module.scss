@@ -1,5 +1,29 @@
 @use "$/mixins";
 
+.inputs {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+
+  &[data-input="false"] {
+    cursor: pointer;
+
+    >.y,
+    .m,
+    .d {
+      cursor: inherit;
+    }
+  }
+
+  &:focus-within {
+    >.sep {
+      visibility: visible;
+    }
+  }
+}
+
 .y,
 .m,
 .d {
@@ -42,6 +66,10 @@
   align-items: center;
   z-index: 1;
   padding-top: var(--padding-top-text);
+
+  &[data-has="false"] {
+    visibility: hidden;
+  }
 }
 
 .picker,
