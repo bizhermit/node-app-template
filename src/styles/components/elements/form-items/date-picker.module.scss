@@ -3,8 +3,8 @@ $width7: 14.285%;
 
 .main {
   flex-direction: column !important;
-  width: 30rem;
-  height: 24rem;
+  width: 32rem;
+  height: 26rem;
   border-radius: var(--radius);
   overflow: visible;
   background: var(--c-input);
@@ -71,11 +71,12 @@ $width7: 14.285%;
     >.date {
       height: 100%;
       flex-flow: column nowrap;
+      justify-content: center;
       overflow-y: auto;
       overflow-x: visible;
       flex: 1;
       z-index: 0;
-      padding: calc(var(--size) * 2.75) 0;
+      padding: calc(var(--size) * 2.85) 0;
 
       >.cell {
         height: calc(var(--size) * 0.75);

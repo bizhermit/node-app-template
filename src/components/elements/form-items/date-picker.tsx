@@ -602,7 +602,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       ?? yearElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
     ) as HTMLDivElement;
     if (elem == null) return;
-    yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - 100;
+    yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - (yearElemRef.current.hasAttribute("data-show") ? 100 : yearElemRef.current.clientHeight / 2);
   }, [mode, yearNodes, showYear, form.editable]);
 
   useEffect(() => {
@@ -612,7 +612,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       ?? monthElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
     ) as HTMLDivElement;
     if (elem == null) return;
-    monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - 100;
+    monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - (monthElemRef.current.hasAttribute("data-show") ? 100 : monthElemRef.current.clientHeight / 2);
   }, [mode, monthNodes, showMonth, form.editable]);
 
   useEffect(() => {
