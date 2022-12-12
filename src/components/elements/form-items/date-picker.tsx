@@ -28,6 +28,10 @@ export type DatePickerCommonProps = {
     position: "before" | "after";
     disallowSame?: boolean;
   };
+  $validDays?: "weekday" | "holiday" | string
+  | Array<string | number | Date | { date: string | number | Date; valid?: boolean; }>
+  | ((date: Date) => boolean);
+  $validDaysMode?: "allow" | "disallow";
 };
 
 type DatePickerStringProps =
@@ -134,6 +138,45 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const maxDate = useMemo(() => {
     return convertDate(props.$max) ?? new Date(2100, 0, 0);
   }, [props.$max]);
+  const judgeValid = useMemo<(date: Date) => boolean>(() => {
+    if (props.$validDays == null) return () => true;
+    const validModeIsAllow = props.$validDaysMode !== "disallow";
+    if (typeof props.$validDays === "function") return props.$validDays;
+    if (Array.isArray(props.$validDays)) {
+      const map: Struct<boolean> = {};
+      props.$validDays.forEach(day => {
+        if (typeof day === "object") {
+          const { date, valid } = (day as Struct);
+          const d = convertDate(date);
+          if (d == null) return;
+          map[dateFormat(d)!] = valid ?? validModeIsAllow;
+          return;
+        }
+        const d = convertDate(day);
+        if (d == null) return;
+        map[dateFormat(d)!] = validModeIsAllow;
+      });
+      return (date: Date) => {
+        const valid = map[dateFormat(date)!];
+        if (validModeIsAllow) return valid === true;
+        return valid !== false;
+      };
+    }
+    if ((validModeIsAllow && props.$validDays === "weekday") || (!validModeIsAllow && props.$validDays === "holiday")) {
+      return (date: Date) => !(date.getDay() === 0 || date.getDay() === 6);
+    }
+    if ((validModeIsAllow && props.$validDays === "holiday") || props.$validDays === "weekday") {
+      return (date: Date) => date.getDay() === 0 || date.getDay() === 6;
+    }
+    if (props.$validDays.length !== 7) return () => true;
+    const validWeeks = ArrayUtils.generateArray(7, index => {
+      if ((props.$validDays as string)[index] !== "1") {
+        return validModeIsAllow ? undefined : index;
+      }
+      return validModeIsAllow ? index : undefined;
+    }).filter(v => v != null);
+    return (date) => validWeeks.indexOf(date.getDay()) >= 0;
+  }, [props.$validDays, props.$validDaysMode]);
   const [showYear, setShowYear] = useState(false);
   const [showMonth, setShowMonth] = useState(false);
 
@@ -233,7 +276,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           }
           if (rangePair.position === "before") {
             if (!DatetimeUtils.isBeforeDate(date, pairDate)) return "日付の前後関係が不適切です。";
-            return ""
+            return "";
           }
           if (!DatetimeUtils.isAfterDate(date, pairDate)) return "日付の前後関係が不適切です。";
           return "";
@@ -258,6 +301,20 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             if (pairDate == null) return "";
             return compare(v, pairDate);
           });
+        }
+      }
+      if (props.$validDays) {
+        const judge = (value: string | number | Date | null) => {
+          const date = convertDate(value);
+          if (date == null) return "";
+          return judgeValid(date) ? "" : "選択可能な日付ではありません。";
+        };
+        if (multiable) {
+          validations.push(v => {
+            return multiValidationIterator(v, judge);
+          });
+        } else {
+          validations.push(judge);
         }
       }
       return validations;
@@ -447,6 +504,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     let afterMin = false;
     let beforeMax = true;
     const isInRange = (date: Date) => {
+      if (!judgeValid(date)) return false;
       if (!afterMin && !DatetimeUtils.isBeforeDate(minDate, date)) {
         afterMin = true;
       }
@@ -535,7 +593,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       }
     }
     return nodes;
-  }, [month, year, days, form.editable, minDate, maxDate, mode, type]);
+  }, [month, year, days, form.editable, minDate, maxDate, mode, type, judgeValid]);
 
   const weekNodes = useMemo(() => {
     if (type !== "date") return [];
@@ -609,7 +667,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       const maxLastDate = DatetimeUtils.getLastDateAtMonth(maxDate);
       return !DatetimeUtils.isAfterDate(today, minFirstDate) && !DatetimeUtils.isBeforeDate(today, maxLastDate);
     }
-    return !DatetimeUtils.isAfterDate(today, minDate) && !DatetimeUtils.isBeforeDate(today, maxDate);
+    return !DatetimeUtils.isAfterDate(today, minDate) && !DatetimeUtils.isBeforeDate(today, maxDate) && judgeValid(today);
   }, [minDate, maxDate, type]);
 
   const selectToday = () => {

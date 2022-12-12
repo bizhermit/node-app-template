@@ -126,6 +126,20 @@ const Page: NextPage = () => {
           // }}
           $min="2022-12-10"
           $max="2022-12-25"
+          // $validDays="weekday"
+          $validDaysMode="disallow"
+          // $validDays={[
+          //   { date: "2022-12-15", valid: true },
+          //   { date: "2022-12-16", valid: true },
+          //   { date: "2022-12-18", valid: true },
+          //   { date: "2022-12-20", valid: true },
+          // ]}
+          $validDays={[
+            "2022-12-15",
+            "2022-12-16",
+            "2022-12-18",
+            "2022-12-20",
+          ]}
         />
         <DatePicker
           name="date-picker-bind"
