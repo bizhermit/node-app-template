@@ -12,13 +12,13 @@
   "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
     "node_modules",
-    "/scripts",
-    "/dist",
-    "/nexpress",
-    "/nextron",
-    "/.*",
-    "/src/pages/**/*",
-    "/src/hooks/api.*",
-    "/src/utilities/sandbox.*"
+    "scripts",
+    "dist",
+    "nexpress",
+    "nextron",
+    ".*",
+    "src/pages",
+    "src/hooks/api.*",
+    "src/utilities/sandbox.*"
   ],
 }
