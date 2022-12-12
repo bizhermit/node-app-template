@@ -422,6 +422,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           data-selectable={inRange}
           data-selected={selected}
           data-today={isToday(date)}
+          data-week={cursor.getDay()}
           onClick={(form.editable && inRange) ?
             () => {
               select(dateStr, selected);
@@ -482,6 +483,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         <div
           key={week}
           className={Style.cell}
+          data-week={week}
         >
           {weekTexts[week]}
         </div>

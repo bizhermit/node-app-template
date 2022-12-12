@@ -89,6 +89,32 @@ $width7: 14.285%;
         &[data-state="after"] {
           display: none;
         }
+
+        &[data-week="0"],
+        &[data-week="6"] {
+          &::after {
+            box-sizing: border-box;
+            position: absolute;
+            content: "";
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 0.3rem;
+
+          }
+        }
+
+        &[data-week="0"] {
+          &::after {
+            background: var(--c-sunday);
+          }
+        }
+
+        &[data-week="6"] {
+          &::after {
+            background: var(--c-saturday);
+          }
+        }
       }
     }
   }
@@ -232,7 +258,17 @@ $width7: 14.285%;
 
   >.cell {
     width: #{$width7};
-    padding: 0;
+    border-radius: 0;
+
+    &[data-week="0"] {
+      background: var(--c-sunday);
+      color: var(--c-sunday_);
+    }
+
+    &[data-week="6"] {
+      background: var(--c-saturday);
+      color: var(--c-saturday_);
+    }
   }
 }
 

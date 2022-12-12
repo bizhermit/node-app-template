@@ -10,6 +10,8 @@ export const colors: Array<Color> = [
   "error",
   "selected",
   "nav",
+  "sunday",
+  "saturday",
   "main",
   "main-light",
   "main-dark",
