@@ -56,6 +56,10 @@ $colorMap: (
     "dark": rgb(70, 48, 48),
     "dark_r": map-get($baseColor, dark_r),
   ),
+  "selected": (
+    "light": rgb(200, 220, 255),
+    "dark": rgb(80, 80, 110),
+  ),
   "scroll": (
     "light": rgba(100, 100, 105, 0.3),
     "light_r": rgba(210, 210, 215, 0.5),
@@ -65,6 +69,14 @@ $colorMap: (
   "nav": (
     "light": rgb(52, 58, 64),
     "dark": rgb(27, 35, 40),
+  ),
+  "sunday": (
+    "light": rgb(255, 150, 150),
+    "dark": rgb(180, 110, 110),
+  ),
+  "saturday": (
+    "light": rgb(150, 170, 255),
+    "dark": rgb(100, 100, 180),
   ),
   "main": (
     "light": $lightMainColor,

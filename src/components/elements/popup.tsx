@@ -2,7 +2,7 @@ import usePortalElement from "@/hooks/portal-element";
 import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
-import { attributes, convertSizeNumToStr } from "@/utilities/attributes";
+import { attributesWithoutChildren, convertSizeNumToStr } from "@/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 
 const defaultAnimationDuration = 150;
@@ -19,12 +19,13 @@ export type PopupPosition = {
 export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $show?: boolean;
   $mask?: boolean;
-  $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number };
+  $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number } | "parent";
   $position?: PopupPosition;
   $animationDirection?: "vertical" | "horizontal" | "none";
   $animationDuration?: number;
   $animationInterval?: number;
   $preventClickEvent?: boolean;
+  $preventUnmount?: boolean;
   $closeWhenClick?: boolean;
   $zIndex?: number;
   $onToggle?: (show: boolean) => void;
@@ -37,6 +38,7 @@ const baseZIndex = 10000000;
 const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
+  const aref = useRef<HTMLDivElement>(null!);
   const mref = useRef<HTMLDivElement>(null!);
   const zIndex = useRef<number>(0);
   const updateZIndex = useRef(() => { });
@@ -63,6 +65,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
 
   const showedRef = useRef(false);
   const [showed, setShowed] = useState(showedRef.current);
+  const [mount, setMount] = useState(showed);
 
   const click = (e: React.MouseEvent<HTMLDivElement>) => {
     if (props.$preventClickEvent) {
@@ -80,12 +83,9 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   };
 
   useEffect(() => {
-    if (props.$show) {
-      updateZIndex.current();
-    } else {
-      removeZIndex.current();
-    }
-    setShowed(props.$show === true);
+    const show = props.$show === true;
+    if (show) setMount(true);
+    setShowed(show);
   }, [props.$show]);
 
   const toggleAnimationInitStyle = useToggleAnimation({
@@ -100,6 +100,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     onToggle: (open) => {
       if (open) {
         showedRef.current = true;
+        updateZIndex.current();
         if (mref.current) {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "0";
@@ -120,6 +121,9 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           rect = document.body.getBoundingClientRect();
           if (posX.startsWith("outer")) posX = "center";
           if (posY.startsWith("outer")) posY = "center";
+        } else if (props.$anchor === "parent") {
+          const anchor = aref.current?.parentElement as HTMLElement;
+          rect = anchor.getBoundingClientRect();
         } else if ("current" in props.$anchor) {
           const anchor = props.$anchor.current;
           if (anchor == null) {
@@ -295,6 +299,8 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         if (!mref.current) return;
         mref.current.style.opacity = "1";
       } else {
+        removeZIndex.current();
+        if (props.$preventUnmount !== true) setMount(false);
         if (!mref.current) return;
         mref.current.style.opacity = "0";
         mref.current.style.display = "none";
@@ -311,33 +317,40 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
 
   if (!showedRef.current && !showed) return <></>;
   if (portal == null) return <></>;
-  return createPortal(
+  return (
     <>
-      {props.$mask &&
-        <div
-          ref={mref}
-          className={Style.mask1}
-          tabIndex={0}
-          onKeyDown={keydownMask1}
-        />
-      }
-      <div
-        {...attributes(props, Style.main)}
-        ref={ref}
-        style={toggleAnimationInitStyle}
-        data-show={props.$show}
-        data-showed={showed}
-        onClick={click}
-      />
-      {props.$mask &&
-        <div
-          className={Style.mask2}
-          tabIndex={0}
-          onKeyDown={keydownMask2}
-        />
-      }
+      {props.$anchor === "parent" && <div ref={aref} />}
+      {createPortal(
+        <>
+          {props.$mask &&
+            <div
+              ref={mref}
+              className={Style.mask1}
+              tabIndex={0}
+              onKeyDown={keydownMask1}
+            />
+          }
+          <div
+            {...attributesWithoutChildren(props, Style.main)}
+            ref={ref}
+            style={toggleAnimationInitStyle}
+            data-show={props.$show}
+            data-showed={showed}
+            onClick={click}
+          >
+            {mount && props.children}
+          </div>
+          {props.$mask &&
+            <div
+              className={Style.mask2}
+              tabIndex={0}
+              onKeyDown={keydownMask2}
+            />
+          }
+        </>
+        , portal)}
     </>
-    , portal);
+  );
 });
 
 export default Popup;
