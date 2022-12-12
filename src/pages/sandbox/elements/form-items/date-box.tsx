@@ -114,6 +114,8 @@ const Page: NextPage = () => {
         $required
         $disallowInput={disallowInput}
         $messagePosition="bottom"
+        $min="2022-12-05"
+        $max="2022-12-26"
       />
       <DateBox
         $type={type}
@@ -130,13 +132,32 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $readOnly={readOnly}
       >
-        <DateBox
-          $type={type}
-          name="date-box-form-bind"
-          $tag="form bind"
-          $required
-          $disallowInput={disallowInput}
-        />
+        <Row $vAlign="bottom" className="gap-1">
+          <DateBox
+            $type={type}
+            name="date-box-form-bind"
+            $tag="form bind"
+            $required
+            $disallowInput={disallowInput}
+            $rangePair={{
+              name: "date-box-form-bind-pair",
+              position: "after",
+              disallowSame: false,
+            }}
+          />
+          <span className="h-size pt-t flex-box flex-center">～</span>
+          <DateBox
+            $type={type}
+            $tag="pair"
+            name="date-box-form-bind-pair"
+            $disallowInput={disallowInput}
+            $rangePair={{
+              name: "date-box-form-bind",
+              position: "before",
+              disallowSame: false,
+            }}
+          />
+        </Row>
       </Form>
     </div>
   );

@@ -158,9 +158,10 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
             return "";
           }
           if (rangePair.position === "before") {
-            if (!DatetimeUtils.isBefore(pairDate, date)) return "日付の前後関係が不適切です。";
+            if (!DatetimeUtils.isBeforeDate(date, pairDate)) return "日付の前後関係が不適切です。";
+            return ""
           }
-          if (!DatetimeUtils.isAfter(pairDate, date)) return "日付の前後関係が不適切です。";
+          if (!DatetimeUtils.isAfterDate(date, pairDate)) return "日付の前後関係が不適切です。";
           return "";
         };
         const getPairDate = (data: Struct) => {
@@ -178,6 +179,14 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       }
       return validations;
     },
+    validationsDeps: [
+      maxDate,
+      minDate,
+      type,
+      props.$rangePair?.name,
+      props.$rangePair?.position,
+      props.$rangePair?.disallowSame,
+    ],
   });
 
   const commitCache = () => {
@@ -228,10 +237,29 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     cacheD.current = Number(v);
   };
 
-  const optimizeUpDown = () => {
-    if (cacheY.current == null) cacheY.current = today.getFullYear();
-    if (type !== "year" && cacheM.current == null) cacheM.current = today.getMonth() + 1;
-    if (type === "date" && cacheD.current == null) cacheD.current = today.getDate();
+  const updown = (y = 0, m = 0, d = 0) => {
+    let year = cacheY.current == null ? today.getFullYear() : cacheY.current + y;
+    let month = type === "year" ? 0 : (cacheM.current == null ? today.getMonth() + 1 : cacheM.current + m);
+    let day = type === "date" ? (cacheD.current == null ? today.getDate() : cacheD.current + d) : 1;
+    const date = new Date(year, month - 1, day);
+    if (minDate) {
+      if (DatetimeUtils.isBeforeDate(minDate, date)) {
+        year = minDate.getFullYear();
+        month = minDate.getMonth() + 1;
+        day = minDate.getDate();
+      }
+    }
+    if (maxDate) {
+      if (DatetimeUtils.isAfterDate(maxDate, date)) {
+        year = maxDate.getFullYear();
+        month = maxDate.getMonth() + 1;
+        day = maxDate.getDate();
+      }
+    }
+    if (!(cacheD.current !== day || cacheM.current !== month || cacheY.current !== year)) return;
+    cacheY.current = year;
+    cacheM.current = month;
+    cacheD.current = day;
     commitCache();
   };
 
@@ -245,15 +273,11 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         commitCache();
         break;
       case "ArrowUp":
-        if (cacheY.current == null) cacheY.current = today.getFullYear();
-        else cacheY.current++;
-        optimizeUpDown();
+        updown(1, 0, 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        if (cacheY.current == null) cacheY.current = today.getFullYear();
-        else cacheY.current--;
-        optimizeUpDown();
+        updown(-1, 0, 0);
         e.preventDefault();
         break;
       default:
@@ -274,15 +298,11 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         if (e.currentTarget.value.length === 0) yref.current?.focus();
         break;
       case "ArrowUp":
-        if (cacheM.current == null) cacheM.current = today.getMonth() + 1;
-        else cacheM.current++;
-        optimizeUpDown();
+        updown(0, 1, 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        if (cacheM.current == null) cacheM.current = today.getMonth() + 1;
-        else cacheM.current--;
-        optimizeUpDown();
+        updown(0, -1, 0);
         e.preventDefault();
         break;
       default:
@@ -303,15 +323,11 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         if (e.currentTarget.value.length === 0) mref.current?.focus();
         break;
       case "ArrowUp":
-        if (cacheD.current == null) cacheD.current = today.getDate();
-        else cacheD.current++;
-        optimizeUpDown();
+        updown(0, 0, 1);
         e.preventDefault();
         break;
       case "ArrowDown":
-        if (cacheD.current == null) cacheD.current = today.getDate();
-        else cacheD.current--;
-        optimizeUpDown();
+        updown(0, 0, -1);
         e.preventDefault();
         break;
       default:

@@ -76,7 +76,7 @@
 .clear {
   box-sizing: border-box;
   height: var(--size);
-  width: var(--size);
+  width: calc(var(--size) * 0.9);
   border-radius: var(--radius);
   display: flex;
   flex-flow: row nowrap;

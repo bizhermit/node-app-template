@@ -232,9 +232,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             return "";
           }
           if (rangePair.position === "before") {
-            if (!DatetimeUtils.isBefore(pairDate, date)) return "日付の前後関係が不適切です。";
+            if (!DatetimeUtils.isBeforeDate(date, pairDate)) return "日付の前後関係が不適切です。";
+            return ""
           }
-          if (!DatetimeUtils.isAfter(pairDate, date)) return "日付の前後関係が不適切です。";
+          if (!DatetimeUtils.isAfterDate(date, pairDate)) return "日付の前後関係が不適切です。";
           return "";
         };
         const getPairDate = (data: Struct) => {
