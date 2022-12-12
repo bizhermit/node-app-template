@@ -11,15 +11,15 @@
     cursor: pointer;
 
     >.y,
-    .m,
-    .d {
+    >.m,
+    >.d {
       cursor: inherit;
     }
   }
 
   &:focus-within {
     >.sep {
-      visibility: visible;
+      color: inherit
     }
   }
 }
@@ -44,7 +44,7 @@
 
 .y {
   width: 5rem;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 }
 
 .m {
@@ -53,7 +53,7 @@
 
 .d {
   width: 2.8rem;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .sep {
@@ -66,9 +66,10 @@
   align-items: center;
   z-index: 1;
   padding-top: var(--padding-top-text);
+  cursor: inherit;
 
   &[data-has="false"] {
-    visibility: hidden;
+    color: transparent;
   }
 }
 
