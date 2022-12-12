@@ -1,3 +1,5 @@
+@use "$/mixins";
+
 .y,
 .m,
 .d {
@@ -17,7 +19,7 @@
 }
 
 .y {
-  width: 4.8rem;
+  width: 5rem;
   margin-left: 1rem;
 }
 
@@ -45,8 +47,9 @@
 .picker,
 .clear {
   box-sizing: border-box;
-  height: 100%;
+  height: var(--size);
   width: var(--size);
+  border-radius: var(--radius);
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
@@ -55,4 +58,15 @@
   z-index: 1;
   cursor: pointer;
   user-select: none;
+
+  &:hover {
+    z-index: 2;
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
 }
+
+@include mixins.hoverAnimation;

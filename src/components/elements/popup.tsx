@@ -81,11 +81,6 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   };
 
   useEffect(() => {
-    if (props.$show) {
-      updateZIndex.current();
-    } else {
-      removeZIndex.current();
-    }
     setShowed(props.$show === true);
   }, [props.$show]);
 
@@ -101,6 +96,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     onToggle: (open) => {
       if (open) {
         showedRef.current = true;
+        updateZIndex.current();
         if (mref.current) {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "0";
@@ -299,6 +295,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         if (!mref.current) return;
         mref.current.style.opacity = "1";
       } else {
+        removeZIndex.current();
         if (!mref.current) return;
         mref.current.style.opacity = "0";
         mref.current.style.display = "none";

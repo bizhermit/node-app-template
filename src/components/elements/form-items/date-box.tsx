@@ -2,7 +2,7 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { cache, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-box.module.scss";
 import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
@@ -74,26 +74,23 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   const yref = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
   const dref = useRef<HTMLInputElement>(null!);
-  const cacheY = useRef("");
-  const cacheM = useRef("");
-  const cacheD = useRef("");
+  const cacheY = useRef<number>();
+  const cacheM = useRef<number>();
+  const cacheD = useRef<number>();
   const [showPicker, setShowPicker] = useState(false);
 
   const setInputValues = (value?: string | number | Date) => {
     const date = convertDate(value);
     if (date == null) {
-      cacheY.current = cacheM.current = cacheD.current = "";
-      if (yref.current) yref.current.value = "";
-      if (mref.current) mref.current.value = "";
-      if (dref.current) dref.current.value = "";
-      return;
+      cacheY.current = cacheM.current = cacheD.current = undefined;
+    } else {
+      cacheY.current = date.getFullYear();
+      cacheM.current = date.getMonth() + 1;
+      cacheD.current = date.getDate();
     }
-    cacheY.current = String(date.getFullYear());
-    if (yref.current) yref.current.value = cacheY.current;
-    cacheM.current = String(date.getMonth() + 1);
-    if (mref.current) mref.current.value = cacheM.current;
-    cacheD.current = String(date.getDate());
-    if (dref.current) dref.current.value = cacheD.current;
+    if (yref.current) yref.current.value = String(cacheY.current || "");
+    if (mref.current) mref.current.value = String(cacheM.current || "");
+    if (dref.current) dref.current.value = String(cacheD.current || "");
   };
 
   const form = useForm<string | number | Date | any>(props, {
@@ -185,9 +182,9 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
 
   const commitCache = () => {
     const y = cacheY.current;
-    const m = type !== "year" ? cacheM.current : "0";
-    const d = type === "date" ? cacheD.current : "1";
-    if (StringUtils.isAnyEmpty(y, m, d)) {
+    const m = type !== "year" ? cacheM.current : 1;
+    const d = type === "date" ? cacheD.current : 1;
+    if (y == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
       setInputValues(undefined);
       return;
     };
@@ -200,32 +197,126 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const changeY = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!form.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
-      e.currentTarget.value = cacheY.current;
+      e.currentTarget.value = String(cacheY.current || "");
       return;
     }
-    cacheY.current = v;
+    cacheY.current = Number(v);
     if (v.length === 4) mref.current?.focus();
   };
 
   const changeM = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!form.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
-      e.currentTarget.value = cacheM.current;
+      e.currentTarget.value = String(cacheM.current || "");
       return;
     }
-    cacheM.current = v;
+    cacheM.current = Number(v);
     if (v.length === 2 || !(v === "1" || v === "2")) dref.current?.focus();
   };
 
   const changeD = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!form.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
-      e.currentTarget.value = cacheD.current;
+      e.currentTarget.value = String(cacheD.current || "");
       return;
     }
-    cacheD.current = v;
+    cacheD.current = Number(v);
+  };
+
+  const optimizeUpDown = () => {
+    if (cacheY.current == null) cacheY.current = today.getFullYear();
+    if (type !== "year" && cacheM.current == null) cacheM.current = today.getMonth() + 1;
+    if (type === "date" && cacheD.current == null) cacheD.current = today.getDate();
+    commitCache();
+  };
+
+  const keydownY = (e: React.KeyboardEvent) => {
+    if (!form.editable) return;
+    switch (e.key) {
+      case "F2":
+        picker();
+        break;
+      case "Enter":
+        commitCache();
+        break;
+      case "ArrowUp":
+        if (cacheY.current == null) cacheY.current = today.getFullYear();
+        else cacheY.current++;
+        optimizeUpDown();
+        e.preventDefault();
+        break;
+      case "ArrowDown":
+        if (cacheY.current == null) cacheY.current = today.getFullYear();
+        else cacheY.current--;
+        optimizeUpDown();
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const keydownM = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!form.editable) return;
+    switch (e.key) {
+      case "F2":
+        picker();
+        break;
+      case "Enter":
+        commitCache();
+        break;
+      case "Backspace":
+        if (e.currentTarget.value.length === 0) yref.current?.focus();
+        break;
+      case "ArrowUp":
+        if (cacheM.current == null) cacheM.current = today.getMonth() + 1;
+        else cacheM.current++;
+        optimizeUpDown();
+        e.preventDefault();
+        break;
+      case "ArrowDown":
+        if (cacheM.current == null) cacheM.current = today.getMonth() + 1;
+        else cacheM.current--;
+        optimizeUpDown();
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const keydownD = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!form.editable) return;
+    switch (e.key) {
+      case "F2":
+        picker();
+        break;
+      case "Enter":
+        commitCache();
+        break;
+      case "Backspace":
+        if (e.currentTarget.value.length === 0) mref.current?.focus();
+        break;
+      case "ArrowUp":
+        if (cacheD.current == null) cacheD.current = today.getDate();
+        else cacheD.current++;
+        optimizeUpDown();
+        e.preventDefault();
+        break;
+      case "ArrowDown":
+        if (cacheD.current == null) cacheD.current = today.getDate();
+        else cacheD.current--;
+        optimizeUpDown();
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
   };
 
   const blur = (e: React.FocusEvent) => {
@@ -234,14 +325,17 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const picker = () => {
+    if (!form.editable) return;
     setShowPicker(true);
   };
 
   const clear = () => {
+    if (!form.editable) return;
     form.change(undefined);
   };
 
   const focusInput = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (!form.editable) return;
     e.currentTarget.select();
   };
 
@@ -267,8 +361,10 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         disabled={props.$disallowInput || form.disabled}
         readOnly={props.$disallowInput || form.readOnly}
         maxLength={4}
+        defaultValue={cacheY.current || ""}
         onChange={changeY}
         onFocus={focusInput}
+        onKeyDown={keydownY}
       />
       {type !== "year" &&
         <>
@@ -280,8 +376,10 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
             disabled={props.$disallowInput || form.disabled}
             readOnly={props.$disallowInput || form.readOnly}
             maxLength={2}
+            defaultValue={cacheM.current || ""}
             onChange={changeM}
             onFocus={focusInput}
+            onKeyDown={keydownM}
           />
         </>
       }
@@ -295,8 +393,10 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
             disabled={props.$disallowInput || form.disabled}
             readOnly={props.$disallowInput || form.readOnly}
             maxLength={2}
+            defaultValue={cacheD.current || ""}
             onChange={changeD}
             onFocus={focusInput}
+            onKeyDown={keydownD}
           />
         </>
       }
@@ -321,14 +421,21 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       <Popup
         className="es-4"
         $show={showPicker}
+        $onToggle={setShowPicker}
         $anchor="parent"
         $position={{
           x: "inner",
           y: "outer",
         }}
+        $animationDuration={50}
+        $closeWhenClick
+        $preventClickEvent
       >
         <DatePicker
           $value={form.value || today}
+          $type={type}
+          $max={maxDate}
+          $min={minDate}
           $onClickPositive={(value) => {
             form.change(value);
             setShowPicker(false);

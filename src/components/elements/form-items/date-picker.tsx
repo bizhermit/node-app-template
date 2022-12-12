@@ -652,6 +652,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         .filter(v => v != null)
       ?? []
     );
+    if (showYear) setShowYear(false);
+    if (showMonth) setShowMonth(false);
   }, [form.value]);
 
   useEffect(() => {
