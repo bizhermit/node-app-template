@@ -97,10 +97,6 @@ interface MessageBoxContentComponent<T = void> {
   }): ReactElement;
 }
 
-type Options = {
-  color?: Color;
-};
-
 type MessageBoxProps = {
   header?: ReactNode;
   body: ReactNode;

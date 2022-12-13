@@ -58,8 +58,12 @@ const Page: NextPage = () => {
           msg.alert({
             header: "動作確認",
             body: "表示中に遷移",
+          }).then(() => {
+            console.log("close");
           });
-          router.push("/sandbox/color");
+          setTimeout(() => {
+            router.push("/sandbox/color");
+          }, 1000);
           unlock();
         }}
       >
