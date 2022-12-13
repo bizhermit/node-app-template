@@ -5,6 +5,7 @@
     "rootDir": ".",
     "outDir": "./dist/libs/react-components",
     "declaration": true,
+    "incremental": false,
     "module": "commonjs",
     "target": "esnext",
     "jsx": "react-jsx"
