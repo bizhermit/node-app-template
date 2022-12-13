@@ -221,15 +221,16 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
 
   const unmount = useCallback(() => {
     showed.current = false;
-    if (root.current) {
-      root.current.unmount();
-      root.current = null!;
-    }
-    if (elemRef.current) {
-      if (document.body.contains(elemRef.current)) {
-        document.body.removeChild(elemRef.current);
+    setTimeout(() => {
+      if (root.current) {
+        root.current?.unmount();
       }
-    }
+      if (elemRef.current) {
+        if (document.body.contains(elemRef.current)) {
+          document.body.removeChild(elemRef.current);
+        }
+      }
+    });
   }, []);
 
   const show = useCallback(async <T = void>(Component: MessageBoxContentComponent<T>) => {
