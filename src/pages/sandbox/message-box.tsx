@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 
 const Page: NextPage = () => {
-  const msg = useMessageBox();
+  const msg = useMessageBox({ preventUnmountClose: true });
   const router = useRouter();
 
   return (

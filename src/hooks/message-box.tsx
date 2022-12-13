@@ -217,11 +217,26 @@ const getConfirmComponent = (props: ConfirmProps): MessageBoxContentComponent<bo
   );
 };
 
-const useMessageBox = () => {
+const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
   const elemRef = useRef<HTMLDivElement>();
   const root = useRef<Root>();
+  const showed = useRef(false);
+  const preventUnmountClose = options?.preventUnmountClose === true;
 
-  const show = useCallback(async <T = void>(Component: MessageBoxContentComponent<T>, options?: Options) => {
+  const unmount = useCallback(() => {
+    showed.current = false;
+    if (root.current) {
+      root.current.unmount();
+      root.current = null!;
+    }
+    if (elemRef.current) {
+      if (document.body.contains(elemRef.current)) {
+        document.body.removeChild(elemRef.current);
+      }
+    }
+  }, []);
+
+  const show = useCallback(async <T = void>(Component: MessageBoxContentComponent<T>) => {
     if (typeof window === "undefined") return new Promise<void>(resolve => resolve());
     if (elemRef.current == null) {
       elemRef.current = document.createElement("div");
@@ -230,11 +245,14 @@ const useMessageBox = () => {
     if (root.current == null) {
       root.current = createRoot(elemRef.current);
     }
+    showed.current = true;
     return new Promise<T>(resolve => {
       const MessageBoxComponent: FC<{ showed: boolean; }> = (props) => (
         <MessageBox showed={props.showed}>
           <Component close={(params: any) => {
             root.current?.render(<MessageBoxComponent showed={false} />);
+            if (!showed.current) unmount();
+            showed.current = false;
             resolve(params as T);
           }} />
         </MessageBox>
@@ -245,15 +263,11 @@ const useMessageBox = () => {
 
   useEffect(() => {
     return () => {
-      if (root.current) {
-        root.current.unmount();
-        root.current = null!;
+      if (showed.current && preventUnmountClose) {
+        showed.current = false;
+        return;
       }
-      if (elemRef.current) {
-        if (document.body.contains(elemRef.current)) {
-          document.body.removeChild(elemRef.current);
-        }
-      }
+      unmount();
     };
   }, []);
 
@@ -261,11 +275,11 @@ const useMessageBox = () => {
     show,
     alert: (message: string | AlertProps) => {
       const props = convertToProps(message, { color: "main-light" });
-      return show(getAlertComponent(props), props);
+      return show(getAlertComponent(props));
     },
     confirm: (message: string | ConfirmProps) => {
       const props = convertToProps(message, { color: "main" });
-      return show(getConfirmComponent(props), props);
+      return show(getConfirmComponent(props));
     }
   };
 };
