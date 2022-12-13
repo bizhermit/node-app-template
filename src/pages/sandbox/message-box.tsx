@@ -1,9 +1,11 @@
 import Button from "@/components/elements/button";
 import useMessageBox from "@/hooks/message-box";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 
 const Page: NextPage = () => {
   const msg = useMessageBox();
+  const router = useRouter();
 
   return (
     <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
@@ -50,6 +52,18 @@ const Page: NextPage = () => {
         }}
       >
         confirm:header
+      </Button>
+      <Button
+        $onClick={async (unlock) => {
+          msg.alert({
+            header: "動作確認",
+            body: "表示中に遷移",
+          });
+          router.push("/sandbox/color");
+          unlock();
+        }}
+      >
+        router push
       </Button>
     </div>
   );

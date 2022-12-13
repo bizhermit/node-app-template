@@ -28,22 +28,34 @@ const MessageBox: FC<{
     animationTime: 50,
     onToggle: (open) => {
       if (open) {
-        ref.current.style.top = convertSizeNumToStr((document.body.clientHeight - ref.current.offsetHeight) / 2)!;
-        ref.current.style.left = convertSizeNumToStr((document.body.clientWidth - ref.current.offsetWidth) / 2)!;
-        mref.current.style.removeProperty("display");
+        if (ref.current) {
+          ref.current.style.top = convertSizeNumToStr((document.body.clientHeight - ref.current.offsetHeight) / 2)!;
+          ref.current.style.left = convertSizeNumToStr((document.body.clientWidth - ref.current.offsetWidth) / 2)!;
+        }
+        if (mref.current) {
+          mref.current.style.removeProperty("display");
+        }
       }
     },
     onToggling: (ctx) => {
-      mref.current.style.opacity = String(ctx.opacity);
+      if (mref.current) {
+        mref.current.style.opacity = String(ctx.opacity);
+      }
     },
     onToggled: (open) => {
       if (open) {
-        mref.current.style.opacity = "1";
-        ref.current.querySelector("button")?.focus();
+        if (mref.current) {
+          mref.current.style.opacity = "1";
+        }
+        if (ref.current) {
+          ref.current.querySelector("button")?.focus();
+        }
       } else {
         setMount(false);
-        mref.current.style.display = "none";
-        mref.current.style.opacity = "0";
+        if (mref.current) {
+          mref.current.style.display = "none";
+          mref.current.style.opacity = "0";
+        }
       }
     },
   }, []);
@@ -232,17 +244,17 @@ const useMessageBox = () => {
   }, []);
 
   useEffect(() => {
-    if (elemRef.current) {
+    return () => {
       if (root.current) {
         root.current.unmount();
         root.current = null!;
       }
-      try {
+      if (elemRef.current) {
         if (document.body.contains(elemRef.current)) {
-          document.body?.removeChild?.(elemRef.current);
+          document.body.removeChild(elemRef.current);
         }
-      } catch { }
-    }
+      }
+    };
   }, []);
 
   return {
