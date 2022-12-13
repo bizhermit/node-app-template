@@ -176,6 +176,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       icon: "B",
                       pathname: "/sandbox/elements/badge",
                     }],
+                  }, {
+                    key: "message-box",
+                    label: "MessageBox",
+                    icon: "M",
+                    pathname: "/sandbox/message-box",
                   }]
                 }]}
               />
