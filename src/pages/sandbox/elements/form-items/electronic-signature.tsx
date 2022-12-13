@@ -9,7 +9,7 @@ import { useState } from "react";
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<ImageData>>();
+  const [value, setValue] = useState<Nullable<string>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
 
@@ -64,7 +64,7 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
-      <ElectronicSignature 
+      <ElectronicSignature
       />
     </div>
   );

@@ -1,0 +1,9 @@
+.canvas {
+  box-sizing: border-box;
+  position: relative;
+  flex: none;
+  touch-action: none;
+  border-radius: var(--radius);
+  border: 0.1rem solid var(--c-border);
+  background-color: #fff;
+}
