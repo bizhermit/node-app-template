@@ -31,7 +31,7 @@ const App = ({ Component, pageProps }: AppProps) => {
               <Menu
                 className="flex-1"
                 // $direction="horizontal"
-                style={{ width: convertSizeNumToStr(230) }}
+                style={{ width: convertSizeNumToStr(280) }}
                 $items={[{
                   key: "index",
                   icon: <MdOutlinePowerSettingsNew />,
@@ -104,6 +104,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "DateBox",
                         icon: "D",
                         pathname: "/sandbox/elements/form-items/date-box",
+                      }, {
+                        key: "electronic-signature",
+                        label: "ElectronicSignature",
+                        icon: "E",
+                        pathname: "/sandbox/elements/form-items/electronic-signature"
                       }]
                     }, {
                       key: "container",
