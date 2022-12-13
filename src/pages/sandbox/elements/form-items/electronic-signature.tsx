@@ -12,6 +12,7 @@ const Page: NextPage = () => {
   const [value, setValue] = useState<Nullable<string>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const [autoSave, setAutoSave] = useState(false);
 
   return (
     <div className="flex-box flex-start h-100 w-100 p-1 gap-1">
@@ -25,6 +26,11 @@ const Page: NextPage = () => {
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
+        />
+        <ToggleBox
+          $tag="auto save"
+          $value={autoSave}
+          $onChange={v => setAutoSave(v!)}
         />
       </Row>
       <Row className="gap-1">
@@ -65,6 +71,10 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <ElectronicSignature
+        $tag="useState"
+        $autoSave={autoSave}
+        $value={value}
+        $onChange={v => setValue(v)}
       />
     </div>
   );

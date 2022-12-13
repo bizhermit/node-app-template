@@ -1,3 +1,7 @@
+.main {
+  flex-flow: column;
+}
+
 .canvas {
   box-sizing: border-box;
   position: relative;
@@ -6,4 +10,20 @@
   border-radius: var(--radius);
   border: 0.1rem solid var(--c-border);
   background-color: #fff;
+}
+
+.buttons {
+  box-sizing: border-box;
+}
+
+.button {
+  box-sizing: border-box;
+  border: none;
+  margin: 0;
+  padding: 0;
+  height: var(--size);
+  width: var(--size);
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
 }
