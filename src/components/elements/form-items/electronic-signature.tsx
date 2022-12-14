@@ -21,10 +21,6 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   const [revision, setRevision] = useState(-1);
   const history = useRef<Array<ImageData>>([]);
   const position = props.$buttonsPosition || "right";
-  const canClear = revision > 0;
-  const canRedo = revision >= 0 && revision < history.current.length - 1;
-  const canUndo = revision > 0;
-  const canClearHist = history.current.length > 1;
   const nullValue = useRef("");
 
   const form = useForm({
@@ -45,6 +41,11 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       return validations;
     },
   });
+
+  const canClear = StringUtils.isNotEmpty(form.value) && form.value !== nullValue.current;
+  const canRedo = revision >= 0 && revision < history.current.length - 1;
+  const canUndo = revision > 0;
+  const canClearHist = history.current.length > 1;
 
   const save = () => {
     if (cref.current == null) return;
