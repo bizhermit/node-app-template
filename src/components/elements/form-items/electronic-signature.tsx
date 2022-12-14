@@ -24,6 +24,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   const canClear = revision > 0;
   const canRedo = revision >= 0 && revision < history.current.length - 1;
   const canUndo = revision > 0;
+  const canClearHist = history.current.length > 1;
   const nullValue = useRef("");
 
   const form = useForm({
@@ -51,8 +52,9 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   };
 
   const spillHistory = () => {
-    const maxLen = Math.max(0, props.$maxHistory ?? 100);
-    if (history.current.length > maxLen) history.current.splice(0, 1);
+    if (history.current.length > Math.max(0, props.$maxHistory ?? 100)) {
+      history.current.splice(0, 1);
+    }
   };
 
   const clearHistory = () => {
@@ -60,7 +62,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     const ctx = cref.current.getContext("2d")!;
     history.current.push(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
     spillHistory();
-    setRevision(history.current.length - 1);
+    setRevision(0);
   };
 
   const popHistory = () => {
@@ -183,9 +185,11 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       img.src = form.valueRef.current;
       img.onload = () => {
         ctx.drawImage(img, 0, 0);
-      }
+      };
     } else {
       clearCanvas();
+    }
+    if (!("$value" in props)) {
       clearHistory();
     }
   }, [props.$value, props.$bind, form.bind]);
@@ -247,6 +251,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
             <VscClose />
           </Button>
           <Button
+            disabled={!canClearHist}
             onClick={() => {
               clearCanvas(true);
             }}

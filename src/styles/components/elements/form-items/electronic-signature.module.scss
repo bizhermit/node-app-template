@@ -66,17 +66,20 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  cursor: pointer;
-  user-select: none;
   background: transparent;
   z-index: 0;
+  
+  &:not(:disabled) {
+    cursor: pointer;
+    user-select: none;
 
-  &:hover {
-    @include mixins.hover;
-    z-index: 1;
-
-    &:active {
-      @include mixins.hoverActive;
+    &:hover {
+      @include mixins.hover;
+      z-index: 1;
+  
+      &:active {
+        @include mixins.hoverActive;
+      }
     }
   }
 }
