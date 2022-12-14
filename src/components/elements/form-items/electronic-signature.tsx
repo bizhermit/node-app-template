@@ -1,7 +1,8 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { FC, ReactNode, useEffect, useRef } from "react";
+import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
-import { convertSizeNumToStr, releaseCursor, setCursor } from "@/utilities/attributes";
+import { releaseCursor, setCursor } from "@/utilities/attributes";
+import { VscClearAll, VscClose, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 
 export type ElectronicSignatureProps = FormItemProps<string> & {
   $width?: number | string;
@@ -11,33 +12,23 @@ export type ElectronicSignatureProps = FormItemProps<string> & {
   $backgroundColor?: string | CanvasGradient | CanvasPattern;
   $maxHistory?: number;
   $autoSave?: boolean;
+  $buttonsPosition?: "hide" | "right" | "bottom" | "top" | "left";
 };
 
 const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignatureProps>((props, ref) => {
   const cref = useRef<HTMLCanvasElement>(null!);
-  const revision = useRef<number>(-1);
+  const [revision, setRevision] = useState(-1);
   const history = useRef<Array<ImageData>>([]);
+  const position = props.$buttonsPosition || "right";
+  const canClear = revision > 0;
+  const canRedo = revision >= 0 && revision < history.current.length - 1;
+  const canUndo = revision > 0;
 
   const form = useForm(props);
 
-  const saveImpl = () => {
+  const save = () => {
     if (cref.current == null) return;
     form.change(cref.current.toDataURL());
-  };
-
-  const clearHistory = () => {
-    history.current.splice(0, history.current.length);
-    const ctx = cref.current.getContext("2d")!;
-    history.current.push(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
-    spillHistory();
-    revision.current = history.current.length - 1;
-  };
-
-  const popHistory = () => {
-    const popLen = history.current.length - 1 - revision.current;
-    if (popLen > 0) {
-      history.current.splice(revision.current + 1, popLen);
-    }
   };
 
   const spillHistory = () => {
@@ -45,10 +36,25 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     if (history.current.length > maxLen) history.current.splice(0, 1);
   };
 
+  const clearHistory = () => {
+    history.current.splice(0, history.current.length);
+    const ctx = cref.current.getContext("2d")!;
+    history.current.push(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
+    spillHistory();
+    setRevision(history.current.length - 1);
+  };
+
+  const popHistory = () => {
+    const popLen = history.current.length - 1 - revision;
+    if (popLen > 0) {
+      history.current.splice(revision + 1, popLen);
+    }
+  };
+
   const pushHistory = (imageData: ImageData) => {
     history.current.push(imageData);
     spillHistory();
-    revision.current = history.current.length - 1;
+    setRevision(history.current.length - 1);
   };
 
   const drawStart = (baseX: number, baseY: number, isTouch?: boolean) => {
@@ -78,7 +84,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       ctx.stroke();
       ctx.closePath();
       pushHistory(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
-      if (props.$autoSave) saveImpl();
+      if (props.$autoSave) save();
     };
     if (isTouch) {
       const move = (e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY);
@@ -115,31 +121,33 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     drawStart(touch.clientX, touch.clientY, true);
   };
 
-  const clearImpl = (history?: boolean) => {
+  const clearCanvas = (history?: boolean) => {
     if (cref.current == null) return;
     const ctx = cref.current.getContext("2d")!;
     popHistory();
     ctx.clearRect(0, 0, cref.current.width, cref.current.height);
     pushHistory(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
     if (history) clearHistory();
-    if (props.$autoSave) saveImpl();
+    if (props.$autoSave) save();
   };
 
-  const redoImpl = () => {
-    if (revision.current >= history.current.length - 1) return false;
-    revision.current = Math.min(history.current.length - 1, revision.current + 1);
+  const redo = () => {
+    if (!canRedo) return;
+    const r = Math.min(history.current.length - 1, revision + 1);
+    setRevision(r);
     const ctx = cref.current.getContext("2d")!;
-    ctx.putImageData(history.current[revision.current], 0, 0);
-    if (props.$autoSave) saveImpl();
+    ctx.putImageData(history.current[r], 0, 0);
+    if (props.$autoSave) save();
     return true;
   };
 
-  const undoImpl = () => {
-    if (revision.current <= 0) return false;
-    revision.current = Math.max(0, revision.current - 1);
+  const undo = () => {
+    if (!canUndo) return;
+    const r = Math.max(0, revision - 1);
+    setRevision(r);
     const ctx = cref.current.getContext("2d")!;
-    ctx.putImageData(history.current[revision.current], 0, 0);
-    if (props.$autoSave) saveImpl();
+    ctx.putImageData(history.current[r], 0, 0);
+    if (props.$autoSave) save();
     return true;
   };
 
@@ -156,6 +164,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       $preventFieldLayout
       $mainProps={{
         className: Style.main,
+        "data-position": position,
       }}
     >
       <canvas
@@ -163,47 +172,52 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
         className={Style.canvas}
         onMouseDown={mouseDown}
         onTouchStart={touchStart}
-        width={props.$width || 400}
+        width={props.$width || 500}
         height={props.$height || 200}
       />
-      {form.editable &&
+      {form.editable && position !== "hide" &&
         <div
           className={Style.buttons}
         >
+          {props.$autoSave !== true &&
+            <Button
+              onClick={() => {
+                save();
+              }}
+            >
+              <VscSave />
+            </Button>
+          }
           <Button
+            disabled={!canUndo}
             onClick={() => {
-              saveImpl();
+              undo();
             }}
           >
-            save
+            <VscDiscard />
+          </Button>
+          <Button
+            disabled={!canRedo}
+            onClick={() => {
+              redo();
+            }}
+          >
+            <VscRedo />
+          </Button>
+          <Button
+            disabled={!canClear}
+            onClick={() => {
+              clearCanvas();
+            }}
+          >
+            <VscClose />
           </Button>
           <Button
             onClick={() => {
-              undoImpl();
+              clearCanvas(true);
             }}
           >
-            undo
-          </Button>
-          <Button
-            onClick={() => {
-              redoImpl();
-            }}
-          >
-            redo
-          </Button>
-          <Button
-            onClick={() => {
-              clearImpl();
-            }}
-          >
-            clear
-          </Button>
-          <Button
-            onClick={() => {
-              clearImpl(true)
-            }}
-          >
-            clear(histry)
+            <VscClearAll />
           </Button>
         </div>
       }
@@ -212,13 +226,15 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
 });
 
 const Button: FC<{
+  disabled?: boolean;
   onClick: VoidFunc;
   children?: ReactNode;
-}> = ({ onClick, children }) => {
+}> = ({ disabled, onClick, children }) => {
   return (
     <button
       className={Style.button}
       type="button"
+      disabled={disabled}
       onClick={onClick}
     >
       {children}

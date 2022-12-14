@@ -1,5 +1,37 @@
+@use "$/mixins";
+
 .main {
-  flex-flow: column;
+  &[data-position="right"] {
+    flex-flow: row;
+
+    >.buttons {
+      flex-flow: column;
+    }
+  }
+
+  &[data-position="bottom"] {
+    flex-flow: column;
+
+    >.buttons {
+      flex-flow: row;
+    }
+  }
+
+  &[data-position="top"] {
+    flex-flow: column-reverse;
+
+    >.buttons {
+      flex-flow: row;
+    }
+  }
+
+  &[data-position="left"] {
+    flex-flow: row-reverse;
+
+    >.buttons {
+      flex-flow: column;
+    }
+  }
 }
 
 .canvas {
@@ -10,10 +42,16 @@
   border-radius: var(--radius);
   border: 0.1rem solid var(--c-border);
   background-color: #fff;
+  z-index: 0;
 }
 
 .buttons {
   box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
 }
 
 .button {
@@ -23,7 +61,24 @@
   padding: 0;
   height: var(--size);
   width: var(--size);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
   cursor: pointer;
   user-select: none;
+  background: transparent;
+  z-index: 0;
+
+  &:hover {
+    @include mixins.hover;
+    z-index: 1;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
 }
+
+@include mixins.hoverAnimation;

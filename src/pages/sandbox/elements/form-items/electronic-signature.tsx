@@ -1,6 +1,7 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import ElectronicSignature from "@/components/elements/form-items/electronic-signature";
+import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
@@ -13,6 +14,7 @@ const Page: NextPage = () => {
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
   const [autoSave, setAutoSave] = useState(false);
+  const [buttonsPosition, setButtonsPosition] = useState<"hide" | "top" | "left" | "bottom" | "right">();
 
   return (
     <div className="flex-box flex-start h-100 w-100 p-1 gap-1">
@@ -33,6 +35,18 @@ const Page: NextPage = () => {
           $onChange={v => setAutoSave(v!)}
         />
       </Row>
+      <RadioButtons
+        $tag="buttons position"
+        $value={buttonsPosition}
+        $onChange={v => setButtonsPosition(v!)}
+        $source={[
+          { value: "right", label: "right" },
+          { value: "bottom", label: "bottom" },
+          { value: "top", label: "top" },
+          { value: "left", label: "left" },
+          { value: "hide", label: "hide" },
+        ]}
+      />
       <Row className="gap-1">
         <Button
           $onClick={() => {
@@ -73,6 +87,7 @@ const Page: NextPage = () => {
       <ElectronicSignature
         $tag="useState"
         $autoSave={autoSave}
+        $buttonsPosition={buttonsPosition}
         $value={value}
         $onChange={v => setValue(v)}
       />
