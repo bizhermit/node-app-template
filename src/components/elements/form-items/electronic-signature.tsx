@@ -59,7 +59,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
 
   const clearHistory = () => {
     history.current.splice(0, history.current.length);
-    const ctx = cref.current.getContext("2d")!;
+    const ctx = getContext();
     history.current.push(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
     spillHistory();
     setRevision(0);
@@ -78,9 +78,13 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     setRevision(history.current.length - 1);
   };
 
+  const getContext = () => {
+    return cref.current.getContext("2d", { willReadFrequently: true })!;
+  };
+
   const drawStart = (baseX: number, baseY: number, isTouch?: boolean) => {
     if (!form.editable || cref.current == null) return;
-    const ctx = cref.current.getContext("2d")!;
+    const ctx = getContext();
     const lineWidth = Math.max(1, props.$lineWidth || 2);
     const lineColor = props.$lineColor || "black";
     ctx.strokeStyle = lineColor;
@@ -144,7 +148,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
 
   const clearCanvas = (history?: boolean) => {
     if (cref.current == null) return;
-    const ctx = cref.current.getContext("2d")!;
+    const ctx = getContext();
     popHistory();
     ctx.clearRect(0, 0, cref.current.width, cref.current.height);
     pushHistory(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
@@ -156,7 +160,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     if (!canRedo) return;
     const r = Math.min(history.current.length - 1, revision + 1);
     setRevision(r);
-    const ctx = cref.current.getContext("2d")!;
+    const ctx = getContext();
     ctx.putImageData(history.current[r], 0, 0);
     if (props.$autoSave) save();
     return true;
@@ -166,7 +170,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     if (!canUndo) return;
     const r = Math.max(0, revision - 1);
     setRevision(r);
-    const ctx = cref.current.getContext("2d")!;
+    const ctx = getContext();
     ctx.putImageData(history.current[r], 0, 0);
     if (props.$autoSave) save();
     return true;
@@ -180,7 +184,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
 
   useEffect(() => {
     if (StringUtils.isNotEmpty(form.valueRef.current)) {
-      const ctx = cref.current.getContext("2d")!;
+      const ctx = getContext();
       const img = new Image();
       img.src = form.valueRef.current;
       img.onload = () => {
@@ -193,6 +197,14 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       clearHistory();
     }
   }, [props.$value, props.$bind, form.bind]);
+
+  useEffect(() => {
+    const imageData = history.current[revision];
+    if (imageData) {
+      const ctx = getContext();
+      ctx.putImageData(imageData, 0, 0);
+    }
+  }, [form.editable]);
 
   return (
     <FormItemWrap
