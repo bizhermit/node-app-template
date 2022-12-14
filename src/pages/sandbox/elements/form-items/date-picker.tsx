@@ -149,7 +149,7 @@ const Page: NextPage = () => {
           $readOnly={readOnly}
           $type={type}
           $required
-          $multiable
+          $multiple
           $monthTexts="en-s"
           // $max="2022-12-10"
         />

@@ -72,7 +72,13 @@ const Page: NextPage = () => {
         $value={value}
         $onChange={v => setValue(v!)}
         $required
-      />
+        style={{
+          height: 200,
+          width: 400,
+        }}
+      >
+        ここにファイルをドロップ
+      </FileDrop>
       <FileDrop
         $tag="bind"
         $disabled={disabled}
@@ -80,7 +86,9 @@ const Page: NextPage = () => {
         name="file-drop-bind"
         $bind={bind}
         $required
-      />
+      >
+        File Drop
+      </FileDrop>
       <Form
         $bind={formBind}
         $disabled={disabled}
@@ -90,7 +98,9 @@ const Page: NextPage = () => {
           $tag="form bind"
           name="file-drop-form-bind"
           $required
-        />
+        >
+          Hey!
+        </FileDrop>
       </Form>
     </div>
   );

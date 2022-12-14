@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
+import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, multiValidationIterator, useForm } from "@/components/elements/form";
 import React, { Key, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
@@ -26,36 +26,36 @@ export type DatePickerCommonProps = DateInputPorps & {
 type DatePickerStringProps =
   (FormItemProps<string> & {
     $typeof?: "string";
-    $multiable?: false;
+    $multiple?: false;
     $onClickPositive?: (value: Nullable<string>) => void;
   }) |
   (FormItemProps<Array<string>> & {
     $typeof?: "string";
-    $multiable: true;
+    $multiple: true;
     $onClickPositive?: (value: Array<Nullable<string>>) => void;
   });
 
 type DatePickerNumberProps =
   (FormItemProps<number> & {
     $typeof: "number";
-    $multiable?: false;
+    $multiple?: false;
     $onClickPositive?: (value: Nullable<number>) => void;
   }) |
   (FormItemProps<Array<number>> & {
     $typeof: "number";
-    $multiable: true;
+    $multiple: true;
     $onClickPositive?: (value: Array<Nullable<number>>) => void;
   });
 
 type DatePickerDateProps =
   (FormItemProps<Date> & {
     $typeof: "date";
-    $multiable?: false;
+    $multiple?: false;
     $onClickPositive?: (value: Nullable<Date>) => void;
   }) |
   (FormItemProps<Array<Date>> & {
     $typeof: "date";
-    $multiable: true;
+    $multiple: true;
     $onClickPositive?: (value: Array<Nullable<Date>>) => void;
   });
 
@@ -66,24 +66,15 @@ export type DatePickerProps =
 const today = new Date();
 const threshold = 2;
 
-const multiValidationIterator = (v: any, func: (value: string | number | Date) => string) => {
-  if (v == null || !Array.isArray(v)) return "";
-  for (let i = 0, il = v.length; i < il; i++) {
-    const ret = func(v[i]);
-    if (ret) return ret;
-  }
-  return "";
-};
-
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
   const yearElemRef = useRef<HTMLDivElement>(null!);
   const monthElemRef = useRef<HTMLDivElement>(null!);
   const dayElemRef = useRef<HTMLDivElement>(null!);
   const type = props.$type ?? "date";
-  const multiable = props.$multiable === true;
+  const multiple = props.$multiple === true;
   const [mode, setMode] = useState<DatePickerMode>(() => {
     if (type === "year") return "list";
-    if (multiable) return "calendar";
+    if (multiple) return "calendar";
     return props.$mode || "calendar";
   });
   const [year, setYear] = useState<number>();
@@ -119,30 +110,16 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     $messagePosition: "bottom-hide",
     ...props,
   }, {
-    preventRequiredValidation: multiable,
     interlockValidation: props.$rangePair != null,
+    multiple: props.$multiple,
     validations: () => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
-      if (multiable) {
-        if (props.$required) {
-          validations.push(v => {
-            if (v == null) return formValidationMessages.required;
-            if (!Array.isArray(v)) {
-              return formValidationMessages.typeMissmatch;
-            }
-            if (v.length === 0 || v[0] === null) {
-              return formValidationMessages.required;
-            }
-            return "";
-          });
-        }
-      }
       const maxTime = convertToMaxTime(maxDate, type);
       const minTime = convertToMinTime(minDate, type);
       if (maxTime != null && minTime != null) {
         const compare = rangeDateValidation(minTime, maxTime, type);
-        if (multiable) {
+        if (multiple) {
           validations.push(v => multiValidationIterator(v, compare));
         } else {
           validations.push(compare);
@@ -150,7 +127,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       } else {
         if (maxTime != null) {
           const compare = maxDateValidation(maxTime, type);
-          if (multiable) {
+          if (multiple) {
             validations.push(v => multiValidationIterator(v, compare));
           } else {
             validations.push(compare);
@@ -158,7 +135,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         }
         if (minTime != null) {
           const compare = minDateValidation(minTime, type);
-          if (multiable) {
+          if (multiple) {
             validations.push(v => multiValidationIterator(v, compare));
           } else {
             validations.push(compare);
@@ -168,7 +145,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       const rangePair = props.$rangePair;
       if (rangePair != null) {
         const { compare, getPairDate, validation } = dateContextValidation(rangePair);
-        if (multiable) {
+        if (multiple) {
           validations.push((v, d) => {
             if (d == null) return "";
             const pairDate = convertDate(getPairDate(d));
@@ -185,7 +162,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           if (date == null) return "";
           return judgeValid(date) ? "" : "選択可能な日付ではありません。";
         };
-        if (multiable) {
+        if (multiple) {
           validations.push(v => {
             return multiValidationIterator(v, judge);
           });
@@ -196,7 +173,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       return validations;
     },
     validationsDeps: [
-      multiable,
+      multiple,
       maxDate,
       minDate,
       type,
@@ -216,7 +193,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   };
 
   const getLatestDate = () => {
-    if (multiable) return undefined;
+    if (multiple) return undefined;
     const vals = getArrayValue();
     const val = vals[vals.length - 1];
     if (val == null) return undefined;
@@ -239,7 +216,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       return ret;
     };
     const select = (num: number, selected: boolean) => {
-      if (!multiable) {
+      if (!multiple) {
         form.change(convertDateToValue(new Date(num, 0, 1), props.$typeof));
         return;
       }
@@ -315,7 +292,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       return afterMin && beforeMax;
     };
     const select = (date: Date, selected: boolean) => {
-      if (!multiable) {
+      if (!multiple) {
         form.change(convertDateToValue(date, props.$typeof));
         return;
       }
@@ -393,7 +370,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     };
     const select = (dateStr: string, selected: boolean) => {
       const date = convertDate(dateStr)!;
-      if (!multiable) {
+      if (!multiple) {
         form.change(convertDateToValue(date, props.$typeof));
         return;
       }
@@ -531,7 +508,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const clear = () => {
     setYear(today.getFullYear());
     setMonth(today.getMonth());
-    if (multiable) {
+    if (multiple) {
       form.change([]);
       return;
     }
@@ -566,7 +543,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         date = DatetimeUtils.copy(today);
         break;
     }
-    if (multiable) {
+    if (multiple) {
       form.change([convertDateToValue(date, props.$typeof)]);
       return;
     }
@@ -629,7 +606,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     if (type === "year") {
       setMode("list");
     } else {
-      if (multiable) {
+      if (multiple) {
         setMode("calendar");
       }
     }
@@ -809,7 +786,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
             <LabelText>{props.$positiveText ?? "OK"}</LabelText>
           </div>
         }
-        {type !== "year" && !multiable && form.editable &&
+        {type !== "year" && !multiple && form.editable &&
           <div
             className={Style.switch}
             onClick={toggleMode}

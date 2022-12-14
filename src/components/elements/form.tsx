@@ -218,6 +218,7 @@ export default Form;
 
 type UseFormOptions<T = any, U = any> = {
   effect?: (value: Nullable<T>) => void;
+  multiple?: boolean;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
@@ -253,10 +254,25 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<Nullable<T>>> = [];
     if (props?.$required && !options?.preventRequiredValidation) {
-      rets.push((v) => {
-        if (v == null || v === "") return formValidationMessages.required;
-        return "";
-      });
+      if (options?.multiple) {
+        if (props.$required) {
+          rets.push(v => {
+            if (v == null) return formValidationMessages.required;
+            if (!Array.isArray(v)) {
+              return formValidationMessages.typeMissmatch;
+            }
+            if (v.length === 0 || v[0] === null) {
+              return formValidationMessages.required;
+            }
+            return "";
+          });
+        }
+      } else {
+        rets.push((v) => {
+          if (v == null || v === "") return formValidationMessages.required;
+          return "";
+        });
+      }
     }
     if (options?.validations) {
       rets.push(...options.validations());
@@ -269,7 +285,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       }
     }
     return rets;
-  }, [props?.$required, ...(options?.validationsDeps ?? [])]);
+  }, [props?.$required, options?.multiple, ...(options?.validationsDeps ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -463,3 +479,12 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
     </div>
   );
 });
+
+export const multiValidationIterator = (v: any, func: (value: string | number | Date) => string) => {
+  if (v == null || !Array.isArray(v)) return "";
+  for (let i = 0, il = v.length; i < il; i++) {
+    const ret = func(v[i]);
+    if (ret) return ret;
+  }
+  return "";
+};
