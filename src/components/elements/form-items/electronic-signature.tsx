@@ -1,8 +1,9 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "@/utilities/attributes";
 import { VscClearAll, VscClose, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type ElectronicSignatureProps = FormItemProps<string> & {
   $width?: number | string;
@@ -23,8 +24,26 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   const canClear = revision > 0;
   const canRedo = revision >= 0 && revision < history.current.length - 1;
   const canUndo = revision > 0;
+  const nullValue = useRef("");
 
-  const form = useForm(props);
+  const form = useForm({
+    $messagePosition: "bottom-hide",
+    ...props,
+  }, {
+    preventRequiredValidation: true,
+    validations: () => {
+      const validations: Array<FormItemValidation<Nullable<string>>> = [];
+      if (props.$required) {
+        validations.push(v => {
+          if (v == null || v === "" || v === nullValue.current) {
+            return formValidationMessages.required;
+          }
+          return "";
+        });
+      }
+      return validations;
+    },
+  });
 
   const save = () => {
     if (cref.current == null) return;
@@ -152,9 +171,24 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   };
 
   useEffect(() => {
+    nullValue.current = cref.current.toDataURL();
     if (history.current.length > 0) return;
     clearHistory();
   }, []);
+
+  useEffect(() => {
+    if (StringUtils.isNotEmpty(form.valueRef.current)) {
+      const ctx = cref.current.getContext("2d")!;
+      const img = new Image();
+      img.src = form.valueRef.current;
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0);
+      }
+    } else {
+      clearCanvas();
+      clearHistory();
+    }
+  }, [props.$value, props.$bind, form.bind]);
 
   return (
     <FormItemWrap
