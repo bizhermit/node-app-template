@@ -12,7 +12,8 @@ type InputOmitProps = "name"
   | "defaultValue"
   | "defaultChecked"
   | "color"
-  | "onChange";
+  | "onChange"
+  | "children";
 
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
