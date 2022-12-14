@@ -1,0 +1,95 @@
+@use "$/mixins";
+
+.main {
+  &[data-position="right"] {
+    flex-flow: row;
+
+    >.buttons {
+      flex-flow: column;
+    }
+  }
+
+  &[data-position="bottom"] {
+    flex-flow: column;
+
+    >.buttons {
+      flex-flow: row;
+    }
+  }
+
+  &[data-position="top"] {
+    flex-flow: column-reverse;
+
+    >.buttons {
+      flex-flow: row;
+    }
+  }
+
+  &[data-position="left"] {
+    flex-flow: row-reverse;
+
+    >.buttons {
+      flex-flow: column;
+    }
+  }
+
+  &[data-editable="true"] {
+    &[data-error="true"] {
+      .canvas {
+        background-color: var(--c-error);
+      }
+    }
+  }
+}
+
+.canvas {
+  box-sizing: border-box;
+  position: relative;
+  flex: none;
+  touch-action: none;
+  border-radius: var(--radius);
+  border: 0.1rem solid var(--c-border);
+  background-color: #fff;
+  z-index: 0;
+}
+
+.buttons {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.button {
+  box-sizing: border-box;
+  border: none;
+  margin: 0;
+  padding: 0;
+  height: var(--size);
+  width: var(--size);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: transparent;
+  z-index: 0;
+  
+  &:not(:disabled) {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      @include mixins.hover;
+      z-index: 1;
+  
+      &:active {
+        @include mixins.hoverActive;
+      }
+    }
+  }
+}
+
+@include mixins.hoverAnimation;

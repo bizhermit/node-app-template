@@ -116,8 +116,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const [showMonth, setShowMonth] = useState(false);
 
   const form = useForm<string | number | Date | Array<string | number | Date> | any>({
+    $messagePosition: "bottom-hide",
     ...props,
-    $messagePosition: props.$messagePosition ?? "bottom-hide",
   }, {
     preventRequiredValidation: multiable,
     interlockValidation: props.$rangePair != null,
