@@ -11,7 +11,7 @@ export type GroupBoxProps = HTMLAttributes<HTMLDivElement> & {
 
 const GroupBox = React.forwardRef<HTMLDivElement, GroupBoxProps>((props, ref) => {
   const borderColorClassName = `bdc-${props.$color || "border"}`;
-  
+
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
