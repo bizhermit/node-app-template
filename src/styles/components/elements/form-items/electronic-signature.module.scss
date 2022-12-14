@@ -32,6 +32,14 @@
       flex-flow: column;
     }
   }
+
+  &[data-editable="true"] {
+    &[data-error="true"] {
+      .canvas {
+        background-color: var(--c-error);
+      }
+    }
+  }
 }
 
 .canvas {
