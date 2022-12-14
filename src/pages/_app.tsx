@@ -180,6 +180,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Badge",
                       icon: "B",
                       pathname: "/sandbox/elements/badge",
+                    }, {
+                      key: "group-box",
+                      label: "GroupBox",
+                      icon: "G",
+                      pathname: "/sandbox/elements/group-box",
                     }],
                   }, {
                     key: "message-box",
