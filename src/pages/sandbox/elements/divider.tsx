@@ -5,7 +5,7 @@ import { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box flex-stretch w-100 p-1">
+    <div className="flex-stretch w-100 p-1">
       <h1>Divider</h1>
       <section>
         <h2>divider</h2>

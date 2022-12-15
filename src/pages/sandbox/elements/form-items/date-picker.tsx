@@ -18,7 +18,7 @@ const Page: NextPage = () => {
   const [type, setType] = useState<"date" | "month" | "year">("date");
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -154,7 +154,7 @@ const Page: NextPage = () => {
           // $max="2022-12-10"
         />
         <Form
-          className="flex-box"
+          className="flex-start"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

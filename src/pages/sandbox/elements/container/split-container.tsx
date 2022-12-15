@@ -17,7 +17,7 @@ const Page: NextPage = () => {
   const [hide2, setHide2] = useState(false);
 
   return (
-    <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
+    <div className="flex-start w-100 h-100 p-1 gap-1">
       <Row $vAlign="bottom" className="gap-1">
         <ToggleBox
           $tag="disabled"

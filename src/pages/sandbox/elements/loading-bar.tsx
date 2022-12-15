@@ -8,7 +8,7 @@ const Page: NextPage = () => {
   const loadingBar = useLoadingBar();
 
   return (
-    <div className="flex-box flex-stretch w-100 p-1">
+    <div className="flex-stretch w-100 p-1">
       <h1>LoadingBar</h1>
       <section>
         <h2>position</h2>

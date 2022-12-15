@@ -13,7 +13,7 @@ const style: CSSProperties = {
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box p-1">
+    <div className="flex-start p-1">
       <h1>Button</h1>
       <section>
         <h2>click event</h2>

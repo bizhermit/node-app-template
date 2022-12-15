@@ -5,7 +5,7 @@ import { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box flex-start p-1">
+    <div className="flex-start p-1">
       <Row>
         <ToggleBox>editable</ToggleBox>
         <ToggleBox $readOnly>readOnly</ToggleBox>

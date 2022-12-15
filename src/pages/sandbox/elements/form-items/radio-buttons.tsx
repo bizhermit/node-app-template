@@ -19,7 +19,7 @@ const Page: NextPage = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
