@@ -17,7 +17,7 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
   console.log(JSON.stringify(req.query, null, 2));
   console.log("- body");
   console.log(JSON.stringify(req.body, null, 2));
-  res.status(200);
+  res.status(204).json({});
 };
 
 export default handler;
