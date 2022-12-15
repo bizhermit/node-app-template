@@ -114,7 +114,7 @@ const Page: NextPage = () => {
           $readOnly={readOnly}
           method="post"
           action="/api/form"
-          encType="multipart/form-data"
+          // encType="multipart/form-data"
         >
           <FileDrop
             $tag="form bind"

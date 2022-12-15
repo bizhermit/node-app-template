@@ -120,6 +120,22 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       e.preventDefault();
       return;
     }
+    if (props.encType) {
+      e.currentTarget.enctype = props.encType;
+    } else {
+      const hasMultipartFormData = (() => {
+        if (props.encType) return false;
+        const item = Object.keys(items.current).find(name => {
+          return items.current[name].options?.multipartFormData === true;
+        });
+        return item != null;
+      })();
+      if (hasMultipartFormData) {
+        e.currentTarget.enctype = "multipart/form-data";
+      } else {
+        e.currentTarget.removeAttribute("enctype");
+      }
+    }
     setDisabled(true);
     if (props.$onSubmit == null) {
       setDisabled(false);
@@ -219,6 +235,7 @@ export default Form;
 type UseFormOptions<T = any, U = any> = {
   effect?: (value: Nullable<T>) => void;
   multiple?: boolean;
+  multipartFormData?: boolean;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
