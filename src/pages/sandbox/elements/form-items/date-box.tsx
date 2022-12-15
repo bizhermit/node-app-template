@@ -18,7 +18,7 @@ const Page: NextPage = () => {
   const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -145,7 +145,7 @@ const Page: NextPage = () => {
               disallowSame: false,
             }}
           />
-          <span className="h-size pt-t flex-box flex-center">～</span>
+          <span className="h-size pt-t flex-center">～</span>
           <DateBox
             $type={type}
             $tag="pair"

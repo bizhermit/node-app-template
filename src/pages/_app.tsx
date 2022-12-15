@@ -26,7 +26,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             // $footerVisible="always"
           >
             <div>Header</div>
-            {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
+            {/* <div className="flex-start h-100" style={{ width: 200 }}> */}
             <>
               <Menu
                 className="flex-1"

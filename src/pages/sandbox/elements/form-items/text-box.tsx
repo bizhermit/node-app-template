@@ -15,7 +15,7 @@ const Page: NextPage = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-box flex-start p-1">
+    <div className="flex-start p-1">
       <h1>TextBox</h1>
       <section>
         <h2>readonly/disabled</h2>

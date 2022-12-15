@@ -18,7 +18,7 @@ const Page: NextPage = () => {
   const [buttonsPosition, setButtonsPosition] = useState<"hide" | "top" | "left" | "bottom" | "right">();
 
   return (
-    <div className="flex-box flex-start h-100 w-100 p-1 gap-1">
+    <div className="flex-start h-100 w-100 p-1 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"

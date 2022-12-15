@@ -8,7 +8,7 @@ const Page: NextPage = () => {
   const router = useRouter();
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Button
         $onClick={async (unlock) => {
           const res = await msg.alert("alert");

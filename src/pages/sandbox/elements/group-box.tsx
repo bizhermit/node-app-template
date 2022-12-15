@@ -4,7 +4,7 @@ import { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
+    <div className="flex-start w-100 h-100 p-1 gap-1">
       <Row className="gap-1">
         <GroupBox
           $caption="GroupBox"

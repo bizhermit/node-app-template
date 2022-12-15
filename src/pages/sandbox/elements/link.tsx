@@ -4,7 +4,7 @@ import { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box p-1 gap-1">
+    <div className="flex-start p-1 gap-1">
       <NextLink href="/sandbox/elements/link">next link</NextLink>
       <NextLink href="https://bizhermit.com" >normal link</NextLink>
       <NextLink>no link</NextLink>

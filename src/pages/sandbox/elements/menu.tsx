@@ -14,7 +14,7 @@ const Page: NextPage = () => {
   const [horizontal, setHorizontal] = useState(false);
 
   return (
-    <div className="flex-box flex-start p-1 h-100 w-100 gap-1">
+    <div className="flex-start p-1 h-100 w-100 gap-1">
       <Row>
         <ToggleBox
           $tag="horizontal"
@@ -45,7 +45,7 @@ const Page: NextPage = () => {
         $animationDirection={horizontal ? "horizontal" : "vertical"}
       >
         <div
-          className="flex-box flex-stretch"
+          className="flex-stretch"
           style={{ width: 500 }}
         >
           <Menu

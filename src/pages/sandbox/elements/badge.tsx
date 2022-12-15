@@ -12,7 +12,7 @@ const Page: NextPage = () => {
   const [size, setSize] = useState<Size>("m");
 
   return (
-    <div className="flex-box flex-start p-2 w-100 h-100 gap-1">
+    <div className="flex-start p-2 w-100 h-100 gap-1">
       <Row className="gap-1">
         <Button $onClick={() => setCount(c => c+1)}>count up</Button>
         <Button $onClick={() => setCount(0)} $outline>reset</Button>
