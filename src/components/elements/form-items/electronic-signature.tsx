@@ -213,6 +213,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       ref={ref}
       $$form={form}
       $preventFieldLayout
+      $useHidden
       $mainProps={{
         className: Style.main,
         "data-position": position,
