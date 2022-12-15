@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
+import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/utilities/file-input";
@@ -29,7 +29,7 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
-        validations.push(fileTypeValidation(props.$accept))
+        validations.push(fileTypeValidation(props.$accept));
       }
       if (props.$fileSize != null) {
         validations.push(fileSizeValidation(props.$fileSize));
@@ -65,7 +65,7 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
 
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!form.editable) return;
-    const files = e.currentTarget.files
+    const files = e.currentTarget.files;
     if (files?.length === 0) return;
     commit(files);
   };
