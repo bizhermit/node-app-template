@@ -72,6 +72,7 @@ const Page: NextPage = () => {
         $value={value}
         $onChange={v => setValue(v!)}
         $required
+        $append
         $multiple
         style={{
           height: 200,

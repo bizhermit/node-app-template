@@ -15,7 +15,7 @@ type FileDropCommonProps = {
 };
 
 export type FileDropProps = FileDropCommonProps &
-  ((FormItemProps<File> & { $multiple?: false; }) | (FormItemProps<Array<File>> & { $multiple: true; }));
+  ((FormItemProps<File> & { $multiple?: false; }) | (FormItemProps<Array<File>> & { $multiple: true; $append?: boolean }));
 
 const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);
@@ -46,12 +46,16 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
   };
 
   const commit = (fileList: FileList | null) => {
-    const files = Array.from(fileList ?? []);
-    if (files == null) {
+    if (fileList == null) {
       form.change(undefined);
       return;
     }
+    const files = Array.from(fileList ?? []);
     if (multiable) {
+      if (props.$append) {
+        form.change([...(form.valueRef.current ?? []), ...files]);
+        return;
+      }
       form.change(files);
       return;
     }
