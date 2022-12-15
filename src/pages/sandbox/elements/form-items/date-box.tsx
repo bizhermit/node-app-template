@@ -128,9 +128,12 @@ const Page: NextPage = () => {
         $disallowInput={disallowInput}
       />
       <Form
+        className="flex-start gap-1"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
+        action="/api/form"
+        method="post"
       >
         <Row $vAlign="bottom" className="gap-1">
           <DateBox
@@ -158,6 +161,7 @@ const Page: NextPage = () => {
             }}
           />
         </Row>
+        <Button type="submit">submit</Button>
       </Form>
     </div>
   );

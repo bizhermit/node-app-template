@@ -85,39 +85,45 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
-      <ElectronicSignature
-        $tag="useState"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        $autoSave={autoSave}
-        $buttonsPosition={buttonsPosition}
-        $value={value}
-        $onChange={v => setValue(v)}
-        $required
-      />
-      <ElectronicSignature
-        $tag="bind"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        name="electronic-signature-bind"
-        $bind={bind}
-        $autoSave={autoSave}
-        $buttonsPosition={buttonsPosition}
-        $required
-      />
-      <Form
-        $disabled={disabled}
-        $readOnly={readOnly}
-        $bind={formBind}
-      >
+      <Row className="gap-1">
         <ElectronicSignature
-          $tag="form bind"
-          name="electronic-signature-form-bind"
+          $tag="useState"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $autoSave={autoSave}
+          $buttonsPosition={buttonsPosition}
+          $value={value}
+          $onChange={v => setValue(v)}
+          $required
+        />
+        <ElectronicSignature
+          $tag="bind"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          name="electronic-signature-bind"
+          $bind={bind}
           $autoSave={autoSave}
           $buttonsPosition={buttonsPosition}
           $required
         />
-      </Form>
+        <Form
+          className="flex-start gap-1"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $bind={formBind}
+          action="/api/form"
+          method="post"
+        >
+          <ElectronicSignature
+            $tag="form bind"
+            name="electronic-signature-form-bind"
+            $autoSave={autoSave}
+            $buttonsPosition={buttonsPosition}
+            $required
+          />
+          <Button type="submit">submit</Button>
+        </Form>
+      </Row>
     </div>
   );
 };
