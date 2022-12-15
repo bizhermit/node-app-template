@@ -17,12 +17,14 @@ const Page: NextPage = () => {
         <Form
           className="flex-box gap-1"
           $bind={bind}
+          action="/api/form"
+          method="post"
           // $disabled
           // $readOnly
           // $messageDisplayMode="bottom"
-          $onSubmit={(fd) => {
-            console.log("submit", fd);
-          }}
+          // $onSubmit={(fd) => {
+          //   console.log("submit", fd);
+          // }}
           $onReset={() => {
             console.log("reset");
             // return false;

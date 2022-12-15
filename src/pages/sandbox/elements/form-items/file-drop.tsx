@@ -65,57 +65,71 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
-      <FileDrop
-        $tag="useState"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        $value={value}
-        $onChange={v => setValue(v!)}
-        $required
-        $append
-        $multiple
-        style={{
-          height: 200,
-          width: 400,
-        }}
-      >
-        {(value != null && value.length > 0) ? value.map(file => {
-          if (file == null) return null;
-          return (
-            <span
-              key={file.name}
-              style={{ alignSelf: "flex-start" }}
-            >
-              {file.name}
-            </span>
-          );
-        }) : "ここにファイルをドロップ"}
-      </FileDrop>
-      <FileDrop
-        $tag="bind"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        name="file-drop-bind"
-        $bind={bind}
-        $required
-        $hideClearButton
-      >
-        File Drop
-      </FileDrop>
-      <Form
-        $bind={formBind}
-        $disabled={disabled}
-        $readOnly={readOnly}
-      >
+      <Row className="w-100 gap-1">
         <FileDrop
-          $tag="form bind"
-          name="file-drop-form-bind"
+          $tag="useState"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $value={value}
+          $onChange={v => setValue(v!)}
           $required
-          $noFileDialog
+          $append
+          $multiple
+          style={{
+            height: 200,
+            width: 400,
+          }}
         >
-          Hey!
+          {(value != null && value.length > 0) ? value.map(file => {
+            if (file == null) return null;
+            return (
+              <span
+                key={file.name}
+                style={{ alignSelf: "flex-start" }}
+              >
+                {file.name}
+              </span>
+            );
+          }) : "ここにファイルをドロップ"}
         </FileDrop>
-      </Form>
+        <FileDrop
+          $tag="bind"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          name="file-drop-bind"
+          $bind={bind}
+          $required
+          $hideClearButton
+          style={{
+            height: 200,
+            width: 400,
+          }}
+        >
+          File Drop
+        </FileDrop>
+        <Form
+          $bind={formBind}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          method="post"
+          action="/api/form"
+        >
+          <FileDrop
+            $tag="form bind"
+            // name="file-drop-form-bind"
+            $required
+            $noFileDialog
+            $hideClearButton
+            style={{
+              height: 200,
+              width: 400,
+            }}
+          >
+            Hey!
+          </FileDrop>
+          <Button type="submit">submit</Button>
+        </Form>
+      </Row>
     </div>
   );
 };

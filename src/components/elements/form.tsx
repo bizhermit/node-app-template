@@ -399,6 +399,15 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   };
 };
 
+const convertHiddenValue = (value: any) => {
+  if (value == null) return "";
+  const t = typeof value;
+  if (t === "string" || t === "number" || t === "bigint" || t === "boolean") {
+    return String(value);
+  }
+  return JSON.stringify(value);
+};
+
 export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $$form: ReturnType<typeof useForm<any, any>>;
   $preventFieldLayout?: boolean;
@@ -451,7 +460,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
         <input
           name={props.name}
           type="hidden"
-          value={JSON.stringify(props.$$form.value ?? "")}
+          value={convertHiddenValue(props.$$form.value)}
         />
       }
       {props.$$form.hasValidator && props.$$form.editable ?
