@@ -91,7 +91,7 @@ const FileButton = React.forwardRef<HTMLDivElement, FileButtonProps>((props, ref
           {form.value.name}
         </div>
       }
-      {form.editable && props.$hideClearButton !== true &&
+      {form.editable && props.$hideClearButton !== true && form.value != null &&
         <div
           className={Style.clear}
           onClick={clear}
