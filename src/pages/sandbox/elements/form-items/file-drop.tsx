@@ -2,16 +2,16 @@ import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import CheckBox from "@/components/elements/form-items/check-box";
+import FileDrop from "@/components/elements/form-items/file-drop";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<boolean>(false);
+  const [value, setValue] = useState<Array<File>>([]);
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
 
@@ -64,76 +64,78 @@ const Page: NextPage = () => {
         >
           clear form bind
         </Button>
-        <Button
-          $onClick={() => {
-            setValue(true);
-          }}
-        >
-          set state value
-        </Button>
-        <Button
-          $onClick={() => {
-            setBind({ "check-box-bind": 1 });
-          }}
-        >
-          set bind
-        </Button>
-        <Button
-          $onClick={() => {
-            setFormBind({ "check-box-form-bind": true });
-          }}
-        >
-          set form bind
-        </Button>
       </Row>
       <Divider />
-      <Row>
-        <CheckBox
+      <Row className="w-100 gap-1">
+        <FileDrop
           $tag="useState"
+          $disabled={disabled}
+          $readOnly={readOnly}
           $value={value}
           $onChange={v => setValue(v!)}
-          $disabled={disabled}
-          $readOnly={readOnly}
+          $required
+          $append
+          $multiple
+          style={{
+            height: 200,
+            width: 400,
+          }}
         >
-          チェックボックス
-        </CheckBox>
-        <CheckBox
+          {(value != null && value.length > 0) ? value.map(file => {
+            if (file == null) return null;
+            return (
+              <span
+                key={file.name}
+                style={{ alignSelf: "flex-start" }}
+              >
+                {file.name}
+              </span>
+            );
+          }) : "ここにファイルをドロップ"}
+        </FileDrop>
+        <FileDrop
           $tag="bind"
-          $bind={bind}
-          name="check-box-bind"
-          $outline
-          $checkedValue={1}
-          $uncheckedValue={0}
           $disabled={disabled}
           $readOnly={readOnly}
+          name="file-drop-bind"
+          $bind={bind}
+          $required
+          $hideClearButton
+          style={{
+            height: 200,
+            width: 400,
+          }}
         >
-          outline
-        </CheckBox>
+          File Drop
+        </FileDrop>
         <Form
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}
-          action="/api/form"
           method="post"
+          action="/api/form"
+          // encType="multipart/form-data"
         >
-          <Row $vAlign="bottom">
-            <CheckBox
-              $tag="form bind"
-              name="check-box-form-bind"
-            />
-            <Button type="submit">submit</Button>
-          </Row>
+          <FileDrop
+            $tag="form bind"
+            name="file-drop-form-bind"
+            // $required
+            $noFileDialog
+            // $hideClearButton
+            style={{
+              height: 200,
+              width: 400,
+            }}
+          >
+            Hey!
+          </FileDrop>
+          <CheckBox
+            name="check-box"
+          />
+          <input type="file" name="file" />
+          <Button type="submit">submit</Button>
         </Form>
       </Row>
-      {colors.map(color => {
-        return (
-          <Row key={color}>
-            <CheckBox $color={color} $defaultValue name={color} />
-            <CheckBox $color={color} $outline $defaultValue />
-            <span className={`pt-t px-1 c-${color}`}>{color}</span>
-          </Row>
-        );
-      })}
     </div>
   );
 };

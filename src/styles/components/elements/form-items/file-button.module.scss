@@ -1,0 +1,38 @@
+@use "$/mixins";
+
+.file {
+  display: none !important;
+  visibility: hidden;
+  max-height: 0;
+  max-width: 0;
+  opacity: 0;
+  z-index: -2;
+}
+
+.label {
+  box-sizing: border-box;
+  padding: var(--padding-top-text) 1rem 0 1rem;
+}
+
+.clear {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  width: var(--size);
+  height: var(--size);
+  z-index: 1;
+  cursor: pointer;
+  border-radius: var(--radius);
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+@include mixins.hoverAnimation;

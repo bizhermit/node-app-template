@@ -109,6 +109,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "ElectronicSignature",
                         icon: "E",
                         pathname: "/sandbox/elements/form-items/electronic-signature"
+                      }, {
+                        key: "file-drop",
+                        label: "FileDrop",
+                        icon: "FD",
+                        pathname: "/sandbox/elements/form-items/file-drop",
+                      }, {
+                        key: "file-button",
+                        label: "FileButton",
+                        icon: "FB",
+                        pathname: "/sandbox/elements/form-items/file-button",
                       }]
                     }, {
                       key: "container",

@@ -149,7 +149,7 @@ const Page: NextPage = () => {
           $readOnly={readOnly}
           $type={type}
           $required
-          $multiable
+          $multiple
           $monthTexts="en-s"
           // $max="2022-12-10"
         />
@@ -158,6 +158,8 @@ const Page: NextPage = () => {
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}
+          method="post"
+          action="/api/form"
         >
           <DatePicker
             name="date-picker-form-bind"
@@ -174,6 +176,7 @@ const Page: NextPage = () => {
             placeholder="range pair date"
             $interlockValidation
           />
+          <Button type="submit">submit</Button>
         </Form>
       </Row>
     </div>

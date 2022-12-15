@@ -4,7 +4,7 @@ import { attributesWithoutChildren } from "@/utilities/attributes";
 import { useForm } from "@/components/elements/form";
 import LabelText from "@/components/elements/label-text";
 
-export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & {
+export type ButtonOptions = {
   $size?: Size;
   $color?: Color;
   $round?: boolean;
@@ -12,6 +12,9 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
+};
+
+export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & ButtonOptions & {
   $onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);
   $ignoreFormValidation?: boolean;
 };
