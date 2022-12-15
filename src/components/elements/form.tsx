@@ -73,7 +73,7 @@ type FormItemMountProps = {
   change: (value: Nullable<any>, absolute?: boolean) => void;
 };
 
-export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset"> & {
+export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
   $bind?: Struct;
   $disabled?: boolean;
   $readOnly?: boolean;
@@ -81,6 +81,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
   $messageWrap?: boolean;
   $onSubmit?: (((formData: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+  encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
 };
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
@@ -208,8 +209,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
         {...attributes(props)}
         onSubmit={submit}
         onReset={reset}
-      >
-      </form>
+      />
     </FormContext.Provider>
   );
 });

@@ -121,8 +121,9 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
         onChange={change}
       />
       <input
+        className={Style.file}
         ref={href}
-        type="hidden"
+        type="file"
         name={props.name}
       />
       <div

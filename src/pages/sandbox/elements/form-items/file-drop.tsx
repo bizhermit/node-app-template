@@ -1,6 +1,7 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
+import CheckBox from "@/components/elements/form-items/check-box";
 import FileDrop from "@/components/elements/form-items/file-drop";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
@@ -113,13 +114,14 @@ const Page: NextPage = () => {
           $readOnly={readOnly}
           method="post"
           action="/api/form"
+          encType="multipart/form-data"
         >
           <FileDrop
             $tag="form bind"
-            // name="file-drop-form-bind"
-            $required
+            name="file-drop-form-bind"
+            // $required
             $noFileDialog
-            $hideClearButton
+            // $hideClearButton
             style={{
               height: 200,
               width: 400,
@@ -127,6 +129,10 @@ const Page: NextPage = () => {
           >
             Hey!
           </FileDrop>
+          <CheckBox
+            name="check-box"
+          />
+          <input type="file" name="file" />
           <Button type="submit">submit</Button>
         </Form>
       </Row>
