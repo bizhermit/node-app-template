@@ -138,9 +138,12 @@ const Page: NextPage = () => {
         }}
       />
       <Form
+        className="flex-start gap-1"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
+        action="/api/form"
+        method="post"
       >
         <RadioButtons
           name="radio-buttons-form-bind"
@@ -153,6 +156,7 @@ const Page: NextPage = () => {
             };
           })}
         />
+        <Button type="submit">submit</Button>
       </Form>
       <Row $vAlign="top" className="gap-1">
         <RadioButtons
