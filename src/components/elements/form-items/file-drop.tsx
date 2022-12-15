@@ -3,11 +3,14 @@ import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/utilities/file-input";
 import LabelText from "@/components/elements/label-text";
+import { VscClose } from "react-icons/vsc";
 
 type FileDropCommonProps = {
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
+  $noFileDialog?: boolean;
+  $hideClearButton?: boolean;
   children?: ReactNode;
 };
 
@@ -18,9 +21,9 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
   const iref = useRef<HTMLInputElement>(null!);
   const href = useRef<HTMLInputElement>(null!);
   const multiable = props.$multiple === true;
+  const fileDialog = props.$noFileDialog !== true;
 
   const form = useForm<File | Array<File> | any>(props, {
-    preventRequiredValidation: multiable,
     multiple: props.$multiple,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
@@ -38,7 +41,7 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
   });
 
   const click = () => {
-    if (!form.editable) return;
+    if (!form.editable || !fileDialog) return;
     iref.current?.click();
   };
 
@@ -57,7 +60,9 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
 
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!form.editable) return;
-    commit(e.currentTarget.files);
+    const files = e.currentTarget.files
+    if (files?.length === 0) return;
+    commit(files);
   };
 
   const dragLeave = (e: React.DragEvent) => {
@@ -83,6 +88,10 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
     commit(e.dataTransfer.files);
   };
 
+  const clear = () => {
+    form.change(undefined);
+  };
+
   useEffect(() => {
     const files = (Array.isArray(form.value) ? form.value : [form.value]).filter(file => file != null);
     const dt = new DataTransfer();
@@ -97,10 +106,6 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
       ref={ref}
       $mainProps={{
         className: Style.main,
-        onClick: click,
-        onDragOver: dragOver,
-        onDragLeave: dragLeave,
-        onDrop: drop,
       }}
     >
       <input
@@ -116,12 +121,28 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
         type="hidden"
         name={props.name}
       />
-      <div className={Style.body}>
+      <div
+        className={Style.body}
+        onClick={click}
+        onDragOver={dragOver}
+        onDragLeave={dragLeave}
+        onDrop={drop}
+        tabIndex={props.tabIndex ?? 0}
+        data-dialog={fileDialog}
+      >
         <LabelText>
           {props.children}
         </LabelText>
       </div>
-    </FormItemWrap>
+      {form.editable && props.$hideClearButton !== true &&
+        <div
+          className={Style.clear}
+          onClick={clear}
+        >
+          <VscClose />
+        </div>
+      }
+    </FormItemWrap >
   );
 });
 

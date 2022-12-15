@@ -10,7 +10,7 @@ import { useState } from "react";
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<File>(null!);
+  const [value, setValue] = useState<Array<File>>([]);
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
 
@@ -72,12 +72,23 @@ const Page: NextPage = () => {
         $value={value}
         $onChange={v => setValue(v!)}
         $required
+        $multiple
         style={{
           height: 200,
           width: 400,
         }}
       >
-        ここにファイルをドロップ
+        {(value != null && value.length > 0) ? value.map(file => {
+          if (file == null) return null;
+          return (
+            <span
+              key={file.name}
+              style={{ alignSelf: "flex-start" }}
+            >
+              {file.name}
+            </span>
+          );
+        }) : "ここにファイルをドロップ"}
       </FileDrop>
       <FileDrop
         $tag="bind"
@@ -86,6 +97,7 @@ const Page: NextPage = () => {
         name="file-drop-bind"
         $bind={bind}
         $required
+        $hideClearButton
       >
         File Drop
       </FileDrop>
@@ -98,6 +110,7 @@ const Page: NextPage = () => {
           $tag="form bind"
           name="file-drop-form-bind"
           $required
+          $noFileDialog
         >
           Hey!
         </FileDrop>
