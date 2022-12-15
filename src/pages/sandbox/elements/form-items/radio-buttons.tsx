@@ -103,6 +103,7 @@ const Page: NextPage = () => {
       <Divider />
       <RadioButtons
         style={{ width: 500 }}
+        $tag="useState"
         $appearance={appearance}
         $disabled={disabled}
         $readOnly={readOnly}
@@ -122,6 +123,7 @@ const Page: NextPage = () => {
       />
       <RadioButtons
         name="radio-buttons-bind"
+        $tag="bind"
         $appearance={appearance}
         $bind={bind}
         $disabled={disabled}
@@ -146,6 +148,7 @@ const Page: NextPage = () => {
         method="post"
       >
         <RadioButtons
+          $tag="form bind"
           name="radio-buttons-form-bind"
           $appearance={appearance}
           $source={colors.map(color => {
