@@ -6,6 +6,7 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useState } from "react";
+import { VscFile } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -72,8 +73,10 @@ const Page: NextPage = () => {
         $value={value}
         $onChange={v => setValue(v!)}
         $required
+        $hideFileName
+        $icon={<VscFile />}
       >
-        ファイルを選択
+        {value?.name ?? "ファイルを選択"}
       </FileButton>
       <FileButton
         $tag="bind"
@@ -84,15 +87,19 @@ const Page: NextPage = () => {
         $required
       />
       <Form
+        className="flex-box gap-1"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
+        action="/api/form"
+        method="post"
       >
         <FileButton
           $tag="form bind"
           name="file-button-form-bind"
           $required
         />
+        <Button type="submit" $outline>submit</Button>
       </Form>
     </div>
   );

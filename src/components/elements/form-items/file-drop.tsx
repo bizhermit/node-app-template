@@ -98,10 +98,12 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
   };
 
   useEffect(() => {
-    const files = (Array.isArray(form.value) ? form.value : [form.value]).filter(file => file != null);
-    const dt = new DataTransfer();
-    files.forEach(file => dt.items.add(file));
-    href.current.files = dt.files;
+    if (href.current) {
+      const files = (Array.isArray(form.value) ? form.value : [form.value]).filter(file => file != null);
+      const dt = new DataTransfer();
+      files.forEach(file => dt.items.add(file));
+      href.current.files = dt.files;
+    }
   }, [form.value]);
 
   return (
@@ -121,12 +123,14 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
         accept={props.$accept}
         onChange={change}
       />
-      <input
-        className={Style.file}
-        ref={href}
-        type="file"
-        name={props.name}
-      />
+      {props.name &&
+        <input
+          className={Style.file}
+          ref={href}
+          type="file"
+          name={props.name}
+        />
+      }
       <div
         className={Style.body}
         onClick={click}
