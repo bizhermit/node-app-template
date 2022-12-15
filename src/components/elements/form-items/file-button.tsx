@@ -3,7 +3,6 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
 import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/utilities/file-input";
-import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
 
 export type FileButtonProps = FormItemProps<File> & ButtonOptions & {
@@ -24,7 +23,7 @@ const FileButton = React.forwardRef<HTMLDivElement, FileButtonProps>((props, ref
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
-        validations.push(fileTypeValidation(props.$accept))
+        validations.push(fileTypeValidation(props.$accept));
       }
       if (props.$fileSize != null) {
         validations.push(fileSizeValidation(props.$fileSize));

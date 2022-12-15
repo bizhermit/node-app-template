@@ -154,7 +154,7 @@ const Page: NextPage = () => {
           // $max="2022-12-10"
         />
         <Form
-          className="flex-start"
+          className="flex-start gap-1"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

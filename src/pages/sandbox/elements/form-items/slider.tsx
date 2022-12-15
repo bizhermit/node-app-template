@@ -107,11 +107,16 @@ const Page: NextPage = () => {
         $bind={formBind}
         $readOnly={readOnly}
         $disabled={disabled}
+        action="/api/form"
+        method="post"
       >
-        <Slider
-          $tag="form bind"
-          name="slider-form-bind"
-        />
+        <Row $vAlign="bottom" className="gap-1">
+          <Slider
+            $tag="form bind"
+            name="slider-form-bind"
+          />
+          <Button type="submit">submit</Button>
+        </Row>
       </Form>
       {colors.map(color => {
         return (

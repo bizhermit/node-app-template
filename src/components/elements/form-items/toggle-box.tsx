@@ -7,7 +7,6 @@ import { pressPositiveKey } from "@/utilities/attributes";
 export type ToggleBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
   $checkedValue?: T;
   $uncheckedValue?: T;
-  $outline?: boolean;
   children?: ReactNode;
 };
 

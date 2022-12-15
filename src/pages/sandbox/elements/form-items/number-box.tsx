@@ -112,15 +112,19 @@ const Page: NextPage = () => {
         $preventThousandSeparate
       />
       <Form
+        className="flex-start gap-1"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
+        action="/api/form"
+        method="post"
       >
         <NumberBox
           name="number-box-form-bind"
           $tag="form bind"
           $required
         />
+        <Button type="submit">submit</Button>
       </Form>
     </div>
   );
