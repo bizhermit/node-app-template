@@ -1,0 +1,23 @@
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+
+  &[data-pos="top"] {
+    flex-direction: column;
+  }
+
+  &[data-pos="left"] {
+    flex-direction: row;
+  }
+
+  &[data-pos="right"] {
+    flex-direction: row-reverse;
+  }
+
+  &[data-pos="bottom"] {
+    flex-direction: column-reverse;
+  }
+}

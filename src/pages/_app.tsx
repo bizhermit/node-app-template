@@ -195,6 +195,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "GroupBox",
                       icon: "G",
                       pathname: "/sandbox/elements/group-box",
+                    }, {
+                      key: "struct-view",
+                      label: "StructView",
+                      icon: "SV",
+                      pathname: "/sandbox/elements/struct-view",
                     }],
                   }, {
                     key: "message-box",
