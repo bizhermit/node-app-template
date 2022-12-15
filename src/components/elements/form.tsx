@@ -255,18 +255,16 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const rets: Array<FormItemValidation<Nullable<T>>> = [];
     if (props?.$required && !options?.preventRequiredValidation) {
       if (options?.multiple) {
-        if (props.$required) {
-          rets.push(v => {
-            if (v == null) return formValidationMessages.required;
-            if (!Array.isArray(v)) {
-              return formValidationMessages.typeMissmatch;
-            }
-            if (v.length === 0 || v[0] === null) {
-              return formValidationMessages.required;
-            }
-            return "";
-          });
-        }
+        rets.push(v => {
+          if (v == null) return formValidationMessages.required;
+          if (!Array.isArray(v)) {
+            return formValidationMessages.typeMissmatch;
+          }
+          if (v.length === 0 || v[0] === null) {
+            return formValidationMessages.required;
+          }
+          return "";
+        });
       } else {
         rets.push((v) => {
           if (v == null || v === "") return formValidationMessages.required;
