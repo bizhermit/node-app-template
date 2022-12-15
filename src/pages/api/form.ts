@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const config = {
