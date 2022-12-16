@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, useMemo } from "react";
+import React, { HTMLAttributes, ReactNode } from "react";
 import Style from "$/components/elements/struct-view.module.scss";
 import { attributesWithoutChildren, joinClassNames } from "@/utilities/attributes";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
@@ -21,6 +21,8 @@ export type StructViewProps = HTMLAttributes<HTMLTableElement> & {
   $outline?: boolean;
 };
 
+const emptyText = "(empty)";
+
 const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Color): ReactNode => {
   const c = item.color || color || "main";
   const align = item.align;
@@ -30,7 +32,7 @@ const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Colo
         className={joinClassNames(Style.label, "fgc-dull")}
         data-align={align}
       >
-        (empty)
+        {emptyText}
       </span>
     );
   }
@@ -101,7 +103,7 @@ const StructView = React.forwardRef<HTMLTableElement, StructViewProps>((props, r
             return switchNode(item, v, color);
           })();
           return (
-            <tr className={Style.row}>
+            <tr key={item.key} className={Style.row}>
               <th className={joinClassNames(Style.hcell, `c-${color}`)}>
                 {item.label ?? item.key}
               </th>
@@ -109,7 +111,7 @@ const StructView = React.forwardRef<HTMLTableElement, StructViewProps>((props, r
                 {node}
               </td>
             </tr>
-          )
+          );
         })}
       </tbody>
     </table>

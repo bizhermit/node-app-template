@@ -1,13 +1,9 @@
 import Card from "@/components/elements/card";
-import Divider from "@/components/elements/divider";
-import RadioButtons from "@/components/elements/form-items/radio-buttons";
-import LabelText from "@/components/elements/label-text";
 import Row from "@/components/elements/row";
 import StructView, { StructKey } from "@/components/elements/struct-view";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { useMemo, useState } from "react";
-import { VscStarFull } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
@@ -99,12 +95,13 @@ const Page: NextPage = () => {
         />
         <Card
           style={{ width: 400 }}
-          $color="main"
+          $color="sub"
           $accordion
         >
           StructView (auto keys)
           <div className="w-100">
             <StructView
+              $color="sub-light"
               $struct={struct}
             />
           </div>

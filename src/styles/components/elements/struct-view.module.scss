@@ -14,11 +14,19 @@ $space: 0.3rem;
           >.hcell {
             border-top-left-radius: var(--radius);
           }
+
+          >.bcell {
+            border-top-right-radius: var(--radius);
+          }
         }
 
         &:last-child {
           >.hcell {
             border-bottom-left-radius: var(--radius);
+          }
+
+          >.bcell {
+            border-bottom-right-radius: var(--radius);
           }
         }
       }
@@ -30,7 +38,6 @@ $space: 0.3rem;
   text-align: left;
   padding: var(--padding-top-text) 1rem 0 1rem;
   white-space: nowrap;
-  border-bottom: 0.1rem solid var(--c-border);
   width: 0;
 }
 
@@ -75,6 +82,7 @@ $space: 0.3rem;
     border: none;
     width: 100%;
     padding: 0 #{$space};
+    border-radius: 0;
 
     >tbody {
       >.row {
