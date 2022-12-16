@@ -296,14 +296,16 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     },
     onToggled: (open) => {
       if (open) {
-        if (!mref.current) return;
-        mref.current.style.opacity = "1";
+        if (mref.current) {
+          mref.current.style.opacity = "1";
+        }
       } else {
         removeZIndex.current();
         if (props.$preventUnmount !== true) setMount(false);
-        if (!mref.current) return;
-        mref.current.style.opacity = "0";
-        mref.current.style.display = "none";
+        if (mref.current) {
+          mref.current.style.opacity = "0";
+          mref.current.style.display = "none";
+        }
       }
       props.$onToggled?.(open);
     },

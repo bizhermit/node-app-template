@@ -94,7 +94,8 @@ const Page: NextPage = () => {
         $onChange={v => setValue(v!)}
         $disabled={disabled}
         $readOnly={readOnly}
-        $source={ArrayUtils.generateArray(10, idx => {
+        $resize
+        $source={ArrayUtils.generateArray(30, idx => {
           return {
             value: idx,
             label: `item ${idx}`,
@@ -117,6 +118,7 @@ const Page: NextPage = () => {
         }}
       />
       <Form
+        className="flex-start gap-1"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
@@ -139,6 +141,7 @@ const Page: NextPage = () => {
             });
           }}
         />
+        <Button type="submit">submit</Button>
       </Form>
     </div>
   );
