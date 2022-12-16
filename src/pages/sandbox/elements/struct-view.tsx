@@ -92,17 +92,18 @@ const Page: NextPage = () => {
     <div className="flex-start w-100 p-1 gap-1">
       <Row className="gap-1" $vAlign="top">
         <StructView
-          style={{ width: 400 }}
+          style={{ width: 350 }}
           $keys={keys}
           $struct={struct}
           $outline
         />
         <Card
+          style={{ width: 400 }}
           $color="main"
           $accordion
         >
           StructView (auto keys)
-          <div className="">
+          <div className="w-100">
             <StructView
               $struct={struct}
             />
