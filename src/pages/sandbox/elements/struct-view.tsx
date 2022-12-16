@@ -101,7 +101,7 @@ const Page: NextPage = () => {
           $color="main"
           $accordion
         >
-          StructView
+          StructView (auto keys)
           <div className="">
             <StructView
               $struct={struct}
