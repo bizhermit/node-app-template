@@ -1,3 +1,4 @@
+import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import SelectBox from "@/components/elements/form-items/select-box";
@@ -28,6 +29,63 @@ const Page: NextPage = () => {
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
+      </Row>
+      <Row className="gap-1">
+        <Button
+          $onClick={() => {
+            console.log("-------------------");
+            console.log("useState: ", value);
+            console.log("bind: ", bind);
+            console.log("formBind: ", formBind);
+          }}
+        >
+          show value
+        </Button>
+        <Button
+          $outline
+          $onClick={() => {
+            setValue(null!);
+          }}
+        >
+          clear state value
+        </Button>
+        <Button
+          $outline
+          $onClick={() => {
+            setBind({});
+          }}
+        >
+          clear bind
+        </Button>
+        <Button
+          $outline
+          $onClick={() => {
+            setFormBind({});
+          }}
+        >
+          clear form bind
+        </Button>
+        <Button
+          $onClick={() => {
+            setValue(2);
+          }}
+        >
+          set state value
+        </Button>
+        <Button
+          $onClick={() => {
+            setBind({ "select-box-bind": 3 });
+          }}
+        >
+          set bind
+        </Button>
+        <Button
+          $onClick={() => {
+            setFormBind({ "select-box-form-bind": "main" });
+          }}
+        >
+          set form bind
+        </Button>
       </Row>
       <Divider />
       <SelectBox
