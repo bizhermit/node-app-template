@@ -119,6 +119,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "FileButton",
                         icon: "FB",
                         pathname: "/sandbox/elements/form-items/file-button",
+                      }, {
+                        key: "select-box",
+                        label: "SelectBox",
+                        icon: "S",
+                        pathname: "/sandbox/elements/form-items/select-box",
                       }]
                     }, {
                       key: "container",
