@@ -1,15 +1,33 @@
+import Card from "@/components/elements/card";
+import Divider from "@/components/elements/divider";
+import RadioButtons from "@/components/elements/form-items/radio-buttons";
+import LabelText from "@/components/elements/label-text";
+import Row from "@/components/elements/row";
 import StructView, { StructKey } from "@/components/elements/struct-view";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { VscStarFull } from "react-icons/vsc";
 
 const Page: NextPage = () => {
+  const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
 
   const struct = useMemo(() => {
     const ret: Struct = {};
     ArrayUtils.generateArray(10, index => {
       ret[`item${index}`] = `value ${index}`;
     });
+    ret.left = "left";
+    ret.center = "center";
+    ret.right = "right";
+    ret.text = "123456789012345678901234567890";
+    ret.number = 1234567890;
+    ret.date = new Date();
+    ret.struct = {
+      hoge: "Hoge",
+      fuga: "Fuga",
+      piyo: "Piyo!"
+    };
     return ret;
   }, []);
 
@@ -17,18 +35,80 @@ const Page: NextPage = () => {
     return [
       {
         key: "item1",
-      }
-    ]
+        label: "項目１",
+      },
+      {
+        key: "item3",
+        label: "項目３",
+        align: "right",
+      },
+      {
+        key: "item5",
+        label: "項目５",
+      },
+      {
+        key: "item7",
+        label: "項目７",
+      },
+      {
+        key: "left",
+        label: "align left",
+        align: "left",
+      },
+      {
+        key: "center",
+        label: "align left",
+        align: "center",
+      },
+      {
+        key: "right",
+        label: "align left",
+        align: "right",
+      },
+      {
+        key: "text",
+        label: "文字列",
+      },
+      {
+        key: "number",
+        label: "数値",
+      },
+      {
+        key: "date",
+        label: "日付",
+      },
+      {
+        key: "struct",
+        label: "Struct"
+      },
+      {
+        key: "empty",
+        label: "Empty",
+      },
+    ];
   }, []);
 
   return (
     <div className="flex-start w-100 p-1 gap-1">
-      <StructView
-        // keys={keys}
-        $struct={struct}
-      >
-        StructView
-      </StructView>
+      <Row className="gap-1" $vAlign="top">
+        <StructView
+          style={{ width: 400 }}
+          $keys={keys}
+          $struct={struct}
+          $outline
+        />
+        <Card
+          $color="main"
+          $accordion
+        >
+          StructView
+          <div className="">
+            <StructView
+              $struct={struct}
+            />
+          </div>
+        </Card>
+      </Row>
     </div>
   );
 };
