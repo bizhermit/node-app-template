@@ -84,6 +84,12 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
 
   const clear = () => {
     if (!form.editable) return;
+    if (props.$emptyItem) {
+      if (!(typeof props.$emptyItem === "boolean")) {
+        form.change(props.$emptyItem.value);
+        return;
+      }
+    }
     form.change(undefined);
   };
 
@@ -314,7 +320,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
               const v = item[vdn];
               return (
                 <ListItem
-                  key={v ?? index}
+                  key={v ?? "_empty"}
                   empty={v == null || v === ""}
                   index={index}
                   selected={v === form.valueRef.current}

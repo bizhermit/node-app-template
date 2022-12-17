@@ -111,7 +111,7 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         $required
-        $hideClearButton
+        // $hideClearButton
         $emptyItem={{
           value: "",
           label: "(empty)",
