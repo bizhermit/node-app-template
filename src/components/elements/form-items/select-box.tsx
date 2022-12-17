@@ -42,6 +42,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
 
   const iref = useRef<HTMLInputElement>(null!);
   const [showPicker, setShowPicker] = useState(false);
+  const doScroll = useRef(false);
   const [width, setWidth] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const lref = useRef<HTMLDivElement>(null!);
@@ -76,6 +77,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
     setBindSource(source.filter(item => {
       return StringUtils.contains(item[ldn], text);
     }));
+    doScroll.current = false;
     setShowPicker(true);
   };
 
@@ -87,6 +89,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   const picker = () => {
     if (!form.editable) return;
     if (showPicker) return;
+    setBindSource(source);
     setWidth((iref.current.parentElement as HTMLElement).offsetWidth);
     const rect = iref.current.getBoundingClientRect();
     setMaxHeight((Math.max(document.body.clientHeight - rect.bottom, rect.top) - 10));
@@ -111,6 +114,8 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         setShowPicker(false);
         break;
       case "F2":
+        doScroll.current = true;
+        setBindSource(source);
         setShowPicker(true);
         break;
       case "ArrowUp":
@@ -118,6 +123,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         if (showPicker && lref.current) {
           scrollToSelectedItem();
         } else {
+          doScroll.current = true;
           setShowPicker(true);
         }
         e.stopPropagation();
@@ -151,6 +157,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   };
 
   const clickItem = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!form.editable) return;
     selectItem(isListItem(e.target as HTMLElement));
   };
 
@@ -161,8 +168,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         setShowPicker(false);
         break;
       case "Enter":
-        const elem = isListItem(e.target as HTMLElement);
-        selectItem(elem);
+        selectItem(isListItem(e.target as HTMLElement));
         e.preventDefault();
         break;
       case "ArrowUp":
@@ -220,7 +226,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         ref={iref}
         className={Style.input}
         type="text"
-        disabled={form.disabled}
+        disabled={form.disabled || loading}
         readOnly={!form.editable}
         placeholder={form.editable ? props.placeholder : ""}
         tabIndex={props.tabIndex}
@@ -228,7 +234,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         onChange={changeText}
         onKeyDown={keydown}
       />
-      {form.editable &&
+      {form.editable && !loading &&
         <>
           {props.$hideClearButton !== true &&
             <div
@@ -240,7 +246,10 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
           }
           <div
             className={Style.icon}
-            onClick={picker}
+            onClick={() => {
+              doScroll.current = true;
+              picker();
+            }}
           >
             <VscChevronDown />
           </div>
@@ -249,7 +258,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
       {props.$resize && <Resizer direction="x" />}
       <Popup
         className="es-4 c-input r-2"
-        $show={showPicker}
+        $show={showPicker && form.editable && !loading}
         $onToggle={setShowPicker}
         $anchor="parent"
         $position={{
@@ -261,7 +270,8 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         $preventUnmount
         $onToggled={(open) => {
           if (open) {
-            if (document.activeElement === iref.current) return;
+            if (!doScroll.current) return;
+            doScroll.current = false;
             scrollToSelectedItem();
           }
         }}
