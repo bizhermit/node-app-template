@@ -1,21 +1,23 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
-import NumberBox from "@/components/elements/form-items/number-box";
+import SelectBox from "@/components/elements/form-items/select-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { colors } from "@/utilities/sandbox";
+import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<number>>();
+  const [value, setValue] = useState<number>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -42,7 +44,7 @@ const Page: NextPage = () => {
         <Button
           $outline
           $onClick={() => {
-            setValue(null);
+            setValue(null!);
           }}
         >
           clear state value
@@ -65,52 +67,63 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setValue(1001);
+            setValue(2);
           }}
         >
           set state value
         </Button>
         <Button
           $onClick={() => {
-            setBind({ "number-box-bind": 1001 });
+            setBind({ "select-box-bind": 3 });
           }}
         >
           set bind
         </Button>
         <Button
           $onClick={() => {
-            setFormBind({ "number-box-form-bind": 1001 });
+            setFormBind({ "select-box-form-bind": "main" });
           }}
         >
           set form bind
         </Button>
       </Row>
       <Divider />
-      <NumberBox
+      <SelectBox
         $tag="useState"
         $tagPosition="placeholder"
-        $disabled={disabled}
-        $readOnly={readOnly}
         $value={value}
-        $onChange={v => setValue(v)}
-        $required
-        $messagePosition="bottom"
-        // $messageWrap
-        $resize
-      />
-      <NumberBox
-        name="number-box-bind"
-        $bind={bind}
-        $tag="bind"
+        $onChange={v => setValue(v!)}
         $disabled={disabled}
         $readOnly={readOnly}
         $required
-        $max={10}
-        $min={5}
-        $float={1}
-        $step={0.5}
-        $hideButtons
-        $preventThousandSeparate
+        $resize
+        $source={ArrayUtils.generateArray(30, idx => {
+          return {
+            value: idx,
+            label: `item ${idx}`,
+          };
+        })}
+      />
+      <SelectBox
+        $tag="bind"
+        name="select-box-bind"
+        $bind={bind}
+        $disabled={disabled}
+        $readOnly={readOnly}
+        $required
+        // $hideClearButton
+        $emptyItem={{
+          value: "",
+          label: "(empty)",
+        }}
+        $source={() => {
+          return ArrayUtils.generateArray(10, idx => {
+            return {
+              value: idx,
+              label: `item ${idx}`,
+            };
+          })
+        }}
       />
       <Form
         className="flex-start gap-1"
@@ -120,10 +133,22 @@ const Page: NextPage = () => {
         action="/api/form"
         method="post"
       >
-        <NumberBox
-          name="number-box-form-bind"
+        <SelectBox
           $tag="form bind"
+          name="select-box-form-bind"
           $required
+          $source={async () => {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                resolve(colors.map(color => {
+                  return {
+                    value: color,
+                    label: color,
+                  };
+                }));
+              }, 1000);
+            });
+          }}
         />
         <Button type="submit">submit</Button>
       </Form>
