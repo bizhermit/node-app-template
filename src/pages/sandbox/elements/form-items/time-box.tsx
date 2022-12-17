@@ -13,7 +13,7 @@ const Page: NextPage = () => {
   const [formBind, setFormBind] = useState<Struct>({ "pair-time": "12:00" });
 
   return (
-    <div className="flex-start gap-1 p-1">
+    <div className="flex-start gap-1 p-1 w-100">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
