@@ -1,3 +1,5 @@
+@use "$/mixins";
+
 .input {
   box-sizing: border-box;
   border: none;
@@ -11,4 +13,44 @@
   min-width: 0;
   flex: 1;
   padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
+
+  &[data-clear="true"] {
+    padding-right: 0.5rem;
+  }
+
+  &[data-round="true"] {
+    padding-left: calc(var(--size) / 2);
+
+    &[data-clear="false"] {
+      padding-right: calc(var(--size) / 2);
+    }
+  }
 }
+
+.button {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  width: var(--size);
+  height: var(--size);
+  flex: none;
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--radius);
+
+  &[data-round="true"] {
+    border-radius: 9999px;
+  }
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+@include mixins.hoverAnimation;
