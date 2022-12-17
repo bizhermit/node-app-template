@@ -1,11 +1,13 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import { convertTime, TimeInputProps, TimeValue } from "@/utilities/time-input";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { BsClock } from "react-icons/bs";
 import Time, { TimeUtils } from "@bizhermit/time";
+import Popup from "@/components/elements/popup";
+import TimePicker from "@/components/elements/form-items/time-picker";
 
 type TimeBoxCommonProps = TimeInputProps & {
   $disallowInput?: boolean;
@@ -43,7 +45,30 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
     const time = convertTime(value, unit);
   };
 
-  const form = useForm<any>(props);
+  const form = useForm<any>(props, {
+    interlockValidation: props.$rangePair != null,
+  });
+
+  const commitCache = () => {
+    // const h = cacheH.current;
+    // const m = type !== "year" ? cacheM.current : 1;
+    // const d = type === "date" ? cacheD.current : 1;
+    // if (h == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
+    //   form.change(undefined);
+    //   return;
+    // }
+    // const date = converti(`${h}-${m}-${d}`);
+    // if (date == null) {
+    //   form.change(undefined);
+    //   return;
+    // }
+    // form.change(convertDateToValue(date, props.$typeof));
+  };
+
+  const blur = (e: React.FocusEvent) => {
+    if (e.relatedTarget === href.current || e.relatedTarget === mref.current || e.relatedTarget === sref.current) return;
+    commitCache();
+  };
 
   const picker = () => {
     if (!form.editable) return;
@@ -56,6 +81,24 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
     form.change(undefined);
   };
 
+  const focusInput = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (!form.editable) return;
+    e.currentTarget.select();
+  };
+
+  const clickInputs = () => {
+    if (!props.$disallowInput) return;
+    picker();
+  };
+
+  const focus = () => {
+    (href.current ?? mref.current ?? sref.current)?.focus();
+  };
+
+  useEffect(() => {
+    setInputValues(form.value);
+  }, [form.value, type, unit]);
+
   const hasData = form.value != null && form.value !== "";
 
   return (
@@ -65,9 +108,13 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
       ref={ref}
       $useHidden
       data-has={hasData}
+      $mainProps={{
+        onBlur: blur,
+      }}
     >
       <div
         className={Style.inputs}
+        onClick={clickInputs}
         data-input={!props.$disallowInput}
       >
         {type !== "ms" &&
@@ -79,6 +126,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
             readOnly={props.$disallowInput || form.readOnly}
             maxLength={2}
             defaultValue={cacheH.current || ""}
+            onFocus={focusInput}
           />
         }
         <span className={Style.sep} data-has={hasData}>:</span>
@@ -91,6 +139,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
             readOnly={props.$disallowInput || form.readOnly}
             maxLength={2}
             defaultValue={cacheM.current || ""}
+            onFocus={focusInput}
           />
         }
         {(type === "hms" || type === "ms") &&
@@ -104,6 +153,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
               readOnly={props.$disallowInput || form.readOnly}
               maxLength={2}
               defaultValue={cacheS.current || ""}
+              onFocus={focusInput}
             />
           </>
         }
@@ -126,6 +176,37 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
           </div>
         </>
       }
+      <Popup
+        className="es-4"
+        $show={showPicker}
+        $onToggle={setShowPicker}
+        $anchor="parent"
+        $position={{
+          x: "inner",
+          y: "outer",
+        }}
+        $animationDuration={50}
+        $closeWhenClick
+        $preventClickEvent
+      >
+        <TimePicker
+          $value={form.value}
+          $type={type}
+          $unit={unit}
+          $max={props.$max}
+          $min={props.$min}
+          $skipValidation
+          $onClickPositive={(value) => {
+            form.change(value);
+            setShowPicker(false);
+            focus();
+          }}
+          $onClickNegative={() => {
+            setShowPicker(false);
+            focus();
+          }}
+        />
+      </Popup>
     </FormItemWrap>
   );
 });
