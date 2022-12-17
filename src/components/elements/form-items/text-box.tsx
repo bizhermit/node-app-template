@@ -3,7 +3,8 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { VscClose } from "react-icons/vsc";
 
 export type TextBoxProps = FormItemProps<string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
@@ -15,15 +16,13 @@ export type TextBoxProps = FormItemProps<string> & {
   $width?: number | string;
   $maxWidth?: number | string;
   $minWidth?: number | string;
+  $hideClearButton?: boolean;
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);
 
   const form = useForm(props, {
-    effect: (v) => {
-      if (iref.current) iref.current.value = v || "";
-    },
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
@@ -48,6 +47,14 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
       return validations;
     },
   });
+
+  const clear = () => {
+    form.change(undefined);
+  };
+
+  useEffect(() => {
+    if (iref.current) iref.current.value = form.value || "";
+  }, [form.value]);
 
   return (
     <FormItemWrap
@@ -76,7 +83,18 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         tabIndex={props.tabIndex}
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
+        data-round={props.$round}
+        data-clear={form.editable && props.$hideClearButton !== true}
       />
+      {form.editable && props.$hideClearButton !== true &&
+        <div
+          className={Style.button}
+          onClick={clear}
+          data-round={props.$round}
+        >
+          <VscClose />
+        </div>
+      }
       {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
