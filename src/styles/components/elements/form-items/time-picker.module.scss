@@ -1,0 +1,81 @@
+@use "$/mixins";
+
+.main {
+  flex-direction: column !important;
+  width: 32rem;
+  height: 26rem;
+  border-radius: var(--radius);
+  overflow: visible;
+  background: var(--c-input);
+  color: var(--c-input_);
+
+  &[data-error="true"] {
+    background: var(--c-error);
+    color: var(--c-error_);
+  }
+}
+
+.content {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+.buttons {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  height: calc(var(--size) * 0.8);
+  flex: none;
+  width: 100%;
+  user-select: none;
+
+  &:hover {
+    z-index: 1;
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
+.clear,
+.positive,
+.negative {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+@include mixins.hoverAnimation;
+
+.positive,
+.negative {
+  flex: 1;
+  font-size: calc(var(--font-size) * 0.9);
+}
+
+.clear {
+  width: var(--size);
+  flex: none;
+}

@@ -749,9 +749,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           </div>
         }
       </div>
-      <div
-        className={Style.buttons}
-      >
+      <div className={Style.buttons}>
         {form.editable &&
           <>
             <div

@@ -1,5 +1,7 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
+import Form from "@/components/elements/form";
+import TimePicker from "@/components/elements/form-items/time-picker";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
@@ -93,6 +95,48 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row $vAlign="top" className="gap-1">
+        <TimePicker
+          $tag="useState"
+          $value={value}
+          $onChange={v => setValue(v!)}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          // $required
+          $onClickPositive={(v) => {
+            console.log("positive", v);
+          }}
+          $onClickNegative={() => {
+            console.log("negative");
+          }}
+        />
+        <TimePicker
+          $tag="bind"
+          name="time-picker-bind"
+          $bind={bind}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          // $required
+          $onClickPositive={(v) => {
+            console.log("positive", v);
+          }}
+        />
+        <Form
+          className="flex-start gap-1"
+          $bind={formBind}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          action="/api/form"
+          method="post"
+        >
+          <TimePicker
+            $tag="form bind"
+            name="time-picker-form-bind"
+          // $required
+          />
+          <Button type="submit">submit</Button>
+        </Form>
+      </Row>
     </div>
   );
 };
