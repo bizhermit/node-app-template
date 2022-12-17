@@ -3,7 +3,7 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
 export type TextBoxProps = FormItemProps<string> & {
