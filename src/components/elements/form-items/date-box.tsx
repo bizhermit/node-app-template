@@ -322,12 +322,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         />
         {type !== "year" &&
           <>
-            <span
-              className={Style.sep}
-              data-has={hasData}
-            >
-              /
-            </span>
+            <span className={Style.sep} data-has={hasData}>/</span>
             <input
               ref={mref}
               className={Style.m}
@@ -344,12 +339,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         }
         {type === "date" &&
           <>
-            <span
-              className={Style.sep}
-              data-has={hasData}
-            >
-              /
-            </span>
+            <span className={Style.sep} data-has={hasData}>/</span>
             <input
               ref={dref}
               className={Style.d}
