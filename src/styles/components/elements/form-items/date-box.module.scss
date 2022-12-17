@@ -40,20 +40,23 @@
   padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
   text-align: center;
   flex: none;
+
+  &:first-child {
+    margin-left: 0.5rem;
+  }
+
+  &:last-child {
+    margin-right: 0.5rem;
+  }
 }
 
 .y {
   width: 5rem;
-  margin-left: 0.5rem;
 }
 
-.m {
-  width: 2.8rem;
-}
-
+.m,
 .d {
   width: 2.8rem;
-  margin-right: 0.5rem;
 }
 
 .sep {
