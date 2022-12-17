@@ -251,14 +251,14 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         <>
           {props.$hideClearButton !== true &&
             <div
-              className={Style.icon}
+              className={Style.button}
               onClick={clear}
             >
               <VscClose />
             </div>
           }
           <div
-            className={Style.icon}
+            className={Style.button}
             onClick={() => {
               doScroll.current = true;
               picker();
