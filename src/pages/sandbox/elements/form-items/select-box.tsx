@@ -111,6 +111,11 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         $required
+        $hideClearButton
+        $emptyItem={{
+          value: "",
+          label: "(empty)",
+        }}
         $source={() => {
           return ArrayUtils.generateArray(10, idx => {
             return {

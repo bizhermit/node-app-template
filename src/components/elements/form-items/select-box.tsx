@@ -19,7 +19,7 @@ export type SelectBoxProps<T extends string | number = string | number> = FormIt
   $width?: number | string;
   $maxWidth?: number | string;
   $minWidth?: number | string;
-  $appendEmpltySourceItem?: boolean;
+  $emptyItem?: boolean | { value: T; label: string; };
 };
 
 interface SelectBoxFC extends FunctionComponent {
@@ -46,16 +46,17 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   const [width, setWidth] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const lref = useRef<HTMLDivElement>(null!);
+  const [label, setLabel] = useState("");
 
   const renderLabel = () => {
     if (iref.current == null) return;
     const item = source.find(item => equals(item[vdn], form.valueRef.current));
     if (item == null) {
       iref.current.value = "";
-      return undefined;
+      return;
     }
-    iref.current.value = String(item[ldn] || "");
-    return item[ldn];
+    setLabel(iref.current.value = String(item[ldn] || ""));
+    return;
   };
 
   const form = useForm(props, {
@@ -201,11 +202,14 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   const blur = (e: React.FocusEvent) => {
     if (e.relatedTarget === iref.current || e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current) return;
     setShowPicker(false);
+    renderLabel();
   };
 
   useEffect(() => {
     renderLabel();
   }, [form.value]);
+
+  const isEmptyValue = form.value == null || form.value === "";
 
   return (
     <FormItemWrap
@@ -213,7 +217,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
       ref={ref}
       $$form={form}
       $useHidden
-      data-has={form.value != null && form.value !== ""}
+      data-has={StringUtils.isNotEmpty(label)}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width ?? defaultWidth),
@@ -226,6 +230,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
       <input
         ref={iref}
         className={Style.input}
+        defaultValue={label}
         type="text"
         disabled={form.disabled || loading}
         readOnly={!form.editable}
@@ -234,6 +239,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         onFocus={picker}
         onChange={changeText}
         onKeyDown={keydown}
+        data-has={!isEmptyValue}
       />
       {form.editable && !loading &&
         <>
@@ -286,17 +292,30 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
           onKeyDown={keydownItem}
         >
           {useMemo(() => {
-            if (props.$appendEmpltySourceItem && bindSource[0]?.[vdn] !== "") {
-              const emptyItem: Struct = {};
-              emptyItem[vdn] = "";
-              emptyItem[ldn] = "";
-              bindSource.unshift(emptyItem);
+            if (props.$emptyItem) {
+              const emptyValue = bindSource[0]?.[vdn];
+              if (emptyValue != null && emptyValue !== "") {
+                if (typeof props.$emptyItem === "boolean") {
+                  const emptyItem: Struct = {};
+                  emptyItem[vdn] = undefined;
+                  emptyItem[ldn] = "";
+                  bindSource.unshift(emptyItem);
+                } else {
+                  if (emptyValue !== props.$emptyItem.value) {
+                    const emptyItem: Struct = {};
+                    emptyItem[vdn] = props.$emptyItem.value;
+                    emptyItem[ldn] = props.$emptyItem.label;
+                    bindSource.unshift(emptyItem);
+                  }
+                }
+              }
             }
             return bindSource.map((item, index) => {
               const v = item[vdn];
               return (
                 <ListItem
                   key={v ?? index}
+                  empty={v == null || v === ""}
                   index={index}
                   selected={v === form.valueRef.current}
                 >
@@ -313,6 +332,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
 
 const ListItem: FC<{
   index: number;
+  empty: boolean;
   selected: boolean;
   children?: ReactNode;
 }> = (props) => {
@@ -321,6 +341,7 @@ const ListItem: FC<{
       className={Style.item}
       data-index={props.index}
       data-selected={props.selected}
+      data-empty={props.empty}
       tabIndex={0}
     >
       {props.children}
