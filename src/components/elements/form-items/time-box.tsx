@@ -68,8 +68,45 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
     >
       <div
         className={Style.inputs}
+        data-input={!props.$disallowInput}
       >
-
+        {type !== "ms" &&
+          <input
+            ref={href}
+            className={Style.h}
+            type="text"
+            disabled={props.$disallowInput || form.disabled}
+            readOnly={props.$disallowInput || form.readOnly}
+            maxLength={2}
+            defaultValue={cacheH.current || ""}
+          />
+        }
+        <span className={Style.sep} data-has={hasData}>:</span>
+        {type !== "h" &&
+          <input
+            ref={mref}
+            className={Style.m}
+            type="text"
+            disabled={props.$disallowInput || form.disabled}
+            readOnly={props.$disallowInput || form.readOnly}
+            maxLength={2}
+            defaultValue={cacheM.current || ""}
+          />
+        }
+        {(type === "hms" || type === "ms") &&
+          <>
+            <span className={Style.sep} data-has={hasData}>:</span>
+            <input
+              ref={sref}
+              className={Style.s}
+              type="text"
+              disabled={props.$disallowInput || form.disabled}
+              readOnly={props.$disallowInput || form.readOnly}
+              maxLength={2}
+              defaultValue={cacheS.current || ""}
+            />
+          </>
+        }
       </div>
       {form.editable &&
         <>

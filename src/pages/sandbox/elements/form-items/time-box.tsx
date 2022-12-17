@@ -126,6 +126,21 @@ const Page: NextPage = () => {
           <Button type="submit">submit</Button>
         </Form>
       </Row>
+      <TimeBox
+        $tag="hm"
+      />
+      <TimeBox
+        $tag="hms"
+        $type="hms"
+      />
+      <TimeBox
+        $tag="h"
+        $type="h"
+      />
+      <TimeBox
+        $tag="ms"
+        $type="ms"
+      />
     </div>
   );
 };
