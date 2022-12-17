@@ -213,6 +213,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
       ref={ref}
       $$form={form}
       $useHidden
+      data-has={form.value != null && form.value !== ""}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width ?? defaultWidth),

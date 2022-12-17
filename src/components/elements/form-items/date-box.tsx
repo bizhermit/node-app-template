@@ -290,7 +290,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     setInputValues(form.value);
   }, [form.value, type]);
 
-  const hasData = Boolean(form.value);
+  const hasData = form.value != null && form.value !== "";
 
   return (
     <FormItemWrap

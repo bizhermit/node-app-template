@@ -434,7 +434,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $useHidden?: boolean;
   children: ReactNode;
 }>((props, ref) => {
-  const errorNode = (Boolean(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
+  const errorNode = (StringUtils.isNotEmpty(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
       data-mode={props.$$form.messageDisplayMode}

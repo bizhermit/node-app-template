@@ -90,10 +90,12 @@ const Page: NextPage = () => {
       <Divider />
       <SelectBox
         $tag="useState"
+        $tagPosition="placeholder"
         $value={value}
         $onChange={v => setValue(v!)}
         $disabled={disabled}
         $readOnly={readOnly}
+        $required
         $resize
         $source={ArrayUtils.generateArray(30, idx => {
           return {
@@ -108,6 +110,7 @@ const Page: NextPage = () => {
         $bind={bind}
         $disabled={disabled}
         $readOnly={readOnly}
+        $required
         $source={() => {
           return ArrayUtils.generateArray(10, idx => {
             return {
@@ -128,6 +131,7 @@ const Page: NextPage = () => {
         <SelectBox
           $tag="form bind"
           name="select-box-form-bind"
+          $required
           $source={async () => {
             return new Promise(resolve => {
               setTimeout(() => {

@@ -88,6 +88,7 @@ const Page: NextPage = () => {
       <Divider />
       <NumberBox
         $tag="useState"
+        $tagPosition="placeholder"
         $disabled={disabled}
         $readOnly={readOnly}
         $value={value}
