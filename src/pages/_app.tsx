@@ -124,6 +124,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "SelectBox",
                         icon: "S",
                         pathname: "/sandbox/elements/form-items/select-box",
+                      }, {
+                        key: "time-picker",
+                        label: "TimePicker",
+                        icon: "TP",
+                        pathname: "/sandbox/elements/form-items/time-picker",
+                      }, {
+                        key: "time-box",
+                        label: "TimeBox",
+                        icon: "TB",
+                        pathname: "/sandbox/elements/form-items/time-box",
                       }]
                     }, {
                       key: "container",
