@@ -23,6 +23,9 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);
 
   const form = useForm(props, {
+    effect: (v) => {
+      if (iref.current) iref.current.value = v || "";
+    },
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
@@ -49,12 +52,10 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
   });
 
   const clear = () => {
+    if (!form.editable) return;
     form.change(undefined);
+    if (iref.current) iref.current.value = "";
   };
-
-  useEffect(() => {
-    if (iref.current) iref.current.value = form.value || "";
-  }, [form.value]);
 
   return (
     <FormItemWrap
