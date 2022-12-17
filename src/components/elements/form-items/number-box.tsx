@@ -2,7 +2,7 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import React, { useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
-import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
+import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
@@ -22,6 +22,7 @@ type NumberBoxProps = FormItemProps<number> & {
   $width?: number | string;
   $maxWidth?: number | string;
   $minWidth?: number | string;
+  $hideClearButton?: boolean;
 };
 
 const defaultWidth = 120;
@@ -190,6 +191,12 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
     renderFormattedValue();
   };
 
+  const clear = () => {
+    if (!form.editable) return;
+    form.change(undefined);
+    renderFormattedValue();
+  };
+
   return (
     <FormItemWrap
       {...props}
@@ -220,6 +227,14 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         onKeyDown={keydown}
         inputMode={props.$inputMode || (props.$float ? "decimal" : "numeric")}
       />
+      {form.editable && props.$hideClearButton !== true &&
+        <div
+          className={Style.clear}
+          onClick={clear}
+        >
+          <VscClose />
+        </div>
+      }
       {form.editable && !props.$hideButtons &&
         <div
           className={Style.buttons}
