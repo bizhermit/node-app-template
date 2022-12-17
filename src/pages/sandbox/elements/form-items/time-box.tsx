@@ -1,5 +1,7 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
+import Form from "@/components/elements/form";
+import TimeBox from "@/components/elements/form-items/time-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { NextPage } from "next";
@@ -93,6 +95,37 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row $vAlign="top" className="gap-3">
+        <TimeBox
+          $tag="useState"
+          $tagPosition="placeholder"
+          $value={value}
+          $onChange={v => setValue(v)}
+          $disabled={disabled}
+          $readOnly={readOnly}
+        />
+        <TimeBox
+          $tag="bind"
+          name="time-box-bind"
+          $bind={bind}
+          $disabled={disabled}
+          $readOnly={readOnly}
+        />
+        <Form
+          className="flex-start gap-1"
+          $bind={formBind}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          action="/api/form"
+          method="post"
+        >
+          <TimeBox
+            $tag="form bind"
+            name="time-box-form-bind"
+          />
+          <Button type="submit">submit</Button>
+        </Form>
+      </Row>
     </div>
   );
 };
