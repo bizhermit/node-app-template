@@ -30,7 +30,7 @@ const isNumericOrEmpty = (value?: string): value is string => {
 
 const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   const type = props.$type ?? "hm";
-  const unit = props.$unit
+  const unit = props.$unit ?? "minute";
 
   const [showPicker, setShowPicker] = useState(false);
 
@@ -50,19 +50,18 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   });
 
   const commitCache = () => {
-    // const h = cacheH.current;
-    // const m = type !== "year" ? cacheM.current : 1;
-    // const d = type === "date" ? cacheD.current : 1;
-    // if (h == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
-    //   form.change(undefined);
-    //   return;
-    // }
-    // const date = converti(`${h}-${m}-${d}`);
-    // if (date == null) {
-    //   form.change(undefined);
-    //   return;
-    // }
-    // form.change(convertDateToValue(date, props.$typeof));
+    const needH = type !== "ms";
+    const needM = type !== "h";
+    const needS = type === "hms" || type === "ms";
+    const h = needH ? cacheH.current : 0;
+    const m = needM ? cacheM.current : 0;
+    const s = needS ? cacheS.current : 0;
+    if ((needH && h == null) || (needM && m == null) || (needS && m == null)) {
+      form.change(undefined);
+      return;
+    }
+    const time = new Time(`${h}:${m}:${s}`);
+    form.change(TimeUtils.convertMillisecondsToUnit(time.getTime(), unit));
   };
 
   const blur = (e: React.FocusEvent) => {
