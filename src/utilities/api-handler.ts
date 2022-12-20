@@ -1,10 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+type QueryStruct = Partial<{ [key: string]: string | string[] }>;
+
 type Context = {
   req: NextApiRequest;
   res: NextApiResponse;
+  getQuery: <T extends QueryStruct = QueryStruct>() => T;
   getBody: <T = Struct>() => T;
-  getQuery: () => Partial<{ [key: string]: string | string[] }>;
+  getCookies: <T extends QueryStruct = QueryStruct>() => T;
   setStatus: (code: number) => void;
 };
 type Handler = (context: Context) => Promise<void | Struct>;
@@ -25,8 +28,9 @@ const apiHandler = (methods: Methods) => {
     const context: Context = {
       req,
       res,
-      getQuery: () => req.query,
+      getQuery: () => req.query as any,
       getBody: () => req.body,
+      getCookies: () => req.cookies as any,
       setStatus: (code: number) => statusCode = code,
     };
 

@@ -16,6 +16,7 @@ export default apiHandler({
     console.log(body);
     return {
       updated: true,
+      body,
     };
   },
   delete: async (ctx) => {
