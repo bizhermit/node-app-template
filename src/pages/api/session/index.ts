@@ -6,8 +6,10 @@ export default apiHandler({
   },
   get: async (ctx) => {
     console.log("get");
+    const session = ctx.getSession();
+    session.count = (session?.count ?? 0) + 1;
     return {
-      count: 1,
+      count: session.count,
     };
   },
   post: async (ctx) => {
