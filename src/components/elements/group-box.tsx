@@ -1,5 +1,5 @@
 import LabelText from "@/components/elements/label-text";
-import { attributesWithoutChildren, joinClassNames } from "@/utilities/attributes";
+import { attributesWithoutChildren, joinClassNames } from "@/components/utilities/attributes";
 import React, { HTMLAttributes, ReactNode } from "react";
 import Style from "$/components/elements/group-box.module.scss";
 

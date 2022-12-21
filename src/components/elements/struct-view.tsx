@@ -1,6 +1,6 @@
 import React, { HTMLAttributes, ReactNode } from "react";
 import Style from "$/components/elements/struct-view.module.scss";
-import { attributesWithoutChildren, joinClassNames } from "@/utilities/attributes";
+import { attributesWithoutChildren, joinClassNames } from "@/components/utilities/attributes";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 

@@ -28,7 +28,7 @@
     "pack": "npm run dist -- --dir --win & npm run clean:nextron",
     "lint": "npx next lint",
     "clean:libs": "npx rimraf dist/libs",
-    "export:react-components": "npx rimraf dist/libs/react-components && npx tsc -p tsconfig.react-components.json && node scripts/export-react-components && npx minifier dist/libs/react-components"
+    "export:react-addon": "npx rimraf dist/libs/react-addon && npx tsc -p tsconfig.react-addon.json && node scripts/export-react-addon && npx minifier dist/libs/react-addon"
   },
   "dependencies": {
     "@bizhermit/basic-utils": "^2.0.0",

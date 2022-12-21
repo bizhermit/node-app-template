@@ -1,5 +1,5 @@
 import Tooltip from "@/components/elements/tooltip";
-import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
+import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";

@@ -1,4 +1,4 @@
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import { CSSProperties, MutableRefObject, useEffect, useMemo, useRef } from "react";
 

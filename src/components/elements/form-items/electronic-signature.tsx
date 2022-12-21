@@ -1,7 +1,7 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
-import { releaseCursor, setCursor } from "@/utilities/attributes";
+import { releaseCursor, setCursor } from "@/components/utilities/attributes";
 import { VscClearAll, VscClose, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 

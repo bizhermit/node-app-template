@@ -1,4 +1,4 @@
-import { isReactNode } from "@/utilities/attributes";
+import { isReactNode } from "@/components/utilities/attributes";
 import { FC, HTMLAttributes } from "react";
 
 const LabelText: FC<HTMLAttributes<HTMLSpanElement>> = (props) => {
