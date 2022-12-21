@@ -1,12 +1,19 @@
 // type ParamsType = string | number | boolean | null | undefined;
 // type Params = Struct<ParamsType | Array<ParamsType>>;
 
-export type Api = Struct<{
-  get?: any;
-  post?: any;
-  put?: any;
-  delete?: any;
-}>;
+type MethodArgs = {
+  request?: Struct | FormData;
+  response?: Struct;
+};
+
+export type ApiPaths = {
+  [key: string]: {
+    get?: MethodArgs;
+    post?: MethodArgs;
+    put?: MethodArgs;
+    delete?: MethodArgs;
+  };
+};
 
 // type Props = {
 //   baseUrl?: string;

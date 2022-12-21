@@ -14,8 +14,6 @@ const Page: NextPage = () => {
           try {
             const res = await crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
             console.log(res);
-            // const data = await res.json();
-            // console.log(data);
           } finally {
             unlock();
           }
@@ -31,8 +29,6 @@ const Page: NextPage = () => {
               body: JSON.stringify({ hoge: 1 }),
             });
             console.log(res);
-            // const data = await res.json();
-            // console.log(data);
           } finally {
             unlock();
           }
@@ -48,8 +44,6 @@ const Page: NextPage = () => {
               body: JSON.stringify({ hoge: 10 }),
             });
             console.log(res);
-            // const data = await res.json();
-            // console.log(data);
           } finally {
             unlock();
           }
@@ -65,8 +59,6 @@ const Page: NextPage = () => {
               body: JSON.stringify({ hoge: 100 }),
             });
             console.log(res);
-            // const data = await res.json();
-            // console.log(data);
           } finally {
             unlock();
           }
@@ -80,8 +72,6 @@ const Page: NextPage = () => {
           try {
             const res = await crossFetch("/api/fetch/1", {});
             console.log(res);
-            // const data = await res.json();
-            // console.log(data);
           } finally {
             unlock();
           }

@@ -11,9 +11,9 @@ export default apiHandler({
     console.log(ctx.getQuery());
     const session = ctx.getSession();
     session.count = (session?.count ?? 0) + 1;
-    return {
-      count: session.count,
-    };
+    // return {
+    //   count: session.count,
+    // };
   },
   post: async (ctx) => {
     console.log("post");
