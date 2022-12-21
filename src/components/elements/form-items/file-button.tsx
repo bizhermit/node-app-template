@@ -2,7 +2,7 @@ import Button, { ButtonOptions } from "@/components/elements/button";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
-import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/utilities/file-input";
+import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/components/utilities/file-input";
 import { VscClose } from "react-icons/vsc";
 
 export type FileButtonProps = FormItemProps<File> & ButtonOptions & {
