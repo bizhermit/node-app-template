@@ -1,5 +1,5 @@
 import React, { HTMLAttributes, ReactNode } from "react";
-import { attributesWithoutChildren, convertSizeNumToStr } from "@/utilities/attributes";
+import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
 import Style from "$/components/elements/divider.module.scss";
 import LabelText from "@/components/elements/label-text";
 

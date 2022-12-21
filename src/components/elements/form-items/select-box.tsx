@@ -3,7 +3,7 @@ import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { VscChevronDown, VscClose } from "react-icons/vsc";
 import Style from "$/components/elements/form-items/select-box.module.scss";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import Resizer from "@/components/elements/resizer";
 import Popup from "@/components/elements/popup";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";

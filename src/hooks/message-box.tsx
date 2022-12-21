@@ -3,7 +3,7 @@ import { FC, ReactElement, ReactNode, useCallback, useEffect, useRef, useState }
 import { createRoot, Root } from "react-dom/client";
 import Style from "$/hooks/message-box.module.scss";
 import useToggleAnimation from "@/hooks/toggle-animation";
-import { convertSizeNumToStr, joinClassNames } from "@/utilities/attributes";
+import { convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 
 const MessageBox: FC<{
   showed: boolean;

@@ -2,7 +2,7 @@ import usePortalElement from "@/hooks/portal-element";
 import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
-import { attributesWithoutChildren, convertSizeNumToStr } from "@/utilities/attributes";
+import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 
 const defaultAnimationDuration = 150;

@@ -1,5 +1,5 @@
 import Popup from "@/components/elements/popup";
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
 
 type TooltipProps = HTMLAttributes<HTMLDivElement> & {

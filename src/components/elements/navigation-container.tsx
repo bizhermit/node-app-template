@@ -2,7 +2,7 @@ import useLayout, { WindowSize } from "@/components/providers/layout";
 import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 
 export type NavigationPosition = "left" | "right" | "top" | "bottom";

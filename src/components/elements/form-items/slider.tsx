@@ -1,7 +1,7 @@
 import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { useMemo, useRef } from "react";
 import Style from "$/components/elements/form-items/slider.module.scss";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
 export type SliderProps = FormItemProps<number> & {
   $max?: number;

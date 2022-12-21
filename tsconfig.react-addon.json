@@ -3,7 +3,7 @@
   "compilerOptions": {
     "noEmit": false,
     "rootDir": ".",
-    "outDir": "./dist/libs/react-components",
+    "outDir": "./dist/libs/react-addon",
     "declaration": true,
     "incremental": false,
     "module": "commonjs",
@@ -19,7 +19,7 @@
     "nextron",
     ".*",
     "src/pages",
-    "src/hooks/api.*",
-    "src/utilities/sandbox.*"
+    "src/hooks/api*",
+    "src/utilities"
   ],
 }
