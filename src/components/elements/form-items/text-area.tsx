@@ -2,7 +2,7 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import React, { useRef } from "react";
 import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type TextAreaProps = FormItemProps<string> & {

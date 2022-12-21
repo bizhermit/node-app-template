@@ -1,7 +1,7 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useRef } from "react";
 import { VscClose } from "react-icons/vsc";

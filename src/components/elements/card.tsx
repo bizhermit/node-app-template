@@ -1,6 +1,6 @@
 import React, { HTMLAttributes, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/card.module.scss";
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";

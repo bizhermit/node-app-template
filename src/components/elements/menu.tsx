@@ -1,6 +1,6 @@
 import React, { FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/menu.module.scss";
-import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
+import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { useRouter } from "next/router";

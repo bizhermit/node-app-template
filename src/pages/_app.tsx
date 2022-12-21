@@ -10,7 +10,7 @@ import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbComponents } from "react-icons/tb";
 import { LoadingBarProvider } from "@/components/elements/loading-bar";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (

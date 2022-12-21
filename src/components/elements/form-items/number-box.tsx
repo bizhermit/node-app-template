@@ -6,7 +6,7 @@ import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
 type NumberBoxProps = FormItemProps<number> & {
   $max?: number;
