@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import apiHandler from "@/utilities/api-handler";
 
 export default apiHandler({
@@ -6,6 +8,7 @@ export default apiHandler({
   },
   get: async (ctx) => {
     console.log("get");
+    console.log(ctx.getQuery());
     const session = ctx.getSession();
     session.count = (session?.count ?? 0) + 1;
     return {

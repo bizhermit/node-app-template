@@ -3,6 +3,7 @@ import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
 import Row from "@/components/elements/row";
+import crossFetch from "@/utilities/cross-fetch";
 import { NextPage } from "next";
 
 const Page: NextPage = () => {
@@ -11,9 +12,10 @@ const Page: NextPage = () => {
       <Button
         $onClick={async (unlock) => {
           try {
-            const res = await fetch("/api/fetch", {});
-            const data = await res.json();
-            console.log(data);
+            const res = await crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
+            console.log(res);
+            // const data = await res.json();
+            // console.log(data);
           } finally {
             unlock();
           }
@@ -24,12 +26,13 @@ const Page: NextPage = () => {
       <Button
         $onClick={async (unlock) => {
           try {
-            const res = await fetch("/api/fetch", {
+            const res = await crossFetch("/api/fetch", {
               method: "post",
               body: JSON.stringify({ hoge: 1 }),
             });
-            const data = await res.json();
-            console.log(data);
+            console.log(res);
+            // const data = await res.json();
+            // console.log(data);
           } finally {
             unlock();
           }
@@ -40,12 +43,13 @@ const Page: NextPage = () => {
       <Button
         $onClick={async (unlock) => {
           try {
-            const res = await fetch("/api/fetch", {
+            const res = await crossFetch("/api/fetch", {
               method: "put",
               body: JSON.stringify({ hoge: 10 }),
             });
-            const data = await res.json();
-            console.log(data);
+            console.log(res);
+            // const data = await res.json();
+            // console.log(data);
           } finally {
             unlock();
           }
@@ -56,12 +60,13 @@ const Page: NextPage = () => {
       <Button
         $onClick={async (unlock) => {
           try {
-            const res = await fetch("/api/fetch", {
+            const res = await crossFetch("/api/fetch", {
               method: "delete",
               body: JSON.stringify({ hoge: 100 }),
             });
-            const data = await res.json();
-            console.log(data);
+            console.log(res);
+            // const data = await res.json();
+            // console.log(data);
           } finally {
             unlock();
           }
@@ -73,9 +78,10 @@ const Page: NextPage = () => {
       <Button
         $onClick={async (unlock) => {
           try {
-            const res = await fetch("/api/fetch/1", {});
-            const data = await res.json();
-            console.log(data);
+            const res = await crossFetch("/api/fetch/1", {});
+            console.log(res);
+            // const data = await res.json();
+            // console.log(data);
           } finally {
             unlock();
           }

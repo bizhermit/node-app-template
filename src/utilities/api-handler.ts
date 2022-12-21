@@ -71,7 +71,7 @@ const apiHandler = (methods: Methods) => {
 const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
   const session = (req as any).session;
   if (session) return session;
-  return {};
+  return (global as any)._session ?? {};
 };
 
 export default apiHandler;
