@@ -20,10 +20,19 @@ const Page: NextPage = () => {
       </Button>
       <Button
         $onClick={async (unlock) => {
+          const csrfToken = document.cookie.split(";").find(item => {
+            const [key, value] = item.trim().split("=");
+            return key === "CSRF-Token";
+          })?.split("=")[1];
+          console.log(csrfToken);
           try {
             const res = await fetch("/api/session", {
               method: "post",
               body: JSON.stringify({ hoge: 1 }),
+              // credentials: "same-origin",
+              headers: {
+                "CSRF-Token": csrfToken ?? "",
+              },
             });
             const data = await res.json();
             console.log(data);

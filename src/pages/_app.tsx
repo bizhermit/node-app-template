@@ -212,10 +212,10 @@ const App = ({ Component, pageProps }: AppProps) => {
                     icon: "M",
                     pathname: "/sandbox/message-box",
                   }, {
-                    key: "session",
-                    label: "Session",
-                    icon: "S",
-                    pathname: "/sandbox/session",
+                    key: "fetch",
+                    label: "Fetch",
+                    icon: "F",
+                    pathname: "/sandbox/fetch",
                   }]
                 }]}
               />
