@@ -68,7 +68,7 @@ const apiHandler = (methods: Methods) => {
   };
 };
 
-const getSession = (req: NextApiRequest, res: NextApiResponse): SessionStruct => {
+const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
   const session = (req as any).session;
   if (session) return session;
   return {};
