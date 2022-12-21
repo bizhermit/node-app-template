@@ -58,7 +58,7 @@ nextApp.prepare().then(async () => {
     store: undefined,
     cookie: {
       secure: !isDev,
-      httpOnly: !isDev,
+      httpOnly: true,
       maxAge: 1000 * 60 * 30,
     },
   }));
@@ -75,31 +75,35 @@ nextApp.prepare().then(async () => {
   if (!isDev) app.set("trust proxy", 1);
   app.disable("x-powered-by");
 
-  const handler = nextApp.getRequestHandler();
-
-  const corsProtection = cors({
+  const csrfTokenName = "csrf-token";
+  app.use(csrf({
+    cookie: true,
+    value: (req) => {
+      return req.body?._csrf
+        || req.query?._csrf
+        || req.headers?.[csrfTokenName]
+        || req.cookies?.[csrfTokenName];
+    }
+  }));
+  app.use(cors({
     origin: corsOrigin,
     credentials: true,
-  });
+  }));
+
+  const handler = nextApp.getRequestHandler();
 
   // API
-  const csrfProtection = csrf({
-    cookie: true,
-  });
-  app.all(`${basePath}/api/*`, corsProtection, csrfProtection, (req, res) => {
+  app.all(`${basePath}/api/*`, (req, res) => {
     log.debug("api call:", req.url);
     return handler(req, res);
   });
 
-  // CSRF
-  app.use(csrf({ cookie: true }));
-  app.get(`${basePath}${csrfPath}`, corsProtection, (req, res) => {
-    const token = req.csrfToken();
-    res.cookie("XSRF-TOKEN", token).status(204).send();
-  });
-
   // ALL
-  app.all("*", corsProtection, (req, res) => {
+  app.all("*", (req, res) => {
+    if (!req.url.startsWith("/_")) {
+      const token = req.csrfToken();
+      res.cookie(csrfTokenName, token);
+    }
     return handler(req, res);
   });
 

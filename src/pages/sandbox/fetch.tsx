@@ -2,6 +2,7 @@ import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
+import Row from "@/components/elements/row";
 import { NextPage } from "next";
 
 const Page: NextPage = () => {
@@ -22,19 +23,10 @@ const Page: NextPage = () => {
       </Button>
       <Button
         $onClick={async (unlock) => {
-          const csrfToken = document.cookie.split(";").find(item => {
-            const [key, value] = item.trim().split("=");
-            return key === "CSRF-Token";
-          })?.split("=")[1];
-          console.log(csrfToken);
           try {
             const res = await fetch("/api/fetch", {
               method: "post",
               body: JSON.stringify({ hoge: 1 }),
-              // credentials: "same-origin",
-              headers: {
-                "CSRF-Token": csrfToken ?? "",
-              },
             });
             const data = await res.json();
             console.log(data);
@@ -93,10 +85,13 @@ const Page: NextPage = () => {
       </Button>
       <Form
         className="flex-start gap-1"
-        action="/api/fetch"
+        action="/api/form"
       >
-        <TextBox name="textbox" />
-        <Button type="submit">submit</Button>
+        <Row className="gap-1">
+          <TextBox name="textbox" />
+          <Button type="submit" formMethod="get">get</Button>
+          <Button type="submit" formMethod="post">post</Button>
+        </Row>
       </Form>
     </div>
   );
