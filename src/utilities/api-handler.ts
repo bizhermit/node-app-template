@@ -25,13 +25,24 @@ type Methods = {
 const apiHandler = (methods: Methods) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const method = req.method?.toLocaleLowerCase() ?? "get";
+    const handler = methods[method];
+    if (handler == null) {
+      res.status(404).json({});
+      return;
+    }
 
     let statusCode: number | undefined = undefined;
+    const contentType = req.headers["content-type"]?.match(/([^\;]*)/)?.[1];
     const context: Context = {
       req,
       res,
       getQuery: () => req.query as any,
-      getBody: () => req.body,
+      getBody: () => {
+        if (contentType === "multipart/form-data") {
+          
+        }
+        return req.body;
+      },
       getCookies: () => req.cookies as any,
       getSession: () => getSession(req, res),
       setStatus: (code: number) => statusCode = code,
@@ -42,15 +53,10 @@ const apiHandler = (methods: Methods) => {
       try {
         await commonHandler(context);
       } catch (e) {
-        // console.log(e);
+        console.log(e);
         res.status(500).json({});
         return;
       }
-    }
-    const handler = methods[method];
-    if (handler == null) {
-      res.status(404).json({});
-      return;
     }
 
     try {
@@ -61,7 +67,7 @@ const apiHandler = (methods: Methods) => {
       }
       res.status(statusCode ?? 200).json(data);
     } catch (e) {
-      // console.log(e);
+      console.log(e);
       res.status(500).json({});
       return;
     }
