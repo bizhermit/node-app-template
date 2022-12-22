@@ -17,9 +17,11 @@
     }
   }
 
-  &:focus-within {
-    >.sep {
-      color: inherit
+  &[data-editable="true"] {
+    &:focus-within {
+      >.sep {
+        color: inherit
+      }
     }
   }
 }
