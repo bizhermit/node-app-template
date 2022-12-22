@@ -7,16 +7,16 @@ export default apiHandler({
   },
   get: async (ctx) => {
     console.log("- query");
-    console.log(JSON.stringify(ctx.getQuery(), null, 2));
+    console.log(ctx.getQuery());
     console.log("- body");
-    console.log(JSON.stringify(ctx.getBody(), null, 2));
+    console.log(ctx.getBody());
     ctx.setStatus(204);
   },
   post: async (ctx) => {
     console.log("- query");
-    console.log(JSON.stringify(ctx.getQuery(), null, 2));
+    console.log(ctx.getQuery());
     console.log("- body");
-    console.log(JSON.stringify(ctx.getBody(), null, 2));
+    console.log(ctx.getBody());
     ctx.setStatus(204);
   },
 });
