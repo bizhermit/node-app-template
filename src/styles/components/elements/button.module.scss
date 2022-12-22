@@ -34,11 +34,23 @@ $buttonSize: (
     opacity: 0.6;
   }
 
+  &[data-round="true"] {
+    border-radius: 9999px;
+
+    >.main {
+      border-radius: 9999px;
+    }
+  }
+
   @each $key, $value in $buttonSize {
     &[data-size="#{$key}"] {
       height: calc(var(--size) * #{$value});
       min-width: calc(var(--size) * #{$value});
       font-size: calc(var(--font-size) * #{$value});
+
+      &[data-wide="true"] {
+        min-width: calc(var(--size) * 3.2 * #{$value});
+      }
 
       >.main {
         >.label {
@@ -74,10 +86,6 @@ $buttonSize: (
   height: 100%;
   width: 100%;
   border: 0.15rem solid var(--c-border);
-
-  &[data-round="true"] {
-    border-radius: 9999px;
-  }
 
   &[data-icon="left"] {
     >.label {

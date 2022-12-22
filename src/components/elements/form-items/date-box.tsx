@@ -307,6 +307,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         className={Style.inputs}
         onClick={clickInputs}
         data-input={!props.$disallowInput}
+        data-editable={form.editable}
       >
         <input
           ref={yref}
@@ -378,6 +379,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           <div
             className={Style.clear}
             onClick={clear}
+            data-disabled={!hasData}
           >
             <VscClose />
           </div>

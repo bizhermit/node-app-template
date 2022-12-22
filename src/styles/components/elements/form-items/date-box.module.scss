@@ -17,9 +17,11 @@
     }
   }
 
-  &:focus-within {
-    >.sep {
-      color: inherit
+  &[data-editable="true"] {
+    &:focus-within {
+      >.sep {
+        color: inherit
+      }
     }
   }
 }
@@ -87,6 +89,11 @@
   z-index: 1;
   cursor: pointer;
   user-select: none;
+
+  &[data-disabled="true"] {
+    opacity: 0.2;
+    pointer-events: none;
+  }
 
   &:hover {
     z-index: 2;

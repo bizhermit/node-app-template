@@ -24,13 +24,18 @@
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  width: var(--size);
+  width: calc(var(--size) * 0.9);
   height: var(--size);
   flex: none;
   z-index: 1;
   cursor: pointer;
   user-select: none;
   border-radius: var(--radius);
+
+  &[data-disabled="true"] {
+    opacity: 0.2;
+    pointer-events: none;
+  }
 
   &:hover {
     @include mixins.hover;

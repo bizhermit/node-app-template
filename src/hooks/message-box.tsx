@@ -25,7 +25,7 @@ const MessageBox: FC<{
   const style = useToggleAnimation({
     elementRef: ref,
     open: showed,
-    animationTime: 50,
+    animationDuration: 50,
     onToggle: (open) => {
       if (open) {
         if (ref.current) {
