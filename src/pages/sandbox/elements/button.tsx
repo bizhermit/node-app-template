@@ -69,6 +69,13 @@ const Page: NextPage = () => {
           <Button $icon={<VscCloudDownload />} $size="l">Large</Button>
           <Button $icon={<VscCloudDownload />} $size="xl">X Large</Button>
         </Row>
+        <Row className="gap-1 mt-1">
+          <Button $icon={<VscCloudDownload />} $size="xs" $round />
+          <Button $icon={<VscCloudDownload />} $size="s" $round />
+          <Button $icon={<VscCloudDownload />} $size="m" $round />
+          <Button $icon={<VscCloudDownload />} $size="l" $round />
+          <Button $icon={<VscCloudDownload />} $size="xl" $round />
+        </Row>
       </section>
       <section>
         <h2>color</h2>

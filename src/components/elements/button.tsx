@@ -12,6 +12,7 @@ export type ButtonOptions = {
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
+  $fitContent?: boolean;
 };
 
 type OmitAttributes = "onClick" | "color";
@@ -71,10 +72,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
       disabled={props.disabled || submitDisabled || disabled}
       onClick={click}
       data-size={props.$size || "m"}
+      data-wide={!props.$fitContent && props.children != null}
+      data-round={props.$round}
     >
       <div
         className={`${Style.main} ${colorClassName}`}
-        data-round={props.$round}
         data-outline={props.$outline}
         data-icon={props.$icon != null && (props.$iconPosition || "left")}
       >
