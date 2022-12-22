@@ -1,23 +1,23 @@
 /* eslint-disable no-console */
-import { NextApiRequest, NextApiResponse } from "next";
+import apiHandler from "@/utilities/api-handler";
 
-export const config = {
-  api: {
-    // bodyParser: false,
+export default apiHandler({
+  common: async (ctx) => {
+    console.log(ctx.req.method);
   },
-};
-
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
-  console.log("----------");
-  console.log(req.headers.referer);
-  console.log(`${req.method}`);
-  // console.log("- headers");
-  // console.log(req.headers)
-  console.log("- query");
-  console.log(JSON.stringify(req.query, null, 2));
-  console.log("- body");
-  console.log(JSON.stringify(req.body, null, 2));
-  res.status(204).json({});
-};
-
-export default handler;
+  get: async (ctx) => {
+    console.log("- query");
+    console.log(ctx.getQuery());
+    console.log("- body");
+    console.log(ctx.getBody());
+    ctx.setStatus(204);
+  },
+  post: async (ctx) => {
+    console.log("- query");
+    console.log(ctx.getQuery());
+    console.log("- body");
+    console.log(ctx.getBody());
+    // console.log(ctx.getBody().textbox)
+    ctx.setStatus(204);
+  },
+});

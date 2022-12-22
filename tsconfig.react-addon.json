@@ -19,7 +19,7 @@
     "nextron",
     ".*",
     "src/pages",
-    "src/hooks/api*",
+    "src/hooks/fetch*",
     "src/utilities"
   ],
 }

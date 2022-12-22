@@ -211,6 +211,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                     label: "MessageBox",
                     icon: "M",
                     pathname: "/sandbox/message-box",
+                  }, {
+                    key: "fetch",
+                    label: "Fetch",
+                    icon: "F",
+                    pathname: "/sandbox/fetch",
                   }]
                 }]}
               />
