@@ -94,7 +94,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     changeOpacity: true,
     closeOpacityDelay: props.$animationDirection === "horizontal" || props.$animationDirection === "vertical",
     animationInterval: props.$animationInterval ?? defaultAnimationInterval,
-    animationTime: props.$animationDuration ?? defaultAnimationDuration,
+    animationDuration: props.$animationDuration ?? defaultAnimationDuration,
     style: props.style,
     direction: props.$animationDirection,
     onToggle: (open) => {
