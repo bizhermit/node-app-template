@@ -1,4 +1,4 @@
-import Style from "$/components/templates/row.module.scss";
+import Style from "$/components/elements/row.module.scss";
 import { attributes } from "@/components/utilities/attributes";
 import React, { HTMLAttributes, LegacyRef } from "react";
 
