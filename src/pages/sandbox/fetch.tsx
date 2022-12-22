@@ -2,6 +2,7 @@ import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import FileButton from "@/components/elements/form-items/file-button";
+import TextArea from "@/components/elements/form-items/text-area";
 import TextBox from "@/components/elements/form-items/text-box";
 import GroupBox from "@/components/elements/group-box";
 import Row from "@/components/elements/row";
@@ -107,6 +108,8 @@ const Page: NextPage = () => {
             action="/api/form"
           >
             <TextBox name="textbox" />
+            <TextBox name="textbox" />
+            <TextArea name="textarea" />
             <Row className="gap-1">
               <Button type="submit" formMethod="get">get</Button>
               <Button type="submit" formMethod="post">post</Button>
@@ -119,6 +122,8 @@ const Page: NextPage = () => {
             action="/api/form"
           >
             <TextBox name="textbox" />
+            <TextBox name="textbox" />
+            <TextArea name="textarea" />
             <FileButton name="filebutton1" />
             <FileButton name="filebutton2" />
             <Row className="gap-1">

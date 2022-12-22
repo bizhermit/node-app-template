@@ -17,6 +17,7 @@ export default apiHandler({
     console.log(ctx.getQuery());
     console.log("- body");
     console.log(ctx.getBody());
+    // console.log(ctx.getBody().textbox)
     ctx.setStatus(204);
   },
 });
