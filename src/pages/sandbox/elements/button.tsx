@@ -43,7 +43,7 @@ const Page: NextPage = () => {
           $onSubmit={() => {
             console.log("submit");
           }}
-          // $bind={{}}
+        // $bind={{}}
         >
           <Row className="gap-1">
             <TextBox $required name="text-box" />
