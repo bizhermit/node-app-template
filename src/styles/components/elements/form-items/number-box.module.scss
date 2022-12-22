@@ -21,7 +21,7 @@
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  width: var(--size);
+  width: calc(var(--size) * 0.9);
   height: var(--size);
   flex: none;
   z-index: 1;
@@ -31,6 +31,11 @@
 
   &[data-round="true"] {
     border-radius: 9999px;
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.2;
+    pointer-events: none;
   }
 
   &:hover {

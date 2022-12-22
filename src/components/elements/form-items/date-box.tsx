@@ -378,6 +378,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           <div
             className={Style.clear}
             onClick={clear}
+            data-disabled={!hasData}
           >
             <VscClose />
           </div>

@@ -88,6 +88,11 @@
   cursor: pointer;
   user-select: none;
 
+  &[data-disabled="true"] {
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
   &:hover {
     z-index: 2;
     @include mixins.hover;
