@@ -19,6 +19,42 @@
   }
 }
 
+@mixin inputButton {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  width: calc(var(--size) * 0.9);
+  height: var(--size);
+  flex: none;
+  z-index: 1;
+  user-select: none;
+  border-radius: var(--radius);
+  transition: opacity 0.2;
+
+  &[data-round="true"] {
+    border-radius: 9999px;
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.2;
+    cursor: inherit;
+  }
+
+  &[data-disabled="false"] {
+    cursor: pointer;
+    
+    &:hover {
+      @include hover;
+  
+      &:active {
+        @include hoverActive;
+      }
+    }
+  }
+}
+
 @mixin scrollOverlay($thumbColor: var(--c-scroll), $noOverflow: false) {
   @if $noOverflow == false {
     overflow: auto;

@@ -68,7 +68,7 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
           data-editable={form.editable}
         />
         <div
-          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "border"}_r bgc-${props.$color || "main"}`}`}
+          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "main"}_r bgc-${props.$color || "main"}`}`}
           data-checked={form.value === checkedValue}
         />
       </div>

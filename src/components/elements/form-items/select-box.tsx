@@ -216,6 +216,8 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   }, [form.value]);
 
   const isEmptyValue = form.value == null || form.value === "";
+  const hasLabel = StringUtils.isNotEmpty(label);
+  const hasData = !(form.value == null || form.value === "");
 
   return (
     <FormItemWrap
@@ -223,7 +225,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
       ref={ref}
       $$form={form}
       $useHidden
-      data-has={StringUtils.isNotEmpty(label)}
+      data-has={hasLabel}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width ?? defaultWidth),
@@ -253,6 +255,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
             <div
               className={Style.button}
               onClick={clear}
+              data-disabled={!hasData}
             >
               <VscClose />
             </div>
@@ -263,6 +266,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
               doScroll.current = true;
               picker();
             }}
+            data-disabled={showPicker}
           >
             <VscChevronDown />
           </div>

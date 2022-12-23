@@ -17,29 +17,7 @@
 }
 
 .clear {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  width: var(--size);
-  height: var(--size);
-  flex: none;
-  z-index: 1;
-  cursor: pointer;
-  user-select: none;
-  border-radius: var(--radius);
-
-  &[data-round="true"] {
-    border-radius: 9999px;
-  }
-
-  &:hover {
-    @include mixins.hover;
-
-    &:active {
-      @include mixins.hoverActive;
-    }
-  }
+  @include mixins.inputButton;
 }
 
 .buttons {
@@ -69,7 +47,7 @@
   user-select: none;
   transition: background 0.1s, color 0.1s;
 
-  > :global(.react-icon) {
+  > :global(.icon) {
     height: 1.2rem;
     width: 1.2rem;
   }

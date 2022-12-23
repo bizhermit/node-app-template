@@ -28,29 +28,7 @@
 }
 
 .button {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  width: var(--size);
-  height: var(--size);
-  flex: none;
-  z-index: 1;
-  cursor: pointer;
-  user-select: none;
-  border-radius: var(--radius);
-
-  &[data-round="true"] {
-    border-radius: 9999px;
-  }
-
-  &:hover {
-    @include mixins.hover;
-
-    &:active {
-      @include mixins.hoverActive;
-    }
-  }
+  @include mixins.inputButton;
 }
 
 @include mixins.hoverAnimation;
