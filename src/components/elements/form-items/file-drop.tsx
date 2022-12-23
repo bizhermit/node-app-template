@@ -5,7 +5,7 @@ import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from 
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
 
-type FileDropCommonProps = {
+type FileDropCommonProps<T> = FormItemProps<T> & {
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -14,13 +14,13 @@ type FileDropCommonProps = {
   children?: ReactNode;
 };
 
-export type FileDropProps_Single = FormItemProps<File> & FileDropCommonProps;
+export type FileDropProps_Single = FileDropCommonProps<File>;
 
-export type FileDropProps_Multiple = FormItemProps<Array<File>> & {
+export type FileDropProps_Multiple = FileDropCommonProps<Array<File>> & {
   $append?: boolean;
-} & FileDropCommonProps;
+};
 
-export type FileDropProps = (FileDropProps_Single & { $multiple?: false; }) | (FileDropProps_Multiple & { $multiple: true } );
+export type FileDropProps = (FileDropProps_Single & { $multiple?: false; }) | (FileDropProps_Multiple & { $multiple: true });
 
 const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);
