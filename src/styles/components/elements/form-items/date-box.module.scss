@@ -77,35 +77,7 @@
 
 .picker,
 .clear {
-  box-sizing: border-box;
-  height: var(--size);
-  width: calc(var(--size) * 0.9);
-  border-radius: var(--radius);
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  flex: none;
-  z-index: 1;
-  user-select: none;
-  transition: opacity 0.2;
-
- &[data-disabled="true"] {
-    opacity: 0.2;
-    cursor: inherit;
-  }
-
-  &[data-disabled="false"] {
-    cursor: pointer;
-    
-    &:hover {
-      @include mixins.hover;
-  
-      &:active {
-        @include mixins.hoverActive;
-      }
-    }
-  }
+  @include mixins.inputButton;
 }
 
 @include mixins.hoverAnimation;

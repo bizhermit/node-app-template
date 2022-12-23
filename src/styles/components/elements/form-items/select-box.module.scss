@@ -20,34 +20,7 @@
 }
 
 .button {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  width: calc(var(--size) * 0.9);
-  height: var(--size);
-  flex: none;
-  z-index: 1;
-  user-select: none;
-  border-radius: var(--radius);
-  transition: opacity 0.2;
-
-  &[data-disabled="true"] {
-    opacity: 0.2;
-    cursor: inherit;
-  }
-
-  &[data-disabled="false"] {
-    cursor: pointer;
-
-    &:hover {
-      @include mixins.hover;
-
-      &:active {
-        @include mixins.hoverActive;
-      }
-    }
-  }
+  @include mixins.inputButton;
 }
 
 @include mixins.hoverAnimation;
