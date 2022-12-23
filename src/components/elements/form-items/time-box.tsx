@@ -13,12 +13,12 @@ type TimeBoxBaseProps<T> = FormItemProps<T> & TimeInputProps & {
   $disallowInput?: boolean;
 };
 
-type TimeBoxStringProps = TimeBoxBaseProps<string>;
+type TimeBoxProps_TypeString = TimeBoxBaseProps<string>;
 
-type TimeBoxNumberProps = TimeBoxBaseProps<number>;
+type TimeBoxProps_TypeNumber = TimeBoxBaseProps<number>;
 
-export type TimeBoxProps = (TimeBoxStringProps & { $typeof?: "string" })
-  | (TimeBoxNumberProps & { $typeof: "number" });
+export type TimeBoxProps = (TimeBoxProps_TypeString & { $typeof?: "string" })
+  | (TimeBoxProps_TypeNumber & { $typeof: "number" });
 
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
