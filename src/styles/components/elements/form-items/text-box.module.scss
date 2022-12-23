@@ -36,9 +36,9 @@
   height: var(--size);
   flex: none;
   z-index: 1;
-  cursor: pointer;
   user-select: none;
   border-radius: var(--radius);
+  transition: opacity 0.2;
 
   &[data-round="true"] {
     border-radius: 9999px;
@@ -46,14 +46,18 @@
 
   &[data-disabled="true"] {
     opacity: 0.2;
-    pointer-events: none;
+    cursor: inherit;
   }
 
-  &:hover {
-    @include mixins.hover;
-
-    &:active {
-      @include mixins.hoverActive;
+  &[data-disabled="false"] {
+    cursor: pointer;
+    
+    &:hover {
+      @include mixins.hover;
+  
+      &:active {
+        @include mixins.hoverActive;
+      }
     }
   }
 }

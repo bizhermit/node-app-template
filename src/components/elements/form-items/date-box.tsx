@@ -372,6 +372,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
             <div
               className={Style.picker}
               onClick={picker}
+              data-disabled={showPicker}
             >
               <VscCalendar />
             </div>
