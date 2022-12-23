@@ -162,7 +162,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     elementRef: ref,
     open: showItems,
     direction: "vertical",
-    animationDuration: Math.min(250, (props.items?.length ?? 0) * 50)
+    animationDuration: Math.min(250, (props.items?.length ?? 0) * 30),
   });
 
   const node = (

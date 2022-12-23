@@ -13,19 +13,15 @@ type DateBoxCommonProps = DateInputPorps & {
   $disallowInput?: boolean;
 };
 
-type DateBoxStringProps = FormItemProps<string> & {
-  $typeof?: "string";
-};
+export type DateBoxProps_TypeString = FormItemProps<string> & DateBoxCommonProps;
 
-type DateBoxNumberProps = FormItemProps<number> & {
-  $typeof: "number";
-};
+export type DateBoxProps_TypeNumber = FormItemProps<number> & DateBoxCommonProps;
 
-type DateBoxDateProps = FormItemProps<Date> & {
-  $typeof: "date";
-};
+export type DateBoxProps_TypeDate = FormItemProps<Date> & DateBoxCommonProps;
 
-export type DateBoxProps = (DateBoxStringProps | DateBoxNumberProps | DateBoxDateProps) & DateBoxCommonProps;
+export type DateBoxProps = (DateBoxProps_TypeString & { $typeof?: "string" })
+  | (DateBoxProps_TypeNumber & { $typeof: "number" })
+  | (DateBoxProps_TypeDate & { $typeof: "date" });
 
 const today = new Date();
 
