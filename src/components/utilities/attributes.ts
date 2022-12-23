@@ -31,12 +31,8 @@ export const isReactNode = (node: ReactNode): node is ReactElement | ReactFragme
   return !isNotReactNode(node);
 };
 
-export const convertSizeNumToStr = (value?: string | number | null, nullValue?: string | (() => void)) => {
-  if (value == null) {
-    if (nullValue == null || typeof nullValue === "string") return nullValue ?? undefined;
-    nullValue();
-    return undefined;
-  }
+export const convertSizeNumToStr = (value?: string | number | null, nullValue?: string) => {
+  if (value == null) return nullValue ?? undefined;
   if (typeof value === "string") return value;
   return `${convertPxToRemNum(value)!}rem`;
 };
