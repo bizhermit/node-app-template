@@ -1,6 +1,6 @@
 import Style from "$/components/elements/row.module.scss";
 import { attributes } from "@/components/utilities/attributes";
-import React, { HTMLAttributes, LegacyRef } from "react";
+import React, { HTMLAttributes } from "react";
 
 export type RowProps = HTMLAttributes<HTMLDivElement> & {
   $hAlign?: "left" | "center" | "right" | "stretch" | "around" | "between" | "evenly";
@@ -8,11 +8,11 @@ export type RowProps = HTMLAttributes<HTMLDivElement> & {
   $nowrap?: boolean;
 };
 
-const Row = React.forwardRef<HTMLButtonElement, RowProps>((props, ref) => {
+const Row = React.forwardRef<HTMLDivElement, RowProps>((props, ref) => {
   return (
     <div
       {...attributes(props, Style.wrap)}
-      ref={ref as LegacyRef<HTMLDivElement>}
+      ref={ref}
       data-h={props.$hAlign || "left"}
       data-v={props.$vAlign || "middle"}
       data-nowrap={props.$nowrap}
