@@ -86,6 +86,7 @@ const apiHandler = (methods: Methods) => {
       try {
         await commonHandler(context);
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.log(e);
         res.status(500).json({});
         return;
@@ -100,6 +101,7 @@ const apiHandler = (methods: Methods) => {
       }
       res.status(statusCode ?? 200).json(data);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
       res.status(500).json({});
       return;
