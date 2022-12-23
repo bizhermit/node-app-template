@@ -5,7 +5,7 @@ import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from 
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
 
-type FileDropCommonProps<T> = FormItemProps<T> & {
+type FileDropBaseProps<T> = FormItemProps<T> & {
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -14,9 +14,9 @@ type FileDropCommonProps<T> = FormItemProps<T> & {
   children?: ReactNode;
 };
 
-export type FileDropProps_Single = FileDropCommonProps<File>;
+export type FileDropProps_Single = FileDropBaseProps<File>;
 
-export type FileDropProps_Multiple = FileDropCommonProps<Array<File>> & {
+export type FileDropProps_Multiple = FileDropBaseProps<Array<File>> & {
   $append?: boolean;
 };
 

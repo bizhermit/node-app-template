@@ -9,15 +9,15 @@ import { VscCalendar, VscClose } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, convertToMaxTime, getMinDate, convertToMinTime, maxDateValidation, minDateValidation, rangeDateValidation, DateValue } from "@/components/utilities/date-input";
 
-type DateBoxCommonProps<T> = FormItemProps<T> & DateInputPorps & {
+type DateBoxBaseProps<T> = FormItemProps<T> & DateInputPorps & {
   $disallowInput?: boolean;
 };
 
-export type DateBoxProps_TypeString = DateBoxCommonProps<string>;
+export type DateBoxProps_TypeString = DateBoxBaseProps<string>;
 
-export type DateBoxProps_TypeNumber = DateBoxCommonProps<number>;
+export type DateBoxProps_TypeNumber = DateBoxBaseProps<number>;
 
-export type DateBoxProps_TypeDate = DateBoxCommonProps<Date>;
+export type DateBoxProps_TypeDate = DateBoxBaseProps<Date>;
 
 export type DateBoxProps = (DateBoxProps_TypeString & { $typeof?: "string" })
   | (DateBoxProps_TypeNumber & { $typeof: "number" })
