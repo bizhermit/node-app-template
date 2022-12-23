@@ -31,11 +31,6 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
       &::before {
         border-radius: 9999px !important;
       }
-
-      >.input {
-        padding-left: calc(var(--size) / 2);
-        padding-right: calc(var(--size) / 2);
-      }
     }
   }
 }
@@ -78,23 +73,28 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   min-width: 0;
   border-color: var(--c-border);
 
+  &[data-field="true"] {
+    &::before {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      height: 100%;
+      width: 100%;
+      border-width: 0.1rem;
+      border-style: solid;
+      border-color: inherit;
+      border-radius: var(--radius);
+      z-index: 0;
+      transition: background 0.2s;
+    }
+  }
+
   &[data-editable="true"] {
     &[data-field="true"] {
       color: var(--c-input_);
 
       &::before {
-        box-sizing: border-box;
-        position: absolute;
-        content: "";
         background: var(--c-input);
-        height: 100%;
-        width: 100%;
-        border-width: 0.1rem;
-        border-style: solid;
-        border-color: inherit;
-        border-radius: var(--radius);
-        z-index: 0;
-        transition: background 0.2s;
       }
 
       &[data-error="true"] {

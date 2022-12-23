@@ -19,7 +19,7 @@ const Page: NextPage = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -103,6 +103,7 @@ const Page: NextPage = () => {
       <Divider />
       <RadioButtons
         style={{ width: 500 }}
+        $tag="useState"
         $appearance={appearance}
         $disabled={disabled}
         $readOnly={readOnly}
@@ -122,6 +123,7 @@ const Page: NextPage = () => {
       />
       <RadioButtons
         name="radio-buttons-bind"
+        $tag="bind"
         $appearance={appearance}
         $bind={bind}
         $disabled={disabled}
@@ -138,11 +140,15 @@ const Page: NextPage = () => {
         }}
       />
       <Form
+        className="flex-start gap-1"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
+        action="/api/form"
+        method="post"
       >
         <RadioButtons
+          $tag="form bind"
           name="radio-buttons-form-bind"
           $appearance={appearance}
           $source={colors.map(color => {
@@ -153,6 +159,7 @@ const Page: NextPage = () => {
             };
           })}
         />
+        <Button type="submit">submit</Button>
       </Form>
       <Row $vAlign="top" className="gap-1">
         <RadioButtons

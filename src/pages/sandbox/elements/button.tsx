@@ -13,7 +13,7 @@ const style: CSSProperties = {
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box p-1">
+    <div className="flex-start p-1">
       <h1>Button</h1>
       <section>
         <h2>click event</h2>
@@ -43,7 +43,7 @@ const Page: NextPage = () => {
           $onSubmit={() => {
             console.log("submit");
           }}
-          // $bind={{}}
+        // $bind={{}}
         >
           <Row className="gap-1">
             <TextBox $required name="text-box" />
@@ -68,6 +68,13 @@ const Page: NextPage = () => {
           <Button $icon={<VscCloudDownload />} $size="m">Medium</Button>
           <Button $icon={<VscCloudDownload />} $size="l">Large</Button>
           <Button $icon={<VscCloudDownload />} $size="xl">X Large</Button>
+        </Row>
+        <Row className="gap-1 mt-1">
+          <Button $icon={<VscCloudDownload />} $size="xs" $round />
+          <Button $icon={<VscCloudDownload />} $size="s" $round />
+          <Button $icon={<VscCloudDownload />} $size="m" $round />
+          <Button $icon={<VscCloudDownload />} $size="l" $round />
+          <Button $icon={<VscCloudDownload />} $size="xl" $round />
         </Row>
       </section>
       <section>

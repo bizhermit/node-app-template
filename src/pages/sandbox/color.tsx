@@ -4,7 +4,7 @@ import { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-box flex-stretch p-1 w-100">
+    <div className="flex-stretch p-1 w-100">
       {colors.map(color => {
         return (
           <Row key={color} className="w-100">

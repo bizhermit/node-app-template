@@ -1,4 +1,4 @@
-import { attributes } from "@/utilities/attributes";
+import { attributes } from "@/components/utilities/attributes";
 import Link, { LinkProps } from "next/link";
 import { UrlObject } from "url";
 import { AnchorHTMLAttributes, FC, ReactNode } from "react";

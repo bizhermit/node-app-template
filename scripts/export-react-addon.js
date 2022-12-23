@@ -3,7 +3,7 @@ const fse = require("fs-extra");
 const { isEmpty } = require("@bizhermit/basic-utils/dist/string-utils");
 
 const projectRoot = path.join(__dirname, "../");
-const root = path.join(projectRoot, "/dist/libs/react-components");
+const root = path.join(projectRoot, "/dist/libs/react-addon");
 if (!fse.existsSync(root)) {
   process.stdout.write(`no directory: ${root}\n`);
   process.exit();
@@ -55,13 +55,14 @@ const projectRootPkg = JSON.parse(fse.readFileSync(path.join(projectRoot, "packa
 // console.log("version", majorVer, minorVer, patchVer, preVerName, preVer);
 
 const pkg = {
-  "name": "react-components",
+  "name": "react-addon",
   "version": projectRootPkg.version ?? "0.0.0-alpha.0",
-  "description": "React components",
+  "description": "React addon",
   "keywords": [
     "react",
     "react-components",
-    "ui"
+    "ui",
+    "hooks"
   ],
   "author": "Senda Ryoichi <rsenda@bizhermit.com> (https://bizhermit.com)",
   "license": "MIT",

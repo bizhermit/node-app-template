@@ -10,12 +10,12 @@ import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbComponents } from "react-icons/tb";
 import { LoadingBarProvider } from "@/components/elements/loading-bar";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
-      <IconContext.Provider value={{ className: "react-icon", size: "0" }}>
+      <IconContext.Provider value={{ className: "icon", size: "0" }}>
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
@@ -26,12 +26,12 @@ const App = ({ Component, pageProps }: AppProps) => {
             // $footerVisible="always"
           >
             <div>Header</div>
-            {/* <div className="flex-box h-100" style={{ width: 200 }}> */}
+            {/* <div className="flex-start h-100" style={{ width: 200 }}> */}
             <>
               <Menu
                 className="flex-1"
                 // $direction="horizontal"
-                style={{ width: convertSizeNumToStr(230) }}
+                style={{ width: convertSizeNumToStr(280) }}
                 $items={[{
                   key: "index",
                   icon: <MdOutlinePowerSettingsNew />,
@@ -104,6 +104,26 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "DateBox",
                         icon: "D",
                         pathname: "/sandbox/elements/form-items/date-box",
+                      }, {
+                        key: "electronic-signature",
+                        label: "ElectronicSignature",
+                        icon: "E",
+                        pathname: "/sandbox/elements/form-items/electronic-signature"
+                      }, {
+                        key: "file-drop",
+                        label: "FileDrop",
+                        icon: "FD",
+                        pathname: "/sandbox/elements/form-items/file-drop",
+                      }, {
+                        key: "file-button",
+                        label: "FileButton",
+                        icon: "FB",
+                        pathname: "/sandbox/elements/form-items/file-button",
+                      }, {
+                        key: "select-box",
+                        label: "SelectBox",
+                        icon: "S",
+                        pathname: "/sandbox/elements/form-items/select-box",
                       }]
                     }, {
                       key: "container",
@@ -175,7 +195,27 @@ const App = ({ Component, pageProps }: AppProps) => {
                       label: "Badge",
                       icon: "B",
                       pathname: "/sandbox/elements/badge",
+                    }, {
+                      key: "group-box",
+                      label: "GroupBox",
+                      icon: "G",
+                      pathname: "/sandbox/elements/group-box",
+                    }, {
+                      key: "struct-view",
+                      label: "StructView",
+                      icon: "SV",
+                      pathname: "/sandbox/elements/struct-view",
                     }],
+                  }, {
+                    key: "message-box",
+                    label: "MessageBox",
+                    icon: "M",
+                    pathname: "/sandbox/message-box",
+                  }, {
+                    key: "fetch",
+                    label: "Fetch",
+                    icon: "F",
+                    pathname: "/sandbox/fetch",
                   }]
                 }]}
               />

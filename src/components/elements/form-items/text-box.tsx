@@ -1,8 +1,10 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useRef } from "react";
+import { VscClose } from "react-icons/vsc";
 
 export type TextBoxProps = FormItemProps<string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
@@ -14,6 +16,7 @@ export type TextBoxProps = FormItemProps<string> & {
   $width?: number | string;
   $maxWidth?: number | string;
   $minWidth?: number | string;
+  $hideClearButton?: boolean;
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
@@ -48,13 +51,21 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
     },
   });
 
+  const clear = () => {
+    if (!form.editable) return;
+    form.change(undefined);
+    if (iref.current) iref.current.value = "";
+  };
+
+  const hasData = StringUtils.isNotEmpty(form.value);
+
   return (
     <FormItemWrap
       {...props}
       ref={ref}
       $$form={form}
       data-round={props.$round}
-      data-has={Boolean(form.value)}
+      data-has={hasData}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width),
@@ -75,7 +86,19 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         tabIndex={props.tabIndex}
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
+        data-round={props.$round}
+        data-clear={form.editable && props.$hideClearButton !== true}
       />
+      {form.editable && props.$hideClearButton !== true &&
+        <div
+          className={Style.button}
+          onClick={clear}
+          data-disabled={!hasData}
+          data-round={props.$round}
+        >
+          <VscClose />
+        </div>
+      }
       {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );

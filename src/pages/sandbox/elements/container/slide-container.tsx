@@ -18,7 +18,7 @@ const Page: NextPage = () => {
   const [breadcrumbs, setBreadcrumbs] = useState(false);
 
   return (
-    <div className="flex-box flex-start w-100 h-100 p-1 gap-1">
+    <div className="flex-start w-100 h-100 p-1 gap-1">
       <Row $vAlign="bottom" className="gap-1">
         <RadioButtons
           $tag="slide destination"

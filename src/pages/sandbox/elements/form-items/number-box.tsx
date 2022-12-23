@@ -15,7 +15,7 @@ const Page: NextPage = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -88,6 +88,7 @@ const Page: NextPage = () => {
       <Divider />
       <NumberBox
         $tag="useState"
+        $tagPosition="placeholder"
         $disabled={disabled}
         $readOnly={readOnly}
         $value={value}
@@ -112,15 +113,19 @@ const Page: NextPage = () => {
         $preventThousandSeparate
       />
       <Form
+        className="flex-start gap-1"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
+        action="/api/form"
+        method="post"
       >
         <NumberBox
           name="number-box-form-bind"
           $tag="form bind"
           $required
         />
+        <Button type="submit">submit</Button>
       </Form>
     </div>
   );

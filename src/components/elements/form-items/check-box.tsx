@@ -2,7 +2,7 @@ import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form
 import React, { FunctionComponent, ReactElement, ReactNode } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/components/elements/label-text";
-import { pressPositiveKey } from "@/utilities/attributes";
+import { pressPositiveKey } from "@/components/utilities/attributes";
 
 export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
   $checkedValue?: T;
@@ -68,7 +68,7 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
           data-editable={form.editable}
         />
         <div
-          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "border"}_r bgc-${props.$color || "main"}`}`}
+          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "main"}_r bgc-${props.$color || "main"}`}`}
           data-checked={form.value === checkedValue}
         />
       </div>

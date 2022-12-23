@@ -1,4 +1,4 @@
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { HTMLAttributes, ReactNode } from "react";
 import Style from "$/components/elements/badge.module.scss";
 import LabelText from "@/components/elements/label-text";

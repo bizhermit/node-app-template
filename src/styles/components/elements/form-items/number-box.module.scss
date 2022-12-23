@@ -16,6 +16,10 @@
   text-align: right;
 }
 
+.clear {
+  @include mixins.inputButton;
+}
+
 .buttons {
   box-sizing: border-box;
   position: relative;
@@ -43,7 +47,7 @@
   user-select: none;
   transition: background 0.1s, color 0.1s;
 
-  > :global(.react-icon) {
+  > :global(.icon) {
     height: 1.2rem;
     width: 1.2rem;
   }

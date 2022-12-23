@@ -1,6 +1,6 @@
 import Style from "$/components/elements/stepper.module.scss";
 import LabelText from "@/components/elements/label-text";
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { HTMLAttributes, ReactNode, useImperativeHandle, useRef } from "react";
 
 export type StepState = "done" | "current" | "future";

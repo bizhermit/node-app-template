@@ -15,7 +15,7 @@ const Page: NextPage = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -86,40 +86,46 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
-      <TextArea
-        $tag="useState"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        $value={value}
-        $onChange={v => setValue(v)}
-        $required
-        $messagePosition="bottom"
-        $resize
-        $width={300}
-        $height={300}
-      />
-      <TextArea
-        name="text-area-bind"
-        $bind={bind}
-        $tag="bind"
-        $disabled={disabled}
-        $readOnly={readOnly}
-        $required
-        $resize="x"
-      />
-      <Form
-        $bind={formBind}
-        $disabled={disabled}
-        $readOnly={readOnly}
-      >
+      <Row $vAlign="top" className="gap-1">
         <TextArea
-          name="text-area-form-bind"
-          $tag="form bind"
+          $tag="useState"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $value={value}
+          $onChange={v => setValue(v)}
           $required
-          $resize="y"
+          $messagePosition="bottom"
+          $resize
+          $width={300}
+          $height={300}
         />
-      </Form>
-      <textarea />
+        <TextArea
+          name="text-area-bind"
+          $bind={bind}
+          $tag="bind"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $required
+          $resize="x"
+        />
+        <Form
+          className="flex-start gap-1"
+          $bind={formBind}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          action="/api/form"
+          method="post"
+        >
+          <TextArea
+            name="text-area-form-bind"
+            $tag="form bind"
+            $required
+            $resize="y"
+          />
+          <Button type="submit">submit</Button>
+        </Form>
+        <textarea />
+      </Row>
     </div>
   );
 };

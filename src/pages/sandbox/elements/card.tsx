@@ -11,7 +11,7 @@ const Page: NextPage = () => {
   const [accordion, setAccordion] = useState(true);
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1">
         <ToggleBox
           $tag="disabled"
@@ -93,7 +93,7 @@ const Content: FC = () =>{
   }, []);
 
   return (
-    <div className="flex-box flex-center p-3 h-100 w-100 c-pure">
+    <div className="flex-center p-3 h-100 w-100 c-pure">
       Content
     </div>
   )

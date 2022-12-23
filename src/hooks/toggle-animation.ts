@@ -1,4 +1,4 @@
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import { CSSProperties, MutableRefObject, useEffect, useMemo, useRef } from "react";
 
@@ -13,7 +13,7 @@ type Props<T extends Struct = {}> = {
   minVisible?: boolean;
   changeOpacity?: boolean;
   closeOpacityDelay?: boolean;
-  animationTime?: number;
+  animationDuration?: number;
   animationInterval?: number;
   onToggle?: (open: boolean) => (T | void);
   onToggled?: (open: boolean, params: T) => void;
@@ -25,7 +25,7 @@ type Props<T extends Struct = {}> = {
   destructor?: (open: boolean, params: T) => void;
 };
 
-const defaultAnimationTime = 150;
+const defaultAnimationDuration = 150;
 const defaultAnimationInterval = 10;
 
 const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<any> = []) => {
@@ -37,7 +37,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
       return;
     }
     let alive = true;
-    const aTime = props.animationTime ?? defaultAnimationTime;
+    const aTime = props.animationDuration ?? defaultAnimationDuration;
     const aInterval = props.animationInterval ?? defaultAnimationInterval;
     const aDirection = props.direction || "none";
     const defaultMin = "0";

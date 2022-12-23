@@ -1,6 +1,6 @@
 import React, { FC, HTMLAttributes, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/slide-container.module.scss";
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import LabelText from "@/components/elements/label-text";
 
 type SlideState = "before" | "previous" | "current" | "next" | "after";

@@ -10,19 +10,21 @@ const Page: NextPage = () => {
   const [bind, setBind] = useState<Struct>({});
 
   return (
-    <div className="flex-box p-1">
+    <div className="flex-start p-1">
       <h1>Form</h1>
       <section>
         <h2>submit/reset/button</h2>
         <Form
-          className="flex-box gap-1"
+          className="flex-start gap-1"
           $bind={bind}
+          action="/api/form"
+          method="post"
           // $disabled
           // $readOnly
           // $messageDisplayMode="bottom"
-          $onSubmit={(fd) => {
-            console.log("submit", fd);
-          }}
+          // $onSubmit={(fd) => {
+          //   console.log("submit", fd);
+          // }}
           $onReset={() => {
             console.log("reset");
             // return false;

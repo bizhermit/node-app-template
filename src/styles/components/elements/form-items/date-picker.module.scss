@@ -355,6 +355,7 @@ $width7: 14.285%;
   align-items: center;
   cursor: pointer;
   user-select: none;
+  border-radius: var(--radius);
 
   &:hover {
     @include mixins.hover;

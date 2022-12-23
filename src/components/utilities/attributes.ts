@@ -1,6 +1,10 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import React, { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
 
+export const joinClassNames = (...classNames: Array<string | null | undefined>) => {
+  return StringUtils.join(" ", ...classNames);
+};
+
 export const attributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret: Struct = {
     ...props,

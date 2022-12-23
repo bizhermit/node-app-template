@@ -2,12 +2,11 @@ import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form
 import React, { FunctionComponent, ReactElement, ReactNode } from "react";
 import Style from "$/components/elements/form-items/toggle-box.module.scss";
 import LabelText from "@/components/elements/label-text";
-import { pressPositiveKey } from "@/utilities/attributes";
+import { pressPositiveKey } from "@/components/utilities/attributes";
 
 export type ToggleBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
   $checkedValue?: T;
   $uncheckedValue?: T;
-  $outline?: boolean;
   children?: ReactNode;
 };
 

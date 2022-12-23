@@ -6,14 +6,6 @@
   box-sizing: border-box;
 }
 
-.flex-box {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
 // margin
 
 .mt-auto {
@@ -295,15 +287,28 @@
 }
 
 // flex
+@mixin flexBox {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.flex-start {
+  @include flexBox;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
 
 .flex-center {
-  justify-content: center !important;
-  align-items: center !important;
+  @include flexBox;
+  justify-content: center;
+  align-items: center;
 }
 
 .flex-stretch {
-  justify-content: stretch !important;
-  align-items: stretch !important;
+  @include flexBox;
+  justify-content: stretch;
+  align-items: stretch;
 }
 
 .flex-1 {

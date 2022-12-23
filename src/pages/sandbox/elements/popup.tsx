@@ -15,7 +15,7 @@ const Component: FC = () => {
   const anchorRef = useRef<HTMLButtonElement>(null!);
 
   return (
-    <div className="flex-box flex-center w-100 h-100">
+    <div className="flex-center w-100 h-100">
       <Button
         // className="mr-auto mb-auto"
         ref={anchorRef}
@@ -42,8 +42,8 @@ const Component: FC = () => {
         // $animationDirection="horizontal"
         // $animationDirection="vertical"
       >
-        <div className="flex-box c-pure">
-          <Form className="flex-box flex-stretch p-1 gap-1 border">
+        <div className="flex-start c-pure">
+          <Form className="flex-stretch p-1 gap-1 border">
             <TextBox style={{ width: 300 }} />
             <TextBox style={{ width: 300 }} />
             <Row $hAlign="center" className="gap-1 w-100">

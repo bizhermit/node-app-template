@@ -2,7 +2,8 @@ import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/comp
 import React, { useRef } from "react";
 import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type TextAreaProps = FormItemProps<string> & {
   $length?: number;
@@ -54,7 +55,7 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
       {...props}
       ref={ref}
       $$form={form}
-      data-has={Boolean(form.value)}
+      data-has={StringUtils.isNotEmpty(form.value)}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width),

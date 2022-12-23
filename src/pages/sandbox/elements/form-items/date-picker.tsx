@@ -18,7 +18,7 @@ const Page: NextPage = () => {
   const [type, setType] = useState<"date" | "month" | "year">("date");
 
   return (
-    <div className="flex-box flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-1 w-100 h-100 gap-1">
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -149,15 +149,17 @@ const Page: NextPage = () => {
           $readOnly={readOnly}
           $type={type}
           $required
-          $multiable
+          $multiple
           $monthTexts="en-s"
           // $max="2022-12-10"
         />
         <Form
-          className="flex-box"
+          className="flex-start gap-1"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}
+          method="post"
+          action="/api/form"
         >
           <DatePicker
             name="date-picker-form-bind"
@@ -174,6 +176,7 @@ const Page: NextPage = () => {
             placeholder="range pair date"
             $interlockValidation
           />
+          <Button type="submit">submit</Button>
         </Form>
       </Row>
     </div>

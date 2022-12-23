@@ -1,0 +1,74 @@
+@use "$/mixins";
+
+.input {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  height: var(--size);
+  min-width: 0;
+  flex: 1;
+  padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
+
+  &[data-has="false"] {
+    color: var(--c-dull_);
+  }
+}
+
+.button {
+  @include mixins.inputButton;
+}
+
+@include mixins.hoverAnimation;
+
+.list {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow: auto;
+  outline: none;
+}
+
+.item {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding: var(--padding-top-text) 1rem 0 1rem;
+  height: var(--size);
+  flex: none;
+  cursor: pointer;
+  background: var(--c-input);
+  color: var(--c-input_);
+  z-index: 0;
+  outline: none;
+
+  &:hover {
+    @include mixins.hover;
+    z-index: 1;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+
+  &:focus {
+    background: var(--c-hover);
+    color: var(--c-hover_);
+  }
+
+  &[data-selected="true"] {
+    background: var(--c-selected);
+    color: var(--c-selected_);
+  }
+
+  &[data-empty="true"] {
+    color: var(--c-dull_);
+  }
+}

@@ -1,5 +1,5 @@
 import Tooltip from "@/components/elements/tooltip";
-import { attributes, attributesWithoutChildren } from "@/utilities/attributes";
+import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
@@ -12,7 +12,8 @@ type InputOmitProps = "name"
   | "defaultValue"
   | "defaultChecked"
   | "color"
-  | "onChange";
+  | "onChange"
+  | "children";
 
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
@@ -72,7 +73,7 @@ type FormItemMountProps = {
   change: (value: Nullable<any>, absolute?: boolean) => void;
 };
 
-export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset"> & {
+export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
   $bind?: Struct;
   $disabled?: boolean;
   $readOnly?: boolean;
@@ -80,6 +81,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
   $messageWrap?: boolean;
   $onSubmit?: (((formData: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+  encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
 };
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
@@ -117,6 +119,22 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     if (props.$disabled || disabledRef.current || hasError) {
       e.preventDefault();
       return;
+    }
+    if (props.encType) {
+      e.currentTarget.enctype = props.encType;
+    } else {
+      const hasMultipartFormData = (() => {
+        if (props.encType) return false;
+        const item = Object.keys(items.current).find(name => {
+          return items.current[name].options?.multipartFormData === true;
+        });
+        return item != null;
+      })();
+      if (hasMultipartFormData) {
+        e.currentTarget.enctype = "multipart/form-data";
+      } else {
+        e.currentTarget.removeAttribute("enctype");
+      }
     }
     setDisabled(true);
     if (props.$onSubmit == null) {
@@ -207,8 +225,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
         {...attributes(props)}
         onSubmit={submit}
         onReset={reset}
-      >
-      </form>
+      />
     </FormContext.Provider>
   );
 });
@@ -217,6 +234,8 @@ export default Form;
 
 type UseFormOptions<T = any, U = any> = {
   effect?: (value: Nullable<T>) => void;
+  multiple?: boolean;
+  multipartFormData?: boolean;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
@@ -252,10 +271,23 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<Nullable<T>>> = [];
     if (props?.$required && !options?.preventRequiredValidation) {
-      rets.push((v) => {
-        if (v == null || v === "") return formValidationMessages.required;
-        return "";
-      });
+      if (options?.multiple) {
+        rets.push(v => {
+          if (v == null) return formValidationMessages.required;
+          if (!Array.isArray(v)) {
+            return formValidationMessages.typeMissmatch;
+          }
+          if (v.length === 0 || v[0] === null) {
+            return formValidationMessages.required;
+          }
+          return "";
+        });
+      } else {
+        rets.push((v) => {
+          if (v == null || v === "") return formValidationMessages.required;
+          return "";
+        });
+      }
     }
     if (options?.validations) {
       rets.push(...options.validations());
@@ -268,7 +300,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       }
     }
     return rets;
-  }, [props?.$required, ...(options?.validationsDeps ?? [])]);
+  }, [props?.$required, options?.multiple, ...(options?.validationsDeps ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -384,6 +416,15 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   };
 };
 
+const convertHiddenValue = (value: any) => {
+  if (value == null) return "";
+  const t = typeof value;
+  if (t === "string" || t === "number" || t === "bigint" || t === "boolean") {
+    return String(value);
+  }
+  return JSON.stringify(value);
+};
+
 export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $$form: ReturnType<typeof useForm<any, any>>;
   $preventFieldLayout?: boolean;
@@ -393,7 +434,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $useHidden?: boolean;
   children: ReactNode;
 }>((props, ref) => {
-  const errorNode = (Boolean(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
+  const errorNode = (StringUtils.isNotEmpty(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
       data-mode={props.$$form.messageDisplayMode}
@@ -436,7 +477,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
         <input
           name={props.name}
           type="hidden"
-          value={JSON.stringify(props.$$form.value ?? "")}
+          value={convertHiddenValue(props.$$form.value)}
         />
       }
       {props.$$form.hasValidator && props.$$form.editable ?
@@ -462,3 +503,12 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
     </div>
   );
 });
+
+export const multiValidationIterator = (v: any, func: (value: string | number | Date) => string) => {
+  if (v == null || !Array.isArray(v)) return "";
+  for (let i = 0, il = v.length; i < il; i++) {
+    const ret = func(v[i]);
+    if (ret) return ret;
+  }
+  return "";
+};
