@@ -13,7 +13,6 @@
     "noEmit": true,
     "isolatedModules": true,
     "strict": true,
-    "strictNullChecks": false,
     "skipLibCheck": true,
     "moduleResolution": "node",
     "baseUrl": ".",
