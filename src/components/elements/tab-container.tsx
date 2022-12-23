@@ -3,7 +3,8 @@ import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, use
 import Style from "$/components/elements/tab-container.module.scss";
 import LabelText from "@/components/elements/label-text";
 
-export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+type OmitAttributes = "color" | "children";
+export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $tabPosition?: "top" | "left" | "right" | "bottom";
   $defaultKey?: Key;
   $key?: Key;

@@ -3,7 +3,8 @@ import { attributesWithoutChildren, joinClassNames } from "@/components/utilitie
 import React, { HTMLAttributes, ReactNode } from "react";
 import Style from "$/components/elements/group-box.module.scss";
 
-export type GroupBoxProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color";
+export type GroupBoxProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $caption?: ReactNode;
   $bodyClassName?: string;
   $color?: Color;
