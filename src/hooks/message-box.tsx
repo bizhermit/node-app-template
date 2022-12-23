@@ -3,7 +3,7 @@ import { FC, ReactElement, ReactNode, useCallback, useEffect, useRef, useState }
 import { createRoot, Root } from "react-dom/client";
 import Style from "$/hooks/message-box.module.scss";
 import useToggleAnimation from "@/hooks/toggle-animation";
-import { convertSizeNumToStr, joinClassNames } from "@/utilities/attributes";
+import { convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 
 const MessageBox: FC<{
   showed: boolean;
@@ -25,7 +25,7 @@ const MessageBox: FC<{
   const style = useToggleAnimation({
     elementRef: ref,
     open: showed,
-    animationTime: 50,
+    animationDuration: 50,
     onToggle: (open) => {
       if (open) {
         if (ref.current) {

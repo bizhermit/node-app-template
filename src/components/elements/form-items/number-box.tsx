@@ -6,7 +6,7 @@ import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
 type NumberBoxProps = FormItemProps<number> & {
   $max?: number;
@@ -25,7 +25,7 @@ type NumberBoxProps = FormItemProps<number> & {
   $hideClearButton?: boolean;
 };
 
-const defaultWidth = 120;
+const defaultWidth = 150;
 
 const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);
@@ -197,13 +197,15 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
     renderFormattedValue();
   };
 
+  const hasData = form.value != null;
+
   return (
     <FormItemWrap
       {...props}
       ref={ref}
       $$form={form}
       $useHidden
-      data-has={form.value != null}
+      data-has={hasData}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width ?? defaultWidth),
@@ -231,6 +233,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         <div
           className={Style.clear}
           onClick={clear}
+          data-disabled={!hasData}
         >
           <VscClose />
         </div>

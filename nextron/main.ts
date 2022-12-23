@@ -6,6 +6,7 @@ import prepareNext from "electron-next";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { existsSync, mkdir, readFile, writeFile } from "fs-extra";
+import { RequestInit } from "next/dist/server/web/spec-extension/request";
 
 const $global = global as { [key: string]: any };
 const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
@@ -49,6 +50,7 @@ app.on("ready", async () => {
     log.info("app listen start", loadUrl);
   } else {
     mainWindow.setMenu(null);
+    mainWindow.webContents.openDevTools();
     loadUrl = url.format({
       pathname: "index.html",
       protocol: "file:",
@@ -124,102 +126,158 @@ app.on("ready", async () => {
     }
   };
 
+  const $fetch = (uri: string, init?: RequestInit) => {
+    return new Promise((resolve, reject) => {
+      fetch(uri, init).then(async res => {
+        const response = {
+          ok: res.ok,
+          status: res.status,
+          statusText: res.statusText,
+          text: await res.text(),
+        };
+        resolve(response);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  };
   if (isDev) {
-    setListener("fetch", "handle", (_e, apiPath: string, params: { [key: string]: any } = {}, options?: RequestInit) => {
-      log.debug("fetch api: ", apiPath, JSON.stringify(params), JSON.stringify(options));
-      const url = (loadUrl + "api/" + apiPath).replace(/\/\//g, "/");
-      const opts: RequestInit = { ...options };
-      if (options?.method !== "GET") {
-        if (StringUtils.isEmpty(opts.method)) opts.method = "POST";
-        opts.headers = { "Content-Type": "application/json", ...opts.headers };
-        if (opts.body == null) opts.body = JSON.stringify(params ?? {});
+    setListener("fetch", "handle", (_e, url: string, init?: RequestInit) => {
+      return $fetch(url.startsWith("http") ? url : path.join(loadUrl, url), init);
+    });
+  } else {
+    const getStatusText = (statusCode: number) => {
+      switch (statusCode) {
+        case 100: return "Continue";
+        case 101: return "Switching Protocols";
+        case 102: return "Processing";
+        case 103: return "Early Hints";
+        case 200: return "OK";
+        case 201: return "Created";
+        case 202: return "Accepted";
+        case 203: return "Non-Authoritative Information";
+        case 204: return "No Content";
+        case 205: return "Reset Content";
+        case 206: return "Partial Content";
+        case 207: return "Multi-Status";
+        case 208: return "Already Reported";
+        case 226: return "IM Used";
+        case 300: return "Multiple Choices";
+        case 301: return "Moved Permanently";
+        case 302: return "Found";
+        case 303: return "See Other";
+        case 304: return "Not Modified";
+        case 305: return "Use Proxy";
+        case 306: return "(Unused)";
+        case 307: return "Temporary Redirect";
+        case 308: return "Permanent Redirect";
+        case 400: return "Bad Request";
+        case 401: return "Unauthorized";
+        case 402: return "Payment Required";
+        case 403: return "Forbidden";
+        case 404: return "Not Found";
+        case 405: return "Method Not Allowed";
+        case 406: return "Not Acceptable";
+        case 407: return "Proxy Authentication Required";
+        case 408: return "Request Timeout";
+        case 409: return "Conflict";
+        case 410: return "Gone";
+        case 411: return "Length Required";
+        case 412: return "Precondition Failed";
+        case 413: return "Payload Too Large";
+        case 414: return "URI Too Long";
+        case 415: return "Unsupported Media Type";
+        case 416: return "Range Not Satisfiable";
+        case 417: return "Expectation Failed";
+        case 418: return "I'm a teapot";
+        case 421: return "Misdirected Request";
+        case 422: return "Unprocessable Content";
+        case 423: return "Locked";
+        case 424: return "Failed Dependency";
+        case 425: return "Too Early";
+        case 426: return "Upgrade Required";
+        case 428: return "Precondition Required";
+        case 429: return "Too Many Requests";
+        case 431: return "Request Header Fields Too Large";
+        case 451: return "Unavailable For Legal Reasons";
+        case 500: return "Internal Server Error";
+        case 501: return "Not Implemented";
+        case 502: return "Bad Gateway";
+        case 503: return "Service Unavailable";
+        case 504: return "Gateway Timeout";
+        case 505: return "HTTP Version Not Supported";
+        case 506: return "Variant Also Negotiates";
+        case 507: return "Insufficient Storage";
+        case 508: return "Loop Detected";
+        case 510: return "Not Extended";
+        case 511: return "Network Authentication Required";
+        default: return "Unknown";
       }
-      return new Promise<any>((resolve, reject) => {
-        fetch(url, opts).then((res) => {
-          if (!res.ok) {
-            reject(`fetch failed`);
-            return;
-          }
-          res.json().then((ret) => {
-            resolve(ret);
-          }).catch((err) => {
-            reject(err);
+    };
+    setListener("fetch", "handle", (_e, url: string, init?: RequestInit) => {
+      if (url.startsWith("http")) {
+        return $fetch(url, init);
+      }
+      return new Promise((resolve, reject) => {
+        const uriCtx = url.match(/([^?]*)(?:\?|$)(.*)/);
+        if (uriCtx == null) {
+          reject(getStatusText(400));
+          return;
+        }
+        const uri = uriCtx[1];
+        const req = {
+          method: init?.method || "GET",
+          query: (() => {
+            const str = uriCtx[2];
+            if (!str) return {};
+            const query: { [key: string]: any } = {};
+            str.split("&").forEach(item => {
+              const [_, key, value] = item.match(/([^=]*)(?:=|$)(.*)/) ?? [];
+              if (key in query) {
+                if (!Array.isArray(query[key])) {
+                  query[key] = [query[key]];
+                }
+                query[key].push(value);
+                return;
+              }
+              query[key] = value;
+            });
+            return query;
+          })(),
+          body: JSON.parse((init as any)?.body ?? "{}"),
+          session: $global._session,
+          cookies: {},
+        };
+        const returnValue: { json?: any; status?: number | undefined; } = {};
+        const returnJudge = () => {
+          if (returnValue.status == null || returnValue.status < 200 || returnValue.json == null) return;
+          resolve({
+            ok: returnValue.status < 300,
+            status: returnValue.status,
+            statusText: getStatusText(returnValue.status),
+            text: JSON.stringify(returnValue.json),
           });
+        };
+        const res = {
+          status: (code: number) => {
+            returnValue.status = Math.round(code);
+            returnJudge();
+            return res;
+          },
+          json: (body?: any) => {
+            returnValue.json = body;
+            returnJudge();
+          },
+        };
+        import(path.join(appRoot, ".main/src/pages", uri)).then((handler) => {
+          try {
+            handler.default(req, res);
+          } catch (err) {
+            reject(err);
+          }
         }).catch((err) => {
           reject(err);
         });
-      });
-    });
-  } else {
-    setListener("fetch", "handle", (_e, apiPath: string, params: { [key: string]: any } = {}, options?: RequestInit) => {
-      return new Promise<any>((resolve, reject) => {
-        try {
-          let data: { [key: string]: any } = {};
-          const res = {
-            statusCode: 0,
-            status: (code: number) => {
-              res.statusCode = code ?? 0;
-              return res;
-            },
-            json: (struct: { [key: string]: any }) => {
-              data = struct;
-              return res;
-            },
-          };
-          const listener = () => {
-            if (res.statusCode !== 0) {
-              resolve(JSON.parse(JSON.stringify(data)));
-              return;
-            }
-            setTimeout(() => {
-              listener();
-            }, 5);
-          };
-          $global._session.regenerate = (callback?: () => void) => {
-            Object.keys($global._session).forEach((key) => {
-              if (key === "regenerate") return;
-              delete $global._session[key];
-            });
-            callback?.();
-          };
-          const req = {
-            body: params,
-            session: $global._session,
-            query: {} as { [key: string]: string | Array<string> },
-            cookies: {} as { [key: string]: string },
-            method: options?.method,
-          };
-          let ap = apiPath;
-          let sepIndex = apiPath.indexOf("?");
-          if (sepIndex >= 0) {
-            ap = apiPath.substring(0, sepIndex);
-            const queryStrs = apiPath.substring(sepIndex + 1).split("&");
-            queryStrs.forEach((q) => {
-              sepIndex = q.indexOf("=");
-              const key = q.substring(0, sepIndex);
-              const val = sepIndex >= 0 ? q.substring(sepIndex + 1) : "";
-              if (key in req.query) {
-                const v = req.query[key];
-                if (typeof v === "string") req.query[key] = [v as string, val];
-                else v.push(val);
-              } else {
-                req.query[key] = val;
-              }
-            });
-          }
-          import(path.join(appRoot, ".main/src/pages/api", ap)).then((handler) => {
-            try {
-              handler.default(req, res);
-              listener();
-            } catch (ex) {
-              reject(ex);
-            }
-          }).catch((ex) => {
-            reject(ex);
-          });
-        } catch (ex) {
-          reject(ex);
-        }
       });
     });
   }

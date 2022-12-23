@@ -1,7 +1,7 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
-import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/utilities/file-input";
+import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/components/utilities/file-input";
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
 
@@ -14,8 +14,13 @@ type FileDropCommonProps = {
   children?: ReactNode;
 };
 
-export type FileDropProps = FileDropCommonProps &
-  ((FormItemProps<File> & { $multiple?: false; }) | (FormItemProps<Array<File>> & { $multiple: true; $append?: boolean }));
+export type FileDropProps_Single = FormItemProps<File> & FileDropCommonProps;
+
+export type FileDropProps_Multiple = FormItemProps<Array<File>> & {
+  $append?: boolean;
+} & FileDropCommonProps;
+
+export type FileDropProps = (FileDropProps_Single & { $multiple?: false; }) | (FileDropProps_Multiple & { $multiple: true } );
 
 const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);

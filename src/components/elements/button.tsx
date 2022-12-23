@@ -1,6 +1,6 @@
 import Style from "$/components/elements/button.module.scss";
 import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { attributesWithoutChildren } from "@/utilities/attributes";
+import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import { useForm } from "@/components/elements/form";
 import LabelText from "@/components/elements/label-text";
 
@@ -12,9 +12,11 @@ export type ButtonOptions = {
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
+  $fitContent?: boolean;
 };
 
-export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> & ButtonOptions & {
+type OmitAttributes = "onClick" | "color";
+export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, OmitAttributes> & ButtonOptions & {
   $onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);
   $ignoreFormValidation?: boolean;
 };
@@ -57,7 +59,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
   const colorClassName = useMemo(() => {
     const color = props.$color || "main";
     if (props.$outline) {
-      if (props.$color == null) return "";
       return `fgc-${color} bdc-${color}`;
     }
     return `c-${color} bdc-${color}`;
@@ -71,17 +72,18 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) =>
       disabled={props.disabled || submitDisabled || disabled}
       onClick={click}
       data-size={props.$size || "m"}
+      data-wide={!props.$fitContent && props.children != null}
+      data-round={props.$round}
     >
       <div
         className={`${Style.main} ${colorClassName}`}
-        data-round={props.$round}
         data-outline={props.$outline}
         data-icon={props.$icon != null && (props.$iconPosition || "left")}
       >
         {props.$icon != null && props.$iconPosition !== "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }
-        <LabelText className={Style.label} data-fill={props.$fillLabel}>{String(props.children)}</LabelText>
+        <LabelText className={Style.label} data-fill={props.$fillLabel}>{props.children}</LabelText>
         {props.$icon != null && props.$iconPosition === "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }

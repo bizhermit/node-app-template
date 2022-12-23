@@ -1,7 +1,7 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useRef } from "react";
 import { VscClose } from "react-icons/vsc";
@@ -57,13 +57,15 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
     if (iref.current) iref.current.value = "";
   };
 
+  const hasData = StringUtils.isNotEmpty(form.value);
+
   return (
     <FormItemWrap
       {...props}
       ref={ref}
       $$form={form}
       data-round={props.$round}
-      data-has={StringUtils.isNotEmpty(form.value)}
+      data-has={hasData}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width),
@@ -91,6 +93,7 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         <div
           className={Style.button}
           onClick={clear}
+          data-disabled={!hasData}
           data-round={props.$round}
         >
           <VscClose />

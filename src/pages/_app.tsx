@@ -10,12 +10,12 @@ import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbComponents } from "react-icons/tb";
 import { LoadingBarProvider } from "@/components/elements/loading-bar";
-import { convertSizeNumToStr } from "@/utilities/attributes";
+import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
-      <IconContext.Provider value={{ className: "react-icon", size: "0" }}>
+      <IconContext.Provider value={{ className: "icon", size: "0" }}>
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
@@ -221,6 +221,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                     label: "MessageBox",
                     icon: "M",
                     pathname: "/sandbox/message-box",
+                  }, {
+                    key: "fetch",
+                    label: "Fetch",
+                    icon: "F",
+                    pathname: "/sandbox/fetch",
                   }]
                 }]}
               />

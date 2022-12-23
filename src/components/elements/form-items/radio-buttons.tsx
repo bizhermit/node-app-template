@@ -3,7 +3,7 @@ import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo }
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
-import { pressPositiveKey } from "@/utilities/attributes";
+import { pressPositiveKey } from "@/components/utilities/attributes";
 
 export type RadioButtonsProps<T extends string | number = string | number> = Omit<FormItemProps<T, { afterData: Struct; beforeData: Struct; }>, "$tagPosition"> & {
   $labelDataName?: string;

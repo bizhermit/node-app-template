@@ -1,5 +1,5 @@
-import Style from "$/components/templates/row.module.scss";
-import { attributes } from "@/utilities/attributes";
+import Style from "$/components/elements/row.module.scss";
+import { attributes } from "@/components/utilities/attributes";
 import React, { HTMLAttributes, LegacyRef } from "react";
 
 export type RowProps = HTMLAttributes<HTMLDivElement> & {
