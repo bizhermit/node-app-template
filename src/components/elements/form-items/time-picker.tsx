@@ -6,25 +6,20 @@ import Style from "$/components/elements/form-items/time-picker.module.scss";
 import { VscClose, VscRecord } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
 
-export type TimePickerCommonProps = TimeInputProps & {
+export type TimePickerBaseProps<T> = TimeInputProps & {
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
   $negativeText?: ReactNode;
   $skipValidation?: boolean;
+  $onClickPositive?: (value: Nullable<T>) => void;
 };
 
-type TimePickerStringProps = FormItemProps<string> & {
-  $typeof?: "string";
-  $onClickPositive?: (value: Nullable<string>) => void;
-};
+type TimePickerStringProps = TimePickerBaseProps<string>;
 
-type TimePickerNumberProps = FormItemProps<number> & {
-  $typeof: "number";
-  $onClickPositive?: (value: Nullable<number>) => void;
-};
+type TimePickerNumberProps = TimePickerBaseProps<number>;
 
-export type TimePickerProps =
-  (TimePickerStringProps | TimePickerNumberProps) & TimePickerCommonProps;
+export type TimePickerProps = (TimePickerStringProps & { $typeof?: "string" })
+  | (TimePickerNumberProps & { $typeof: "number" });
 
 const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref) => {
   const form = useForm<any>(props);

@@ -9,19 +9,16 @@ import Time, { TimeUtils } from "@bizhermit/time";
 import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
 
-type TimeBoxCommonProps = TimeInputProps & {
+type TimeBoxBaseProps<T> = FormItemProps<T> & TimeInputProps & {
   $disallowInput?: boolean;
 };
 
-type TimeBoxStringProps = FormItemProps<string> & {
-  $typeof?: "string";
-};
+type TimeBoxStringProps = TimeBoxBaseProps<string>;
 
-type TimeBoxNumberProps = FormItemProps<number> & {
-  $typeof: "number";
-};
+type TimeBoxNumberProps = TimeBoxBaseProps<number>;
 
-export type TimeBoxProps = (TimeBoxStringProps | TimeBoxNumberProps) & TimeBoxCommonProps;
+export type TimeBoxProps = (TimeBoxStringProps & { $typeof?: "string" })
+  | (TimeBoxNumberProps & { $typeof: "number" });
 
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
