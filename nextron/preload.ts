@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { contextBridge, ipcRenderer } from "electron";
+import { RequestInit } from "next/dist/server/web/spec-extension/request";
 
 const $global = global as { [key: string]: any };
 
@@ -10,7 +11,7 @@ process.once("loaded", () => {
 
 contextBridge.exposeInMainWorld("electron", {
   test: () => ipcRenderer.sendSync("test"),
-  fetch: (path: string, params?: { [key: string]: any }, options?: RequestInit) => ipcRenderer.invoke("fetch", path, params, options),
+  fetch: (url: string, init?: RequestInit) => ipcRenderer.invoke("fetch", url, init),
   setSize: (params: { width?: number; height?: number; animate?: boolean; }) => ipcRenderer.sendSync("setSize", params),
   getSize: () => ipcRenderer.sendSync("getSize"),
   setAlwaysOnTop: (alwaysOnTop: boolean) => ipcRenderer.sendSync("setAlwaysOnTop", alwaysOnTop),

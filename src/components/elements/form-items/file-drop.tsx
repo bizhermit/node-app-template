@@ -14,8 +14,13 @@ type FileDropCommonProps = {
   children?: ReactNode;
 };
 
-export type FileDropProps = FileDropCommonProps &
-  ((FormItemProps<File> & { $multiple?: false; }) | (FormItemProps<Array<File>> & { $multiple: true; $append?: boolean }));
+export type FileDropProps_Single = FormItemProps<File> & FileDropCommonProps;
+
+export type FileDropProps_Multiple = FormItemProps<Array<File>> & {
+  $append?: boolean;
+} & FileDropCommonProps;
+
+export type FileDropProps = (FileDropProps_Single & { $multiple?: false; }) | (FileDropProps_Multiple & { $multiple: true } );
 
 const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) => {
   const iref = useRef<HTMLInputElement>(null!);

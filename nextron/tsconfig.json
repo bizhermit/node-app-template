@@ -1,28 +1,14 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "alwaysStrict": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "lib": ["dom", "es2017"],
     "module": "commonjs",
-    "moduleResolution": "node",
     "noEmit": false,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "strict": true,
-    "target": "esnext",
     "rootDir": "../",
     "outDir": "../.main"
   },
   "exclude": [
-    "node_modules",
+    "../node_modules",
+    "../nxpress",
     "../src/components",
     "../src/hooks",
     "../src/styles"
