@@ -76,6 +76,7 @@ const Page: NextPage = () => {
                     <DateBox
                       name="from"
                       $bind={item}
+                      $required
                       $preventFormBind
                       $rangePair={{
                         name: "to",

@@ -110,8 +110,8 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   }, [errors]);
 
   const validation = () => {
-    Object.keys(items.current).forEach(name => {
-      items.current[name]?.validation();
+    Object.keys(items.current).forEach(id => {
+      items.current[id]?.validation();
     });
   };
 
@@ -125,8 +125,8 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     } else {
       const hasMultipartFormData = (() => {
         if (props.encType) return false;
-        const item = Object.keys(items.current).find(name => {
-          return items.current[name].options?.multipartFormData === true;
+        const item = Object.keys(items.current).find(id => {
+          return items.current[id].options?.multipartFormData === true;
         });
         return item != null;
       })();
@@ -166,8 +166,8 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
 
   const resetItems = () => {
     setTimeout(() => {
-      Object.keys(items.current).forEach(name => {
-        const item = items.current[name];
+      Object.keys(items.current).forEach(id => {
+        const item = items.current[id];
         item.options.effect?.(item.props.$defaultValue);
         item.change(item.props.$defaultValue);
       });
@@ -310,7 +310,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       if ("$bind" in props) return props.$bind;
       if (!props.$preventFormBind) return ctx.bind;
       return {};
-    });
+    })();
     for (let i = 0, il = validations.length; i < il; i++) {
       const result = validations[i](value, bind, i);
       if (result == null || result === "" || result === false) continue;
