@@ -5,7 +5,8 @@ import Resizer from "./resizer";
 
 export type SplitDirection = "horizontal" | "vertical";
 
-export type SplitContainerProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color" | "children";
+export type SplitContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $direction?: SplitDirection;
   $reverse?: boolean;
   $disabled?: boolean;

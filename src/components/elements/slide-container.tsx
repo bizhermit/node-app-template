@@ -6,7 +6,8 @@ import LabelText from "@/components/elements/label-text";
 type SlideState = "before" | "previous" | "current" | "next" | "after";
 export type SlideDirection = "horizontal" | "horizontal-reverse" | "vertical" | "vertical-reverse";
 
-export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+type OmitAttributes = "color" | "children";
+export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $direction?: SlideDirection;
   $index: number;
   $onChange?: (index: number) => void;

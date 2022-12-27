@@ -8,13 +8,6 @@ export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, ind
 
 export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide";
 
-type InputOmitProps = "name"
-  | "defaultValue"
-  | "defaultChecked"
-  | "color"
-  | "onChange"
-  | "children";
-
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
   if ("name" in ret) delete ret.name;
@@ -23,6 +16,12 @@ const inputAttributes = (props: Struct, ...classNames: Array<string | null | und
   return ret;
 };
 
+type InputOmitProps = "name"
+  | "defaultValue"
+  | "defaultChecked"
+  | "color"
+  | "onChange"
+  | "children";
 export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;

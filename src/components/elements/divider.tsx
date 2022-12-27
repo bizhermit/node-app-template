@@ -1,13 +1,13 @@
-import React, { HTMLAttributes, ReactNode } from "react";
+import React, { HTMLAttributes } from "react";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
 import Style from "$/components/elements/divider.module.scss";
 import LabelText from "@/components/elements/label-text";
 
-export type DividerProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color";
+export type DividerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $color?: Color;
   $reverseColor?: boolean;
   $height?: number | string;
-  children?: ReactNode;
   $align?: "left" | "center" | "right";
   $shortWidth?: number | string;
 };

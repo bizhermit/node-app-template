@@ -27,7 +27,8 @@ export const useNavigation = () => {
   return useContext(NavigationContext);
 };
 
-export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+type OmitAttributes = "color" | "children";
+export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $navigationPosition?: NavigationPosition;
   $navigationMode?: NavigationMode | "auto";
   $footerVisible?: "always" | "end";
