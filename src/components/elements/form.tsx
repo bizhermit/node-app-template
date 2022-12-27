@@ -38,6 +38,7 @@ export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
+  $preventFormBind?: boolean;
 };
 
 type FormContextProps = {
@@ -304,11 +305,15 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   const validation = useCallback(() => {
     const value = valueRef.current;
     const msgs: Array<string> = [];
+    const bind = (() => {
+      if (props == null) return {};
+      if ("$bind" in props) return props.$bind;
+      if (!props.$preventFormBind) return ctx.bind;
+      return {};
+    });
     for (let i = 0, il = validations.length; i < il; i++) {
-      const result = validations[i](value, ctx.bind, i);
-      if (result == null || result === "" || result === false) {
-        continue;
-      }
+      const result = validations[i](value, bind, i);
+      if (result == null || result === "" || result === false) continue;
       if (typeof result === "string") msgs.push(result);
       msgs.push(formValidationMessages.default);
       break;
@@ -331,8 +336,10 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     setValue(value);
     const name = props?.name;
     if (name) {
-      if (ctx.bind) {
-        ctx.bind[name] = value;
+      if (!props.$preventFormBind) {
+        if (ctx.bind) {
+          ctx.bind[name] = value;
+        }
       }
       if (props.$bind) {
         props.$bind[name] = value;
@@ -348,7 +355,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     const name = props?.name;
-    if (props == null || name == null || ctx.bind == null || "$bind" in props || "$value" in props) return;
+    if (props == null || name == null || ctx.bind == null || "$bind" in props || "$value" in props || props.$preventFormBind) return;
     const before = valueRef.current;
     setValue(ctx.bind[name]);
     if (!equals(valueRef.current, before)) {
