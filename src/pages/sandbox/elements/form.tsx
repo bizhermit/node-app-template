@@ -109,7 +109,8 @@ const Page: NextPage = () => {
             <h3>no form item</h3>
             <Row>
               <TextBox
-                name="self-bind-text-box"
+                // name="self-bind-text-box"
+                $preventFormBind
                 $bind={bind}
                 $required
                 // $defaultValue="hoge"
@@ -118,7 +119,8 @@ const Page: NextPage = () => {
                 }}
               />
               <CheckBox
-                name="self-bind-check-box"
+                // name="self-bind-check-box"
+                $preventFormBind
                 $bind={bind}
                 $required
               />
