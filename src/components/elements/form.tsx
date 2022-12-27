@@ -96,13 +96,13 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const [errors, setErrors] = useState<Struct>({});
 
   const mount = (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
-    const name = itemProps.name ?? StringUtils.generateUuidV4();
-    items.current[name] = { ...mountItemProps, props: itemProps, options, };
-    return name;
+    const id = itemProps.id ?? StringUtils.generateUuidV4();
+    items.current[id] = { ...mountItemProps, props: itemProps, options, };
+    return id;
   };
 
-  const unmount = (name: string) => {
-    delete items.current[name];
+  const unmount = (id: string) => {
+    delete items.current[id];
   };
 
   const hasError = useMemo(() => {
@@ -328,7 +328,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
         return ret;
       });
     }
-  }, [validations]);
+  }, [validations, props?.$preventFormBind]);
 
   const change = useCallback((value: Nullable<T>, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
@@ -351,7 +351,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       validation();
     }
     props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.$bind, props?.$onChange, validation]);
+  }, [ctx.bind, props?.$bind, props?.$onChange, validation, props?.$preventFormBind]);
 
   useEffect(() => {
     const name = props?.name;
@@ -363,7 +363,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     }
     options?.effect?.(valueRef.current);
     validation();
-  }, [ctx.bind]);
+  }, [ctx.bind, props?.$preventFormBind]);
 
   useEffect(() => {
     const name = props?.name;
@@ -386,12 +386,12 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     if (props) {
-      const name = ctx.mount(props, {
+      const id = ctx.mount(props, {
         validation,
         change,
       }, options ?? { effect: () => { } });
       return () => {
-        ctx.unmount(name);
+        ctx.unmount(id);
       };
     }
   }, [validation, change]);

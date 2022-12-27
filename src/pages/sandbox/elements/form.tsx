@@ -2,16 +2,25 @@ import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import CheckBox from "@/components/elements/form-items/check-box";
+import DateBox from "@/components/elements/form-items/date-box";
 import TextBox from "@/components/elements/form-items/text-box";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
+import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
   const [bind, setBind] = useState<Struct>({});
   const [viewBind, setViewBind] = useState(bind);
-  const [formBind, setFormBind] = useState<Struct>({});
+  const [formBind, setFormBind] = useState<Struct>({
+    array: ArrayUtils.generateArray(10, idx => {
+      return {
+        id: idx,
+        text: `item${idx}`,
+      };
+    })
+  });
   const [viewFormBind, setViewFormBind] = useState(formBind);
 
   return (
@@ -28,7 +37,8 @@ const Page: NextPage = () => {
           // $readOnly
           // $messageDisplayMode="bottom"
           $onSubmit={(fd) => {
-            console.log(fd);
+            // console.log(fd);
+            console.log(formBind);
             setViewFormBind({ ...formBind });
             return false;
           }}
@@ -42,7 +52,7 @@ const Page: NextPage = () => {
             <Row>
               <TextBox
                 name="text-box"
-                $required
+                // $required
                 // $defaultValue="fuga"
                 $onChange={(a, b) => {
                   console.log(b, "->", a);
@@ -50,12 +60,47 @@ const Page: NextPage = () => {
               />
               <CheckBox
                 name="check-box"
-                $required
+              // $required
               />
             </Row>
+            <div className="flex-start">
+              {formBind.array.map(((item: Struct) => {
+                return (
+                  <Row key={item.id}>
+                    <TextBox
+                      name="text"
+                      $bind={item}
+                      $required
+                      $preventFormBind
+                    />
+                    <DateBox
+                      name="from"
+                      $bind={item}
+                      $preventFormBind
+                      $rangePair={{
+                        name: "to",
+                        position: "after",
+                      }}
+                    />
+                    <DateBox
+                      name="to"
+                      $bind={item}
+                      $preventFormBind
+                      $rangePair={{
+                        name: "from",
+                        position: "before",
+                      }}
+                    />
+                  </Row>
+                );
+              }))}
+            </div>
             <Row className="gap-1">
               <Button type="submit">submit / show form bind</Button>
               <Button type="reset">reset</Button>
+              <Button $onClick={() => {
+                console.log(formBind);
+              }}>show form bind</Button>
             </Row>
           </section>
           <Divider />
@@ -80,6 +125,7 @@ const Page: NextPage = () => {
             <Row className="gap-1">
               <Button
                 $onClick={() => {
+                  console.log(bind);
                   setViewBind({ ...bind });
                 }}
               >
