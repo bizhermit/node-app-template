@@ -19,11 +19,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         <LoadingBarProvider>
           <NavigationContainer
             className="w-100 h-100"
-            // $navigationMode="manual"
-            // $navigationMode="minimize"
-            // $navigationMode="visible"
-            // $navigationPosition="right"
-            // $footerVisible="always"
+          // $navigationMode="manual"
+          // $navigationMode="minimize"
+          // $navigationMode="visible"
+          // $navigationPosition="right"
+          // $footerVisible="always"
           >
             <div>Header</div>
             {/* <div className="flex-start h-100" style={{ width: 200 }}> */}
@@ -51,6 +51,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                     icon: <TbComponents />,
                     label: "Elements",
                     items: [{
+                      key: "icons",
+                      label: "Icons",
+                      icon: "I",
+                      pathname: "/sandbox/elements/icons"
+                    }, {
                       key: "form",
                       label: "Form",
                       icon: "F",
