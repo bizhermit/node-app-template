@@ -6,12 +6,13 @@ import LabelText from "@/components/elements/label-text";
 type SlideState = "before" | "previous" | "current" | "next" | "after";
 export type SlideDirection = "horizontal" | "horizontal-reverse" | "vertical" | "vertical-reverse";
 
-export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+type OmitAttributes = "color" | "children";
+export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $direction?: SlideDirection;
   $index: number;
   $onChange?: (index: number) => void;
   $defaultMount?: boolean;
-  $unmountDeselected?: boolean;
+  $preventUnmountDeselected?: boolean;
   $bodyColor?: Color;
   $overlap?: boolean;
   $breadcrumbs?: boolean
@@ -55,7 +56,7 @@ const SlideContainer = React.forwardRef<HTMLDivElement, SlideContainerProps>((pr
           color={bodyColor}
           overlap={child.props?.overlap ?? props.$overlap ?? false}
           defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
-          unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? true}
+          preventUnmountDeselected={child.props.preventUnmountDeselected ?? props.$preventUnmountDeselected ?? false}
           state={state}
         >
           {child}
@@ -136,7 +137,7 @@ const Content: FC<{
   current: number;
   state: SlideState;
   defaultMount: boolean;
-  unmountDeselected: boolean;
+  preventUnmountDeselected: boolean;
   color: Color;
   overlap: boolean;
   children: ReactNode;
@@ -149,9 +150,8 @@ const Content: FC<{
     const state = e.currentTarget.getAttribute("data-state") as SlideState;
     if (state !== "current") {
       e.currentTarget.style.visibility = "hidden";
-      if (props.unmountDeselected) {
-        setMounted(false);
-      }
+      if (props.preventUnmountDeselected) return;
+      setMounted(false);
     }
   };
 
@@ -183,7 +183,7 @@ export const SlideContent: FC<{
   label?: ReactNode;
   overlap?: boolean;
   defaultMount?: boolean;
-  unmountDeselected?: boolean;
+  preventUnmountDeselected?: boolean;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;
