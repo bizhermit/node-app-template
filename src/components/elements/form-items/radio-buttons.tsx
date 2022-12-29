@@ -98,8 +98,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
           <div
             className={`${Style.label} ${appearance === "button" ?
               `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
-              `fgc-${c}`
-            }`}
+              `fgc-${c}`}`}
           >
             <LabelText>{l}</LabelText>
           </div>
@@ -110,10 +109,14 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
   }, [source, form.editable, form.value, props.$appearance]);
 
   useEffect(() => {
-    if (selectedItem == null && source.length > 0) {
-      form.change(source[0][vdn]);
+    if (!loading && selectedItem == null && source.length > 0) {
+      let target = source[0];
+      if ("$defaultValue" in props && props.$defaultValue != null) {
+        target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
+      }
+      form.change(target[vdn]);
     }
-  }, [selectedItem]);
+  }, [selectedItem, source]);
 
   return (
     <FormItemWrap
