@@ -124,12 +124,13 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
   useEffect(() => {
     if (selectedItem == null && source.length > 0) {
       form.change(source[0][vdn]);
-    if (!loading && selectedItem == null && source.length > 0) {
-      let target = source[0];
-      if ("$defaultValue" in props && props.$defaultValue != null) {
-        target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
+      if (!loading && selectedItem == null && source.length > 0) {
+        let target = source[0];
+        if ("$defaultValue" in props && props.$defaultValue != null) {
+          target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
+        }
+        form.change(target[vdn]);
       }
-      form.change(target[vdn]);
     }
   }, [selectedItem, source]);
 
