@@ -102,7 +102,6 @@ const Content: FC<{
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return;
-    e.stopPropagation();
     if (e.currentTarget.getAttribute("data-selected") !== "true") {
       e.currentTarget.style.visibility = "hidden";
       e.currentTarget.style.removeProperty("top");
