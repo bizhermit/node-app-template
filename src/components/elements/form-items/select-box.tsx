@@ -46,13 +46,14 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   const [label, setLabel] = useState("");
 
   const renderLabel = () => {
-    if (iref.current == null) return;
     const item = source.find(item => equals(item[vdn], form.valueRef.current));
     if (item == null) {
-      iref.current.value = "";
+      if (iref.current) iref.current.value = "";
+      setLabel("");
       return;
     }
-    setLabel(iref.current.value = String(item[ldn] || ""));
+    if (iref.current) iref.current.value = String(item[ldn] || "");
+    setLabel(String(item[ldn] || ""));
     return;
   };
 
@@ -216,7 +217,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
 
   useEffect(() => {
     renderLabel();
-  }, [form.value]);
+  }, [form.value, source]);
 
   const isEmptyValue = form.value == null || form.value === "";
   const hasLabel = StringUtils.isNotEmpty(label);
