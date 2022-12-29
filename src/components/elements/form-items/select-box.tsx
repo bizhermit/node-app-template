@@ -36,9 +36,6 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
     preventMemorize: props.$preventSourceMemorize,
   });
   const [bindSource, setBindSource] = useState(source);
-  useEffect(() => {
-    setBindSource(source);
-  }, [source]);
 
   const iref = useRef<HTMLInputElement>(null!);
   const [showPicker, setShowPicker] = useState(false);
@@ -65,7 +62,8 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         afterData: source.find(item => equals(item[vdn], a)),
         beforeData: source.find(item => equals(item[vdn], b)),
       };
-    }
+    },
+    generateChangeCallbackDataDeps: [source],
   });
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,6 +210,11 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   };
 
   useEffect(() => {
+    setBindSource(source);
+    form.change(form.valueRef.current, true);
+  }, [source]);
+
+  useEffect(() => {
     renderLabel();
   }, [form.value]);
 
@@ -283,9 +286,10 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
           x: "inner",
           y: "outer",
         }}
-        $animationDuration={50}
+        $animationDuration={80}
         style={{ width }}
         $preventUnmount
+        $animationDirection="vertical"
         $onToggled={(open) => {
           if (open) {
             if (!doScroll.current) return;
