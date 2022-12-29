@@ -316,6 +316,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           onChange={changeY}
           onFocus={focusInput}
           onKeyDown={keydownY}
+          autoComplete="off"
         />
         {type !== "year" &&
           <>
@@ -336,6 +337,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
               onChange={changeM}
               onFocus={focusInput}
               onKeyDown={keydownM}
+              autoComplete="off"
             />
           </>
         }
@@ -358,6 +360,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
               onChange={changeD}
               onFocus={focusInput}
               onKeyDown={keydownD}
+              autoComplete="off"
             />
           </>
         }
