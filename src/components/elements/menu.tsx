@@ -26,7 +26,8 @@ type AddonMenuItemProps = MenuItemProps & { nestLevel: number; };
 
 type Direction = "vertical" | "horizontal";
 
-export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+type OmitAttributes = "color" | "children";
+export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $items?: Array<MenuItemProps>;
   $direction?: Direction;
   $itemDefaultAttributes?: ItemAttributes;

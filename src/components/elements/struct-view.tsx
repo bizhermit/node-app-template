@@ -13,7 +13,8 @@ export type StructKey = {
   children?: Array<StructKey>;
 };
 
-export type StructViewProps = HTMLAttributes<HTMLTableElement> & {
+type OmitAttributes = "color" | "children";
+export type StructViewProps = Omit<HTMLAttributes<HTMLTableElement>, OmitAttributes> & {
   $keys?: Array<StructKey>;
   $struct?: Struct;
   $color?: Color;

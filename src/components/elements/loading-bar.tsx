@@ -5,7 +5,8 @@ import usePortalElement from "@/hooks/portal-element";
 import { createPortal } from "react-dom";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
-export type LoadingBarProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color" | "children";
+export type LoadingBarProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $color?: Color;
   $reverseColor?: boolean;
   $fixed?: boolean;

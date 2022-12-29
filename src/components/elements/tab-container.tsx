@@ -3,7 +3,8 @@ import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, use
 import Style from "$/components/elements/tab-container.module.scss";
 import LabelText from "@/components/elements/label-text";
 
-export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, "children"> & {
+type OmitAttributes = "color" | "children";
+export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $tabPosition?: "top" | "left" | "right" | "bottom";
   $defaultKey?: Key;
   $key?: Key;
@@ -100,6 +101,7 @@ const Content: FC<{
   const [mounted, setMounted] = useState(props.selected || props.defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
     if (e.currentTarget.getAttribute("data-selected") !== "true") {
       e.currentTarget.style.visibility = "hidden";
       e.currentTarget.style.removeProperty("top");

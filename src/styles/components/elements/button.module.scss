@@ -59,7 +59,9 @@ $buttonSize: (
         }
       
         >.icon {
-          min-width: calc(var(--size) * #{$value});
+          &:not(:only-child) {
+            min-width: calc(var(--size) * #{$value});
+          }
 
           >:global(.icon) {
             &[height="0"] {
@@ -118,4 +120,8 @@ $buttonSize: (
   justify-content: center;
   align-items: center;
   height: 100%;
+
+  &:only-child {
+    width: 100%;
+  }
 }

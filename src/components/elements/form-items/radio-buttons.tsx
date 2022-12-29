@@ -34,7 +34,8 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
         afterData: source.find(item => equals(item[vdn], a)),
         beforeData: source.find(item => equals(item[vdn], b)),
       };
-    }
+    },
+    generateChangeCallbackDataDeps: [source],
   });
 
   const select = (value: T) => {
@@ -90,16 +91,23 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
               className={`${Style.box} bdc-${c || "border"}`}
             >
               <div
-                className={`${Style.check} ${appearance === "check-outline" ? `bdc-${c || "input"}` : `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`}`}
+                className={
+                  `${Style.check} ${appearance === "check-outline" ?
+                    `bdc-${c || "input"}` :
+                    `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`
+                  }`
+                }
                 data-selected={selected}
               />
             </div>
           }
           <div
-            className={`${Style.label} ${appearance === "button" ?
-              `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
-              `fgc-${c}`
-            }`}
+            className={
+              `${Style.label} ${appearance === "button" ?
+                `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
+                `fgc-${c}`
+              }`
+            }
           >
             <LabelText>{l}</LabelText>
           </div>
@@ -110,10 +118,21 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
   }, [source, form.editable, form.value, props.$appearance]);
 
   useEffect(() => {
+    form.change(form.valueRef.current, true);
+  }, [source]);
+
+  useEffect(() => {
     if (selectedItem == null && source.length > 0) {
       form.change(source[0][vdn]);
+      if (!loading && selectedItem == null && source.length > 0) {
+        let target = source[0];
+        if ("$defaultValue" in props && props.$defaultValue != null) {
+          target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
+        }
+        form.change(target[vdn]);
+      }
     }
-  }, [selectedItem]);
+  }, [selectedItem, source]);
 
   return (
     <FormItemWrap

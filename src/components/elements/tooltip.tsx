@@ -2,7 +2,8 @@ import Popup from "@/components/elements/popup";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
 
-type TooltipProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color" | "children";
+type TooltipProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $disabled?: boolean;
   $showDelay?: number;
   $position?: {
