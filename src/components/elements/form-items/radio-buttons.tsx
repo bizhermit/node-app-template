@@ -118,6 +118,10 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
   }, [source, form.editable, form.value, props.$appearance]);
 
   useEffect(() => {
+    form.change(form.valueRef.current, true);
+  }, [source]);
+
+  useEffect(() => {
     if (selectedItem == null && source.length > 0) {
       form.change(source[0][vdn]);
     }
