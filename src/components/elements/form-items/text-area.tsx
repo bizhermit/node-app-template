@@ -16,7 +16,7 @@ export type TextAreaProps = FormItemProps<string> & {
   $height?: number | string;
   $maxHeight?: number | string;
   $minHeight?: number | string;
-  $autoComplete: string;
+  $autoComplete?: string;
 };
 
 const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) => {

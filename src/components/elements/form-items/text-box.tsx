@@ -17,7 +17,7 @@ export type TextBoxProps = FormItemProps<string> & {
   $maxWidth?: number | string;
   $minWidth?: number | string;
   $hideClearButton?: boolean;
-  $autoComplete: string;
+  $autoComplete?: string;
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
