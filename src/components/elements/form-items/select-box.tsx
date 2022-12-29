@@ -65,7 +65,8 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         afterData: source.find(item => equals(item[vdn], a)),
         beforeData: source.find(item => equals(item[vdn], b)),
       };
-    }
+    },
+    generateChangeCallbackDataDeps: [source],
   });
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {

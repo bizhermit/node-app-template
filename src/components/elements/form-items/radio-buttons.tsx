@@ -34,7 +34,8 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
         afterData: source.find(item => equals(item[vdn], a)),
         beforeData: source.find(item => equals(item[vdn], b)),
       };
-    }
+    },
+    generateChangeCallbackDataDeps: [source],
   });
 
   const select = (value: T) => {
@@ -90,16 +91,23 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
               className={`${Style.box} bdc-${c || "border"}`}
             >
               <div
-                className={`${Style.check} ${appearance === "check-outline" ? `bdc-${c || "input"}` : `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`}`}
+                className={
+                  `${Style.check} ${appearance === "check-outline" ?
+                    `bdc-${c || "input"}` :
+                    `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`
+                  }`
+                }
                 data-selected={selected}
               />
             </div>
           }
           <div
-            className={`${Style.label} ${appearance === "button" ?
-              `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
-              `fgc-${c}`
-            }`}
+            className={
+              `${Style.label} ${appearance === "button" ?
+                `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
+                `fgc-${c}`
+              }`
+            }
           >
             <LabelText>{l}</LabelText>
           </div>
