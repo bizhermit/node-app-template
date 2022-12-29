@@ -234,6 +234,7 @@ export default Form;
 
 type UseFormOptions<T = any, U = any> = {
   effect?: (value: Nullable<T>) => void;
+  effectDeps?: Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
@@ -241,6 +242,7 @@ type UseFormOptions<T = any, U = any> = {
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
+  generateChangeCallbackDataDeps?: Array<any>;
 };
 
 export const formValidationMessages = {
@@ -351,7 +353,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       validation();
     }
     props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.$bind, props?.$onChange, validation, props?.$preventFormBind]);
+  }, [ctx.bind, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps ?? [])]);
 
   useEffect(() => {
     const name = props?.name;
@@ -399,7 +401,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   useEffect(() => {
     options?.effect?.(valueRef.current);
     validation();
-  }, []);
+  }, [...(options?.effectDeps ?? [])]);
 
   const disabled = props?.$disabled || ctx.disabled;
   const readOnly = props?.$readOnly || ctx.readOnly;
