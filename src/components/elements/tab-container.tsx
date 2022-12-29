@@ -101,6 +101,7 @@ const Content: FC<{
   const [mounted, setMounted] = useState(props.selected || props.defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
     e.stopPropagation();
     if (e.currentTarget.getAttribute("data-selected") !== "true") {
       e.currentTarget.style.visibility = "hidden";

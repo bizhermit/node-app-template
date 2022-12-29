@@ -93,6 +93,7 @@ const Breadcrumb: FC<{
   const [state, setState] = useState<SlideState>(props.state);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
     e.stopPropagation();
     const state = e.currentTarget.getAttribute("data-state") as SlideState;
     if (state === "next" || state === "after") {
@@ -148,6 +149,7 @@ const Content: FC<{
   const [mounted, setMounted] = useState(state === "current" || props.defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
     e.stopPropagation();
     const state = e.currentTarget.getAttribute("data-state") as SlideState;
     if (state !== "current") {
