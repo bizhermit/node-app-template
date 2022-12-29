@@ -247,6 +247,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         onClick={picker}
         onChange={changeText}
         onKeyDown={keydown}
+        autoComplete="off"
         data-has={!isEmptyValue}
       />
       {form.editable && !loading &&

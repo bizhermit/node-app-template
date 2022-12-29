@@ -16,6 +16,7 @@ export type TextAreaProps = FormItemProps<string> & {
   $height?: number | string;
   $maxHeight?: number | string;
   $minHeight?: number | string;
+  $autoComplete: string;
 };
 
 const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) => {
@@ -78,6 +79,7 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
         tabIndex={props.tabIndex}
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
+        autoComplete={props.$autoComplete ?? "off"}
       />
       {props.$resize &&
         <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />

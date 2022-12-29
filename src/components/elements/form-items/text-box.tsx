@@ -17,6 +17,7 @@ export type TextBoxProps = FormItemProps<string> & {
   $maxWidth?: number | string;
   $minWidth?: number | string;
   $hideClearButton?: boolean;
+  $autoComplete: string;
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
@@ -88,6 +89,7 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         onChange={e => form.change(e.target.value)}
         data-round={props.$round}
         data-clear={form.editable && props.$hideClearButton !== true}
+        autoComplete={props.$autoComplete ?? "off"}
       />
       {form.editable && props.$hideClearButton !== true &&
         <div
