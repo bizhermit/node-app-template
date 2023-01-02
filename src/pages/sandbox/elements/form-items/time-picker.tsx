@@ -132,6 +132,7 @@ const Page: NextPage = () => {
           <TimePicker
             $tag="form bind"
             name="time-picker-form-bind"
+            $minuteInterval={10}
           // $required
           />
           <Button type="submit">submit</Button>

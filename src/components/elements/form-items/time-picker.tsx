@@ -117,6 +117,8 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     return nodes;
   }, [
     hour,
+    minute,
+    second,
     needH,
     form.editable,
     minTime,
@@ -144,13 +146,15 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
             select(i);
           } : undefined}
         >
-          {String(i)}
+          {needH ? `00${i}`.slice(-2) : String(i)}
         </div>
       );
     }
     return nodes;
   }, [
+    hour,
     minute,
+    second,
     form.editable,
     needM,
     minTime,
@@ -178,12 +182,14 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
             select(i);
           } : undefined}
         >
-          {String(i)}
+          {`00${i}`.slice(-2)}
         </div>
       );
     }
     return nodes;
   }, [
+    hour,
+    minute,
     second,
     form.editable,
     needS,
@@ -196,7 +202,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     form.change(undefined);
   };
 
-  useEffect(() => {
+  const scrollToHourSelected = () => {
     if (hourElemRef.current == null) return;
     const elem = (
       hourElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
@@ -204,9 +210,9 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     hourElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - hourElemRef.current.clientHeight / 2;
-  }, [hourNodes, form.editable]);
+  };
 
-  useEffect(() => {
+  const scrollToMinuteSelected = () => {
     if (minuteElemRef.current == null) return;
     const elem = (
       minuteElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
@@ -214,9 +220,9 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     minuteElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - minuteElemRef.current.clientHeight / 2;
-  }, [minuteNodes, form.editable]);
+  };
 
-  useEffect(() => {
+  const scrollToSecondSelected = () => {
     if (secondElemRef.current == null) return;
     const elem = (
       secondElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
@@ -224,7 +230,17 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     secondElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - secondElemRef.current.clientHeight / 2;
-  }, [secondNodes, form.editable]);
+  };
+
+  useEffect(() => {
+    scrollToSecondSelected();
+  }, [form.editable]);
+
+  const scrollToSelected = () => {
+    scrollToHourSelected();
+    scrollToMinuteSelected();
+    scrollToSecondSelected();
+  };
 
   useEffect(() => {
     const time = convertTime(form.valueRef.current, unit);
@@ -233,13 +249,14 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
       setMinute(needM ? 0 : undefined);
       setSecond(needS ? 0 : undefined);
     } else {
-      const t = new Time (time);
+      const t = new Time(time);
       if (needH) setHour(t.getHours());
       else setHour(undefined);
       setMinute(t.getMinutes(!needH));
       if (needS) setSecond(t.getSeconds());
       else setSecond(undefined);
     }
+    setTimeout(scrollToSelected);
   }, [props.$value, props.$bind, form.bind]);
 
   return (
@@ -294,7 +311,10 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
         {props.$onClickNegative != null &&
           <div
             className={Style.negative}
-            onClick={props.$onClickNegative}
+            onClick={() => {
+              scrollToSelected();
+              props.$onClickNegative?.();
+            }}
           >
             <LabelText>{props.$negativeText ?? "キャンセル"}</LabelText>
           </div>
@@ -303,6 +323,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
           <div
             className={Style.positive}
             onClick={() => {
+              scrollToSelected();
               props.$onClickPositive?.(form.value as never);
             }}
           >
