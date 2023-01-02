@@ -23,6 +23,21 @@ export type TimeInputProps = {
   $secondInterval?: number;
 };
 
+export const getUnit = (props: TimeInputProps, type: TimeType) => {
+  if (props.$unit) return props.$unit;
+  switch (type) {
+    case "h":
+      return "hour";
+    case "hm":
+      return "minute";
+    case "hms":
+    case "ms":
+      return "second";
+    default:
+      return "minute";
+  }
+};
+
 export const convertTime = (value: TimeValue | null | undefined, unit: TimeUnit) => {
   if (value == null) return undefined;
   if (typeof value === "number") {

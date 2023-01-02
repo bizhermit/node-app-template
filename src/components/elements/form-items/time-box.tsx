@@ -1,5 +1,5 @@
 import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTime, getMaxTime, getMinTime, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps, TimeValue } from "@/utilities/time-input";
+import { convertTime, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps, TimeValue } from "@/utilities/time-input";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
@@ -28,18 +28,7 @@ const isNumericOrEmpty = (value?: string): value is string => {
 const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   const type = props.$type ?? "hm";
   const unit = useMemo(() => {
-    if (props.$unit) return props.$unit;
-    switch (type) {
-      case "h":
-        return "hour";
-      case "hm":
-        return "minute";
-      case "hms":
-      case "ms":
-        return "second";
-      default:
-        return "minute";
-    }
+    return getUnit(props, type);
   }, [type, props.$unit]);
   const minTime = useMemo(() => {
     return getMinTime(props, unit);
