@@ -97,10 +97,10 @@ export const timeContextValidation = (rangePair: TimeRangePair, unit: TimeUnit) 
       return "";
     }
     if (rangePair.position === "before") {
-      if (time < pairTime) return "時間の前後関係が不適切です。";
+      if (time <= pairTime) return "時間の前後関係が不適切です。";
       return "";
     }
-    if (time > pairTime) return "時間の前後関係が不適切です。";
+    if (time >= pairTime) return "時間の前後関係が不適切です。";
     return "";
   };
   const getPairTime = (data: Struct) => {

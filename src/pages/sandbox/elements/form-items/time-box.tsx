@@ -123,8 +123,22 @@ const Page: NextPage = () => {
           method="post"
         >
           <TimeBox
-            $tag="form bind"
+            $tag="form bind from"
             name="time-box-form-bind"
+            $rangePair={{
+              name: "time-box-form-bind-to",
+              position: "after",
+              disallowSame: true,
+            }}
+          />
+          <TimeBox
+            $tag="form bind to"
+            name="time-box-form-bind-to"
+            $rangePair={{
+              name: "time-box-form-bind",
+              position: "before",
+              disallowSame: true,
+            }}
           />
           <Button type="submit">submit</Button>
         </Form>
