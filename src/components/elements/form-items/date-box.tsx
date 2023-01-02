@@ -59,9 +59,9 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       cacheM.current = date.getMonth() + 1;
       cacheD.current = date.getDate();
     }
-    if (yref.current) yref.current.value = String(cacheY.current || "");
-    if (mref.current) mref.current.value = String(cacheM.current || "");
-    if (dref.current) dref.current.value = String(cacheD.current || "");
+    if (yref.current) yref.current.value = String(cacheY.current ?? "");
+    if (mref.current) mref.current.value = String(cacheM.current ?? "");
+    if (dref.current) dref.current.value = String(cacheD.current ?? "");
   };
 
   const form = useForm<DateValue | any>(props, {
@@ -96,9 +96,9 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       return validations;
     },
     validationsDeps: [
+      type,
       maxDate,
       minDate,
-      type,
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,

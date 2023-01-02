@@ -1,7 +1,7 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTime, TimeInputProps, TimeValue } from "@/utilities/time-input";
+import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertTime, getMaxTime, getMinTime, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps, TimeValue } from "@/utilities/time-input";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { BsClock } from "react-icons/bs";
@@ -28,6 +28,12 @@ const isNumericOrEmpty = (value?: string): value is string => {
 const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   const type = props.$type ?? "hm";
   const unit = props.$unit ?? "minute";
+  const minTime = useMemo(() => {
+    return getMinTime(props, unit);
+  }, [props.$min]);
+  const maxTime = useMemo(() => {
+    return getMaxTime(props, unit);
+  }, [props.$max]);
 
   const [showPicker, setShowPicker] = useState(false);
 
@@ -43,10 +49,55 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
 
   const setInputValues = (value?: TimeValue) => {
     const time = convertTime(value, unit);
+    if (time == null) {
+      cacheH.current = cacheM.current = cacheS.current = undefined;
+    } else {
+      const t = new Time(time);
+      cacheH.current = t.getHours();
+      cacheM.current = t.getMinutes();
+      cacheS.current = t.getSeconds();
+    }
+    if (href.current) href.current.value = String(cacheH.current ?? "");
+    if (mref.current) {
+      const v = String(cacheM.current ?? "");
+      mref.current.value = v ? `00${v}`.slice(-2) : v;
+    }
+    if (sref.current) {
+      const v = String(cacheS.current ?? "");
+      sref.current.value = v ? `00${v}`.slice(-2) : v;
+    }
   };
 
   const form = useForm<any>(props, {
     interlockValidation: props.$rangePair != null,
+    validations: () => {
+      const validations: Array<FormItemValidation<any>> = [];
+      if (maxTime != null && minTime != null) {
+        validations.push(rangeTimeValidation(minTime, maxTime, type, unit));
+      } else {
+        if (maxTime != null) {
+          validations.push(maxTimeValidation(maxTime, type, unit));
+        }
+        if (minTime != null) {
+          validations.push(minTimeValidation(minTime, type, unit));
+        }
+      }
+      const rangePair = props.$rangePair;
+      if (rangePair != null) {
+        const { validation } = timeContextValidation(rangePair, unit);
+        validations.push(validation);
+      }
+      return validations;
+    },
+    validationsDeps: [
+      type,
+      unit,
+      minTime,
+      maxTime,
+      props.$rangePair?.name,
+      props.$rangePair?.position,
+      props.$rangePair?.disallowSame,
+    ],
   });
 
   const commitCache = () => {
@@ -94,28 +145,24 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   };
 
   const updown = (y = 0, m = 0, d = 0) => {
-    let hour = cacheH.current == null ? 0 : cacheH.current + y;
-    let minute = cacheM.current == null ? 0 : cacheM.current + m;
-    let second = cacheS.current == null ? 0 : cacheS.current + d;
-    // const date = new Date(hour, minute - 1, second);
-    // if (minDate) {
-    //   if (DatetimeUtils.isBeforeDate(minDate, date)) {
-    //     hour = minDate.getFullYear();
-    //     minute = minDate.getMonth() + 1;
-    //     second = minDate.getDate();
-    //   }
-    // }
-    // if (maxDate) {
-    //   if (DatetimeUtils.isAfterDate(maxDate, date)) {
-    //     hour = maxDate.getFullYear();
-    //     minute = maxDate.getMonth() + 1;
-    //     second = maxDate.getDate();
-    //   }
-    // }
-    if (!(cacheS.current !== second || cacheM.current !== minute || cacheH.current !== hour)) return;
-    cacheH.current = hour;
-    cacheM.current = minute;
-    cacheS.current = second;
+    const time = new Time(Math.max(0, (
+      (cacheH.current == null ? 0 : cacheH.current + y) * 3600 +
+      (cacheM.current == null ? 0 : cacheM.current + m) * 60 +
+      (cacheS.current == null ? 0 : cacheS.current + d)
+    )) * 1000);
+    if (minTime != null) {
+      if (time.getTime() < minTime) {
+        return;
+      }
+    }
+    if (maxTime != null) {
+      if (time.getTime() > maxTime) {
+        return;
+      }
+    }
+    cacheH.current = needH ? time.getHours() : undefined;
+    cacheM.current = time.getMinutes(!needH);
+    cacheS.current = time.getSeconds();
     commitCache();
   };
 

@@ -103,6 +103,8 @@ const Page: NextPage = () => {
           $onChange={v => setValue(v)}
           $disabled={disabled}
           $readOnly={readOnly}
+          $max="22:00"
+          $min="01:00"
         />
         <TimeBox
           $tag="bind"
