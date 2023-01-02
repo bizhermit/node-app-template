@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import { convertTime, getMaxTime, getMinTime, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps, TimeValue } from "@/utilities/time-input";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -100,16 +100,37 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
     ],
   });
 
+  const optimizedIntervalHour = (h: number | undefined) => {
+    if (h == null) return h;
+    const i = props.$hourInterval ?? 1;
+    return Math.floor(h / i) * i;
+  };
+
+  const optimizedIntervalMinute = (m: number | undefined) => {
+    if (m == null) return m;
+    const i = props.$minuteInterval ?? 1;
+    return Math.floor(m / i) * i;
+  };
+
+  const optimizedIntervalSecond = (s: number | undefined) => {
+    if (s == null) return s;
+    const i = props.$secondInterval ?? 1;
+    return Math.floor(s / i) * i;
+  };
+
   const commitCache = () => {
-    const h = needH ? cacheH.current : 0;
-    const m = needM ? cacheM.current : 0;
-    const s = needS ? cacheS.current : 0;
+    const h = optimizedIntervalHour(needH ? cacheH.current : 0);
+    const m = optimizedIntervalMinute(needM ? cacheM.current : 0);
+    const s = optimizedIntervalSecond(needS ? cacheS.current : 0);
     if ((needH && h == null) || (needM && m == null) || (needS && m == null)) {
-      form.change(undefined);
+      if (form.valueRef.current == null) setInputValues(undefined);
+      else form.change(undefined);
       return;
     }
     const time = new Time(`${h}:${m}:${s}`);
-    form.change(TimeUtils.convertMillisecondsToUnit(time.getTime(), unit));
+    const v = TimeUtils.convertMillisecondsToUnit(time.getTime(), unit);
+    if (equals(v, form.valueRef.current)) setInputValues(v);
+    else form.change(v);
   };
 
   const changeH = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,11 +197,11 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
         commitCache();
         break;
       case "ArrowUp":
-        updown(1, 0, 0);
+        updown((props.$hourInterval ?? 1), 0, 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown(-1, 0, 0);
+        updown((props.$hourInterval ?? 1) * -1, 0, 0);
         e.preventDefault();
         break;
       default:
@@ -201,11 +222,11 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
         if (e.currentTarget.value.length === 0) href.current?.focus();
         break;
       case "ArrowUp":
-        updown(0, 1, 0);
+        updown(0, (props.$minuteInterval ?? 1), 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown(0, -1, 0);
+        updown(0, (props.$minuteInterval ?? 1) * -1, 0);
         e.preventDefault();
         break;
       default:
@@ -226,11 +247,11 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
         if (e.currentTarget.value.length === 0) mref.current?.focus();
         break;
       case "ArrowUp":
-        updown(0, 0, 1);
+        updown(0, 0, (props.$secondInterval ?? 1));
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown(0, 0, -1);
+        updown(0, 0, (props.$secondInterval ?? 1) * -1);
         e.preventDefault();
         break;
       default:

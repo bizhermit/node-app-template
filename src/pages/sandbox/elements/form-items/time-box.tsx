@@ -105,6 +105,7 @@ const Page: NextPage = () => {
           $readOnly={readOnly}
           $max="22:00"
           $min="01:00"
+          $minuteInterval={10}
         />
         <TimeBox
           $tag="bind"

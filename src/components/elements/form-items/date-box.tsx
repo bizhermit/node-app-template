@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -111,15 +111,19 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     const m = type !== "year" ? cacheM.current : 1;
     const d = type === "date" ? cacheD.current : 1;
     if (y == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
-      form.change(undefined);
+      if (form.valueRef.current == null) setInputValues(undefined);
+      else form.change(undefined);
       return;
     }
     const date = convertDate(`${y}-${m}-${d}`);
     if (date == null) {
-      form.change(undefined);
+      if (form.valueRef.current == null) setInputValues(undefined);
+      else form.change(undefined);
       return;
     }
-    form.change(convertDateToValue(date, props.$typeof));
+    const v = convertDateToValue(date, props.$typeof);
+    if (equals(v, form.valueRef.current)) setInputValues(v);
+    else form.change(v);
   };
 
   const changeY = (e: React.ChangeEvent<HTMLInputElement>) => {
