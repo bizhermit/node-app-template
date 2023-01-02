@@ -122,24 +122,26 @@ const Page: NextPage = () => {
           action="/api/form"
           method="post"
         >
-          <TimeBox
-            $tag="form bind from"
-            name="time-box-form-bind"
-            $rangePair={{
-              name: "time-box-form-bind-to",
-              position: "after",
-              disallowSame: true,
-            }}
-          />
-          <TimeBox
-            $tag="form bind to"
-            name="time-box-form-bind-to"
-            $rangePair={{
-              name: "time-box-form-bind",
-              position: "before",
-              disallowSame: true,
-            }}
-          />
+          <Row $vAlign="bottom">
+            <TimeBox
+              $tag="form bind from"
+              name="time-box-form-bind"
+              $rangePair={{
+                name: "time-box-form-bind-to",
+                position: "after",
+                disallowSame: true,
+              }}
+            />
+            <TimeBox
+              $tag="form bind to"
+              name="time-box-form-bind-to"
+              $rangePair={{
+                name: "time-box-form-bind",
+                position: "before",
+                disallowSame: true,
+              }}
+            />
+          </Row>
           <Button type="submit">submit</Button>
         </Form>
       </Row>

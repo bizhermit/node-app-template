@@ -27,7 +27,20 @@ const isNumericOrEmpty = (value?: string): value is string => {
 
 const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   const type = props.$type ?? "hm";
-  const unit = props.$unit ?? "minute";
+  const unit = useMemo(() => {
+    if (props.$unit) return props.$unit;
+    switch (type) {
+      case "h":
+        return "hour";
+      case "hm":
+        return "minute";
+      case "hms":
+      case "ms":
+        return "second";
+      default:
+        return "minute";
+    }
+  }, [type, props.$unit]);
   const minTime = useMemo(() => {
     return getMinTime(props, unit);
   }, [props.$min]);
@@ -172,14 +185,10 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
       (cacheS.current == null ? 0 : cacheS.current + d)
     )) * 1000);
     if (minTime != null) {
-      if (time.getTime() < minTime) {
-        return;
-      }
+      if (time.getTime() < minTime) return;
     }
     if (maxTime != null) {
-      if (time.getTime() > maxTime) {
-        return;
-      }
+      if (time.getTime() > maxTime) return;
     }
     cacheH.current = needH ? time.getHours() : undefined;
     cacheM.current = time.getMinutes(!needH);
