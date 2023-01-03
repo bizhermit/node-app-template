@@ -115,6 +115,7 @@ const Page: NextPage = () => {
           $disabled={disabled}
           $readOnly={readOnly}
           $typeof="string"
+          $minuteInterval={5}
         />
         <Form
           className="flex-start gap-1"

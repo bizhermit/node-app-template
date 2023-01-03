@@ -400,6 +400,9 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
           $typeof={props.$typeof}
           $max={props.$max}
           $min={props.$min}
+          $hourInterval={props.$hourInterval}
+          $minuteInterval={props.$minuteInterval}
+          $secondInterval={props.$secondInterval}
           $skipValidation
           $onClickPositive={(value: any) => {
             form.change(value);
