@@ -1,6 +1,6 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import { convertTime, convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/utilities/time-input";
-import Time, { TimeUtils } from "@bizhermit/time";
+import Time from "@bizhermit/time";
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import { VscClose } from "react-icons/vsc";
@@ -113,7 +113,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     ],
   });
 
-  const selectCell = (h: number | undefined, m: number | undefined, s: number | undefined, commit?: boolean) => {
+  const selectCell = (h: number | undefined, m: number | undefined, s: number | undefined) => {
     const time = new Time((
       (h ?? 0) * 3600 +
       (m ?? 0) * 60 +
@@ -122,8 +122,9 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     if (needH) setHour(time.getHours());
     setMinute(time.getMinutes(!needH));
     if (needS) setSecond(time.getSeconds());
-    if (commit) {
+    if (props.$onClickPositive == null) {
       form.change(convertTimeToValue(time.getTime(), unit, type, props.$typeof));
+      setTimeout(scrollToSelected, 20);
     }
   };
 
@@ -132,7 +133,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     const nodes = [];
     const interval = props.$hourInterval || 1;
     const select = (h: number) => {
-      selectCell(h, minute, second, true);
+      selectCell(h, minute, second);
     };
     for (let i = 0, il = 24; i < il; i++) {
       if (i % interval !== 0) continue;
@@ -168,7 +169,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     const nodes = [];
     const interval = props.$minuteInterval || 1;
     const select = (m: number) => {
-      selectCell(hour, m, second, true);
+      selectCell(hour, m, second);
     };
     for (let i = 0, il = 60; i < il; i++) {
       if (i % interval !== 0) continue;
@@ -204,7 +205,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     const nodes = [];
     const interval = props.$secondInterval || 1;
     const select = (s: number) => {
-      selectCell(hour, minute, s, true);
+      selectCell(hour, minute, s);
     };
     for (let i = 0, il = 60; i < il; i++) {
       if (i % interval !== 0) continue;
