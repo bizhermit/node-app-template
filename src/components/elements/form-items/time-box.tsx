@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { BsClock } from "react-icons/bs";
-import Time, { TimeUtils } from "@bizhermit/time";
+import Time from "@bizhermit/time";
 import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
 

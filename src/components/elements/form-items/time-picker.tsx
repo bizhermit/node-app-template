@@ -122,8 +122,8 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     if (needH) setHour(time.getHours());
     setMinute(time.getMinutes(!needH));
     if (needS) setSecond(time.getSeconds());
+    form.change(convertTimeToValue(time.getTime(), unit, type, props.$typeof));
     if (props.$onClickPositive == null) {
-      form.change(convertTimeToValue(time.getTime(), unit, type, props.$typeof));
       setTimeout(scrollToSelected, 20);
     }
   };
