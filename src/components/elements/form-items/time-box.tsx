@@ -1,5 +1,5 @@
 import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTime, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps, TimeValue } from "@/utilities/time-input";
+import { convertTime, convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps, TimeValue } from "@/utilities/time-input";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
@@ -17,8 +17,8 @@ type TimeBoxProps_TypeString = TimeBoxBaseProps<string>;
 
 type TimeBoxProps_TypeNumber = TimeBoxBaseProps<number>;
 
-export type TimeBoxProps = (TimeBoxProps_TypeString & { $typeof?: "string" })
-  | (TimeBoxProps_TypeNumber & { $typeof: "number" });
+export type TimeBoxProps = (TimeBoxProps_TypeNumber & { $typeof?: "number" })
+  | (TimeBoxProps_TypeString & { $typeof: "string" });
 
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
@@ -129,10 +129,16 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
       else form.change(undefined);
       return;
     }
-    const time = new Time(`${h}:${m}:${s}`);
-    const v = TimeUtils.convertMillisecondsToUnit(time.getTime(), unit);
-    if (equals(v, form.valueRef.current)) setInputValues(v);
-    else form.change(v);
+    const v = convertTimeToValue((
+      (h ?? 0) * 3600 +
+      (m ?? 0) * 60 +
+      (s ?? 0)
+    ) * 1000, unit, type, props.$typeof);
+    if (equals(v, form.valueRef.current)) {
+      setInputValues(v);
+    } else {
+      form.change(v);
+    }
   };
 
   const changeH = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -391,10 +397,11 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
           $value={form.value}
           $type={type}
           $unit={unit}
+          $typeof={props.$typeof}
           $max={props.$max}
           $min={props.$min}
           $skipValidation
-          $onClickPositive={(value) => {
+          $onClickPositive={(value: any) => {
             form.change(value);
             setShowPicker(false);
             focus();

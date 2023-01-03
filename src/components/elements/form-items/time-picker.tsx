@@ -1,5 +1,5 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTime, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/utilities/time-input";
+import { convertTime, convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/utilities/time-input";
 import Time, { TimeUtils } from "@bizhermit/time";
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
@@ -18,8 +18,8 @@ type TimePickerProps_TypeString = TimePickerBaseProps<string>;
 
 type TimePickerProps_TypeNumber = TimePickerBaseProps<number>;
 
-export type TimePickerProps = (TimePickerProps_TypeString & { $typeof?: "string" })
-  | (TimePickerProps_TypeNumber & { $typeof: "number" });
+export type TimePickerProps = (TimePickerProps_TypeNumber & { $typeof?: "number" })
+  | (TimePickerProps_TypeString & { $typeof: "string" });
 
 const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref) => {
   const type = props.$type ?? "hm";
@@ -39,9 +39,45 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
   const hourElemRef = useRef<HTMLDivElement>(null!);
   const minuteElemRef = useRef<HTMLDivElement>(null!);
   const secondElemRef = useRef<HTMLDivElement>(null!);
-  const [hour, setHour] = useState<number>();
-  const [minute, setMinute] = useState<number>();
-  const [second, setSecond] = useState<number>();
+  const [hour, setHour] = useState<number | undefined>(undefined);
+  const [minute, setMinute] = useState<number | undefined>(undefined);
+  const [second, setSecond] = useState<number | undefined>(undefined);
+
+  const scrollToHourSelected = () => {
+    if (hourElemRef.current == null) return;
+    const elem = (
+      hourElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
+      ?? hourElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
+    ) as HTMLDivElement;
+    if (elem == null) return;
+    hourElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - hourElemRef.current.clientHeight / 2;
+  };
+
+  const scrollToMinuteSelected = () => {
+    if (minuteElemRef.current == null) return;
+    const elem = (
+      minuteElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
+      ?? minuteElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
+    ) as HTMLDivElement;
+    if (elem == null) return;
+    minuteElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - minuteElemRef.current.clientHeight / 2;
+  };
+
+  const scrollToSecondSelected = () => {
+    if (secondElemRef.current == null) return;
+    const elem = (
+      secondElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
+      ?? secondElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
+    ) as HTMLDivElement;
+    if (elem == null) return;
+    secondElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - secondElemRef.current.clientHeight / 2;
+  };
+
+  const scrollToSelected = () => {
+    scrollToHourSelected();
+    scrollToMinuteSelected();
+    scrollToSecondSelected();
+  };
 
   const form = useForm<any>(props, {
     interlockValidation: props.$rangePair != null,
@@ -87,7 +123,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     setMinute(time.getMinutes(!needH));
     if (needS) setSecond(time.getSeconds());
     if (commit) {
-      form.change(TimeUtils.convertMillisecondsToUnit(time.getTime(), unit));
+      form.change(convertTimeToValue(time.getTime(), unit, type, props.$typeof));
     }
   };
 
@@ -200,55 +236,25 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
   ]);
 
   const clear = () => {
-    form.change(undefined);
-  };
-
-  const scrollToHourSelected = () => {
-    if (hourElemRef.current == null) return;
-    const elem = (
-      hourElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
-      ?? hourElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
-    ) as HTMLDivElement;
-    if (elem == null) return;
-    hourElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - hourElemRef.current.clientHeight / 2;
-  };
-
-  const scrollToMinuteSelected = () => {
-    if (minuteElemRef.current == null) return;
-    const elem = (
-      minuteElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
-      ?? minuteElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
-    ) as HTMLDivElement;
-    if (elem == null) return;
-    minuteElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - minuteElemRef.current.clientHeight / 2;
-  };
-
-  const scrollToSecondSelected = () => {
-    if (secondElemRef.current == null) return;
-    const elem = (
-      secondElemRef.current.querySelector(`.${Style.cell}[data-selected="true"]`)
-      ?? secondElemRef.current.querySelector(`.${Style.cell}[data-today="true"]`)
-    ) as HTMLDivElement;
-    if (elem == null) return;
-    secondElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - secondElemRef.current.clientHeight / 2;
+    if (form.valueRef.current == null) {
+      setHour(undefined);
+      setMinute(undefined);
+      setSecond(undefined);
+    } else {
+      form.change(undefined);
+    }
   };
 
   useEffect(() => {
     scrollToSecondSelected();
   }, [form.editable]);
 
-  const scrollToSelected = () => {
-    scrollToHourSelected();
-    scrollToMinuteSelected();
-    scrollToSecondSelected();
-  };
-
   useEffect(() => {
     const time = convertTime(form.valueRef.current, unit);
     if (time == null) {
-      setHour(needH ? 0 : undefined);
-      setMinute(needM ? 0 : undefined);
-      setSecond(needS ? 0 : undefined);
+      setHour(undefined);
+      setMinute(undefined);
+      setSecond(undefined);
     } else {
       const t = new Time(time);
       if (needH) setHour(t.getHours());
@@ -257,7 +263,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
       if (needS) setSecond(t.getSeconds());
       else setSecond(undefined);
     }
-    setTimeout(scrollToSelected);
+    setTimeout(scrollToSelected, 20);
   }, [props.$value, props.$bind, form.bind]);
 
   return (

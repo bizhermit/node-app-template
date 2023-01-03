@@ -46,6 +46,22 @@ export const convertTime = (value: TimeValue | null | undefined, unit: TimeUnit)
   return (new Time(value)).getTime();
 };
 
+export const convertTimeToValue = (value: number | undefined, unit: TimeUnit, type: TimeType, $typeof?: "number" | "string") => {
+  if ($typeof === "string") {
+    return new Time(value).format((() => {
+      switch (type) {
+        case "h":
+          return "h";
+        case "hm":
+          return "hh:mm";
+        default:
+          return "hh:mm:ss";
+      }
+    })());
+  }
+  return TimeUtils.convertMillisecondsToUnit(value, unit);
+};
+
 export const getMinTime = (props: TimeInputProps, unit: TimeUnit) => {
   return convertTime(props.$min, unit) ?? 0;
 };

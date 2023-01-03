@@ -10,7 +10,7 @@ import { useState } from "react";
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<string>>();
+  const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState<Struct>({ "pair-time": "12:00" });
 
@@ -69,7 +69,7 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            setValue("9:00");
+            setValue(540);
           }}
         >
           set state value
@@ -106,6 +106,7 @@ const Page: NextPage = () => {
           $max="22:00"
           $min="01:00"
           $minuteInterval={10}
+          $required
         />
         <TimeBox
           $tag="bind"
@@ -113,6 +114,7 @@ const Page: NextPage = () => {
           $bind={bind}
           $disabled={disabled}
           $readOnly={readOnly}
+          $typeof="string"
         />
         <Form
           className="flex-start gap-1"
