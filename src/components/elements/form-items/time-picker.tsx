@@ -3,7 +3,7 @@ import { convertTime, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTim
 import Time, { TimeUtils } from "@bizhermit/time";
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
-import { VscClose, VscRecord } from "react-icons/vsc";
+import { VscClose } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
 
 export type TimePickerBaseProps<T> = FormItemProps<T> & TimeInputProps & {
@@ -46,6 +46,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
   const form = useForm<any>(props, {
     interlockValidation: props.$rangePair != null,
     validations: () => {
+      if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
       if (maxTime != null && minTime != null) {
         validations.push(rangeTimeValidation(minTime, maxTime, type, unit));
