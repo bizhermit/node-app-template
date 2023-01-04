@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react";
+import React, { FunctionComponent, HTMLAttributes, ReactElement, useRef } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes } from "@/components/utilities/attributes";
 
@@ -7,11 +7,16 @@ export type DataTableColumn = {
 };
 
 type OmitAttributes = "children";
-export type DataTableProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  columns: Array<DataTableColumn>;
+export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+  $columns: Array<DataTableColumn>;
+  $value: Array<T>;
 };
 
-const DataTable = React.forwardRef<HTMLDivElement, DataTableProps>((props, ref) => {
+interface DataTableFC extends FunctionComponent<DataTableProps> {
+ <T extends Struct = Struct>(attrs: DataTableProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   return (
     <div
       {...attributes(props, Style.wrap)}
