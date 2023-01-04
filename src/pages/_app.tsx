@@ -211,6 +211,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                       icon: "G",
                       pathname: "/sandbox/elements/group-box",
                     }, {
+                      key: "data-table",
+                      label: "DataTable",
+                      icon: "DT",
+                      pathname: "/sandbox/elements/data-table",
+                    }, {
                       key: "struct-view",
                       label: "StructView",
                       icon: "SV",
