@@ -109,6 +109,8 @@ const Page: NextPage = () => {
           $onClickNegative={() => {
             console.log("negative");
           }}
+          $min="1:00"
+          $max="12:00"
         />
         <TimePicker
           $tag="bind"

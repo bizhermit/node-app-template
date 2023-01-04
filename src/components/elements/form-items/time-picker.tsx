@@ -137,6 +137,8 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     };
     for (let i = 0, il = 24; i < il; i++) {
       if (i % interval !== 0) continue;
+      if (i * 3600000 < minTime) continue;
+      if (i * 3600000 - 1 >= maxTime) break;
       nodes.push(
         <div
           key={i}
@@ -171,8 +173,11 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     const select = (m: number) => {
       selectCell(hour, m, second);
     };
+    const h = (hour ?? 0) * 3600000;
     for (let i = 0, il = 60; i < il; i++) {
       if (i % interval !== 0) continue;
+      if (h + i * 60000 < minTime) continue;
+      if (h + i * 60000 - 1 >= maxTime) break;
       nodes.push(
         <div
           key={i}
@@ -207,8 +212,11 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     const select = (s: number) => {
       selectCell(hour, minute, s);
     };
+    const hm = (hour ?? 0) * 3600000 + (minute ?? 0) * 60000;
     for (let i = 0, il = 60; i < il; i++) {
       if (i % interval !== 0) continue;
+      if (hm + i * 1000 < minTime) continue;
+      if (hm + i * 1000 - 1 >= maxTime) break;
       nodes.push(
         <div
           key={i}
