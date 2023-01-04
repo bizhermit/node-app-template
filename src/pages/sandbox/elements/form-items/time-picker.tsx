@@ -109,8 +109,9 @@ const Page: NextPage = () => {
           $onClickNegative={() => {
             console.log("negative");
           }}
-          $min="1:00"
+          $min="1:15"
           $max="12:00"
+          $minuteInterval={5}
         />
         <TimePicker
           $tag="bind"
@@ -134,8 +135,10 @@ const Page: NextPage = () => {
           <TimePicker
             $tag="form bind"
             name="time-picker-form-bind"
-            $minuteInterval={10}
-          // $required
+            $type="hms"
+            $required
+            $min="1:23:45"
+            $max="23:45:01"
           />
           <Button type="submit">submit</Button>
         </Form>

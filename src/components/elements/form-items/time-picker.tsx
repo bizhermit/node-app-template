@@ -135,15 +135,15 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     const select = (h: number) => {
       selectCell(h, minute, second);
     };
+    const min = Math.floor(minTime / 3600000);
+    const max = Math.floor(maxTime / 3600000);
     for (let i = 0, il = 24; i < il; i++) {
       if (i % interval !== 0) continue;
-      if (i * 3600000 < minTime) continue;
-      if (i * 3600000 - 1 >= maxTime) break;
       nodes.push(
         <div
           key={i}
           className={Style.cell}
-          data-selectable={true}
+          data-selectable={min <= i && i <= max}
           data-selected={hour === i}
           data-current={false}
           onClick={form.editable ? () => {
@@ -173,16 +173,16 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     const select = (m: number) => {
       selectCell(hour, m, second);
     };
-    const h = (hour ?? 0) * 3600000;
+    const h = needH ? (hour ?? 0) * 3600000 : 0;
+    const min = Math.floor((minTime - h) / 60000);
+    const max = Math.floor((maxTime - h) / 60000);
     for (let i = 0, il = 60; i < il; i++) {
       if (i % interval !== 0) continue;
-      if (h + i * 60000 < minTime) continue;
-      if (h + i * 60000 - 1 >= maxTime) break;
       nodes.push(
         <div
           key={i}
           className={Style.cell}
-          data-selectable={true}
+          data-selectable={min <= i && i <= max}
           data-selected={minute === i}
           data-current={false}
           onClick={form.editable ? () => {
@@ -213,15 +213,15 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
       selectCell(hour, minute, s);
     };
     const hm = (hour ?? 0) * 3600000 + (minute ?? 0) * 60000;
+    const min = Math.floor((minTime - hm) / 1000);
+    const max = Math.floor((maxTime - hm) / 1000);
     for (let i = 0, il = 60; i < il; i++) {
       if (i % interval !== 0) continue;
-      if (hm + i * 1000 < minTime) continue;
-      if (hm + i * 1000 - 1 >= maxTime) break;
       nodes.push(
         <div
           key={i}
           className={Style.cell}
-          data-selectable={true}
+          data-selectable={min <= i && i <= max}
           data-selected={second === i}
           data-current={false}
           onClick={form.editable ? () => {
