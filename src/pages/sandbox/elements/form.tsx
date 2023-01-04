@@ -142,13 +142,13 @@ const Page: NextPage = () => {
           <div className="flex-start">
             <h3 className="mt-1">bind data</h3>
             <StructView
-              $struct={viewBind}
+              $value={viewBind}
             />
           </div>
           <div className="flex-start">
             <h3 className="mt-1">form bind data</h3>
             <StructView
-              $struct={viewFormBind}
+              $value={viewFormBind}
             />
           </div>
         </Row>
