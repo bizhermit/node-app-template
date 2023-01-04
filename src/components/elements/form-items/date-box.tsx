@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -59,9 +59,9 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       cacheM.current = date.getMonth() + 1;
       cacheD.current = date.getDate();
     }
-    if (yref.current) yref.current.value = String(cacheY.current || "");
-    if (mref.current) mref.current.value = String(cacheM.current || "");
-    if (dref.current) dref.current.value = String(cacheD.current || "");
+    if (yref.current) yref.current.value = String(cacheY.current ?? "");
+    if (mref.current) mref.current.value = String(cacheM.current ?? "");
+    if (dref.current) dref.current.value = String(cacheD.current ?? "");
   };
 
   const form = useForm<DateValue | any>(props, {
@@ -96,9 +96,9 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       return validations;
     },
     validationsDeps: [
+      type,
       maxDate,
       minDate,
-      type,
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
@@ -111,15 +111,19 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     const m = type !== "year" ? cacheM.current : 1;
     const d = type === "date" ? cacheD.current : 1;
     if (y == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
-      form.change(undefined);
+      if (form.valueRef.current == null) setInputValues(undefined);
+      else form.change(undefined);
       return;
     }
     const date = convertDate(`${y}-${m}-${d}`);
     if (date == null) {
-      form.change(undefined);
+      if (form.valueRef.current == null) setInputValues(undefined);
+      else form.change(undefined);
       return;
     }
-    form.change(convertDateToValue(date, props.$typeof));
+    const v = convertDateToValue(date, props.$typeof);
+    if (equals(v, form.valueRef.current)) setInputValues(v);
+    else form.change(v);
   };
 
   const changeY = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -320,12 +324,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         />
         {type !== "year" &&
           <>
-            <span
-              className={Style.sep}
-              data-has={hasData}
-            >
-              /
-            </span>
+            <span className={Style.sep} data-has={hasData}>/</span>
             <input
               ref={mref}
               className={Style.m}
@@ -343,12 +342,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         }
         {type === "date" &&
           <>
-            <span
-              className={Style.sep}
-              data-has={hasData}
-            >
-              /
-            </span>
+            <span className={Style.sep} data-has={hasData}>/</span>
             <input
               ref={dref}
               className={Style.d}
