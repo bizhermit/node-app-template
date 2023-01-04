@@ -16,7 +16,7 @@ export type StructKey = {
 type OmitAttributes = "color" | "children";
 export type StructViewProps = Omit<HTMLAttributes<HTMLTableElement>, OmitAttributes> & {
   $keys?: Array<StructKey>;
-  $struct?: Struct;
+  $value?: Struct;
   $color?: Color;
   $baseColor?: Color;
   $outline?: boolean;
@@ -55,7 +55,7 @@ const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Colo
     return (
       <StructView
         $keys={item.children}
-        $struct={value}
+        $value={value}
         $color={c}
         $baseColor={baseColor}
       />
@@ -80,8 +80,8 @@ const StructView = React.forwardRef<HTMLTableElement, StructViewProps>((props, r
 
   const keys = (() => {
     if (props.$keys != null) return props.$keys;
-    if (props.$struct == null) return [];
-    return Object.keys(props.$struct).map(key => {
+    if (props.$value == null) return [];
+    return Object.keys(props.$value).map(key => {
       return {
         key,
       } as StructKey;
@@ -96,7 +96,7 @@ const StructView = React.forwardRef<HTMLTableElement, StructViewProps>((props, r
     >
       <tbody>
         {keys.map(item => {
-          const v = props.$struct?.[item.key];
+          const v = props.$value?.[item.key];
           const node = (() => {
             if (item.format != null) {
               return item.format(v);

@@ -22,7 +22,7 @@ export type SelectBoxProps<T extends string | number = string | number> = FormIt
   $emptyItem?: boolean | { value: T; label: string; };
 };
 
-interface SelectBoxFC extends FunctionComponent {
+interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
   <T extends string | number = string | number>(attrs: SelectBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 

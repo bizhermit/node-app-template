@@ -15,7 +15,7 @@ export type RadioButtonsProps<T extends string | number = string | number> = Omi
   $preventSourceMemorize?: boolean;
 };
 
-interface RadioButtonsFC extends FunctionComponent {
+interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
   <T extends string | number = string | number>(attrs: RadioButtonsProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
