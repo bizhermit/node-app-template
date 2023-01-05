@@ -42,6 +42,7 @@ const Page: NextPage = () => {
         <Button $fitContent $onClick={() => generateItems(100)}>100</Button>
       </Row>
       <DataTable<Data>
+        className="w-100"
         $columns={columns}
         $value={items}
       />
