@@ -7,7 +7,7 @@ import TextBox from "@/components/elements/form-items/text-box";
 import GroupBox from "@/components/elements/group-box";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
-import crossFetch from "@/utilities/cross-fetch";
+import fetchApi from "@/utilities/fetch-api";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -22,7 +22,8 @@ const Page: NextPage = () => {
             <Button
               $onClick={async (unlock) => {
                 try {
-                  const res = await crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
+                  // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
+                  const res = await fetchApi.get("/fetch");
                   setResponse(res);
                 } finally {
                   unlock();
@@ -34,14 +35,7 @@ const Page: NextPage = () => {
             <Button
               $onClick={async (unlock) => {
                 try {
-                  const res = await crossFetch("/api/fetch", {
-                    method: "post",
-                    body: JSON.stringify({ hoge: 1 }),
-                    headers: {
-                      "Content-Type": "application/json; charset=utf-8",
-                    },
-                  });
-                  console.log(res)
+                  const res = await fetchApi.post("/fetch");
                   setResponse(res);
                 } finally {
                   unlock();
@@ -53,13 +47,7 @@ const Page: NextPage = () => {
             <Button
               $onClick={async (unlock) => {
                 try {
-                  const res = await crossFetch("/api/fetch", {
-                    method: "put",
-                    body: JSON.stringify({ hoge: 10 }),
-                    headers: {
-                      "Content-Type": "application/json; charset=utf-8",
-                    },
-                  });
+                  const res = await fetchApi.put("/fetch", { hoge: 10 });
                   setResponse(res);
                 } finally {
                   unlock();
@@ -71,13 +59,7 @@ const Page: NextPage = () => {
             <Button
               $onClick={async (unlock) => {
                 try {
-                  const res = await crossFetch("/api/fetch", {
-                    method: "delete",
-                    body: JSON.stringify({ hoge: 100 }),
-                    headers: {
-                      "Content-Type": "application/json; charset=utf-8",
-                    },
-                  });
+                  const res = await fetchApi.delete("/fetch", { hoge: 100 });
                   setResponse(res);
                 } finally {
                   unlock();
@@ -91,7 +73,7 @@ const Page: NextPage = () => {
             <Button
               $onClick={async (unlock) => {
                 try {
-                  const res = await crossFetch("/api/fetch/1", {});
+                  const res = await fetchApi.get("/fetch/[id]", { id: 1 });
                   setResponse(res);
                 } finally {
                   unlock();
