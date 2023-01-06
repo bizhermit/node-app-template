@@ -40,11 +40,27 @@ const crossFetch = async <T>(url: string, init?: RequestInit) => {
   return fetchServer<T>(url, init);
 };
 
-const convertUrl = (url: string, params?: any, options?: FetchOptions) => {
-  return `/api${url}`;
+const convertUrl = (url: string, params?: any, _options?: FetchOptions) => {
+  let str = `/api${url}`;
+  const dynamicKeys = str.match(/\[([^\]]*)\]/g);
+  if (!dynamicKeys) {
+    return str;
+  }
+  const getValue = (key: string) => {
+    if (params == null || typeof params !== "object") return "";
+    if (params instanceof FormData) {
+      return String(params.get(key) ?? "");
+    }
+    return String(params?.[key] ?? "");
+  };
+  dynamicKeys.forEach(dynamicKey => {
+    const key = dynamicKey.match(/\[(.*)\]/)![1];
+    str = str.replace(dynamicKey, getValue(key ?? ""));
+  });
+  return str;
 };
 
-const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit => {
+const convertToRequestInit = (params?: any, _options?: FetchOptions): RequestInit => {
   if (params == null) {
     return {};
   }
