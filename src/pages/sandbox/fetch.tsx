@@ -48,6 +48,7 @@ const Page: NextPage = () => {
               $onClick={async (unlock) => {
                 try {
                   const res = await fetchApi.put("/fetch", { hoge: 10 });
+                  // (await (await fetchApi.get("/notfound")).data);
                   setResponse(res);
                 } finally {
                   unlock();

@@ -1,18 +1,27 @@
-type AnyParameter = FormData | string | Struct | undefined | null;
+type AnyRequestParameter = FormData | string | Struct | undefined | null;
+type AnyResponseParameter = string | Struct | undefined | null;
 
 type ApiMethods = "get" | "put" | "post" | "delete";
 type ApiParameters = "req" | "res";
 
-type AbstractApi = { [key: string]: Partial<Record<ApiMethods, Partial<Record<ApiParameters, any>>>> };
-
-type PickApiParameter<A extends AbstractApi, Url extends string, Method extends string, Direction extends ApiParameters> =
-  (A[Url] extends Record<Method, any> ?
-    (A[Url][Method] extends Record<Direction, any> ?
-      A[Url][Method][Direction] :
-      AnyParameter
-    ) :
-    AnyParameter
+type AbstractApi = {
+  [key: string]: (
+    Partial<Record<ApiMethods, Partial<Record<ApiParameters, any>>>> |
+    Partial<Record<ApiMethods, any>> |
+    any
   );
+};
+
+type PickApiParameter<A extends AbstractApi, Url extends keyof A, Method extends ApiMethods, Direction extends ApiParameters> = (
+  A[Url] extends Record<Method, any> ? (
+    A[Url][Method] extends Record<Direction, any> ?
+    A[Url][Method][Direction] : (
+      Direction extends "res" ? A[Url][Method] : AnyRequestParameter
+    )
+  ) : (
+    Direction extends "res" ? A[Url] : AnyRequestParameter
+  )
+);
 
 type Api = {
   "/fetch": {
@@ -29,6 +38,9 @@ type Api = {
         body: null;
       };
     };
+    put: {
+      nodata: number;
+    };
     delete: {
       res: {
         deleted: boolean;
@@ -36,4 +48,7 @@ type Api = {
     };
   };
   "/fetch/[id]": any;
+  "/notfound": {
+    hoge: number;
+  };
 };
