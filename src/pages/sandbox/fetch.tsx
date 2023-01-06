@@ -73,7 +73,7 @@ const Page: NextPage = () => {
             <Button
               $onClick={async (unlock) => {
                 try {
-                  const res = await fetchApi.get("/fetch/[id]", { id: 1 });
+                  const res = await fetchApi.get("/fetch/[id]", { fuga: 3, id: 1, hoge: [2, 3] });
                   setResponse(res);
                 } finally {
                   unlock();

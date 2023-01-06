@@ -1,4 +1,5 @@
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
+import queryString from "querystring";
 
 type FetchOptions = {
 
@@ -40,10 +41,12 @@ const crossFetch = async <T>(url: string, init?: RequestInit) => {
   return fetchServer<T>(url, init);
 };
 
-const convertUrl = (url: string, params?: any, _options?: FetchOptions) => {
+const convertUrl = (url: string, withQuery: boolean, params?: any, _options?: FetchOptions) => {
   let str = `/api${url}`;
+  let query = withQuery ? queryString.stringify((params as any) ?? {}) : "";
   const dynamicKeys = str.match(/\[([^\]]*)\]/g);
   if (!dynamicKeys) {
+    if (query) str += `?${query}`;
     return str;
   }
   const getValue = (key: string) => {
@@ -56,7 +59,9 @@ const convertUrl = (url: string, params?: any, _options?: FetchOptions) => {
   dynamicKeys.forEach(dynamicKey => {
     const key = dynamicKey.match(/\[(.*)\]/)![1];
     str = str.replace(dynamicKey, getValue(key ?? ""));
+    query = query.replace(RegExp(`(${key}=[^&]*&|$)`, "g"), "");
   });
+  if (query) str += `?${query}`;
   return str;
 };
 
@@ -85,22 +90,22 @@ const convertToRequestInit = (params?: any, _options?: FetchOptions): RequestIni
 
 const fetchApi = {
   get: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "get", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "get", "res">>(convertUrl(url, params, options), { method: "GET" });
+    return crossFetch<PickApiParameter<Api, U, "get", "res">>(convertUrl(url, true, params, options), { method: "GET" });
   },
   put: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "put", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "put", "res">>(convertUrl(url, params, options), {
+    return crossFetch<PickApiParameter<Api, U, "put", "res">>(convertUrl(url, false, params, options), {
       method: "PUT",
       ...(convertToRequestInit(params, options)),
     });
   },
   post: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "post", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "post", "res">>(convertUrl(url, params, options), {
+    return crossFetch<PickApiParameter<Api, U, "post", "res">>(convertUrl(url, false, params, options), {
       method: "POST",
       ...(convertToRequestInit(params, options)),
     });
   },
   delete: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "delete", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "delete", "res">>(convertUrl(url, params, options), {
+    return crossFetch<PickApiParameter<Api, U, "delete", "res">>(convertUrl(url, false, params, options), {
       method: "DELETE",
       ...(convertToRequestInit(params, options)),
     });
