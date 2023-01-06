@@ -228,6 +228,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         onBlur={blur}
         onKeyDown={keydown}
         inputMode={props.$inputMode || (props.$float ? "decimal" : "numeric")}
+        autoComplete="off"
       />
       {form.editable && props.$hideClearButton !== true &&
         <div

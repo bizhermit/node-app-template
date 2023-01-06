@@ -90,7 +90,7 @@ const Page: NextPage = () => {
         <StructView
           style={{ width: 350 }}
           $keys={keys}
-          $struct={struct}
+          $value={struct}
           $outline
         />
         <Card
@@ -102,7 +102,7 @@ const Page: NextPage = () => {
           <div className="w-100">
             <StructView
               $color="sub-light"
-              $struct={struct}
+              $value={struct}
             />
           </div>
         </Card>

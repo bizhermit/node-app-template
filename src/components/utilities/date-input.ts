@@ -7,7 +7,7 @@ import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 export type DateType = "date" | "month" | "year";
 export type DateValue = string | number | Date;
 
-type RangePair = {
+type DateRangePair = {
   name: string;
   position: "before" | "after";
   disallowSame?: boolean;
@@ -22,7 +22,7 @@ export type DateInputPorps = {
   $type?: DateType;
   $min?: DateValue;
   $max?: DateValue;
-  $rangePair?: RangePair;
+  $rangePair?: DateRangePair;
   $validDays?: ValidDays;
   $validDaysMode?: ValidDaysMode;
 };
@@ -146,7 +146,7 @@ export const maxDateValidation = (maxTime: number, type: DateType) => {
   };
 };
 
-export const dateContextValidation = (rangePair: RangePair) => {
+export const dateContextValidation = (rangePair: DateRangePair) => {
   const compare = (value: DateValue | any, pairDate: Date) => {
     const date = convertDate(value);
     if (date == null) return "";

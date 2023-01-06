@@ -17,11 +17,11 @@ export type DatePickerBaseProps<T> = FormItemProps<T> & DateInputPorps & {
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
   $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
+  $onClickPositive?: (value: Nullable<T>) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
   $negativeText?: ReactNode;
   $skipValidation?: boolean;
-  $onClickPositive?: (value: Nullable<T>) => void;
 };
 
 export type DatePickerProps_TypeString_Single = DatePickerBaseProps<string>;
@@ -729,9 +729,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           </div>
         }
       </div>
-      <div
-        className={Style.buttons}
-      >
+      <div className={Style.buttons}>
         {form.editable &&
           <>
             <div

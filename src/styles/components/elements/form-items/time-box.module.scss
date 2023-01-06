@@ -10,25 +10,23 @@
   &[data-input="false"] {
     cursor: pointer;
 
-    >.y,
+    >.h,
     >.m,
-    >.d {
+    >.s {
       cursor: inherit;
     }
   }
 
-  &[data-editable="true"] {
-    &:focus-within {
-      >.sep {
-        color: inherit
-      }
+  &:focus-within {
+    >.sep {
+      color: inherit
     }
   }
 }
 
-.y,
+.h,
 .m,
-.d {
+.s {
   box-sizing: border-box;
   border: none;
   background: transparent;
@@ -38,27 +36,18 @@
   z-index: 1;
   resize: none;
   height: var(--size);
-  min-width: 0;
+  width: 2.8rem;
   padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
   text-align: center;
   flex: none;
 
-  &:first-child {
+  &:first-of-type {
     margin-left: 0.5rem;
   }
 
-  &:last-child {
+  &:last-of-type {
     margin-right: 0.5rem;
   }
-}
-
-.y {
-  width: 5rem;
-}
-
-.m,
-.d {
-  width: 2.8rem;
 }
 
 .sep {
@@ -78,14 +67,34 @@
   }
 
   &:first-child,
-  &:last-child  {
+  &:last-child {
     display: none;
   }
 }
 
 .picker,
 .clear {
-  @include mixins.inputButton;
+  box-sizing: border-box;
+  height: var(--size);
+  width: calc(var(--size) * 0.9);
+  border-radius: var(--radius);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    z-index: 2;
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
 }
 
 @include mixins.hoverAnimation;

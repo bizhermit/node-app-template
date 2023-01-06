@@ -22,7 +22,7 @@ export type SelectBoxProps<T extends string | number = string | number> = FormIt
   $emptyItem?: boolean | { value: T; label: string; };
 };
 
-interface SelectBoxFC extends FunctionComponent {
+interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
   <T extends string | number = string | number>(attrs: SelectBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
@@ -36,9 +36,6 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
     preventMemorize: props.$preventSourceMemorize,
   });
   const [bindSource, setBindSource] = useState(source);
-  useEffect(() => {
-    setBindSource(source);
-  }, [source]);
 
   const iref = useRef<HTMLInputElement>(null!);
   const [showPicker, setShowPicker] = useState(false);
@@ -49,13 +46,14 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   const [label, setLabel] = useState("");
 
   const renderLabel = () => {
-    if (iref.current == null) return;
     const item = source.find(item => equals(item[vdn], form.valueRef.current));
     if (item == null) {
-      iref.current.value = "";
+      if (iref.current) iref.current.value = "";
+      setLabel("");
       return;
     }
-    setLabel(iref.current.value = String(item[ldn] || ""));
+    if (iref.current) iref.current.value = String(item[ldn] || "");
+    setLabel(String(item[ldn] || ""));
     return;
   };
 
@@ -65,7 +63,8 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         afterData: source.find(item => equals(item[vdn], a)),
         beforeData: source.find(item => equals(item[vdn], b)),
       };
-    }
+    },
+    generateChangeCallbackDataDeps: [source],
   });
 
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,8 +211,13 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   };
 
   useEffect(() => {
+    setBindSource(source);
+    form.change(form.valueRef.current, true);
+  }, [source]);
+
+  useEffect(() => {
     renderLabel();
-  }, [form.value]);
+  }, [form.value, source]);
 
   const isEmptyValue = form.value == null || form.value === "";
   const hasLabel = StringUtils.isNotEmpty(label);
@@ -247,6 +251,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         onClick={picker}
         onChange={changeText}
         onKeyDown={keydown}
+        autoComplete="off"
         data-has={!isEmptyValue}
       />
       {form.editable && !loading &&
@@ -282,9 +287,10 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
           x: "inner",
           y: "outer",
         }}
-        $animationDuration={50}
+        $animationDuration={80}
         style={{ width }}
         $preventUnmount
+        $animationDirection="vertical"
         $onToggled={(open) => {
           if (open) {
             if (!doScroll.current) return;
