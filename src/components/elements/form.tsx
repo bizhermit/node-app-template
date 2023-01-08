@@ -73,20 +73,33 @@ type FormItemMountProps = {
   change: (value: Nullable<any>, absolute?: boolean) => void;
 };
 
+type PlainFormProps = {
+  $bind?: undefined | null | false;
+  $onSubmit?: (((data: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+};
+
+type BindFormProps = {
+  $bind: Struct | true;
+  $onSubmit?: (((data: Struct, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+};
+
 export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
-  $bind?: Struct;
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onSubmit?: (((formData: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
-};
+} & (PlainFormProps | BindFormProps);
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
+
+  const bind = useMemo(() => {
+    if (!props.$bind || props.$bind === true) return {};
+    return props.$bind;
+  }, [props.$bind]);
 
   const disabledRef = useRef(false);
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
@@ -148,7 +161,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       setDisabled(false);
       return;
     }
-    const ret = props.$onSubmit(new FormData(e.currentTarget), e);
+    const ret = props.$onSubmit((!props.$bind ? new FormData(e.currentTarget) : bind) as any, e);
     if (ret == null || typeof ret === "boolean") {
       if (ret !== true) {
         e.preventDefault();
@@ -209,7 +222,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
 
   return (
     <FormContext.Provider value={{
-      bind: props.$bind,
+      bind,
       disabled: props.$disabled || disabled,
       readOnly: props.$readOnly,
       errors,
