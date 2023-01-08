@@ -3,7 +3,7 @@
 import apiHandler from "@/utilities/api-handler";
 
 export default apiHandler<"/fetch">({
-  common: async (ctx) => {
+  preaction: async (ctx) => {
     // console.log("common");
     const body = ctx.getBody();
     console.log(body);
@@ -25,8 +25,8 @@ export default apiHandler<"/fetch">({
     const body = ctx.getBody();
     console.log(body);
     return {
-      updated: true,
-      body,
+      // updated: true,
+      // body,
     };
   },
   delete: async (ctx) => {

@@ -1,26 +1,33 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import * as os from "os";
 
+type SystemMethods = Exclude<keyof MethodProcess<any>, ApiMethods>;
+
 type DefaultQueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type QueryParameter<A extends Api, U extends keyof A> = {
-  [P in keyof Exclude<PickApiParameter<A, U, Exclude<"get", "common">, "req">, FormData>]:
-  Exclude<PickApiParameter<A, U, Exclude<"get", "common">, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
+  [P in keyof Exclude<PickApiParameter<A, U, Exclude<"get", SystemMethods>, "req">, FormData>]:
+  Exclude<PickApiParameter<A, U, Exclude<"get", SystemMethods>, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
 };
 type SessionStruct = { [key: string]: any };
 
-type Context<U extends keyof Api, M extends (ApiMethods | "common")> = {
+type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   req: NextApiRequest;
   res: NextApiResponse;
   getQuery: <T extends DefaultQueryStruct = M extends "get" ? QueryParameter<Api, U> : DefaultQueryStruct>() => T;
-  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, "common">, "req">, FormData>>() => T;
+  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>() => T;
   getCookies: <T extends DefaultQueryStruct = DefaultQueryStruct>() => T;
   getSession: () => SessionStruct;
   setStatus: (code: number) => void;
 };
-type Handler<U extends keyof Api, M extends (ApiMethods | "common")> = (context: Context<U, M>) => Promise<void | Struct>;
+type Handler<U extends keyof Api, M extends (ApiMethods | SystemMethods)> =
+  (context: Context<U, M>) => Promise<
+    void | Struct
+    | Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "res">, FormData>
+  >;
 
 type MethodProcess<U extends keyof Api> = {
-  common?: Handler<U, "common">;
+  preaction?: Handler<U, "preaction">;
+  postaction?: Handler<U, "postaction">;
   get?: Handler<U, "get">;
   post?: Handler<U, "post">;
   put?: Handler<U, "put">;
@@ -85,20 +92,11 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
       setStatus: (code: number) => statusCode = code,
     };
 
-    const commonHandler = methods.common;
-    if (commonHandler) {
-      try {
-        await commonHandler(context);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-        res.status(500).json({});
-        return;
-      }
-    }
-
     try {
+      await methods.preaction?.(context);
       const data = await handler(context);
+      // TODO: error(ex. validation) handling, return error code
+      await methods.postaction?.(context);
       if (data == null) {
         res.status(statusCode ?? 204).json({});
         return;

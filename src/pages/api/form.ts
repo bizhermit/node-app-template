@@ -2,7 +2,7 @@
 import apiHandler from "@/utilities/api-handler";
 
 export default apiHandler({
-  common: async (ctx) => {
+  preaction: async (ctx) => {
     console.log(ctx.req.method);
   },
   get: async (ctx) => {
