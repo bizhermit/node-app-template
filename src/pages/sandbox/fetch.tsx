@@ -7,11 +7,13 @@ import TextBox from "@/components/elements/form-items/text-box";
 import GroupBox from "@/components/elements/group-box";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
+import useFetch from "@/hooks/fetch";
 import fetchApi from "@/utilities/fetch-api";
 import { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
+  const api = useFetch();
   const [response, setResponse] = useState({});
 
   return (
@@ -23,7 +25,7 @@ const Page: NextPage = () => {
               $onClick={async (unlock) => {
                 try {
                   // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
-                  const res = await fetchApi.get("/fetch", {
+                  const res = await api.get("/fetch", {
                     hoge: 1,
                     fuga: [2, 3],
                   });
