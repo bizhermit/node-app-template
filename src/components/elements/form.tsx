@@ -74,7 +74,7 @@ type FormItemMountProps = {
 };
 
 type PlainFormProps = {
-  $bind?: undefined | false;
+  $bind?: undefined | null | false;
   $onSubmit?: (((data: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
 };
 
