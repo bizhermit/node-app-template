@@ -27,7 +27,7 @@ type Api = {
   "/fetch": {
     get: {
       req: {
-        hoge: number;
+        hoge?: number;
         fuga: Array<number>;
       };
       res: null;

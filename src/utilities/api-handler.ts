@@ -11,7 +11,7 @@ type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   getQuery: <T extends QueryStruct = M extends "get" ? {
     [P in keyof Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>]:
     Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
-  } : QueryStruct>() => T;
+  } : QueryStruct, Q extends boolean = true>(convert?: Q) => Q extends false ? T : Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>;
   getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>() => T;
   getCookies: <T extends QueryStruct = QueryStruct>() => T;
   getSession: () => SessionStruct;
@@ -41,7 +41,11 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
     const context: Context<U, typeof method> = {
       req,
       res,
-      getQuery: () => req.query as any,
+      getQuery: (convert?: boolean) => {
+        if (!convert) return req.query;
+        // TODO: convert query to params
+        return req.query as any;
+      },
       getBody: () => {
         if (req.body == null) return undefined;
         if (contentType === "multipart/form-data" && typeof req.body === "string") {
