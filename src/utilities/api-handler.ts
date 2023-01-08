@@ -2,36 +2,29 @@ import { NextApiRequest, NextApiResponse } from "next";
 import * as os from "os";
 
 type SystemMethods = Exclude<keyof MethodProcess<any>, ApiMethods>;
-
-type DefaultQueryStruct = Partial<{ [key: string]: string | Array<string> }>;
-type QueryParameter<A extends Api, U extends keyof A> = {
-  [P in keyof Exclude<PickApiParameter<A, U, Exclude<"get", SystemMethods>, "req">, FormData>]:
-  Exclude<PickApiParameter<A, U, Exclude<"get", SystemMethods>, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
-};
+type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
 
 type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   req: NextApiRequest;
   res: NextApiResponse;
-  getQuery: <T extends DefaultQueryStruct = M extends "get" ? QueryParameter<Api, U> : DefaultQueryStruct>() => T;
+  getQuery: <T extends QueryStruct = M extends "get" ? {
+    [P in keyof Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>]:
+    Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
+  } : QueryStruct>() => T;
   getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>() => T;
-  getCookies: <T extends DefaultQueryStruct = DefaultQueryStruct>() => T;
+  getCookies: <T extends QueryStruct = QueryStruct>() => T;
   getSession: () => SessionStruct;
   setStatus: (code: number) => void;
 };
-type Handler<U extends keyof Api, M extends (ApiMethods | SystemMethods)> =
-  (context: Context<U, M>) => Promise<
-    void | Struct
-    | Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "res">, FormData>
-  >;
 
 type MethodProcess<U extends keyof Api> = {
-  preaction?: Handler<U, "preaction">;
-  postaction?: Handler<U, "postaction">;
-  get?: Handler<U, "get">;
-  post?: Handler<U, "post">;
-  put?: Handler<U, "put">;
-  delete?: Handler<U, "delete">;
+  preaction?: (context: Context<U, "preaction">) => Promise<void>;
+  postaction?: (context: Context<U, "postaction">) => Promise<void>;
+  get?: (context: Context<U, "get">) => Promise<void | Exclude<PickApiParameter<Api, U, "get", "res">, FormData>>;
+  post?: (context: Context<U, "post">) => Promise<void | Exclude<PickApiParameter<Api, U, "post", "res">, FormData>>;
+  put?: (context: Context<U, "put">) => Promise<void | Exclude<PickApiParameter<Api, U, "put", "res">, FormData>>;
+  delete?: (context: Context<U, "delete">) => Promise<void | Exclude<PickApiParameter<Api, U, "delete", "res">, FormData>>;
 };
 
 const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {

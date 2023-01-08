@@ -43,6 +43,9 @@ type Api = {
       nodata: number;
     };
     delete: {
+      req: {
+        hoge: number;
+      };
       res: {
         deleted: boolean;
       };

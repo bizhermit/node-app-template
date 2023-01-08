@@ -7,6 +7,7 @@ export default apiHandler<"/fetch">({
     // console.log("common");
     const body = ctx.getBody();
     console.log(body);
+    return;
   },
   get: async (ctx) => {
     console.log("get");
@@ -19,14 +20,15 @@ export default apiHandler<"/fetch">({
     // return {
     //   count: session.count,
     // };
+    // return null;
   },
   post: async (ctx) => {
     console.log("post");
     const body = ctx.getBody();
     console.log(body);
     return {
-      // updated: true,
-      // body,
+      updated: true,
+      body
     };
   },
   delete: async (ctx) => {
