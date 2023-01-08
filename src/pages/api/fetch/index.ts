@@ -11,7 +11,7 @@ export default apiHandler<"/fetch">({
   },
   get: async (ctx) => {
     console.log("get");
-    const query = ctx.getQuery(false);
+    const query = ctx.getQuery();
     console.log(query);
     const body = ctx.getBody();
     console.log(body);

@@ -5,17 +5,42 @@ type SystemMethods = Exclude<keyof MethodProcess<any>, ApiMethods>;
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
 
+type ParameterContext_Base = {
+  name: string;
+  required?: boolean;
+};
+
+type ParameterContext_String = ParameterContext_Base & {
+  type?: "string";
+};
+
+type ParameterContext_Number = ParameterContext_Base & {
+  type: "number";
+};
+
+type ParameterContext_Boolean = ParameterContext_Base & {
+  type: "boolean";
+};
+
+type ParameterContext_Array = ParameterContext_Base & {
+  type: "array";
+  itemValidation: ParameterContext | Array<ParameterContext>;
+};
+
+type ParameterContext = ParameterContext_String | ParameterContext_Number | ParameterContext_Boolean | ParameterContext_Array;
+
 type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   req: NextApiRequest;
   res: NextApiResponse;
   getQuery: <T extends QueryStruct = M extends "get" ? {
     [P in keyof Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>]:
     Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
-  } : QueryStruct, Q extends boolean = true>(convert?: Q) => Q extends false ? T : Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>;
-  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>() => T;
+  } : QueryStruct, C extends Array<ParameterContext> | undefined = undefined>(parameterContexts?: C) => C extends null | undefined | void ? T : Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>;
+  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>(parameterContexts?: Array<ParameterContext>) => T;
   getCookies: <T extends QueryStruct = QueryStruct>() => T;
   getSession: () => SessionStruct;
   setStatus: (code: number) => void;
+  hasError: () => boolean;
 };
 
 type MethodProcess<U extends keyof Api> = {
@@ -41,12 +66,13 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
     const context: Context<U, typeof method> = {
       req,
       res,
-      getQuery: (convert?: boolean) => {
-        if (!convert) return req.query;
-        // TODO: convert query to params
+      getQuery: (parameterContexts?: Array<ParameterContext>) => {
+        if (!parameterContexts) return req.query;
+        // TODO: convert to params / validaiton from parameterContexts
+        console.log(parameterContexts);
         return req.query as any;
       },
-      getBody: () => {
+      getBody: (parameterContexts?: Array<ParameterContext>) => {
         if (req.body == null) return undefined;
         if (contentType === "multipart/form-data" && typeof req.body === "string") {
           const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
@@ -79,14 +105,22 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
               }
               body[name] = value;
             });
+            // TODO: validation from parameterContexts
+            console.log(parameterContexts);
             return body;
           }
         }
+        // TODO: validation from parameterContexts
+        console.log(parameterContexts);
         return req.body;
       },
       getCookies: () => req.cookies as any,
       getSession: () => getSession(req, res),
       setStatus: (code: number) => statusCode = code,
+      hasError: () => {
+        // TODO: validation result check
+        return false;
+      },
     };
 
     try {
