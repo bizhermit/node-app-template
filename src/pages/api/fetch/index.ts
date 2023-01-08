@@ -2,13 +2,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import apiHandler from "@/utilities/api-handler";
 
-export default apiHandler({
+export default apiHandler<"/fetch">({
   common: async (ctx) => {
     // console.log("common");
+    const body = ctx.getBody();
+    console.log(body);
   },
   get: async (ctx) => {
     console.log("get");
-    console.log(ctx.getQuery());
+    const query = ctx.getQuery();
+    console.log(query);
+    const body = ctx.getBody();
+    console.log(body);
     const session = ctx.getSession();
     session.count = (session?.count ?? 0) + 1;
     // return {
@@ -17,7 +22,7 @@ export default apiHandler({
   },
   post: async (ctx) => {
     console.log("post");
-    const body = ctx.getBody<{ hoge: number }>();
+    const body = ctx.getBody();
     console.log(body);
     return {
       updated: true,
@@ -26,6 +31,8 @@ export default apiHandler({
   },
   delete: async (ctx) => {
     console.log("delete");
+    const body = ctx.getBody();
+    console.log(body);
     return {
       deleted: true,
     };

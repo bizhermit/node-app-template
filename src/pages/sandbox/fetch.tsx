@@ -23,7 +23,10 @@ const Page: NextPage = () => {
               $onClick={async (unlock) => {
                 try {
                   // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
-                  const res = await fetchApi.get("/fetch");
+                  const res = await fetchApi.get("/fetch", {
+                    hoge: 1,
+                    fuga: [2, 3],
+                  });
                   setResponse(res);
                 } finally {
                   unlock();

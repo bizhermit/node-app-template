@@ -1,31 +1,35 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import * as os from "os";
 
-type QueryStruct = Partial<{ [key: string]: string | string[] }>;
+type DefaultQueryStruct = Partial<{ [key: string]: string | Array<string> }>;
+type QueryParameter<A extends Api, U extends keyof A> = {
+  [P in keyof Exclude<PickApiParameter<A, U, Exclude<"get", "common">, "req">, FormData>]:
+  Exclude<PickApiParameter<A, U, Exclude<"get", "common">, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
+};
 type SessionStruct = { [key: string]: any };
 
-type Context = {
+type Context<U extends keyof Api, M extends (ApiMethods | "common")> = {
   req: NextApiRequest;
   res: NextApiResponse;
-  getQuery: <T extends QueryStruct = QueryStruct>() => T;
-  getBody: <T = Struct>() => T;
-  getCookies: <T extends QueryStruct = QueryStruct>() => T;
+  getQuery: <T extends DefaultQueryStruct = M extends "get" ? QueryParameter<Api, U> : DefaultQueryStruct>() => T;
+  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, "common">, "req">, FormData>>() => T;
+  getCookies: <T extends DefaultQueryStruct = DefaultQueryStruct>() => T;
   getSession: () => SessionStruct;
   setStatus: (code: number) => void;
 };
-type Handler = (context: Context) => Promise<void | Struct>;
+type Handler<U extends keyof Api, M extends (ApiMethods | "common")> = (context: Context<U, M>) => Promise<void | Struct>;
 
-type Methods = {
-  common?: Handler;
-  get?: Handler;
-  post?: Handler;
-  put?: Handler;
-  delete?: Handler;
-} & { [key: string]: Handler };
+type MethodProcess<U extends keyof Api> = {
+  common?: Handler<U, "common">;
+  get?: Handler<U, "get">;
+  post?: Handler<U, "post">;
+  put?: Handler<U, "put">;
+  delete?: Handler<U, "delete">;
+};
 
-const apiHandler = (methods: Methods) => {
+const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
-    const method = req.method?.toLocaleLowerCase() ?? "get";
+    const method = (req.method?.toLocaleLowerCase() ?? "get") as ApiMethods;
     const handler = methods[method];
     if (handler == null) {
       res.status(404).json({});
@@ -34,7 +38,7 @@ const apiHandler = (methods: Methods) => {
 
     let statusCode: number | undefined = undefined;
     const contentType = req.headers["content-type"]?.match(/([^\;]*)/)?.[1];
-    const context: Context = {
+    const context: Context<U, typeof method> = {
       req,
       res,
       getQuery: () => req.query as any,

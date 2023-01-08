@@ -28,6 +28,7 @@ type Api = {
     get: {
       req: {
         hoge: number;
+        fuga: Array<number>;
       };
       res: null;
     };
