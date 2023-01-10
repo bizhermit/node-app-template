@@ -50,6 +50,11 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
       }
       return validations;
     },
+    validationsDeps: [
+      props.$length,
+      props.$minLength,
+      props.$maxLength,
+    ],
   });
 
   return (
