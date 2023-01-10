@@ -7,6 +7,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type TextAreaProps = FormItemProps<string> & {
   $length?: number;
+  $preventInputOverLength?: boolean;
   $maxLength?: number;
   $minLength?: number;
   $resize?: boolean | "x" | "y" | "xy";
@@ -75,7 +76,7 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
         placeholder={form.editable ? props.placeholder : ""}
         disabled={form.disabled}
         readOnly={form.readOnly}
-        maxLength={props.$maxLength}
+        maxLength={props.$maxLength ?? (props.$preventInputOverLength ? undefined : props.$length)}
         tabIndex={props.tabIndex}
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}

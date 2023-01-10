@@ -93,6 +93,8 @@ const Page: NextPage = () => {
           $disabled={disabled}
           $readOnly={readOnly}
           $value={value}
+          $length={4}
+          $preventInputOverLength
           $onChange={v => setValue(v)}
         />
         <TextBox
