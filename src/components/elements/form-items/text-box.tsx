@@ -12,6 +12,18 @@ export type TextBoxProps = FormItemProps<string> & {
   $preventInputWithinLength?: boolean;
   $maxLength?: number;
   $minLength?: number;
+  $charType?: "int"
+  | "h-num"
+  | "f-num"
+  | "num"
+  | "h-alpha"
+  | "f-alpha"
+  | "alpha"
+  | "h-alpha-num"
+  | "h-alpha-num-syn"
+  | "h-katakana"
+  | "f-katakana"
+  | "katakana";
   $round?: boolean;
   $resize?: boolean;
   $width?: number | string;
@@ -49,8 +61,102 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
           });
         }
       }
+      switch (props.$charType) {
+        case "h-num":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isHalfWidthNumeric(v)) return "";
+            return "半角数字で入力してください。";
+          });
+          break;
+        case "f-num":
+          validations.push(v => {
+            if (!v) return "";
+            if (/^[０-９]+$/.test(v)) return "";
+            return "全角数字で入力してください。";
+          });
+          break;
+        case "num":
+          validations.push(v => {
+            if (!v) return "";
+            if (/^[0-9０-９]+$/.test(v)) return "";
+            return "数字で入力してください。";
+          });
+          break;
+        case "h-alpha":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isHalfWidthAlphabet(v)) return "";
+            return "半角英字で入力してください。";
+          });
+          break;
+        case "f-alpha":
+          validations.push(v => {
+            if (!v) return "";
+            if (/^[ａ-ｚＡ-Ｚ]+$/.test(v)) return "";
+            return "全角英字で入力してください。";
+          });
+          break;
+        case "alpha":
+          validations.push(v => {
+            if (!v) return "";
+            if (/^[a-zA-Zａ-ｚＡ-Ｚ]+$/.test(v)) return "";
+            return "英字で入力してください。";
+          });
+          break;
+        case "h-alpha-num":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isHalfWidthAlphanumeric(v)) return "";
+            return "半角英数字で入力してください";
+          });
+          break;
+        case "h-alpha-num-syn":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isHalfWidthAlphanumericAndSymbols(v)) return "";
+            return "半角英数字記号で入力してください。";
+          });
+          break;
+        case "int":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isInteger(v)) return "";
+            return "数値で入力してください。";
+          });
+          break;
+        case "h-katakana":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isHalfWidthKatakana(v)) return "";
+            return "半角カタカナで入力してください。";
+          });
+          break;
+        case "f-katakana":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isKatakana(v)) return "";
+            return "全角カタカナで入力してください。";
+          });
+          break;
+        case "katakana":
+          validations.push(v => {
+            if (!v) return "";
+            if (StringUtils.isFullOrHalfWidthKatakana(v)) return "";
+            return "カタカナで入力してください。";
+          });
+          break;
+        default:
+          break;
+      }
       return validations;
     },
+    validationsDeps: [
+      props.$length,
+      props.$minLength,
+      props.$maxLength,
+      props.$charType,
+    ],
   });
 
   const clear = () => {
