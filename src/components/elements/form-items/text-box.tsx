@@ -9,7 +9,7 @@ import { VscClose } from "react-icons/vsc";
 export type TextBoxProps = FormItemProps<string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
-  $preventInputOverLength?: boolean;
+  $preventInputWithinLength?: boolean;
   $maxLength?: number;
   $minLength?: number;
   $round?: boolean;
@@ -84,7 +84,7 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         placeholder={form.editable ? props.placeholder : ""}
         disabled={form.disabled}
         readOnly={form.readOnly}
-        maxLength={props.$maxLength ?? (props.$preventInputOverLength ? undefined : props.$length)}
+        maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
         tabIndex={props.tabIndex}
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
