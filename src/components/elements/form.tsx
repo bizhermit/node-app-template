@@ -413,8 +413,11 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     options?.effect?.(valueRef.current);
-    validation();
   }, [...(options?.effectDeps ?? [])]);
+
+  useEffect(() => {
+    validation();
+  }, [validation]);
 
   const disabled = props?.$disabled || ctx.disabled;
   const readOnly = props?.$readOnly || ctx.readOnly;
