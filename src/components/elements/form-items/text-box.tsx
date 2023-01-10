@@ -61,90 +61,49 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
           });
         }
       }
+      const addCharTypeValidation = (func: (v: string) => boolean, message: string) => {
+        validations.push(v => {
+          if (!v) return "";
+          if (func(v)) return "";
+          return message;
+        });
+      };
       switch (props.$charType) {
         case "h-num":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isHalfWidthNumeric(v)) return "";
-            return "半角数字で入力してください。";
-          });
+          addCharTypeValidation(StringUtils.isHalfWidthNumeric, "半角数字で入力してください。");
           break;
         case "f-num":
-          validations.push(v => {
-            if (!v) return "";
-            if (/^[０-９]+$/.test(v)) return "";
-            return "全角数字で入力してください。";
-          });
+          addCharTypeValidation(/^[０-９]+$/.test, "全角数字で入力してください。");
           break;
         case "num":
-          validations.push(v => {
-            if (!v) return "";
-            if (/^[0-9０-９]+$/.test(v)) return "";
-            return "数字で入力してください。";
-          });
+          addCharTypeValidation(/^[0-9０-９]+$/.test, "数字で入力してください。");
           break;
         case "h-alpha":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isHalfWidthAlphabet(v)) return "";
-            return "半角英字で入力してください。";
-          });
+          addCharTypeValidation(StringUtils.isHalfWidthAlphabet, "半角英字で入力してください。");
           break;
         case "f-alpha":
-          validations.push(v => {
-            if (!v) return "";
-            if (/^[ａ-ｚＡ-Ｚ]+$/.test(v)) return "";
-            return "全角英字で入力してください。";
-          });
+          addCharTypeValidation(/^[ａ-ｚＡ-Ｚ]+$/.test, "全角英字で入力してください。");
           break;
         case "alpha":
-          validations.push(v => {
-            if (!v) return "";
-            if (/^[a-zA-Zａ-ｚＡ-Ｚ]+$/.test(v)) return "";
-            return "英字で入力してください。";
-          });
+          addCharTypeValidation(/^[a-zA-Zａ-ｚＡ-Ｚ]+$/.test, "英字で入力してください。");
           break;
         case "h-alpha-num":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isHalfWidthAlphanumeric(v)) return "";
-            return "半角英数字で入力してください";
-          });
+          addCharTypeValidation(StringUtils.isHalfWidthAlphanumeric, "半角英数字で入力してください");
           break;
         case "h-alpha-num-syn":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isHalfWidthAlphanumericAndSymbols(v)) return "";
-            return "半角英数字記号で入力してください。";
-          });
+          addCharTypeValidation(StringUtils.isHalfWidthAlphanumericAndSymbols, "半角英数字記号で入力してください。");
           break;
         case "int":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isInteger(v)) return "";
-            return "数値で入力してください。";
-          });
+          addCharTypeValidation(StringUtils.isInteger, "数値で入力してください。");
           break;
         case "h-katakana":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isHalfWidthKatakana(v)) return "";
-            return "半角カタカナで入力してください。";
-          });
+          addCharTypeValidation(StringUtils.isHalfWidthKatakana, "半角カタカナで入力してください。");
           break;
         case "f-katakana":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isKatakana(v)) return "";
-            return "全角カタカナで入力してください。";
-          });
+          addCharTypeValidation(StringUtils.isKatakana, "全角カタカナで入力してください。");
           break;
         case "katakana":
-          validations.push(v => {
-            if (!v) return "";
-            if (StringUtils.isFullOrHalfWidthKatakana(v)) return "";
-            return "カタカナで入力してください。";
-          });
+          addCharTypeValidation(StringUtils.isFullOrHalfWidthKatakana, "カタカナで入力してください。");
           break;
         default:
           break;

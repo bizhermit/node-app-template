@@ -95,7 +95,7 @@ const Page: NextPage = () => {
           $value={value}
           // $length={4}
           $preventInputWithinLength
-          // $charType="f-katakana"
+          $charType="h-num"
           $onChange={v => setValue(v)}
         />
         <TextBox
