@@ -1,7 +1,7 @@
-const notification_body: DataItem_String = {
+const notification_body: DataItem = Object.freeze({
   name: "body",
+  type: "string",
   maxLength: 1023,
-  validations: [],
-};
+});
 
 export default notification_body;

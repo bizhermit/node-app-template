@@ -2,17 +2,17 @@ type AnyRequestParameter = FormData | string | Struct | undefined | null;
 type AnyResponseParameter = string | Struct | undefined | null;
 
 type ApiMethods = "get" | "put" | "post" | "delete";
-type ApiParameters = "req" | "res";
+type ApiDirection = "req" | "res";
 
 type AbstractApi = {
   [key: string]: (
-    Partial<Record<ApiMethods, Partial<Record<ApiParameters, any>>>> |
+    Partial<Record<ApiMethods, Partial<Record<ApiDirection, any>>>> |
     Partial<Record<ApiMethods, any>> |
     any
   );
 };
 
-type PickApiParameter<A extends AbstractApi, Url extends keyof A, Method extends ApiMethods, Direction extends ApiParameters> = (
+type PickApiParameter<A extends AbstractApi, Url extends keyof A, Method extends ApiMethods, Direction extends ApiDirection> = (
   A[Url] extends Record<Method, any> ? (
     A[Url][Method] extends Record<Direction, any> ?
     A[Url][Method][Direction] : (
@@ -23,7 +23,16 @@ type PickApiParameter<A extends AbstractApi, Url extends keyof A, Method extends
   )
 );
 
+type ApiPaths = ""
+  | "/fetch"
+  | "/fetch/[id]"
+  ;
+
 type Api = {
+  [P in ApiPaths]: typeof import(`@/src/pages/api/fetch`);
+};
+
+type $Api = {
   "/fetch": {
     get: {
       req: {

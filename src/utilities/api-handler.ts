@@ -5,29 +5,10 @@ type SystemMethods = Exclude<keyof MethodProcess<any>, ApiMethods>;
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
 
-type ParameterContext_Base = {
-  name: string;
-  required?: boolean;
-};
-
-type ParameterContext_String = ParameterContext_Base & {
-  type?: "string";
-};
-
-type ParameterContext_Number = ParameterContext_Base & {
-  type: "number";
-};
-
-type ParameterContext_Boolean = ParameterContext_Base & {
-  type: "boolean";
-};
-
-type ParameterContext_Array = ParameterContext_Base & {
-  type: "array";
-  itemValidation: ParameterContext | Array<ParameterContext>;
-};
-
-type ParameterContext = ParameterContext_String | ParameterContext_Number | ParameterContext_Boolean | ParameterContext_Array;
+export type ApiParameters = Partial<Record<ApiMethods, {
+  req?: Array<DataItem>;
+  res?: any;
+}>>;
 
 type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   req: NextApiRequest;
@@ -35,8 +16,8 @@ type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   getQuery: <T extends QueryStruct = M extends "get" ? {
     [P in keyof Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>]:
     Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
-  } : QueryStruct, C extends Array<ParameterContext> | undefined = undefined>(parameterContexts?: C) => C extends null | undefined | void ? T : Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>;
-  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>(parameterContexts?: Array<ParameterContext>) => T;
+  } : QueryStruct, C extends Array<DataItem> | undefined = undefined>(parameterContexts?: C) => C extends null | undefined | void ? T : Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>;
+  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>(parameterContexts?: Array<DataItem>) => T;
   getCookies: <T extends QueryStruct = QueryStruct>() => T;
   getSession: () => SessionStruct;
   setStatus: (code: number) => void;
@@ -66,13 +47,13 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
     const context: Context<U, typeof method> = {
       req,
       res,
-      getQuery: (parameterContexts?: Array<ParameterContext>) => {
+      getQuery: (parameterContexts?: Array<DataItem>) => {
         if (!parameterContexts) return req.query;
         // TODO: convert to params / validaiton from parameterContexts
         console.log(parameterContexts);
         return req.query as any;
       },
-      getBody: (parameterContexts?: Array<ParameterContext>) => {
+      getBody: (parameterContexts?: Array<DataItem>) => {
         if (req.body == null) return undefined;
         if (contentType === "multipart/form-data" && typeof req.body === "string") {
           const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];

@@ -19,76 +19,90 @@ const Page: NextPage = () => {
   return (
     <div className="flex-start p-1 gap-1 w-100">
       <Row $vAlign="top" className="gap-1">
-        <GroupBox $caption="fetch" $bodyClassName="flex-start p-1 gap-1">
-          <Row className="gap-1">
-            <Button
-              $onClick={async (unlock) => {
-                try {
-                  // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
-                  const res = await api.get("/fetch", {
-                    hoge: 1,
-                    fuga: [2, 3],
-                  });
-                  setResponse(res);
-                } finally {
-                  unlock();
-                }
-              }}
-            >
-              get
-            </Button>
-            <Button
-              $onClick={async (unlock) => {
-                try {
-                  const res = await fetchApi.post("/fetch");
-                  setResponse(res);
-                } finally {
-                  unlock();
-                }
-              }}
-            >
-              post
-            </Button>
-            <Button
-              $onClick={async (unlock) => {
-                try {
-                  const res = await fetchApi.put("/fetch", { hoge: 10 });
-                  // (await (await fetchApi.get("/notfound")).data);
-                  setResponse(res);
-                } finally {
-                  unlock();
-                }
-              }}
-            >
-              put
-            </Button>
-            <Button
-              $onClick={async (unlock) => {
-                try {
-                  const res = await fetchApi.delete("/fetch", { hoge: 100 });
-                  setResponse(res);
-                } finally {
-                  unlock();
-                }
-              }}
-            >
-              delete
-            </Button>
-          </Row>
-          <Row className="gap-1">
-            <Button
-              $onClick={async (unlock) => {
-                try {
-                  const res = await fetchApi.get("/fetch/[id]", { fuga: 3, id: 1, hoge: [2, 3] });
-                  setResponse(res);
-                } finally {
-                  unlock();
-                }
-              }}
-            >
-              get (dynamic url)
-            </Button>
-          </Row>
+        <GroupBox $caption="fetch">
+          <Form
+            className="flex-start p-1 gap-1"
+            $bind
+            $onSubmit={(data) => {
+              console.log(data);
+              api.post("/fetch", data);
+            }}
+          >
+            <Row className="gap-1">
+              <Button
+                $onClick={async (unlock) => {
+                  try {
+                    // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
+                    api.get("/fetch");
+                    const res = await api.get("/fetch", {
+                      hoge: 1,
+                      fuga: [2, 3],
+                    });
+                    setResponse(res);
+                  } finally {
+                    unlock();
+                  }
+                }}
+              >
+                get
+              </Button>
+              <Button
+                $onClick={async (unlock) => {
+                  try {
+                    const res = await fetchApi.post("/fetch");
+                    setResponse(res);
+                  } finally {
+                    unlock();
+                  }
+                }}
+              >
+                post
+              </Button>
+              <Button
+                $onClick={async (unlock) => {
+                  try {
+                    const res = await fetchApi.put("/fetch", { hoge: 10 });
+                    // (await (await fetchApi.get("/notfound")).data);
+                    setResponse(res);
+                  } finally {
+                    unlock();
+                  }
+                }}
+              >
+                put
+              </Button>
+              <Button
+                $onClick={async (unlock) => {
+                  try {
+                    const res = await fetchApi.delete("/fetch", { hoge: 100 });
+                    setResponse(res);
+                  } finally {
+                    unlock();
+                  }
+                }}
+              >
+                delete
+              </Button>
+            </Row>
+            <Row className="gap-1">
+              <Button
+                $onClick={async (unlock) => {
+                  try {
+                    const res = await fetchApi.get("/fetch/[id]", { fuga: 3, id: 1, hoge: [2, 3] });
+                    setResponse(res);
+                  } finally {
+                    unlock();
+                  }
+                }}
+              >
+                get (dynamic url)
+              </Button>
+            </Row>
+            <Row>
+              <TextBox />
+              <Button type="submit">submit</Button>
+            </Row>
+          </Form>
         </GroupBox>
         <GroupBox $caption="form" $bodyClassName="p-1">
           <Form

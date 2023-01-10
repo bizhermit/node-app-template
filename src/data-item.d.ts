@@ -1,9 +1,10 @@
 type DataItem_Base = {
   name: string;
+  required?: boolean;
 };
 
 type DataItem_String = DataItem_Base & {
-  type?: "string" | undefined | null;
+  type: "string";
   validations?: Array<(v: Nullable<string>) => string>;
   length?: number;
   minLength?: number;
@@ -51,4 +52,4 @@ type DataItem_Array = DataItem_Base & {
   maxLength?: number;
 };
 
-type DataItem = DataItem_String | DataItem_Number | DataItem_Boolean | DataItem_Date | DataItem_Array;
+type DataItem = Readonly<DataItem_String | DataItem_Number | DataItem_Boolean | DataItem_Date | DataItem_Array>;
