@@ -5,7 +5,7 @@ type DataItem_Base = {
 
 type DataItem_String = DataItem_Base & {
   type: "string";
-  validations?: Array<(v: Nullable<string>) => string>;
+  validations?: readonly ((v: Nullable<string>) => string)[];
   length?: number;
   minLength?: number;
   maxLength?: number;
@@ -15,7 +15,7 @@ type DataItem_String = DataItem_Base & {
 
 type DataItem_Number = DataItem_Base & {
   type: "number";
-  validations?: Array<(v: Nullable<number>) => string>;
+  validations?: readonly ((v: Nullable<number>) => string)[];
   min?: number;
   max?: number;
   // styles
@@ -24,7 +24,7 @@ type DataItem_Number = DataItem_Base & {
 
 type DataItem_Boolean = DataItem_Base & {
   type: "boolean";
-  validations?: Array<(v: Nullable<boolean>) => string>;
+  validations?: readonly ((v: Nullable<boolean>) => string)[];
   min?: string;
   max?: string;
   // styles
@@ -33,7 +33,7 @@ type DataItem_Boolean = DataItem_Base & {
 
 type DataItem_Date = DataItem_Base & {
   type: "date" | "month";
-  validations?: Array<(v: Nullable<string>) => string>;
+  validations?: readonly ((v: Nullable<string>) => string)[];
   min?: string;
   max?: string;
   rangePair?: {
@@ -45,7 +45,7 @@ type DataItem_Date = DataItem_Base & {
 
 type DataItem_Array = DataItem_Base & {
   type: "array";
-  validations?: Array<(v: Nullable<Array<any>>) => string>;
+  validations?: readonly ((v: Nullable<Array<any>>) => string)[];
   items: DataItem | Array<DataItem>;
   length?: number;
   minLength?: number;
@@ -53,3 +53,14 @@ type DataItem_Array = DataItem_Base & {
 };
 
 type DataItem = Readonly<DataItem_String | DataItem_Number | DataItem_Boolean | DataItem_Date | DataItem_Array>;
+
+type DataItemStruct<A extends Readonly<Array<DataItem>>> = {
+  [P in A[number]as `${P["name"]}`]: (
+    P["type"] extends "string" ? string :
+    P["type"] extends "number" ? number :
+    P["type"] extends "boolean" ? boolean :
+    P["type"] extends "date" ? Date :
+    P["type"] extends "array" ? Array<any> :
+    any
+  )
+};

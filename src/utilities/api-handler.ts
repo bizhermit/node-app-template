@@ -9,20 +9,21 @@ export type ApiParameters = Partial<Record<ApiMethods, {
   req?: Array<DataItem>;
   res?: any;
 }>>;
-
 type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   req: NextApiRequest;
   res: NextApiResponse;
-  getQuery: <T extends QueryStruct = M extends "get" ? {
-    [P in keyof Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>]:
-    Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>[P] extends Array<any> ? string | Array<string> : string
-  } : QueryStruct, C extends Array<DataItem> | undefined = undefined>(parameterContexts?: C) => C extends null | undefined | void ? T : Exclude<PickApiParameter<Api, U, Exclude<"get", SystemMethods>, "req">, FormData>;
-  getBody: <T = M extends "get" ? null : Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods>, "req">, FormData>>(parameterContexts?: Array<DataItem>) => T;
   getCookies: <T extends QueryStruct = QueryStruct>() => T;
   getSession: () => SessionStruct;
   setStatus: (code: number) => void;
   hasError: () => boolean;
-};
+} & (
+    M extends "get" ? {
+      getQuery: <T extends (Exclude<PickApiParameter<Api, U, "get", "req", QueryStruct>, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<PickApiParameter<Api, U, "get", "req", QueryStruct>, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
+    } : {
+      getQuery: <T extends Readonly<Array<DataItem>> | null | undefined = undefined>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : QueryStruct;
+      getBody: <T extends (Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods | "get">, "req">, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods | "get">, "req">, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
+    }
+  );
 
 type MethodProcess<U extends keyof Api> = {
   preaction?: (context: Context<U, "preaction">) => Promise<void>;
@@ -47,14 +48,14 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
     const context: Context<U, typeof method> = {
       req,
       res,
-      getQuery: (parameterContexts?: Array<DataItem>) => {
-        if (!parameterContexts) return req.query;
+      getQuery: (dataItems?: Readonly<Array<DataItem>>) => {
+        if (!dataItems) return req.query;
         // TODO: convert to params / validaiton from parameterContexts
-        console.log(parameterContexts);
+        console.log(dataItems);
         return req.query as any;
       },
-      getBody: (parameterContexts?: Array<DataItem>) => {
-        if (req.body == null) return undefined;
+      getBody: (dataItems?: Readonly<Array<DataItem>>) => {
+        if (method === "get" || req.body == null) return undefined;
         if (contentType === "multipart/form-data" && typeof req.body === "string") {
           const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
           if (key) {
@@ -87,12 +88,12 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
               body[name] = value;
             });
             // TODO: validation from parameterContexts
-            console.log(parameterContexts);
+            console.log(dataItems);
             return body;
           }
         }
         // TODO: validation from parameterContexts
-        console.log(parameterContexts);
+        console.log(dataItems);
         return req.body;
       },
       getCookies: () => req.cookies as any,
@@ -106,7 +107,7 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
 
     try {
       await methods.preaction?.(context);
-      const data = await handler(context);
+      const data = await handler(context as any);
       // TODO: error(ex. validation) handling, return error code
       await methods.postaction?.(context);
       if (data == null) {

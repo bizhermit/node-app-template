@@ -12,27 +12,18 @@ type AbstractApi = {
   );
 };
 
-type PickApiParameter<A extends AbstractApi, Url extends keyof A, Method extends ApiMethods, Direction extends ApiDirection> = (
+type PickApiParameter<A extends AbstractApi, Url extends keyof A, Method extends ApiMethods, Direction extends ApiDirection, Default = Direction extends "res" ? AnyResponseParameter : AnyRequestParameter> = (
   A[Url] extends Record<Method, any> ? (
     A[Url][Method] extends Record<Direction, any> ?
     A[Url][Method][Direction] : (
-      Direction extends "res" ? A[Url][Method] : AnyRequestParameter
+      Direction extends "res" ? A[Url][Method] : Default
     )
   ) : (
-    Direction extends "res" ? A[Url] : AnyRequestParameter
+    Direction extends "res" ? A[Url] : Default
   )
 );
 
-type ApiPaths = ""
-  | "/fetch"
-  | "/fetch/[id]"
-  ;
-
 type Api = {
-  [P in ApiPaths]: typeof import(`@/src/pages/api/fetch`);
-};
-
-type $Api = {
   "/fetch": {
     get: {
       req: {
@@ -42,7 +33,6 @@ type $Api = {
       res: null;
     };
     post: {
-      req: null;
       res: {
         updated: boolean;
         body: null;
