@@ -97,6 +97,7 @@ const Page: NextPage = () => {
           $preventInputWithinLength
           $charType="h-num"
           $onChange={v => setValue(v)}
+          $error="ex error"
         />
         <TextBox
           $tag="bind"

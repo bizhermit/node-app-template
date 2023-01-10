@@ -39,6 +39,7 @@ export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
   $preventFormBind?: boolean;
+  $error?: string;
 };
 
 type FormContextProps = {
@@ -46,8 +47,10 @@ type FormContextProps = {
   disabled?: boolean;
   readOnly?: boolean;
   errors: Struct;
-  hasError: boolean;
   setErrors: Dispatch<SetStateAction<Struct>>;
+  exErrors: Struct;
+  setExErrors: Dispatch<SetStateAction<Struct>>;
+  hasError: boolean;
   mount: (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => string;
   unmount: (name: string) => void;
   validation: () => void;
@@ -60,8 +63,10 @@ export const FormContext = createContext<FormContextProps>({
   disabled: false,
   readOnly: false,
   errors: {},
-  hasError: false,
   setErrors: () => { },
+  exErrors: {},
+  setExErrors: () => { },
+  hasError: false,
   mount: () => "",
   unmount: () => { },
   validation: () => { },
@@ -107,6 +112,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   }, false);
   const items = useRef<Struct<FormItemMountProps & { props: FormItemProps; options: UseFormOptions; }>>({});
   const [errors, setErrors] = useState<Struct>({});
+  const [exErrors, setExErrors] = useState<Struct>({});
 
   const mount = (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
     const id = itemProps.id ?? StringUtils.generateUuidV4();
@@ -119,8 +125,9 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   };
 
   const hasError = useMemo(() => {
-    return Object.keys(errors).find(key => Boolean(errors[key])) != null;
-  }, [errors]);
+    return Object.keys(errors).find(key => Boolean(errors[key])) != null
+      || Object.keys(exErrors).find(key => Boolean(exErrors[key])) != null;
+  }, [errors, exErrors]);
 
   const validation = () => {
     Object.keys(items.current).forEach(id => {
@@ -226,8 +233,10 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       disabled: props.$disabled || disabled,
       readOnly: props.$readOnly,
       errors,
-      hasError,
       setErrors,
+      exErrors,
+      setExErrors,
+      hasError,
       mount,
       unmount,
       validation,
@@ -345,6 +354,17 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     }
   }, [validations, props?.$preventFormBind]);
 
+  useEffect(() => {
+    const name = props?.name;
+    if (name) {
+      ctx.setExErrors(cur => {
+        const ret = { ...cur };
+        ret[name] = props?.$error;
+        return ret;
+      });
+    }
+  }, [props?.$error]);
+
   const change = useCallback((value: Nullable<T>, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
     const before = valueRef.current;
@@ -432,7 +452,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     value,
     validation,
     hasValidator: validations.length > 0,
-    error,
+    error: error || props?.$error,
     setError,
     effect: options?.effect,
     messageDisplayMode: props?.$messagePosition ?? ctx.messageDisplayMode,
@@ -504,7 +524,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
           value={convertHiddenValue(props.$$form.value)}
         />
       }
-      {props.$$form.hasValidator && props.$$form.editable ?
+      {(props.$$form.hasValidator || ("$error" in props)) && props.$$form.editable ?
         (props.$$form.messageDisplayMode.startsWith("bottom") ?
           <>
             <div {...attrs}>
