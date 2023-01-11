@@ -49,7 +49,7 @@ const Page: NextPage = () => {
         $appearance={appearance}
         $color="main"
       />
-      <section>
+      {/* <section>
         <h2>color</h2>
         {colors.map(color => {
           return (
@@ -65,7 +65,7 @@ const Page: NextPage = () => {
             </div>
           );
         })}
-      </section>
+      </section> */}
     </div>
   );
 };
