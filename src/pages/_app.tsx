@@ -16,7 +16,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
       <IconContext.Provider value={{ className: "icon", size: "0" }}>
-        <LoadingProvider>
+        <LoadingProvider $appearance="circle">
           <NavigationContainer
             className="w-100 h-100"
             // $navigationMode="manual"

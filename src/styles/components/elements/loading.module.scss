@@ -8,6 +8,7 @@ $circleWidth: 1.2rem;
   position: absolute;
   z-index: 999;
   overflow: hidden;
+  outline: none;
 
   &[data-appearance="bar"] {
     top: 0;
@@ -26,6 +27,49 @@ $circleWidth: 1.2rem;
   &[data-fixed="true"] {
     position: fixed;
     z-index: 99999;
+  }
+}
+
+.mask1,
+.mask2 {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 997;
+  top: 0 !important;
+  left: 0 !important;
+  background: var(--c-mask);
+  height: 100% !important;
+  width: 100% !important;
+  outline: none;
+
+  &[data-fixed="true"] {
+    position: fixed;
+    z-index: 99997;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+}
+
+.mask2 {
+  background: transparent !important;
+  z-index: 0 !important;
+}
+
+.content {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  z-index: 998;
+  overflow: hidden;
+
+  &[data-fixed="true"] {
+    position: fixed;
+    z-index: 99998;
+    width: 100vw !important;
+    height: 100vh !important;
   }
 }
 
@@ -109,9 +153,11 @@ $circleWidth: 1.2rem;
     height: 100%;
     width: 100%;
   }
+
   &::before {
     opacity: 0.25;
   }
+
   &::after {
     border-left-color: transparent !important;
     border-right-color: transparent !important;
@@ -123,9 +169,11 @@ $circleWidth: 1.2rem;
   0% {
     transform: rotate(0deg);
   }
+
   70% {
     transform: rotate(720deg);
   }
+
   100% {
     transform: rotate(1080deg);
   }

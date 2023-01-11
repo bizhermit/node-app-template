@@ -2,13 +2,13 @@ import Button from "@/components/elements/button";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import Loading, { ScreenLoading, useLoading } from "@/components/elements/loading";
 import Row from "@/components/elements/row";
-import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
   const loading = useLoading();
   const [appearance, setAppearance] = useState<"bar" | "circle">("bar");
+  const [show, setShow] = useState(false);
 
   return (
     <div className="flex-stretch w-100 p-1">
@@ -25,7 +25,7 @@ const Page: NextPage = () => {
         />
       </section>
       <section>
-        <h2>position</h2>
+        <h2>provider</h2>
         {/* <ScreenLoadingBar /> */}
         <Row className="gap-1">
           <Button
@@ -45,10 +45,19 @@ const Page: NextPage = () => {
           <span>{loading.loading}</span>
         </Row>
       </section>
-      <Loading
-        $appearance={appearance}
-        $color="main"
-      />
+      <section>
+        <h2>show mask loading</h2>
+        <Button $onClick={() => setShow(true)}>show</Button>
+        {show &&
+          <Loading
+            $appearance={appearance}
+            $color="main"
+            $mask
+          >
+            <Button $onClick={() => setShow(false)}>hide</Button>
+          </Loading>
+        }
+      </section>
       {/* <section>
         <h2>color</h2>
         {colors.map(color => {
