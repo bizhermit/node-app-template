@@ -12,12 +12,11 @@ export type LoadingProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> 
   $color?: Color;
   $reverseColor?: boolean;
   $fixed?: boolean;
-  $mask?: boolean;
   $appearance?: LoadingAppearance;
 };
 
 const Loading = React.forwardRef<HTMLDivElement, LoadingProps>((props, ref) => {
-  const appearance = props.$appearance || "circle";
+  const appearance = props.$appearance || "bar";
 
   return (
     <div

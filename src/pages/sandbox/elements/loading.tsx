@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const Page: NextPage = () => {
   const loading = useLoading();
-  const [appearance, setAppearance] = useState<"bar" | "circle">("circle");
+  const [appearance, setAppearance] = useState<"bar" | "circle">("bar");
 
   return (
     <div className="flex-stretch w-100 p-1">
