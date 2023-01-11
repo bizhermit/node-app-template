@@ -1,15 +1,27 @@
 $bar1Width: 25%;
 $bar2Width: 15%;
+$circleSize: 12rem;
+$circleWidth: 1.2rem;
 
 .wrap {
   box-sizing: border-box;
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 0.5rem;
-  width: 100%;
   z-index: 999;
   overflow: hidden;
+
+  &[data-appearance="bar"] {
+    top: 0;
+    left: 0;
+    height: 0.5rem;
+    width: 100%;
+  }
+
+  &[data-appearance="circle"] {
+    top: calc(50% - #{$circleSize / 2});
+    left: calc(50% - #{$circleSize / 2});
+    height: #{$circleSize};
+    width: #{$circleSize};
+  }
 
   &[data-fixed="true"] {
     position: fixed;
@@ -74,5 +86,47 @@ $bar2Width: 15%;
 
   100% {
     left: #{$bar2Width + 100%};
+  }
+}
+
+.circle {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  border-color: inherit;
+
+  &::before,
+  &::after {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    border-radius: 9999px;
+    border-width: #{$circleWidth};
+    border-style: solid;
+    border-color: inherit;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+  &::before {
+    opacity: 0.25;
+  }
+  &::after {
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+    animation: circle 4s ease-in-out 0s infinite normal;
+  }
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(720deg);
+  }
+  100% {
+    transform: rotate(1080deg);
   }
 }

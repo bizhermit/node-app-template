@@ -5,21 +5,33 @@ import usePortalElement from "@/hooks/portal-element";
 import { createPortal } from "react-dom";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
+export type LoadingAppearance = "bar" | "circle";
+
 type OmitAttributes = "color" | "children";
 export type LoadingProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $color?: Color;
   $reverseColor?: boolean;
   $fixed?: boolean;
+  $mask?: boolean;
+  $appearance?: LoadingAppearance;
 };
 
 const Loading = React.forwardRef<HTMLDivElement, LoadingProps>((props, ref) => {
+  const appearance = props.$appearance || "circle";
+
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
       ref={ref}
       data-fixed={props.$fixed}
+      data-appearance={appearance}
     >
-      <div className={`${Style.bar} bgc-${props.$color || "main"}${props.$reverseColor ? "_r" : ""}`} />
+      {appearance === "bar" &&
+        <div className={`${Style.bar} bgc-${props.$color || "main"}${props.$reverseColor ? "_r" : ""}`} />
+      }
+      {appearance === "circle" &&
+        <div className={`${Style.circle} bdc-${props.$color || "main"}${props.$reverseColor ? "_r" : ""}`} />
+      }
     </div>
   );
 });
@@ -37,21 +49,21 @@ export const ScreenLoading = React.forwardRef<HTMLDivElement, LoadingProps>((pro
   return createPortal(<Loading {...props} ref={ref} $fixed />, portal);
 });
 
-type LoadingBarContextProps = {
+type LoadingContextProps = {
   show: (id: string) => void;
   hide: (id: string) => void;
   hideAbsolute: () => void;
   showed: boolean;
 };
 
-const LoadingContext = createContext<LoadingBarContextProps>({
+const LoadingContext = createContext<LoadingContextProps>({
   show: () => { },
   hide: () => { },
   hideAbsolute: () => { },
   showed: false,
 });
 
-export const useLoadingBar = () => {
+export const useLoading = () => {
   const ctx = useContext(LoadingContext);
   const id = useRef(StringUtils.generateUuidV4());
 
@@ -73,7 +85,7 @@ export const useLoadingBar = () => {
     };
   }, []);
 
-  return { show, hide, showed: ctx.showed };
+  return { show, hide, loading: ctx.showed };
 };
 
 export const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = (props) => {
