@@ -168,6 +168,12 @@ export const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = (pr
     });
   }, []);
 
+  const loadingProps = (() => {
+    const p = {...props};
+    delete p.children;
+    return p;
+  })();
+
   return (
     <LoadingContext.Provider
       value={{
@@ -177,7 +183,7 @@ export const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = (pr
         showed: ids.length > 0,
       }}
     >
-      {ids.length > 0 && <Loading {...props} />}
+      {ids.length > 0 && <Loading {...loadingProps} />}
       {props.children}
     </LoadingContext.Provider>
   );
