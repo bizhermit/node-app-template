@@ -1,5 +1,5 @@
 import Button from "@/components/elements/button";
-import LoadingBar, { ScreenLoadingBar, useLoadingBar } from "@/components/elements/loading-bar";
+import Loading, { ScreenLoading, useLoadingBar } from "@/components/elements/loading";
 import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
@@ -37,11 +37,11 @@ const Page: NextPage = () => {
           return (
             <div key={color}>
               <Row className="p-1 mt-1">
-                <LoadingBar $color={color} />
+                <Loading $color={color} />
                 <span>{color}</span>
               </Row>
               <Row className={`p-1 c-${color}`}>
-                <LoadingBar $color={color} $reverseColor />
+                <Loading $color={color} $reverseColor />
                 <span>{color} reverse</span>
               </Row>
             </div>

@@ -1,18 +1,18 @@
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { createContext, FC, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
-import Style from "$/components/elements/loading-bar.module.scss";
+import Style from "$/components/elements/loading.module.scss";
 import usePortalElement from "@/hooks/portal-element";
 import { createPortal } from "react-dom";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 type OmitAttributes = "color" | "children";
-export type LoadingBarProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+export type LoadingProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $color?: Color;
   $reverseColor?: boolean;
   $fixed?: boolean;
 };
 
-const LoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>((props, ref) => {
+const Loading = React.forwardRef<HTMLDivElement, LoadingProps>((props, ref) => {
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
@@ -24,9 +24,9 @@ const LoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>((props, ref
   );
 });
 
-export default LoadingBar;
+export default Loading;
 
-export const ScreenLoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps>((props, ref) => {
+export const ScreenLoading = React.forwardRef<HTMLDivElement, LoadingProps>((props, ref) => {
   const portal = usePortalElement({
     mount: (elem) => {
       elem.classList.add(Style.root);
@@ -34,7 +34,7 @@ export const ScreenLoadingBar = React.forwardRef<HTMLDivElement, LoadingBarProps
   });
 
   if (portal == null) return <></>;
-  return createPortal(<LoadingBar {...props} ref={ref} $fixed />, portal);
+  return createPortal(<Loading {...props} ref={ref} $fixed />, portal);
 });
 
 type LoadingBarContextProps = {
@@ -44,7 +44,7 @@ type LoadingBarContextProps = {
   showed: boolean;
 };
 
-const LoadingBarContext = createContext<LoadingBarContextProps>({
+const LoadingContext = createContext<LoadingBarContextProps>({
   show: () => { },
   hide: () => { },
   hideAbsolute: () => { },
@@ -52,7 +52,7 @@ const LoadingBarContext = createContext<LoadingBarContextProps>({
 });
 
 export const useLoadingBar = () => {
-  const ctx = useContext(LoadingBarContext);
+  const ctx = useContext(LoadingContext);
   const id = useRef(StringUtils.generateUuidV4());
 
   const show = () => {
@@ -76,7 +76,7 @@ export const useLoadingBar = () => {
   return { show, hide, showed: ctx.showed };
 };
 
-export const LoadingBarProvider: FC<{ children?: ReactNode; } & LoadingBarProps> = (props) => {
+export const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = (props) => {
   const [ids, setIds] = useState<Array<string>>([]);
 
   const show = useCallback((id: string) => {
@@ -103,7 +103,7 @@ export const LoadingBarProvider: FC<{ children?: ReactNode; } & LoadingBarProps>
   }, []);
 
   return (
-    <LoadingBarContext.Provider
+    <LoadingContext.Provider
       value={{
         show,
         hide,
@@ -111,8 +111,8 @@ export const LoadingBarProvider: FC<{ children?: ReactNode; } & LoadingBarProps>
         showed: ids.length > 0,
       }}
     >
-      {ids.length > 0 && <LoadingBar {...props} />}
+      {ids.length > 0 && <Loading {...props} />}
       {props.children}
-    </LoadingBarContext.Provider>
+    </LoadingContext.Provider>
   );
 };
