@@ -95,6 +95,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
   $messageWrap?: boolean;
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+  $onError?: (error: Struct) => void;
 } & (PlainFormProps | BindFormProps);
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
@@ -237,6 +238,22 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (props.$onError) {
+      const e = { ...errors };
+      Object.keys(e).forEach(id => {
+        if (e[id]) return;
+        delete e[id];
+      });
+      const exE = { ...exErrors };
+      Object.keys(exE).forEach(id => {
+        if (exE[id]) return;
+        delete exE[id];
+      });
+      props.$onError({ ...exE, ...e });
+    }
+  }, [errors, exErrors]);
 
   return (
     <FormContext.Provider value={{
