@@ -51,7 +51,7 @@ type FormContextProps = {
   exErrors: Struct;
   setExErrors: Dispatch<SetStateAction<Struct>>;
   hasError: boolean;
-  mount: (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => string;
+  mount: (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => string;
   unmount: (name: string) => void;
   validation: () => void;
   messageDisplayMode: FormItemMessageDisplayMode;
@@ -95,6 +95,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
   $messageWrap?: boolean;
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+  $onError?: (error: Struct) => void;
 } & (PlainFormProps | BindFormProps);
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
@@ -114,14 +115,25 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const [errors, setErrors] = useState<Struct>({});
   const [exErrors, setExErrors] = useState<Struct>({});
 
-  const mount = (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
-    const id = itemProps.id ?? StringUtils.generateUuidV4();
+  const mount = (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
     items.current[id] = { ...mountItemProps, props: itemProps, options, };
     return id;
   };
 
   const unmount = (id: string) => {
     delete items.current[id];
+    setErrors(cur => {
+      if (!(id in cur)) return cur;
+      const ret = { ...cur };
+      delete ret[id];
+      return ret;
+    });
+    setExErrors(cur => {
+      if (!(id in cur)) return cur;
+      const ret = { ...cur };
+      delete ret[id];
+      return ret;
+    });
   };
 
   const hasError = useMemo(() => {
@@ -227,6 +239,22 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     }
   };
 
+  useEffect(() => {
+    if (props.$onError) {
+      const e = { ...errors };
+      Object.keys(e).forEach(id => {
+        if (e[id]) return;
+        delete e[id];
+      });
+      const exE = { ...exErrors };
+      Object.keys(exE).forEach(id => {
+        if (exE[id]) return;
+        delete exE[id];
+      });
+      props.$onError({ ...exE, ...e });
+    }
+  }, [errors, exErrors]);
+
   return (
     <FormContext.Provider value={{
       bind,
@@ -280,6 +308,7 @@ export const equals = (v1: unknown, v2: unknown) => {
 
 export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: UseFormOptions<T, U>) => {
   const ctx = useContext(FormContext);
+  const id = useRef(StringUtils.generateUuidV4());
   const [error, setError] = useState("");
   const valueRef = useRef<Nullable<T>>((() => {
     if (props == null) return undefined;
@@ -344,22 +373,34 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     }
     const msg = msgs[0] || "";
     setError(msg);
-    const name = props?.name;
-    if (name) {
+    if (props?.name) {
       ctx.setErrors(cur => {
+        if (msg) {
+          return {
+            ...cur,
+            [id.current]: msg,
+          };
+        }
+        if (!(id.current in cur)) return cur;
         const ret = { ...cur };
-        ret[name] = msg;
+        delete ret[id.current];
         return ret;
       });
     }
   }, [validations, props?.$preventFormBind]);
 
   useEffect(() => {
-    const name = props?.name;
-    if (name) {
+    if (props?.name) {
       ctx.setExErrors(cur => {
+        if (props?.$error) {
+          return {
+            ...cur,
+            [id.current]: props.$error,
+          };
+        }
+        if (!(id.current in cur)) return cur;
         const ret = { ...cur };
-        ret[name] = props?.$error;
+        delete ret[id.current];
         return ret;
       });
     }
@@ -421,12 +462,12 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     if (props) {
-      const id = ctx.mount(props, {
+      ctx.mount(id.current, props, {
         validation,
         change,
       }, options ?? { effect: () => { } });
       return () => {
-        ctx.unmount(id);
+        ctx.unmount(id.current);
       };
     }
   }, [validation, change]);
