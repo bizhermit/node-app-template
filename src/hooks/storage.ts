@@ -37,8 +37,7 @@ export const useSessionState = <S = undefined>(key: string, initialState: S | ((
   const set = (v: S | ((current: S) => S)) => {
     let l = loaded;
     setLoaded(cur => {
-      l = cur;
-      return cur;
+      return l = cur;
     });
     if (!l) return false;
     setImpl(cur => {
@@ -109,8 +108,7 @@ export const useLocalState = <S = undefined>(key: string, initialState: S | (() 
   const set = (v: S | ((current: S) => S)) => {
     let l = loaded;
     setLoaded(cur => {
-      l = cur;
-      return cur;
+      return l = cur;
     });
     if (!l) return false;
     setImpl(cur => {

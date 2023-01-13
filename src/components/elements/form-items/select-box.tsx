@@ -312,16 +312,16 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
               const emptyValue = bindSource[0]?.[vdn];
               if (emptyValue != null && emptyValue !== "") {
                 if (typeof props.$emptyItem === "boolean") {
-                  const emptyItem: Struct = {};
-                  emptyItem[vdn] = undefined;
-                  emptyItem[ldn] = "";
-                  bindSource.unshift(emptyItem);
+                  bindSource.unshift({
+                    [vdn]: undefined,
+                    [ldn]: "",
+                  });
                 } else {
                   if (emptyValue !== props.$emptyItem.value) {
-                    const emptyItem: Struct = {};
-                    emptyItem[vdn] = props.$emptyItem.value;
-                    emptyItem[ldn] = props.$emptyItem.label;
-                    bindSource.unshift(emptyItem);
+                    bindSource.unshift({
+                      [vdn]: props.$emptyItem.value,
+                      [ldn]: props.$emptyItem.label,
+                    });
                   }
                 }
               }
