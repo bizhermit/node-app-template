@@ -376,6 +376,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     if (props?.name) {
       ctx.setErrors(cur => {
         if (msg) {
+          if (cur[id.current] === msg) return cur;
           return {
             ...cur,
             [id.current]: msg,
