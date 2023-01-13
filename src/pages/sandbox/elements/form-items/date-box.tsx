@@ -145,7 +145,7 @@ const Page: NextPage = () => {
             $rangePair={{
               name: "date-box-form-bind-pair",
               position: "after",
-              disallowSame: false,
+              disallowSame: true,
             }}
           />
           <span className="h-size pt-t flex-center">～</span>
@@ -157,7 +157,7 @@ const Page: NextPage = () => {
             $rangePair={{
               name: "date-box-form-bind",
               position: "before",
-              disallowSame: false,
+              disallowSame: true,
             }}
           />
         </Row>

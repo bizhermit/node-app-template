@@ -12,56 +12,36 @@ import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeVali
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
-export type DatePickerCommonProps = DateInputPorps & {
+export type DatePickerBaseProps<T> = FormItemProps<T> & DateInputPorps & {
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
   $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
+  $onClickPositive?: (value: Nullable<T>) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
   $negativeText?: ReactNode;
   $skipValidation?: boolean;
 };
 
-type DatePickerStringProps =
-  (FormItemProps<string> & {
-    $typeof?: "string";
-    $multiple?: false;
-    $onClickPositive?: (value: Nullable<string>) => void;
-  }) |
-  (FormItemProps<Array<string>> & {
-    $typeof?: "string";
-    $multiple: true;
-    $onClickPositive?: (value: Array<Nullable<string>>) => void;
-  });
+export type DatePickerProps_TypeString_Single = DatePickerBaseProps<string>;
+export type DatePickerProps_TypeString_Multiple = DatePickerBaseProps<Array<string>>;
+export type DatePickerProps_TypeString = (DatePickerProps_TypeString_Single & { $multiple?: false; })
+  | (DatePickerProps_TypeString_Multiple & { $multiple: true; });
 
-type DatePickerNumberProps =
-  (FormItemProps<number> & {
-    $typeof: "number";
-    $multiple?: false;
-    $onClickPositive?: (value: Nullable<number>) => void;
-  }) |
-  (FormItemProps<Array<number>> & {
-    $typeof: "number";
-    $multiple: true;
-    $onClickPositive?: (value: Array<Nullable<number>>) => void;
-  });
+export type DatePickerProps_TypeNumber_Single = DatePickerBaseProps<number>;
+export type DatePickerProps_TypeNumber_Multiple = DatePickerBaseProps<Array<number>>;
+export type DatePickerProps_TypeNumber = (DatePickerProps_TypeNumber_Single & { $multiple?: false; })
+  | (DatePickerProps_TypeNumber_Multiple & { $multiple: true; });
 
-type DatePickerDateProps =
-  (FormItemProps<Date> & {
-    $typeof: "date";
-    $multiple?: false;
-    $onClickPositive?: (value: Nullable<Date>) => void;
-  }) |
-  (FormItemProps<Array<Date>> & {
-    $typeof: "date";
-    $multiple: true;
-    $onClickPositive?: (value: Array<Nullable<Date>>) => void;
-  });
+export type DatePickerProps_TypeDate_Single = DatePickerBaseProps<Date>;
+export type DatePickerProps_TypeDate_Multiple = DatePickerBaseProps<Array<Date>>;
+export type DatePickerProps_TypeDate = (DatePickerProps_TypeDate_Single & { $multiple?: false; })
+  | (DatePickerProps_TypeDate_Multiple & { $multiple: true; });
 
-export type DatePickerProps =
-  (DatePickerStringProps | DatePickerNumberProps | DatePickerDateProps)
-  & DatePickerCommonProps;
+export type DatePickerProps = (DatePickerProps_TypeString & { $typeof?: "string" })
+  | (DatePickerProps_TypeNumber & { $typeof: "number" })
+  | (DatePickerProps_TypeDate & { $typeof: "date" });
 
 const today = new Date();
 const threshold = 2;
@@ -749,9 +729,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           </div>
         }
       </div>
-      <div
-        className={Style.buttons}
-      >
+      <div className={Style.buttons}>
         {form.editable &&
           <>
             <div

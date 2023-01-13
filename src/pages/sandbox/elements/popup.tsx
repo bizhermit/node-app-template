@@ -1,8 +1,11 @@
 import Button from "@/components/elements/button";
 import Form from "@/components/elements/form";
+import DateBox from "@/components/elements/form-items/date-box";
+import SelectBox from "@/components/elements/form-items/select-box";
 import TextBox from "@/components/elements/form-items/text-box";
 import Popup from "@/components/elements/popup";
 import Row from "@/components/elements/row";
+import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { FC, useRef, useState } from "react";
 
@@ -43,9 +46,24 @@ const Component: FC = () => {
         // $animationDirection="vertical"
       >
         <div className="flex-start c-pure">
-          <Form className="flex-stretch p-1 gap-1 border">
-            <TextBox style={{ width: 300 }} />
-            <TextBox style={{ width: 300 }} />
+          <Form
+            className="flex-start p-1 gap-1 border"
+            action="/api/form"
+            method="get"
+          >
+            <TextBox name="text" style={{ width: 300 }} />
+            <SelectBox
+              name="select"
+              $source={ArrayUtils.generateArray(10, (idx) => {
+                return {
+                  value: idx,
+                  label: `item${idx}`,
+                };
+              })}
+            />
+            <DateBox
+              name="date"
+            />
             <Row $hAlign="center" className="gap-1 w-100">
               <Button type="submit">submit</Button>
               <Button

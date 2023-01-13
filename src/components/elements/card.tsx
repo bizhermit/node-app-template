@@ -8,7 +8,8 @@ import Resizer from "@/components/elements/resizer";
 
 type ReactNodeArray = Array<ReactNode>;
 type IconPosition = "start" | "end" | "both" | "none";
-export type CardProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color" | "children";
+export type CardProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $color?: Color;
   $headerAlign?: "start" | "center" | "end";
   $footerAlign?: "start" | "center" | "end";

@@ -11,7 +11,7 @@ export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<
   children?: ReactNode;
 };
 
-interface CheckBoxFC extends FunctionComponent {
+interface CheckBoxFC extends FunctionComponent<CheckBoxProps> {
   <T extends string | number | boolean = boolean>(attrs: CheckBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 

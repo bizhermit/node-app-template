@@ -10,7 +10,7 @@ export type ToggleBoxProps<T extends string | number | boolean = boolean> = Omit
   children?: ReactNode;
 };
 
-interface ToggleBoxFC extends FunctionComponent {
+interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
   <T extends string | number | boolean = boolean>(attrs: ToggleBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 

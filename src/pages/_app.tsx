@@ -9,14 +9,14 @@ import Menu from "@/components/elements/menu";
 import { AiOutlineCodeSandbox } from "react-icons/ai";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbComponents } from "react-icons/tb";
-import { LoadingBarProvider } from "@/components/elements/loading-bar";
+import { LoadingProvider } from "@/components/elements/loading";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
       <IconContext.Provider value={{ className: "icon", size: "0" }}>
-        <LoadingBarProvider>
+        <LoadingProvider $appearance="circle">
           <NavigationContainer
             className="w-100 h-100"
             // $navigationMode="manual"
@@ -124,6 +124,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                         label: "SelectBox",
                         icon: "S",
                         pathname: "/sandbox/elements/form-items/select-box",
+                      }, {
+                        key: "time-picker",
+                        label: "TimePicker",
+                        icon: "TP",
+                        pathname: "/sandbox/elements/form-items/time-picker",
+                      }, {
+                        key: "time-box",
+                        label: "TimeBox",
+                        icon: "TB",
+                        pathname: "/sandbox/elements/form-items/time-box",
                       }]
                     }, {
                       key: "container",
@@ -156,10 +166,10 @@ const App = ({ Component, pageProps }: AppProps) => {
                       icon: "L",
                       pathname: "/sandbox/elements/link",
                     }, {
-                      key: "loading-bar",
-                      label: "LoadingBar",
+                      key: "loading",
+                      label: "Loading",
                       icon: "L",
-                      pathname: "/sandbox/elements/loading-bar",
+                      pathname: "/sandbox/elements/loading",
                     }, {
                       key: "divider",
                       label: "Divider",
@@ -223,7 +233,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Component {...pageProps} />
             <div>foot</div>
           </NavigationContainer>
-        </LoadingBarProvider>
+        </LoadingProvider>
       </IconContext.Provider>
     </LayoutProvider>
   );

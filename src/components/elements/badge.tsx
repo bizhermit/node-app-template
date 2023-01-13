@@ -1,12 +1,12 @@
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import React, { HTMLAttributes, ReactNode } from "react";
+import React, { HTMLAttributes } from "react";
 import Style from "$/components/elements/badge.module.scss";
 import LabelText from "@/components/elements/label-text";
 
-export type BadgeProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color";
+export type BadgeProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $position?: "left-top" | "right-top" | "left-bottom" | "right-bottom";
   $size?: Size;
-  children?: ReactNode;
 };
 
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>((props, ref) => {

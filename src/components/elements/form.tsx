@@ -8,13 +8,6 @@ export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, ind
 
 export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide";
 
-type InputOmitProps = "name"
-  | "defaultValue"
-  | "defaultChecked"
-  | "color"
-  | "onChange"
-  | "children";
-
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
   if ("name" in ret) delete ret.name;
@@ -23,6 +16,12 @@ const inputAttributes = (props: Struct, ...classNames: Array<string | null | und
   return ret;
 };
 
+type InputOmitProps = "name"
+  | "defaultValue"
+  | "defaultChecked"
+  | "color"
+  | "onChange"
+  | "children";
 export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;
@@ -39,6 +38,8 @@ export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
+  $preventFormBind?: boolean;
+  $error?: string;
 };
 
 type FormContextProps = {
@@ -46,9 +47,11 @@ type FormContextProps = {
   disabled?: boolean;
   readOnly?: boolean;
   errors: Struct;
-  hasError: boolean;
   setErrors: Dispatch<SetStateAction<Struct>>;
-  mount: (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => string;
+  exErrors: Struct;
+  setExErrors: Dispatch<SetStateAction<Struct>>;
+  hasError: boolean;
+  mount: (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => string;
   unmount: (name: string) => void;
   validation: () => void;
   messageDisplayMode: FormItemMessageDisplayMode;
@@ -60,8 +63,10 @@ export const FormContext = createContext<FormContextProps>({
   disabled: false,
   readOnly: false,
   errors: {},
-  hasError: false,
   setErrors: () => { },
+  exErrors: {},
+  setExErrors: () => { },
+  hasError: false,
   mount: () => "",
   unmount: () => { },
   validation: () => { },
@@ -73,20 +78,34 @@ type FormItemMountProps = {
   change: (value: Nullable<any>, absolute?: boolean) => void;
 };
 
+type PlainFormProps = {
+  $bind?: undefined | null | false;
+  $onSubmit?: (((data: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+};
+
+type BindFormProps = {
+  $bind: Struct | true;
+  $onSubmit?: (((data: Struct, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+};
+
 export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
-  $bind?: Struct;
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onSubmit?: (((formData: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
-};
+  $onError?: (error: Struct) => void;
+} & (PlainFormProps | BindFormProps);
 
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
+
+  const bind = useMemo(() => {
+    if (!props.$bind || props.$bind === true) return {};
+    return props.$bind;
+  }, [props.$bind]);
 
   const disabledRef = useRef(false);
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
@@ -94,24 +113,37 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   }, false);
   const items = useRef<Struct<FormItemMountProps & { props: FormItemProps; options: UseFormOptions; }>>({});
   const [errors, setErrors] = useState<Struct>({});
+  const [exErrors, setExErrors] = useState<Struct>({});
 
-  const mount = (itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
-    const name = itemProps.name ?? StringUtils.generateUuidV4();
-    items.current[name] = { ...mountItemProps, props: itemProps, options, };
-    return name;
+  const mount = (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
+    items.current[id] = { ...mountItemProps, props: itemProps, options, };
+    return id;
   };
 
-  const unmount = (name: string) => {
-    delete items.current[name];
+  const unmount = (id: string) => {
+    delete items.current[id];
+    setErrors(cur => {
+      if (!(id in cur)) return cur;
+      const ret = { ...cur };
+      delete ret[id];
+      return ret;
+    });
+    setExErrors(cur => {
+      if (!(id in cur)) return cur;
+      const ret = { ...cur };
+      delete ret[id];
+      return ret;
+    });
   };
 
   const hasError = useMemo(() => {
-    return Object.keys(errors).find(key => Boolean(errors[key])) != null;
-  }, [errors]);
+    return Object.keys(errors).find(key => Boolean(errors[key])) != null
+      || Object.keys(exErrors).find(key => Boolean(exErrors[key])) != null;
+  }, [errors, exErrors]);
 
   const validation = () => {
-    Object.keys(items.current).forEach(name => {
-      items.current[name]?.validation();
+    Object.keys(items.current).forEach(id => {
+      items.current[id]?.validation();
     });
   };
 
@@ -125,8 +157,8 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     } else {
       const hasMultipartFormData = (() => {
         if (props.encType) return false;
-        const item = Object.keys(items.current).find(name => {
-          return items.current[name].options?.multipartFormData === true;
+        const item = Object.keys(items.current).find(id => {
+          return items.current[id].options?.multipartFormData === true;
         });
         return item != null;
       })();
@@ -148,7 +180,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       setDisabled(false);
       return;
     }
-    const ret = props.$onSubmit(new FormData(e.currentTarget), e);
+    const ret = props.$onSubmit((!props.$bind ? new FormData(e.currentTarget) : bind) as any, e);
     if (ret == null || typeof ret === "boolean") {
       if (ret !== true) {
         e.preventDefault();
@@ -166,8 +198,8 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
 
   const resetItems = () => {
     setTimeout(() => {
-      Object.keys(items.current).forEach(name => {
-        const item = items.current[name];
+      Object.keys(items.current).forEach(id => {
+        const item = items.current[id];
         item.options.effect?.(item.props.$defaultValue);
         item.change(item.props.$defaultValue);
       });
@@ -207,14 +239,32 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     }
   };
 
+  useEffect(() => {
+    if (props.$onError) {
+      const e = { ...errors };
+      Object.keys(e).forEach(id => {
+        if (e[id]) return;
+        delete e[id];
+      });
+      const exE = { ...exErrors };
+      Object.keys(exE).forEach(id => {
+        if (exE[id]) return;
+        delete exE[id];
+      });
+      props.$onError({ ...exE, ...e });
+    }
+  }, [errors, exErrors]);
+
   return (
     <FormContext.Provider value={{
-      bind: props.$bind,
+      bind,
       disabled: props.$disabled || disabled,
       readOnly: props.$readOnly,
       errors,
-      hasError,
       setErrors,
+      exErrors,
+      setExErrors,
+      hasError,
       mount,
       unmount,
       validation,
@@ -234,6 +284,7 @@ export default Form;
 
 type UseFormOptions<T = any, U = any> = {
   effect?: (value: Nullable<T>) => void;
+  effectDeps?: Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
   validations?: () => Array<FormItemValidation<Nullable<T>>>;
@@ -241,6 +292,7 @@ type UseFormOptions<T = any, U = any> = {
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
+  generateChangeCallbackDataDeps?: Array<any>;
 };
 
 export const formValidationMessages = {
@@ -256,6 +308,7 @@ export const equals = (v1: unknown, v2: unknown) => {
 
 export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: UseFormOptions<T, U>) => {
   const ctx = useContext(FormContext);
+  const id = useRef(StringUtils.generateUuidV4());
   const [error, setError] = useState("");
   const valueRef = useRef<Nullable<T>>((() => {
     if (props == null) return undefined;
@@ -305,26 +358,54 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   const validation = useCallback(() => {
     const value = valueRef.current;
     const msgs: Array<string> = [];
+    const bind = (() => {
+      if (props == null) return {};
+      if ("$bind" in props) return props.$bind;
+      if (!props.$preventFormBind) return ctx.bind;
+      return {};
+    })();
     for (let i = 0, il = validations.length; i < il; i++) {
-      const result = validations[i](value, ctx.bind, i);
-      if (result == null || result === "" || result === false) {
-        continue;
-      }
+      const result = validations[i](value, bind, i);
+      if (result == null || result === "" || result === false) continue;
       if (typeof result === "string") msgs.push(result);
       msgs.push(formValidationMessages.default);
       break;
     }
     const msg = msgs[0] || "";
     setError(msg);
-    const name = props?.name;
-    if (name) {
+    if (props?.name) {
       ctx.setErrors(cur => {
+        if (msg) {
+          if (cur[id.current] === msg) return cur;
+          return {
+            ...cur,
+            [id.current]: msg,
+          };
+        }
+        if (!(id.current in cur)) return cur;
         const ret = { ...cur };
-        ret[name] = msg;
+        delete ret[id.current];
         return ret;
       });
     }
-  }, [validations]);
+  }, [validations, props?.$preventFormBind]);
+
+  useEffect(() => {
+    if (props?.name) {
+      ctx.setExErrors(cur => {
+        if (props?.$error) {
+          return {
+            ...cur,
+            [id.current]: props.$error,
+          };
+        }
+        if (!(id.current in cur)) return cur;
+        const ret = { ...cur };
+        delete ret[id.current];
+        return ret;
+      });
+    }
+  }, [props?.$error]);
 
   const change = useCallback((value: Nullable<T>, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
@@ -332,8 +413,10 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     setValue(value);
     const name = props?.name;
     if (name) {
-      if (ctx.bind) {
-        ctx.bind[name] = value;
+      if (!props.$preventFormBind) {
+        if (ctx.bind) {
+          ctx.bind[name] = value;
+        }
       }
       if (props.$bind) {
         props.$bind[name] = value;
@@ -345,11 +428,11 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       validation();
     }
     props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.$bind, props?.$onChange, validation]);
+  }, [ctx.bind, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps ?? [])]);
 
   useEffect(() => {
     const name = props?.name;
-    if (props == null || name == null || ctx.bind == null || "$bind" in props || "$value" in props) return;
+    if (props == null || name == null || ctx.bind == null || "$bind" in props || "$value" in props || props.$preventFormBind) return;
     const before = valueRef.current;
     setValue(ctx.bind[name]);
     if (!equals(valueRef.current, before)) {
@@ -357,7 +440,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     }
     options?.effect?.(valueRef.current);
     validation();
-  }, [ctx.bind]);
+  }, [ctx.bind, props?.$preventFormBind]);
 
   useEffect(() => {
     const name = props?.name;
@@ -380,20 +463,23 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     if (props) {
-      const name = ctx.mount(props, {
+      ctx.mount(id.current, props, {
         validation,
         change,
       }, options ?? { effect: () => { } });
       return () => {
-        ctx.unmount(name);
+        ctx.unmount(id.current);
       };
     }
   }, [validation, change]);
 
   useEffect(() => {
     options?.effect?.(valueRef.current);
+  }, [...(options?.effectDeps ?? [])]);
+
+  useEffect(() => {
     validation();
-  }, []);
+  }, [validation]);
 
   const disabled = props?.$disabled || ctx.disabled;
   const readOnly = props?.$readOnly || ctx.readOnly;
@@ -408,7 +494,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     value,
     validation,
     hasValidator: validations.length > 0,
-    error,
+    error: error || props?.$error,
     setError,
     effect: options?.effect,
     messageDisplayMode: props?.$messagePosition ?? ctx.messageDisplayMode,
@@ -480,7 +566,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
           value={convertHiddenValue(props.$$form.value)}
         />
       }
-      {props.$$form.hasValidator && props.$$form.editable ?
+      {(props.$$form.hasValidator || ("$error" in props)) && props.$$form.editable ?
         (props.$$form.messageDisplayMode.startsWith("bottom") ?
           <>
             <div {...attrs}>

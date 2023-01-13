@@ -124,6 +124,7 @@
   box-sizing: border-box;
   position: relative;
   display: flex;
+  align-items: center;
 
   &[data-accordion="true"] {
     user-select: none;

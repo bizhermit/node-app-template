@@ -5,7 +5,8 @@ import React, { HTMLAttributes, ReactNode, useImperativeHandle, useRef } from "r
 
 export type StepState = "done" | "current" | "future";
 
-export type StepperProps = HTMLAttributes<HTMLDivElement> & {
+type OmitAttributes = "color" | "children";
+export type StepperProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $step: number;
   $appearance?: "line" | "arrow";
   $color?: {
