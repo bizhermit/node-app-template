@@ -70,7 +70,7 @@ const Page: NextPage = () => {
             <Row>
               <TextBox
                 name="text-box"
-                // $required
+                $required
                 // $defaultValue="fuga"
                 $onChange={(a, b) => {
                   console.log(b, "->", a);
@@ -78,7 +78,7 @@ const Page: NextPage = () => {
               />
               <CheckBox
                 name="check-box"
-              // $required
+              $required
               />
             </Row>
             {/* <div className="flex-start">
