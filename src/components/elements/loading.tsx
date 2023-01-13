@@ -169,7 +169,7 @@ export const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = (pr
   }, []);
 
   const loadingProps = (() => {
-    const p = {...props};
+    const p = { ...props };
     delete p.children;
     return p;
   })();
