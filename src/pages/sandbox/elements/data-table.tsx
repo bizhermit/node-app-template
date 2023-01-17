@@ -21,7 +21,7 @@ const Page: NextPage = () => {
     return cols;
   }, []);
 
-  const [items, setItems] = useState<Array<Data>>([]);
+  const [items, setItems] = useState<Array<Data>>(null!);
 
   const generateItems = (length = 0) => {
     setItems(ArrayUtils.generateArray(length, index => {
@@ -35,6 +35,7 @@ const Page: NextPage = () => {
   return (
     <div className="flex-start w-100 h-100 gap-1 p-1">
       <Row className="gap-1">
+        <Button $fitContent $onClick={() => setItems(null!)}>null</Button>
         <Button $fitContent $onClick={() => generateItems(0)}>0</Button>
         <Button $fitContent $onClick={() => generateItems(1)}>1</Button>
         <Button $fitContent $onClick={() => generateItems(10)}>10</Button>
@@ -45,6 +46,7 @@ const Page: NextPage = () => {
         className="w-100 flex-1"
         $columns={columns}
         $value={items}
+        $emptyText
       />
     </div>
   );

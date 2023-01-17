@@ -1,4 +1,4 @@
-import React, { FunctionComponent, HTMLAttributes, ReactElement } from "react";
+import React, { FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, useEffect, useMemo } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes } from "@/components/utilities/attributes";
 import { NextLinkProps } from "@/components/elements/link";
@@ -8,6 +8,8 @@ import { TextBoxProps } from "@/components/elements/form-items/text-box";
 import { NumberBoxProps } from "@/components/elements/form-items/number-box";
 import { DateBoxProps } from "@/components/elements/form-items/date-box";
 import { RadioButtonsProps } from "@/components/elements/form-items/radio-buttons";
+import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
+import LabelText from "@/components/elements/label-text";
 
 type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn;
@@ -78,23 +80,69 @@ export type DataTableColumn<T extends Struct = Struct> =
   | ({ type: "date" } & DataTableDateColumn<T>)
   | DataTableGroupColumn<T>;
 
+type DataTableSort = {
+  name: string;
+  direction: "asc" | "desc";
+};
+
 type OmitAttributes = "children";
 export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $columns: Array<DataTableColumn>;
-  $value: Array<T>;
+  $value: LoadableArray<T>;
+  $idDataName?: string;
+  $multiSort?: boolean;
+  $sort?: Array<DataTableSort>;
+  $onSort?: (sort: Array<DataTableSort>) => void;
+  $header?: boolean;
+  $emptyText?: boolean | ReactNode;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
   <T extends Struct = Struct>(attrs: DataTableProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
+const DefaultEmptyText: FC = () => {
+  return <LabelText>データが存在しません。</LabelText>;
+};
+
 const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
+  const items = useMemo(() => {
+    return originItems;
+  }, [originItems]);
+
+  const header = useMemo(() => {
+    if (!props.$header) return undefined;
+    return <></>;
+  }, [props.$columns]);
+
+  const body = useMemo(() => {
+    return <></>;
+  }, [items]);
+
+  const isEmpty = useMemo(() => {
+    if (!props.$emptyText || props.$value == null || !Array.isArray(props.$value)) return false;
+    return items.length === 0 || props.$value.length === 0;
+  }, [items, props.$emptyText]);
+
   return (
     <div
       {...attributes(props, Style.wrap)}
       ref={ref}
     >
-      data table
+      {props.$header &&
+        <div className={Style.header}>
+          {header}
+        </div>
+      }
+      {isEmpty ?
+        <div className={Style.empty}>
+          {props.$emptyText === true ? <DefaultEmptyText /> : props.$emptyText}
+        </div> :
+        <div className={Style.body}>
+          {body}
+        </div>
+      }
     </div>
   );
 });
