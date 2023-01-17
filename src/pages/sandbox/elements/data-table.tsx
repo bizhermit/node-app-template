@@ -33,7 +33,7 @@ const Page: NextPage = () => {
   };
 
   return (
-    <div className="flex-start w-100 p-1">
+    <div className="flex-start w-100 h-100 gap-1 p-1">
       <Row className="gap-1">
         <Button $fitContent $onClick={() => generateItems(0)}>0</Button>
         <Button $fitContent $onClick={() => generateItems(1)}>1</Button>
@@ -42,7 +42,7 @@ const Page: NextPage = () => {
         <Button $fitContent $onClick={() => generateItems(100)}>100</Button>
       </Row>
       <DataTable<Data>
-        className="w-100"
+        className="w-100 flex-1"
         $columns={columns}
         $value={items}
       />
