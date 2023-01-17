@@ -12,7 +12,7 @@ type Data = {
 
 const Page: NextPage = () => {
   const columns = useMemo(() => {
-    const cols: Array<DataTableColumn> = [];
+    const cols: Array<DataTableColumn<Data>> = [];
     cols.push(
       {
         name: "col1",

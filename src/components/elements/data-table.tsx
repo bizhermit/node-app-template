@@ -10,6 +10,7 @@ import { DateBoxProps } from "@/components/elements/form-items/date-box";
 import { RadioButtonsProps } from "@/components/elements/form-items/radio-buttons";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn;
@@ -87,7 +88,7 @@ type DataTableSort = {
 
 type OmitAttributes = "children";
 export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $columns: Array<DataTableColumn>;
+  $columns: Array<DataTableColumn<T>>;
   $value: LoadableArray<T>;
   $idDataName?: string;
   $multiSort?: boolean;
@@ -105,6 +106,39 @@ const DefaultEmptyText: FC = () => {
   return <LabelText>データが存在しません。</LabelText>;
 };
 
+const getValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColumn<T>) => {
+  const names = (column.displayName || column.name).split(".");
+  let v: any = data;
+  for (const n of names) {
+    if (v == null) return undefined;
+    try {
+      v = v[n];
+    } catch {
+      return undefined;
+    }
+  }
+  return v;
+};
+
+const setValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColumn<T>, value: any) => {
+  const names = (column.displayName || column.name).split(".");
+  let v: any = data;
+  for (const n of names.slice(0, names.length - 1)) {
+    try {
+      if (v[n] == null) v[n] = {};
+      v = v[n];
+    } catch {
+      return;
+    }
+  }
+  try {
+    v[names[names.length - 1]] = value;
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  }
+};
+
 const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
   const items = useMemo(() => {
@@ -117,8 +151,38 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   }, [props.$columns]);
 
   const body = useMemo(() => {
-    return <></>;
-  }, [items]);
+    const idDn = props.$idDataName ?? "id";
+    const generateCell = (index: number, data: T, column: DataTableColumn<T>) => {
+      if (!column.name) column.name = StringUtils.generateUuidV4();
+      if ("rows" in column) {
+        return (
+          <div
+            key={column.name}
+          >
+            group
+          </div>
+        );
+      }
+      return (
+        <div
+          key={column.name}
+          className={Style.bcell}
+        >
+          {getValue(data, column)}
+        </div>
+      );
+    };
+    return items.map((item, index) => {
+      return (
+        <div
+          key={getValue(item, { name: idDn }) ?? index}
+          className={Style.row}
+        >
+          {props.$columns?.map(col => generateCell(index, item, col))}
+        </div>
+      );
+    });
+  }, [items, props.$columns]);
 
   const isEmpty = useMemo(() => {
     if (!props.$emptyText || props.$value == null || !Array.isArray(props.$value)) return false;
