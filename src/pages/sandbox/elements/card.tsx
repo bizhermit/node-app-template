@@ -46,7 +46,7 @@ const Page: NextPage = () => {
         $footerAlign="end"
         $toggleTriger="h&f"
       >
-        <></>
+        <span className="px-1 py-2">Header</span>
         <Content />
         Footer
       </Card>
@@ -66,7 +66,7 @@ const Page: NextPage = () => {
             footer: "end"
           }}
         >
-          あいうえお
+          <span className="px-2">あいうえお</span>
           <Content />
           ん
         </Card>
