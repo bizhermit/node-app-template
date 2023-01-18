@@ -33,8 +33,7 @@ $borderStyle: 1px solid var(--c-border);
 }
 
 .hrow,
-.brow,
-.crow {
+.brow {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -44,9 +43,7 @@ $borderStyle: 1px solid var(--c-border);
   background: inherit;
   color: inherit;
 
-  +.hrow,
-  +.brow,
-  +.crow {
+  &:not(:first-child) {
     border-top: #{$borderStyle};
   }
 }
@@ -76,9 +73,26 @@ $borderStyle: 1px solid var(--c-border);
   &[data-align="right"] {
     justify-content: right;
   }
+}
 
-  +.bcell,
-  +.hcell {
+.rcell {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+
+  >.hrow,
+  >.brow {
+    flex: 1;
+  }
+}
+
+.hcell,
+.bcell,
+.rcell {
+  &:not(:first-child) {
     border-left: #{$borderStyle};
   }
 }

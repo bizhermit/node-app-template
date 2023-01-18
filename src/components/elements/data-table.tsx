@@ -102,6 +102,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $rowHeight?: number | string;
   $rowMinHeight?: number | string;
   $rowMaxHeight?: number | string;
+  $headerHeight?: number | string;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -218,7 +219,6 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           };
         }
         const buf = findColumn(columns, col);
-        console.log(buf?.width, col.width);
         return {
           ...col,
           width: buf?.width ?? col.width,
@@ -241,7 +241,30 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             key={column.name}
             className={Style.rcell}
           >
-            group
+            {column.rows.map((row, index) => {
+              if (row.length === 0) {
+                return (
+                  <div
+                    key={index}
+                    className={Style.hrow}
+                  >
+                    <div className={Style.hcell}>
+                      <div className={Style.label}>
+                        {column.label}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div
+                  key={index}
+                  className={Style.hrow}
+                >
+                  {row?.map(c => generateCell(c))}
+                </div>
+              );
+            })}
           </div>
         );
       }
@@ -264,6 +287,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
               direction="x"
               resized={({ width }) => {
                 column.width = width;
+                setHeaderRev(r => r + 1);
                 setBodyRev(r => r + 1);
               }}
             />
@@ -274,6 +298,9 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     return (
       <div
         className={Style.hrow}
+        style={{
+          height: convertSizeNumToStr(props.$headerHeight),
+        }}
       >
         {columns.current?.map(col => generateCell(col))}
       </div>
@@ -281,6 +308,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   }, [
     headerRev,
     columns.current,
+    props.$headerHeight,
   ]);
 
   const body = useMemo(() => {
@@ -298,7 +326,17 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             key={column.name}
             className={Style.rcell}
           >
-            group
+            {column.rows.map((row, index) => {
+              if (row.length === 0) return <></>;
+              return (
+                <div
+                  key={index}
+                  className={Style.brow}
+                >
+                  {row?.map(c => generateCell(index, data, c))}
+                </div>
+              );
+            })}
           </div>
         );
       }

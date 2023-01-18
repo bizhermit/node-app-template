@@ -22,19 +22,27 @@ const Page: NextPage = () => {
         resize: true,
       },
       {
-        name: "col2",
-        label: "Col2",
-        align: "left",
-      },
-      {
-        name: "col3",
-        label: "Col3",
-        align: "center",
-      },
-      {
-        name: "col4",
-        label: "Col4",
-        align: "right",
+        label: "Group",
+        rows: [
+          [],
+          [
+            {
+              name: "col2",
+              label: "Col2",
+              align: "left",
+            },
+            {
+              name: "col3",
+              label: "Col3",
+              align: "center",
+            },
+            {
+              name: "col4",
+              label: "Col4",
+              align: "right",
+            },
+          ]
+        ]
       },
       {
         name: "col5",
@@ -91,7 +99,8 @@ const Page: NextPage = () => {
         $value={items}
         $header
         $emptyText
-        $rowHeight="3rem"
+        $headerHeight="6rem"
+        $rowHeight="3.6rem"
       />
     </div>
   );
