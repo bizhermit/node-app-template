@@ -16,12 +16,22 @@
   margin-bottom: auto !important;
 }
 
+.my-auto {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
 .mr-auto {
   margin-right: auto !important;
 }
 
 .ml-auto {
   margin-left: auto !important;
+}
+
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 @for $i from 0 through 9 {

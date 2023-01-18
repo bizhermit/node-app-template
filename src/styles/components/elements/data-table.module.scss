@@ -13,8 +13,15 @@ $borderStyle: 1px solid var(--c-border);
   border-radius: var(--radius);
 }
 
-.header {
+.header,
+.body {
   box-sizing: border-box;
+  width: fit-content;
+  min-width: 100%;
+  overflow: visible;
+}
+
+.header {
   z-index: 1;
   position: sticky;
   top: 0;
@@ -22,8 +29,7 @@ $borderStyle: 1px solid var(--c-border);
 
 .body {
   z-index: 0;
-  height: 0px;
-  overflow: visible;
+  height: 0;
 }
 
 .hrow,

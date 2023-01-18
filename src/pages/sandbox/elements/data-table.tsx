@@ -1,5 +1,6 @@
 import Button from "@/components/elements/button";
 import DataTable, { DataTableColumn } from "@/components/elements/data-table";
+import NumberBox from "@/components/elements/form-items/number-box";
 import Row from "@/components/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
@@ -41,7 +42,7 @@ const Page: NextPage = () => {
         align: "center",
         header: (props) => {
           return (
-            <div className="ml-auto">custom header</div>
+            <div className="mx-auto">custom header</div>
           );
         },
         body: (props) => {
@@ -52,6 +53,7 @@ const Page: NextPage = () => {
       }, {
         name: "number",
         label: "Number",
+        type: "number",
       }
     );
     return cols;
