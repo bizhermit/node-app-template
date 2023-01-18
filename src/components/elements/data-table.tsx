@@ -99,6 +99,9 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $header?: boolean;
   $emptyText?: boolean | ReactNode;
   $color?: Color;
+  $rowHeight?: number | string;
+  $rowMinHeight?: number | string;
+  $rowMaxHeight?: number | string;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -215,9 +218,12 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           };
         }
         const buf = findColumn(columns, col);
+        console.log(buf?.width, col.width);
         return {
           ...col,
           width: buf?.width ?? col.width,
+          minWidth: buf?.minWidth ?? col.minWidth,
+          maxWidth: buf?.maxWidth ?? col.maxWidth,
           resize: col.resize && col.width != null,
         };
       }) ?? [];
@@ -272,10 +278,18 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         {columns.current?.map(col => generateCell(col))}
       </div>
     );
-  }, [headerRev, columns.current]);
+  }, [
+    headerRev,
+    columns.current,
+  ]);
 
   const body = useMemo(() => {
     const idDn = props.$idDataName ?? "id";
+    const rowStyle: CSSProperties = {
+      height: convertSizeNumToStr(props.$rowHeight),
+      minHeight: convertSizeNumToStr(props.$rowMinHeight),
+      maxHeight: convertSizeNumToStr(props.$rowMaxHeight),
+    };
     const generateCell = (index: number, data: T, column: DataTableColumn<T>, nestLevel = 0) => {
       if (!column.name) column.name = StringUtils.generateUuidV4();
       if ("rows" in column) {
@@ -313,12 +327,20 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         <div
           key={getValue(item, { name: idDn }) ?? index}
           className={Style.brow}
+          style={rowStyle}
         >
           {columns.current?.map(col => generateCell(index, item, col))}
         </div>
       );
     });
-  }, [bodyRev, items, columns.current]);
+  }, [
+    bodyRev,
+    items,
+    columns.current,
+    props.$rowHeight,
+    props.$rowMinHeight,
+    props.$rowMaxHeight,
+  ]);
 
   const isEmpty = useMemo(() => {
     if (!props.$emptyText || props.$value == null || !Array.isArray(props.$value)) return false;

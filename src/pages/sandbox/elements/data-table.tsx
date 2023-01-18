@@ -91,6 +91,7 @@ const Page: NextPage = () => {
         $value={items}
         $header
         $emptyText
+        $rowHeight="3rem"
       />
     </div>
   );
