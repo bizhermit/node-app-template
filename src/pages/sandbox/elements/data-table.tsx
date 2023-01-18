@@ -16,6 +16,42 @@ const Page: NextPage = () => {
     cols.push(
       {
         name: "col1",
+        label: "Col1",
+        width: 120,
+        resize: true,
+      },
+      {
+        name: "col2",
+        label: "Col2",
+        align: "left",
+      },
+      {
+        name: "col3",
+        label: "Col3",
+        align: "center",
+      },
+      {
+        name: "col4",
+        label: "Col4",
+        align: "right",
+      },
+      {
+        name: "col5",
+        label: "Col5",
+        align: "center",
+        header: (props) => {
+          return (
+            <div className="ml-auto">custom header</div>
+          );
+        },
+        body: (props) => {
+          return (
+            <div>custom cell {props.index}</div>
+          );
+        },
+      }, {
+        name: "number",
+        label: "Number",
       }
     );
     return cols;
@@ -28,6 +64,11 @@ const Page: NextPage = () => {
       return {
         id: index,
         col1: `col1 - ${index}`,
+        col2: `col2 - ${index}`,
+        col3: `col3 - ${index}`,
+        col4: `col4 - ${index}`,
+        col5: `col5 - ${index}`,
+        number: index,
       } as Data;
     }));
   };
@@ -46,6 +87,7 @@ const Page: NextPage = () => {
         className="w-100 flex-1"
         $columns={columns}
         $value={items}
+        $header
         $emptyText
       />
     </div>

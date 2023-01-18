@@ -1,6 +1,6 @@
-import React, { FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, useEffect, useMemo } from "react";
+import React, { CSSProperties, FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-table.module.scss";
-import { attributes } from "@/components/utilities/attributes";
+import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import { NextLinkProps } from "@/components/elements/link";
 import { ButtonProps } from "@/components/elements/button";
 import { CheckBoxProps } from "@/components/elements/form-items/check-box";
@@ -11,9 +11,10 @@ import { RadioButtonsProps } from "@/components/elements/form-items/radio-button
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import Resizer from "@/components/elements/resizer";
 
 type DataTableCellContext<T extends Struct = Struct> = {
-  column: DataTableColumn;
+  column: DataTableColumn<T>;
   data: T;
   index: number;
 };
@@ -31,9 +32,10 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
   };
   border?: boolean;
   sort?: boolean | ((data1: T, data2: T) => boolean);
-  header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index">>;
+  resize?: boolean;
+  header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data">>;
   body?: React.FunctionComponent<DataTableCellContext<T>>;
-  footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index">>;
+  footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data">>;
 };
 
 export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
@@ -73,7 +75,7 @@ export type DataTableGroupColumn<T extends Struct = Struct> = {
 };
 
 export type DataTableColumn<T extends Struct = Struct> =
-  DataTableLabelColumn<T>
+  | ({ type?: "label" } & DataTableLabelColumn<T>)
   | ({ type: "button" } & DataTableButtonColumn<T>)
   | ({ type: "check" } & DataTableCheckColumn<T>)
   | ({ type: "text" } & DataTableTextColumn<T>)
@@ -93,9 +95,10 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $idDataName?: string;
   $multiSort?: boolean;
   $sort?: Array<DataTableSort>;
-  $onSort?: (sort: Array<DataTableSort>) => void;
+  $onSort?: (sort: Array<DataTableSort>) => (void | boolean);
   $header?: boolean;
   $emptyText?: boolean | ReactNode;
+  $color?: Color;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -139,25 +142,147 @@ const setValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColum
   }
 };
 
+const defaultColumnWidth = "10rem";
+const getColumnStyle = (column: DataTableColumn<any>, nestLevel = 0): CSSProperties => {
+  if ("rows" in column) return {};
+  let w = column.width;
+  if (nestLevel > 0 && w == null) w = defaultColumnWidth;
+  if (w == null) {
+    return {
+      flex: "1",
+      minWidth: convertSizeNumToStr(column.minWidth) ?? defaultColumnWidth,
+      maxWidth: convertSizeNumToStr(column.maxWidth),
+    };
+  }
+  w = convertSizeNumToStr(w);
+  return {
+    flex: "none",
+    width: w,
+    minWidth: convertSizeNumToStr(column.minWidth),
+    maxWidth: convertSizeNumToStr(column.maxWidth),
+  };
+};
+
+const findColumn = (columns: Array<DataTableColumn<any>>, column: DataTableColumn<any>) => {
+  const find = (cols?: Array<DataTableColumn<any>>) => {
+    if (cols == null) return undefined;
+    for (const col of cols) {
+      if ("rows" in col) {
+        for (const rcols of col.rows) {
+          const c = find(rcols) as DataTableBaseColumn<any> | undefined;
+          if (c != null) return c;
+        }
+        continue;
+      }
+      if (col.name === column.name) return col as DataTableBaseColumn<any>;
+    }
+    return undefined;
+  };
+  return find(columns);
+};
+
+const getCellAlign = (column: DataTableColumn<any>) => {
+  if ("rows" in column) return undefined;
+  if (column.align) return column.align;
+  switch (column.type) {
+    case "check":
+    case "date":
+      return "center";
+    case "number":
+      return "right";
+    default:
+      return "left";
+  }
+};
+
 const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
   const items = useMemo(() => {
     return originItems;
   }, [originItems]);
 
-  const header = useMemo(() => {
-    if (!props.$header) return undefined;
-    return <></>;
+  const [headerRev, setHeaderRev] = useState(0);
+  const [bodyRev, setBodyRev] = useState(0);
+
+  const columns = useRef<Array<DataTableColumn<T>>>(null!);
+  columns.current = useMemo(() => {
+    const clone = (columns?: Array<DataTableColumn<T>>): Array<DataTableColumn<T>> => {
+      return columns?.map(col => {
+        if ("rows" in col) {
+          return {
+            ...col,
+            rows: col.rows.map(cols => clone(cols)),
+          };
+        }
+        const buf = findColumn(columns, col);
+        return {
+          ...col,
+          width: buf?.width ?? col.width,
+          resize: col.resize && col.width != null,
+        };
+      }) ?? [];
+    };
+    return clone(props.$columns);
   }, [props.$columns]);
 
-  const body = useMemo(() => {
-    const idDn = props.$idDataName ?? "id";
-    const generateCell = (index: number, data: T, column: DataTableColumn<T>) => {
+  const header = useMemo(() => {
+    if (!props.$header) return undefined;
+    const generateCell = (column: DataTableColumn<T>, nestLevel = 0) => {
       if (!column.name) column.name = StringUtils.generateUuidV4();
       if ("rows" in column) {
         return (
           <div
             key={column.name}
+            className={Style.rcell}
+          >
+            group
+          </div>
+        );
+      }
+      return (
+        <div
+          key={column.name}
+          className={Style.hcell}
+          style={getColumnStyle(column, nestLevel)}
+        >
+          {column.header ?
+            <column.header
+              column={column}
+            /> :
+            <div className={Style.label}>
+              {column.label}
+            </div>
+          }
+          {column.resize &&
+            <Resizer
+              direction="x"
+              resized={({ width }) => {
+                column.width = width;
+                setBodyRev(r => r + 1);
+              }}
+            />
+          }
+        </div>
+      );
+    };
+    return (
+      <div
+        className={Style.hrow}
+      >
+        {columns.current?.map(col => generateCell(col))}
+      </div>
+    );
+  }, [headerRev, columns.current]);
+
+  const body = useMemo(() => {
+    const idDn = props.$idDataName ?? "id";
+    const generateCell = (index: number, data: T, column: DataTableColumn<T>, nestLevel = 0) => {
+      if (!column.name) column.name = StringUtils.generateUuidV4();
+      if ("rows" in column) {
+        return (
+          <div
+            key={column.name}
+            className={Style.rcell}
           >
             group
           </div>
@@ -167,8 +292,19 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         <div
           key={column.name}
           className={Style.bcell}
+          data-align={getCellAlign(column)}
+          style={getColumnStyle(column, nestLevel)}
         >
-          {getValue(data, column)}
+          {column.body ?
+            <column.body
+              index={index}
+              column={column}
+              data={data}
+            /> :
+            <div className={Style.label}>
+              {getValue(data, column)}
+            </div>
+          }
         </div>
       );
     };
@@ -176,13 +312,13 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
       return (
         <div
           key={getValue(item, { name: idDn }) ?? index}
-          className={Style.row}
+          className={Style.brow}
         >
-          {props.$columns?.map(col => generateCell(index, item, col))}
+          {columns.current?.map(col => generateCell(index, item, col))}
         </div>
       );
     });
-  }, [items, props.$columns]);
+  }, [bodyRev, items, columns.current]);
 
   const isEmpty = useMemo(() => {
     if (!props.$emptyText || props.$value == null || !Array.isArray(props.$value)) return false;
@@ -195,7 +331,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
       ref={ref}
     >
       {props.$header &&
-        <div className={Style.header}>
+        <div className={joinClassNames(Style.header, `c-${props.$color || "main"}`)}>
           {header}
         </div>
       }

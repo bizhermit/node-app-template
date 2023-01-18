@@ -9,8 +9,8 @@ export type ResizerProps = {
   direction?: "x" | "y" | "xy";
   reverse?: boolean;
   targetRef?: MutableRefObject<HTMLElement>;
-  resizing?: () => void;
-  resized?: () => void;
+  resizing?: (ctx: { width?: number; height?: number; }) => void;
+  resized?: (ctx: { width?: number; height?: number; }) => void;
 } & Struct;
 
 const Resizer: FC<ResizerProps> = (props) => {
@@ -24,8 +24,9 @@ const Resizer: FC<ResizerProps> = (props) => {
     let move: VoidFunc;
     if (props.direction === "x") {
       const moveImpl = (x: number) => {
-        pelem.style.width = ((x - posX) * (reverse ? -1 : 1) + lastX) + "px";
-        props.resizing?.();
+        const w = (x - posX) * (reverse ? -1 : 1) + lastX;
+        pelem.style.width = w + "px";
+        props.resizing?.({ width: w });
       };
       cursor = "col-resize";
       if (isTouch) {
@@ -35,8 +36,9 @@ const Resizer: FC<ResizerProps> = (props) => {
       }
     } else if (props.direction === "y") {
       const moveImpl = (y: number) => {
-        pelem.style.height = ((y - posY) * (reverse ? -1 : 1) + lastY) + "px";
-        props.resizing?.();
+        const h = (y - posY) * (reverse ? -1 : 1) + lastY;
+        pelem.style.height = h + "px";
+        props.resizing?.({ height: h });
       };
       cursor = "row-resize";
       if (isTouch) {
@@ -46,9 +48,11 @@ const Resizer: FC<ResizerProps> = (props) => {
       }
     } else {
       const moveImpl = (x: number, y: number) => {
-        pelem.style.width = ((x - posX) * (reverse ? -1 : 1) + lastX) + "px";
-        pelem.style.height = ((y - posY) * (reverse ? -1 : 1) + lastY) + "px";
-        props.resizing?.();
+        const w = (x - posX) * (reverse ? -1 : 1) + lastX;
+        const h = (y - posY) * (reverse ? -1 : 1) + lastY;
+        pelem.style.width = w + "px";
+        pelem.style.height = h + "px";
+        props.resizing?.({ width: w, height: h });
       };
       cursor = "nwse-resize";
       if (isTouch) {
@@ -59,20 +63,22 @@ const Resizer: FC<ResizerProps> = (props) => {
     }
     const endImpl = () => {
       const width = pelem.style.width;
+      const ctx: { width?: number; height?: number; } = {};
       if (width) {
-        pelem.style.width = convertSizeNumToStr(parseFloat(width))!;
+        pelem.style.width = convertSizeNumToStr(ctx.width = parseFloat(width))!;
       }
       const height = pelem.style.height;
       if (height) {
-        pelem.style.height = convertSizeNumToStr(parseFloat(height))!;
+        pelem.style.height = convertSizeNumToStr(ctx.height = parseFloat(height))!;
       }
+      return ctx;
     };
     if (isTouch) {
       const end = () => {
         window.removeEventListener("touchmove", move);
         window.removeEventListener("touchend", end);
-        endImpl();
-        props.resized?.();
+        const ctx = endImpl();
+        props.resized?.(ctx);
       };
       window.addEventListener("touchend", end);
       window.addEventListener("touchmove", move);
@@ -82,8 +88,8 @@ const Resizer: FC<ResizerProps> = (props) => {
         window.removeEventListener("mousemove", move);
         window.removeEventListener("mouseup", end);
         releaseCursor();
-        endImpl();
-        props.resized?.();
+        const ctx = endImpl();
+        props.resized?.(ctx);
       };
       window.addEventListener("mouseup", end);
       window.addEventListener("mousemove", move);
