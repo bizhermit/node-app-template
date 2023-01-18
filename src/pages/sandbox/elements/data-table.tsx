@@ -30,6 +30,8 @@ const Page: NextPage = () => {
               name: "col2",
               label: "Col2",
               align: "left",
+              resize: true,
+              width: 300,
             },
             {
               name: "col3",

@@ -224,7 +224,6 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           width: buf?.width ?? col.width,
           minWidth: buf?.minWidth ?? col.minWidth,
           maxWidth: buf?.maxWidth ?? col.maxWidth,
-          resize: col.resize && col.width != null,
         };
       }) ?? [];
     };

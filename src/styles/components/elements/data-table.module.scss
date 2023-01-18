@@ -103,6 +103,8 @@ $borderStyle: 1px solid var(--c-border);
 
 .empty {
   box-sizing: border-box;
+  position: sticky;
+  left: 0;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
