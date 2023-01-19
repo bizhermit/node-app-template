@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
-import { NextLinkProps } from "@/components/elements/link";
+import NextLink from "@/components/elements/link";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
 import Resizer from "@/components/elements/resizer";
@@ -22,8 +22,11 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
   minWidth?: number | string;
   maxWidth?: number | string;
   align?: "left" | "center" | "right";
-  link?: Omit<NextLinkProps, "children" | "href"> & {
-    href: (ctx: DataTableCellContext<T>) => string;
+  href?: (ctx: DataTableCellContext<T>) => string;
+  hrefOptions?: {
+    target?: React.HTMLAttributeAnchorTarget;
+    decoration?: boolean;
+    rel?: string;
   };
   border?: boolean;
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
@@ -374,29 +377,36 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           data-align={getCellAlign(column)}
           style={getColumnStyle(column, nestLevel)}
         >
-          {column.body ?
-            <column.body
-              index={index}
-              column={column}
-              data={data}
-            /> :
-            <div className={Style.label}>
-              {(() => {
-                const v = getValue(data, column);
-                switch (column.type) {
-                  case "date":
-                    return DatetimeUtils.format(v, column.formatPattern ?? "yyyy/MM/dd");
-                  case "number":
-                    return NumberUtils.format(v, {
-                      thou: column.thousandSseparator ?? true,
-                      fpad: column.floatPadding ?? 0,
-                    });
-                  default:
-                    return v;
-                }
-              })()}
-            </div>
-          }
+          <NextLink
+            href={column.href?.({ column, data, index })}
+            target={column.hrefOptions?.target}
+            rel={column.hrefOptions?.rel}
+            className={column.hrefOptions?.decoration === false ? "no-decoration" : undefined}
+          >
+            {column.body ?
+              <column.body
+                index={index}
+                column={column}
+                data={data}
+              /> :
+              <div className={Style.label}>
+                {(() => {
+                  const v = getValue(data, column);
+                  switch (column.type) {
+                    case "date":
+                      return DatetimeUtils.format(v, column.formatPattern ?? "yyyy/MM/dd");
+                    case "number":
+                      return NumberUtils.format(v, {
+                        thou: column.thousandSseparator ?? true,
+                        fpad: column.floatPadding ?? 0,
+                      });
+                    default:
+                      return v;
+                  }
+                })()}
+              </div>
+            }
+          </NextLink>
         </div>
       );
     };
