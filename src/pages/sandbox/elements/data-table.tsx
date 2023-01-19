@@ -9,6 +9,10 @@ import { useMemo, useState } from "react";
 type Data = {
   id: number;
   col1?: string;
+  col2?: string;
+  col3?: string;
+  col4?: string;
+  col5?: string;
 };
 
 const Page: NextPage = () => {
@@ -23,6 +27,7 @@ const Page: NextPage = () => {
         sort: true,
       },
       {
+        name: "group",
         label: "Group",
         rows: [
           [],
@@ -59,13 +64,14 @@ const Page: NextPage = () => {
         },
         body: (props) => {
           return (
-            <div>custom cell {props.index}</div>
+            <div>custom cell: {props.data.col5}</div>
           );
         },
       }, {
         name: "number",
         label: "Number",
         type: "number",
+        sort: true,
       }
     );
     return cols;
@@ -82,7 +88,7 @@ const Page: NextPage = () => {
         col3: `col3 - ${index}`,
         col4: `col4 - ${index}`,
         col5: `col5 - ${index}`,
-        number: index,
+        number: index * 1000,
       } as Data;
     }));
   };
@@ -106,6 +112,7 @@ const Page: NextPage = () => {
         $headerHeight="6rem"
         $rowHeight="3.6rem"
         $multiSort
+        $scroll
       />
     </div>
   );

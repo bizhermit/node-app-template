@@ -29,7 +29,10 @@ $borderStyle: 1px solid var(--c-border);
 
 .body {
   z-index: 0;
-  height: 0;
+
+  &[data-scroll="true"] {
+    height: 0;
+  }
 }
 
 .hrow,

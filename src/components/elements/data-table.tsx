@@ -10,7 +10,6 @@ import { DateBoxProps } from "@/components/elements/form-items/date-box";
 import { RadioButtonsProps } from "@/components/elements/form-items/radio-buttons";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import Resizer from "@/components/elements/resizer";
 
 type DataTableCellContext<T extends Struct = Struct> = {
@@ -69,7 +68,7 @@ export type DataTableDateColumn<T extends Struct = Struct> = DataTableBaseColumn
 };
 
 export type DataTableGroupColumn<T extends Struct = Struct> = {
-  name?: string;
+  name: string;
   label?: string;
   rows: Array<Array<DataTableColumn<T>>>;
 };
@@ -96,6 +95,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $multiSort?: boolean;
   $sorts?: Array<DataTableSort>;
   $onSort?: (sort: Array<DataTableSort>) => (void | boolean);
+  $preventSort?: boolean;
   $header?: boolean;
   $emptyText?: boolean | ReactNode;
   $color?: Color;
@@ -103,6 +103,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $rowMinHeight?: number | string;
   $rowMaxHeight?: number | string;
   $headerHeight?: number | string;
+  $scroll?: boolean;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -167,7 +168,7 @@ const getColumnStyle = (column: DataTableColumn<any>, nestLevel = 0): CSSPropert
   };
 };
 
-const findColumn = (columns: Array<DataTableColumn<any>>, column: DataTableColumn<any>) => {
+const findColumn = (columns: Array<DataTableColumn<any>>, columnName: string) => {
   const find = (cols?: Array<DataTableColumn<any>>) => {
     if (cols == null) return undefined;
     for (const col of cols) {
@@ -178,7 +179,7 @@ const findColumn = (columns: Array<DataTableColumn<any>>, column: DataTableColum
         }
         continue;
       }
-      if (col.name === column.name) return col as DataTableBaseColumn<any>;
+      if (col.name === columnName) return col as DataTableBaseColumn<any>;
     }
     return undefined;
   };
@@ -206,19 +207,12 @@ const switchSortDirection = (currentDirection: "" | "asc" | "desc" | undefined, 
   return "";
 };
 
+const equals = (v1: unknown, v2: unknown) => {
+  if (v1 == null && v2 == null) return true;
+  return v1 === v2;
+};
+
 const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
-  const items = useMemo(() => {
-    return originItems;
-  }, [originItems]);
-  const [sorts, setSorts] = useState<Array<DataTableSort>>(() => {
-    return props.$sorts ?? [];
-  });
-
-  useEffect(() => {
-    setSorts(props.$sorts ?? []);
-  }, [props.$sorts]);
-
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
 
@@ -232,7 +226,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             rows: col.rows.map(cols => clone(cols)),
           };
         }
-        const buf = findColumn(columns, col);
+        const buf = findColumn(columns, col.name);
         return {
           ...col,
           width: buf?.width ?? col.width,
@@ -243,6 +237,37 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     };
     return clone(props.$columns);
   }, [props.$columns]);
+  const [sorts, setSorts] = useState<Array<DataTableSort>>(() => {
+    return props.$sorts ?? [];
+  });
+  const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
+  const items = useMemo(() => {
+    if (props.$preventSort) return originItems;
+    const sortCols = sorts.map(s => {
+      const col = findColumn(columns.current, s.name);
+      if (!col) return undefined;
+      return { ...s, column: col };
+    }).filter(col => col != null);
+    return [...originItems].sort((item1, item2) => {
+      for (const scol of sortCols) {
+        const v1 = getValue(item1, scol!);
+        const v2 = getValue(item2, scol!);
+        const dnum = scol?.direction === "desc" ? -1 : 1;
+        if (typeof scol!.column.sort === "function") {
+          const ret = scol!.column.sort(v1, v2);
+          if (ret === 0) continue;
+          return ret * dnum;
+        }
+        if (equals(v1, v2)) continue;
+        return (v1 < v2 ? -1 : 1) * dnum;
+      }
+      return 0;
+    });
+  }, [originItems, sorts]);
+
+  useEffect(() => {
+    setSorts(props.$sorts ?? []);
+  }, [props.$sorts]);
 
   const changeSort = useCallback((column: DataTableBaseColumn<T>, currentSort?: DataTableSort) => {
     const d = switchSortDirection(currentSort?.direction);
@@ -256,7 +281,6 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   const header = useMemo(() => {
     if (!props.$header) return undefined;
     const generateCell = (column: DataTableColumn<T>, nestLevel = 0) => {
-      if (!column.name) column.name = StringUtils.generateUuidV4();
       if ("rows" in column) {
         return (
           <div
@@ -350,7 +374,6 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
       maxHeight: convertSizeNumToStr(props.$rowMaxHeight),
     };
     const generateCell = (index: number, data: T, column: DataTableColumn<T>, nestLevel = 0) => {
-      if (!column.name) column.name = StringUtils.generateUuidV4();
       if ("rows" in column) {
         return (
           <div
@@ -358,7 +381,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             className={Style.rcell}
           >
             {column.rows.map((row, index) => {
-              if (row.length === 0) return <></>;
+              if (row.length === 0) return undefined;
               return (
                 <div
                   key={index}
@@ -430,7 +453,10 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         <div className={Style.empty}>
           {props.$emptyText === true ? <DefaultEmptyText /> : props.$emptyText}
         </div> :
-        <div className={Style.body}>
+        <div
+          className={Style.body}
+          data-scroll={props.$scroll}
+        >
           {body}
         </div>
       }
