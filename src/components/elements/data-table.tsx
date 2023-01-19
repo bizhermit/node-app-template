@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import React, { CSSProperties, FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import { NextLinkProps } from "@/components/elements/link";
@@ -31,7 +31,7 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
     href: (ctx: DataTableCellContext<T>) => string;
   };
   border?: boolean;
-  sort?: boolean | ((data1: T, data2: T) => boolean);
+  sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
   resize?: boolean;
   header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data">>;
   body?: React.FunctionComponent<DataTableCellContext<T>>;
@@ -94,7 +94,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $value: LoadableArray<T>;
   $idDataName?: string;
   $multiSort?: boolean;
-  $sort?: Array<DataTableSort>;
+  $sorts?: Array<DataTableSort>;
   $onSort?: (sort: Array<DataTableSort>) => (void | boolean);
   $header?: boolean;
   $emptyText?: boolean | ReactNode;
@@ -199,11 +199,25 @@ const getCellAlign = (column: DataTableColumn<any>) => {
   }
 };
 
+const switchSortDirection = (currentDirection: "" | "asc" | "desc" | undefined, noReset?: boolean) => {
+  if (!currentDirection) return "asc";
+  if (currentDirection === "asc") return "desc";
+  if (noReset) return "asc";
+  return "";
+};
+
 const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
   const items = useMemo(() => {
     return originItems;
   }, [originItems]);
+  const [sorts, setSorts] = useState<Array<DataTableSort>>(() => {
+    return props.$sorts ?? [];
+  });
+
+  useEffect(() => {
+    setSorts(props.$sorts ?? []);
+  }, [props.$sorts]);
 
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
@@ -229,6 +243,17 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     };
     return clone(props.$columns);
   }, [props.$columns]);
+
+  const changeSort = useCallback((column: DataTableBaseColumn<T>, currentSort?: DataTableSort) => {
+    const d = switchSortDirection(currentSort?.direction);
+    if (!props.$multiSort) {
+      const newSorts: Array<DataTableSort> = !d ? [] : [{ name: column.name, direction: d }];
+      const ret = props.$onSort?.(newSorts);
+      if (ret === false) return;
+      setSorts(newSorts);
+    }
+    // TODO
+  }, [sorts, props.$multiSort, props.$onSort]);
 
   const header = useMemo(() => {
     if (!props.$header) return undefined;
@@ -267,11 +292,15 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           </div>
         );
       }
+      const sort = sorts.find(s => s.name === column.name);
       return (
         <div
           key={column.name}
           className={Style.hcell}
           style={getColumnStyle(column, nestLevel)}
+          onClick={column.sort ? () => {
+            changeSort(column, sort);
+          } : undefined}
         >
           {column.header ?
             <column.header
@@ -281,6 +310,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
               {column.label}
             </div>
           }
+          {column.sort && <div className={Style.sort} data-direction={sort?.direction || ""} />}
           {column.resize &&
             <Resizer
               direction="x"
@@ -308,6 +338,8 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     headerRev,
     columns.current,
     props.$headerHeight,
+    sorts,
+    changeSort,
   ]);
 
   const body = useMemo(() => {

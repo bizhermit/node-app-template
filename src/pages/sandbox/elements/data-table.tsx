@@ -20,6 +20,7 @@ const Page: NextPage = () => {
         label: "Col1",
         width: 120,
         resize: true,
+        sort: true,
       },
       {
         label: "Group",
@@ -50,6 +51,7 @@ const Page: NextPage = () => {
         name: "col5",
         label: "Col5",
         align: "center",
+        sort: true,
         header: (props) => {
           return (
             <div className="mx-auto">custom header</div>
@@ -103,6 +105,7 @@ const Page: NextPage = () => {
         $emptyText
         $headerHeight="6rem"
         $rowHeight="3.6rem"
+        $multiSort
       />
     </div>
   );
