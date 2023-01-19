@@ -1,6 +1,5 @@
 import Button from "@/components/elements/button";
-import DataTable, { DataTableColumn } from "@/components/elements/data-table";
-import NumberBox from "@/components/elements/form-items/number-box";
+import DataTable, { DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
 import Row from "@/components/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
@@ -19,6 +18,7 @@ const Page: NextPage = () => {
   const columns = useMemo(() => {
     const cols: Array<DataTableColumn<Data>> = [];
     cols.push(
+      dataTableRowNumberColumn,
       {
         name: "col1",
         label: "Col1",
@@ -43,7 +43,7 @@ const Page: NextPage = () => {
               label: "Col2",
               align: "left",
               resize: true,
-              width: 300,
+              width: 200,
             },
             {
               name: "col3",
@@ -79,12 +79,14 @@ const Page: NextPage = () => {
         label: "Number",
         type: "number",
         sort: true,
+        width: 120,
       },
       {
         name: "date",
         label: "Date",
         type: "date",
         sort: true,
+        width: 120,
       }
     );
     return cols;

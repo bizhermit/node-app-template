@@ -460,4 +460,11 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   );
 });
 
+export const dataTableRowNumberColumn: DataTableColumn<any> = {
+  name: "_rownum",
+  align: "center",
+  width: "5rem",
+  body: props => <LabelText>{props.index + 1}</LabelText>,
+} as const;
+
 export default DataTable;
