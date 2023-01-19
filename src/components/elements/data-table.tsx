@@ -2,15 +2,11 @@ import React, { CSSProperties, FC, FunctionComponent, HTMLAttributes, ReactEleme
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import { NextLinkProps } from "@/components/elements/link";
-import { ButtonProps } from "@/components/elements/button";
-import { CheckBoxProps } from "@/components/elements/form-items/check-box";
-import { TextBoxProps } from "@/components/elements/form-items/text-box";
-import { NumberBoxProps } from "@/components/elements/form-items/number-box";
-import { DateBoxProps } from "@/components/elements/form-items/date-box";
-import { RadioButtonsProps } from "@/components/elements/form-items/radio-buttons";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
 import Resizer from "@/components/elements/resizer";
+import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
+import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 
 type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
@@ -39,31 +35,12 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
 
 export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
 
-export type DataTableButtonColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
-  props?: Omit<ButtonProps, "$onClick">;
-  onClick?: (ctx: DataTableCellContext, unlock: VoidFunc, e: React.MouseEvent<HTMLButtonElement>) => (void | Promise<void>);
-};
-
-type InputColumnOmitAttributes = "name" | "$bind" | "$source" | "$tag";
-export type DataTableRadioColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
-  props?: Omit<RadioButtonsProps, InputColumnOmitAttributes>;
-};
-
-export type DataTableCheckColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
-  props?: Omit<CheckBoxProps, InputColumnOmitAttributes>;
-  bulk?: boolean;
-};
-
-export type DataTableTextColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
-  props?: Omit<TextBoxProps, InputColumnOmitAttributes>;
-};
-
 export type DataTableNumberColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
-  props?: Omit<NumberBoxProps, InputColumnOmitAttributes>;
+  thousandSseparator?: boolean;
+  floatPadding?: number;
 };
 
 export type DataTableDateColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
-  props?: Omit<DateBoxProps, InputColumnOmitAttributes>;
   formatPattern?: string;
 };
 
@@ -75,9 +52,6 @@ export type DataTableGroupColumn<T extends Struct = Struct> = {
 
 export type DataTableColumn<T extends Struct = Struct> =
   | ({ type?: "label" } & DataTableLabelColumn<T>)
-  | ({ type: "button" } & DataTableButtonColumn<T>)
-  | ({ type: "check" } & DataTableCheckColumn<T>)
-  | ({ type: "text" } & DataTableTextColumn<T>)
   | ({ type: "number" } & DataTableNumberColumn<T>)
   | ({ type: "date" } & DataTableDateColumn<T>)
   | DataTableGroupColumn<T>;
@@ -190,7 +164,6 @@ const getCellAlign = (column: DataTableColumn<any>) => {
   if ("rows" in column) return undefined;
   if (column.align) return column.align;
   switch (column.type) {
-    case "check":
     case "date":
       return "center";
     case "number":
@@ -408,7 +381,20 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
               data={data}
             /> :
             <div className={Style.label}>
-              {getValue(data, column)}
+              {(() => {
+                const v = getValue(data, column);
+                switch (column.type) {
+                  case "date":
+                    return DatetimeUtils.format(v, column.formatPattern ?? "yyyy/MM/dd");
+                  case "number":
+                    return NumberUtils.format(v, {
+                      thou: column.thousandSseparator ?? true,
+                      fpad: column.floatPadding ?? 0,
+                    });
+                  default:
+                    return v;
+                }
+              })()}
             </div>
           }
         </div>

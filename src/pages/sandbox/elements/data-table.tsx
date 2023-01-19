@@ -67,10 +67,17 @@ const Page: NextPage = () => {
             <div>custom cell: {props.data.col5}</div>
           );
         },
-      }, {
+      },
+      {
         name: "number",
         label: "Number",
         type: "number",
+        sort: true,
+      },
+      {
+        name: "date",
+        label: "Date",
+        type: "date",
         sort: true,
       }
     );
@@ -89,6 +96,7 @@ const Page: NextPage = () => {
         col4: `col4 - ${index}`,
         col5: `col5 - ${index}`,
         number: index * 1000,
+        date: `2023-01-${1 + index}`
       } as Data;
     }));
   };
