@@ -246,13 +246,11 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
 
   const changeSort = useCallback((column: DataTableBaseColumn<T>, currentSort?: DataTableSort) => {
     const d = switchSortDirection(currentSort?.direction);
-    if (!props.$multiSort) {
-      const newSorts: Array<DataTableSort> = !d ? [] : [{ name: column.name, direction: d }];
-      const ret = props.$onSort?.(newSorts);
-      if (ret === false) return;
-      setSorts(newSorts);
-    }
-    // TODO
+    const newSorts: Array<DataTableSort> = props.$multiSort ? sorts.filter(s => s.name !== column.name) : [];
+    if (d) newSorts.push({ name: column.name, direction: d });
+    const ret = props.$onSort?.(newSorts);
+    if (ret === false) return;
+    setSorts(newSorts);
   }, [sorts, props.$multiSort, props.$onSort]);
 
   const header = useMemo(() => {
@@ -302,14 +300,16 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             changeSort(column, sort);
           } : undefined}
         >
-          {column.header ?
-            <column.header
-              column={column}
-            /> :
-            <div className={Style.label}>
-              {column.label}
-            </div>
-          }
+          <div className={Style.content}>
+            {column.header ?
+              <column.header
+                column={column}
+              /> :
+              <div className={Style.label}>
+                {column.label}
+              </div>
+            }
+          </div>
           {column.sort && <div className={Style.sort} data-direction={sort?.direction || ""} />}
           {column.resize &&
             <Resizer

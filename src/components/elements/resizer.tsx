@@ -102,6 +102,7 @@ const Resizer: FC<ResizerProps> = (props) => {
       className={`${Style.main} ${Style[props.direction]}${props.className ? ` ${props.className}` : ""}`}
       onMouseDown={e => resizeStart(e.currentTarget, e.clientX, e.clientY)}
       onTouchStart={e => resizeStart(e.currentTarget, e.touches[0].clientX, e.touches[0].clientY, true)}
+      onClick={e => e.stopPropagation()}
     />
   );
 };
