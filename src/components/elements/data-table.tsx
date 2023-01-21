@@ -51,6 +51,7 @@ export type DataTableGroupColumn<T extends Struct = Struct> = {
   name: string;
   label?: string;
   rows: Array<Array<DataTableColumn<T>>>;
+  border?: boolean;
 };
 
 export type DataTableColumn<T extends Struct = Struct> =
@@ -265,6 +266,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           <div
             key={column.name}
             className={Style.rcell}
+            data-border={column.border ?? props.$cellBorder}
           >
             {column.rows.map((row, index) => {
               if (row.length === 0) {
@@ -276,7 +278,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                   >
                     <div
                       className={Style.hcell}
-                      data-border={props.$cellBorder}
+                      data-border={column.border ?? props.$cellBorder}
                     >
                       <div className={Style.label}>
                         {column.label}
@@ -307,7 +309,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           onClick={column.sort ? () => {
             changeSort(column, sort);
           } : undefined}
-          data-border={props.$cellBorder}
+          data-border={column.border ?? props.$cellBorder}
         >
           <div className={Style.content}>
             {column.header ?
@@ -367,6 +369,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           <div
             key={column.name}
             className={Style.rcell}
+            data-border={column.border ?? props.$cellBorder}
           >
             {column.rows.map((row, index) => {
               if (row.length === 0) return undefined;
@@ -389,7 +392,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           className={Style.bcell}
           style={getColumnStyle(column, nestLevel)}
           data-align={getCellAlign(column)}
-          data-border={props.$cellBorder}
+          data-border={column.border ?? props.$cellBorder}
         >
           <NextLink
             href={column.href?.({ column, data, index })}

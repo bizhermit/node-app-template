@@ -81,6 +81,7 @@ const Page: NextPage = () => {
         type: "number",
         sort: true,
         width: 120,
+        border: true,
       },
       {
         name: "date",
@@ -88,6 +89,7 @@ const Page: NextPage = () => {
         type: "date",
         sort: true,
         width: 120,
+        border: false,
       }
     );
     return cols;
