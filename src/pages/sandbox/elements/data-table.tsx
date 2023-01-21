@@ -129,6 +129,8 @@ const Page: NextPage = () => {
         $rowHeight="3.6rem"
         $multiSort
         $scroll
+        $outline
+        $rowBorder
       />
     </div>
   );

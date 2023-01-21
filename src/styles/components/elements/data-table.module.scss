@@ -8,9 +8,12 @@ $borderStyle: 1px solid var(--c-border);
   justify-content: flex-start;
   align-items: stretch;
   min-height: 0;
-  border: #{$borderStyle};
   overflow: auto;
   border-radius: var(--radius);
+
+  &[data-border="true"] {
+    border: #{$borderStyle};
+  }
 }
 
 .header,
@@ -47,7 +50,9 @@ $borderStyle: 1px solid var(--c-border);
   color: inherit;
 
   &:not(:first-child) {
-    border-top: #{$borderStyle};
+    &[data-border="true"] {
+      border-top: #{$borderStyle};
+    }
   }
 }
 
@@ -101,7 +106,7 @@ $borderStyle: 1px solid var(--c-border);
 .bcell,
 .rcell {
   &:not(:first-child) {
-    border-left: #{$borderStyle};
+    // border-left: #{$borderStyle};
   }
 }
 
