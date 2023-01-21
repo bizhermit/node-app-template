@@ -388,7 +388,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
         return ret;
       });
     }
-  }, [validations, props?.$preventFormBind]);
+  }, [validations, props?.name, props?.$preventFormBind]);
 
   useEffect(() => {
     if (props?.name) {
@@ -428,7 +428,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
       validation();
     }
     props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps ?? [])]);
+  }, [ctx.bind, props?.name, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps ?? [])]);
 
   useEffect(() => {
     const name = props?.name;
