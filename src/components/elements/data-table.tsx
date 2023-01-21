@@ -51,6 +51,7 @@ export type DataTableGroupColumn<T extends Struct = Struct> = {
   name: string;
   label?: string;
   rows: Array<Array<DataTableColumn<T>>>;
+  border?: boolean;
 };
 
 export type DataTableColumn<T extends Struct = Struct> =
@@ -81,6 +82,9 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $rowMaxHeight?: number | string;
   $headerHeight?: number | string;
   $scroll?: boolean;
+  $outline?: boolean;
+  $rowBorder?: boolean;
+  $cellBorder?: boolean;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -262,6 +266,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           <div
             key={column.name}
             className={Style.rcell}
+            data-border={column.border ?? props.$cellBorder}
           >
             {column.rows.map((row, index) => {
               if (row.length === 0) {
@@ -269,8 +274,12 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                   <div
                     key={index}
                     className={Style.hrow}
+                    data-border={props.$rowBorder}
                   >
-                    <div className={Style.hcell}>
+                    <div
+                      className={Style.hcell}
+                      data-border={column.border ?? props.$cellBorder}
+                    >
                       <div className={Style.label}>
                         {column.label}
                       </div>
@@ -282,6 +291,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                 <div
                   key={index}
                   className={Style.hrow}
+                  data-border={props.$rowBorder}
                 >
                   {row?.map(c => generateCell(c))}
                 </div>
@@ -299,6 +309,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           onClick={column.sort ? () => {
             changeSort(column, sort);
           } : undefined}
+          data-border={column.border ?? props.$cellBorder}
         >
           <div className={Style.content}>
             {column.header ?
@@ -330,6 +341,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         style={{
           height: convertSizeNumToStr(props.$headerHeight),
         }}
+        data-border={props.$rowBorder}
       >
         {columns.current?.map(col => generateCell(col))}
       </div>
@@ -340,6 +352,8 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     props.$headerHeight,
     sorts,
     changeSort,
+    props.$rowBorder,
+    props.$cellBorder,
   ]);
 
   const body = useMemo(() => {
@@ -355,6 +369,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           <div
             key={column.name}
             className={Style.rcell}
+            data-border={column.border ?? props.$cellBorder}
           >
             {column.rows.map((row, index) => {
               if (row.length === 0) return undefined;
@@ -362,6 +377,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                 <div
                   key={index}
                   className={Style.brow}
+                  data-border={props.$rowBorder}
                 >
                   {row?.map(c => generateCell(index, data, c))}
                 </div>
@@ -374,8 +390,9 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         <div
           key={column.name}
           className={Style.bcell}
-          data-align={getCellAlign(column)}
           style={getColumnStyle(column, nestLevel)}
+          data-align={getCellAlign(column)}
+          data-border={column.border ?? props.$cellBorder}
         >
           <NextLink
             href={column.href?.({ column, data, index })}
@@ -416,6 +433,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           key={getValue(item, { name: idDn }) ?? index}
           className={Style.brow}
           style={rowStyle}
+          data-border={props.$rowBorder}
         >
           {columns.current?.map(col => generateCell(index, item, col))}
         </div>
@@ -428,6 +446,8 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     props.$rowHeight,
     props.$rowMinHeight,
     props.$rowMaxHeight,
+    props.$rowBorder,
+    props.$cellBorder,
   ]);
 
   const isEmpty = useMemo(() => {
@@ -439,6 +459,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     <div
       {...attributes(props, Style.wrap)}
       ref={ref}
+      data-border={props.$outline}
     >
       {props.$header &&
         <div className={joinClassNames(Style.header, `c-${props.$color || "main"}`)}>
