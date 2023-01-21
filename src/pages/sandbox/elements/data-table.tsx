@@ -1,5 +1,6 @@
 import Button from "@/components/elements/button";
 import DataTable, { DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
@@ -109,15 +110,26 @@ const Page: NextPage = () => {
     }));
   };
 
+  const [outline, setOutline] = useState(true);
+  const [rowBorder, setRowBorder] = useState(true);
+  const [cellBorder, setCellBorder] = useState(true);
+
   return (
     <div className="flex-start w-100 h-100 gap-1 p-1">
       <Row className="gap-1">
-        <Button $fitContent $onClick={() => setItems(null!)}>null</Button>
-        <Button $fitContent $onClick={() => generateItems(0)}>0</Button>
-        <Button $fitContent $onClick={() => generateItems(1)}>1</Button>
-        <Button $fitContent $onClick={() => generateItems(10)}>10</Button>
-        <Button $fitContent $onClick={() => generateItems(50)}>50</Button>
-        <Button $fitContent $onClick={() => generateItems(100)}>100</Button>
+        <Row className="gap-1">
+          <Button $fitContent $onClick={() => setItems(null!)}>null</Button>
+          <Button $fitContent $onClick={() => generateItems(0)}>0</Button>
+          <Button $fitContent $onClick={() => generateItems(1)}>1</Button>
+          <Button $fitContent $onClick={() => generateItems(10)}>10</Button>
+          <Button $fitContent $onClick={() => generateItems(50)}>50</Button>
+          <Button $fitContent $onClick={() => generateItems(100)}>100</Button>
+        </Row>
+        <Row className="gap-1">
+          <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>
+          <ToggleBox $value={rowBorder} $onChange={v => setRowBorder(v!)}>row border</ToggleBox>
+          <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>
+        </Row>
       </Row>
       <DataTable<Data>
         className="w-100 flex-1"
@@ -129,8 +141,9 @@ const Page: NextPage = () => {
         $rowHeight="3.6rem"
         $multiSort
         $scroll
-        $outline
-        $rowBorder
+        $outline={outline}
+        $rowBorder={rowBorder}
+        $cellBorder={cellBorder}
       />
     </div>
   );

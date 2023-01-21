@@ -274,7 +274,10 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                     className={Style.hrow}
                     data-border={props.$rowBorder}
                   >
-                    <div className={Style.hcell}>
+                    <div
+                      className={Style.hcell}
+                      data-border={props.$cellBorder}
+                    >
                       <div className={Style.label}>
                         {column.label}
                       </div>
@@ -384,8 +387,9 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         <div
           key={column.name}
           className={Style.bcell}
-          data-align={getCellAlign(column)}
           style={getColumnStyle(column, nestLevel)}
+          data-align={getCellAlign(column)}
+          data-border={props.$cellBorder}
         >
           <NextLink
             href={column.href?.({ column, data, index })}

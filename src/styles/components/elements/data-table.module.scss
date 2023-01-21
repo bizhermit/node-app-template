@@ -106,7 +106,9 @@ $borderStyle: 1px solid var(--c-border);
 .bcell,
 .rcell {
   &:not(:first-child) {
-    // border-left: #{$borderStyle};
+    &[data-border="true"] {
+      border-left: #{$borderStyle};
+    }
   }
 }
 
