@@ -4,15 +4,20 @@ import { UrlObject } from "url";
 import { AnchorHTMLAttributes, FC, ReactNode } from "react";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
-const NextLink: FC<Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   href?: string | UrlObject;
   $tag?: React.ElementType;
   $noDecoration?: boolean;
   children?: ReactNode;
-}> = (props) => {
-  const attrs = attributes(props, props.$noDecoration ? "no-decoration" : "");
+};
+
+const NextLink: FC<NextLinkProps> = (props) => {
+  const attrs = attributes(props, props.$noDecoration ? "no-decoration" : undefined);
   const href = attrs.href?.toString();
   if (StringUtils.isEmpty(href)) {
+    if (typeof props.children === "object") {
+      return <>{props.children}</>;
+    }
     const Tag = props.$tag ?? "span";
     return <Tag {...attrs} />;
   }

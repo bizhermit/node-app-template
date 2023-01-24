@@ -8,7 +8,7 @@ import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
-type NumberBoxProps = FormItemProps<number> & {
+export type NumberBoxProps = FormItemProps<number> & {
   $max?: number;
   $min?: number;
   $sign?: "only-positive" | "only-negative";
