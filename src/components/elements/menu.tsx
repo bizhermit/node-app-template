@@ -15,7 +15,7 @@ export type MenuItemProps = {
   pathname?: string;
   label?: ReactNode;
   icon?: ReactNode;
-  items?: Array<MenuItemProps>;
+  items?: Array<MenuItemProps | null | undefined>;
   attributes?: ItemAttributes;
   openedIcon?: ReactNode;
   closedIcon?: ReactNode;
@@ -28,7 +28,7 @@ type Direction = "vertical" | "horizontal";
 
 type OmitAttributes = "color" | "children";
 export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $items?: Array<MenuItemProps>;
+  $items?: Array<MenuItemProps | null | undefined>;
   $direction?: Direction;
   $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
@@ -56,7 +56,7 @@ const Menu = React.forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
 });
 
 const MenuGroup: FC<MenuProps & {
-  $items?: Array<MenuItemProps>;
+  $items?: Array<MenuItemProps | null | undefined>;
   $nestLevel?: number;
   $direction?: Direction;
   $itemDefaultAttributes?: ItemAttributes;
@@ -71,10 +71,10 @@ const MenuGroup: FC<MenuProps & {
       {...attributesWithoutChildren(props, Style.list)}
       data-direction={props.$direction}
     >
-      {props.$items.map((item, index) =>
+      {props.$items.filter(item => !item).map((item, index) =>
         <MenuItem
           {...item}
-          key={item.key ?? index}
+          key={item!.key ?? index}
           nestLevel={props.$nestLevel ?? 0}
           $itemDefaultAttributes={props.$itemDefaultAttributes}
           $defaultOpenedIcon={props.$defaultOpenedIcon}
