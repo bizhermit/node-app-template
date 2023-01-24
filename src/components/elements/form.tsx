@@ -388,7 +388,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
         return ret;
       });
     }
-  }, [validations, props?.name, props?.$preventFormBind]);
+  }, [validations, ctx.bind, props?.name, props?.$bind, props?.$preventFormBind]);
 
   useEffect(() => {
     if (props?.name) {
