@@ -30,17 +30,35 @@ const Page: NextPage = () => {
         <h2>submit/reset/button</h2>
         <Form
           className="flex-start gap-1"
-          $bind={formBind}
+          // $bind={formBind}
+          $bind
           action="/api/form"
           method="post"
           // $disabled
           // $readOnly
           // $messageDisplayMode="bottom"
           $onSubmit={(fd) => {
-            // console.log(fd);
-            console.log(formBind);
-            setViewFormBind({ ...formBind });
-            return false;
+            console.log("----submit----");
+            console.log(fd);
+            setViewFormBind({ ...(() => {
+              if (fd instanceof FormData) {
+                const d: Struct = {};
+                fd.forEach((v, k) => {
+                  if (!(k in d)) {
+                    d[k] = v;
+                    return;
+                  }
+                  if (!Array.isArray(d[k])) {
+                    d[k] = [d[k]];
+                  }
+                  d[k].push(v);
+                });
+                console.log("formData: ", d);
+                return d;
+              }
+              return fd;
+            })() });
+            // return false;
           }}
           $onReset={() => {
             console.log("reset");
@@ -52,7 +70,7 @@ const Page: NextPage = () => {
             <Row>
               <TextBox
                 name="text-box"
-                // $required
+                $required
                 // $defaultValue="fuga"
                 $onChange={(a, b) => {
                   console.log(b, "->", a);
@@ -60,10 +78,10 @@ const Page: NextPage = () => {
               />
               <CheckBox
                 name="check-box"
-              // $required
+              $required
               />
             </Row>
-            <div className="flex-start">
+            {/* <div className="flex-start">
               {formBind.array.map(((item: Struct) => {
                 return (
                   <Row key={item.id}>
@@ -95,7 +113,7 @@ const Page: NextPage = () => {
                   </Row>
                 );
               }))}
-            </div>
+            </div> */}
             <Row className="gap-1">
               <Button type="submit">submit / show form bind</Button>
               <Button type="reset">reset</Button>
@@ -142,13 +160,13 @@ const Page: NextPage = () => {
           <div className="flex-start">
             <h3 className="mt-1">bind data</h3>
             <StructView
-              $struct={viewBind}
+              $value={viewBind}
             />
           </div>
           <div className="flex-start">
             <h3 className="mt-1">form bind data</h3>
             <StructView
-              $struct={viewFormBind}
+              $value={viewFormBind}
             />
           </div>
         </Row>

@@ -1,0 +1,164 @@
+@use "$/mixins";
+
+.main {
+  flex-direction: column !important;
+  width: 26rem;
+  height: 26rem;
+  border-radius: var(--radius);
+  overflow: visible;
+  background: var(--c-input);
+  color: var(--c-input_);
+
+  &[data-error="true"] {
+    background: var(--c-error);
+    color: var(--c-error_);
+  }
+
+  &[data-editable="true"] {
+    >.content {
+      user-select: none;
+
+      >.list {
+        &:hover {
+          z-index: 1;
+        }
+
+        >.cell {
+          &[data-selectable="true"] {
+            cursor: pointer;
+
+            &:hover {
+              @include mixins.hover;
+              z-index: 1;
+
+              &:active {
+                @include mixins.hoverActive;
+              }
+            }
+          }
+
+          &[data-selectable="false"] {
+            cursor: not-allowed;
+            opacity: 0.2;
+          }
+        }
+      }
+    }
+  }
+}
+
+.content {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+.list {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  flex: 1;
+  overflow: auto;
+  padding: calc(var(--size) * 2.85) 0;
+}
+
+.cell {
+  box-sizing: border-box;
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding-top: var(--padding-top-text);
+  line-height: 1.2rem;
+  border-width: 0.1rem;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: var(--radius);
+  height: calc(var(--size) * 0.75);
+
+  &[data-selected="true"] {
+    color: var(--c-selected_);
+    z-index: 0;
+
+    &::before {
+      $pad: 0.1rem;
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      z-index: -1;
+      top: #{$pad};
+      left: #{$pad};
+      height: calc(100% - $pad * 2);
+      width: calc(100% - $pad * 2);
+      background: var(--c-selected);
+      border-radius: var(--radius);
+    }
+  }
+
+  &[data-current="true"] {
+    border-color: var(--c-border);
+  }
+}
+
+.buttons {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: stretch;
+  height: calc(var(--size) * 0.8);
+  flex: none;
+  width: 100%;
+  user-select: none;
+
+  &:hover {
+    z-index: 1;
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
+.clear,
+.positive,
+.negative {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    @include mixins.hover;
+
+    &:active {
+      @include mixins.hoverActive;
+    }
+  }
+}
+
+@include mixins.hoverAnimation;
+
+.positive,
+.negative {
+  flex: 1;
+  font-size: calc(var(--font-size) * 0.9);
+}
+
+.clear {
+  width: var(--size);
+  flex: none;
+}

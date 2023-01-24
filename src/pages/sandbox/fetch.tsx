@@ -135,7 +135,7 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <GroupBox $caption="response" $bodyClassName="p-1">
-        <StructView $struct={response} />
+        <StructView $value={response} />
       </GroupBox>
     </div>
   );
