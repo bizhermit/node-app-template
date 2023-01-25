@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 const getSessionValue = <V>(key: string) => {
   if (typeof window === "undefined") return undefined;
@@ -22,9 +22,22 @@ const setSessionValue = <V = any>(key: string, value: V) => {
   return value;
 };
 
-export const useSessionState = <S = undefined>(key: string, initialState: S | (() => S)) => {
+type Action<S> = { value: S | ((state: S) => S); save?: boolean; };
+type Options = {
+  autoSave?: boolean;
+};
+
+export const useSessionState = <S = undefined>(key: string, initialState: S | (() => S), options?: Options) => {
   const [loaded, setLoaded] = useState(false);
-  const [val, setImpl] = useState<S>(initialState);
+  const [val, setImpl] = useReducer<(state: S, action: Action<S>) => S>((state, { value, save }) => {
+    if (typeof value === "function") {
+      const v = (value as Function)(state) as S;
+      if (save) setSessionValue(key, v);
+      return v;
+    }
+    if (save) setSessionValue(key, value);
+    return value;
+  }, initialState as any);
 
   const clear = () => {
     removeSessionValue(key);
@@ -34,36 +47,26 @@ export const useSessionState = <S = undefined>(key: string, initialState: S | ((
     setSessionValue(key, val);
   };
 
-  const set = (v: S | ((current: S) => S)) => {
+  const set = (v: S | ((current: S) => S), save?: boolean) => {
     let l = loaded;
-    setLoaded(cur => {
-      return l = cur;
-    });
+    setLoaded(cur => l = cur);
     if (!l) return false;
-    setImpl(cur => {
-      if (typeof v === "function") {
-        return (v as Function)(cur) as S;
-      }
-      return v;
-    });
+    setImpl({ value: v, save });
     return true;
   };
 
   useEffect(() => {
     if (!loaded) return;
+    if (options?.autoSave === false) return;
     setSessionValue(key, val);
   }, [val]);
 
   useEffect(() => {
     const v = getSessionValue<S>(key);
     if (v == null) {
-      if (typeof initialState === "function") {
-        setImpl((initialState as Function)());
-      } else {
-        setImpl(initialState);
-      }
+      setImpl({ value: initialState });
     } else {
-      setImpl(v);
+      setImpl({ value: v });
     }
     setLoaded(true);
   }, []);
