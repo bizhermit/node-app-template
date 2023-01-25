@@ -71,7 +71,7 @@ const MenuGroup: FC<MenuProps & {
       {...attributesWithoutChildren(props, Style.list)}
       data-direction={props.$direction}
     >
-      {props.$items.filter(item => !item).map((item, index) =>
+      {props.$items.filter(item => item != null).map((item, index) =>
         <MenuItem
           {...item}
           key={item!.key ?? index}
