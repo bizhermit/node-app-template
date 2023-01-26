@@ -236,6 +236,11 @@ const App = ({ Component, pageProps }: AppProps) => {
                     label: "Fetch",
                     icon: "F",
                     pathname: "/sandbox/fetch",
+                  }, {
+                    key: "storage",
+                    label: "Storage",
+                    icon: "S",
+                    pathname: "/sandbox/storage"
                   }]
                 }]}
               />
