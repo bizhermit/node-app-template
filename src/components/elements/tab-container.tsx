@@ -42,7 +42,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
           data-selected={selected}
           onClick={() => setKey(child?.key!)}
         >
-          <LabelText>{child?.props.label}</LabelText>
+          {child?.props.label}
         </div>
       );
       bodys.push(
