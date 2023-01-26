@@ -63,6 +63,10 @@ $borderStyle: 1px solid var(--c-border);
   &:nth-child(2n) {
     background: var(--c-dull);
   }
+
+  &:hover {
+    background: var(--c-hover);
+  }
 }
 
 .hcell,
@@ -113,6 +117,12 @@ $borderStyle: 1px solid var(--c-border);
     &[data-border="true"] {
       border-left: #{$borderStyle};
     }
+  }
+}
+
+.bcell {
+  &:hover {
+    background: var(--c-selected);
   }
 }
 
