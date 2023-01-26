@@ -39,7 +39,8 @@ $borderStyle: 1px solid var(--c-border);
 }
 
 .hrow,
-.brow {
+.brow,
+.grow {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -58,6 +59,10 @@ $borderStyle: 1px solid var(--c-border);
 
 .brow {
   background: var(--c-pure);
+
+  &:nth-child(2n) {
+    background: var(--c-dull);
+  }
 }
 
 .hcell,
@@ -96,8 +101,7 @@ $borderStyle: 1px solid var(--c-border);
   justify-content: stretch;
   align-items: stretch;
 
-  >.hrow,
-  >.brow {
+  >.grow {
     flex: 1;
   }
 }
