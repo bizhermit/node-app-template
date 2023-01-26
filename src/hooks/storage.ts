@@ -43,14 +43,13 @@ export const useSessionState = <S = undefined>(key: string, initialState: S | ((
     setLoaded(cur => l = cur);
     if (!l) return false;
     setImpl(state => {
-      const s = save || (options?.autoSave !== false && save !== false);
       const v = (() => {
         if (typeof value === "function") {
           return (value as Function)(state) as S;
         }
         return value;
       })();
-      if (!Object.is(state, v) && s) {
+      if (!Object.is(state, v) && (save || (options?.autoSave !== false && save !== false))) {
         setSessionValue(key, v);
       }
       return v;
@@ -105,14 +104,13 @@ export const useLocalState = <S = undefined>(key: string, initialState: S | (() 
     setLoaded(cur => l = cur);
     if (!l) return false;
     setImpl(state => {
-      const s = save || (options?.autoSave !== false && save !== false);
       const v = (() => {
         if (typeof value === "function") {
           return (value as Function)(state) as S;
         }
         return value;
       })();
-      if (!Object.is(state, v) && s) {
+      if (!Object.is(state, v) && (save || (options?.autoSave !== false && save !== false))) {
         setLocalValue(key, v);
       }
       return v;
