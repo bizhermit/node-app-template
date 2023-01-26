@@ -15,7 +15,7 @@ const removeSessionValue = (key: string) => {
 const setSessionValue = <V = any>(key: string, value: V) => {
   if (typeof window === "undefined") return value;
   if (value == null) {
-    removeSessionValue(key);
+    window.sessionStorage.removeItem(key);
     return value;
   }
   window.sessionStorage.setItem(key, JSON.stringify(value));
