@@ -30,14 +30,24 @@ type Options = {
 export const useSessionState = <S = undefined>(key: string, initialState: S | (() => S), options?: Options) => {
   const [loaded, setLoaded] = useState(false);
   const [val, setImpl] = useReducer<(state: S, action: Action<S>) => S>((state, { value, save }) => {
-    if (typeof value === "function") {
-      const v = (value as Function)(state) as S;
-      if (save) setSessionValue(key, v);
-      return v;
+    const s = save || (options?.autoSave !== false && save !== false);
+    const v = (() => {
+      if (typeof value === "function") {
+        return (value as Function)(state) as S;
+      }
+      return value;
+    })();
+    if (Object.is(state, v)) return state;
+    if (s) {
+      setSessionValue(key, v);
     }
-    if (save) setSessionValue(key, value);
-    return value;
-  }, initialState as any);
+    return v;
+  }, (() => {
+    if (initialState instanceof Function) {
+      return initialState();
+    }
+    return initialState;
+  })());
 
   const clear = () => {
     removeSessionValue(key);
@@ -54,12 +64,6 @@ export const useSessionState = <S = undefined>(key: string, initialState: S | ((
     setImpl({ value: v, save });
     return true;
   };
-
-  useEffect(() => {
-    if (!loaded) return;
-    if (options?.autoSave === false) return;
-    setSessionValue(key, val);
-  }, [val]);
 
   useEffect(() => {
     const v = getSessionValue<S>(key);

@@ -4,13 +4,14 @@ import { useSessionState } from "@/hooks/storage";
 import { NextPage } from "next";
 
 const Page: NextPage = () => {
-  const session = useSessionState("session", 0, { autoSave: false });
+  const session = useSessionState("session", () => 10, { autoSave: true });
 
   return (
     <div className="flex-stretch p-1">
       <Row className="gap-1">
         <Button
           $onClick={() => {
+            console.log("count up");
             session[1]((cur) => {
               return cur + 1;
             });
@@ -20,6 +21,7 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
+            console.log("reset");
             session[1](0);
           }}
         >
@@ -27,6 +29,7 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
+            console.log("save");
             session[2].save();
           }}
         >
