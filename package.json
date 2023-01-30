@@ -28,6 +28,7 @@
     "pack": "npm run dist -- --dir --win & npm run clean:nextron",
     "lint": "npx next lint",
     "clean:libs": "npx rimraf dist/libs",
+    "route": "node scripts/generate-route-types",
     "export:react-addon": "npx rimraf dist/libs/react-addon && npx tsc -p tsconfig.react-addon.json && npx tsc-alias -p tsconfig.react-addon.json && node scripts/export-react-addon && npx minifier dist/libs/react-addon"
   },
   "dependencies": {
