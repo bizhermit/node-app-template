@@ -9,26 +9,28 @@ export type NavigationPosition = "left" | "right" | "top" | "bottom";
 
 export type NavigationMode = "auto" | "visible" | "minimize" | "manual" | "none";
 
-export type HeaderVisible = "always" | "none";
-export type FooterVisible = "always" | "end" | "none";
+export type NavigationHeaderVisible = "always" | "none";
+export type NavigationFooterVisible = "always" | "end" | "none";
 
 type NavigationContextProps = {
   toggle: (open?: boolean) => void;
   showedNavigation: boolean;
   navigationPosition: NavigationPosition;
+  setNavigationPosition: (position: NavigationPosition) => void;
   navigationMode: NavigationMode;
   setNavigationMode: (mode: NavigationMode) => void;
   navigationState: Omit<NavigationMode, "auto">;
-  headerVisible: HeaderVisible;
-  setHeaderVisible: (mode: HeaderVisible) => void;
-  footerVisible: FooterVisible;
-  setFooterVisible: (mode: FooterVisible) => void;
+  headerVisible: NavigationHeaderVisible;
+  setHeaderVisible: (mode: NavigationHeaderVisible) => void;
+  footerVisible: NavigationFooterVisible;
+  setFooterVisible: (mode: NavigationFooterVisible) => void;
 }
 
 const NavigationContext = createContext<NavigationContextProps>({
   toggle: () => { },
   showedNavigation: false,
   navigationPosition: "left",
+  setNavigationPosition: () => {},
   navigationMode: "none",
   setNavigationMode: () => { },
   navigationState: "none",
@@ -46,8 +48,8 @@ type OmitAttributes = "color" | "children";
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $defaultNavigationPosition?: NavigationPosition;
   $defaultNavigationMode?: NavigationMode;
-  $defaultHeaderVisible?: HeaderVisible;
-  $defaultFooterVisible?: FooterVisible;
+  $defaultHeaderVisible?: NavigationHeaderVisible;
+  $defaultFooterVisible?: NavigationFooterVisible;
   $headerTag?: React.ElementType;
   $footerTag?: React.ElementType;
   $navTag?: React.ElementType;
@@ -72,7 +74,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
   const FooterTag = props.$footerTag ?? "footer";
   const NavTag = props.$navTag ?? "nav";
   const MainTag = props.$mainTag ?? "main";
-  const navPosition = props.$defaultNavigationPosition ?? "left";
+  const [navPosition, setNavigationPosition] = useState(props.$defaultNavigationPosition ?? "left");
   const childCtx = (() => {
     const hasHeader = props.children.length >= 3;
     const hasFooter = props.children.length >= 4;
@@ -139,7 +141,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
         }
       }
     },
-  }, [navMode]);
+  }, [navMode, navPosition]);
 
   const toggleModeBySize = () => {
     if (navPosition === "top" || navPosition === "bottom") return;
@@ -171,9 +173,12 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
       value={{
         toggle: toggleNav,
         showedNavigation: showedNav,
-        navigationMode,
         navigationPosition: navPosition,
+        setNavigationPosition: (pos = "left") => {
+          setNavigationPosition(pos);
+        },
         navigationState: navMode,
+        navigationMode,
         setNavigationMode: (mode = "auto") => {
           setNavigationMode(mode);
           if (mode === "auto") {

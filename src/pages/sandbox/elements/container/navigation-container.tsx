@@ -1,7 +1,7 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
-import { FooterVisible, HeaderVisible, NavigationMode, useNavigation } from "@/components/elements/navigation-container";
+import { NavigationFooterVisible, NavigationHeaderVisible, NavigationMode, NavigationPosition, useNavigation } from "@/components/elements/navigation-container";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
 import { NextPage } from "next";
@@ -22,6 +22,21 @@ const Page: NextPage = () => {
         $value={navigation}
       />
       <Divider />
+      <RadioButtons<NavigationPosition>
+        $source={[
+          "left",
+          "right",
+          "top",
+          "bottom"
+        ].map(v => {
+          return { value: v, label: v };
+        })}
+        $value={navigation.navigationPosition}
+        $onChange={v => {
+          navigation.setNavigationPosition(v!);
+        }}
+        $tag="navigation position"
+      />
       <RadioButtons<NavigationMode>
         $source={[
           "auto",
@@ -38,7 +53,7 @@ const Page: NextPage = () => {
         }}
         $tag="navigation mode"
       />
-      <RadioButtons<HeaderVisible>
+      <RadioButtons<NavigationHeaderVisible>
         $source={[
           "always",
           "none",
@@ -51,7 +66,7 @@ const Page: NextPage = () => {
         }}
         $tag="header"
       />
-      <RadioButtons<FooterVisible>
+      <RadioButtons<NavigationFooterVisible>
         $source={[
           "always",
           "end",
