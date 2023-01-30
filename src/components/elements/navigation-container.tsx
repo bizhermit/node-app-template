@@ -16,12 +16,12 @@ const defaultKey = "default";
 
 type NavigationContextProps = {
   toggle: (open?: boolean) => void;
-  showedNavigation: boolean;
-  navigationPosition: NavigationPosition;
-  setNavigationPosition: (position: NavigationPosition | typeof defaultKey) => void;
-  navigationMode: NavigationMode;
-  setNavigationMode: (mode: NavigationMode | typeof defaultKey) => void;
-  navigationState: Omit<NavigationMode, "auto">;
+  showed: boolean;
+  position: NavigationPosition;
+  setPosition: (position: NavigationPosition | typeof defaultKey) => void;
+  mode: NavigationMode;
+  setMode: (mode: NavigationMode | typeof defaultKey) => void;
+  state: Omit<NavigationMode, "auto">;
   headerVisible: NavigationHeaderVisible;
   setHeaderVisible: (mode: NavigationHeaderVisible | typeof defaultKey) => void;
   footerVisible: NavigationFooterVisible;
@@ -30,12 +30,12 @@ type NavigationContextProps = {
 
 const NavigationContext = createContext<NavigationContextProps>({
   toggle: () => { },
-  showedNavigation: false,
-  navigationPosition: "left",
-  setNavigationPosition: () => { },
-  navigationMode: "none",
-  setNavigationMode: () => { },
-  navigationState: "none",
+  showed: false,
+  position: "left",
+  setPosition: () => { },
+  mode: "none",
+  setMode: () => { },
+  state: "none",
   headerVisible: "none",
   setHeaderVisible: () => { },
   footerVisible: "none",
@@ -179,14 +179,14 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     <NavigationContext.Provider
       value={{
         toggle: toggleNav,
-        showedNavigation: showedNav,
-        navigationPosition: navPosition,
-        setNavigationPosition: (pos = defaultNavigationPosition) => {
+        showed: showedNav,
+        position: navPosition,
+        setPosition: (pos = defaultNavigationPosition) => {
           setNavigationPosition(pos === defaultKey ? (props.$defaultNavigationPosition || defaultNavigationPosition) : pos);
         },
-        navigationState: navMode,
-        navigationMode,
-        setNavigationMode: (mode = defaultNavigationMode) => {
+        state: navMode,
+        mode: navigationMode,
+        setMode: (mode = defaultNavigationMode) => {
           const m = mode === defaultKey ? (props.$defaultNavigationMode || defaultNavigationMode) : mode;
           setNavigationMode(m);
           if (m === "auto") {

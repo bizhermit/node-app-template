@@ -44,7 +44,7 @@ const Navigation: FC = () => {
   return (
     <Menu
       className="flex-1"
-      $direction={navigation.navigationPosition === "top" || navigation.navigationPosition === "bottom" ? "horizontal" : "vertical"}
+      $direction={navigation.position === "top" || navigation.position === "bottom" ? "horizontal" : "vertical"}
       style={{ width: convertSizeNumToStr(280) }}
       $items={[{
         key: "index",

@@ -13,9 +13,9 @@ const Page: NextPage = () => {
     <div className="flex-start w-100 h-100 p-1 gap-1">
       <StructView
         $keys={[
-          { key: "navigationPosition" },
-          { key: "navigationMode" },
-          { key: "navigationState" },
+          { key: "position" },
+          { key: "mode" },
+          { key: "state" },
           { key: "headerVisible" },
           { key: "footerVisible" },
         ]}
@@ -23,7 +23,7 @@ const Page: NextPage = () => {
       />
       <Divider />
       <Row className="gap-1">
-        <Button $onClick={() => navigation.setNavigationPosition("default")}>default</Button>
+        <Button $onClick={() => navigation.setPosition("default")}>default</Button>
         <RadioButtons<NavigationPosition>
           $source={[
             "left",
@@ -33,15 +33,15 @@ const Page: NextPage = () => {
           ].map(v => {
             return { value: v, label: v };
           })}
-          $value={navigation.navigationPosition}
+          $value={navigation.position}
           $onChange={v => {
-            navigation.setNavigationPosition(v!);
+            navigation.setPosition(v!);
           }}
           $tag="navigation position"
         />
       </Row>
       <Row className="gap-1">
-        <Button $onClick={() => navigation.setNavigationMode("default")}>default</Button>
+        <Button $onClick={() => navigation.setMode("default")}>default</Button>
         <RadioButtons<NavigationMode>
           $source={[
             "auto",
@@ -52,9 +52,9 @@ const Page: NextPage = () => {
           ].map(v => {
             return { value: v, label: v };
           })}
-          $value={navigation.navigationMode}
+          $value={navigation.mode}
           $onChange={v => {
-            navigation.setNavigationMode(v!);
+            navigation.setMode(v!);
           }}
           $tag="navigation mode"
         />
