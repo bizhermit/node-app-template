@@ -44,10 +44,10 @@ export const useNavigation = () => {
 
 type OmitAttributes = "color" | "children";
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $navigationPosition?: NavigationPosition;
-  $navigationMode?: NavigationMode;
-  $headerVisible?: "always" | "none";
-  $footerVisible?: "always" | "end" | "none";
+  $defaultNavigationPosition?: NavigationPosition;
+  $defaultNavigationMode?: NavigationMode;
+  $defaultHeaderVisible?: HeaderVisible;
+  $defaultFooterVisible?: FooterVisible;
   $headerTag?: React.ElementType;
   $footerTag?: React.ElementType;
   $navTag?: React.ElementType;
@@ -60,19 +60,19 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
   const navRef = useRef<HTMLElement>(null!);
   const maskRef = useRef<HTMLDivElement>(null!);
   const [showedNav, setShowedNav] = useState(false);
-  const [navigationMode, setNavigationMode] = useState<NavigationMode>(props.$navigationMode || "auto");
+  const [navigationMode, setNavigationMode] = useState<NavigationMode>(props.$defaultNavigationMode || "auto");
   const [navMode, setNavMode] = useState<Omit<NavigationMode, "auto">>(() => {
     if (navigationMode === "auto") return "visible";
     return navigationMode;
   });
-  const [headerVisible, setHeaderVisible] = useState(props.$headerVisible || "always");
-  const [footerVisible, setFooterVisible] = useState(props.$footerVisible || "end");
+  const [headerVisible, setHeaderVisible] = useState(props.$defaultHeaderVisible || "always");
+  const [footerVisible, setFooterVisible] = useState(props.$defaultFooterVisible || "end");
 
   const HeaderTag = props.$headerTag ?? "header";
   const FooterTag = props.$footerTag ?? "footer";
   const NavTag = props.$navTag ?? "nav";
   const MainTag = props.$mainTag ?? "main";
-  const navPosition = props.$navigationPosition ?? "left";
+  const navPosition = props.$defaultNavigationPosition ?? "left";
   const childCtx = (() => {
     const hasHeader = props.children.length >= 3;
     const hasFooter = props.children.length >= 4;
