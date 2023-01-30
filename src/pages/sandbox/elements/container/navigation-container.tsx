@@ -22,64 +22,76 @@ const Page: NextPage = () => {
         $value={navigation}
       />
       <Divider />
-      <RadioButtons<NavigationPosition>
-        $source={[
-          "left",
-          "right",
-          "top",
-          "bottom"
-        ].map(v => {
-          return { value: v, label: v };
-        })}
-        $value={navigation.navigationPosition}
-        $onChange={v => {
-          navigation.setNavigationPosition(v!);
-        }}
-        $tag="navigation position"
-      />
-      <RadioButtons<NavigationMode>
-        $source={[
-          "auto",
-          "visible",
-          "minimize",
-          "manual",
-          "none",
-        ].map(v => {
-          return { value: v, label: v };
-        })}
-        $value={navigation.navigationMode}
-        $onChange={v => {
-          navigation.setNavigationMode(v!);
-        }}
-        $tag="navigation mode"
-      />
-      <RadioButtons<NavigationHeaderVisible>
-        $source={[
-          "always",
-          "none",
-        ].map(v => {
-          return { value: v, label: v };
-        })}
-        $value={navigation.headerVisible}
-        $onChange={v => {
-          navigation.setHeaderVisible(v!);
-        }}
-        $tag="header"
-      />
-      <RadioButtons<NavigationFooterVisible>
-        $source={[
-          "always",
-          "end",
-          "none",
-        ].map(v => {
-          return { value: v, label: v };
-        })}
-        $value={navigation.footerVisible}
-        $onChange={v => {
-          navigation.setFooterVisible(v!);
-        }}
-        $tag="footer"
-      />
+      <Row className="gap-1">
+        <Button $onClick={() => navigation.setNavigationPosition("default")}>default</Button>
+        <RadioButtons<NavigationPosition>
+          $source={[
+            "left",
+            "right",
+            "top",
+            "bottom"
+          ].map(v => {
+            return { value: v, label: v };
+          })}
+          $value={navigation.navigationPosition}
+          $onChange={v => {
+            navigation.setNavigationPosition(v!);
+          }}
+          $tag="navigation position"
+        />
+      </Row>
+      <Row className="gap-1">
+        <Button $onClick={() => navigation.setNavigationMode("default")}>default</Button>
+        <RadioButtons<NavigationMode>
+          $source={[
+            "auto",
+            "visible",
+            "minimize",
+            "manual",
+            "none",
+          ].map(v => {
+            return { value: v, label: v };
+          })}
+          $value={navigation.navigationMode}
+          $onChange={v => {
+            navigation.setNavigationMode(v!);
+          }}
+          $tag="navigation mode"
+        />
+      </Row>
+      <Row className="gap-1">
+        <Button $onClick={() => navigation.setHeaderVisible("default")}>default</Button>
+        <RadioButtons<NavigationHeaderVisible>
+          $source={[
+            "always",
+            "none",
+          ].map(v => {
+            return { value: v, label: v };
+          })}
+          $value={navigation.headerVisible}
+          $onChange={v => {
+            navigation.setHeaderVisible(v!);
+          }}
+          $tag="header"
+        />
+      </Row>
+      <Row className="gap-1">
+        <Button $onClick={() => navigation.setFooterVisible("default")}>default</Button>
+        <RadioButtons<NavigationFooterVisible>
+          $source={[
+            "always",
+            "end",
+            "none",
+          ].map(v => {
+            return { value: v, label: v };
+          })}
+          $value={navigation.footerVisible}
+          $onChange={v => {
+            navigation.setFooterVisible(v!);
+          }}
+          $tag="footer"
+        />
+      </Row>
       <Divider />
       <Row className="gap-1">
         <Button
