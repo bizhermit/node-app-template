@@ -1,5 +1,5 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
-import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
@@ -9,6 +9,9 @@ export type NavigationPosition = "left" | "right" | "top" | "bottom";
 
 export type NavigationMode = "auto" | "visible" | "minimize" | "manual" | "none";
 
+export type HeaderVisible = "always" | "none";
+export type FooterVisible = "always" | "end" | "none";
+
 type NavigationContextProps = {
   toggle: (open?: boolean) => void;
   showedNavigation: boolean;
@@ -16,6 +19,10 @@ type NavigationContextProps = {
   navigationMode: NavigationMode;
   setNavigationMode: (mode: NavigationMode) => void;
   navigationState: Omit<NavigationMode, "auto">;
+  headerVisible: HeaderVisible;
+  setHeaderVisible: (mode: HeaderVisible) => void;
+  footerVisible: FooterVisible;
+  setFooterVisible: (mode: FooterVisible) => void;
 }
 
 const NavigationContext = createContext<NavigationContextProps>({
@@ -25,6 +32,10 @@ const NavigationContext = createContext<NavigationContextProps>({
   navigationMode: "none",
   setNavigationMode: () => { },
   navigationState: "none",
+  headerVisible: "none",
+  setHeaderVisible: () => { },
+  footerVisible: "none",
+  setFooterVisible: () => { },
 });
 
 export const useNavigation = () => {
@@ -35,7 +46,8 @@ type OmitAttributes = "color" | "children";
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $navigationPosition?: NavigationPosition;
   $navigationMode?: NavigationMode;
-  $footerVisible?: "always" | "end";
+  $headerVisible?: "always" | "none";
+  $footerVisible?: "always" | "end" | "none";
   $headerTag?: React.ElementType;
   $footerTag?: React.ElementType;
   $navTag?: React.ElementType;
@@ -53,13 +65,15 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     if (navigationMode === "auto") return "visible";
     return navigationMode;
   });
+  const [headerVisible, setHeaderVisible] = useState(props.$headerVisible || "always");
+  const [footerVisible, setFooterVisible] = useState(props.$footerVisible || "end");
 
   const HeaderTag = props.$headerTag ?? "header";
   const FooterTag = props.$footerTag ?? "footer";
   const NavTag = props.$navTag ?? "nav";
   const MainTag = props.$mainTag ?? "main";
   const navPosition = props.$navigationPosition ?? "left";
-  const childCtx = useMemo(() => {
+  const childCtx = (() => {
     const hasHeader = props.children.length >= 3;
     const hasFooter = props.children.length >= 4;
     return {
@@ -68,7 +82,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
       main: hasHeader ? 2 : 1,
       footer: hasFooter ? 3 : undefined,
     };
-  }, []);
+  })();
 
   const click = (e: React.MouseEvent) => {
     if (navPosition === "top" || navPosition === "bottom") {
@@ -150,7 +164,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
   useEffect(() => {
     if (navigationMode !== "auto") return;
     toggleModeBySize();
-  }, [layout.windowSize]);
+  }, [layout.windowSize, headerVisible]);
 
   return (
     <NavigationContext.Provider
@@ -167,14 +181,22 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
             return;
           }
           setNavMode(mode);
-        }
+        },
+        headerVisible,
+        setHeaderVisible: (mode = "always") => {
+          setHeaderVisible(mode);
+        },
+        footerVisible,
+        setFooterVisible: (mode = "end") => {
+          setFooterVisible(mode);
+        },
       }}
     >
       <div
         {...attributesWithoutChildren(props, Style.wrap)}
         ref={ref}
       >
-        {childCtx.header != null &&
+        {headerVisible !== "none" && childCtx.header != null &&
           <HeaderTag
             className={Style.header}
             data-pos={navPosition}
@@ -227,11 +249,11 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
           <div className={Style.content}>
             <MainTag
               className={Style.main}
-              data-footer={props.$footerVisible || "end"}
+              data-footer={footerVisible}
             >
               {props.children[childCtx.main]}
             </MainTag>
-            {childCtx.footer != null &&
+            {footerVisible !== "none" && childCtx.footer != null &&
               <FooterTag className={Style.footer}>
                 {props.children[childCtx.footer]}
               </FooterTag>

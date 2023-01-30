@@ -1,6 +1,8 @@
+import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
-import { NavigationMode, useNavigation } from "@/components/elements/navigation-container";
+import { FooterVisible, HeaderVisible, NavigationMode, useNavigation } from "@/components/elements/navigation-container";
+import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
 import { NextPage } from "next";
 
@@ -13,7 +15,9 @@ const Page: NextPage = () => {
         $keys={[
           { key: "navigationPosition" },
           { key: "navigationMode" },
-          { key: "navigationState" }
+          { key: "navigationState" },
+          { key: "headerVisible" },
+          { key: "footerVisible" },
         ]}
         $value={navigation}
       />
@@ -32,7 +36,52 @@ const Page: NextPage = () => {
         $onChange={v => {
           navigation.setNavigationMode(v!);
         }}
+        $tag="navigation mode"
       />
+      <RadioButtons<HeaderVisible>
+        $source={[
+          "always",
+          "none",
+        ].map(v => {
+          return { value: v, label: v };
+        })}
+        $value={navigation.headerVisible}
+        $onChange={v => {
+          navigation.setHeaderVisible(v!);
+        }}
+        $tag="header"
+      />
+      <RadioButtons<FooterVisible>
+        $source={[
+          "always",
+          "end",
+          "none",
+        ].map(v => {
+          return { value: v, label: v };
+        })}
+        $value={navigation.footerVisible}
+        $onChange={v => {
+          navigation.setFooterVisible(v!);
+        }}
+        $tag="footer"
+      />
+      <Divider />
+      <Row className="gap-1">
+        <Button
+          $onClick={() => {
+            navigation.toggle(true);
+          }}
+        >
+          open
+        </Button>
+        <Button
+          $onClick={() => {
+            navigation.toggle(false);
+          }}
+        >
+          close
+        </Button>
+      </Row>
     </div>
   );
 };
