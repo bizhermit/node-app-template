@@ -24,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Header />
             <Navigation />
             <Component {...pageProps} />
-            <div>foot</div>
+            <Footer />
           </NavigationContainer>
         </LoadingProvider>
       </IconContext.Provider>
@@ -35,6 +35,12 @@ const App = ({ Component, pageProps }: AppProps) => {
 const Header: FC = () => {
   return (
     <div className="px-1">Header</div>
+  );
+};
+
+const Footer: FC = () => {
+  return (
+    <div className="px-1">foot</div>
   );
 };
 

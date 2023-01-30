@@ -252,13 +252,6 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
               {props.children[childCtx.nav]}
             </NavTag>
           }
-          {navMode === "manual" &&
-            <div
-              ref={maskRef}
-              className={Style.mask}
-              onClick={() => toggleNav(false)}
-            />
-          }
           <div className={Style.content}>
             <MainTag
               className={Style.main}
@@ -272,6 +265,13 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
               </FooterTag>
             }
           </div>
+          {navMode === "manual" &&
+            <div
+              ref={maskRef}
+              className={Style.mask}
+              onClick={() => toggleNav(false)}
+            />
+          }
         </div>
       </div>
     </NavigationContext.Provider>
