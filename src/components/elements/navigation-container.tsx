@@ -1,5 +1,5 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
-import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
@@ -7,20 +7,39 @@ import useToggleAnimation from "@/hooks/toggle-animation";
 
 export type NavigationPosition = "left" | "right" | "top" | "bottom";
 
-export type NavigationMode = "visible" | "minimize" | "manual";
+export type NavigationMode = "auto" | "visible" | "minimize" | "manual" | "none";
+
+export type NavigationHeaderVisible = "always" | "none";
+export type NavigationFooterVisible = "always" | "end" | "none";
+
+const defaultKey = "default";
 
 type NavigationContextProps = {
   toggle: (open?: boolean) => void;
-  showedNavigation: boolean;
-  navigationPosition: NavigationPosition;
-  navigationMode: NavigationMode;
+  showed: boolean;
+  position: NavigationPosition;
+  setPosition: (position: NavigationPosition | typeof defaultKey) => void;
+  mode: NavigationMode;
+  setMode: (mode: NavigationMode | typeof defaultKey) => void;
+  state: Omit<NavigationMode, "auto">;
+  headerVisible: NavigationHeaderVisible;
+  setHeaderVisible: (mode: NavigationHeaderVisible | typeof defaultKey) => void;
+  footerVisible: NavigationFooterVisible;
+  setFooterVisible: (mode: NavigationFooterVisible | typeof defaultKey) => void;
 }
 
 const NavigationContext = createContext<NavigationContextProps>({
   toggle: () => { },
-  showedNavigation: false,
-  navigationPosition: "left",
-  navigationMode: "visible",
+  showed: false,
+  position: "left",
+  setPosition: () => { },
+  mode: "none",
+  setMode: () => { },
+  state: "none",
+  headerVisible: "none",
+  setHeaderVisible: () => { },
+  footerVisible: "none",
+  setFooterVisible: () => { },
 });
 
 export const useNavigation = () => {
@@ -29,9 +48,10 @@ export const useNavigation = () => {
 
 type OmitAttributes = "color" | "children";
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $navigationPosition?: NavigationPosition;
-  $navigationMode?: NavigationMode | "auto";
-  $footerVisible?: "always" | "end";
+  $defaultNavigationPosition?: NavigationPosition;
+  $defaultNavigationMode?: NavigationMode;
+  $defaultHeaderVisible?: NavigationHeaderVisible;
+  $defaultFooterVisible?: NavigationFooterVisible;
   $headerTag?: React.ElementType;
   $footerTag?: React.ElementType;
   $navTag?: React.ElementType;
@@ -39,22 +59,30 @@ export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, Omit
   children: [ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode, ReactNode];
 };
 
+const defaultNavigationPosition: NavigationPosition = "left";
+const defaultNavigationMode: NavigationMode = "auto";
+const defaultHeaderVisible: NavigationHeaderVisible = "always";
+const defaultFooterVisible: NavigationFooterVisible = "end";
+
 const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
   const layout = useLayout();
   const navRef = useRef<HTMLElement>(null!);
   const maskRef = useRef<HTMLDivElement>(null!);
   const [showedNav, setShowedNav] = useState(false);
-  const [navMode, setNavMode] = useState<NavigationMode>(() => {
-    if (props.$navigationMode === "auto") return "visible";
-    return props.$navigationMode ?? "visible";
+  const [navigationMode, setNavigationMode] = useState<NavigationMode>(props.$defaultNavigationMode || defaultNavigationMode);
+  const [navMode, setNavMode] = useState<Omit<NavigationMode, "auto">>(() => {
+    if (navigationMode === "auto") return "visible";
+    return navigationMode;
   });
+  const [headerVisible, setHeaderVisible] = useState(props.$defaultHeaderVisible || defaultHeaderVisible);
+  const [footerVisible, setFooterVisible] = useState(props.$defaultFooterVisible || defaultFooterVisible);
 
   const HeaderTag = props.$headerTag ?? "header";
   const FooterTag = props.$footerTag ?? "footer";
   const NavTag = props.$navTag ?? "nav";
   const MainTag = props.$mainTag ?? "main";
-  const navPosition = props.$navigationPosition ?? "left";
-  const childCtx = useMemo(() => {
+  const [navPosition, setNavigationPosition] = useState(props.$defaultNavigationPosition ?? defaultNavigationPosition);
+  const childCtx = (() => {
     const hasHeader = props.children.length >= 3;
     const hasFooter = props.children.length >= 4;
     return {
@@ -63,7 +91,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
       main: hasHeader ? 2 : 1,
       footer: hasFooter ? 3 : undefined,
     };
-  }, []);
+  })();
 
   const click = (e: React.MouseEvent) => {
     if (navPosition === "top" || navPosition === "bottom") {
@@ -120,10 +148,9 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
         }
       }
     },
-  }, [navMode]);
+  }, [navMode, navPosition]);
 
-  useEffect(() => {
-    if (props.$navigationMode && props.$navigationMode !== "auto") return;
+  const toggleModeBySize = () => {
     if (navPosition === "top" || navPosition === "bottom") return;
     if (layout.mobile) {
       setNavMode("manual");
@@ -141,22 +168,48 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     }
     setNavMode("manual");
     setShowedNav(false);
-  }, [layout.windowSize]);
+  };
+
+  useEffect(() => {
+    if (navigationMode !== "auto") return;
+    toggleModeBySize();
+  }, [layout.windowSize, headerVisible]);
 
   return (
     <NavigationContext.Provider
       value={{
         toggle: toggleNav,
-        showedNavigation: showedNav,
-        navigationMode: navMode,
-        navigationPosition: navPosition,
+        showed: showedNav,
+        position: navPosition,
+        setPosition: (pos = defaultNavigationPosition) => {
+          setNavigationPosition(pos === defaultKey ? (props.$defaultNavigationPosition || defaultNavigationPosition) : pos);
+        },
+        state: navMode,
+        mode: navigationMode,
+        setMode: (mode = defaultNavigationMode) => {
+          const m = mode === defaultKey ? (props.$defaultNavigationMode || defaultNavigationMode) : mode;
+          setNavigationMode(m);
+          if (m === "auto") {
+            toggleModeBySize();
+            return;
+          }
+          setNavMode(m);
+        },
+        headerVisible,
+        setHeaderVisible: (mode = defaultHeaderVisible) => {
+          setHeaderVisible(mode === defaultKey ? (props.$defaultHeaderVisible || defaultHeaderVisible) : mode);
+        },
+        footerVisible,
+        setFooterVisible: (mode = defaultFooterVisible) => {
+          setFooterVisible(mode === defaultKey ? (props.$defaultFooterVisible || defaultFooterVisible) : mode);
+        },
       }}
     >
       <div
         {...attributesWithoutChildren(props, Style.wrap)}
         ref={ref}
       >
-        {childCtx.header != null &&
+        {headerVisible !== "none" && childCtx.header != null &&
           <HeaderTag
             className={Style.header}
             data-pos={navPosition}
@@ -184,19 +237,34 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
           data-mode={navMode}
           data-pos={navPosition}
         >
-          <NavTag
-            ref={navRef}
-            className={Style.nav}
-            style={toggleAnimationInitStyle}
-            data-mode={navMode}
-            data-pos={navPosition}
-            data-show={showedNav}
-            onClick={click}
-            onMouseEnter={mouseEnter}
-            onMouseLeave={mouseLeave}
-          >
-            {props.children[childCtx.nav]}
-          </NavTag>
+          {navMode !== "none" &&
+            <NavTag
+              ref={navRef}
+              className={Style.nav}
+              style={toggleAnimationInitStyle}
+              data-mode={navMode}
+              data-pos={navPosition}
+              data-show={showedNav}
+              onClick={click}
+              onMouseEnter={mouseEnter}
+              onMouseLeave={mouseLeave}
+            >
+              {props.children[childCtx.nav]}
+            </NavTag>
+          }
+          <div className={Style.content}>
+            <MainTag
+              className={Style.main}
+              data-footer={footerVisible}
+            >
+              {props.children[childCtx.main]}
+            </MainTag>
+            {footerVisible !== "none" && childCtx.footer != null &&
+              <FooterTag className={Style.footer}>
+                {props.children[childCtx.footer]}
+              </FooterTag>
+            }
+          </div>
           {navMode === "manual" &&
             <div
               ref={maskRef}
@@ -204,19 +272,6 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
               onClick={() => toggleNav(false)}
             />
           }
-          <div className={Style.content}>
-            <MainTag
-              className={Style.main}
-              data-footer={props.$footerVisible || "end"}
-            >
-              {props.children[childCtx.main]}
-            </MainTag>
-            {childCtx.footer != null &&
-              <FooterTag className={Style.footer}>
-                {props.children[childCtx.footer]}
-              </FooterTag>
-            }
-          </div>
         </div>
       </div>
     </NavigationContext.Provider>

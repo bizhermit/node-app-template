@@ -8,6 +8,7 @@
   "remoteEnv": {
     "PORT": "3000"
   },
+  "forwardPorts": [3000],
   "extensions": [
     "MS-CEINTL.vscode-language-pack-ja",
     "eamodio.gitlens",
@@ -17,6 +18,10 @@
     "foxundermoon.next-js",
     "PulkitGangwar.nextjs-snippets",
     "Divlo.vscode-styled-jsx-languageserver",
-    "Divlo.vscode-styled-jsx-syntax"
+    "Divlo.vscode-styled-jsx-syntax",
+    "Pivotal.vscode-manifest-yaml",
+    "jock.svg",
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced"
   ]
 }

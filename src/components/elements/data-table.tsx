@@ -273,7 +273,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                 return (
                   <div
                     key={index}
-                    className={Style.hrow}
+                    className={Style.grow}
                     data-border={props.$rowBorder}
                   >
                     <div
@@ -376,7 +376,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
               return (
                 <div
                   key={index}
-                  className={Style.brow}
+                  className={Style.grow}
                   data-border={props.$rowBorder}
                 >
                   {row?.map(c => generateCell(index, data, c))}

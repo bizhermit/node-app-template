@@ -1,5 +1,8 @@
 @use "$/mixins";
 
+$shadowWidth: .3rem;
+$shadowPadding: .2rem;
+
 .wrap {
   box-sizing: border-box;
   display: flex;
@@ -18,7 +21,7 @@
   align-items: center;
   overflow: hidden;
   flex: none;
-  z-index: 1;
+  z-index: 3;
   padding: 0;
   margin: 0;
 
@@ -49,15 +52,27 @@
   min-height: var(--size);
   background: var(--c-nav);
   color: var(--c-nav_);
+  box-shadow: 0 .1rem #{$shadowWidth} 0 var(--c-shadow);
 
   &[data-pos="right"] {
     flex-direction: row-reverse;
   }
+
+  +.body {
+    >.nav {
+      padding-top: #{$shadowPadding};
+    }
+    >.content {
+      >.main {
+        padding-top: #{$shadowPadding};
+      }
+    }
+  }
 }
 
 .footer {
-  background: var(--c-nav);
-  color: var(--c-nav_);
+  background: var(--c-dull);
+  color: var(--c-dull_);
 }
 
 .body {
@@ -126,10 +141,30 @@
 
   &[data-pos="left"] {
     left: 0;
+    box-shadow: .1rem 0 #{$shadowWidth} 0 var(--c-shadow);
+
+    &[data-mode="visible"],
+    &[data-mode="minimize"] {
+      +.content {
+        >.main {
+          padding-left: #{$shadowPadding};
+        }
+      }
+    }
   }
 
   &[data-pos="right"] {
     right: 0;
+    box-shadow: -.1rem 0 #{$shadowWidth} 0 var(--c-shadow);
+
+    &[data-mode="visible"],
+    &[data-mode="minimize"] {
+      +.content {
+        >.main {
+          padding-right: #{$shadowPadding};
+        }
+      }
+    }
   }
 
   &[data-pos="top"],
@@ -148,11 +183,29 @@
 
   &[data-pos="top"] {
     top: 0;
+    box-shadow: 0 .1rem #{$shadowWidth} 0 var(--c-shadow);
+
+    &[data-mode="visible"],
+    &[data-mode="minimize"] {
+      +.content {
+        >.main {
+          padding-top: #{$shadowPadding};
+        }
+      }
+    }
   }
 
   &[data-pos="bottom"] {
     bottom: 0;
     align-items: flex-end;
+    box-shadow: 0 -.1rem #{$shadowWidth} 0 var(--c-shadow);
+
+    &[data-mode="visible"],
+    &[data-mode="minimize"] {
+      +.content {
+          padding-bottom: #{$shadowPadding};
+      }
+    }
   }
 }
 

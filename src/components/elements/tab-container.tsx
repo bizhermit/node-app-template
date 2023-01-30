@@ -1,7 +1,6 @@
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/tab-container.module.scss";
-import LabelText from "@/components/elements/label-text";
 
 type OmitAttributes = "color" | "children";
 export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
@@ -42,7 +41,7 @@ const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props,
           data-selected={selected}
           onClick={() => setKey(child?.key!)}
         >
-          <LabelText>{child?.props.label}</LabelText>
+          {child?.props.label}
         </div>
       );
       bodys.push(
