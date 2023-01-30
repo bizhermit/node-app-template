@@ -7,20 +7,24 @@ import useToggleAnimation from "@/hooks/toggle-animation";
 
 export type NavigationPosition = "left" | "right" | "top" | "bottom";
 
-export type NavigationMode = "visible" | "minimize" | "manual";
+export type NavigationMode = "auto" | "visible" | "minimize" | "manual" | "none";
 
 type NavigationContextProps = {
   toggle: (open?: boolean) => void;
   showedNavigation: boolean;
   navigationPosition: NavigationPosition;
   navigationMode: NavigationMode;
+  setNavigationMode: (mode: NavigationMode) => void;
+  navigationState: Omit<NavigationMode, "auto">;
 }
 
 const NavigationContext = createContext<NavigationContextProps>({
   toggle: () => { },
   showedNavigation: false,
   navigationPosition: "left",
-  navigationMode: "visible",
+  navigationMode: "none",
+  setNavigationMode: () => { },
+  navigationState: "none",
 });
 
 export const useNavigation = () => {
@@ -30,7 +34,7 @@ export const useNavigation = () => {
 type OmitAttributes = "color" | "children";
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $navigationPosition?: NavigationPosition;
-  $navigationMode?: NavigationMode | "auto";
+  $navigationMode?: NavigationMode;
   $footerVisible?: "always" | "end";
   $headerTag?: React.ElementType;
   $footerTag?: React.ElementType;
@@ -44,9 +48,10 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
   const navRef = useRef<HTMLElement>(null!);
   const maskRef = useRef<HTMLDivElement>(null!);
   const [showedNav, setShowedNav] = useState(false);
-  const [navMode, setNavMode] = useState<NavigationMode>(() => {
-    if (props.$navigationMode === "auto") return "visible";
-    return props.$navigationMode ?? "visible";
+  const [navigationMode, setNavigationMode] = useState<NavigationMode>(props.$navigationMode || "auto");
+  const [navMode, setNavMode] = useState<Omit<NavigationMode, "auto">>(() => {
+    if (navigationMode === "auto") return "visible";
+    return navigationMode;
   });
 
   const HeaderTag = props.$headerTag ?? "header";
@@ -122,8 +127,7 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     },
   }, [navMode]);
 
-  useEffect(() => {
-    if (props.$navigationMode && props.$navigationMode !== "auto") return;
+  const toggleModeBySize = () => {
     if (navPosition === "top" || navPosition === "bottom") return;
     if (layout.mobile) {
       setNavMode("manual");
@@ -141,6 +145,11 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
     }
     setNavMode("manual");
     setShowedNav(false);
+  };
+
+  useEffect(() => {
+    if (navigationMode !== "auto") return;
+    toggleModeBySize();
   }, [layout.windowSize]);
 
   return (
@@ -148,8 +157,17 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
       value={{
         toggle: toggleNav,
         showedNavigation: showedNav,
-        navigationMode: navMode,
+        navigationMode,
         navigationPosition: navPosition,
+        navigationState: navMode,
+        setNavigationMode: (mode = "auto") => {
+          setNavigationMode(mode);
+          if (mode === "auto") {
+            toggleModeBySize();
+            return;
+          }
+          setNavMode(mode);
+        }
       }}
     >
       <div
@@ -184,19 +202,21 @@ const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainer
           data-mode={navMode}
           data-pos={navPosition}
         >
-          <NavTag
-            ref={navRef}
-            className={Style.nav}
-            style={toggleAnimationInitStyle}
-            data-mode={navMode}
-            data-pos={navPosition}
-            data-show={showedNav}
-            onClick={click}
-            onMouseEnter={mouseEnter}
-            onMouseLeave={mouseLeave}
-          >
-            {props.children[childCtx.nav]}
-          </NavTag>
+          {navMode !== "none" &&
+            <NavTag
+              ref={navRef}
+              className={Style.nav}
+              style={toggleAnimationInitStyle}
+              data-mode={navMode}
+              data-pos={navPosition}
+              data-show={showedNav}
+              onClick={click}
+              onMouseEnter={mouseEnter}
+              onMouseLeave={mouseLeave}
+            >
+              {props.children[childCtx.nav]}
+            </NavTag>
+          }
           {navMode === "manual" &&
             <div
               ref={maskRef}
