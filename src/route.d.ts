@@ -38,7 +38,7 @@ type PagePath = "/"
   | "/sandbox/message-box"
   | "/sandbox/storage";
 
-type ApiPath = "/api/fetch"
-  | "/api/fetch/[id]"
-  | "/api/form"
-  | "/api/hello";
+type ApiPath = "/fetch"
+  | "/fetch/[id]"
+  | "/form"
+  | "/hello";
