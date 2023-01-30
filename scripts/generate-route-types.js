@@ -26,8 +26,7 @@ const main = (dirName, nestLevel = 0, isApi = false) => {
       return;
     }
 
-    let pathName =  path.join(dirName, /index.ts[x]?$/.test(name) ? "" : name);
-    pathName = pathName.replace(path.extname(pathName), "");
+    const pathName =  path.join(dirName, /index.ts[x]?$/.test(name) ? "" : path.basename(name, path.extname(name)));
 
     if (api) {
       apis.push(`/${path.relative(apiRootPath, pathName).replace(/\\/g, "/")}`);
