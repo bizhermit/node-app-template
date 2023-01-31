@@ -140,7 +140,27 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                    const res = await fetchApi.post("/fetch");
+                    const res = await fetchApi.post("/fetch", {
+                      body: "hoge",
+                      release_date: new Date(),
+                      title: "title",
+                      array: [
+                        "1"
+                      ],
+                      arrayStruct: [{
+                        body: "",
+                        release_date: new Date(),
+                        title: "",
+                      }]
+                      struct: {
+                        body: "",
+                        release_date: new Date(),
+                        title: "",
+                      },
+                      // body: "string",
+                      // release_date: "ge",
+                      // title: "string",
+                    });
                     setResponse(res);
                   } finally {
                     unlock();

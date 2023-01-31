@@ -46,7 +46,7 @@ type DataItem_Date = DataItem_Base & {
 type DataItem_Array = DataItem_Base & {
   type: "array";
   validations?: readonly ((v: Nullable<Array<any>>) => string)[];
-  items: DataItem | Array<DataItem>;
+  item: DataItem | { [key: string]: DataItem };
   length?: number;
   minLength?: number;
   maxLength?: number;

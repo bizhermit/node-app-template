@@ -7,6 +7,38 @@ import apiHandler from "@/utilities/api-handler";
 
 const pathname = "/fetch";
 
+export const GetReq = {
+  hoge: 1,
+  fuga: [1],
+};
+export const GetRes = {
+  hoge: 3,
+  fuga: 4,
+};
+
+export const PostReq = {
+  [notification_title.name]: notification_title,
+  [notification_body.name]: notification_body,
+  [notification_releaseDate.name]: notification_releaseDate,
+  array: {
+    type: "array",
+    item: notification_title,
+  },
+  arrayStruct: {
+    type: "array",
+    item: {
+      [notification_title.name]: notification_title,
+      [notification_body.name]: notification_body,
+      [notification_releaseDate.name]: notification_releaseDate,
+    },
+  },
+  struct: {
+    [notification_title.name]: notification_title,
+    [notification_body.name]: notification_body,
+    [notification_releaseDate.name]: notification_releaseDate,
+  },
+} as const;
+
 const params = [
   notification_title,
   notification_body,
