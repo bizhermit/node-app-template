@@ -9,7 +9,7 @@ export type ApiParameters = Partial<Record<ApiMethods, {
   req?: Array<DataItem>;
   res?: any;
 }>>;
-type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
+type Context<U extends ApiPath, M extends (ApiMethods | SystemMethods)> = {
   req: NextApiRequest;
   res: NextApiResponse;
   getCookies: <T extends QueryStruct = QueryStruct>() => T;
@@ -18,23 +18,23 @@ type Context<U extends keyof Api, M extends (ApiMethods | SystemMethods)> = {
   hasError: () => boolean;
 } & (
     M extends "get" ? {
-      getQuery: <T extends (Exclude<PickApiParameter<Api, U, "get", "req", QueryStruct>, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<PickApiParameter<Api, U, "get", "req", QueryStruct>, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
+      getQuery: <T extends (Exclude<ApiRequest<U, "get">, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, "get">, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
     } : {
       getQuery: <T extends Readonly<Array<DataItem>> | null | undefined = undefined>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : QueryStruct;
-      getBody: <T extends (Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods | "get">, "req">, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<PickApiParameter<Api, U, Exclude<M, SystemMethods | "get">, "req">, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
+      getBody: <T extends (Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
     }
   );
 
-type MethodProcess<U extends keyof Api> = {
+type MethodProcess<U extends ApiPath> = {
   preaction?: (context: Context<U, "preaction">) => Promise<void>;
   postaction?: (context: Context<U, "postaction">) => Promise<void>;
-  get?: (context: Context<U, "get">) => Promise<void | Exclude<PickApiParameter<Api, U, "get", "res">, FormData>>;
-  post?: (context: Context<U, "post">) => Promise<void | Exclude<PickApiParameter<Api, U, "post", "res">, FormData>>;
-  put?: (context: Context<U, "put">) => Promise<void | Exclude<PickApiParameter<Api, U, "put", "res">, FormData>>;
-  delete?: (context: Context<U, "delete">) => Promise<void | Exclude<PickApiParameter<Api, U, "delete", "res">, FormData>>;
+  get?: (context: Context<U, "get">) => Promise<void | Exclude<ApiRequest<U, "get">, FormData>>;
+  post?: (context: Context<U, "post">) => Promise<void | Exclude<ApiRequest<U, "post">, FormData>>;
+  put?: (context: Context<U, "put">) => Promise<void | Exclude<ApiRequest<U, "put">, FormData>>;
+  delete?: (context: Context<U, "delete">) => Promise<void | Exclude<ApiRequest<U, "delete">, FormData>>;
 };
 
-const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
+const apiHandler = <U extends ApiPath>(methods: MethodProcess<U>) => {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const method = (req.method?.toLocaleLowerCase() ?? "get") as ApiMethods;
     const handler = methods[method];
@@ -125,9 +125,7 @@ const apiHandler = <U extends keyof Api>(methods: MethodProcess<U>) => {
 };
 
 const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
-  const session = (req as any).session;
-  if (session) return session;
-  return (global as any)._session ?? {};
+  return (req as any).session ?? (global as any)._session ?? {};
 };
 
 export default apiHandler;

@@ -1,6 +1,6 @@
 import queryString from "querystring";
 
-export const getDynamicUrlContext = <T extends Struct | FormData = Struct | FormData>(
+export const getDynamicUrlContext = <T extends Struct | FormData | undefined | null>(
   pathName: PagePath | ApiPath,
   params?: T,
   options?: {

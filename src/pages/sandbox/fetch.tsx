@@ -9,6 +9,7 @@ import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
 import useFetch from "@/hooks/fetch";
 import fetchApi from "@/utilities/fetch-api";
+import { getDynamicUrlContext } from "@/utilities/url";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -18,6 +19,96 @@ const Page: NextPage = () => {
 
   return (
     <div className="flex-start p-1 gap-1 w-100">
+      <Row className="gap-1">
+        <StructView
+          $value={(() => {
+            const fd = new FormData();
+            fd.append("id", "10");
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", fd),
+              data: fd,
+            };
+          })()}
+        />
+        <StructView
+          $value={(() => {
+            const fd = new FormData();
+            // fd.append("id", "10");
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", fd),
+              data: fd,
+            };
+          })()}
+        />
+        <StructView
+          $value={(() => {
+            const fd = new FormData();
+            fd.append("id", "10");
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", fd, { appendQuery: false }),
+              data: fd,
+            };
+          })()}
+        />
+        <StructView
+          $value={(() => {
+            const fd = new FormData();
+            fd.append("id", "10");
+            fd.append("hoge", "1");
+            fd.append("hoge", "2");
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", fd, { appendQuery: true }),
+              data: fd,
+            };
+          })()}
+        />
+      </Row>
+      <Row className="gap-1">
+        <StructView
+          $value={(() => {
+            const data = {
+              id: 10,
+            };
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", data),
+              data,
+            };
+          })()}
+        />
+        <StructView
+          $value={(() => {
+            const data = {};
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", data),
+              data,
+            };
+          })()}
+        />
+        <StructView
+          $value={(() => {
+            const data = {
+              id: 10
+            };
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", data, { appendQuery: false }),
+              data,
+            };
+          })()}
+        />
+        <StructView
+          $value={(() => {
+            const data = {
+              id: 10,
+              hoge: [1, 2],
+            };
+            return {
+              url: getDynamicUrlContext("/fetch/[id]", data, { appendQuery: true }),
+              data,
+            };
+          })()}
+        />
+      </Row>
+      <Divider />
       <Row $vAlign="top" className="gap-1">
         <GroupBox $caption="fetch">
           <Form
@@ -33,7 +124,7 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
-                    api.get("/fetch");
+                    // api.get("/fetch");
                     const res = await api.get("/fetch", {
                       hoge: 1,
                       fuga: [2, 3],

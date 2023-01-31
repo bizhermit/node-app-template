@@ -5,6 +5,8 @@ import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
 import apiHandler from "@/utilities/api-handler";
 
+const pathname = "/fetch";
+
 const params = [
   notification_title,
   notification_body,
@@ -12,7 +14,7 @@ const params = [
 ] as const;
 export declare type GetRequest = DataItemStruct<typeof params>;
 
-export default apiHandler<"/fetch">({
+export default apiHandler<typeof pathname>({
   preaction: async (ctx) => {
     // console.log("common");
     const body = ctx.getBody();

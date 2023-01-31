@@ -1,9 +1,7 @@
+import { getDynamicUrlContext } from "@/utilities/url";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
-import queryString from "querystring";
 
-type FetchOptions = {
-
-};
+type FetchOptions = {};
 
 const electron = (global as any).electron;
 
@@ -41,44 +39,16 @@ const crossFetch = async <T>(url: string, init?: RequestInit) => {
   return fetchServer<T>(url, init);
 };
 
-const convertUrl = (url: string, withQuery: boolean, params?: any, _options?: FetchOptions) => {
-  let str = `/api${url}`;
-  let query = withQuery ? queryString.stringify((params as any) ?? {}) : "";
-  const dynamicKeys = str.match(/\[([^\]]*)\]/g);
-  if (!dynamicKeys) {
-    if (query) str += `?${query}`;
-    return str;
-  }
-  const getValue = (key: string) => {
-    if (params == null || typeof params !== "object") return "";
-    if (params instanceof FormData) {
-      return String(params.get(key) ?? "");
-    }
-    return String(params?.[key] ?? "");
-  };
-  dynamicKeys.forEach(dynamicKey => {
-    const key = dynamicKey.match(/\[(.*)\]/)![1];
-    str = str.replace(dynamicKey, getValue(key ?? ""));
-    query = query.replace(RegExp(`(${key}=[^&]*&|$)`, "g"), "");
-  });
-  if (query) str += `?${query}`;
-  return str;
-};
-
 const convertToRequestInit = (params?: any, _options?: FetchOptions): RequestInit => {
   if (params == null) {
     return {};
   }
   if (params instanceof FormData) {
-    return {
-      body: params,
-    };
+    return { body: params };
   }
   const t = typeof params;
   if (t === "string" || t === "bigint" || t === "number" || t === "boolean") {
-    return {
-      body: String(params),
-    };
+    return { body: String(params) };
   }
   return {
     body: JSON.stringify(params),
@@ -88,27 +58,27 @@ const convertToRequestInit = (params?: any, _options?: FetchOptions): RequestIni
   };
 };
 
+const update = <T>(url: ApiPath, method: ApiMethods, params: any = undefined, options?: FetchOptions) => {
+  const ctx = getDynamicUrlContext(url, params);
+  return crossFetch<T>(`/api${ctx.url}`, {
+    method,
+    ...(convertToRequestInit(ctx.data, options)),
+  });
+};
+
 const fetchApi = {
-  get: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "get", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "get", "res">>(convertUrl(url, true, params, options), { method: "GET" });
+  get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get">, _options?: FetchOptions) => {
+    const ctx = getDynamicUrlContext(url, params, { appendQuery: true });
+    return crossFetch<ApiResponse<U, "get">>(`/api${ctx.url}`, { method: "GET" });
   },
-  put: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "put", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "put", "res">>(convertUrl(url, false, params, options), {
-      method: "PUT",
-      ...(convertToRequestInit(params, options)),
-    });
+  put: <U extends ApiPath>(url: U, params?: ApiRequest<U, "put">, options?: FetchOptions) => {
+    return update<ApiResponse<U, "put">>(url, "put", params, options);
   },
-  post: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "post", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "post", "res">>(convertUrl(url, false, params, options), {
-      method: "POST",
-      ...(convertToRequestInit(params, options)),
-    });
+  post: <U extends ApiPath>(url: U, params?: ApiRequest<U, "post">, options?: FetchOptions) => {
+    return update<ApiResponse<U, "post">>(url, "post", params, options);
   },
-  delete: <U extends keyof Api>(url: U, params: PickApiParameter<Api, U, "delete", "req"> = undefined, options?: FetchOptions) => {
-    return crossFetch<PickApiParameter<Api, U, "delete", "res">>(convertUrl(url, false, params, options), {
-      method: "DELETE",
-      ...(convertToRequestInit(params, options)),
-    });
+  delete: <U extends ApiPath>(url: U, params?: ApiRequest<U, "delete">, options?: FetchOptions) => {
+    return update<ApiResponse<U, "delete">>(url, "delete", params, options);
   },
 };
 

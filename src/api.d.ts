@@ -4,26 +4,36 @@ type AnyResponseParameter = string | Struct | undefined | null;
 type ApiMethods = "get" | "put" | "post" | "delete";
 type ApiDirection = "req" | "res";
 
-type AbstractApi = {
-  [key: string]: (
-    Partial<Record<ApiMethods, Partial<Record<ApiDirection, any>>>> |
-    Partial<Record<ApiMethods, any>> |
-    any
-  );
-};
+type RequestObject<T extends Struct | FormData> = T extends Struct | FormData ? T : Struct | FormData;
+type ResponseObject<T extends Object = Object> = T extends null | undefined | unknown ? Struct : T;
+type MethodInterface = {
+  req: RequestObject;
+  res: ResponseObject;
+} | ResponseObject;
 
-type PickApiParameter<A extends AbstractApi, Url extends keyof A, Method extends ApiMethods, Direction extends ApiDirection, Default = Direction extends "res" ? AnyResponseParameter : AnyRequestParameter> = (
-  A[Url] extends Record<Method, any> ? (
-    A[Url][Method] extends Record<Direction, any> ?
-    A[Url][Method][Direction] : (
-      Direction extends "res" ? A[Url][Method] : Default
-    )
-  ) : (
-    Direction extends "res" ? A[Url] : Default
-  )
-);
+type ApiRequest<U extends ApiPath, M extends ApiMethods> =
+  Api extends { [P in U]: infer Url } ? (
+    Url extends { [P in M]: infer Method } ? (
+      Method extends { req: infer Obj } ? Obj : RequestObject
+    ) : RequestObject
+  ) : RequestObject;
 
-type Api = {
+type ApiResponse<U extends ApiPath, M extends ApiMethods> =
+  Api extends { [P in U]: infer Url } ? (
+    Url extends { [P in M]: infer Method } ? (
+      Method extends { res: infer Obj } ? Obj : (
+        Method extends { req: any } ? null : Method
+      )
+    ) : ResponseObject
+  ) : ResponseObject;
+
+type _Api<A extends {
+  [P in ApiPath]: {
+    [M in ApiMethods]: MethodInterface;
+  };
+}> = A;
+
+type Api = _Api<{
   "/fetch": {
     get: {
       req: {
@@ -50,8 +60,8 @@ type Api = {
       };
     };
   };
-  "/fetch/[id]": any;
-  "/notfound": {
-    hoge: number;
+  "/fetch/[id]": {
   };
-};
+  "/formfg": {
+  }
+}>;

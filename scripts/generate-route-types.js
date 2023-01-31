@@ -26,10 +26,28 @@ const main = (dirName, nestLevel = 0, isApi = false) => {
       return;
     }
 
-    const pathName =  path.join(dirName, /index.ts[x]?$/.test(name) ? "" : path.basename(name, path.extname(name)));
+    const pathName = path.join(dirName, /index.ts[x]?$/.test(name) ? "" : path.basename(name, path.extname(name)));
 
     if (api) {
-      apis.push(`/${path.relative(apiRootPath, pathName).replace(/\\/g, "/")}`);
+      const relativePathName = `/${path.relative(apiRootPath, pathName).replace(/\\/g, "/")}`;
+      apis.push(relativePathName);
+
+      const variableLine = `const pathname = "${relativePathName}";`;
+      let content = fse.readFileSync(fullName).toString();
+      const variable = content.match(/const pathname[\s]?=[\s]?\"[^"]+\"[;]?/);
+      if (variable) {
+        if (variable[0] === variableLine) return;
+        content = content.replace(variable[0], variableLine);
+      } else {
+        const lines = content.split(/[\r]?\n/g);
+        let findex = -1;
+        lines.forEach((line, index) => {
+          if (line.startsWith("import ")) findex = index;
+        });
+        lines.splice(findex + 1, 0, `${findex < 0 ? "" : "\n"}${variableLine}`);
+        content = lines.join("\n");
+      }
+      fse.writeFileSync(fullName, content);
       return;
     }
 

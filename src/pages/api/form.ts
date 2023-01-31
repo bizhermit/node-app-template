@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 import apiHandler from "@/utilities/api-handler";
 
-export default apiHandler({
+const pathname = "/form";
+
+export default apiHandler<typeof pathname>({
   preaction: async (ctx) => {
     console.log(ctx.req.method);
   },
