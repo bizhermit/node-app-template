@@ -19,7 +19,7 @@ const Page: NextPage = () => {
 
   return (
     <div className="flex-start p-1 gap-1 w-100">
-      <Row className="gap-1">
+      <Row className="gap-1 none">
         <StructView
           $value={(() => {
             const fd = new FormData();
@@ -63,7 +63,7 @@ const Page: NextPage = () => {
           })()}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="gap-1 none">
         <StructView
           $value={(() => {
             const data = {
@@ -143,7 +143,7 @@ const Page: NextPage = () => {
                     const res = await fetchApi.post("/fetch", {
                       body: "hoge",
                       release_date: new Date(),
-                      title: "title",
+                      title: "",
                       array: [
                         "1"
                       ],
@@ -226,7 +226,7 @@ const Page: NextPage = () => {
             </Row>
           </Form>
         </GroupBox>
-        <GroupBox $caption="form (file)" $bodyClassName="p-1">
+        <GroupBox $caption="form (file)" $bodyClassName="p-1" className="none">
           <Form
             className="flex-start gap-1"
             action="/api/form"

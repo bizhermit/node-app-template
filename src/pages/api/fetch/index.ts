@@ -25,7 +25,10 @@ export type GetRes = {
 };
 
 export const PostReq = {
-  title: notification_title,
+  title: {
+    ...notification_title,
+    required: true,
+  },
   [notification_body.name]: notification_body,
   [notification_releaseDate.name]: notification_releaseDate,
   array: arrayItem({
@@ -48,8 +51,6 @@ export const PostReq = {
 export default apiHandler<typeof pathname>({
   preaction: async (ctx) => {
     // console.log("common");
-    const body = ctx.getArgs();
-    console.log(body);
     return;
   },
   get: async (ctx) => {
@@ -63,15 +64,15 @@ export default apiHandler<typeof pathname>({
   },
   post: async (ctx) => {
     console.log("post");
-    const args = ctx.getArgs();
-    console.log(args);
+    const args = ctx.getArgs(PostReq);
+    // console.log(args);
     return {
     };
   },
   delete: async (ctx) => {
     console.log("delete");
     const args = ctx.getArgs();
-    console.log(args);
+    // console.log(args);
     return {
       deleted: true,
     };

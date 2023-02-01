@@ -1,12 +1,20 @@
+type DataItemValidationResult = {
+  type: "error" | "warning" | "information";
+  name: string;
+  title?: string;
+  body: string;
+};
+
 type DataItem_Base = {
   $$: any;
   name?: string;
+  label?: string;
   required?: boolean;
 };
 
 type DataItem_String = DataItem_Base & {
   type: "string";
-  validations?: readonly ((v: Nullable<string>) => string)[];
+  validations?: readonly ((v: Nullable<string>, key: string, ctx: DataItem_String, data: Nullable<Struct>) => (DataItemValidationResult | void))[];
   length?: number;
   minLength?: number;
   maxLength?: number;
