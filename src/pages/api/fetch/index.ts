@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import dataItem from "@/data-items/data-item-wrapper";
 import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
@@ -8,43 +9,45 @@ import apiHandler from "@/utilities/api-handler";
 const pathname = "/fetch";
 
 export const GetReq = {
-  hoge: 1,
-  fuga: [1],
+  hoge: dataItem({
+    type: "number",
+    required: true,
+  }),
+  fuga: dataItem({
+    type: "array",
+    required: true,
+    item: dataItem({
+      type: "number",
+    })
+  }),
 };
-export const GetRes = {
-  hoge: 3,
-  fuga: 4,
+export type GetRes = {
+  hoge: number;
+  fuga?: string,
 };
 
 export const PostReq = {
   [notification_title.name]: notification_title,
   [notification_body.name]: notification_body,
   [notification_releaseDate.name]: notification_releaseDate,
-  array: {
+  array: dataItem({
     type: "array",
     item: notification_title,
-  },
-  arrayStruct: {
+  }),
+  arrayStruct: dataItem({
     type: "array",
     item: {
       [notification_title.name]: notification_title,
       [notification_body.name]: notification_body,
       [notification_releaseDate.name]: notification_releaseDate,
     },
-  },
+  }),
   struct: {
     [notification_title.name]: notification_title,
     [notification_body.name]: notification_body,
     [notification_releaseDate.name]: notification_releaseDate,
   },
-} as const;
-
-const params = [
-  notification_title,
-  notification_body,
-  notification_releaseDate,
-] as const;
-export declare type GetRequest = DataItemStruct<typeof params>;
+};
 
 export default apiHandler<typeof pathname>({
   preaction: async (ctx) => {
@@ -67,7 +70,7 @@ export default apiHandler<typeof pathname>({
   post: async (ctx) => {
     console.log("post");
     const query = ctx.getQuery();
-    const body = ctx.getBody(params);
+    const body = ctx.getBody();
     console.log(body);
     return {
       updated: true,

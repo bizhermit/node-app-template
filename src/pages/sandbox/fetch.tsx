@@ -151,7 +151,7 @@ const Page: NextPage = () => {
                         body: "",
                         release_date: new Date(),
                         title: "",
-                      }]
+                      }],
                       struct: {
                         body: "",
                         release_date: new Date(),

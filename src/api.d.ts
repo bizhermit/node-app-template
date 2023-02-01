@@ -33,38 +33,21 @@ type _Api<A extends {
   };
 }> = A;
 
-type Test04<T> = T extends { [_ in keyof T]: infer R } ? R : never;
-type Test05<T> = (T extends any ? (_: T) => void : never) extends (_: infer R) => void ? R : never;
-
-type RequestValue = DataItem | { [key: string]: RequestValue };
-type ValueType<T extends RequestValue> =
-  T extends { name: string; type: string } ? (
-    T["type"] extends DataItem_String["type"] ? string :
-    T["type"] extends DataItem_Number["type"] ? number :
-    T["type"] extends DataItem_Boolean["type"] ? boolean :
-    T["type"] extends DataItem_Date["type"] ? Date :
-    T["type"] extends DataItem_Array["type"] ? Array<any> :
-    any
-  ) : { [P in keyof T]: ValueType<T[P]> };
-
-type $ApiReq<S extends { [key: string]: DataItem }> = {
-  [P in keyof S]: ValueType<S[P]>;
-};
 type $Api<T> = {
   get: {
-    req: T["GetReq"];
+    req: DataItemStruct<T["GetReq"]>;
     res: T["GetRes"];
   };
   put: {
-    req: T["PutReq"];
+    req: DataItemStruct<T["PutReq"]>;
     res: T["PutRes"];
   };
   post: {
-    req: $ApiReq<T["PostReq"]>;
+    req: DataItemStruct<T["PostReq"]>;
     res: T["PostRes"];
   };
   delete: {
-    req: T["DeleteReq"];
+    req: DataItemStruct<T["DeleteReq"]>;
     res: T["DeleteRes"];
   };
 };
