@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import dataItem from "@/data-items/data-item-wrapper";
+import dataItem, { arrayItem, numberItem } from "@/data-items/data-item-wrapper";
 import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
@@ -9,33 +9,29 @@ import apiHandler from "@/utilities/api-handler";
 const pathname = "/fetch";
 
 export const GetReq = {
-  hoge: dataItem({
-    type: "number",
+  hoge: numberItem({
     required: true,
   }),
-  fuga: dataItem({
-    type: "array",
+  fuga: arrayItem({
     required: true,
     item: dataItem({
       type: "number",
-    })
+    }),
   }),
 };
 export type GetRes = {
+  updated: boolean;
   hoge: number;
-  fuga?: string,
 };
 
 export const PostReq = {
   [notification_title.name]: notification_title,
   [notification_body.name]: notification_body,
   [notification_releaseDate.name]: notification_releaseDate,
-  array: dataItem({
-    type: "array",
+  array: arrayItem({
     item: notification_title,
   }),
-  arrayStruct: dataItem({
-    type: "array",
+  arrayStruct: arrayItem({
     item: {
       [notification_title.name]: notification_title,
       [notification_body.name]: notification_body,
@@ -73,8 +69,6 @@ export default apiHandler<typeof pathname>({
     const body = ctx.getBody();
     console.log(body);
     return {
-      updated: true,
-      body: null,
     };
   },
   delete: async (ctx) => {

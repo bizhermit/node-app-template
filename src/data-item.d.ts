@@ -1,11 +1,11 @@
 type DataItem_Base = {
   $$: any;
+  name?: string;
   required?: boolean;
 };
 
 type DataItem_String = DataItem_Base & {
   type: "string";
-  name: string;
   validations?: readonly ((v: Nullable<string>) => string)[];
   length?: number;
   minLength?: number;
@@ -16,7 +16,6 @@ type DataItem_String = DataItem_Base & {
 
 type DataItem_Number = DataItem_Base & {
   type: "number";
-  name: string;
   validations?: readonly ((v: Nullable<number>) => string)[];
   min?: number;
   max?: number;
@@ -26,7 +25,6 @@ type DataItem_Number = DataItem_Base & {
 
 type DataItem_Boolean = DataItem_Base & {
   type: "boolean";
-  name: string;
   validations?: readonly ((v: Nullable<boolean>) => string)[];
   min?: string;
   max?: string;
@@ -36,7 +34,6 @@ type DataItem_Boolean = DataItem_Base & {
 
 type DataItem_Date = DataItem_Base & {
   type: "date" | "month";
-  name: string;
   validations?: readonly ((v: Nullable<string>) => string)[];
   min?: string;
   max?: string;
@@ -49,7 +46,6 @@ type DataItem_Date = DataItem_Base & {
 
 type DataItem_Array = DataItem_Base & {
   type: "array";
-  name?: string;
   validations?: readonly ((v: Nullable<Array<any>>) => string)[];
   item: DataItem | { [key: string]: DataItem };
   length?: number;

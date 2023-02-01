@@ -33,7 +33,7 @@ type _Api<A extends {
   };
 }> = A;
 
-type $Api<T> = {
+type ImportApi<T> = {
   get: {
     req: DataItemStruct<T["GetReq"]>;
     res: T["GetRes"];
@@ -53,35 +53,13 @@ type $Api<T> = {
 };
 
 type Api = _Api<{
-  // "/fetch": {
-  //   get: {
-  //     req: {
-  //       hoge?: number;
-  //       fuga: Array<number>;
-  //     };
-  //     res: null;
-  //   };
-  //   post: {
-  //     res: {
-  //       updated: boolean;
-  //       body: null;
-  //     };
-  //   };
-  //   put: {
-  //     nodata: number;
-  //   };
-  //   delete: {
-  //     req: {
-  //       hoge: number;
-  //     };
-  //     res: {
-  //       deleted: boolean;
-  //     };
-  //   };
-  // };
-  // "/fetch/[id]": {
-  // };
-  // "/formfg": {
-  // }
-  "/fetch": $Api<typeof import("@/pages/api/fetch/index")>;
+  "/fetch": ImportApi<typeof import("@/pages/api/fetch/index")>;
+  "/fetch/[id]": {
+    get: {
+      req: {
+        hoge: number;
+        fuga: Array<string>;
+      }
+    };
+  };
 }>;

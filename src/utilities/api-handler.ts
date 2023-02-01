@@ -5,10 +5,6 @@ type SystemMethods = Exclude<keyof MethodProcess<any>, ApiMethods>;
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
 
-export type ApiParameters = Partial<Record<ApiMethods, {
-  req?: Array<DataItem>;
-  res?: any;
-}>>;
 type Context<U extends ApiPath, M extends (ApiMethods | SystemMethods)> = {
   req: NextApiRequest;
   res: NextApiResponse;
@@ -28,10 +24,10 @@ type Context<U extends ApiPath, M extends (ApiMethods | SystemMethods)> = {
 type MethodProcess<U extends ApiPath> = {
   preaction?: (context: Context<U, "preaction">) => Promise<void>;
   postaction?: (context: Context<U, "postaction">) => Promise<void>;
-  get?: (context: Context<U, "get">) => Promise<void | Exclude<ApiRequest<U, "get">, FormData>>;
-  post?: (context: Context<U, "post">) => Promise<void | Exclude<ApiRequest<U, "post">, FormData>>;
-  put?: (context: Context<U, "put">) => Promise<void | Exclude<ApiRequest<U, "put">, FormData>>;
-  delete?: (context: Context<U, "delete">) => Promise<void | Exclude<ApiRequest<U, "delete">, FormData>>;
+  get?: (context: Context<U, "get">) => Promise<void | Exclude<ApiResponse<U, "get">, FormData>>;
+  post?: (context: Context<U, "post">) => Promise<void | Exclude<ApiResponse<U, "post">, FormData>>;
+  put?: (context: Context<U, "put">) => Promise<void | Exclude<ApiResponse<U, "put">, FormData>>;
+  delete?: (context: Context<U, "delete">) => Promise<void | Exclude<ApiResponse<U, "delete">, FormData>>;
 };
 
 const apiHandler = <U extends ApiPath>(methods: MethodProcess<U>) => {
