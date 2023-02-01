@@ -342,7 +342,7 @@ const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           >
             {mount && props.children}
           </div>
-          {props.$mask &&
+          {props.$mask && showed &&
             <div
               className={Style.mask2}
               tabIndex={0}
