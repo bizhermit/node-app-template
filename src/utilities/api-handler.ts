@@ -12,14 +12,17 @@ type Context<U extends ApiPath, M extends (ApiMethods | SystemMethods)> = {
   getSession: () => SessionStruct;
   setStatus: (code: number) => void;
   hasError: () => boolean;
-} & (
-    M extends "get" ? {
-      getQuery: <T extends (Exclude<ApiRequest<U, "get">, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, "get">, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
-    } : {
-      getQuery: <T extends Readonly<Array<DataItem>> | null | undefined = undefined>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : QueryStruct;
-      getBody: <T extends (Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
-    }
-  );
+  getArgs: <T extends RequestDataContext>(dataContext?: T)
+    => T extends unknown ? ApiRequest<U, Exclude<M, SystemMethods>> : ApiRequestDataStruct<T>;
+};
+// &(
+//   M extends "get" ? {
+//     getQuery: <T extends (Exclude<ApiRequest<U, "get">, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, "get">, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
+//   } : {
+//     getQuery: <T extends Readonly<Array<DataItem>> | null | undefined = undefined>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : QueryStruct;
+//     getBody: <T extends (Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
+//   }
+// );;
 
 type MethodProcess<U extends ApiPath> = {
   preaction?: (context: Context<U, "preaction">) => Promise<void>;
@@ -44,54 +47,58 @@ const apiHandler = <U extends ApiPath>(methods: MethodProcess<U>) => {
     const context: Context<U, typeof method> = {
       req,
       res,
-      getQuery: (dataItems?: Readonly<Array<DataItem>>) => {
-        if (!dataItems) return req.query;
-        // TODO: convert to params / validaiton from parameterContexts
-        console.log(dataItems);
-        return req.query as any;
+      getArgs: (ctx) => {
+        return {
+        } as any;
       },
-      getBody: (dataItems?: Readonly<Array<DataItem>>) => {
-        if (method === "get" || req.body == null) return undefined;
-        if (contentType === "multipart/form-data" && typeof req.body === "string") {
-          const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
-          if (key) {
-            const body: { [key: string]: any } = {};
-            req.body.split(key).forEach(item => {
-              if (item.startsWith("--")) return;
-              const lines = item.split(/\r?\n/);
-              lines.splice(lines.length - 1, 1);
-              lines.splice(0, 1);
-              const name = lines[0]?.match(/\sname="([^\"]*)"/)?.[1];
-              if (!name) return;
-              const headerEndLineIndex = lines.findIndex(line => line === "");
-              let value = lines.slice(headerEndLineIndex + 1).join(os.EOL) as any;
-              if (headerEndLineIndex > 1) {
-                if (value) {
-                  value = {
-                    fileName: lines[0]?.match(/\sfilename="([^\"]*)"/)?.[1],
-                    contentType: lines[1].match(/Content-Type:\s([^\s|\r?\n|;]*)/)?.[1],
-                    value,
-                  };
-                } else {
-                  value = undefined;
-                }
-              }
-              if (name in body) {
-                if (!Array.isArray(body[name])) body[name] = [body[name]];
-                body[name].push(value);
-                return;
-              }
-              body[name] = value;
-            });
-            // TODO: validation from parameterContexts
-            console.log(dataItems);
-            return body;
-          }
-        }
-        // TODO: validation from parameterContexts
-        console.log(dataItems);
-        return req.body;
-      },
+      // getQuery: (dataItems?: Readonly<Array<DataItem>>) => {
+      //   if (!dataItems) return req.query;
+      //   // TODO: convert to params / validaiton from parameterContexts
+      //   console.log(dataItems);
+      //   return req.query as any;
+      // },
+      // getBody: (dataItems?: Readonly<Array<DataItem>>) => {
+      //   if (method === "get" || req.body == null) return undefined;
+      //   if (contentType === "multipart/form-data" && typeof req.body === "string") {
+      //     const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
+      //     if (key) {
+      //       const body: { [key: string]: any } = {};
+      //       req.body.split(key).forEach(item => {
+      //         if (item.startsWith("--")) return;
+      //         const lines = item.split(/\r?\n/);
+      //         lines.splice(lines.length - 1, 1);
+      //         lines.splice(0, 1);
+      //         const name = lines[0]?.match(/\sname="([^\"]*)"/)?.[1];
+      //         if (!name) return;
+      //         const headerEndLineIndex = lines.findIndex(line => line === "");
+      //         let value = lines.slice(headerEndLineIndex + 1).join(os.EOL) as any;
+      //         if (headerEndLineIndex > 1) {
+      //           if (value) {
+      //             value = {
+      //               fileName: lines[0]?.match(/\sfilename="([^\"]*)"/)?.[1],
+      //               contentType: lines[1].match(/Content-Type:\s([^\s|\r?\n|;]*)/)?.[1],
+      //               value,
+      //             };
+      //           } else {
+      //             value = undefined;
+      //           }
+      //         }
+      //         if (name in body) {
+      //           if (!Array.isArray(body[name])) body[name] = [body[name]];
+      //           body[name].push(value);
+      //           return;
+      //         }
+      //         body[name] = value;
+      //       });
+      //       // TODO: validation from parameterContexts
+      //       console.log(dataItems);
+      //       return body;
+      //     }
+      //   }
+      //   // TODO: validation from parameterContexts
+      //   console.log(dataItems);
+      //   return req.body;
+      // },
       getCookies: () => req.cookies as any,
       getSession: () => getSession(req, res),
       setStatus: (code: number) => statusCode = code,

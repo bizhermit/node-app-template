@@ -33,21 +33,27 @@ type _Api<A extends {
   };
 }> = A;
 
+type RequestDataContext = { [key: string]: DataItem | RequestDataContext };
+
+type ApiRequestDataStruct<S extends RequestDataContext> = {
+  [P in keyof S]: DataItemValueType<S[P]>;
+};
+
 type ImportApi<T> = {
   get: {
-    req: DataItemStruct<T["GetReq"]>;
+    req: ApiRequestDataStruct<T["GetReq"]>;
     res: T["GetRes"];
   };
   put: {
-    req: DataItemStruct<T["PutReq"]>;
+    req: ApiRequestDataStruct<T["PutReq"]>;
     res: T["PutRes"];
   };
   post: {
-    req: DataItemStruct<T["PostReq"]>;
+    req: ApiRequestDataStruct<T["PostReq"]>;
     res: T["PostRes"];
   };
   delete: {
-    req: DataItemStruct<T["DeleteReq"]>;
+    req: ApiRequestDataStruct<T["DeleteReq"]>;
     res: T["DeleteRes"];
   };
 };

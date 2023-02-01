@@ -44,10 +44,10 @@ type DataItem_Date = DataItem_Base & {
   };
 };
 
-type DataItem_Array = DataItem_Base & {
+type DataItem_Array<T extends DataItem | { [key: string]: DataItem } = DataItem | { [key: string]: DataItem }> = DataItem_Base & {
   type: "array";
   validations?: readonly ((v: Nullable<Array<any>>) => string)[];
-  item: DataItem | { [key: string]: DataItem };
+  item: T;
   length?: number;
   minLength?: number;
   maxLength?: number;
@@ -55,18 +55,13 @@ type DataItem_Array = DataItem_Base & {
 
 type DataItem = Readonly<DataItem_String | DataItem_Number | DataItem_Boolean | DataItem_Date | DataItem_Array>;
 
-type RequestValue = DataItem | { [key: string]: RequestValue };
-
-type ValueType<T extends RequestValue> =
+type DataStruct = DataItem | { [key: string]: DataStruct };
+type DataItemValueType<T extends DataStruct> =
   T extends { $$: any } ? (
     T["type"] extends DataItem_String["type"] ? string :
     T["type"] extends DataItem_Number["type"] ? number :
     T["type"] extends DataItem_Boolean["type"] ? boolean :
     T["type"] extends DataItem_Date["type"] ? Date :
-    T["type"] extends DataItem_Array["type"] ? Array<ValueType<T["item"]>> :
+    T["type"] extends DataItem_Array["type"] ? Array<DataItemValueType<T["item"]>> :
     any
-  ) : { [P in keyof T]: ValueType<T[P]> };
-
-type DataItemStruct<S extends { [key: string]: DataItem }> = {
-  [P in keyof S]: ValueType<S[P]>;
-};
+  ) : { [P in keyof T]: DataItemValueType<T[P]> };

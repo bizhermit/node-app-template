@@ -25,7 +25,7 @@ export type GetRes = {
 };
 
 export const PostReq = {
-  [notification_title.name]: notification_title,
+  title: notification_title,
   [notification_body.name]: notification_body,
   [notification_releaseDate.name]: notification_releaseDate,
   array: arrayItem({
@@ -48,14 +48,12 @@ export const PostReq = {
 export default apiHandler<typeof pathname>({
   preaction: async (ctx) => {
     // console.log("common");
-    const body = ctx.getBody();
+    const body = ctx.getArgs();
     console.log(body);
     return;
   },
   get: async (ctx) => {
     console.log("get");
-    const query = ctx.getQuery();
-    console.log(query);
     const session = ctx.getSession();
     session.count = (session?.count ?? 0) + 1;
     // return {
@@ -65,16 +63,15 @@ export default apiHandler<typeof pathname>({
   },
   post: async (ctx) => {
     console.log("post");
-    const query = ctx.getQuery();
-    const body = ctx.getBody();
-    console.log(body);
+    const args = ctx.getArgs();
+    console.log(args);
     return {
     };
   },
   delete: async (ctx) => {
     console.log("delete");
-    const body = ctx.getBody();
-    console.log(body);
+    const args = ctx.getArgs();
+    console.log(args);
     return {
       deleted: true,
     };

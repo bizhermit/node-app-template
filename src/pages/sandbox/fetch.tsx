@@ -157,9 +157,6 @@ const Page: NextPage = () => {
                         release_date: new Date(),
                         title: "",
                       },
-                      // body: "string",
-                      // release_date: "ge",
-                      // title: "string",
                     });
                     setResponse(res);
                   } finally {
