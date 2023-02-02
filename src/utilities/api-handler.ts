@@ -10,7 +10,7 @@ type MessageContext = DataItemValidationResult | undefined;
 const getItem = (
   msgs: Array<MessageContext>,
   key: Nullable<string | number> = undefined,
-  ctx: Nullable<DataItem> | RequestDataContext = undefined,
+  ctx: Nullable<DataItem> | DataContext = undefined,
   data?: Struct,
   index?: number,
 ) => {
@@ -34,6 +34,8 @@ const getItem = (
         break;
       case "array":
         getArrayItem(msgs, key!, ctx, data, index);
+        break;
+      case "struct":
         break;
       default:
         break;
@@ -188,7 +190,7 @@ const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct =
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends RequestDataContext, Res extends ResponseDataContext> =
+type MethodProcess<Req extends DataContext, Res extends DataContext> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
@@ -196,18 +198,18 @@ type MethodProcess<Req extends RequestDataContext, Res extends ResponseDataConte
     getSession: () => SessionStruct;
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => ApiRequestDataStruct<Req, true>;
-  }) => Promise<void | ApiResponseDataStruct<Res>>;
+    getData: () => ApiDataStruct<Req, true>;
+  }) => Promise<void | ApiDataStruct<Res, true>>;
 
 const apiHandler = <
-  GetReq extends RequestDataContext = RequestDataContext,
-  GetRes extends ResponseDataContext = ResponseDataContext,
-  PostReq extends RequestDataContext = RequestDataContext,
-  PostRes extends ResponseDataContext = ResponseDataContext,
-  PutReq extends RequestDataContext = RequestDataContext,
-  PutRes extends ResponseDataContext = ResponseDataContext,
-  DeleteReq extends RequestDataContext = RequestDataContext,
-  DeleteRes extends ResponseDataContext = ResponseDataContext
+  GetReq extends DataContext = DataContext,
+  GetRes extends DataContext = DataContext,
+  PostReq extends DataContext = DataContext,
+  PostRes extends DataContext = DataContext,
+  PutReq extends DataContext = DataContext,
+  PutRes extends DataContext = DataContext,
+  DeleteReq extends DataContext = DataContext,
+  DeleteRes extends DataContext = DataContext
 >(methods: {
   $get?: { req?: GetReq; res?: GetRes; };
   get?: MethodProcess<GetReq, GetRes>;

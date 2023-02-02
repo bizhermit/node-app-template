@@ -14,14 +14,14 @@ type MethodInterface = {
 type ApiRequest<U extends ApiPath, M extends ApiMethods> =
   Api extends { [P in U]: infer Url } ? (
     Url extends { [P in M]: infer Method } ? (
-      Method extends { req: infer Obj } ? Obj : RequestObject
+      Method extends { req: infer Req } ? Req : RequestObject
     ) : RequestObject
   ) : RequestObject;
 
 type ApiResponse<U extends ApiPath, M extends ApiMethods> =
   Api extends { [P in U]: infer Url } ? (
     Url extends { [P in M]: infer Method } ? (
-      Method extends { res: infer Obj } ? Obj : (
+      Method extends { res: infer Res } ? Res : (
         Method extends { req: any } ? null : Method
       )
     ) : ResponseObject
@@ -33,32 +33,24 @@ type _Api<A extends {
   };
 }> = A;
 
-type RequestDataContext = { [key: string]: DataItem | RequestDataContext };
-
-type ApiRequestDataStruct<S extends RequestDataContext | unknown, Strict extends boolean = false> = {
-  [P in keyof S]: DataItemValueType<S[P], Strict>;
-};
-
-type ResponseDataContext = {};
-
-type ApiResponseDataStruct<T extends ResponseDataContext | unknown> = T;
+type ApiDataStruct<S extends DataContext, Strict extends boolean = false> = DataItemValueType<S, Strict>;
 
 type ImportApi<T> = {
   get: {
-    req: ApiRequestDataStruct<T["default"]["$get"]["req"]>;
-    res: T["GetRes"];
+    req: ApiDataStruct<T["default"]["$get"]["req"], false>;
+    res: ApiDataStruct<T["default"]["$get"]["res"], true>;
   };
   put: {
-    req: ApiRequestDataStruct<T["default"]["$put"]["req"]>;
-    res: T["PutRes"];
+    req: ApiDataStruct<T["default"]["$put"]["req"], false>;
+    res: ApiDataStruct<T["default"]["$put"]["res"], true>;
   };
   post: {
-    req: ApiRequestDataStruct<T["default"]["$post"]["req"]>;
-    res: T["PostRes"];
+    req: ApiDataStruct<T["default"]["$post"]["req"], false>;
+    res: ApiDataStruct<T["default"]["$post"]["res"], true>;
   };
   delete: {
-    req: ApiRequestDataStruct<T["default"]["$delete"]["req"]>
-    res: T["DeleteRes"];
+    req: ApiDataStruct<T["default"]["$delete"]["req"], false>;
+    res: ApiDataStruct<T["default"]["$delete"]["res"], true>;
   };
 };
 

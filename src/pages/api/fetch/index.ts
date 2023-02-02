@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { arrayItem, stringItem } from "@/data-items/data-item-wrapper";
+import { arrayItem, booleanItem, stringItem, structItem } from "@/data-items/data-item-wrapper";
 import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
@@ -45,11 +45,27 @@ const handler = apiHandler({
         [notification_body.name]: notification_body,
         [notification_releaseDate.name]: notification_releaseDate,
       },
+      structItem: structItem({
+        item: {
+          title: {
+            ...notification_title,
+            required: true,
+          },
+          [notification_body.name]: notification_body,
+          [notification_releaseDate.name]: notification_releaseDate,
+        },
+        required: true,
+      })
     },
+    res: {
+      update: booleanItem(),
+    }
   },
   post: async (ctx) => {
     const data = ctx.getData();
-    return data;
+    return {
+      update: true,
+    };
   },
 });
 

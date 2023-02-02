@@ -156,6 +156,11 @@ const Page: NextPage = () => {
                         release_date: new Date(),
                         title: "titleう",
                       },
+                      structItem: {
+                        title: "titleお",
+                        body: "",
+                        release_date: "2022-12-12",
+                      }
                     });
                     setResponse(res);
                   } finally {
