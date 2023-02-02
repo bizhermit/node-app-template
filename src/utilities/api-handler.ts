@@ -36,6 +36,7 @@ const getItem = (
         getArrayItem(msgs, key!, ctx, data, index);
         break;
       case "struct":
+        getStructItem(msgs, key!, ctx, data, index);
         break;
       default:
         break;
@@ -184,6 +185,40 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
     }
     getItem(msgs, null, ctx.item, item, index);
   });
+};
+
+const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number) => {
+  const v = data?.[key] as Array<any> | undefined;
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined) => {
+    if (res) {
+      msgs.push({
+        type: "error",
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: v,
+      });
+    }
+  };
+  if (v != null && typeof v !== "object") {
+    pushMsg(`${name}の形式が構造体ではありません。`);
+    return;
+  }
+  if (ctx.required) {
+    if (v == null) {
+      pushMsg(`${name}を設定してください。`);
+    }
+  }
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      const res = validation(v, key, ctx, data, index);
+      if (res) msgs.push(res);
+    }
+  }
+
+  getItem(msgs, null, ctx.item, v);
 };
 
 const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
