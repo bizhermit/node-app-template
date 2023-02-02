@@ -138,7 +138,7 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await fetchApi.post("/fetch", {
-                      number: "01",
+                      number: "0100",
                       title: "titleあ",
                       body: "hoge",
                       release_date: new Date(),

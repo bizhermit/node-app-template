@@ -153,8 +153,11 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
     const v = data[key];
     if (v != null && typeof v !== "number") {
       try {
-        data[key] = Number(v);
-        if (isNaN(data[key])) data[key] = undefined;
+        if (typeof v === "string" && v.trim() === "") {
+          data[key] = undefined;
+        } else {
+          if (isNaN(data[key] = Number(v))) throw new Error;
+        }
       } catch {
         pushMsg(`${name}を数値に変換できません。`);
         return;
@@ -167,8 +170,16 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   if (ctx.required) {
     pushMsg(NumberValidation.required(v, name));
   }
-
-  // TODO: validation
+  if (ctx.min != null && ctx.max != null) {
+    pushMsg(NumberValidation.range(v, ctx.min, ctx.max, name));
+  } else {
+    if (ctx.min != null) {
+      pushMsg(NumberValidation.min(v, ctx.min, name));
+    }
+    if (ctx.max != null) {
+      pushMsg(NumberValidation.max(v, ctx.max, name));
+    }
+  }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {

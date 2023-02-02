@@ -11,8 +11,8 @@ export type TextBoxProps = FormItemProps<string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $preventInputWithinLength?: boolean;
-  $maxLength?: number;
   $minLength?: number;
+  $maxLength?: number;
   $charType?: StringCharType;
   $round?: boolean;
   $resize?: boolean;
@@ -35,11 +35,11 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
       if (props.$length != null) {
         validations.push(v => StringValidation.length(v, props.$length!));
       } else {
-        if (props.$maxLength != null) {
-          validations.push(v => StringValidation.maxLength(v, props.$maxLength!));
-        }
         if (props.$minLength != null) {
           validations.push(v => StringValidation.minLength(v, props.$minLength!));
+        }
+        if (props.$maxLength != null) {
+          validations.push(v => StringValidation.maxLength(v, props.$maxLength!));
         }
       }
       switch (props.$charType) {

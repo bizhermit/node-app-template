@@ -7,6 +7,7 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
+import NumberValidation from "@/validations/number";
 
 export type NumberBoxProps = FormItemProps<number> & {
   $max?: number;
@@ -53,22 +54,13 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
       const validations: Array<FormItemValidation<Nullable<number>>> = [];
       const max = props.$max, min = props.$min;
       if (max != null && min != null) {
-        validations.push(v => {
-          if (v != null && (v > max || v < min)) return `${min}以上${max}以下で入力してください。`;
-          return "";
-        });
+        validations.push(v => NumberValidation.range(v, min, max));
       } else {
-        if (max != null) {
-          validations.push(v => {
-            if (v != null && v > max) return `${max}以下で入力してください。`;
-            return "";
-          });
-        }
         if (min != null) {
-          validations.push(v => {
-            if (v != null && v < min) return `${min}以上で入力してください。`;
-            return "";
-          });
+          validations.push(v => NumberValidation.min(v, min));
+        }
+        if (max != null) {
+          validations.push(v => NumberValidation.max(v, max));
         }
       }
       return validations;

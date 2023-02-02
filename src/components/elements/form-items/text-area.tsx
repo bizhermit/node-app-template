@@ -4,13 +4,13 @@ import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { StringValidation } from "@/validations/string";
+import StringValidation from "@/validations/string";
 
 export type TextAreaProps = FormItemProps<string> & {
   $length?: number;
   $preventInputWithinLength?: boolean;
-  $maxLength?: number;
   $minLength?: number;
+  $maxLength?: number;
   $resize?: boolean | "x" | "y" | "xy";
   $width?: number | string;
   $maxWidth?: number | string;
@@ -33,11 +33,11 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
       if (props.$length != null) {
         validations.push(v => StringValidation.length(v, props.$length!));
       } else {
-        if (props.$maxLength != null) {
-          validations.push(v => StringValidation.maxLength(v, props.$maxLength!));
-        }
         if (props.$minLength != null) {
           validations.push(v => StringValidation.minLength(v, props.$minLength!));
+        }
+        if (props.$maxLength != null) {
+          validations.push(v => StringValidation.maxLength(v, props.$maxLength!));
         }
       }
       return validations;
