@@ -36,36 +36,25 @@ type _Api<A extends {
 type ApiDataStruct<S extends DataContext, Strict extends boolean = false> = DataItemValueType<S, Strict>;
 
 type ImportApi<T> = {
-  get: {
-    req: ApiDataStruct<T["default"]["$get"]["req"], false>;
-    res: ApiDataStruct<T["default"]["$get"]["res"], true>;
-  };
-  put: {
-    req: ApiDataStruct<T["default"]["$put"]["req"], false>;
-    res: ApiDataStruct<T["default"]["$put"]["res"], true>;
-  };
-  post: {
-    req: ApiDataStruct<T["default"]["$post"]["req"], false>;
-    res: ApiDataStruct<T["default"]["$post"]["res"], true>;
-  };
-  delete: {
-    req: ApiDataStruct<T["default"]["$delete"]["req"], false>;
-    res: ApiDataStruct<T["default"]["$delete"]["res"], true>;
+  [P in keyof T]: {
+    get: {
+      req: ApiDataStruct<T[P]["default"]["$get"]["req"], false>;
+      res: ApiDataStruct<T[P]["default"]["$get"]["res"], true>;
+    };
+    put: {
+      req: ApiDataStruct<T[P]["default"]["$put"]["req"], false>;
+      res: ApiDataStruct<T[P]["default"]["$put"]["res"], true>;
+    };
+    post: {
+      req: ApiDataStruct<T[P]["default"]["$post"]["req"], false>;
+      res: ApiDataStruct<T[P]["default"]["$post"]["res"], true>;
+    };
+    delete: {
+      req: ApiDataStruct<T[P]["default"]["$delete"]["req"], false>;
+      res: ApiDataStruct<T[P]["default"]["$delete"]["res"], true>;
+    };
   };
 };
 
-type Api = _Api<{
-  "/fetch": ImportApi<typeof import("@/pages/api/fetch/index")>;
-  "/fetch/[id]": ImportApi<typeof import("@/pages/api/fetch/[id]")>;
-  // "/fetch/[id]": {
-  //   get: {
-  //     req: {
-  //       hoge: number;
-  //       fuga: Array<string>;
-  //     };
-  //     res: {
-  //       completed: boolean;
-  //     };
-  //   };
-  // };
+type Api = ImportApi<TypeofApi> & _Api<{
 }>;

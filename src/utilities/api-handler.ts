@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import StringValidation from "@/validations/string";
 import * as os from "os";
 import { dataItemKey } from "@/data-items/data-item-wrapper";

@@ -1,3 +1,4 @@
 /.eslintrc.js
 /next.config.js
+/**/*.js
 /src/pages/sandbox/*

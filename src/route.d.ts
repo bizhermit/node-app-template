@@ -42,3 +42,10 @@ type ApiPath = "/fetch"
   | "/fetch/[id]"
   | "/form"
   | "/hello";
+
+type TypeofApi = {
+  "/fetch": typeof import("@/pages/api/fetch");
+  "/fetch/[id]": typeof import("@/pages/api/fetch/[id]");
+  "/form": typeof import("@/pages/api/form");
+  "/hello": typeof import("@/pages/api/hello");
+};

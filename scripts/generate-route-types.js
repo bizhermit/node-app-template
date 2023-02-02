@@ -32,22 +32,22 @@ const main = (dirName, nestLevel = 0, isApi = false) => {
       const relativePathName = `/${path.relative(apiRootPath, pathName).replace(/\\/g, "/")}`;
       apis.push(relativePathName);
 
-      const variableLine = `const pathname = "${relativePathName}";`;
-      let content = fse.readFileSync(fullName).toString();
-      const variable = content.match(/const pathname[\s]?=[\s]?\"[^"]+\"[;]?/);
-      if (variable) {
-        if (variable[0] === variableLine) return;
-        content = content.replace(variable[0], variableLine);
-      } else {
-        const lines = content.split(/[\r]?\n/g);
-        let findex = -1;
-        lines.forEach((line, index) => {
-          if (line.startsWith("import ")) findex = index;
-        });
-        lines.splice(findex + 1, 0, `${findex < 0 ? "" : "\n"}${variableLine}`);
-        content = lines.join("\n");
-      }
-      fse.writeFileSync(fullName, content);
+      // const variableLine = `const pathname = "${relativePathName}";`;
+      // let content = fse.readFileSync(fullName).toString();
+      // const variable = content.match(/const pathname[\s]?=[\s]?\"[^"]+\"[;]?/);
+      // if (variable) {
+      //   if (variable[0] === variableLine) return;
+      //   content = content.replace(variable[0], variableLine);
+      // } else {
+      //   const lines = content.split(/[\r]?\n/g);
+      //   let findex = -1;
+      //   lines.forEach((line, index) => {
+      //     if (line.startsWith("import ")) findex = index;
+      //   });
+      //   lines.splice(findex + 1, 0, `${findex < 0 ? "" : "\n"}${variableLine}`);
+      //   content = lines.join("\n");
+      // }
+      // fse.writeFileSync(fullName, content);
       return;
     }
 
@@ -68,5 +68,9 @@ fse.writeFileSync(path.join(srcRootPath, "route.d.ts"), `type PagePath = ${(() =
     process.stdout.write(`${pathName}\n`);
     return `"${pathName}"`;
   }).join("\n  | ");
-})()};`);
+})()};\n\ntype TypeofApi = {\n${(() => {
+  return apis.map(pathname => {
+    return `  "${pathname}": typeof import("@/pages/api${pathname}");`;
+  }).join("\n");
+})()}\n};`);
 process.stdout.write("\n");

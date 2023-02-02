@@ -6,7 +6,7 @@ import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
 import apiHandler from "@/utilities/api-handler";
 
-const handler = apiHandler({
+export default apiHandler({
   $get: {
     req: {
       id: stringItem({
@@ -63,10 +63,9 @@ const handler = apiHandler({
   },
   post: async (ctx) => {
     const data = ctx.getData();
+    console.log(JSON.stringify(data, null, 2));
     return {
       update: true,
     };
   },
 });
-
-export default handler;
