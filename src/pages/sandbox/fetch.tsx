@@ -139,6 +139,7 @@ const Page: NextPage = () => {
                   try {
                     const res = await fetchApi.post("/fetch", {
                       number: "0100",
+                      boolean: 2,
                       title: "titleあ",
                       body: "hoge",
                       release_date: new Date(),

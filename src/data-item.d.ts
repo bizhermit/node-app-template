@@ -2,8 +2,9 @@ type DataItemKey = "$$";
 
 type DataValueType = string | number | boolean | Date | Array<DataValueType> | { [key: string]: DataValueType };
 
+type DataItemValidationResultType = "error" | "warning" | "information";
 type DataItemValidationResult = {
-  type: "error" | "warning" | "information";
+  type: DataItemValidationResultType;
   key: string | number;
   index?: number;
   value?: any;
@@ -34,6 +35,7 @@ type DataItem_Base = {
   name?: string;
   label?: string;
   required?: boolean;
+  strict?: boolean;
 };
 
 type DataItem_String = DataItem_Base & {

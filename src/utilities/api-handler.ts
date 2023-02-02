@@ -55,10 +55,10 @@ const getItem = (
 
 const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined) => {
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
       msgs.push({
-        type: "error",
+        type,
         key,
         name,
         index,
@@ -136,10 +136,10 @@ const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
 
 const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined) => {
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
       msgs.push({
-        type: "error",
+        type,
         key,
         name,
         index,
@@ -152,15 +152,21 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   if (data) {
     const v = data[key];
     if (v != null && typeof v !== "number") {
-      try {
-        if (typeof v === "string" && v.trim() === "") {
-          data[key] = undefined;
-        } else {
-          if (isNaN(data[key] = Number(v))) throw new Error;
+      if (ctx.strict) {
+        data[key] = undefined;
+        pushMsg(`${name}をundefindに変換しました。[${typeof v}]->x[number]`, "warning");
+      } else {
+        try {
+          if (typeof v === "string" && v.trim() === "") {
+            data[key] = undefined;
+          } else {
+            if (isNaN(data[key] = Number(v))) throw new Error;
+            pushMsg(`${name}を数値に変換しました。[${v}]->[${data[key]}]`, "warning");
+          }
+        } catch {
+          pushMsg(`${name}を数値に変換できません。`);
+          return;
         }
-      } catch {
-        pushMsg(`${name}を数値に変換できません。`);
-        return;
       }
     }
   }
@@ -191,10 +197,10 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
 
 const getBooleanItem = <T = true, F = false>(msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean<T, F>, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined) => {
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
       msgs.push({
-        type: "error",
+        type,
         key,
         name,
         index,
@@ -204,14 +210,28 @@ const getBooleanItem = <T = true, F = false>(msgs: Array<MessageContext>, key: s
     }
   };
 
+  const tv = ctx.trueValue ?? true;
+  const fv = ctx.falseValue ?? false;
   if (data) {
     const v = data[key];
-    // TODO: exchange
+    if (v != null && (v !== tv && v !== fv)) {
+      if (ctx.strict) {
+        data[key] = undefined;
+        pushMsg(`${name}をundefindに変換しました。[${v}]->x[${tv}/${fv}]`, "warning");
+      } else {
+        data[key] = v ? tv : fv;
+        pushMsg(`${name}を真偽値に変換しました。[${v}]->[${data[key]}]`, "warning");
+      }
+    }
   }
 
   const v = data?.[key] as Nullable<T | F>;
 
-  // TODO: validation
+  if (ctx.required) {
+    if (v !== tv && v !== fv) {
+      pushMsg(`${name}を入力してください。`);
+    }
+  }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
@@ -223,10 +243,10 @@ const getBooleanItem = <T = true, F = false>(msgs: Array<MessageContext>, key: s
 
 const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined) => {
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
       msgs.push({
-        type: "error",
+        type,
         key,
         name,
         index,
@@ -255,10 +275,10 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
 
 const getMonthItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined) => {
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
       msgs.push({
-        type: "error",
+        type,
         key,
         name,
         index,
@@ -287,10 +307,10 @@ const getMonthItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
 
 const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined) => {
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
       msgs.push({
-        type: "error",
+        type,
         key,
         name,
         index,
@@ -347,10 +367,10 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
 
 const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined) => {
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
       msgs.push({
-        type: "error",
+        type,
         key,
         name,
         index,

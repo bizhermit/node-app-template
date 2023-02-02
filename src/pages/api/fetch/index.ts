@@ -22,6 +22,11 @@ export default apiHandler({
     req: {
       number: numberItem({
         label: "年齢",
+        // strict: true,
+        required: true,
+      }),
+      boolean: booleanItem({
+        // strict: true,
         required: true,
       }),
       title: {
