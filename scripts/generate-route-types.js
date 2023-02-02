@@ -56,7 +56,7 @@ const main = (dirName, nestLevel = 0, isApi = false) => {
 }
 main(pageRootPath);
 
-fse.writeFileSync(path.join(srcRootPath, "route.d.ts"), `type PagePath = ${(() => {
+fse.writeFileSync(path.join(srcRootPath, "route.d.ts"), `// generate by script\n// do not edit\n\ntype PagePath = ${(() => {
   process.stdout.write(`-- pages -- ${pages.length}\n`);
   return pages.map(pathName => {
     process.stdout.write(`${pathName}\n`);

@@ -1,3 +1,6 @@
+// generate by script
+// do not edit
+
 type PagePath = "/"
   | "/404"
   | "/sandbox/color"
