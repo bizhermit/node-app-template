@@ -58,7 +58,7 @@ type DataItem_Number = DataItem_Base & {
 
 type DataItem_Boolean<T = true, F = false> = DataItem_Base & {
   type: "boolean";
-  validations?: DataItemValidation<boolean, DataItem_Boolean>;
+  validations?: DataItemValidation<T | F, DataItem_Boolean<T, F>>;
   trueValue?: T;
   falseValue?: F;
   // styles
@@ -67,9 +67,9 @@ type DataItem_Boolean<T = true, F = false> = DataItem_Base & {
 
 type DataItem_Date = DataItem_Base & {
   type: "date" | "month";
-  validations?: DataItemValidation<string, DataItem_Date>;
-  min?: string;
-  max?: string;
+  validations?: DataItemValidation<Date, DataItem_Date>;
+  min?: string | Date;
+  max?: string | Date;
   rangePair?: {
     name: string;
     position: "before" | "after";
@@ -117,7 +117,9 @@ type DataItemValueType<T extends DataItem, Strict extends boolean = false> =
     ) :
     T["type"] extends DataItem_Boolean["type"] ? (
       Strict extends true ? (
-        T["required"] extends true ? boolean : Nullable<boolean>
+        T["required"] extends true ? (
+          DataItem_Boolean["trueValue"] | DataItem_Boolean["falseValue"]
+        ) : Nullable<DataItem_Boolean["trueValue"] | DataItem_Boolean["falseValue"]>
       ) : boolean | string | number | undefined
     ) :
     T["type"] extends DataItem_Date["type"] ? (

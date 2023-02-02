@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { arrayItem, booleanItem, stringItem, structItem } from "@/data-items/data-item-wrapper";
+import { arrayItem, booleanItem, numberItem, stringItem, structItem } from "@/data-items/data-item-wrapper";
 import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
@@ -20,6 +20,10 @@ export default apiHandler({
   },
   $post: {
     req: {
+      number: numberItem({
+        label: "年齢",
+        required: true,
+      }),
       title: {
         ...notification_title,
         required: true,

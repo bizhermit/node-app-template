@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import StringValidation from "@/validations/string";
 import * as os from "os";
 import { dataItemKey } from "@/data-items/data-item-wrapper";
+import NumberValidation from "@/validations/number";
 
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
@@ -21,16 +22,16 @@ const getItem = (
         getStringItem(msgs, key!, ctx, data, index);
         break;
       case "number":
-        // TODO
+        getNumberItem(msgs, key!, ctx, data, index);
         break;
       case "boolean":
-        // TODO
+        getBooleanItem(msgs, key!, ctx, data, index);
         break;
       case "date":
-        // TODO
+        getDateItem(msgs, key!, ctx, data, index);
         break;
       case "month":
-        // TODO
+        getMonthItem(msgs, key!, ctx, data, index);
         break;
       case "array":
         getArrayItem(msgs, key!, ctx, data, index);
@@ -53,11 +54,6 @@ const getItem = (
 };
 
 const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number) => {
-  if (data) {
-    const v = data[key];
-    if (v != null && typeof v !== "string") data[key] = String(v);
-  }
-  const v = data?.[key] as string | undefined;
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined) => {
     if (res) {
@@ -67,10 +63,17 @@ const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
         name,
         index,
         body: `${index != null ? `${index}:` : ""}${res}`,
-        value: v,
+        value: data?.[key],
       });
     }
   };
+
+  if (data) {
+    const v = data[key];
+    if (v != null && typeof v !== "string") data[key] = String(v);
+  }
+  const v = data?.[key] as Nullable<string>;
+
   if (ctx.required) {
     pushMsg(StringValidation.required(v, name));
   }
@@ -131,8 +134,7 @@ const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
 };
 
-const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number) => {
-  const v = data?.[key] as Array<any> | undefined;
+const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined) => {
     if (res) {
@@ -142,10 +144,153 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
         name,
         index,
         body: `${index != null ? `${index}:` : ""}${res}`,
-        value: v,
+        value: data?.[key],
       });
     }
   };
+
+  if (data) {
+    const v = data[key];
+    if (v != null && typeof v !== "number") {
+      try {
+        data[key] = Number(v);
+        if (isNaN(data[key])) data[key] = undefined;
+      } catch {
+        pushMsg(`${name}を数値に変換できません。`);
+        return;
+      }
+    }
+  }
+
+  const v = data?.[key] as Nullable<number>;
+
+  if (ctx.required) {
+    pushMsg(NumberValidation.required(v, name));
+  }
+
+  // TODO: validation
+
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      const res = validation(v, key, ctx, data, index);
+      if (res) msgs.push(res);
+    }
+  }
+};
+
+const getBooleanItem = <T = true, F = false>(msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean<T, F>, data?: Struct, index?: number) => {
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined) => {
+    if (res) {
+      msgs.push({
+        type: "error",
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: data?.[key],
+      });
+    }
+  };
+
+  if (data) {
+    const v = data[key];
+    // TODO: exchange
+  }
+
+  const v = data?.[key] as Nullable<T | F>;
+
+  // TODO: validation
+
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      const res = validation(v, key, ctx, data, index);
+      if (res) msgs.push(res);
+    }
+  }
+};
+
+const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number) => {
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined) => {
+    if (res) {
+      msgs.push({
+        type: "error",
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: data?.[key],
+      });
+    }
+  };
+
+  if (data) {
+    const v = data[key];
+    // TODO: exchange
+  }
+
+  const v = data?.[key] as Nullable<Date>;
+
+  // TODO: validation
+
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      const res = validation(v, key, ctx, data, index);
+      if (res) msgs.push(res);
+    }
+  }
+};
+
+const getMonthItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number) => {
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined) => {
+    if (res) {
+      msgs.push({
+        type: "error",
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: data?.[key],
+      });
+    }
+  };
+
+  if (data) {
+    const v = data[key];
+    // TODO: exchange
+  }
+
+  const v = data?.[key] as Nullable<Date>;
+
+  // TODO: validation
+
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      const res = validation(v, key, ctx, data, index);
+      if (res) msgs.push(res);
+    }
+  }
+};
+
+const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number) => {
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined) => {
+    if (res) {
+      msgs.push({
+        type: "error",
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: data?.[key],
+      });
+    }
+  };
+
+  const v = data?.[key] as Nullable<Array<any>>;
+
   if (v != null && !Array.isArray(v)) {
     pushMsg(`${name}の形式が配列ではありません。`);
     return;
@@ -190,7 +335,6 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
 };
 
 const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number) => {
-  const v = data?.[key] as Array<any> | undefined;
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined) => {
     if (res) {
@@ -200,10 +344,13 @@ const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
         name,
         index,
         body: `${index != null ? `${index}:` : ""}${res}`,
-        value: v,
+        value: data?.[key],
       });
     }
   };
+
+  const v = data?.[key] as Nullable<Struct<any>>;
+
   if (v != null && typeof v !== "object") {
     pushMsg(`${name}の形式が構造体ではありません。`);
     return;
@@ -222,7 +369,7 @@ const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
 
   if (ctx.required !== true && v == null) return;
 
-  getItem(msgs, null, ctx.item, v);
+  getItem(msgs, null, ctx.item, v!);
 };
 
 const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {

@@ -123,8 +123,6 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                    // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
-                    // api.get("/fetch");
                     const res = await api.get("/fetch", {
                       id: "id1",
                     });
@@ -140,21 +138,22 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await fetchApi.post("/fetch", {
+                      number: "01",
+                      title: "titleあ",
                       body: "hoge",
                       release_date: new Date(),
-                      title: "titleあ",
                       array: [
                         "titleえ"
                       ],
                       arrayStruct: [{
+                        title: "titleい",
                         body: "",
                         release_date: new Date(),
-                        title: "titleい",
                       }],
                       struct: {
+                        title: "titleう",
                         body: "",
                         release_date: new Date(),
-                        title: "titleう",
                       },
                       structItem: {
                         title: "titleお",
