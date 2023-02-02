@@ -116,7 +116,7 @@ const Page: NextPage = () => {
             $bind
             $onSubmit={(data) => {
               console.log(data);
-              api.post("/fetch", data);
+              // api.post("/fetch", data);
             }}
           >
             <Row className="gap-1">
@@ -126,8 +126,7 @@ const Page: NextPage = () => {
                     // const res = await fetchApi crossFetch("/api/fetch?hoge=1&hoge=2&fuga=3", {});
                     // api.get("/fetch");
                     const res = await api.get("/fetch", {
-                      hoge: 1,
-                      fuga: [2, 3],
+                      id: "id1",
                     });
                     setResponse(res);
                   } finally {
@@ -143,19 +142,19 @@ const Page: NextPage = () => {
                     const res = await fetchApi.post("/fetch", {
                       body: "hoge",
                       release_date: new Date(),
-                      title: "",
+                      title: "titleあ",
                       array: [
-                        "1"
+                        "titleえ"
                       ],
                       arrayStruct: [{
                         body: "",
                         release_date: new Date(),
-                        title: "",
+                        title: "titleい",
                       }],
                       struct: {
                         body: "",
                         release_date: new Date(),
-                        title: "",
+                        title: "titleう",
                       },
                     });
                     setResponse(res);
@@ -196,7 +195,11 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                    const res = await fetchApi.get("/fetch/[id]", { fuga: 3, id: 1, hoge: [2, 3] });
+                    const res = await fetchApi.get("/fetch/[id]", {
+                      id: 1,
+                      hoge: "text",
+                      fuga: [1, 2, 3]
+                    });
                     setResponse(res);
                   } finally {
                     unlock();

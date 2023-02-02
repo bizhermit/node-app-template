@@ -1,13 +1,18 @@
+import { arrayItem, numberItem, stringItem } from "@/data-items/data-item-wrapper";
 import apiHandler from "@/utilities/api-handler";
 
-const pathname = "/fetch/[id]";
-
-export default apiHandler<typeof pathname>({
+export default apiHandler({
+  $get: {
+    req: {
+      id: numberItem(),
+      hoge: stringItem(),
+      fuga: arrayItem({
+        item: stringItem(),
+      }),
+    },
+  },
   get: async (ctx) => {
-    const query = ctx.getArgs();
-    const id = query.id;
-    return {
-      id,
-    };
+    const data = ctx.getData();
+    return data;
   },
 });

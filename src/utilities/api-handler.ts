@@ -1,87 +1,243 @@
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { NextApiRequest, NextApiResponse } from "next";
+import StringValidation from "@/validations/string";
 import * as os from "os";
+import { dataItemKey } from "@/data-items/data-item-wrapper";
 
-type SystemMethods = Exclude<keyof MethodProcess<any>, ApiMethods>;
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
+type MessageContext = DataItemValidationResult | undefined;
 
-type Context<U extends ApiPath, M extends (ApiMethods | SystemMethods)> = {
-  req: NextApiRequest;
-  res: NextApiResponse;
-  getCookies: <T extends QueryStruct = QueryStruct>() => T;
-  getSession: () => SessionStruct;
-  setStatus: (code: number) => void;
-  hasError: () => boolean;
-  getArgs: <T extends RequestDataContext>(dataContext?: T)
-    => T extends unknown ? ApiRequest<U, Exclude<M, SystemMethods>> : ApiRequestDataStruct<T>;
+const getItem = (
+  msgs: Array<MessageContext>,
+  key: Nullable<string | number> = undefined,
+  ctx: Nullable<DataItem> | RequestDataContext = undefined,
+  data?: Struct,
+  index?: number,
+) => {
+  if (ctx == null) return;
+  if (dataItemKey in ctx) {
+    switch (ctx.type) {
+      case "string":
+        getStringItem(msgs, key!, ctx, data, index);
+        break;
+      case "number":
+        // TODO
+        break;
+      case "boolean":
+        // TODO
+        break;
+      case "date":
+        // TODO
+        break;
+      case "month":
+        // TODO
+        break;
+      case "array":
+        getArrayItem(msgs, key!, ctx, data, index);
+        break;
+      default:
+        break;
+    }
+    return;
+  }
+  Object.keys(ctx).forEach(k => {
+    if (key == null) {
+      getItem(msgs, k, ctx[k], data);
+      return;
+    }
+    getItem(msgs, k, ctx[k], data?.[key]);
+  });
 };
-// &(
-//   M extends "get" ? {
-//     getQuery: <T extends (Exclude<ApiRequest<U, "get">, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, "get">, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
-//   } : {
-//     getQuery: <T extends Readonly<Array<DataItem>> | null | undefined = undefined>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : QueryStruct;
-//     getBody: <T extends (Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData> | Readonly<Array<DataItem>> | null | undefined) = Exclude<ApiRequest<U, Exclude<M, SystemMethods | "get">>, FormData>>(dataItems?: T extends Readonly<Array<DataItem>> ? T : undefined) => Partial<T extends Readonly<Array<DataItem>> ? DataItemStruct<T> : T>;
-//   }
-// );;
 
-type MethodProcess<U extends ApiPath> = {
-  preaction?: (context: Context<U, "preaction">) => Promise<void>;
-  postaction?: (context: Context<U, "postaction">) => Promise<void>;
-  get?: (context: Context<U, "get">) => Promise<void | Exclude<ApiResponse<U, "get">, FormData>>;
-  post?: (context: Context<U, "post">) => Promise<void | Exclude<ApiResponse<U, "post">, FormData>>;
-  put?: (context: Context<U, "put">) => Promise<void | Exclude<ApiResponse<U, "put">, FormData>>;
-  delete?: (context: Context<U, "delete">) => Promise<void | Exclude<ApiResponse<U, "delete">, FormData>>;
-};
-
-type MessageContext = DataItemValidationResult;
-
-const getStringItem = (msgs: Array<MessageContext>, key: string, ctx: DataItem_String, data?: Struct) => {
+const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number) => {
   if (data) {
     const v = data[key];
     if (v != null && typeof v !== "string") data[key] = String(v);
   }
   const v = data?.[key] as string | undefined;
-  if (ctx.required && StringUtils.isEmpty(v)) {
-    msgs.push({ type: "error", name: key, body: `${ctx.label || ctx.name}を入力してください` });
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined) => {
+    if (res) {
+      msgs.push({
+        type: "error",
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: v,
+      });
+    }
+  };
+  if (ctx.required) {
+    pushMsg(StringValidation.required(v, name));
   }
-  if (ctx.length != null && StringUtils.length(v) !== ctx.length) {
-    msgs.push({ type: "error", name: key, body: `${ctx.label || ctx.name}は${ctx.length}文字で入力してください` });
+  if (ctx.length != null) {
+    pushMsg(StringValidation.length(v, ctx.length, name));
   }
-  if (ctx.minLength != null && StringUtils.length(v) < ctx.minLength) {
-    msgs.push({ type: "error", name: key, body: `${ctx.label || ctx.name}は${ctx.minLength}文字以上で入力してください` });
+  if (ctx.minLength != null) {
+    pushMsg(StringValidation.minLength(v, ctx.minLength, name));
   }
-  if (ctx.maxLength != null && StringUtils.length(v) > ctx.maxLength) {
-    msgs.push({ type: "error", name: key, body: `${ctx.label || ctx.name}は${ctx.maxLength}文字以下で入力してください` });
+  if (ctx.maxLength != null) {
+    pushMsg(StringValidation.maxLength(v, ctx.maxLength, name));
+  }
+  switch (ctx.charType) {
+    case "h-num":
+      pushMsg(StringValidation.halfWidthNumeric(v, name));
+      break;
+    case "f-num":
+      pushMsg(StringValidation.fullWidthNumeric(v, name));
+      break;
+    case "num":
+      pushMsg(StringValidation.numeric(v, name));
+      break;
+    case "h-alpha":
+      pushMsg(StringValidation.halfWidthAlphabet(v, name));
+      break;
+    case "f-alpha":
+      pushMsg(StringValidation.fullWidthAlphabet(v, name));
+      break;
+    case "alpha":
+      pushMsg(StringValidation.alphabet(v, name));
+      break;
+    case "h-alpha-num":
+      pushMsg(StringValidation.halfWidthAlphaNumeric(v, name));
+      break;
+    case "h-alpha-num-syn":
+      pushMsg(StringValidation.halfWidthAlphaNumericAndSymbols(v, name));
+      break;
+    case "int":
+      pushMsg(StringValidation.integer(v, name));
+      break;
+    case "h-katakana":
+      pushMsg(StringValidation.halfWidthKatakana(v, name));
+      break;
+    case "f-katakana":
+      pushMsg(StringValidation.fullWidthKatakana(v, name));
+      break;
+    case "katakana":
+      pushMsg(StringValidation.katakana(v, name));
+      break;
+    default:
+      break;
   }
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data);
+      const res = validation(v, key, ctx, data, index);
       if (res) msgs.push(res);
     }
   }
 };
 
-const apiHandler = <U extends ApiPath>(methods: MethodProcess<U>) => {
-  return async (req: NextApiRequest, res: NextApiResponse) => {
-    const method = (req.method?.toLocaleLowerCase() ?? "get") as ApiMethods;
-    const handler = methods[method];
-    if (handler == null) {
-      res.status(404).json({});
+const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number) => {
+  const v = data?.[key] as Array<any> | undefined;
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined) => {
+    if (res) {
+      msgs.push({
+        type: "error",
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: v,
+      });
+    }
+  };
+  if (v != null && !Array.isArray(v)) {
+    pushMsg(`${name}の形式が配列ではありません。`);
+    return;
+  }
+  if (ctx.required) {
+    if (v == null || v.length === 0) {
+      pushMsg(`${name}は1件以上設定してください。`);
+    }
+  }
+  if (ctx.length != null) {
+    if (v != null && v.length !== ctx.length) {
+      pushMsg(`${name}は${ctx.minLength}件で設定してください。`);
+    }
+  }
+  if (ctx.minLength != null) {
+    if (v != null && v.length < ctx.minLength) {
+      pushMsg(`${name}は${ctx.minLength}件以上を設定してください。`);
+    }
+  }
+  if (ctx.maxLength != null) {
+    if (v == null || v.length > ctx.maxLength) {
+      pushMsg(`${name}は${ctx.maxLength}件以内で設定してください。`);
+    }
+  }
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      const res = validation(v, key, ctx, data, index);
+      if (res) msgs.push(res);
+    }
+  }
+
+  const itemIsStruct = dataItemKey in ctx.item;
+  v?.forEach((item, index) => {
+    if (itemIsStruct) {
+      getItem(msgs, index, ctx.item, v, index);
       return;
     }
+    getItem(msgs, null, ctx.item, item, index);
+  });
+};
 
+const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
+  return (req as any).session ?? (global as any)._session ?? {};
+};
+
+type MethodProcess<Req extends RequestDataContext, Res extends ResponseDataContext> =
+  (context: {
+    req: NextApiRequest;
+    res: NextApiResponse;
+    getCookies: <T extends QueryStruct = QueryStruct>() => T;
+    getSession: () => SessionStruct;
+    setStatus: (code: number) => void;
+    hasError: () => boolean;
+    getData: () => ApiRequestDataStruct<Req, true>;
+  }) => Promise<void | ApiResponseDataStruct<Res>>;
+
+const apiHandler = <
+  GetReq extends RequestDataContext = RequestDataContext,
+  GetRes extends ResponseDataContext = ResponseDataContext,
+  PostReq extends RequestDataContext = RequestDataContext,
+  PostRes extends ResponseDataContext = ResponseDataContext,
+  PutReq extends RequestDataContext = RequestDataContext,
+  PutRes extends ResponseDataContext = ResponseDataContext,
+  DeleteReq extends RequestDataContext = RequestDataContext,
+  DeleteRes extends ResponseDataContext = ResponseDataContext
+>(methods: {
+  $get?: { req?: GetReq; res?: GetRes; };
+  get?: MethodProcess<GetReq, GetRes>;
+  $post?: { req?: PostReq; res?: PostRes; };
+  post?: MethodProcess<PostReq, PostRes>;
+  $put?: { req?: PutReq; res?: PutRes; };
+  put?: MethodProcess<PutReq, PutRes>;
+  $delete?: { req?: DeleteReq; res?: DeleteRes; };
+  delete?: MethodProcess<DeleteReq, DeleteRes>;
+}) => {
+  const f = async (req: NextApiRequest, res: NextApiResponse) => {
     let statusCode: number | undefined = undefined;
-    const contentType = req.headers["content-type"]?.match(/([^\;]*)/)?.[1];
-    let args: any = null;
     const msgs: Array<MessageContext> = [];
-    const context: Context<U, typeof method> = {
-      req,
-      res,
-      getArgs: (dataContext) => {
-        if (args != null) return args;
+    const hasError = () => {
+      return msgs.some(msg => msg?.type === "error");
+    };
+
+    try {
+      const method = (req.method?.toLocaleLowerCase() ?? "get") as ApiMethods;
+      const handler = methods[method];
+      if (handler == null) {
+        res.status(404).json({});
+        return;
+      }
+
+      const dataContext = methods[`$${method}`]?.req;
+      const reqData = await (async () => {
         let retData: Struct = { ...req.query };
         if (req.body != null) {
+          const contentType = req.headers["content-type"]?.match(/([^\;]*)/)?.[1];
           if (contentType === "multipart/form-data" && typeof req.body === "string") {
             const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
             if (key) {
@@ -119,74 +275,42 @@ const apiHandler = <U extends ApiPath>(methods: MethodProcess<U>) => {
             retData = { ...retData, ...req.body };
           }
         }
-        if (dataContext == null) return args = retData;
-        const impl = (ctx?: RequestDataContext, data?: any) => {
-          if (ctx == null) return;
-          Object.keys(ctx).forEach(key => {
-            const c = ctx[key] as DataItem;
-            const d = data[key];
-            if (!("$$" in c)) {
-              impl(c, d);
-              return;
-            }
-            switch (c.type) {
-              case "string":
-                getStringItem(msgs, key, c, d);
-                break;
-              case "number":
-                // TODO: validation
-                break;
-              case "boolean":
-                // TODO: validation
-                break;
-              case "date":
-                // TODO: validation
-                break;
-              case "month":
-                // TODO: validation
-                break;
-              case "array":
-                // TODO: validation
-                break;
-              default:
-                break;
-            }
-          });
-        };
-        impl(dataContext, retData);
-        console.log("messages: ", msgs);
-        return args = retData;
-      },
-      getCookies: () => req.cookies as any,
-      getSession: () => getSession(req, res),
-      setStatus: (code: number) => statusCode = code,
-      hasError: () => {
-        return msgs.some(msg => msg.type === "error");
-      },
-    };
+        if (dataContext == null) return retData;
+        getItem(msgs, null, dataContext, retData);
+        if (hasError()) {
+          statusCode = 400;
+          throw new Error("validation error");
+        }
+        return retData;
+      })();
 
-    try {
-      await methods.preaction?.(context);
-      const data = await handler(context as any);
-      await methods.postaction?.(context);
-      // TODO: set messages
-      if (data == null) {
-        res.status(statusCode ?? 204).json({});
-        return;
-      }
-      res.status(statusCode ?? 200).json(data);
+      const resData = await handler({
+        req,
+        res,
+        getCookies: () => req.cookies as any,
+        getSession: () => getSession(req, res),
+        setStatus: (code: number) => statusCode = code,
+        hasError,
+        getData: () => reqData as any,
+      });
+
+      res.status(statusCode ?? (resData == null ? 204 : 200)).json({
+        messages: msgs.filter(msg => msg != null),
+        data: resData
+      });
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.log(e);
-      // TODO: set messages
-      res.status(500).json({});
-      return;
+      // console.log(e);
+      res.status(statusCode ?? 500).json({
+        messages: msgs.filter(msg => msg != null),
+      });
     }
   };
-};
-
-const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
-  return (req as any).session ?? (global as any)._session ?? {};
+  f.$get = methods.$get as { req: GetReq; res: GetRes; };
+  f.$post = methods.$post as { req: PostReq; res: PostRes; };
+  f.$put = methods.$put as { req: PutReq; res: PutRes; };
+  f.$delete = methods.$delete as { req: DeleteReq; res: DeleteRes; };
+  return f;
 };
 
 export default apiHandler;

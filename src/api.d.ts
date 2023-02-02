@@ -35,37 +35,45 @@ type _Api<A extends {
 
 type RequestDataContext = { [key: string]: DataItem | RequestDataContext };
 
-type ApiRequestDataStruct<S extends RequestDataContext> = {
-  [P in keyof S]: DataItemValueType<S[P]>;
+type ApiRequestDataStruct<S extends RequestDataContext | unknown, Strict extends boolean = false> = {
+  [P in keyof S]: DataItemValueType<S[P], Strict>;
 };
+
+type ResponseDataContext = {};
+
+type ApiResponseDataStruct<T extends ResponseDataContext | unknown> = T;
 
 type ImportApi<T> = {
   get: {
-    req: ApiRequestDataStruct<T["GetReq"]>;
+    req: ApiRequestDataStruct<T["default"]["$get"]["req"]>;
     res: T["GetRes"];
   };
   put: {
-    req: ApiRequestDataStruct<T["PutReq"]>;
+    req: ApiRequestDataStruct<T["default"]["$put"]["req"]>;
     res: T["PutRes"];
   };
   post: {
-    req: ApiRequestDataStruct<T["PostReq"]>;
+    req: ApiRequestDataStruct<T["default"]["$post"]["req"]>;
     res: T["PostRes"];
   };
   delete: {
-    req: ApiRequestDataStruct<T["DeleteReq"]>;
+    req: ApiRequestDataStruct<T["default"]["$delete"]["req"]>
     res: T["DeleteRes"];
   };
 };
 
 type Api = _Api<{
   "/fetch": ImportApi<typeof import("@/pages/api/fetch/index")>;
-  "/fetch/[id]": {
-    get: {
-      req: {
-        hoge: number;
-        fuga: Array<string>;
-      }
-    };
-  };
+  "/fetch/[id]": ImportApi<typeof import("@/pages/api/fetch/[id]")>;
+  // "/fetch/[id]": {
+  //   get: {
+  //     req: {
+  //       hoge: number;
+  //       fuga: Array<string>;
+  //     };
+  //     res: {
+  //       completed: boolean;
+  //     };
+  //   };
+  // };
 }>;

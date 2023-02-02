@@ -6,6 +6,7 @@ const notification_title = stringItem({
   type: "string",
   maxLength: 32,
   width: 300,
+  charType: "h-alpha-num",
 } as const);
 
 export default notification_title;
