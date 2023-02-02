@@ -177,6 +177,8 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
     }
   }
 
+  if (ctx.required !== true && v == null) return;
+
   const itemIsStruct = dataItemKey in ctx.item;
   v?.forEach((item, index) => {
     if (itemIsStruct) {
@@ -217,6 +219,8 @@ const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
       if (res) msgs.push(res);
     }
   }
+
+  if (ctx.required !== true && v == null) return;
 
   getItem(msgs, null, ctx.item, v);
 };
