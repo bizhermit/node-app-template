@@ -195,10 +195,7 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
 };
 
-const getBooleanItem = <
-  T extends boolean | string | number = true,
-  F extends boolean | string | number = false
->(msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean<T, F>, data?: Struct, index?: number) => {
+const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -228,7 +225,7 @@ const getBooleanItem = <
     }
   }
 
-  const v = data?.[key] as Nullable<T | F>;
+  const v = data?.[key] as Nullable<boolean | number | string>;
 
   if (ctx.required) {
     if (v !== tv && v !== fv) {

@@ -27,12 +27,12 @@ export default apiHandler({
       }),
       boolean: booleanItem({
         // strict: true,
-        required: true,
+        // required: true,
       }),
       boolean01: booleanItem({
-        required: true,
-        // trueValue: 1,
-        // falseValue: 0,
+        // required: true,
+        trueValue: 1,
+        falseValue: 0,
       }),
       title: {
         ...notification_title,
@@ -78,6 +78,7 @@ export default apiHandler({
   post: async (ctx) => {
     const data = ctx.getData();
     console.log(JSON.stringify(data, null, 2));
+    data.boolean;
     data.boolean01;
     return {
       update: true,

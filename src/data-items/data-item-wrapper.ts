@@ -12,7 +12,7 @@ export const numberItem = <C extends Omit<DataItem_Number, DataItemKey | "type">
   return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "number" });
 };
 
-export const booleanItem = <C extends Omit<DataItem_Boolean, DataItemKey | "type" | "trueValue" | "falseValue"> & Partial<Pick<DataItem_Boolean, "trueValue" | "falseValue">>>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Boolean : C & DataItem_Boolean> => {
+export const booleanItem = <C extends Omit<DataItem_Boolean, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Boolean : C & DataItem_Boolean> => {
   return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "boolean" });
 };
 

@@ -58,11 +58,11 @@ type DataItem_Number = DataItem_Base & {
   width?: number;
 };
 
-type DataItem_Boolean<T extends boolean | number | string = true, F extends boolean | number | string = false> = DataItem_Base & {
+type DataItem_Boolean = DataItem_Base & {
   type: "boolean";
-  validations?: DataItemValidation<(T | F), DataItem_Boolean<T, F>>;
-  trueValue: T;
-  falseValue: F;
+  validations?: DataItemValidation<boolean | number | string, DataItem_Boolean>;
+  trueValue?: boolean | number | string;
+  falseValue?: boolean | number | string;
   // styles
   width?: number;
 };
@@ -123,12 +123,12 @@ type DataItemValueType<D extends DataItem, Strict extends boolean = false> =
     D["type"] extends DataItem_Boolean["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? (
-          D["trueValue"] | D["falseValue"]
-        ) : Nullable<D["trueValue"] | D["falseValue"]>
+          (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)
+        ) : Nullable<(D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)>
       ) : (
         D["strict"] extends true ?
-        Nullable<D["trueValue"] | D["falseValue"]> :
-        Nullable<D["trueValue"] | D["falseValue"] | boolean | string | number>
+        Nullable<(D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)> :
+        Nullable<(D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | boolean | string | number>
       )
     ) :
     D["type"] extends DataItem_Date["type"] ? (
