@@ -195,7 +195,10 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
 };
 
-const getBooleanItem = <T = true, F = false>(msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean<T, F>, data?: Struct, index?: number) => {
+const getBooleanItem = <
+  T extends boolean | string | number = true,
+  F extends boolean | string | number = false
+>(msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean<T, F>, data?: Struct, index?: number) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -415,8 +418,8 @@ type MethodProcess<Req extends DataContext, Res extends DataContext> =
     getSession: () => SessionStruct;
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => ApiDataStruct<Req, true>;
-  }) => Promise<void | ApiDataStruct<Res, true>>;
+    getData: () => DataItemValueType<Req, true>;
+  }) => Promise<void | DataItemValueType<Res, true>>;
 
 const apiHandler = <
   GetReq extends DataContext = DataContext,

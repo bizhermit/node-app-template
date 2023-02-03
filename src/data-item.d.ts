@@ -58,11 +58,11 @@ type DataItem_Number = DataItem_Base & {
   width?: number;
 };
 
-type DataItem_Boolean<T = true, F = false> = DataItem_Base & {
+type DataItem_Boolean<T extends boolean | number | string = true, F extends boolean | number | string = false> = DataItem_Base & {
   type: "boolean";
-  validations?: DataItemValidation<T | F, DataItem_Boolean<T, F>>;
-  trueValue?: T;
-  falseValue?: F;
+  validations?: DataItemValidation<(T | F), DataItem_Boolean<T, F>>;
+  trueValue: T;
+  falseValue: F;
   // styles
   width?: number;
 };
@@ -99,50 +99,57 @@ type DataContext = { [key: string]: DataItem };
 type DataItem = DataContext
   | DataItem_String
   | DataItem_Number
-  | DataItem_Boolean
+  | DataItem_Boolean<any, any>
   | DataItem_Date
   | DataItem_Array<any>
   | DataItem_Struct<any>
+  | (DataItem_Base & { type: "any" })
   ;
 
-type DataItemValueType<T extends DataItem, Strict extends boolean = false> =
-  T extends { $$: any } ? (
-    T["type"] extends DataItem_String["type"] ? (
+type DataItemValueType<D extends DataItem, Strict extends boolean = false> =
+  D extends { $$: any } ? (
+    D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
-        T["required"] extends true ? string : Nullable<string>
-      ) : string | number | boolean | undefined
+        D["required"] extends true ? string : Nullable<string>
+      ) : Nullable<string | number | boolean>
     ) :
-    T["type"] extends DataItem_Number["type"] ? (
+    D["type"] extends DataItem_Number["type"] ? (
       Strict extends true ? (
-        T["required"] extends true ? number : Nullable<number>
-      ) : number | string | undefined
+        D["required"] extends true ? number : Nullable<number>
+      ) : (
+        D["strict"] extends true ? Nullable<number> : Nullable<number | string>
+      )
     ) :
-    T["type"] extends DataItem_Boolean["type"] ? (
+    D["type"] extends DataItem_Boolean["type"] ? (
       Strict extends true ? (
-        T["required"] extends true ? (
-          DataItem_Boolean["trueValue"] | DataItem_Boolean["falseValue"]
-        ) : Nullable<DataItem_Boolean["trueValue"] | DataItem_Boolean["falseValue"]>
-      ) : boolean | string | number | undefined
+        D["required"] extends true ? (
+          D["trueValue"] | D["falseValue"]
+        ) : Nullable<D["trueValue"] | D["falseValue"]>
+      ) : (
+        D["strict"] extends true ?
+        Nullable<D["trueValue"] | D["falseValue"]> :
+        Nullable<D["trueValue"] | D["falseValue"] | boolean | string | number>
+      )
     ) :
-    T["type"] extends DataItem_Date["type"] ? (
+    D["type"] extends DataItem_Date["type"] ? (
       Strict extends true ? (
-        T["required"] extends true ? Date : Nullable<Date>
+        D["required"] extends true ? Date : Nullable<Date>
       ) : Date | string | undefined
     ) :
-    T["type"] extends DataItem_Array["type"] ? (
+    D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
-        T["required"] extends true ? Array<DataItemValueType<T["item"]>> : Nullable<Array<DataItemValueType<T["item"]>>>
-      ) : Array<DataItemValueType<T["item"]>> | undefined
+        D["required"] extends true ? Array<DataItemValueType<D["item"], Strict>> : Nullable<Array<DataItemValueType<D["item"], Strict>>>
+      ) : Array<DataItemValueType<D["item"], Strict>> | undefined
     ) :
-    T["type"] extends DataItem_Struct["type"] ? (
+    D["type"] extends DataItem_Struct["type"] ? (
       Strict extends true ? (
-        T["required"] extends true ? { [P in keyof T["item"]]: T["item"][P] } : Nullable<{ [P in keyof T["item"]]: T["item"][P] }>
-      ) : { [P in keyof T["item"]]?: DataItemValueType<T["item"][P]> }
+        D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : Nullable<{ [P in keyof D["item"]]: D["item"][P] }>
+      ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict> }
     ) :
     any
   ) : (
     Strict extends true ?
-    { [P in keyof T]: DataItemValueType<T[P]> } :
-    { [P in keyof T]?: DataItemValueType<T[P]> }
+    { [P in keyof D]: DataItemValueType<D[P], Strict> } :
+    { [P in keyof D]?: DataItemValueType<D[P], Strict> }
   )
   ;

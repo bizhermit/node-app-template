@@ -33,28 +33,25 @@ type _Api<A extends {
   };
 }> = A;
 
-type ApiDataStruct<S extends DataContext, Strict extends boolean = false> = DataItemValueType<S, Strict>;
-
 type ImportApi<T> = {
   [P in keyof T]: {
     get: {
-      req: ApiDataStruct<T[P]["default"]["$get"]["req"], false>;
-      res: ApiDataStruct<T[P]["default"]["$get"]["res"], true>;
+      req: DataItemValueType<T[P]["default"]["$get"]["req"], false>;
+      res: DataItemValueType<T[P]["default"]["$get"]["res"], true>;
     };
     put: {
-      req: ApiDataStruct<T[P]["default"]["$put"]["req"], false>;
-      res: ApiDataStruct<T[P]["default"]["$put"]["res"], true>;
+      req: DataItemValueType<T[P]["default"]["$put"]["req"], false>;
+      res: DataItemValueType<T[P]["default"]["$put"]["res"], true>;
     };
     post: {
-      req: ApiDataStruct<T[P]["default"]["$post"]["req"], false>;
-      res: ApiDataStruct<T[P]["default"]["$post"]["res"], true>;
+      req: DataItemValueType<T[P]["default"]["$post"]["req"], false>;
+      res: DataItemValueType<T[P]["default"]["$post"]["res"], true>;
     };
     delete: {
-      req: ApiDataStruct<T[P]["default"]["$delete"]["req"], false>;
-      res: ApiDataStruct<T[P]["default"]["$delete"]["res"], true>;
+      req: DataItemValueType<T[P]["default"]["$delete"]["req"], false>;
+      res: DataItemValueType<T[P]["default"]["$delete"]["res"], true>;
     };
   };
 };
 
-type Api = ImportApi<TypeofApi> & _Api<{
-}>;
+type Api = ImportApi<TypeofApi> & _Api<{}>;
