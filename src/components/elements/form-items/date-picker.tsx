@@ -7,7 +7,8 @@ import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import LabelText from "@/components/elements/label-text";
-import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, convertToMaxTime, getMinDate, convertToMinTime, maxDateValidation, minDateValidation, rangeDateValidation } from "@/components/utilities/date-input";
+import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, getMinDate, maxDateValidation, minDateValidation, rangeDateValidation } from "@/components/utilities/date-input";
+import DateValidation from "@/validations/date";
 
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
@@ -95,8 +96,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     validations: () => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
-      const maxTime = convertToMaxTime(maxDate, type);
-      const minTime = convertToMinTime(minDate, type);
+      const maxTime = DateValidation.dateAtLast(maxDate, type);
+      const minTime = DateValidation.dateAsFirst(minDate, type);
       if (maxTime != null && minTime != null) {
         const compare = rangeDateValidation(minTime, maxTime, type);
         if (multiple) {
@@ -124,11 +125,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { compare, getPairDate, validation } = dateContextValidation(rangePair);
+        const { compare, getPairDate, validation } = dateContextValidation(rangePair, type);
         if (multiple) {
           validations.push((v, d) => {
             if (d == null) return "";
-            const pairDate = convertDate(getPairDate(d));
+            const pairDate = getPairDate(d);
             if (pairDate == null) return "";
             return multiValidationIterator(v, (val) => compare(val, pairDate));
           });

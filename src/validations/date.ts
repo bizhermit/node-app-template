@@ -1,6 +1,4 @@
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
+import DatetimeUtils, { dateFormat, convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 
 namespace DateValidation {
 
@@ -17,11 +15,23 @@ namespace DateValidation {
     if (v == null) return undefined;
     switch (type) {
       case "year":
-        return DatetimeUtils.getFirstDateAtYear(convertDate(v))?.getTime();
+        return DatetimeUtils.getFirstDateAtYear(convertDate(v));
       case "month":
-        return DatetimeUtils.getFirstDateAtMonth(convertDate(v))?.getTime();
+        return DatetimeUtils.getFirstDateAtMonth(convertDate(v));
       default:
-        return convertDate(v)?.getTime();
+        return convertDate(v);
+    }
+  };
+
+  export const dateAtLast = (v?: DateValue, type: DateType = "date") => {
+    if (v == null) return undefined;
+    switch (type) {
+      case "year":
+        return DatetimeUtils.getLastDateAtYear(convertDate(v));
+      case "month":
+        return DatetimeUtils.getLastDateAtMonth(convertDate(v));
+      default:
+        return convertDate(v);
     }
   };
 
@@ -50,7 +60,11 @@ namespace DateValidation {
   };
 
   export const context = (v: Nullable<Date>, rangePair: DateRangePair, data: Struct | undefined, type: DateType = "date", itemName?: string, pairItemName?: string) => {
-    const pairDate = convertDate(data?.[rangePair.name]);
+    const pairDate = (() => {
+      const pv = data?.[rangePair.name];
+      if (pv == null || Array.isArray(pv)) return undefined;
+      return convertDate(pv);
+    })();
     if (v == null || pairDate == null) return undefined;
     if (rangePair.disallowSame !== true && DatetimeUtils.equalDate(v, pairDate)) return undefined;
     if (rangePair.position === "before") {

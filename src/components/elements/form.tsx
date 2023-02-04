@@ -590,7 +590,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   );
 });
 
-export const multiValidationIterator = (v: any, func: (value: string | number | Date) => string) => {
+export const multiValidationIterator = (v: any, func: (value: string | number | Date) => (string | undefined | null)) => {
   if (v == null || !Array.isArray(v)) return "";
   for (let i = 0, il = v.length; i < il; i++) {
     const ret = func(v[i]);

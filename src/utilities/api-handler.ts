@@ -54,7 +54,7 @@ const getItem = (
   });
 };
 
-const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number, _pctx?: DataContext) => {
+const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -129,13 +129,13 @@ const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index);
+      const res = validation(v, key, ctx, data, index, pctx);
       if (res) msgs.push(res);
     }
   }
 };
 
-const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number, _pctx?: DataContext) => {
+const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -190,13 +190,13 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index);
+      const res = validation(v, key, ctx, data, index, pctx);
       if (res) msgs.push(res);
     }
   }
 };
 
-const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number, _pctx?: DataContext) => {
+const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -236,7 +236,7 @@ const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: 
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index);
+      const res = validation(v, key, ctx, data, index, pctx);
       if (res) msgs.push(res);
     }
   }
@@ -295,7 +295,7 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index);
+      const res = validation(v, key, ctx, data, index, pctx);
       if (res) msgs.push(res);
     }
   }
@@ -344,7 +344,7 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
   }
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index);
+      const res = validation(v, key, ctx, data, index, pctx);
       if (res) msgs.push(res);
     }
   }
@@ -389,7 +389,7 @@ const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index);
+      const res = validation(v, key, ctx, data, index, pctx);
       if (res) msgs.push(res);
     }
   }

@@ -7,7 +7,8 @@ import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
 import { VscCalendar, VscClose } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, convertToMaxTime, getMinDate, convertToMinTime, maxDateValidation, minDateValidation, rangeDateValidation } from "@/components/utilities/date-input";
+import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, getMinDate, maxDateValidation, minDateValidation, rangeDateValidation } from "@/components/utilities/date-input";
+import DateValidation from "@/validations/date";
 
 type DateBoxBaseProps<T> = FormItemProps<T> & DateInputPorps & {
   $disallowInput?: boolean;
@@ -68,21 +69,21 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     interlockValidation: props.$rangePair != null,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
-      const maxTime = convertToMaxTime(maxDate, type);
-      const minTime = convertToMinTime(minDate, type);
-      if (maxTime != null && minTime != null) {
-        validations.push(rangeDateValidation(minTime, maxTime, type));
+      const max = DateValidation.dateAtLast(maxDate, type);
+      const min = DateValidation.dateAsFirst(minDate, type);
+      if (max != null && min != null) {
+        validations.push(rangeDateValidation(min, max, type));
       } else {
-        if (maxTime != null) {
-          validations.push(maxDateValidation(maxTime, type));
+        if (max != null) {
+          validations.push(maxDateValidation(max, type));
         }
-        if (minTime != null) {
-          validations.push(minDateValidation(minTime, type));
+        if (min != null) {
+          validations.push(minDateValidation(min, type));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = dateContextValidation(rangePair);
+        const { validation } = dateContextValidation(rangePair, type);
         validations.push(validation);
       }
       if (props.$validDays) {

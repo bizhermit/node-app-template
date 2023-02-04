@@ -14,7 +14,7 @@ type DataItemValidationResult = {
 };
 
 type DataItemValidation<T, D extends DataItem> =
-  readonly ((v: Nullable<T>, key: string | number, ctx: D, data: Nullable<Struct | Array<any>>, index: Nullable<number>)
+  readonly ((v: Nullable<T>, key: string | number, ctx: D, data: Nullable<Struct | Array<any>>, index: Nullable<number>, pctx: DataContext | null | undefined)
     => (DataItemValidationResult | void))[];
 
 type DataItem_Base = {

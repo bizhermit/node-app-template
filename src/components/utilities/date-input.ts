@@ -1,9 +1,7 @@
 import { FormItemValidation } from "@/components/elements/form";
 import DateValidation from "@/validations/date";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
+import { convertDate, dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 
 export type DateInputPorps = {
   $type?: DateType;
@@ -25,8 +23,6 @@ export const convertDateToValue = (date: Date, $typeof: "string" | "number" | "d
   }
 };
 
-export const formatByDateType = DateValidation.format;
-
 export const getMinDate = (props: DateInputPorps) => {
   return convertDate(props.$min) ?? new Date(1900, 0, 1);
 };
@@ -37,16 +33,7 @@ export const getMaxDate = (props: DateInputPorps) => {
   return convertDate(props.$max) ?? new Date(2100, 0, 0);
 };
 
-export const convertToMaxTime = (maxDate: Date, type: DateType) => {
-  switch (type) {
-    case "year":
-      return DatetimeUtils.getLastDateAtYear(maxDate)?.getTime();
-    case "month":
-      return DatetimeUtils.getLastDateAtMonth(maxDate)?.getTime();
-    default:
-      return maxDate?.getTime();
-  }
-};
+export const convertToMaxTime = DateValidation.dateAtLast;
 
 export const getJudgeValidDateFunc = (props: DateInputPorps): ((date: Date) => boolean) => {
   if (props.$validDays == null) return () => true;
@@ -88,51 +75,25 @@ export const getJudgeValidDateFunc = (props: DateInputPorps): ((date: Date) => b
   return (date) => validWeeks.indexOf(date.getDay()) >= 0;
 };
 
-export const rangeDateValidation = (minTime: number, maxTime: number, type: DateType) => {
-  const maxDateStr = formatByDateType(maxTime, type);
-  const minDateStr = formatByDateType(minTime, type);
-  return (v: any) => {
-    const time = convertDate(v)?.getTime();
-    if (time == null) return "";
-    if (time < minTime || maxTime < time) return `${minDateStr}～${maxDateStr}の範囲で入力してください。`;
-    return "";
-  };
+export const rangeDateValidation = (min: Date, max: Date, type: DateType) => {
+  const minDateStr = DateValidation.format(min, type);
+  const maxDateStr = DateValidation.format(max, type);
+  return (v: any) => DateValidation.range(convertDate(v), min, max, type, undefined, minDateStr, maxDateStr);
 };
 
-export const minDateValidation = (minTime: number, type: DateType) => {
-  const minDateStr = formatByDateType(minTime, type);
-  return (v: any) => {
-    const time = convertDate(v)?.getTime();
-    if (time == null) return "";
-    if (time < minTime) return `${minDateStr}以降で入力してください。`;
-    return "";
-  };
+export const minDateValidation = (min: Date, type: DateType) => {
+  const minDateStr = DateValidation.format(min, type);
+  return (v: any) => DateValidation.min(convertDate(v), min, type, undefined, minDateStr);
 };
 
-export const maxDateValidation = (maxTime: number, type: DateType) => {
-  const maxDateStr = formatByDateType(maxTime, type);
-  return (v: any) => {
-    const time = convertDate(v)?.getTime();
-    if (time == null) return "";
-    if (time > maxTime) return `${maxDateStr}以前で入力してください。`;
-    return "";
-  };
+export const maxDateValidation = (max: Date, type: DateType) => {
+  const maxDateStr = DateValidation.format(max, type);
+  return (v: any) => DateValidation.max(convertDate(v), max, type, undefined, maxDateStr);
 };
 
-export const dateContextValidation = (rangePair: DateRangePair) => {
-  const compare = (value: DateValue | any, pairDate: Date) => {
-    const date = convertDate(value);
-    if (date == null) return "";
-    if (rangePair.disallowSame !== true && DatetimeUtils.equalDate(date, pairDate)) {
-      return "";
-    }
-    if (rangePair.position === "before") {
-      if (!DatetimeUtils.isBeforeDate(date, pairDate)) return "日付の前後関係が不適切です。";
-      return "";
-    }
-    if (!DatetimeUtils.isAfterDate(date, pairDate)) return "日付の前後関係が不適切です。";
-    return "";
-  };
+export const dateContextValidation = (rangePair: DateRangePair, type: DateType) => {
+  const compare = (value: DateValue | any, pairDate: Date) =>
+    DateValidation.context(convertDate(value), rangePair, { [rangePair.name]: pairDate }, type, undefined, undefined);
   const getPairDate = (data: Struct) => {
     if (data == null) return undefined;
     const pairValue = data[rangePair.name];
