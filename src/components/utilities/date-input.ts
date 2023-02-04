@@ -5,22 +5,13 @@ import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 
-export type DateType = DateValidation.Type;
-export type DateValue = DateValidation.DateValue;
-
-type DateRangePair = {
-  name: string;
-  position: "before" | "after";
-  disallowSame?: boolean;
-};
-
 export type DateInputPorps = {
-  $type?: DateValidation.Type;
-  $min?: DateValidation.DateValue;
-  $max?: DateValidation.DateValue;
-  $rangePair?: DateValidation.RangePair;
-  $validDays?: DateValidation.ValidDays;
-  $validDaysMode?: DateValidation.ValidDaysMode;
+  $type?: DateType;
+  $min?: DateValue;
+  $max?: DateValue;
+  $rangePair?: DateRangePair;
+  $validDays?: ValidDays;
+  $validDaysMode?: ValidDaysMode;
 };
 
 export const convertDateToValue = (date: Date, $typeof: "string" | "number" | "date" | undefined) => {
@@ -34,27 +25,13 @@ export const convertDateToValue = (date: Date, $typeof: "string" | "number" | "d
   }
 };
 
-export const formatByDateType = (time?: number, type?: DateType) => {
-  if (time == null) return "";
-  if (type === "year") return dateFormat(time, "yyyy年");
-  if (type === "month") return dateFormat(time, "yyyy/MM");
-  return dateFormat(time, "yyyy/MM/dd");
-};
+export const formatByDateType = DateValidation.format;
 
 export const getMinDate = (props: DateInputPorps) => {
   return convertDate(props.$min) ?? new Date(1900, 0, 1);
 };
 
-export const convertToMinTime = (minDate: Date, type: DateType) => {
-  switch (type) {
-    case "year":
-      return DatetimeUtils.getFirstDateAtYear(minDate)?.getTime();
-    case "month":
-      return DatetimeUtils.getFirstDateAtMonth(minDate)?.getTime();
-    default:
-      return minDate?.getTime();
-  }
-};
+export const convertToMinTime = DateValidation.dateAsFirst;
 
 export const getMaxDate = (props: DateInputPorps) => {
   return convertDate(props.$max) ?? new Date(2100, 0, 0);
@@ -142,7 +119,7 @@ export const maxDateValidation = (maxTime: number, type: DateType) => {
   };
 };
 
-export const dateContextValidation = (rangePair: DateValidation.RangePair) => {
+export const dateContextValidation = (rangePair: DateRangePair) => {
   const compare = (value: DateValue | any, pairDate: Date) => {
     const date = convertDate(value);
     if (date == null) return "";

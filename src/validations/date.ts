@@ -4,28 +4,25 @@ import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 
 namespace DateValidation {
 
-  export type Type = "date" | "month" | "year";
-  export type DateValue = string | number | Date;
-
-  export type RangePair = {
-    name: string;
-    label?: string;
-    position: "before" | "after";
-    disallowSame?: boolean;
-  }
-
-  export type ValidDays = "weekday" | "holiday" | string
-    | Array<DateValue | { date: DateValue; valid?: boolean; }>
-    | ((date: Date) => boolean);
-  export type ValidDaysMode = "allow" | "disallow";
-
   const defaultItemName = "値";
 
-  const format = (v: Date, type: Type) => {
+  export const format = (v?: DateValue, type?: DateType) => {
     if (v == null) return "";
     if (type === "year") return dateFormat(v, "yyyy年");
     if (type === "month") return dateFormat(v, "yyyy/MM");
     return dateFormat(v, "yyyy/MM/dd");
+  };
+
+  export const dateAsFirst = (v?: DateValue, type: DateType = "date") => {
+    if (v == null) return undefined;
+    switch (type) {
+      case "year":
+        return DatetimeUtils.getFirstDateAtYear(convertDate(v))?.getTime();
+      case "month":
+        return DatetimeUtils.getFirstDateAtMonth(convertDate(v))?.getTime();
+      default:
+        return convertDate(v)?.getTime();
+    }
   };
 
   export const required = (v: Nullable<Date>, itemName?: string) => {
@@ -33,26 +30,26 @@ namespace DateValidation {
     return undefined;
   };
 
-  export const min = (v: Nullable<Date>, min: DateValue, type: Type = "date", itemName?: string, formattedMin?: string) => {
+  export const min = (v: Nullable<Date>, min: DateValue, type: DateType = "date", itemName?: string, formattedMin?: string) => {
     const minDate = convertDate(min);
     if (v == null || minDate == null || v.getTime() >= minDate.getTime()) return undefined;
     return `${itemName || defaultItemName}は${formattedMin || format(minDate, type)}以降で入力してください。`;
   };
 
-  export const max = (v: Nullable<Date>, max: DateValue, type: Type = "date", itemName?: string, formattedMax?: string) => {
+  export const max = (v: Nullable<Date>, max: DateValue, type: DateType = "date", itemName?: string, formattedMax?: string) => {
     const maxDate = convertDate(max);
     if (v == null || maxDate == null || v.getTime() <= maxDate.getTime()) return undefined;
     return `${itemName || defaultItemName}は${formattedMax || format(maxDate, type)}以前で入力してください。`;
   };
 
-  export const range = (v: Nullable<Date>, min: DateValue, max: DateValue, type: Type = "date", itemName?: string, formattedMin?: string, formattedMax?: string) => {
+  export const range = (v: Nullable<Date>, min: DateValue, max: DateValue, type: DateType = "date", itemName?: string, formattedMin?: string, formattedMax?: string) => {
     const minDate = convertDate(min);
     const maxDate = convertDate(max);
     if (v == null || minDate == null || maxDate == null || (minDate.getTime() <= v.getTime() && v.getTime() <= maxDate.getTime())) return undefined;
     return `${itemName || defaultItemName}は${formattedMin || format(minDate, type)}～${formattedMax || format(maxDate, type)}の範囲で入力してください。`;
   };
 
-  export const context = (v: Nullable<Date>, rangePair: RangePair, data: Struct | undefined, type: Type = "date", itemName?: string, pairItemName?: string) => {
+  export const context = (v: Nullable<Date>, rangePair: DateRangePair, data: Struct | undefined, type: DateType = "date", itemName?: string, pairItemName?: string) => {
     const pairDate = convertDate(data?.[rangePair.name]);
     if (v == null || pairDate == null) return undefined;
     if (rangePair.disallowSame !== true && DatetimeUtils.equalDate(v, pairDate)) return undefined;
