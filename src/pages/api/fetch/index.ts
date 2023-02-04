@@ -94,11 +94,10 @@ export default apiHandler({
   },
   post: async (ctx) => {
     const data = ctx.getData();
-    console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(data, null, 2));
     data.boolean;
     data.boolean01;
     const date = data[notification_releaseDate.name];
-    console.log(DatetimeUtils.format(date));
     return {
       update: true,
     };
