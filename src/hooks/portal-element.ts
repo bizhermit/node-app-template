@@ -9,7 +9,7 @@ const usePortalElement = (options?: {
   const [element, setElement] = useState<HTMLDivElement>(null!);
 
   useEffect(() => {
-    let elem = element || document.getElementById(idRef.current) as HTMLDivElement;
+    let elem = element || (idRef.current ? document.getElementById(idRef.current) : undefined) as HTMLDivElement;
     if (elem == null) {
       elem = document.createElement("div");
       if (idRef.current) elem.id = idRef.current;

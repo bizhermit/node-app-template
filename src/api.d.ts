@@ -37,19 +37,31 @@ type ImportApi<T> = {
   [P in keyof T]: {
     get: {
       req: DataItemValueType<T[P]["default"]["$get"]["req"], false>;
-      res: DataItemValueType<T[P]["default"]["$get"]["res"], true>;
+      res: {
+        data: DataItemValueType<T[P]["default"]["$get"]["res"], true>;
+        messages: Array<DataItemValidationResult>;
+      };
     };
     put: {
       req: DataItemValueType<T[P]["default"]["$put"]["req"], false>;
-      res: DataItemValueType<T[P]["default"]["$put"]["res"], true>;
+      res: {
+        data: DataItemValueType<T[P]["default"]["$put"]["res"], true>;
+        messages: Array<DataItemValidationResult>;
+      };
     };
     post: {
       req: DataItemValueType<T[P]["default"]["$post"]["req"], false>;
-      res: DataItemValueType<T[P]["default"]["$post"]["res"], true>;
+      res: {
+        data: DataItemValueType<T[P]["default"]["$post"]["res"], true>;
+        messages: Array<DataItemValidationResult>;
+      }
     };
     delete: {
       req: DataItemValueType<T[P]["default"]["$delete"]["req"], false>;
-      res: DataItemValueType<T[P]["default"]["$delete"]["res"], true>;
+      res: {
+        data: DataItemValueType<T[P]["default"]["$delete"]["res"], true>;
+        messages: Array<DataItemValidationResult>;
+      }
     };
   };
 };

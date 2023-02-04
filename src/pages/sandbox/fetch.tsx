@@ -166,6 +166,8 @@ const Page: NextPage = () => {
                       }
                     });
                     setResponse(res);
+                    console.log(res.data.messages);
+                    console.log(res.data.data);
                   } finally {
                     unlock();
                   }
