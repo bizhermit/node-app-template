@@ -3,6 +3,8 @@ import StringValidation from "@/validations/string";
 import * as os from "os";
 import { dataItemKey } from "@/data-items/data-item-wrapper";
 import NumberValidation from "@/validations/number";
+import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
+import DateValidation from "@/validations/date";
 
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
@@ -14,30 +16,29 @@ const getItem = (
   ctx: Nullable<DataItem> | DataContext = undefined,
   data?: Struct,
   index?: number,
+  pctx?: DataContext,
 ) => {
   if (ctx == null) return;
   if (dataItemKey in ctx) {
     switch (ctx.type) {
       case "string":
-        getStringItem(msgs, key!, ctx, data, index);
+        getStringItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "number":
-        getNumberItem(msgs, key!, ctx, data, index);
+        getNumberItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "boolean":
-        getBooleanItem(msgs, key!, ctx, data, index);
+        getBooleanItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "date":
-        getDateItem(msgs, key!, ctx, data, index);
-        break;
       case "month":
-        getMonthItem(msgs, key!, ctx, data, index);
+        getDateItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "array":
-        getArrayItem(msgs, key!, ctx, data, index);
+        getArrayItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "struct":
-        getStructItem(msgs, key!, ctx, data, index);
+        getStructItem(msgs, key!, ctx, data, index, pctx);
         break;
       default:
         break;
@@ -46,14 +47,14 @@ const getItem = (
   }
   Object.keys(ctx).forEach(k => {
     if (key == null) {
-      getItem(msgs, k, ctx[k], data);
+      getItem(msgs, k, ctx[k], data, undefined, ctx);
       return;
     }
-    getItem(msgs, k, ctx[k], data?.[key]);
+    getItem(msgs, k, ctx[k], data?.[key], undefined, ctx);
   });
 };
 
-const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number) => {
+const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number, _pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -134,7 +135,7 @@ const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
 };
 
-const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number) => {
+const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number, _pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -161,10 +162,10 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
             data[key] = undefined;
           } else {
             if (isNaN(data[key] = Number(v))) throw new Error;
-            pushMsg(`${name}を数値に変換しました。[${v}]->[${data[key]}]`, "warning");
+            pushMsg(`${name}を数値型に変換しました。[${v}]->[${data[key]}]`, "warning");
           }
         } catch {
-          pushMsg(`${name}を数値に変換できません。`);
+          pushMsg(`${name}を数値型に変換できません。`);
           return;
         }
       }
@@ -195,7 +196,7 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
 };
 
-const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number) => {
+const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number, _pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -241,7 +242,7 @@ const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: 
   }
 };
 
-const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number) => {
+const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -258,12 +259,39 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
 
   if (data) {
     const v = data[key];
-    // TODO: exchange
+    const t = typeof v;
+    if (v != null) {
+      try {
+        if (t === "string" || t === "number") {
+          data[key] = DatetimeUtils.convert(v);
+        } else {
+          throw new Error;
+        }
+      } catch {
+        pushMsg(`${name}を日付型に変換できません。`);
+        return;
+      }
+    }
   }
 
   const v = data?.[key] as Nullable<Date>;
 
-  // TODO: validation
+  if (ctx.required) {
+    pushMsg(DateValidation.required(v, name));
+  }
+  if (ctx.min != null && ctx.max != null) {
+    pushMsg(DateValidation.range(v, ctx.min, ctx.max, ctx.type, name));
+  } else {
+    if (ctx.min) {
+      pushMsg(DateValidation.min(v, ctx.min, ctx.type, name));
+    }
+    if (ctx.max) {
+      pushMsg(DateValidation.max(v, ctx.max, ctx.type, name));
+    }
+  }
+  if (ctx.rangePair) {
+    pushMsg(DateValidation.context(v, ctx.rangePair, data, ctx.type, name, pctx?.[ctx.rangePair.name]?.label));
+  }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
@@ -273,39 +301,7 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   }
 };
 
-const getMonthItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number) => {
-  const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
-    }
-  };
-
-  if (data) {
-    const v = data[key];
-    // TODO: exchange
-  }
-
-  const v = data?.[key] as Nullable<Date>;
-
-  // TODO: validation
-
-  if (ctx.validations) {
-    for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index);
-      if (res) msgs.push(res);
-    }
-  }
-};
-
-const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number) => {
+const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -358,14 +354,14 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
   const itemIsStruct = dataItemKey in ctx.item;
   v?.forEach((item, index) => {
     if (itemIsStruct) {
-      getItem(msgs, index, ctx.item, v, index);
+      getItem(msgs, index, ctx.item, v, index, pctx);
       return;
     }
-    getItem(msgs, null, ctx.item, item, index);
+    getItem(msgs, null, ctx.item, item, index, pctx);
   });
 };
 
-const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number) => {
+const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -400,7 +396,7 @@ const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
 
   if (ctx.required !== true && v == null) return;
 
-  getItem(msgs, null, ctx.item, v!);
+  getItem(msgs, null, ctx.item, v!, undefined, pctx);
 };
 
 const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
@@ -442,6 +438,9 @@ const apiHandler = <
     const msgs: Array<MessageContext> = [];
     const hasError = () => {
       return msgs.some(msg => msg?.type === "error");
+    };
+    const getReturnMessages = () => {
+      return msgs.filter(msg => msg?.type === "error");
     };
 
     try {
@@ -514,14 +513,14 @@ const apiHandler = <
       });
 
       res.status(statusCode ?? (resData == null ? 204 : 200)).json({
-        messages: msgs.filter(msg => msg != null),
+        messages: getReturnMessages(),
         data: resData
       });
     } catch (e) {
       // eslint-disable-next-line no-console
       // console.log(e);
       res.status(statusCode ?? 500).json({
-        messages: msgs.filter(msg => msg != null),
+        messages: getReturnMessages(),
       });
     }
   };

@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { arrayItem, booleanItem, numberItem, stringItem, structItem } from "@/data-items/data-item-wrapper";
+import { arrayItem, booleanItem, dateItem, numberItem, stringItem, structItem } from "@/data-items/data-item-wrapper";
 import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
 import apiHandler from "@/utilities/api-handler";
+import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 
 export default apiHandler({
   $get: {
@@ -33,6 +34,22 @@ export default apiHandler({
         // required: true,
         trueValue: 1,
         falseValue: 0,
+      }),
+      date1: dateItem({
+        required: true,
+        label: "日付From",
+        rangePair: {
+          name: "date2",
+          position: "after",
+        },
+      }),
+      date2: dateItem({
+        required: true,
+        label: "日付To",
+        rangePair: {
+          name: "date1",
+          position: "before",
+        },
       }),
       title: {
         ...notification_title,
@@ -80,6 +97,8 @@ export default apiHandler({
     console.log(JSON.stringify(data, null, 2));
     data.boolean;
     data.boolean01;
+    const date = data[notification_releaseDate.name];
+    console.log(DatetimeUtils.format(date));
     return {
       update: true,
     };

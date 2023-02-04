@@ -1,11 +1,12 @@
 import { FormItemValidation } from "@/components/elements/form";
+import DateValidation from "@/validations/date";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 
-export type DateType = "date" | "month" | "year";
-export type DateValue = string | number | Date;
+export type DateType = DateValidation.Type;
+export type DateValue = DateValidation.DateValue;
 
 type DateRangePair = {
   name: string;
@@ -13,18 +14,13 @@ type DateRangePair = {
   disallowSame?: boolean;
 };
 
-type ValidDays = "weekday" | "holiday" | string
-  | Array<DateValue | { date: DateValue; valid?: boolean; }>
-  | ((date: Date) => boolean);
-type ValidDaysMode = "allow" | "disallow";
-
 export type DateInputPorps = {
-  $type?: DateType;
-  $min?: DateValue;
-  $max?: DateValue;
-  $rangePair?: DateRangePair;
-  $validDays?: ValidDays;
-  $validDaysMode?: ValidDaysMode;
+  $type?: DateValidation.Type;
+  $min?: DateValidation.DateValue;
+  $max?: DateValidation.DateValue;
+  $rangePair?: DateValidation.RangePair;
+  $validDays?: DateValidation.ValidDays;
+  $validDaysMode?: DateValidation.ValidDaysMode;
 };
 
 export const convertDateToValue = (date: Date, $typeof: "string" | "number" | "date" | undefined) => {
@@ -146,7 +142,7 @@ export const maxDateValidation = (maxTime: number, type: DateType) => {
   };
 };
 
-export const dateContextValidation = (rangePair: DateRangePair) => {
+export const dateContextValidation = (rangePair: DateValidation.RangePair) => {
   const compare = (value: DateValue | any, pairDate: Date) => {
     const date = convertDate(value);
     if (date == null) return "";

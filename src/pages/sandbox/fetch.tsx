@@ -144,6 +144,8 @@ const Page: NextPage = () => {
                       title: "titleあ",
                       body: "hoge",
                       release_date: new Date(),
+                      date1: "2023-02-03",
+                      date2: "2023-02-02",
                       array: [
                         "titleえ"
                       ],

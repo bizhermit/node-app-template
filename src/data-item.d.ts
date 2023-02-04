@@ -74,6 +74,7 @@ type DataItem_Date = DataItem_Base & {
   max?: string | Date;
   rangePair?: {
     name: string;
+    label?: string;
     position: "before" | "after";
     disallowSame?: boolean;
   };
