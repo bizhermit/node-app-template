@@ -6,9 +6,9 @@
   "postStartCommand": "npm install",
   "remoteUser": "node",
   "remoteEnv": {
-    "PORT": "3000"
+    "PORT": "3003"
   },
-  "forwardPorts": [3000],
+  "forwardPorts": [3003],
   "extensions": [
     "MS-CEINTL.vscode-language-pack-ja",
     "eamodio.gitlens",
