@@ -86,3 +86,27 @@ npm run pack
 ```
 
 When completed, check `./dist/pack`.
+
+---
+
+## Other
+
+### Prepare to connect and check from an external terminal for debugging
+
+#### add portproxy
+
+```ps
+netsh interface portproxy add v4tov4 listenaddress=<ipv4 address> listenport=3000 connectaddress=127.0.0.1 connectport=3000
+```
+
+#### delete portproxy
+
+```ps
+netsh interface portproxy delete v4tov4 listenaddress=<ipv4 address> listenport=3000
+```
+
+#### show portproxy
+
+```ps
+netsh interface portproxy show v4tov4
+```
