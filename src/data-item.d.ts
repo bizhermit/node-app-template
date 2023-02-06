@@ -65,7 +65,7 @@ type DataItemValueType<D extends DataItem, Strict extends boolean = false> =
     D["type"] extends DataItem_Date["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? Date : Nullable<Date>
-      ) : Date | string | undefined
+      ) : DateValue | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
@@ -164,6 +164,22 @@ type DataItem_Date = DataItem_Base & {
   min?: DateValue;
   max?: DateValue;
   rangePair?: DateRangePair;
+};
+
+/**
+ * Time
+ */
+
+type TimeMode = "hms" | "hm" | "h" | "ms";
+type TimeUnit = "hour" | "minute" | "second" | "millisecond";
+type TimeValue = string | number | Time;
+
+type DataItem_Time = DataItem_Base & {
+  type: "time";
+  mode?: TimeMode;
+  unit?: TimeUnit;
+  min?: TimeValue;
+  max?: TimeValue;
 };
 
 /**
