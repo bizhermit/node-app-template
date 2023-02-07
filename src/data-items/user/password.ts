@@ -1,17 +1,16 @@
-import dataItem from "@/data-items/data-item-wrapper";
+import stringItem from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
-const user_password = dataItem({
+const user_password = stringItem({
   name: "password",
-  type: "string",
   minLength: 8,
   maxLength: 32,
   validations: [
     (v) => {
-      if (StringUtils.isHalfWidthAlphanumericAndSymbols(v)) return "";
+      if (StringUtils.isHalfWidthAlphanumericAndSymbols(v)) return undefined;
       return "半角英数字記号で入力してください。";
     },
   ],
-} as const);
+});
 
 export default user_password;

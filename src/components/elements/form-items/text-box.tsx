@@ -2,7 +2,7 @@ import Style from "$/components/elements/form-items/text-box.module.scss";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import StringValidation from "@/validations/string";
+import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useRef } from "react";
 import { VscClose } from "react-icons/vsc";
@@ -33,51 +33,51 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
-        validations.push(v => StringValidation.length(v, props.$length!));
+        validations.push(v => StringData.lengthValidation(v, props.$length!));
       } else {
         if (props.$minLength != null) {
-          validations.push(v => StringValidation.minLength(v, props.$minLength!));
+          validations.push(v => StringData.minLengthValidation(v, props.$minLength!));
         }
         if (props.$maxLength != null) {
-          validations.push(v => StringValidation.maxLength(v, props.$maxLength!));
+          validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!));
         }
       }
       switch (props.$charType) {
         case "h-num":
-          validations.push(v => StringValidation.halfWidthNumeric(v));
+          validations.push(v => StringData.halfWidthNumericValidation(v));
           break;
         case "f-num":
-          validations.push(v => StringValidation.fullWidthNumeric(v));
+          validations.push(v => StringData.fullWidthNumericValidation(v));
           break;
         case "num":
-          validations.push(v => StringValidation.numeric(v));
+          validations.push(v => StringData.numericValidation(v));
           break;
         case "h-alpha":
-          validations.push(v => StringValidation.halfWidthAlphabet(v));
+          validations.push(v => StringData.halfWidthAlphabetValidation(v));
           break;
         case "f-alpha":
-          validations.push(v => StringValidation.fullWidthAlphabet(v));
+          validations.push(v => StringData.fullWidthAlphabetValidation(v));
           break;
         case "alpha":
-          validations.push(v => StringValidation.alphabet(v));
+          validations.push(v => StringData.alphabetValidation(v));
           break;
         case "h-alpha-num":
-          validations.push(v => StringValidation.halfWidthAlphaNumeric(v));
+          validations.push(v => StringData.halfWidthAlphaNumericValidation(v));
           break;
         case "h-alpha-num-syn":
-          validations.push(v => StringValidation.halfWidthAlphaNumericAndSymbols(v));
+          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v));
           break;
         case "int":
-          validations.push(v => StringValidation.integer(v));
+          validations.push(v => StringData.integerValidation(v));
           break;
         case "h-katakana":
-          validations.push(v => StringValidation.halfWidthKatakana(v));
+          validations.push(v => StringData.halfWidthKatakanaValidation(v));
           break;
         case "f-katakana":
-          validations.push(v => StringValidation.fullWidthKatakana(v));
+          validations.push(v => StringData.fullWidthKatakanaValidation(v));
           break;
         case "katakana":
-          validations.push(v => StringValidation.katakana(v));
+          validations.push(v => StringData.katakanaValidation(v));
           break;
         default:
           break;

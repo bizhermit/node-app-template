@@ -1,8 +1,7 @@
-import dataItem from "@/data-items/data-item-wrapper";
+import dateItem from "@/data-items/date";
 
-const notification_releaseDate = dataItem({
+const notification_releaseDate = dateItem({
   name: "release_date",
-  type: "date",
-} as const);
+});
 
 export default notification_releaseDate;

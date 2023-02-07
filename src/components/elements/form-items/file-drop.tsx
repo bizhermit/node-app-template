@@ -1,9 +1,9 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
-import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/components/utilities/file-input";
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
+import { FileData } from "@/data-items/file";
 
 type FileDropBaseProps<T> = FormItemProps<T> & {
   $accept?: string;
@@ -34,13 +34,13 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
-        validations.push(fileTypeValidation(props.$accept));
+        validations.push(FileData.fileTypeValidation(props.$accept));
       }
       if (props.$fileSize != null) {
-        validations.push(fileSizeValidation(props.$fileSize));
+        validations.push(FileData.fileSizeValidation(props.$fileSize));
       }
       if (props.$totalFileSize != null) {
-        validations.push(totalFileSizeValidation(props.$totalFileSize));
+        validations.push(FileData.totalFileSizeValidation(props.$totalFileSize));
       }
       return validations;
     },

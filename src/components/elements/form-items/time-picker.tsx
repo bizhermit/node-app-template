@@ -1,13 +1,12 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/components/utilities/time-input";
 import Time from "@bizhermit/time";
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import { VscClose } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
-import TimeValidation from "@/validations/time";
+import { TimeData, TimeInput } from "@/data-items/time";
 
-export type TimePickerBaseProps<T> = FormItemProps<T> & TimeInputProps & {
+export type TimePickerBaseProps<T> = FormItemProps<T> & TimeInput.FCProps & {
   $onClickPositive?: (value: Nullable<T>) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
@@ -25,13 +24,13 @@ export type TimePickerProps = (TimePickerProps_TypeNumber & { $typeof?: "number"
 const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref) => {
   const type = props.$type ?? "hm";
   const unit = useMemo(() => {
-    return getUnit(props, type);
+    return TimeInput.getUnit(props, type);
   }, [type, props.$unit]);
   const minTime = useMemo(() => {
-    return getMinTime(props, unit);
+    return TimeInput.getMinTime(props, unit);
   }, [props.$min]);
   const maxTime = useMemo(() => {
-    return getMaxTime(props, unit);
+    return TimeInput.getMaxTime(props, unit);
   }, [props.$max]);
 
   const needH = type !== "ms";
@@ -86,18 +85,18 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
       if (maxTime != null && minTime != null) {
-        validations.push(rangeTimeValidation(minTime, maxTime, type, unit));
+        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit));
       } else {
         if (maxTime != null) {
-          validations.push(maxTimeValidation(maxTime, type, unit));
+          validations.push(TimeInput.maxValidation(maxTime, type, unit));
         }
         if (minTime != null) {
-          validations.push(minTimeValidation(minTime, type, unit));
+          validations.push(TimeInput.minValidation(minTime, type, unit));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = timeContextValidation(rangePair, type, unit);
+        const { validation } = TimeInput.contextValidation(rangePair, type, unit);
         validations.push(validation);
       }
       return validations;
@@ -123,7 +122,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     if (needH) setHour(time.getHours());
     setMinute(time.getMinutes(!needH));
     if (needS) setSecond(time.getSeconds());
-    form.change(convertTimeToValue(time.getTime(), unit, type, props.$typeof));
+    form.change(TimeInput.convertTimeToValue(time.getTime(), unit, type, props.$typeof));
     if (props.$onClickPositive == null) {
       setTimeout(scrollToSelected, 20);
     }
@@ -260,7 +259,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
   }, [form.editable]);
 
   useEffect(() => {
-    const time = TimeValidation.convertTime(form.valueRef.current, unit);
+    const time = TimeData.convertTime(form.valueRef.current, unit);
     if (time == null) {
       setHour(undefined);
       setMinute(undefined);

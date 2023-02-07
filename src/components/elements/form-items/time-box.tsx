@@ -1,5 +1,4 @@
 import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/components/utilities/time-input";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
@@ -8,9 +7,9 @@ import { BsClock } from "react-icons/bs";
 import Time from "@bizhermit/time";
 import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
-import TimeValidation from "@/validations/time";
+import { TimeData, TimeInput } from "@/data-items/time";
 
-type TimeBoxBaseProps<T> = FormItemProps<T> & TimeInputProps & {
+type TimeBoxBaseProps<T> = FormItemProps<T> & TimeInput.FCProps & {
   $disallowInput?: boolean;
 };
 
@@ -29,13 +28,13 @@ const isNumericOrEmpty = (value?: string): value is string => {
 const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   const type = props.$type ?? "hm";
   const unit = useMemo(() => {
-    return getUnit(props, type);
+    return TimeInput.getUnit(props, type);
   }, [type, props.$unit]);
   const minTime = useMemo(() => {
-    return getMinTime(props, unit);
+    return TimeInput.getMinTime(props, unit);
   }, [props.$min]);
   const maxTime = useMemo(() => {
-    return getMaxTime(props, unit);
+    return TimeInput.getMaxTime(props, unit);
   }, [props.$max]);
 
   const [showPicker, setShowPicker] = useState(false);
@@ -51,7 +50,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   const needS = type === "hms" || type === "ms";
 
   const setInputValues = (value?: TimeValue) => {
-    const time = TimeValidation.convertTime(value, unit);
+    const time = TimeData.convertTime(value, unit);
     if (time == null) {
       cacheH.current = cacheM.current = cacheS.current = undefined;
     } else {
@@ -76,18 +75,18 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (maxTime != null && minTime != null) {
-        validations.push(rangeTimeValidation(minTime, maxTime, type, unit));
+        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit));
       } else {
         if (maxTime != null) {
-          validations.push(maxTimeValidation(maxTime, type, unit));
+          validations.push(TimeInput.maxValidation(maxTime, type, unit));
         }
         if (minTime != null) {
-          validations.push(minTimeValidation(minTime, type, unit));
+          validations.push(TimeInput.minValidation(minTime, type, unit));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = timeContextValidation(rangePair, type, unit);
+        const { validation } = TimeInput.contextValidation(rangePair, type, unit);
         validations.push(validation);
       }
       return validations;
@@ -130,7 +129,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
       else form.change(undefined);
       return;
     }
-    const v = convertTimeToValue((
+    const v = TimeInput.convertTimeToValue((
       (h ?? 0) * 3600 +
       (m ?? 0) * 60 +
       (s ?? 0)

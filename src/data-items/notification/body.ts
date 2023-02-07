@@ -1,9 +1,8 @@
-import dataItem from "@/data-items/data-item-wrapper";
+import stringItem from "@/data-items/string";
 
-const notification_body = dataItem({
+const notification_body = stringItem({
   name: "body",
-  type: "string",
   maxLength: 1023,
-} as const);
+});
 
 export default notification_body;

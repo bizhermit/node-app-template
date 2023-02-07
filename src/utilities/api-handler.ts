@@ -1,15 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import StringValidation from "@/validations/string";
 import * as os from "os";
-import { dataItemKey } from "@/data-items/data-item-wrapper";
-import NumberValidation from "@/validations/number";
+import { dataItemKey } from "@/data-items/data-item";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import DateValidation from "@/validations/date";
-import TimeValidation from "@/validations/time";
 import Time, { TimeUtils } from "@bizhermit/time";
+import { StringData } from "@/data-items/string";
+import { NumberData } from "@/data-items/number";
+import { DateData } from "@/data-items/date";
+import { TimeData } from "@/data-items/time";
 
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
+type ValidationResult = Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>
 type MessageContext = DataItemValidationResult | undefined;
 
 const getItem = (
@@ -61,16 +62,13 @@ const getItem = (
 
 const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
     }
   };
 
@@ -81,77 +79,73 @@ const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   const v = data?.[key] as Nullable<string>;
 
   if (ctx.required) {
-    pushMsg(StringValidation.required(v, name));
+    pushMsg(StringData.requiredValidation(v, name));
   }
   if (ctx.length != null) {
-    pushMsg(StringValidation.length(v, ctx.length, name));
+    pushMsg(StringData.lengthValidation(v, ctx.length, name));
   }
   if (ctx.minLength != null) {
-    pushMsg(StringValidation.minLength(v, ctx.minLength, name));
+    pushMsg(StringData.minLengthValidation(v, ctx.minLength, name));
   }
   if (ctx.maxLength != null) {
-    pushMsg(StringValidation.maxLength(v, ctx.maxLength, name));
+    pushMsg(StringData.maxLengthValidation(v, ctx.maxLength, name));
   }
   switch (ctx.charType) {
     case "h-num":
-      pushMsg(StringValidation.halfWidthNumeric(v, name));
+      pushMsg(StringData.halfWidthNumericValidation(v, name));
       break;
     case "f-num":
-      pushMsg(StringValidation.fullWidthNumeric(v, name));
+      pushMsg(StringData.fullWidthNumericValidation(v, name));
       break;
     case "num":
-      pushMsg(StringValidation.numeric(v, name));
+      pushMsg(StringData.numericValidation(v, name));
       break;
     case "h-alpha":
-      pushMsg(StringValidation.halfWidthAlphabet(v, name));
+      pushMsg(StringData.halfWidthAlphabetValidation(v, name));
       break;
     case "f-alpha":
-      pushMsg(StringValidation.fullWidthAlphabet(v, name));
+      pushMsg(StringData.fullWidthAlphabetValidation(v, name));
       break;
     case "alpha":
-      pushMsg(StringValidation.alphabet(v, name));
+      pushMsg(StringData.alphabetValidation(v, name));
       break;
     case "h-alpha-num":
-      pushMsg(StringValidation.halfWidthAlphaNumeric(v, name));
+      pushMsg(StringData.halfWidthAlphaNumericValidation(v, name));
       break;
     case "h-alpha-num-syn":
-      pushMsg(StringValidation.halfWidthAlphaNumericAndSymbols(v, name));
+      pushMsg(StringData.halfWidthAlphaNumericAndSymbolsValidation(v, name));
       break;
     case "int":
-      pushMsg(StringValidation.integer(v, name));
+      pushMsg(StringData.integerValidation(v, name));
       break;
     case "h-katakana":
-      pushMsg(StringValidation.halfWidthKatakana(v, name));
+      pushMsg(StringData.halfWidthKatakanaValidation(v, name));
       break;
     case "f-katakana":
-      pushMsg(StringValidation.fullWidthKatakana(v, name));
+      pushMsg(StringData.fullWidthKatakanaValidation(v, name));
       break;
     case "katakana":
-      pushMsg(StringValidation.katakana(v, name));
+      pushMsg(StringData.katakanaValidation(v, name));
       break;
     default:
       break;
   }
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index, pctx);
-      if (res) msgs.push(res);
+      pushMsg(validation(v, key, ctx, data, index, pctx));
     }
   }
 };
 
 const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
     }
   };
 
@@ -180,39 +174,35 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   const v = data?.[key] as Nullable<number>;
 
   if (ctx.required) {
-    pushMsg(NumberValidation.required(v, name));
+    pushMsg(NumberData.requiredValidation(v, name));
   }
   if (ctx.min != null && ctx.max != null) {
-    pushMsg(NumberValidation.range(v, ctx.min, ctx.max, name));
+    pushMsg(NumberData.rangeValidation(v, ctx.min, ctx.max, name));
   } else {
     if (ctx.min != null) {
-      pushMsg(NumberValidation.min(v, ctx.min, name));
+      pushMsg(NumberData.minValidation(v, ctx.min, name));
     }
     if (ctx.max != null) {
-      pushMsg(NumberValidation.max(v, ctx.max, name));
+      pushMsg(NumberData.maxValidation(v, ctx.max, name));
     }
   }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index, pctx);
-      if (res) msgs.push(res);
+      pushMsg(validation(v, key, ctx, data, index, pctx));
     }
   }
 };
 
 const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
     }
   };
 
@@ -241,24 +231,20 @@ const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: 
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index, pctx);
-      if (res) msgs.push(res);
+      pushMsg(validation(v, key, ctx, data, index, pctx));
     }
   }
 };
 
 const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
     }
   };
 
@@ -282,42 +268,38 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   const v = data?.[key] as Nullable<Date>;
 
   if (ctx.required) {
-    pushMsg(DateValidation.required(v, name));
+    pushMsg(DateData.requiredValidation(v, name));
   }
   if (ctx.min != null && ctx.max != null) {
-    pushMsg(DateValidation.range(v, ctx.min, ctx.max, ctx.type, name));
+    pushMsg(DateData.rangeValidation(v, ctx.min, ctx.max, ctx.type, name));
   } else {
     if (ctx.min) {
-      pushMsg(DateValidation.min(v, ctx.min, ctx.type, name));
+      pushMsg(DateData.minValidation(v, ctx.min, ctx.type, name));
     }
     if (ctx.max) {
-      pushMsg(DateValidation.max(v, ctx.max, ctx.type, name));
+      pushMsg(DateData.maxValidation(v, ctx.max, ctx.type, name));
     }
   }
   if (ctx.rangePair) {
-    pushMsg(DateValidation.context(v, ctx.rangePair, data, ctx.type, name, pctx?.[ctx.rangePair.name]?.label));
+    pushMsg(DateData.contextValidation(v, ctx.rangePair, data, ctx.type, name, pctx?.[ctx.rangePair.name]?.label));
   }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index, pctx);
-      if (res) msgs.push(res);
+      pushMsg(validation(v, key, ctx, data, index, pctx));
     }
   }
 };
 
 const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Time, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
     }
   };
 
@@ -352,43 +334,39 @@ const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   const v = data?.[key] as (number | null | undefined);
 
   if (ctx.required) {
-    pushMsg(TimeValidation.required(v, name));
+    pushMsg(TimeData.requiredValidation(v, name));
   }
   if (ctx.min != null && ctx.max != null) {
-    pushMsg(TimeValidation.range(v, ctx.min, ctx.max, ctx.mode, ctx.unit, name));
+    pushMsg(TimeData.rangeValidation(v, ctx.min, ctx.max, ctx.mode, ctx.unit, name));
   } else {
     if (ctx.min) {
-      pushMsg(TimeValidation.min(v, ctx.min, ctx.mode, ctx.unit, name));
+      pushMsg(TimeData.minValidation(v, ctx.min, ctx.mode, ctx.unit, name));
     }
     if (ctx.max) {
-      pushMsg(TimeValidation.max(v, ctx.max, ctx.mode, ctx.unit, name));
+      pushMsg(TimeData.maxValidation(v, ctx.max, ctx.mode, ctx.unit, name));
     }
   }
   if (ctx.rangePair) {
     const pairCtx = pctx?.[ctx.rangePair.name] as DataItem_Time;
-    pushMsg(TimeValidation.context(v, ctx.rangePair, data, ctx.mode, ctx.unit, name, pairCtx?.unit, pairCtx?.label));
+    pushMsg(TimeData.contextValidation(v, ctx.rangePair, data, ctx.mode, ctx.unit, name, pairCtx?.unit, pairCtx?.label));
   }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index, pctx);
-      if (res) msgs.push(res);
+      pushMsg(validation(v, key, ctx, data, index, pctx));
     }
   }
 };
 
 const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
     }
   };
 
@@ -420,8 +398,7 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
   }
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index, pctx);
-      if (res) msgs.push(res);
+      pushMsg(validation(v, key, ctx, data, index, pctx));
     }
   }
 
@@ -439,16 +416,13 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
 
 const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
-      msgs.push({
-        type,
-        key,
-        name,
-        index,
-        body: `${index != null ? `${index}:` : ""}${res}`,
-        value: data?.[key],
-      });
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
     }
   };
 
@@ -465,8 +439,7 @@ const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      const res = validation(v, key, ctx, data, index, pctx);
-      if (res) msgs.push(res);
+      pushMsg(validation(v, key, ctx, data, index, pctx));
     }
   }
 

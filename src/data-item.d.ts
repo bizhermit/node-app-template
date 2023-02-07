@@ -15,7 +15,7 @@ type DataItemValidationResult = {
 
 type DataItemValidation<T, D extends DataItem> =
   readonly ((v: Nullable<T>, key: string | number, ctx: D, data: Nullable<Struct | Array<any>>, index: Nullable<number>, pctx: DataContext | null | undefined)
-    => (DataItemValidationResult | void))[];
+    => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>)| string | null | undefined))[];
 
 type DataItem_Base = {
   $$: any;
