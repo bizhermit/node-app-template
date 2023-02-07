@@ -504,7 +504,7 @@ const apiHandler = <
       const reqData = await (async () => {
         let retData: Struct = { ...req.query };
         if (req.body != null) {
-          const contentType = req.headers["content-type"]?.match(/([^\;]*)/)?.[1];
+          const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
           if (contentType === "multipart/form-data" && typeof req.body === "string") {
             const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
             if (key) {
@@ -567,7 +567,7 @@ const apiHandler = <
       });
     } catch (e) {
       // eslint-disable-next-line no-console
-      // console.log(e);
+      console.log(e);
       res.status(statusCode ?? 500).json({
         messages: getReturnMessages(),
       });
