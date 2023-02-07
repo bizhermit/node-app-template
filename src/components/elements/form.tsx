@@ -22,7 +22,7 @@ type InputOmitProps = "name"
   | "color"
   | "onChange"
   | "children";
-export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
+export type FormItemProps<T = any, U = any, D extends DataItem = DataItem> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;
   $disabled?: boolean;
@@ -40,6 +40,7 @@ export type FormItemProps<T = any, U = any> = Omit<HTMLAttributes<HTMLDivElement
   $color?: Color;
   $preventFormBind?: boolean;
   $error?: string;
+  $dataItem?: D;
 };
 
 type FormContextProps = {
