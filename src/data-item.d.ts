@@ -116,6 +116,8 @@ type DataItem_String = DataItem_Base & {
   charType?: StringCharType;
   // styles
   width?: number | string;
+  minWidth?: number | string;
+  maxWidth?: number | string;
 };
 
 /**
@@ -128,7 +130,9 @@ type DataItem_Number = DataItem_Base & {
   min?: number;
   max?: number;
   // styles
-  width?: number;
+  width?: number | string;
+  minWidth?: number | string;
+  maxWidth?: number | string;
 };
 
 /**
@@ -140,8 +144,6 @@ type DataItem_Boolean = DataItem_Base & {
   validations?: DataItemValidation<boolean | number | string, DataItem_Boolean>;
   trueValue?: boolean | number | string;
   falseValue?: boolean | number | string;
-  // styles
-  width?: number;
 };
 
 /**
