@@ -2,8 +2,8 @@ import Button, { ButtonOptions } from "@/components/elements/button";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
-import { fileTypeValidation, fileSizeValidation, totalFileSizeValidation } from "@/components/utilities/file-input";
 import { VscClose } from "react-icons/vsc";
+import { FileData } from "@/data-items/file";
 
 export type FileButtonProps = FormItemProps<File> & ButtonOptions & {
   $accept?: string;
@@ -23,13 +23,13 @@ const FileButton = React.forwardRef<HTMLDivElement, FileButtonProps>((props, ref
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
-        validations.push(fileTypeValidation(props.$accept));
+        validations.push(FileData.fileTypeValidation(props.$accept));
       }
       if (props.$fileSize != null) {
-        validations.push(fileSizeValidation(props.$fileSize));
+        validations.push(FileData.fileSizeValidation(props.$fileSize));
       }
       if (props.$totalFileSize != null) {
-        validations.push(totalFileSizeValidation(props.$totalFileSize));
+        validations.push(FileData.totalFileSizeValidation(props.$totalFileSize));
       }
       return validations;
     },

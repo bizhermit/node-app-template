@@ -1,7 +1,7 @@
 import Button from "@/components/elements/button";
 import useMessageBox from "@/hooks/message-box";
+import useRouter from "@/hooks/route";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
 
 const Page: NextPage = () => {
   const msg = useMessageBox({ preventUnmountClose: true });
@@ -62,6 +62,7 @@ const Page: NextPage = () => {
             console.log("close");
           });
           setTimeout(() => {
+            // router.push("/sandbox/color");
             router.push("/sandbox/color");
           }, 1000);
           unlock();

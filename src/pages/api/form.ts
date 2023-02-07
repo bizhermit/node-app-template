@@ -2,22 +2,12 @@
 import apiHandler from "@/utilities/api-handler";
 
 export default apiHandler({
-  common: async (ctx) => {
-    console.log(ctx.req.method);
-  },
   get: async (ctx) => {
-    console.log("- query");
-    console.log(ctx.getQuery());
-    console.log("- body");
-    console.log(ctx.getBody());
-    ctx.setStatus(204);
+    console.log("--get--");
+    console.log(ctx.getData());
   },
   post: async (ctx) => {
-    console.log("- query");
-    console.log(ctx.getQuery());
-    console.log("- body");
-    console.log(ctx.getBody());
-    // console.log(ctx.getBody().textbox)
-    ctx.setStatus(204);
+    console.log("--post--");
+    console.log(ctx.getData());
   },
 });

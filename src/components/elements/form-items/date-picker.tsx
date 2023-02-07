@@ -7,12 +7,12 @@ import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import LabelText from "@/components/elements/label-text";
-import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, convertToMaxTime, getMinDate, convertToMinTime, maxDateValidation, minDateValidation, rangeDateValidation } from "@/components/utilities/date-input";
+import { DateData, DateInput } from "@/data-items/date";
 
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
-export type DatePickerBaseProps<T> = FormItemProps<T> & DateInputPorps & {
+export type DatePickerBaseProps<T> = FormItemProps<T> & DateInput.FCPorps & {
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
@@ -75,13 +75,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     return props.$weekTexts;
   }, [props.$weekTexts]);
   const minDate = useMemo(() => {
-    return getMinDate(props);
+    return DateInput.getMinDate(props);
   }, [props.$min]);
   const maxDate = useMemo(() => {
-    return getMaxDate(props);
+    return DateInput.getMaxDate(props);
   }, [props.$max]);
   const judgeValid = useMemo(() => {
-    return getJudgeValidDateFunc(props);
+    return DateInput.selectableValidation(props);
   }, [props.$validDays, props.$validDaysMode]);
   const [showYear, setShowYear] = useState(false);
   const [showMonth, setShowMonth] = useState(false);
@@ -95,10 +95,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     validations: () => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
-      const maxTime = convertToMaxTime(maxDate, type);
-      const minTime = convertToMinTime(minDate, type);
+      const maxTime = DateData.dateAsLast(maxDate, type);
+      const minTime = DateData.dateAsFirst(minDate, type);
       if (maxTime != null && minTime != null) {
-        const compare = rangeDateValidation(minTime, maxTime, type);
+        const compare = DateInput.rangeValidation(minTime, maxTime, type);
         if (multiple) {
           validations.push(v => multiValidationIterator(v, compare));
         } else {
@@ -106,7 +106,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         }
       } else {
         if (maxTime != null) {
-          const compare = maxDateValidation(maxTime, type);
+          const compare = DateInput.maxValidation(maxTime, type);
           if (multiple) {
             validations.push(v => multiValidationIterator(v, compare));
           } else {
@@ -114,7 +114,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           }
         }
         if (minTime != null) {
-          const compare = minDateValidation(minTime, type);
+          const compare = DateInput.minValidation(minTime, type);
           if (multiple) {
             validations.push(v => multiValidationIterator(v, compare));
           } else {
@@ -124,11 +124,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { compare, getPairDate, validation } = dateContextValidation(rangePair);
+        const { compare, getPairDate, validation } = DateInput.contextValidation(rangePair, type);
         if (multiple) {
           validations.push((v, d) => {
             if (d == null) return "";
-            const pairDate = convertDate(getPairDate(d));
+            const pairDate = getPairDate(d);
             if (pairDate == null) return "";
             return multiValidationIterator(v, (val) => compare(val, pairDate));
           });
@@ -197,7 +197,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     };
     const select = (num: number, selected: boolean) => {
       if (!multiple) {
-        form.change(convertDateToValue(new Date(num, 0, 1), props.$typeof));
+        form.change(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
         return;
       }
       if (selected) {
@@ -208,7 +208,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         return;
       }
       const vals = [...getArrayValue()];
-      vals.push(convertDateToValue(new Date(num, 0, 1), props.$typeof));
+      vals.push(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
       form.change(vals.sort((d1, d2) => {
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
@@ -273,7 +273,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     };
     const select = (date: Date, selected: boolean) => {
       if (!multiple) {
-        form.change(convertDateToValue(date, props.$typeof));
+        form.change(DateInput.convertDateToValue(date, props.$typeof));
         return;
       }
       if (selected) {
@@ -284,7 +284,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         return;
       }
       const vals = [...getArrayValue()];
-      vals.push(convertDateToValue(date, props.$typeof));
+      vals.push(DateInput.convertDateToValue(date, props.$typeof));
       form.change(vals.sort((d1, d2) => {
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
@@ -351,7 +351,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     const select = (dateStr: string, selected: boolean) => {
       const date = convertDate(dateStr)!;
       if (!multiple) {
-        form.change(convertDateToValue(date, props.$typeof));
+        form.change(DateInput.convertDateToValue(date, props.$typeof));
         return;
       }
       if (selected) {
@@ -362,7 +362,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         return;
       }
       const vals = [...getArrayValue()];
-      vals.push(convertDateToValue(date, props.$typeof));
+      vals.push(DateInput.convertDateToValue(date, props.$typeof));
       form.change(vals.sort((d1, d2) => {
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
@@ -524,10 +524,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         break;
     }
     if (multiple) {
-      form.change([convertDateToValue(date, props.$typeof)]);
+      form.change([DateInput.convertDateToValue(date, props.$typeof)]);
       return;
     }
-    form.change(convertDateToValue(date, props.$typeof));
+    form.change(DateInput.convertDateToValue(date, props.$typeof));
   };
 
   const toggleMode = () => {

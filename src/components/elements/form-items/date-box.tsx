@@ -7,9 +7,9 @@ import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
 import { VscCalendar, VscClose } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import { convertDateToValue, dateContextValidation, DateInputPorps, getJudgeValidDateFunc, getMaxDate, convertToMaxTime, getMinDate, convertToMinTime, maxDateValidation, minDateValidation, rangeDateValidation, DateValue } from "@/components/utilities/date-input";
+import { DateData, DateInput } from "@/data-items/date";
 
-type DateBoxBaseProps<T> = FormItemProps<T> & DateInputPorps & {
+type DateBoxBaseProps<T> = FormItemProps<T> & DateInput.FCPorps & {
   $disallowInput?: boolean;
 };
 
@@ -33,13 +33,13 @@ const isNumericOrEmpty = (value?: string): value is string => {
 const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   const type = props.$type ?? "date";
   const minDate = useMemo(() => {
-    return getMinDate(props);
+    return DateInput.getMinDate(props);
   }, [props.$min]);
   const maxDate = useMemo(() => {
-    return getMaxDate(props);
+    return DateInput.getMaxDate(props);
   }, [props.$max]);
   const judgeValid = useMemo(() => {
-    return getJudgeValidDateFunc(props);
+    return DateInput.selectableValidation(props);
   }, [props.$validDays, props.$validDaysMode]);
 
   const yref = useRef<HTMLInputElement>(null!);
@@ -68,21 +68,21 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     interlockValidation: props.$rangePair != null,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
-      const maxTime = convertToMaxTime(maxDate, type);
-      const minTime = convertToMinTime(minDate, type);
-      if (maxTime != null && minTime != null) {
-        validations.push(rangeDateValidation(minTime, maxTime, type));
+      const max = DateData.dateAsLast(maxDate, type);
+      const min = DateData.dateAsFirst(minDate, type);
+      if (max != null && min != null) {
+        validations.push(DateInput.rangeValidation(min, max, type));
       } else {
-        if (maxTime != null) {
-          validations.push(maxDateValidation(maxTime, type));
+        if (max != null) {
+          validations.push(DateInput.maxValidation(max, type));
         }
-        if (minTime != null) {
-          validations.push(minDateValidation(minTime, type));
+        if (min != null) {
+          validations.push(DateInput.minValidation(min, type));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = dateContextValidation(rangePair);
+        const { validation } = DateInput.contextValidation(rangePair, type);
         validations.push(validation);
       }
       if (props.$validDays) {
@@ -121,7 +121,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       else form.change(undefined);
       return;
     }
-    const v = convertDateToValue(date, props.$typeof);
+    const v = DateInput.convertDateToValue(date, props.$typeof);
     if (equals(v, form.valueRef.current)) setInputValues(v);
     else form.change(v);
   };

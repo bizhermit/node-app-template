@@ -50,7 +50,15 @@ const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Colo
   }
   if (t === "object") {
     if (Array.isArray(value)) {
-      return <span className={Style.label} data-align={align}>(Array)</span>;
+      return (
+        <div>
+          {value.map((item, index) => {
+            return (
+              <div key={index}>{JSON.stringify(item)}</div>
+            );
+          })}
+        </div>
+      );
     }
     return (
       <StructView

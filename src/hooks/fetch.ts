@@ -1,30 +1,8 @@
-// type ParamsType = string | number | boolean | null | undefined;
-// type Params = Struct<ParamsType | Array<ParamsType>>;
+import fetchApi from "@/utilities/fetch-api";
 
-type MethodArgs = {
-  request?: Struct | FormData;
-  response?: Struct;
+const useFetch = () => {
+  // TODO: deal with response messages
+  return fetchApi;
 };
 
-export type ApiPaths = {
-  [key: string]: {
-    get?: MethodArgs;
-    post?: MethodArgs;
-    put?: MethodArgs;
-    delete?: MethodArgs;
-  };
-};
-
-// type Props = {
-//   baseUrl?: string;
-// };
-
-// type Options = {
-//   silent?: boolean;
-// };
-
-// const useApi = <A extends Api>(props?: Props) => {
-
-// };
-
-// export default useApi;
+export default useFetch;

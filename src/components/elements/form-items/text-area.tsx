@@ -4,12 +4,13 @@ import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { StringData } from "@/data-items/string";
 
 export type TextAreaProps = FormItemProps<string> & {
   $length?: number;
   $preventInputWithinLength?: boolean;
-  $maxLength?: number;
   $minLength?: number;
+  $maxLength?: number;
   $resize?: boolean | "x" | "y" | "xy";
   $width?: number | string;
   $maxWidth?: number | string;
@@ -30,22 +31,13 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
-        validations.push(v => {
-          if (v != null && v.length === props.$length) return "";
-          return `${props.$length}文字で入力してください。`;
-        });
+        validations.push(v => StringData.lengthValidation(v, props.$length!));
       } else {
-        if (props.$maxLength != null) {
-          validations.push(v => {
-            if (v != null && v.length > props.$maxLength!) return `${props.$maxLength}文字以内で入力してください。`;
-            return "";
-          });
-        }
         if (props.$minLength != null) {
-          validations.push(v => {
-            if (v == null || v.length < props.$minLength!) return `${props.$minLength}文字以上で入力してください。`;
-            return "";
-          });
+          validations.push(v => StringData.minLengthValidation(v, props.$minLength!));
+        }
+        if (props.$maxLength != null) {
+          validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!));
         }
       }
       return validations;

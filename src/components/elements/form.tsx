@@ -4,7 +4,7 @@ import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, Rea
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
-export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null);
+export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null | undefined);
 
 export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide";
 
@@ -590,7 +590,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   );
 });
 
-export const multiValidationIterator = (v: any, func: (value: string | number | Date) => string) => {
+export const multiValidationIterator = (v: any, func: (value: string | number | Date) => (string | undefined | null)) => {
   if (v == null || !Array.isArray(v)) return "";
   for (let i = 0, il = v.length; i < il; i++) {
     const ret = func(v[i]);
