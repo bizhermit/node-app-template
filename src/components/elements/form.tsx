@@ -599,3 +599,12 @@ export const multiValidationIterator = (v: any, func: (value: string | number | 
   }
   return "";
 };
+
+export const convertDataItemValidationToFormItemValidation = (func: DataItemValidation<any, any>[0], props: FormItemProps | undefined, $dataItem: DataItem, convertValue: (v: any) => any): FormItemValidation<any> => {
+  return (v: string | null | undefined, bindData: Struct | undefined) => {
+    const res = func(convertValue(v), props?.name || $dataItem.name || "", $dataItem, bindData, undefined, undefined);
+    if (res == null) return undefined;
+    if (typeof res === "string") return res;
+    return res.body;
+  };
+};

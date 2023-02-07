@@ -1,13 +1,13 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
-export type TextBoxProps = FormItemProps<string> & {
+export type TextBoxProps = FormItemProps<string, null, DataItem_String | DataItem_Number> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $preventInputWithinLength?: boolean;
@@ -23,7 +23,41 @@ export type TextBoxProps = FormItemProps<string> & {
   $autoComplete?: string;
 };
 
-const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
+const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((p, ref) => {
+  const props = {
+    ...useMemo<TextBoxProps>(() => {
+      const { $dataItem } = p;
+      if ($dataItem == null) return {};
+      switch ($dataItem.type) {
+        case "number":
+          return {
+            name: $dataItem.name,
+            $charType: "int",
+            $width: $dataItem.width,
+            $minWidth: $dataItem.minWidth,
+            $maxWidth: $dataItem.maxWidth,
+            $validations: $dataItem.validations?.map(func => {
+              return convertDataItemValidationToFormItemValidation(func, p, $dataItem, (v) => Number(v));
+            }),
+          };
+        default:
+          return {
+            name: $dataItem.name,
+            $length: $dataItem.length,
+            $minLength: $dataItem.minLength,
+            $maxLength: $dataItem.maxLength,
+            $charType: $dataItem.charType,
+            $width: $dataItem.width,
+            $minWidth: $dataItem.minWidth,
+            $maxWidth: $dataItem.maxWidth,
+            $validations: $dataItem.validations?.map(func => {
+              return convertDataItemValidationToFormItemValidation(func, p, $dataItem, (v) => v);
+            }),
+          };
+      }
+    }, [p.$dataItem]),
+    ...p,
+  };
   const iref = useRef<HTMLInputElement>(null!);
 
   const form = useForm(props, {
