@@ -69,7 +69,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     interlockValidation: props.$rangePair != null,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
-      const max = DateValidation.dateAtLast(maxDate, type);
+      const max = DateValidation.dateAsLast(maxDate, type);
       const min = DateValidation.dateAsFirst(minDate, type);
       if (max != null && min != null) {
         validations.push(rangeDateValidation(min, max, type));

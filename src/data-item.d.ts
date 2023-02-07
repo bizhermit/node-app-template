@@ -67,6 +67,11 @@ type DataItemValueType<D extends DataItem, Strict extends boolean = false> =
         D["required"] extends true ? Date : Nullable<Date>
       ) : DateValue | null | undefined
     ) :
+    D["type"] extends DataItem_Time["type"] ? (
+      Strict extends true ? (
+        D["required"] extends true ? number : number | null | undefined
+      ) : TimeValue | null | undefined
+    ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? Array<DataItemValueType<D["item"], Strict>> : Nullable<Array<DataItemValueType<D["item"], Strict>>>
@@ -172,14 +177,24 @@ type DataItem_Date = DataItem_Base & {
 
 type TimeMode = "hms" | "hm" | "h" | "ms";
 type TimeUnit = "hour" | "minute" | "second" | "millisecond";
-type TimeValue = string | number | Time;
+type TimeValue = number | string;
+
+type TimeRangePair = {
+  name: string;
+  label?: string;
+  position: "before" | "after";
+  disallowSame?: boolean;
+  unit?: TimeUnit;
+};
 
 type DataItem_Time = DataItem_Base & {
   type: "time";
-  mode?: TimeMode;
-  unit?: TimeUnit;
+  mode: TimeMode;
+  unit: TimeUnit;
+  validations?: DataItemValidation<Time, DataItem_Time>;
   min?: TimeValue;
   max?: TimeValue;
+  rangePair?: TimeRangePair;
 };
 
 /**

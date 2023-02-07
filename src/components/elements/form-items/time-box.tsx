@@ -1,5 +1,5 @@
 import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTime, convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps, TimeValue } from "@/components/utilities/time-input";
+import { convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/components/utilities/time-input";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
@@ -8,6 +8,7 @@ import { BsClock } from "react-icons/bs";
 import Time from "@bizhermit/time";
 import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
+import TimeValidation from "@/validations/time";
 
 type TimeBoxBaseProps<T> = FormItemProps<T> & TimeInputProps & {
   $disallowInput?: boolean;
@@ -50,7 +51,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
   const needS = type === "hms" || type === "ms";
 
   const setInputValues = (value?: TimeValue) => {
-    const time = convertTime(value, unit);
+    const time = TimeValidation.convertTime(value, unit);
     if (time == null) {
       cacheH.current = cacheM.current = cacheS.current = undefined;
     } else {
@@ -86,7 +87,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = timeContextValidation(rangePair, unit);
+        const { validation } = timeContextValidation(rangePair, type, unit);
         validations.push(validation);
       }
       return validations;

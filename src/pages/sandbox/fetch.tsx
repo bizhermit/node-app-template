@@ -146,6 +146,8 @@ const Page: NextPage = () => {
                       release_date: new Date(),
                       date1: "2023-02-03",
                       date2: "2023-02-04",
+                      time1: "9:00",
+                      time2: "18:00",
                       array: [
                         "titleえ"
                       ],

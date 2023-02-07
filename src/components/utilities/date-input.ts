@@ -33,7 +33,7 @@ export const getMaxDate = (props: DateInputPorps) => {
   return convertDate(props.$max) ?? new Date(2100, 0, 0);
 };
 
-export const convertToMaxTime = DateValidation.dateAtLast;
+export const convertToMaxTime = DateValidation.dateAsLast;
 
 export const getJudgeValidDateFunc = (props: DateInputPorps): ((date: Date) => boolean) => {
   if (props.$validDays == null) return () => true;

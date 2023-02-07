@@ -1,10 +1,11 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import { convertTime, convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/components/utilities/time-input";
+import { convertTimeToValue, getMaxTime, getMinTime, getUnit, maxTimeValidation, minTimeValidation, rangeTimeValidation, timeContextValidation, TimeInputProps } from "@/components/utilities/time-input";
 import Time from "@bizhermit/time";
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import { VscClose } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
+import TimeValidation from "@/validations/time";
 
 export type TimePickerBaseProps<T> = FormItemProps<T> & TimeInputProps & {
   $onClickPositive?: (value: Nullable<T>) => void;
@@ -96,7 +97,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = timeContextValidation(rangePair, unit);
+        const { validation } = timeContextValidation(rangePair, type, unit);
         validations.push(validation);
       }
       return validations;
@@ -259,7 +260,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
   }, [form.editable]);
 
   useEffect(() => {
-    const time = convertTime(form.valueRef.current, unit);
+    const time = TimeValidation.convertTime(form.valueRef.current, unit);
     if (time == null) {
       setHour(undefined);
       setMinute(undefined);

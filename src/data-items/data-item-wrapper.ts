@@ -24,6 +24,16 @@ export const monthItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(c
   return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "month" });
 };
 
+export const timeItem = <C extends Omit<DataItem_Time, DataItemKey | "type" | "mode" | "unit"> & Partial<Pick<DataItem_Time, "mode" | "unit">>>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Time : C & DataItem_Time> => {
+  return Object.freeze({
+    mode: "hm",
+    unit: "minute",
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "time",
+  });
+};
+
 export const arrayItem = <C extends Omit<DataItem_Array, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Array : C & DataItem_Array> => {
   return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "array" });
 };

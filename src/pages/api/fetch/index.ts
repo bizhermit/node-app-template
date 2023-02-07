@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { arrayItem, booleanItem, dateItem, numberItem, stringItem, structItem } from "@/data-items/data-item-wrapper";
+import { arrayItem, booleanItem, dateItem, numberItem, stringItem, structItem, timeItem } from "@/data-items/data-item-wrapper";
 import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
@@ -51,6 +51,25 @@ export default apiHandler({
           position: "before",
         },
       }),
+      time1: timeItem({
+        required: true,
+        // min: "9:00",
+        // max: "23:00",
+        unit: "millisecond",
+        rangePair: {
+          name: "time2",
+          position: "after",
+        },
+      }),
+      time2: timeItem({
+        // required: true,
+        // max: "17:00",
+        unit: "second",
+        rangePair: {
+          name: "time1",
+          position: "before",
+        },
+      }),
       title: {
         ...notification_title,
         required: true,
@@ -97,7 +116,8 @@ export default apiHandler({
     // console.log(JSON.stringify(data, null, 2));
     data.boolean;
     data.boolean01;
-    const date = data[notification_releaseDate.name];
+    // const date = data[notification_releaseDate.name];
+    data.time1;
     return {
       update: true,
     };

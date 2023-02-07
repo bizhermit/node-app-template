@@ -1,19 +1,9 @@
 import { FormItemValidation } from "@/components/elements/form";
+import TimeValidation from "@/validations/time";
 import Time, { TimeUtils } from "@bizhermit/time";
 
-export type TimeType = "hms" | "hm" | "h" | "ms";
-export type TimeUnit = "hour" | "minute" | "second" | "millisecond";
-export type TimeValue = string | number | Time;
-
-type TimeRangePair = {
-  name: string;
-  position: "before" | "after";
-  disallowSame?: boolean;
-  unit?: TimeUnit;
-};
-
 export type TimeInputProps = {
-  $type?: TimeType;
+  $type?: TimeMode;
   $unit?: TimeUnit;
   $min?: string;
   $max?: string;
@@ -23,9 +13,9 @@ export type TimeInputProps = {
   $secondInterval?: number;
 };
 
-export const getUnit = (props: TimeInputProps, type: TimeType) => {
+export const getUnit = (props: TimeInputProps, mode: TimeMode) => {
   if (props.$unit) return props.$unit;
-  switch (type) {
+  switch (mode) {
     case "h":
       return "hour";
     case "hm":
@@ -38,18 +28,10 @@ export const getUnit = (props: TimeInputProps, type: TimeType) => {
   }
 };
 
-export const convertTime = (value: TimeValue | null | undefined, unit: TimeUnit) => {
-  if (value == null) return undefined;
-  if (typeof value === "number") {
-    return new Time(TimeUtils.convertUnitToMilliseconds(value, unit)).getTime();
-  }
-  return (new Time(value)).getTime();
-};
-
-export const convertTimeToValue = (value: number | undefined, unit: TimeUnit, type: TimeType, $typeof?: "number" | "string") => {
+export const convertTimeToValue = (value: number | undefined, unit: TimeUnit, mode: TimeMode, $typeof?: "number" | "string") => {
   if ($typeof === "string") {
     return new Time(value).format((() => {
-      switch (type) {
+      switch (mode) {
         case "h":
           return "h";
         case "hm":
@@ -63,18 +45,18 @@ export const convertTimeToValue = (value: number | undefined, unit: TimeUnit, ty
 };
 
 export const getMinTime = (props: TimeInputProps, unit: TimeUnit) => {
-  return convertTime(props.$min, unit) ?? 0;
+  return TimeValidation.convertTime(props.$min, unit) ?? 0;
 };
 
 const max24 = (23 * 3600 + 59 * 60 + 59) * 1000;
 export const getMaxTime = (props: TimeInputProps, unit: TimeUnit) => {
-  return convertTime(props.$max, unit) ?? max24;
+  return TimeValidation.convertTime(props.$max, unit) ?? max24;
 };
 
-export const formatByTimeType = (time: number, type: TimeType) => {
+export const formatByTimeMode = (time: number, mode: TimeMode) => {
   if (time == null) return "";
   const t = new Time(time);
-  switch (type) {
+  switch (mode) {
     case "h":
       return t.format("h時");
     case "hm":
@@ -88,57 +70,31 @@ export const formatByTimeType = (time: number, type: TimeType) => {
   }
 };
 
-export const rangeTimeValidation = (minTime: number, maxTime: number, type: TimeType, unit: TimeUnit) => {
-  const maxTimeStr = formatByTimeType(maxTime, type);
-  const minTimeStr = formatByTimeType(minTime, type);
-  return (v: any) => {
-    const time = convertTime(v, unit);
-    if (time == null) return "";
-    if (time < minTime || maxTime < time) return `${minTimeStr}～${maxTimeStr}の範囲で入力してください。`;
-    return "";
-  };
+export const rangeTimeValidation = (minTime: number, maxTime: number, mode: TimeMode, unit: TimeUnit) => {
+  const maxTimeStr = formatByTimeMode(maxTime, mode);
+  const minTimeStr = formatByTimeMode(minTime, mode);
+  return (v: any) => TimeValidation.range(v, minTime, maxTime, mode, unit, undefined, minTimeStr, maxTimeStr);
 };
 
-export const minTimeValidation = (minTime: number, type: TimeType, unit: TimeUnit) => {
-  const minTimeStr = formatByTimeType(minTime, type);
-  return (v: any) => {
-    const time = convertTime(v, unit);
-    if (time == null) return "";
-    if (time < minTime) return `${minTimeStr}以降で入力してください。`;
-    return "";
-  };
+export const minTimeValidation = (minTime: number, mode: TimeMode, unit: TimeUnit) => {
+  const minTimeStr = formatByTimeMode(minTime, mode);
+  return (v: any) => TimeValidation.min(v, minTime, mode, unit, undefined, minTimeStr);
 };
 
-export const maxTimeValidation = (maxTime: number, type: TimeType, unit: TimeUnit) => {
-  const maxTimeStr = formatByTimeType(maxTime, type);
-  return (v: any) => {
-    const time = convertTime(v, unit);
-    if (time == null) return "";
-    if (time > maxTime) return `${maxTimeStr}以前で入力してください。`;
-    return "";
-  };
+export const maxTimeValidation = (maxTime: number, mode: TimeMode, unit: TimeUnit) => {
+  const maxTimeStr = formatByTimeMode(maxTime, mode);
+  return (v: any) => TimeValidation.max(v, maxTime, mode, unit, undefined, maxTimeStr);
 };
 
-export const timeContextValidation = (rangePair: TimeRangePair, unit: TimeUnit) => {
+export const timeContextValidation = (rangePair: TimeRangePair, mode: TimeMode, unit: TimeUnit) => {
   const pairTimeUnit = rangePair.unit ?? "minute";
-  const compare = (value: TimeValue, pairTime: number) => {
-    const time = convertTime(value, unit);
-    if (time == null) return "";
-    if (rangePair.disallowSame !== true && time === pairTime) {
-      return "";
-    }
-    if (rangePair.position === "before") {
-      if (time <= pairTime) return "時間の前後関係が不適切です。";
-      return "";
-    }
-    if (time >= pairTime) return "時間の前後関係が不適切です。";
-    return "";
-  };
+  const compare = (value: TimeValue, pairTime: number) =>
+    TimeValidation.context(TimeValidation.convertTime(value, unit), rangePair, {[rangePair.name]: pairTime}, mode, unit, undefined, undefined, undefined);
   const getPairTime = (data: Struct) => {
     if (data == null) return undefined;
     const pairValue = data[rangePair.name];
     if (pairValue == null || Array.isArray(pairValue)) return undefined;
-    return convertTime(pairValue, pairTimeUnit);
+    return TimeValidation.convertTime(pairValue, pairTimeUnit);
   };
   const validation: FormItemValidation<any> = (v, t) => {
     if (t == null) return "";

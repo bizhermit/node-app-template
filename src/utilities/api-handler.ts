@@ -5,6 +5,8 @@ import { dataItemKey } from "@/data-items/data-item-wrapper";
 import NumberValidation from "@/validations/number";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import DateValidation from "@/validations/date";
+import TimeValidation from "@/validations/time";
+import Time, { TimeUtils } from "@bizhermit/time";
 
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
@@ -33,6 +35,9 @@ const getItem = (
       case "date":
       case "month":
         getDateItem(msgs, key!, ctx, data, index, pctx);
+        break;
+      case "time":
+        getTimeItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "array":
         getArrayItem(msgs, key!, ctx, data, index, pctx);
@@ -291,6 +296,77 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   }
   if (ctx.rangePair) {
     pushMsg(DateValidation.context(v, ctx.rangePair, data, ctx.type, name, pctx?.[ctx.rangePair.name]?.label));
+  }
+
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      const res = validation(v, key, ctx, data, index, pctx);
+      if (res) msgs.push(res);
+    }
+  }
+};
+
+const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Time, data?: Struct, index?: number, pctx?: DataContext) => {
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | undefined, type: DataItemValidationResultType = "error") => {
+    if (res) {
+      msgs.push({
+        type,
+        key,
+        name,
+        index,
+        body: `${index != null ? `${index}:` : ""}${res}`,
+        value: data?.[key],
+      });
+    }
+  };
+
+  if (data) {
+    const v = data[key];
+    const t = typeof v;
+    if (v != null) {
+      try {
+        switch (t) {
+          case "number":
+            break;
+          case "string":
+            data[key] = TimeUtils.convertMillisecondsToUnit(new Time(v).getTime(), ctx.unit);
+            break;
+          default:
+            if ("time" in v) {
+              const tv = v.time;
+              if (typeof tv === "number") {
+                data[key] = TimeUtils.convertMillisecondsToUnit(v.getTime(), ctx.unit);
+                break;
+              }
+            }
+            throw new Error;
+        }
+      } catch {
+        pushMsg(`${name}を時間型に変換できません。`);
+        return;
+      }
+    }
+  }
+
+  const v = data?.[key] as (number | null | undefined);
+
+  if (ctx.required) {
+    pushMsg(TimeValidation.required(v, name));
+  }
+  if (ctx.min != null && ctx.max != null) {
+    pushMsg(TimeValidation.range(v, ctx.min, ctx.max, ctx.mode, ctx.unit, name));
+  } else {
+    if (ctx.min) {
+      pushMsg(TimeValidation.min(v, ctx.min, ctx.mode, ctx.unit, name));
+    }
+    if (ctx.max) {
+      pushMsg(TimeValidation.max(v, ctx.max, ctx.mode, ctx.unit, name));
+    }
+  }
+  if (ctx.rangePair) {
+    const pairCtx = pctx?.[ctx.rangePair.name] as DataItem_Time;
+    pushMsg(TimeValidation.context(v, ctx.rangePair, data, ctx.mode, ctx.unit, name, pairCtx?.unit, pairCtx?.label));
   }
 
   if (ctx.validations) {

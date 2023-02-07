@@ -96,7 +96,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     validations: () => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
-      const maxTime = DateValidation.dateAtLast(maxDate, type);
+      const maxTime = DateValidation.dateAsLast(maxDate, type);
       const minTime = DateValidation.dateAsFirst(minDate, type);
       if (maxTime != null && minTime != null) {
         const compare = rangeDateValidation(minTime, maxTime, type);
