@@ -225,11 +225,16 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
     showed.current = false;
     setTimeout(() => {
       if (root.current) {
-        root.current?.unmount();
+        const internalRootKey = Object.keys(root.current).find(key => key.startsWith("_"));
+        if (internalRootKey == null || (root.current as any)[internalRootKey] != null) {
+          root.current.unmount();
+        }
+        root.current = undefined;
       }
       if (elemRef.current) {
         if (document.body.contains(elemRef.current)) {
           document.body.removeChild(elemRef.current);
+          elemRef.current = undefined;
         }
       }
     });
