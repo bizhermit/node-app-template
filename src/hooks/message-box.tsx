@@ -82,11 +82,13 @@ const MessageBox: FC<{
       >
         {mount && props.children}
       </div>
-      <div
-        className={Style.mask2}
-        tabIndex={0}
-        onKeyDown={keydownMask2}
-      />
+      {showed &&
+        <div
+          className={Style.mask2}
+          tabIndex={0}
+          onKeyDown={keydownMask2}
+        />
+      }
     </>
   );
 };
