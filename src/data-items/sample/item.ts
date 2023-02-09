@@ -5,9 +5,10 @@ import stringItem from "@/data-items/string";
 
 export const sample_string = stringItem({
   name: "sample_text",
+  required: true,
   // minLength: 5,
-  maxLength: 5,
-  // length: 5,
+  // maxLength: 5,
+  length: 5,
   charType: "alpha",
   width: "20rem",
   validations: [

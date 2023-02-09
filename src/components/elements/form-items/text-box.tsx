@@ -4,7 +4,7 @@ import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useMemo, useRef } from "react";
+import React, { useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
 export type TextBoxProps = FormItemProps<string, null, DataItem_String | DataItem_Number> & {
@@ -24,47 +24,37 @@ export type TextBoxProps = FormItemProps<string, null, DataItem_String | DataIte
 };
 
 const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((p, ref) => {
-  const props = {
-    ...useMemo<TextBoxProps>(() => {
-      const { $dataItem } = p;
-      if ($dataItem == null) return {};
-      switch ($dataItem.type) {
+  const iref = useRef<HTMLInputElement>(null!);
+
+  const form = useForm(p, {
+    setDataItem: (d, m) => {
+      const isSearch = m === "get";
+      switch (d.type) {
         case "number":
           return {
-            name: $dataItem.name,
-            $charType: "int",
-            $width: $dataItem.width,
-            $minWidth: $dataItem.minWidth,
-            $maxWidth: $dataItem.maxWidth,
-            $validations: $dataItem.validations?.map(func => {
-              return convertDataItemValidationToFormItemValidation(func, p, $dataItem, (v) => Number(v));
-            }),
+            $charType: "h-num" as StringCharType,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => Number(v))),
+            $width: d.width,
+            $minWidth: d.minWidth,
+            $maxWidth: d.maxWidth,
           };
         default:
           return {
-            name: $dataItem.name,
-            $length: $dataItem.length,
-            $minLength: $dataItem.minLength,
-            $maxLength: $dataItem.maxLength,
-            $charType: $dataItem.charType,
-            $width: $dataItem.width,
-            $minWidth: $dataItem.minWidth,
-            $maxWidth: $dataItem.maxWidth,
-            $validations: $dataItem.validations?.map(func => {
-              return convertDataItemValidationToFormItemValidation(func, p, $dataItem, (v) => v);
-            }),
+            $length: isSearch ? undefined : d.length,
+            $minLength: isSearch ? undefined : d.minLength,
+            $maxLength: d.maxLength ?? d.length,
+            $charType: d.charType,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+            $width: d.width,
+            $minWidth: d.minWidth,
+            $maxWidth: d.maxWidth,
           };
       }
-    }, [p.$dataItem]),
-    ...p,
-  };
-  const iref = useRef<HTMLInputElement>(null!);
-
-  const form = useForm(props, {
+    },
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: () => {
+    validations: (props) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
         validations.push(v => StringData.lengthValidation(v, props.$length!));
@@ -118,7 +108,7 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((p, ref) => {
       }
       return validations;
     },
-    validationsDeps: [
+    validationsDeps: (props) => [
       props.$length,
       props.$minLength,
       props.$maxLength,
@@ -136,46 +126,46 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((p, ref) => {
 
   return (
     <FormItemWrap
-      {...props}
+      {...form.props}
       ref={ref}
       $$form={form}
-      data-round={props.$round}
+      data-round={form.props.$round}
       data-has={hasData}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
+          width: convertSizeNumToStr(form.props.$width),
+          maxWidth: convertSizeNumToStr(form.props.$maxWidth),
+          minWidth: convertSizeNumToStr(form.props.$minWidth),
         },
       }}
     >
       <input
         ref={iref}
         className={Style.input}
-        name={props.name}
-        type={props.$type || "text"}
-        placeholder={form.editable ? props.placeholder : ""}
+        name={form.props.name}
+        type={form.props.$type || "text"}
+        placeholder={form.editable ? form.props.placeholder : ""}
         disabled={form.disabled}
         readOnly={form.readOnly}
-        maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
-        tabIndex={props.tabIndex}
+        maxLength={form.props.$maxLength ?? (form.props.$preventInputWithinLength ? undefined : form.props.$length)}
+        tabIndex={form.props.tabIndex}
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
-        data-round={props.$round}
-        data-clear={form.editable && props.$hideClearButton !== true}
-        autoComplete={props.$autoComplete ?? "off"}
+        data-round={form.props.$round}
+        data-clear={form.editable && form.props.$hideClearButton !== true}
+        autoComplete={form.props.$autoComplete ?? "off"}
       />
-      {form.editable && props.$hideClearButton !== true &&
+      {form.editable && form.props.$hideClearButton !== true &&
         <div
           className={Style.button}
           onClick={clear}
           data-disabled={!hasData}
-          data-round={props.$round}
+          data-round={form.props.$round}
         >
           <VscClose />
         </div>
       }
-      {props.$resize && <Resizer direction="x" />}
+      {form.props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
 });

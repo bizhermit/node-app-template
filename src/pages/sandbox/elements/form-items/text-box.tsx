@@ -91,6 +91,7 @@ const Page: NextPage = () => {
       <section>
         <h2>DataItem</h2>
         <Form
+          method="get"
           $bind
           $onSubmit={(bindData) => {
             console.log(bindData);
@@ -100,7 +101,7 @@ const Page: NextPage = () => {
             <TextBox
               $tag="string"
               $dataItem={sample_string}
-              $required
+              // $required
             />
             <TextBox
               $tag="number"
