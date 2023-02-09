@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { useRef } from "react";
 import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
@@ -6,7 +6,7 @@ import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { StringData } from "@/data-items/string";
 
-export type TextAreaProps = FormItemProps<string> & {
+export type TextAreaProps = FormItemProps<string, null, DataItem_String> & {
   $length?: number;
   $preventInputWithinLength?: boolean;
   $minLength?: number;
@@ -21,14 +21,26 @@ export type TextAreaProps = FormItemProps<string> & {
   $autoComplete?: string;
 };
 
-const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) => {
+const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((p, ref) => {
   const iref = useRef<HTMLTextAreaElement>(null!);
 
-  const form = useForm(props, {
+  const form = useForm(p, {
+    setDataItem: (d, m) => {
+      const isSearch = m === "get";
+      return {
+        $length: isSearch ? undefined : d.length,
+        $minLength: isSearch ? undefined : d.minLength,
+        $maxLength: d.maxLength ?? d.length,
+        $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+        $width: d.width,
+        $minWidth: d.minWidth,
+        $maxWidth: d.maxWidth,
+      };
+    },
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: () => {
+    validations: (props) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
         validations.push(v => StringData.lengthValidation(v, props.$length!));
@@ -42,7 +54,7 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
       }
       return validations;
     },
-    validationsDeps: [
+    validationsDeps: (props) => [
       props.$length,
       props.$minLength,
       props.$maxLength,
@@ -51,36 +63,35 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((props, ref) =>
 
   return (
     <FormItemWrap
-      {...props}
       ref={ref}
       $$form={form}
       data-has={StringUtils.isNotEmpty(form.value)}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
-          height: convertSizeNumToStr(props.$height),
-          maxHeight: convertSizeNumToStr(props.$maxHeight),
-          minHeight: convertSizeNumToStr(props.$minHeight),
+          width: convertSizeNumToStr(form.props.$width),
+          maxWidth: convertSizeNumToStr(form.props.$maxWidth),
+          minWidth: convertSizeNumToStr(form.props.$minWidth),
+          height: convertSizeNumToStr(form.props.$height),
+          maxHeight: convertSizeNumToStr(form.props.$maxHeight),
+          minHeight: convertSizeNumToStr(form.props.$minHeight),
         }
       }}
     >
       <textarea
         ref={iref}
         className={Style.input}
-        name={props.name}
-        placeholder={form.editable ? props.placeholder : ""}
+        name={form.props.name}
+        placeholder={form.editable ? form.props.placeholder : ""}
         disabled={form.disabled}
         readOnly={form.readOnly}
-        maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
-        tabIndex={props.tabIndex}
+        maxLength={form.props.$maxLength ?? (form.props.$preventInputWithinLength ? undefined : form.props.$length)}
+        tabIndex={form.props.tabIndex}
         defaultValue={form.value ?? ""}
         onChange={e => form.change(e.target.value)}
-        autoComplete={props.$autoComplete ?? "off"}
+        autoComplete={form.props.$autoComplete ?? "off"}
       />
-      {props.$resize &&
-        <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
+      {form.props.$resize &&
+        <Resizer direction={typeof form.props.$resize === "boolean" ? "xy" : form.props.$resize} />
       }
     </FormItemWrap>
   );

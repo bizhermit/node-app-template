@@ -535,7 +535,7 @@ const convertHiddenValue = (value: any) => {
   return JSON.stringify(value);
 };
 
-export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
+export const FormItemWrap = React.forwardRef<HTMLDivElement, {
   $$form: ReturnType<typeof useForm<any, any>>;
   $preventFieldLayout?: boolean;
   $className?: string;
@@ -544,6 +544,8 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   $useHidden?: boolean;
   children: ReactNode;
 }>((props, ref) => {
+  const fprops = props.$$form.props;
+
   const errorNode = (StringUtils.isNotEmpty(props.$$form.error) || props.$$form.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
@@ -559,7 +561,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
   );
 
   const attrs = {
-    ...attributes(props.$mainProps ?? {}, Style.main, props.$color ? `bdc-${props.$color}` : ""),
+    ...attributes(props.$mainProps ?? {}, Style.main, fprops.$color ? `bdc-${fprops.$color}` : ""),
     "data-editable": props.$$form.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$$form.disabled,
@@ -567,25 +569,25 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, FormItemProps & {
     "data-clickable": props.$clickable,
   };
 
-  const tagPlaceholder = props.$$form.editable && props.$tag != null && props.$tagPosition === "placeholder";
+  const tagPlaceholder = props.$$form.editable && fprops.$tag != null && fprops.$tagPosition === "placeholder";
 
   return (
     <div
-      {...inputAttributes(props, Style.wrap, props.$className)}
+      {...inputAttributes(fprops, Style.wrap, props.$className)}
       ref={ref}
       data-tagpad={tagPlaceholder}
     >
-      {props.$tag &&
+      {fprops.$tag &&
         <div
-          className={`${Style.tag}${props.$color ? ` fgc-${props.$color}` : ""}`}
-          data-pos={!tagPlaceholder ? "top" : props.$tagPosition || "top"}
+          className={`${Style.tag}${fprops.$color ? ` fgc-${fprops.$color}` : ""}`}
+          data-pos={!tagPlaceholder ? "top" : fprops.$tagPosition || "top"}
         >
-          {props.$tag}
+          {fprops.$tag}
         </div>
       }
-      {props.$useHidden && props.name &&
+      {props.$useHidden && fprops.name &&
         <input
-          name={props.name}
+          name={fprops.name}
           type="hidden"
           value={convertHiddenValue(props.$$form.value)}
         />

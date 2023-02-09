@@ -126,7 +126,6 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((p, ref) => {
 
   return (
     <FormItemWrap
-      {...form.props}
       ref={ref}
       $$form={form}
       data-round={form.props.$round}
