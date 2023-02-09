@@ -13,7 +13,7 @@ type DataItemValidationResult = {
   body: string;
 };
 
-type DataItemValidation<T, D extends DataItem> =
+type DataItemValidation<T, D extends (DataItem | DataContext)> =
   readonly ((v: Nullable<T>, key: string | number, ctx: D, data: Nullable<Struct | Array<any>>, index: Nullable<number>, pctx: DataContext | null | undefined)
     => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>)| string | null | undefined))[];
 
@@ -25,19 +25,19 @@ type DataItem_Base = {
   strict?: boolean;
 };
 
-type DataContext = { [key: string]: DataItem };
+type DataContext = { [key: string]: DataItem | DataContext };
 
-type DataItem = DataContext
+type DataItem = (DataItem_Base & { type: "any" })
   | DataItem_String
   | DataItem_Number
-  | DataItem_Boolean<any, any>
+  | DataItem_Boolean
   | DataItem_Date
+  | DataItem_Time
   | DataItem_Array<any>
   | DataItem_Struct<any>
-  | (DataItem_Base & { type: "any" })
   ;
 
-type DataItemValueType<D extends DataItem, Strict extends boolean = false> =
+type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
@@ -203,7 +203,7 @@ type DataItem_Time = DataItem_Base & {
  * Array
  */
 
-type DataItem_Array<T extends DataItem | { [key: string]: DataItem } = DataItem | { [key: string]: DataItem }> = DataItem_Base & {
+type DataItem_Array<T extends DataItem | DataContext = DataItem | DataContext> = DataItem_Base & {
   type: "array";
   validations?: DataItemValidation<Array<any>, DataItem_Array<T>>;
   item: T;
@@ -216,7 +216,7 @@ type DataItem_Array<T extends DataItem | { [key: string]: DataItem } = DataItem 
  * Struct
  */
 
-type DataItem_Struct<T extends { [key: string]: DataItem; } = { [key: string]: DataItem; }> = DataItem_Base & {
+type DataItem_Struct<T extends DataContext = DataContext> = DataItem_Base & {
   type: "struct";
   validations?: DataItemValidation<Struct<any>, DataItem_Struct<T>>;
   item: T;

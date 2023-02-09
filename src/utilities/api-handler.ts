@@ -35,6 +35,7 @@ const getItem = (
         break;
       case "date":
       case "month":
+      case "year":
         getDateItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "time":
@@ -281,7 +282,10 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   }
   if (ctx.rangePair) {
-    pushMsg(DateData.contextValidation(v, ctx.rangePair, data, ctx.type, name, pctx?.[ctx.rangePair.name]?.label));
+    const pairCtx = pctx?.[ctx.rangePair.name];
+    if (pairCtx != null && dataItemKey in pairCtx && (pairCtx.type === "date" || pairCtx.type === "month" || pairCtx.type === "year")) {
+      pushMsg(DateData.contextValidation(v, ctx.rangePair, data, ctx.type, name, pairCtx?.label));
+    }
   }
 
   if (ctx.validations) {
@@ -347,8 +351,10 @@ const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   }
   if (ctx.rangePair) {
-    const pairCtx = pctx?.[ctx.rangePair.name] as DataItem_Time;
-    pushMsg(TimeData.contextValidation(v, ctx.rangePair, data, ctx.mode, ctx.unit, name, pairCtx?.unit, pairCtx?.label));
+    const pairCtx = pctx?.[ctx.rangePair.name];
+    if (pairCtx != null && dataItemKey in pairCtx && pairCtx.type === "time") {
+      pushMsg(TimeData.contextValidation(v, ctx.rangePair, data, ctx.mode, ctx.unit, name, pairCtx?.unit, pairCtx?.label));
+    }
   }
 
   if (ctx.validations) {

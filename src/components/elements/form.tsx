@@ -60,7 +60,7 @@ type FormContextProps = {
   messageWrap?: boolean;
 };
 
-const defaultMethod = "post";
+const defaultMethod = "get";
 
 export const FormContext = createContext<FormContextProps>({
   bind: undefined,
@@ -106,6 +106,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
 const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
+  const method = props.method ?? defaultMethod;
 
   const bind = useMemo(() => {
     if (!props.$bind || props.$bind === true) return {};
@@ -265,7 +266,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       bind,
       disabled: props.$disabled || disabled,
       readOnly: props.$readOnly,
-      method: props.method ?? defaultMethod,
+      method,
       errors,
       setErrors,
       exErrors,
@@ -279,6 +280,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     }}>
       <form
         {...attributes(props)}
+        method={method}
         onSubmit={submit}
         onReset={reset}
       />
@@ -291,7 +293,7 @@ export default Form;
 type UseFormOptions<T = any, U = any, P extends FormItemProps = FormItemProps> = {
   setDataItem?: (dataItem: NonNullable<P["$dataItem"]>, method: string) => P,
   effect?: (value: Nullable<T>) => void;
-  effectDeps?: Array<any>;
+  effectDeps?: (props: P) => Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
   validations?: (props: P) => Array<FormItemValidation<Nullable<T>>>;
@@ -299,7 +301,7 @@ type UseFormOptions<T = any, U = any, P extends FormItemProps = FormItemProps> =
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
-  generateChangeCallbackDataDeps?: Array<any>;
+  generateChangeCallbackDataDeps?: (props: P) => Array<any>;
 };
 
 export const formValidationMessages = {
@@ -324,10 +326,10 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
       if (d == null) return {} as any;
       return {
         name: d.name,
-        $required: d.required,
+        $required: ctx.method === "get" ? undefined : d.required,
         ...options?.setDataItem?.(d, ctx.method),
       };
-    }, [$props?.$dataItem]),
+    }, [$props?.$dataItem, ctx.method]),
     ...$props,
   };
 
@@ -449,7 +451,7 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
       validation();
     }
     props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.name, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps ?? [])]);
+  }, [ctx.bind, props?.name, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps?.(props) ?? [])]);
 
   useEffect(() => {
     const name = props?.name;
@@ -496,7 +498,7 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
 
   useEffect(() => {
     options?.effect?.(valueRef.current);
-  }, [...(options?.effectDeps ?? [])]);
+  }, [...(options?.effectDeps?.(props) ?? [])]);
 
   useEffect(() => {
     validation();

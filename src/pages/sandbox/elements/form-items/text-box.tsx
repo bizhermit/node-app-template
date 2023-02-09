@@ -91,7 +91,7 @@ const Page: NextPage = () => {
       <section>
         <h2>DataItem</h2>
         <Form
-          method="get"
+          method="post"
           $bind
           $onSubmit={(bindData) => {
             console.log(bindData);
