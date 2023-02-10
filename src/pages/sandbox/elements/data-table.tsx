@@ -1,5 +1,6 @@
 import Button from "@/components/elements/button";
 import DataTable, { DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { joinClassNames } from "@/components/utilities/attributes";
@@ -118,6 +119,7 @@ const Page: NextPage = () => {
   const [cellBorder, setCellBorder] = useState(true);
   const [scroll, setScroll] = useState(true);
   const [page, setPage] = useState(false);
+  const [perPage, setPerPage] = useState(20);
 
   return (
     <div className="flex-start w-100 h-100 gap-1 p-1">
@@ -139,6 +141,7 @@ const Page: NextPage = () => {
           <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>
           <ToggleBox $value={scroll} $onChange={v => setScroll(v!)}>scroll</ToggleBox>
           <ToggleBox $value={page} $onChange={v => setPage(v!)}>page</ToggleBox>
+          <NumberBox $value={perPage} $onChange={v => setPerPage(v ?? 20)} $min={1} $max={100} $width={100} $hideClearButton />
         </Row>
       </Row>
       <DataTable<Data>
@@ -155,7 +158,7 @@ const Page: NextPage = () => {
         $rowBorder={rowBorder}
         $cellBorder={cellBorder}
         $page
-        $perPage={14}
+        $perPage={perPage}
         $onChangePage={(index) => {
           console.log(index);
           return true;
