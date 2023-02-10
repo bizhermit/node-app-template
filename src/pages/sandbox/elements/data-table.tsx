@@ -119,7 +119,7 @@ const Page: NextPage = () => {
   const [cellBorder, setCellBorder] = useState(true);
   const [scroll, setScroll] = useState(true);
   const [page, setPage] = useState(false);
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(10);
 
   return (
     <div className="flex-start w-100 h-100 gap-1 p-1">
@@ -157,7 +157,7 @@ const Page: NextPage = () => {
         $outline={outline}
         $rowBorder={rowBorder}
         $cellBorder={cellBorder}
-        $page
+        $page={page}
         $perPage={perPage}
         $onChangePage={(index) => {
           console.log(index);
