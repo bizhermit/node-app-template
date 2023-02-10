@@ -187,6 +187,17 @@ const switchSortDirection = (currentDirection: "" | "asc" | "desc" | undefined, 
   return "";
 };
 
+const rowNumberColumnName = "_rownum";
+export const dataTableRowNumberColumn: DataTableColumn<any> = {
+  name: rowNumberColumnName,
+  align: "center",
+  width: "5rem",
+  body: props => <LabelText>{props.index + 1}</LabelText>,
+} as const;
+const calcRowNumberColumnWidth = (maxRowNumber = 0) => {
+  return Math.max(String(maxRowNumber).length * 1.6, 4) + 0.8;
+};
+
 const equals = (v1: unknown, v2: unknown) => {
   if (v1 == null && v2 == null) return true;
   return v1 === v2;
@@ -221,28 +232,44 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     return props.$sorts ?? [];
   });
   const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
-  const items = useMemo(() => {
-    if (props.$preventSort) return originItems;
+  const { items, rowNumColWidth } = useMemo(() => {
+    let rowNumColWidth = "5rem";
+    const rowNumCol = findColumn(columns.current, rowNumberColumnName) as typeof dataTableRowNumberColumn;
+    if (props.$preventSort) {
+      if (rowNumCol) {
+        rowNumCol.width = rowNumColWidth = `${calcRowNumberColumnWidth(originItems.length)}rem`;
+      }
+      return {
+        items: originItems,
+        rowNumColWidth,
+      };
+    }
     const sortCols = sorts.map(s => {
       const col = findColumn(columns.current, s.name);
       if (!col) return undefined;
       return { ...s, column: col };
     }).filter(col => col != null);
-    return [...originItems].sort((item1, item2) => {
-      for (const scol of sortCols) {
-        const v1 = getValue(item1, scol!);
-        const v2 = getValue(item2, scol!);
-        const dnum = scol?.direction === "desc" ? -1 : 1;
-        if (typeof scol!.column.sort === "function") {
-          const ret = scol!.column.sort(v1, v2);
-          if (ret === 0) continue;
-          return ret * dnum;
+    if (rowNumCol) {
+      rowNumCol.width = rowNumColWidth = `${calcRowNumberColumnWidth(originItems.length)}rem`;
+    }
+    return {
+      rowNumColWidth,
+      items: [...originItems].sort((item1, item2) => {
+        for (const scol of sortCols) {
+          const v1 = getValue(item1, scol!);
+          const v2 = getValue(item2, scol!);
+          const dnum = scol?.direction === "desc" ? -1 : 1;
+          if (typeof scol!.column.sort === "function") {
+            const ret = scol!.column.sort(v1, v2);
+            if (ret === 0) continue;
+            return ret * dnum;
+          }
+          if (equals(v1, v2)) continue;
+          return (v1 < v2 ? -1 : 1) * dnum;
         }
-        if (equals(v1, v2)) continue;
-        return (v1 < v2 ? -1 : 1) * dnum;
-      }
-      return 0;
-    });
+        return 0;
+      }),
+    };
   }, [originItems, sorts]);
 
   useEffect(() => {
@@ -354,6 +381,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     changeSort,
     props.$rowBorder,
     props.$cellBorder,
+    rowNumColWidth,
   ]);
 
   const body = useMemo(() => {
@@ -448,6 +476,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     props.$rowMaxHeight,
     props.$rowBorder,
     props.$cellBorder,
+    rowNumColWidth,
   ]);
 
   const isEmpty = useMemo(() => {
@@ -480,12 +509,5 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     </div>
   );
 });
-
-export const dataTableRowNumberColumn: DataTableColumn<any> = {
-  name: "_rownum",
-  align: "center",
-  width: "5rem",
-  body: props => <LabelText>{props.index + 1}</LabelText>,
-} as const;
 
 export default DataTable;

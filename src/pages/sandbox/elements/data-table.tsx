@@ -126,6 +126,7 @@ const Page: NextPage = () => {
           <Button $fitContent $onClick={() => generateItems(10)}>10</Button>
           <Button $fitContent $onClick={() => generateItems(50)}>50</Button>
           <Button $fitContent $onClick={() => generateItems(100)}>100</Button>
+          <Button $fitContent $onClick={() => generateItems(1000)}>1000</Button>
         </Row>
         <Row className="gap-1">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>
