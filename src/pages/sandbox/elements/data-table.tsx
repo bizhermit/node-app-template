@@ -117,6 +117,7 @@ const Page: NextPage = () => {
   const [rowBorder, setRowBorder] = useState(true);
   const [cellBorder, setCellBorder] = useState(true);
   const [scroll, setScroll] = useState(true);
+  const [page, setPage] = useState(false);
 
   return (
     <div className="flex-start w-100 h-100 gap-1 p-1">
@@ -135,6 +136,7 @@ const Page: NextPage = () => {
           <ToggleBox $value={rowBorder} $onChange={v => setRowBorder(v!)}>row border</ToggleBox>
           <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>
           <ToggleBox $value={scroll} $onChange={v => setScroll(v!)}>scroll</ToggleBox>
+          <ToggleBox $value={page} $onChange={v => setPage(v!)}>page</ToggleBox>
         </Row>
       </Row>
       <DataTable<Data>
@@ -150,6 +152,7 @@ const Page: NextPage = () => {
         $outline={outline}
         $rowBorder={rowBorder}
         $cellBorder={cellBorder}
+        $page={page}
       />
     </div>
   );

@@ -12,6 +12,7 @@ type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
   data: T;
   index: number;
+  pageFirstIndex: number;
 };
 
 type DataTableBaseColumn<T extends Struct = Struct> = {
@@ -31,9 +32,9 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
   border?: boolean;
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
   resize?: boolean;
-  header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data">>;
+  header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex">>;
   body?: React.FunctionComponent<DataTableCellContext<T>>;
-  footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data">>;
+  footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex">>;
 };
 
 export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
@@ -60,9 +61,16 @@ export type DataTableColumn<T extends Struct = Struct> =
   | ({ type: "date" } & DataTableDateColumn<T>)
   | DataTableGroupColumn<T>;
 
+type DataTableSortDirection = "asc" | "desc";
 type DataTableSort = {
   name: string;
-  direction: "asc" | "desc";
+  direction: DataTableSortDirection;
+};
+
+const defaultPerPage = 20;
+type Pagination = {
+  index: number;
+  perPage: number;
 };
 
 type OmitAttributes = "children";
@@ -74,6 +82,9 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $sorts?: Array<DataTableSort>;
   $onSort?: (sort: Array<DataTableSort>) => (void | boolean);
   $preventSort?: boolean;
+  $page?: boolean | number;
+  $perPage?: number;
+  $total?: number;
   $header?: boolean;
   $emptyText?: boolean | ReactNode;
   $color?: Color;
@@ -191,8 +202,7 @@ const rowNumberColumnName = "_rownum";
 export const dataTableRowNumberColumn: DataTableColumn<any> = {
   name: rowNumberColumnName,
   align: "center",
-  width: "5rem",
-  body: props => <LabelText>{props.index + 1}</LabelText>,
+  body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
 } as const;
 const calcRowNumberColumnWidth = (maxRowNumber = 0) => {
   return Math.max(String(maxRowNumber).length * 1.6, 4) + 0.8;
@@ -206,6 +216,22 @@ const equals = (v1: unknown, v2: unknown) => {
 const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
+  const [pagination, setPagination] = useState<Pagination | undefined>(() => {
+    if (props.$page == null) return undefined;
+    if (typeof props.$page === "boolean") {
+      if (props.$page) {
+        return {
+          index: 0,
+          perPage: props.$perPage ?? defaultPerPage,
+        };
+      }
+      return undefined;
+    }
+    return {
+      index: props.$page,
+      perPage: defaultPerPage,
+    };
+  });
 
   const columns = useRef<Array<DataTableColumn<T>>>(null!);
   columns.current = useMemo(() => {
@@ -235,26 +261,14 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   const { items, rowNumColWidth } = useMemo(() => {
     let rowNumColWidth = "5rem";
     const rowNumCol = findColumn(columns.current, rowNumberColumnName) as typeof dataTableRowNumberColumn;
-    if (props.$preventSort) {
-      if (rowNumCol) {
-        rowNumCol.width = rowNumColWidth = `${calcRowNumberColumnWidth(originItems.length)}rem`;
-      }
-      return {
-        items: originItems,
-        rowNumColWidth,
-      };
-    }
-    const sortCols = sorts.map(s => {
-      const col = findColumn(columns.current, s.name);
-      if (!col) return undefined;
-      return { ...s, column: col };
-    }).filter(col => col != null);
-    if (rowNumCol) {
-      rowNumCol.width = rowNumColWidth = `${calcRowNumberColumnWidth(originItems.length)}rem`;
-    }
-    return {
-      rowNumColWidth,
-      items: [...originItems].sort((item1, item2) => {
+    const items = (() => {
+      if (props.$preventSort) return originItems;
+      const sortCols = sorts.map(s => {
+        const col = findColumn(columns.current, s.name);
+        if (!col) return undefined;
+        return { ...s, column: col };
+      }).filter(col => col != null);
+      return [...originItems].sort((item1, item2) => {
         for (const scol of sortCols) {
           const v1 = getValue(item1, scol!);
           const v2 = getValue(item2, scol!);
@@ -268,9 +282,28 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           return (v1 < v2 ? -1 : 1) * dnum;
         }
         return 0;
-      }),
+      });
+    })();
+    const { firstIndex, lastIndex } = (() => {
+      if (pagination == null) {
+        return {
+          firstIndex: 0,
+          lastIndex: items.length,
+        };
+      }
+      return {
+        firstIndex: pagination.index * pagination.perPage,
+        lastIndex: Math.min(items.length, (pagination.index + 1) * pagination.perPage),
+      };
+    })();
+    if (rowNumCol) {
+      rowNumCol.width = rowNumColWidth = `${calcRowNumberColumnWidth(lastIndex)}rem`;
+    }
+    return {
+      rowNumColWidth,
+      items: pagination ? items.slice(firstIndex, lastIndex) : items,
     };
-  }, [originItems, sorts]);
+  }, [originItems, sorts, pagination, props.$total]);
 
   useEffect(() => {
     setSorts(props.$sorts ?? []);
@@ -414,6 +447,8 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           </div>
         );
       }
+
+      const pageFirstIndex = pagination ? pagination.index * pagination.perPage : 0;
       return (
         <div
           key={column.name}
@@ -423,7 +458,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           data-border={column.border ?? props.$cellBorder}
         >
           <NextLink
-            href={column.href?.({ column, data, index })}
+            href={column.href?.({ column, data, index, pageFirstIndex })}
             target={column.hrefOptions?.target}
             rel={column.hrefOptions?.rel}
             className={column.hrefOptions?.decoration === false ? "no-decoration" : undefined}
@@ -433,6 +468,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                 index={index}
                 column={column}
                 data={data}
+                pageFirstIndex={pageFirstIndex}
               /> :
               <div className={Style.label}>
                 {(() => {
@@ -484,11 +520,71 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     return items.length === 0 || props.$value.length === 0;
   }, [items, props.$emptyText]);
 
+  useEffect(() => {
+    if (props.$page == null) return;
+    if (typeof props.$page === "boolean") {
+      if (props.$page) {
+        setPagination(state => {
+          return {
+            index: state?.index ?? 0,
+            perPage: props.$perPage ?? state?.perPage ?? defaultPerPage,
+          };
+        });
+        return;
+      }
+      setPagination(undefined);
+      return;
+    }
+    setPagination(state => {
+      return {
+        index: (props.$page as number),
+        perPage: props.$perPage ?? state?.perPage ?? defaultPerPage,
+      };
+    });
+  }, [props.$page, props.$perPage]);
+
   return (
     <div
       {...attributes(props, Style.wrap)}
       ref={ref}
     >
+      {pagination &&
+        <div>
+          {pagination.index}/{props.$total ?? items.length}[{pagination.perPage}]
+          <button onClick={() => {
+            setPagination(state => {
+              return {
+                ...state!,
+                index: 0,
+              };
+            });
+          }}>{0}</button>
+          <button onClick={() => {
+            setPagination(state => {
+              return {
+                ...state!,
+                index: 1,
+              };
+            });
+          }}>{1}</button>
+          <button onClick={() => {
+            setPagination(state => {
+              return {
+                ...state!,
+                index: 2,
+              };
+            });
+          }}>{2}</button>
+          <button onClick={() => {
+            setPagination(state => {
+              return {
+                ...state!,
+                index: 3,
+              };
+            });
+          }}>{3}</button>
+        </div>
+      }
       <div
         className={Style.table}
         data-border={props.$outline}
