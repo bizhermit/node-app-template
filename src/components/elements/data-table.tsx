@@ -312,6 +312,18 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   }, [originItems, sorts, columns, pagination, props.$total]);
 
   useEffect(() => {
+    setPagination(state => {
+      if (state == null) return state;
+      const lastIndex = Math.floor(Math.max(0, total - 1) / state.perPage);
+      if (lastIndex >= state.index) return state;
+      return {
+        ...state,
+        index: lastIndex,
+      };
+    });
+  }, [total]);
+
+  useEffect(() => {
     setSorts(props.$sorts ?? []);
   }, [props.$sorts]);
 
