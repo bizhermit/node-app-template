@@ -7,6 +7,9 @@ import LabelText from "@/components/elements/label-text";
 import Resizer from "@/components/elements/resizer";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
+import Button from "@/components/elements/button";
+import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
+import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
@@ -85,6 +88,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $page?: boolean | number;
   $perPage?: number;
   $total?: number;
+  $pagePosition?: "top" | "bottom" | "both";
   $header?: boolean;
   $emptyText?: boolean | ReactNode;
   $color?: Color;
@@ -258,7 +262,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     return props.$sorts ?? [];
   });
   const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
-  const { items, rowNumColWidth } = useMemo(() => {
+  const { items, total, rowNumColWidth } = useMemo(() => {
     let rowNumColWidth = "5rem";
     const rowNumCol = findColumn(columns.current, rowNumberColumnName) as typeof dataTableRowNumberColumn;
     const items = (() => {
@@ -302,8 +306,9 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     return {
       rowNumColWidth,
       items: pagination ? items.slice(firstIndex, lastIndex) : items,
+      total: props.$total ?? originItems.length,
     };
-  }, [originItems, sorts, pagination, props.$total]);
+  }, [originItems, sorts, columns, pagination, props.$total]);
 
   useEffect(() => {
     setSorts(props.$sorts ?? []);
@@ -543,46 +548,66 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     });
   }, [props.$page, props.$perPage]);
 
+  const clickPage = (pageIndex: number) => {
+    setPagination(state => {
+      return {
+        ...state!,
+        index: Math.min(Math.max(0, pageIndex), Math.floor(Math.max(0, total - 1) / state!.perPage)),
+      };
+    });
+  };
+
+  const pageNodes = useMemo(() => {
+    if (pagination == null) return undefined;
+    const { index, perPage } = pagination;
+    const lastIndex = Math.floor(Math.max(0, total - 1) / perPage);
+    return (
+      <>
+        <Button
+          $size="s"
+          $outline
+          $color={props.$color || "main"}
+          $onClick={() => clickPage(0)}
+          $icon={<AiOutlineDoubleLeft />}
+        />
+        <Button
+          $size="s"
+          $outline
+          $color={props.$color || "main"}
+          $onClick={() => clickPage(index - 1)}
+          $icon={<MdOutlineKeyboardArrowLeft />}
+        />
+        <div className={Style.number}>
+          <span>{index + 1}</span>
+          <span>/</span>
+          <span>{lastIndex + 1}</span>
+        </div>
+        <Button
+          $size="s"
+          $outline
+          $color={props.$color || "main"}
+          $onClick={() => clickPage(index + 1)}
+          $icon={<MdOutlineKeyboardArrowRight />}
+        />
+        <Button
+          $size="s"
+          $outline
+          $color={props.$color || "main"}
+          $onClick={() => clickPage(lastIndex)}
+          $icon={<AiOutlineDoubleRight />}
+        />
+      </>
+    );
+  }, [pagination, total, props.$color]);
+
   return (
     <div
       {...attributes(props, Style.wrap)}
       ref={ref}
     >
-      {pagination &&
-        <div>
-          {pagination.index}/{props.$total ?? items.length}[{pagination.perPage}]
-          <button onClick={() => {
-            setPagination(state => {
-              return {
-                ...state!,
-                index: 0,
-              };
-            });
-          }}>{0}</button>
-          <button onClick={() => {
-            setPagination(state => {
-              return {
-                ...state!,
-                index: 1,
-              };
-            });
-          }}>{1}</button>
-          <button onClick={() => {
-            setPagination(state => {
-              return {
-                ...state!,
-                index: 2,
-              };
-            });
-          }}>{2}</button>
-          <button onClick={() => {
-            setPagination(state => {
-              return {
-                ...state!,
-                index: 3,
-              };
-            });
-          }}>{3}</button>
+      {pagination && props.$pagePosition !== "bottom" &&
+        <div className={Style.pagination}>
+          {pageNodes}
         </div>
       }
       <div
@@ -606,6 +631,11 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           </div>
         }
       </div>
+      {pagination && props.$pagePosition !== "top" &&
+        <div className={Style.pagination}>
+          {pageNodes}
+        </div>
+      }
     </div>
   );
 });

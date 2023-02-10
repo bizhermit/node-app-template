@@ -123,13 +123,15 @@ const Page: NextPage = () => {
     <div className="flex-start w-100 h-100 gap-1 p-1">
       <Row className="gap-1">
         <Row className="gap-1">
-          <Button $fitContent $onClick={() => setItems(null!)}>null</Button>
-          <Button $fitContent $onClick={() => generateItems(0)}>0</Button>
-          <Button $fitContent $onClick={() => generateItems(1)}>1</Button>
-          <Button $fitContent $onClick={() => generateItems(10)}>10</Button>
-          <Button $fitContent $onClick={() => generateItems(50)}>50</Button>
-          <Button $fitContent $onClick={() => generateItems(100)}>100</Button>
-          <Button $fitContent $onClick={() => generateItems(1000)}>1000</Button>
+          <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(0)}>0</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(1)}>1</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(10)}>10</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(50)}>50</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(99)}>99</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(100)}>100</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(101)}>101</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(1000)}>1000</Button>
         </Row>
         <Row className="gap-1">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>

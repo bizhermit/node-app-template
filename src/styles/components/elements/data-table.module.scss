@@ -7,7 +7,8 @@ $borderStyle: 1px solid var(--c-border);
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: stretch;
-  overflow: hidden;
+  overflow: visible;
+  row-gap: 0.2rem;
 }
 
 .table {
@@ -21,6 +22,7 @@ $borderStyle: 1px solid var(--c-border);
   overflow: auto;
   border-radius: var(--radius);
   flex: 1;
+  z-index: 0;
 
   &[data-border="true"] {
     border: #{$borderStyle};
@@ -212,4 +214,26 @@ $borderStyle: 1px solid var(--c-border);
   flex: 1;
   min-height: 0;
   opacity: 0.5;
+}
+
+.pagination {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1rem;
+  overflow: visible;
+  z-index: 1;
+  
+  .number {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: var(--padding-top-text);
+    column-gap: 0.2rem;
+  }
 }
