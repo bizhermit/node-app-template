@@ -203,15 +203,17 @@ const switchSortDirection = (currentDirection: "" | "asc" | "desc" | undefined, 
   return "";
 };
 
-const rowNumberColumnName = "_rownum";
-export const dataTableRowNumberColumn: DataTableColumn<any> = {
-  name: rowNumberColumnName,
-  align: "center",
-  body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
-} as const;
 const calcRowNumberColumnWidth = (maxRowNumber = 0) => {
   return Math.max(String(maxRowNumber).length * 1.6, 4) + 0.8;
 };
+
+const rowNumberColumnName = "_rownum";
+export const dataTableRowNumberColumn: DataTableColumn<any> = {
+  name: rowNumberColumnName,
+  width: `${calcRowNumberColumnWidth(0)}rem`,
+  align: "center",
+  body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
+} as const;
 
 const equals = (v1: unknown, v2: unknown) => {
   if (v1 == null && v2 == null) return true;
@@ -264,7 +266,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   });
   const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
   const { items, total, rowNumColWidth } = useMemo(() => {
-    let rowNumColWidth = "5rem";
+    let rowNumColWidth = `${calcRowNumberColumnWidth(0)}rem`;
     const rowNumCol = findColumn(columns.current, rowNumberColumnName) as typeof dataTableRowNumberColumn;
     const items = (() => {
       if (props.$preventSort) return originItems;
@@ -321,7 +323,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         index: lastIndex,
       };
     });
-  }, [total]);
+  }, [total, pagination?.perPage]);
 
   useEffect(() => {
     setSorts(props.$sorts ?? []);

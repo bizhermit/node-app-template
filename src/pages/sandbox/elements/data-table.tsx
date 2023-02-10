@@ -154,7 +154,8 @@ const Page: NextPage = () => {
         $outline={outline}
         $rowBorder={rowBorder}
         $cellBorder={cellBorder}
-        $page={page}
+        $page
+        $perPage={14}
         $onChangePage={(index) => {
           console.log(index);
           return true;
