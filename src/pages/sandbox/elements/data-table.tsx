@@ -2,6 +2,7 @@ import Button from "@/components/elements/button";
 import DataTable, { DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { joinClassNames } from "@/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
 import { useMemo, useState } from "react";
@@ -115,6 +116,7 @@ const Page: NextPage = () => {
   const [outline, setOutline] = useState(true);
   const [rowBorder, setRowBorder] = useState(true);
   const [cellBorder, setCellBorder] = useState(true);
+  const [scroll, setScroll] = useState(true);
 
   return (
     <div className="flex-start w-100 h-100 gap-1 p-1">
@@ -132,10 +134,11 @@ const Page: NextPage = () => {
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>
           <ToggleBox $value={rowBorder} $onChange={v => setRowBorder(v!)}>row border</ToggleBox>
           <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>
+          <ToggleBox $value={scroll} $onChange={v => setScroll(v!)}>scroll</ToggleBox>
         </Row>
       </Row>
       <DataTable<Data>
-        className="w-100 flex-1"
+        className={joinClassNames("w-100", scroll ? "flex-1" : undefined)}
         $columns={columns}
         $value={items}
         $header
@@ -143,7 +146,7 @@ const Page: NextPage = () => {
         $headerHeight="6rem"
         $rowHeight="3.6rem"
         $multiSort
-        $scroll
+        $scroll={scroll}
         $outline={outline}
         $rowBorder={rowBorder}
         $cellBorder={cellBorder}

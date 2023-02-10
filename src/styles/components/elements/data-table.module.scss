@@ -7,9 +7,20 @@ $borderStyle: 1px solid var(--c-border);
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: stretch;
+  overflow: hidden;
+}
+
+.table {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
   min-height: 0;
   overflow: auto;
   border-radius: var(--radius);
+  flex: 1;
 
   &[data-border="true"] {
     border: #{$borderStyle};

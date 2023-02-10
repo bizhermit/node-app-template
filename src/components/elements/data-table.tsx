@@ -488,24 +488,28 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     <div
       {...attributes(props, Style.wrap)}
       ref={ref}
-      data-border={props.$outline}
     >
-      {props.$header &&
-        <div className={joinClassNames(Style.header, `c-${props.$color || "main"}`)}>
-          {header}
-        </div>
-      }
-      {isEmpty ?
-        <div className={Style.empty}>
-          {props.$emptyText === true ? <DefaultEmptyText /> : props.$emptyText}
-        </div> :
-        <div
-          className={Style.body}
-          data-scroll={props.$scroll}
-        >
-          {body}
-        </div>
-      }
+      <div
+        className={Style.table}
+        data-border={props.$outline}
+      >
+        {props.$header &&
+          <div className={joinClassNames(Style.header, `c-${props.$color || "main"}`)}>
+            {header}
+          </div>
+        }
+        {isEmpty ?
+          <div className={Style.empty}>
+            {props.$emptyText === true ? <DefaultEmptyText /> : props.$emptyText}
+          </div> :
+          <div
+            className={Style.body}
+            data-scroll={props.$scroll}
+          >
+            {body}
+          </div>
+        }
+      </div>
     </div>
   );
 });
