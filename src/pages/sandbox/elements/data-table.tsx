@@ -28,6 +28,7 @@ const Page: NextPage = () => {
         width: 120,
         resize: true,
         sort: true,
+        sortNeutral: false,
         href: (ctx) => {
           return `/sandbox/elements/data-table?id=${ctx.data.id}`;
         },

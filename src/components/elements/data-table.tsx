@@ -34,6 +34,7 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
   };
   border?: boolean;
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
+  sortNeutral?: boolean;
   resize?: boolean;
   header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex">>;
   body?: React.FunctionComponent<DataTableCellContext<T>>;
@@ -196,10 +197,10 @@ const getCellAlign = (column: DataTableColumn<any>) => {
   }
 };
 
-const switchSortDirection = (currentDirection: "" | "asc" | "desc" | undefined, noReset?: boolean) => {
+const switchSortDirection = (currentDirection: "" | "asc" | "desc" | undefined, noNeutral?: boolean) => {
   if (!currentDirection) return "asc";
   if (currentDirection === "asc") return "desc";
-  if (noReset) return "asc";
+  if (noNeutral) return "asc";
   return "";
 };
 
@@ -330,7 +331,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
   }, [props.$sorts]);
 
   const changeSort = useCallback((column: DataTableBaseColumn<T>, currentSort?: DataTableSort) => {
-    const d = switchSortDirection(currentSort?.direction);
+    const d = switchSortDirection(currentSort?.direction, column.sortNeutral === false);
     const newSorts: Array<DataTableSort> = props.$multiSort ? sorts.filter(s => s.name !== column.name) : [];
     if (d) newSorts.push({ name: column.name, direction: d });
     const ret = props.$onSort?.(newSorts);
