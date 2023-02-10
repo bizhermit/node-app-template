@@ -155,6 +155,10 @@ const Page: NextPage = () => {
         $rowBorder={rowBorder}
         $cellBorder={cellBorder}
         $page={page}
+        $onChangePage={(index) => {
+          console.log(index);
+          return true;
+        }}
       />
     </div>
   );

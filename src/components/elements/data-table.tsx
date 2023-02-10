@@ -89,6 +89,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $perPage?: number;
   $total?: number;
   $pagePosition?: "top" | "bottom" | "both";
+  $onChangePage?: (index: number) => (void | boolean);
   $header?: boolean;
   $emptyText?: boolean | ReactNode;
   $color?: Color;
@@ -124,7 +125,7 @@ const getValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColum
   return v;
 };
 
-const setValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColumn<T>, value: any) => {
+const _setValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColumn<T>, value: any) => {
   const names = (column.displayName || column.name).split(".");
   let v: any = data;
   for (const n of names.slice(0, names.length - 1)) {
@@ -550,30 +551,38 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
 
   const clickPage = (pageIndex: number) => {
     setPagination(state => {
+      const pindex = Math.min(Math.max(0, pageIndex), Math.floor(Math.max(0, total - 1) / state!.perPage));
+      if (props.$onChangePage) {
+        const res = props.$onChangePage(pindex);
+        if (res !== true) return state;
+      }
       return {
         ...state!,
-        index: Math.min(Math.max(0, pageIndex), Math.floor(Math.max(0, total - 1) / state!.perPage)),
+        index: pindex,
       };
     });
   };
 
-  const pageNodes = useMemo(() => {
+  const pageNodes = () => {
     if (pagination == null) return undefined;
     const { index, perPage } = pagination;
     const lastIndex = Math.floor(Math.max(0, total - 1) / perPage);
+    const color = props.$color || "main";
     return (
       <>
         <Button
+          disabled={index <= 0}
           $size="s"
           $outline
-          $color={props.$color || "main"}
+          $color={color}
           $onClick={() => clickPage(0)}
           $icon={<AiOutlineDoubleLeft />}
         />
         <Button
+          disabled={index <= 0}
           $size="s"
           $outline
-          $color={props.$color || "main"}
+          $color={color}
           $onClick={() => clickPage(index - 1)}
           $icon={<MdOutlineKeyboardArrowLeft />}
         />
@@ -583,22 +592,24 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           <span>{lastIndex + 1}</span>
         </div>
         <Button
+          disabled={index >= lastIndex}
           $size="s"
           $outline
-          $color={props.$color || "main"}
+          $color={color}
           $onClick={() => clickPage(index + 1)}
           $icon={<MdOutlineKeyboardArrowRight />}
         />
         <Button
+          disabled={index >= lastIndex}
           $size="s"
           $outline
-          $color={props.$color || "main"}
+          $color={color}
           $onClick={() => clickPage(lastIndex)}
           $icon={<AiOutlineDoubleRight />}
         />
       </>
     );
-  }, [pagination, total, props.$color]);
+  };
 
   return (
     <div
@@ -607,7 +618,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     >
       {pagination && props.$pagePosition !== "bottom" &&
         <div className={Style.pagination}>
-          {pageNodes}
+          {pageNodes()}
         </div>
       }
       <div
@@ -633,7 +644,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
       </div>
       {pagination && props.$pagePosition !== "top" &&
         <div className={Style.pagination}>
-          {pageNodes}
+          {pageNodes()}
         </div>
       }
     </div>
