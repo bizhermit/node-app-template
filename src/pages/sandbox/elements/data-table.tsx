@@ -1,5 +1,5 @@
 import Button from "@/components/elements/button";
-import DataTable, { DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
 import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
@@ -35,6 +35,7 @@ const Page: NextPage = () => {
         hrefOptions: {
           rel: ""
         },
+        // wrap: true,
       },
       {
         name: "group",
@@ -48,6 +49,7 @@ const Page: NextPage = () => {
               align: "left",
               resize: true,
               width: 200,
+              wrap: true,
             },
             {
               name: "col3",
@@ -66,6 +68,7 @@ const Page: NextPage = () => {
         name: "col5",
         label: "Col5",
         align: "center",
+        // minWidth: "30rem",
         sort: true,
         header: (props) => {
           return (
@@ -74,7 +77,9 @@ const Page: NextPage = () => {
         },
         body: (props) => {
           return (
-            <div>custom cell: {props.data.col5}</div>
+            <DataTableCellLabel>
+              custom cell: {props.data.col5}
+            </DataTableCellLabel>
           );
         },
       },

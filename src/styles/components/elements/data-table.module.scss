@@ -120,12 +120,15 @@ $borderStyle: 1px solid var(--c-border);
 
   >.grow {
     flex: 1;
+    max-height: 100%;
   }
 }
 
 .hcell,
 .bcell,
 .rcell {
+  overflow: hidden;
+
   &:not(:first-child) {
     &[data-border="true"] {
       border-left: #{$borderStyle};
@@ -134,6 +137,10 @@ $borderStyle: 1px solid var(--c-border);
 }
 
 .bcell {
+  > a {
+    max-width: 100%;
+  }
+
   &:hover {
     background: var(--c-selected);
   }
@@ -149,7 +156,16 @@ $borderStyle: 1px solid var(--c-border);
 }
 
 .label {
+  box-sizing: border-box;
+  display: block;
   padding: var(--padding-top-text) 1rem 0 1rem;
+  max-width: 100%;
+  overflow: hidden;
+
+  &[data-wrap="false"] {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .sort {
@@ -159,6 +175,7 @@ $borderStyle: 1px solid var(--c-border);
   width: calc(var(--size) * 0.4);
   overflow: visible;
   margin-right: 0.5rem;
+  flex: none;
 
   &::before,
   &::after {
