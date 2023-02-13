@@ -1,5 +1,5 @@
 import Button from "@/components/elements/button";
-import DataTable, { DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
 import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
@@ -76,7 +76,9 @@ const Page: NextPage = () => {
         },
         body: (props) => {
           return (
-            <div>custom cell: {props.data.col5}</div>
+            <DataTableCellLabel>
+              custom cell: {props.data.col5}
+            </DataTableCellLabel>
           );
         },
       },

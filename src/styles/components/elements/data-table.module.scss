@@ -160,11 +160,11 @@ $borderStyle: 1px solid var(--c-border);
   display: block;
   padding: var(--padding-top-text) 1rem 0 1rem;
   max-width: 100%;
+  overflow: hidden;
 
   &[data-wrap="false"] {
     white-space: nowrap;
     text-overflow: ellipsis;
-    overflow: hidden;
   }
 }
 

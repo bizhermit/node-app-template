@@ -37,9 +37,9 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
   sortNeutral?: boolean;
   resize?: boolean;
   wrap?: boolean;
-  header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex">>;
-  body?: React.FunctionComponent<DataTableCellContext<T>>;
-  footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex">>;
+  header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
+  body?: React.FunctionComponent<DataTableCellContext<T> & { children: ReactNode; }>;
+  footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
 };
 
 export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
@@ -362,9 +362,9 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                       className={Style.hcell}
                       data-border={column.border ?? props.$cellBorder}
                     >
-                      <div className={Style.label}>
+                      <DataTableCellLabel>
                         {column.label}
-                      </div>
+                      </DataTableCellLabel>
                     </div>
                   </div>
                 );
@@ -397,10 +397,14 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             {column.header ?
               <column.header
                 column={column}
-              /> :
-              <div className={Style.label}>
+              >
+                <DataTableCellLabel>
+                  {column.label}
+                </DataTableCellLabel>
+              </column.header> :
+              <DataTableCellLabel>
                 {column.label}
-              </div>
+              </DataTableCellLabel>
             }
           </div>
           {column.sort && <div className={Style.sort} data-direction={sort?.direction || ""} />}
@@ -470,6 +474,24 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
         );
       }
 
+      const CellLabel: FC = () => (
+        <DataTableCellLabel wrap={column.wrap}>
+          {(() => {
+            const v = getValue(data, column);
+            switch (column.type) {
+              case "date":
+                return DatetimeUtils.format(v, column.formatPattern ?? "yyyy/MM/dd");
+              case "number":
+                return NumberUtils.format(v, {
+                  thou: column.thousandSseparator ?? true,
+                  fpad: column.floatPadding ?? 0,
+                });
+              default:
+                return v;
+            }
+          })()}
+        </DataTableCellLabel>
+      );
       const pageFirstIndex = pagination ? pagination.index * pagination.perPage : 0;
       return (
         <div
@@ -491,26 +513,10 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                 column={column}
                 data={data}
                 pageFirstIndex={pageFirstIndex}
-              /> :
-              <div
-                className={Style.label}
-                data-wrap={column.wrap === true}
               >
-                {(() => {
-                  const v = getValue(data, column);
-                  switch (column.type) {
-                    case "date":
-                      return DatetimeUtils.format(v, column.formatPattern ?? "yyyy/MM/dd");
-                    case "number":
-                      return NumberUtils.format(v, {
-                        thou: column.thousandSseparator ?? true,
-                        fpad: column.floatPadding ?? 0,
-                      });
-                    default:
-                      return v;
-                  }
-                })()}
-              </div>
+                <CellLabel />
+              </column.body> :
+              <CellLabel />
             }
           </NextLink>
         </div>
@@ -669,5 +675,19 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     </div>
   );
 });
+
+export const DataTableCellLabel: FC<{
+  wrap?: boolean;
+  children?: ReactNode;
+}> = ({ wrap, children }) => {
+  return (
+    <div
+      className={Style.label}
+      data-wrap={wrap === true}
+    >
+      {children}
+    </div>
+  );
+};
 
 export default DataTable;
