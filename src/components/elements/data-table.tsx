@@ -36,6 +36,7 @@ type DataTableBaseColumn<T extends Struct = Struct> = {
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
   sortNeutral?: boolean;
   resize?: boolean;
+  wrap?: boolean;
   header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex">>;
   body?: React.FunctionComponent<DataTableCellContext<T>>;
   footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex">>;
@@ -491,7 +492,10 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                 data={data}
                 pageFirstIndex={pageFirstIndex}
               /> :
-              <div className={Style.label}>
+              <div
+                className={Style.label}
+                data-wrap={column.wrap === true}
+              >
                 {(() => {
                   const v = getValue(data, column);
                   switch (column.type) {

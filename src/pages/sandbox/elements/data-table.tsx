@@ -35,6 +35,7 @@ const Page: NextPage = () => {
         hrefOptions: {
           rel: ""
         },
+        // wrap: true,
       },
       {
         name: "group",
@@ -48,6 +49,7 @@ const Page: NextPage = () => {
               align: "left",
               resize: true,
               width: 200,
+              // wrap: true,
             },
             {
               name: "col3",
