@@ -120,6 +120,7 @@ $borderStyle: 1px solid var(--c-border);
 
   >.grow {
     flex: 1;
+    max-height: 100%;
   }
 }
 

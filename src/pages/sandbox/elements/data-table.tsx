@@ -49,7 +49,7 @@ const Page: NextPage = () => {
               align: "left",
               resize: true,
               width: 200,
-              // wrap: true,
+              wrap: true,
             },
             {
               name: "col3",
