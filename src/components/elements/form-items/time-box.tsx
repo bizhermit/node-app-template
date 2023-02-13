@@ -1,4 +1,4 @@
-import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
@@ -8,6 +8,7 @@ import Time from "@bizhermit/time";
 import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
 import { TimeData, TimeInput } from "@/data-items/time";
+import { equals } from "@/data-items/utilities";
 
 type TimeBoxBaseProps<T> = FormItemProps<T> & TimeInput.FCProps & {
   $disallowInput?: boolean;

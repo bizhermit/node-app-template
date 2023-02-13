@@ -1,4 +1,4 @@
-import { equals, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { VscChevronDown, VscClose } from "react-icons/vsc";
@@ -8,6 +8,7 @@ import Resizer from "@/components/elements/resizer";
 import Popup from "@/components/elements/popup";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { equals } from "@/data-items/utilities";
 
 export type SelectBoxProps<T extends string | number = string | number> = FormItemProps<T, { afterData: Struct; beforeData: Struct; }> & {
   $labelDataName?: string;

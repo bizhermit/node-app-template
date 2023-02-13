@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { CSSProperties, Dispatch, FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import NextLink from "@/components/elements/link";
@@ -10,15 +10,19 @@ import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import Button from "@/components/elements/button";
 import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { equals, getValue } from "@/data-items/utilities";
 
 type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
   data: T;
   index: number;
   pageFirstIndex: number;
+  items: Array<T>;
+  setHeaderRev: Dispatch<SetStateAction<number>>;
+  setBodyRev: Dispatch<SetStateAction<number>>;
 };
 
-type DataTableBaseColumn<T extends Struct = Struct> = {
+export type DataTableBaseColumn<T extends Struct = Struct> = {
   name: string;
   displayName?: string;
   label?: string;
@@ -113,39 +117,6 @@ const DefaultEmptyText: FC = () => {
   return <LabelText>データが存在しません。</LabelText>;
 };
 
-const getValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColumn<T>) => {
-  const names = (column.displayName || column.name).split(".");
-  let v: any = data;
-  for (const n of names) {
-    if (v == null) return undefined;
-    try {
-      v = v[n];
-    } catch {
-      return undefined;
-    }
-  }
-  return v;
-};
-
-const _setValue = <T extends Struct = Struct>(data: T, column: DataTableBaseColumn<T>, value: any) => {
-  const names = (column.displayName || column.name).split(".");
-  let v: any = data;
-  for (const n of names.slice(0, names.length - 1)) {
-    try {
-      if (v[n] == null) v[n] = {};
-      v = v[n];
-    } catch {
-      return;
-    }
-  }
-  try {
-    v[names[names.length - 1]] = value;
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-  }
-};
-
 const defaultColumnWidth = "10rem";
 const getColumnStyle = (column: DataTableColumn<any>, nestLevel = 0): CSSProperties => {
   if ("rows" in column) return {};
@@ -219,11 +190,6 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
 } as const;
 
-const equals = (v1: unknown, v2: unknown) => {
-  if (v1 == null && v2 == null) return true;
-  return v1 === v2;
-};
-
 const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
@@ -281,8 +247,8 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
       }).filter(col => col != null);
       return [...originItems].sort((item1, item2) => {
         for (const scol of sortCols) {
-          const v1 = getValue(item1, scol!);
-          const v2 = getValue(item2, scol!);
+          const v1 = getValue(item1, (scol as DataTableBaseColumn<T>)!.displayName || scol!.name!);
+          const v2 = getValue(item2, (scol as DataTableBaseColumn<T>)!.displayName || scol!.name!);
           const dnum = scol?.direction === "desc" ? -1 : 1;
           if (typeof scol!.column.sort === "function") {
             const ret = scol!.column.sort(v1, v2);
@@ -399,6 +365,9 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             {column.header ?
               <column.header
                 column={column}
+                items={items}
+                setHeaderRev={setHeaderRev}
+                setBodyRev={setBodyRev}
               >
                 <DataTableCellLabel>
                   {column.label}
@@ -443,6 +412,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     props.$rowBorder,
     props.$cellBorder,
     rowNumColWidth,
+    items,
   ]);
 
   const body = useMemo(() => {
@@ -479,7 +449,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
       const CellLabel: FC = () => (
         <DataTableCellLabel wrap={column.wrap}>
           {(() => {
-            const v = getValue(data, column);
+            const v = getValue(data, column.displayName || column.name);
             switch (column.type) {
               case "date":
                 return DatetimeUtils.format(v, column.formatPattern ?? "yyyy/MM/dd");
@@ -504,7 +474,15 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
           data-border={column.border ?? props.$cellBorder}
         >
           <NextLink
-            href={column.href?.({ column, data, index, pageFirstIndex })}
+            href={column.href?.({
+              column,
+              data,
+              index,
+              pageFirstIndex,
+              items,
+              setHeaderRev,
+              setBodyRev,
+            })}
             target={column.hrefOptions?.target}
             rel={column.hrefOptions?.rel}
             className={column.hrefOptions?.decoration === false ? "no-decoration" : undefined}
@@ -515,6 +493,9 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
                 column={column}
                 data={data}
                 pageFirstIndex={pageFirstIndex}
+                items={items}
+                setHeaderRev={setHeaderRev}
+                setBodyRev={setBodyRev}
               >
                 <CellLabel />
               </column.body> :
@@ -527,7 +508,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     return items.map((item, index) => {
       return (
         <div
-          key={getValue(item, { name: idDn }) ?? index}
+          key={getValue(item, idDn) ?? index}
           className={Style.brow}
           style={rowStyle}
           data-border={props.$rowBorder}
