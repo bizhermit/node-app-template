@@ -68,6 +68,7 @@ const Page: NextPage = () => {
         name: "col5",
         label: "Col5",
         align: "center",
+        // minWidth: "30rem",
         sort: true,
         header: (props) => {
           return (

@@ -152,9 +152,11 @@ const getColumnStyle = (column: DataTableColumn<any>, nestLevel = 0): CSSPropert
   let w = column.width;
   if (nestLevel > 0 && w == null) w = defaultColumnWidth;
   if (w == null) {
+    w = convertSizeNumToStr(column.minWidth) ?? defaultColumnWidth;
     return {
       flex: "1",
-      minWidth: convertSizeNumToStr(column.minWidth) ?? defaultColumnWidth,
+      width: w,
+      minWidth: w,
       maxWidth: convertSizeNumToStr(column.maxWidth),
     };
   }
