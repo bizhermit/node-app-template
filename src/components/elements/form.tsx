@@ -3,6 +3,7 @@ import { attributes, attributesWithoutChildren } from "@/components/utilities/at
 import React, { createContext, Dispatch, FormHTMLAttributes, HTMLAttributes, ReactNode, SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { equals, getValue, setValue } from "@/data-items/utilities";
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null | undefined);
 
@@ -301,11 +302,6 @@ export const formValidationMessages = {
   typeMissmatch: "型が不適切です。",
 } as const;
 
-export const equals = (v1: unknown, v2: unknown) => {
-  if (v1 == null && v2 == null) return true;
-  return v1 === v2;
-};
-
 export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: UseFormOptions<T, U>) => {
   const ctx = useContext(FormContext);
   const id = useRef(StringUtils.generateUuidV4());
@@ -317,7 +313,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     return undefined;
   })());
   const [value, setValueImpl] = useState(valueRef.current);
-  const setValue = (value: Nullable<T>) => {
+  const setCurrentValue = (value: Nullable<T>) => {
     setValueImpl(valueRef.current = value);
   };
 
@@ -410,16 +406,16 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
   const change = useCallback((value: Nullable<T>, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
     const before = valueRef.current;
-    setValue(value);
+    setCurrentValue(value);
     const name = props?.name;
     if (name) {
       if (!props.$preventFormBind) {
         if (ctx.bind) {
-          ctx.bind[name] = value;
+          setValue(ctx.bind, name, value);
         }
       }
       if (props.$bind) {
-        props.$bind[name] = value;
+        setValue(props.$bind, name, value);
       }
     }
     if (props?.$interlockValidation || options?.interlockValidation) {
@@ -434,7 +430,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const name = props?.name;
     if (props == null || name == null || ctx.bind == null || "$bind" in props || "$value" in props || props.$preventFormBind) return;
     const before = valueRef.current;
-    setValue(ctx.bind[name]);
+    setCurrentValue(getValue(ctx.bind, name));
     if (!equals(valueRef.current, before)) {
       props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
@@ -446,7 +442,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
     const name = props?.name;
     if (props == null || name == null || props.$bind == null || "$value" in props) return;
     const before = valueRef.current;
-    setValue(props.$bind[name]);
+    setCurrentValue(getValue(props.$bind, name));
     if (!equals(valueRef.current, before)) {
       props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
     }
@@ -456,7 +452,7 @@ export const useForm = <T = any, U = any>(props?: FormItemProps<T>, options?: Us
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
-    setValue(props.$value);
+    setCurrentValue(props.$value);
     options?.effect?.(valueRef.current);
     validation();
   }, [props?.$value]);

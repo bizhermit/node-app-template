@@ -1,5 +1,6 @@
 import Button from "@/components/elements/button";
 import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import dataTableCheckBoxColumn from "@/components/elements/data-table/check-box";
 import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
@@ -22,6 +23,10 @@ const Page: NextPage = () => {
     const cols: Array<DataTableColumn<Data>> = [];
     cols.push(
       dataTableRowNumberColumn,
+      dataTableCheckBoxColumn({
+        name: "selected",
+        bulkCheck: true,
+      }),
       {
         name: "col1",
         label: "Col1",
@@ -140,6 +145,7 @@ const Page: NextPage = () => {
           <Button $size="s" $fitContent $onClick={() => generateItems(100)}>100</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(101)}>101</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(1000)}>1000</Button>
+          <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
         </Row>
         <Row className="gap-1">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>

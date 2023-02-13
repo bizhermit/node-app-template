@@ -1,4 +1,4 @@
-import { equals, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import DatePicker from "@/components/elements/form-items/date-picker";
 import { VscCalendar, VscClose } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { DateData, DateInput } from "@/data-items/date";
+import { equals } from "@/data-items/utilities";
 
 type DateBoxBaseProps<T> = FormItemProps<T> & DateInput.FCPorps & {
   $disallowInput?: boolean;
