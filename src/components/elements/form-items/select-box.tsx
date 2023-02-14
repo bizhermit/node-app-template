@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { VscChevronDown, VscClose } from "react-icons/vsc";
@@ -10,7 +10,10 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { equals } from "@/data-items/utilities";
 
-export type SelectBoxProps<T extends string | number = string | number> = FormItemProps<T, { afterData: Struct; beforeData: Struct; }> & {
+export type SelectBoxProps<
+  T extends string | number = string | number,
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+> = FormItemProps<T, { afterData: Struct; beforeData: Struct; }, D> & {
   $labelDataName?: string;
   $valueDataName?: string;
   $source?: LoadableArray<Struct>;
@@ -24,19 +27,37 @@ export type SelectBoxProps<T extends string | number = string | number> = FormIt
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
-  <T extends string | number = string | number>(attrs: SelectBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: SelectBoxProps<T, D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const defaultWidth = 200;
 
-const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(<T extends string | number = string | number>(props: SelectBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const vdn = props.$valueDataName ?? "value";
-  const ldn = props.$labelDataName ?? "label";
-
-  const [source, loading] = useLoadableArray(props.$source, {
-    preventMemorize: props.$preventSourceMemorize,
+const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(<
+  T extends string | number = string | number,
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+>(p: SelectBoxProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const vdn = p.$valueDataName ?? "value";
+  const ldn = p.$labelDataName ?? "label";
+  const [source, loading] = useLoadableArray(p.$source ?? p.$dataItem?.source, {
+    preventMemorize: p.$preventSourceMemorize,
   });
   const [bindSource, setBindSource] = useState(source);
+
+  const form = useForm(p, {
+    setDataItem: (d) => {
+      return {
+        $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+        $source: d.source,
+      };
+    },
+    generateChangeCallbackData: (a, b) => {
+      return {
+        afterData: source.find(item => equals(item[vdn], a)),
+        beforeData: source.find(item => equals(item[vdn], b)),
+      };
+    },
+    generateChangeCallbackDataDeps: () => [source],
+  });
 
   const iref = useRef<HTMLInputElement>(null!);
   const [showPicker, setShowPicker] = useState(false);
@@ -58,16 +79,6 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
     return;
   };
 
-  const form = useForm(props, {
-    generateChangeCallbackData: (a, b) => {
-      return {
-        afterData: source.find(item => equals(item[vdn], a)),
-        beforeData: source.find(item => equals(item[vdn], b)),
-      };
-    },
-    generateChangeCallbackDataDeps: [source],
-  });
-
   const changeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!form.editable) return;
     const text = e.currentTarget.value;
@@ -84,9 +95,9 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
 
   const clear = () => {
     if (!form.editable) return;
-    if (props.$emptyItem) {
-      if (!(typeof props.$emptyItem === "boolean")) {
-        form.change(props.$emptyItem.value);
+    if (form.props.$emptyItem) {
+      if (!(typeof form.props.$emptyItem === "boolean")) {
+        form.change(form.props.$emptyItem.value);
         return;
       }
     }
@@ -226,16 +237,15 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
 
   return (
     <FormItemWrap
-      {...props}
       ref={ref}
       $$form={form}
       $useHidden
       data-has={hasLabel}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width ?? defaultWidth),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
+          width: convertSizeNumToStr(form.props.$width ?? defaultWidth),
+          maxWidth: convertSizeNumToStr(form.props.$maxWidth),
+          minWidth: convertSizeNumToStr(form.props.$minWidth),
         },
         onBlur: blur,
       }}
@@ -247,8 +257,8 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         type="text"
         disabled={form.disabled || loading}
         readOnly={!form.editable}
-        placeholder={form.editable ? props.placeholder : ""}
-        tabIndex={props.tabIndex}
+        placeholder={form.editable ? form.props.placeholder : ""}
+        tabIndex={form.props.tabIndex}
         onClick={picker}
         onChange={changeText}
         onKeyDown={keydown}
@@ -257,7 +267,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
       />
       {form.editable && !loading &&
         <>
-          {props.$hideClearButton !== true &&
+          {form.props.$hideClearButton !== true &&
             <div
               className={Style.button}
               onClick={clear}
@@ -278,7 +288,7 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
           </div>
         </>
       }
-      {props.$resize && <Resizer direction="x" />}
+      {form.props.$resize && <Resizer direction="x" />}
       <Popup
         className="es-4 c-input r-2"
         $show={showPicker && form.editable && !loading}
@@ -309,19 +319,19 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
           onKeyDown={keydownItem}
         >
           {useMemo(() => {
-            if (props.$emptyItem) {
+            if (form.props.$emptyItem) {
               const emptyValue = bindSource[0]?.[vdn];
               if (emptyValue != null && emptyValue !== "") {
-                if (typeof props.$emptyItem === "boolean") {
+                if (typeof form.props.$emptyItem === "boolean") {
                   bindSource.unshift({
                     [vdn]: undefined,
                     [ldn]: "",
                   });
                 } else {
-                  if (emptyValue !== props.$emptyItem.value) {
+                  if (emptyValue !== form.props.$emptyItem.value) {
                     bindSource.unshift({
-                      [vdn]: props.$emptyItem.value,
-                      [ldn]: props.$emptyItem.label,
+                      [vdn]: form.props.$emptyItem.value,
+                      [ldn]: form.props.$emptyItem.label,
                     });
                   }
                 }

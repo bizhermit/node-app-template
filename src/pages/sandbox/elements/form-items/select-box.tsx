@@ -4,6 +4,7 @@ import Form from "@/components/elements/form";
 import SelectBox from "@/components/elements/form-items/select-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { sample_number, sample_string } from "@/data-items/sample/item";
 import { colors } from "@/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { NextPage } from "next";
@@ -88,6 +89,30 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row className="gap-2">
+        <SelectBox
+          $tag="number"
+          $dataItem={sample_number}
+          $onChange={v => console.log("number: ", v)}
+          $source={ArrayUtils.generateArray(30, value => {
+            return {
+              value,
+              label: `item ${value}`,
+            };
+          })}
+        />
+        <SelectBox
+          $tag="string"
+          $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+          $source={ArrayUtils.generateArray(30, value => {
+            return {
+              value: String(value),
+              label: `item ${value}`,
+            };
+          })}
+        />
+      </Row>
       <SelectBox
         $tag="useState"
         $tagPosition="placeholder"
