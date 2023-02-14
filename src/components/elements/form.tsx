@@ -350,7 +350,7 @@ export const useForm = <S, T = any, U = any, P extends FormItemProps = FormItemP
 
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<T | null | undefined>> = [];
-    if (props?.$required && !options?.preventRequiredValidation) {
+    if (props?.$required && !options?.preventRequiredValidation?.(props)) {
       if (options?.multiple?.(props)) {
         rets.push(v => {
           if (v == null) return formValidationMessages.required;
@@ -380,7 +380,7 @@ export const useForm = <S, T = any, U = any, P extends FormItemProps = FormItemP
       }
     }
     return rets;
-  }, [props?.$required, options?.multiple?.(props), ...(options?.validationsDeps?.(props, states) ?? [])]);
+  }, [props?.$required, options?.multiple?.(props), props?.$validations, ...(options?.validationsDeps?.(props, states) ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -449,7 +449,7 @@ export const useForm = <S, T = any, U = any, P extends FormItemProps = FormItemP
         setValue(props.$bind, name, value);
       }
     }
-    if (props?.$interlockValidation || options?.interlockValidation) {
+    if (props?.$interlockValidation || options?.interlockValidation?.(props, states)) {
       ctx.validation();
     } else {
       validation();
