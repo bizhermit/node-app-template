@@ -4,6 +4,7 @@ import Form from "@/components/elements/form";
 import CheckBox from "@/components/elements/form-items/check-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { sample_boolean, sample_number, sample_string } from "@/data-items/sample/item";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 import { useState } from "react";
@@ -87,6 +88,31 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row className="gap-2">
+        <CheckBox
+          $onChange={v => console.log("no item: ", v)}
+        >
+          no item
+        </CheckBox>
+        <CheckBox
+          $dataItem={sample_boolean}
+          $onChange={v => console.log("boolean: ", v)}
+        >
+          boolean
+        </CheckBox>
+        <CheckBox
+          $dataItem={sample_number}
+          $onChange={v => console.log("number: ", v)}
+        >
+          number
+        </CheckBox>
+        <CheckBox
+          $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+        >
+          string
+        </CheckBox>
+      </Row>
       <Row>
         <CheckBox
           $tag="useState"
@@ -102,10 +128,11 @@ const Page: NextPage = () => {
           $bind={bind}
           name="check-box-bind"
           $outline
-          $checkedValue={1}
-          $uncheckedValue={0}
+          $checkedValue={"1"}
+          $uncheckedValue={"0"}
           $disabled={disabled}
           $readOnly={readOnly}
+          $onChange={v => console.log(v)}
         >
           outline
         </CheckBox>

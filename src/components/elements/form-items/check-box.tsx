@@ -4,7 +4,10 @@ import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/components/utilities/attributes";
 
-export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
+export type CheckBoxProps<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+> = Omit<FormItemProps<T, null, D>, "$tagPosition"> & {
   $checkedValue?: T;
   $uncheckedValue?: T;
   $outline?: boolean;
@@ -12,16 +15,37 @@ export type CheckBoxProps<T extends string | number | boolean = boolean> = Omit<
 };
 
 interface CheckBoxFC extends FunctionComponent<CheckBoxProps> {
-  <T extends string | number | boolean = boolean>(attrs: CheckBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: CheckBoxProps<T, D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T extends string | number | boolean = boolean>(props: CheckBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const checkedValue = (props.$checkedValue ?? true) as T;
-  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
-
-  const form = useForm(props, {
+const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+>(p: CheckBoxProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm(p, {
+    setDataItem: (d) => {
+      switch (d.type) {
+        case "string":
+          return {
+            $checkedValue: "1" as T,
+            $uncheckedValue: "0" as T,
+          };
+        case "number":
+          return {
+            $checkedValue: 1 as T,
+            $uncheckedValue: 0 as T,
+          };
+        case "boolean":
+          return {
+            $checkedValue: d.trueValue as T,
+            $uncheckedValue: d.falseValue as T,
+          };
+        default:
+          return {};
+      }
+    },
     preventRequiredValidation: true,
-    validations: () => {
+    validations: (props) => {
       if (!props.$required) return [];
       return [(v) => {
         if (v === (checkedValue)) return "";
@@ -29,6 +53,8 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
       }];
     },
   });
+  const checkedValue = (form.props.$checkedValue ?? true) as T;
+  const uncheckedValue = (form.props.$uncheckedValue ?? false) as T;
 
   const toggleCheck = (check?: boolean) => {
     if (check == null) {
@@ -49,7 +75,6 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
 
   return (
     <FormItemWrap
-      {...props}
       ref={ref}
       $$form={form}
       $preventFieldLayout
@@ -59,21 +84,21 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<T 
         className: Style.main,
         onClick: click,
         onKeyDown: keydown,
-        tabIndex: props.tabIndex ?? 0,
+        tabIndex: form.props.tabIndex ?? 0,
       }}
     >
       <div className={Style.body}>
         <div
-          className={`${Style.box} bdc-${props.$color || "border"}`}
+          className={`${Style.box} bdc-${form.props.$color || "border"}`}
           data-editable={form.editable}
         />
         <div
-          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "main"}_r bgc-${props.$color || "main"}`}`}
+          className={`${Style.check} ${form.props.$outline ? `bdc-${form.props.$color || "input"}` : `bdc-${form.props.$color || "main"}_r bgc-${form.props.$color || "main"}`}`}
           data-checked={form.value === checkedValue}
         />
       </div>
-      {props.children &&
-        <LabelText>{props.children}</LabelText>
+      {form.props.children &&
+        <LabelText>{form.props.children}</LabelText>
       }
     </FormItemWrap>
   );
