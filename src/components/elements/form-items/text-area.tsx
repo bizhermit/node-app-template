@@ -1,12 +1,12 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { useRef } from "react";
+import React, { FunctionComponent, ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { StringData } from "@/data-items/string";
 
-export type TextAreaProps = FormItemProps<string, null, DataItem_String> & {
+export type TextAreaProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, null, D, string> & {
   $length?: number;
   $preventInputWithinLength?: boolean;
   $minLength?: number;
@@ -21,7 +21,13 @@ export type TextAreaProps = FormItemProps<string, null, DataItem_String> & {
   $autoComplete?: string;
 };
 
-const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((p, ref) => {
+interface TextAreaFC extends FunctionComponent<TextAreaProps> {
+  <D extends DataItem_String | undefined = undefined>(attrs: TextAreaProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const TextArea: TextAreaFC = React.forwardRef<HTMLDivElement, TextAreaProps>(<
+  D extends DataItem_String | undefined = undefined
+>(p: TextAreaProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLTextAreaElement>(null!);
 
   const form = useForm(p, {
