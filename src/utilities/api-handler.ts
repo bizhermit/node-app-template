@@ -187,6 +187,9 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
       pushMsg(NumberData.maxValidation(v, ctx.max, name));
     }
   }
+  if (ctx.float != null) {
+    pushMsg(NumberData.floatValidation(v, ctx.float, name));
+  }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {

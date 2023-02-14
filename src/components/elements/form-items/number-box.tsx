@@ -42,6 +42,8 @@ const NumberBox: NumberBoxFC = React.forwardRef<HTMLDivElement, NumberBoxProps>(
       switch (d.type) {
         case "string":
           return {
+            $min: 0,
+            $float: 0,
             $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => String(v))),
             $width: d.width,
             $minWidth: d.minWidth,
@@ -49,6 +51,9 @@ const NumberBox: NumberBoxFC = React.forwardRef<HTMLDivElement, NumberBoxProps>(
           };
         default:
           return {
+            $min: d.min,
+            $max: d.max,
+            $float: d.float,
             $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
             $width: d.width,
             $minWidth: d.minWidth,

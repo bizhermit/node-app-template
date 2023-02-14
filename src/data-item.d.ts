@@ -132,6 +132,7 @@ type DataItem_Number = DataItem_Base & {
   validations?: DataItemValidation<number, DataItem_Number>;
   min?: number;
   max?: number;
+  float?: number;
   source?: LoadableArray;
   // styles
   width?: number | string;

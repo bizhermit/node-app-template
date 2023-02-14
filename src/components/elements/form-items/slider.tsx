@@ -1,9 +1,9 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { useMemo, useRef } from "react";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import React, { FunctionComponent, ReactElement, useMemo, useRef } from "react";
 import Style from "$/components/elements/form-items/slider.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
-export type SliderProps = FormItemProps<number> & {
+export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, null, D, number> & {
   $max?: number;
   $min?: number;
   $step?: number;
@@ -12,18 +12,46 @@ export type SliderProps = FormItemProps<number> & {
   $maxWidth?: number | string;
 };
 
+interface SliderFC extends FunctionComponent<SliderProps> {
+  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: SliderProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
 const defaultWidth = 160;
 const defaultMax = 100;
 const defaultMin = 0;
 
-const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
-  const max = props.$max ?? defaultMax;
-  const min = props.$min ?? defaultMin;
+const Slider: SliderFC = React.forwardRef<HTMLDivElement, SliderProps>(<
+  D extends DataItem_Number | DataItem_String | undefined = undefined
+>(p: SliderProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const railRef = useRef<HTMLDivElement>(null!);
 
-  const form = useForm(props, {
+  const form = useForm(p, {
+    setDataItem: (d) => {
+      switch (d.type) {
+        case "string":
+          return {
+            $min: 0,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v == null ? v : String(v))),
+            $width: d.width,
+            $minWidth: d.minWidth,
+            $maxWidth: d.maxWidth,
+          };
+        default:
+          return {
+            $min: d.min,
+            $max: d.max,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+            $width: d.width,
+            $minWidth: d.minWidth,
+            $maxWidth: d.maxWidth,
+          };
+      }
+    },
     preventRequiredValidation: true,
   });
+
+  const max = form.props.$max ?? defaultMax;
+  const min = form.props.$min ?? defaultMin;
 
   const rate = useMemo(() => {
     if (form.value == null) return "0%";
@@ -63,12 +91,12 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
     switch (e.key) {
       case "ArrowLeft":
         if (e.ctrlKey) form.change(min);
-        else form.change(Math.max(min, (form.value ?? min) - (props.$step ?? 1)));
+        else form.change(Math.max(min, (form.value ?? min) - (form.props.$step ?? 1)));
         e.preventDefault();
         break;
       case "ArrowRight":
         if (e.ctrlKey) form.change(max);
-        else form.change(Math.min(max, (form.value ?? min) + (props.$step ?? 1)));
+        else form.change(Math.min(max, (form.value ?? min) + (form.props.$step ?? 1)));
         e.preventDefault();
         break;
       default:
@@ -78,7 +106,6 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
 
   return (
     <FormItemWrap
-      {...props}
       ref={ref}
       $$form={form}
       $useHidden
@@ -86,12 +113,12 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
       $mainProps={{
         className: Style.main,
         style: {
-          width: convertSizeNumToStr(props.$width ?? defaultWidth),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
+          width: convertSizeNumToStr(form.props.$width ?? defaultWidth),
+          maxWidth: convertSizeNumToStr(form.props.$maxWidth),
+          minWidth: convertSizeNumToStr(form.props.$minWidth),
         },
         onKeyDown: keydown,
-        tabIndex: props.tabIndex ?? 0,
+        tabIndex: form.props.tabIndex ?? 0,
       }}
     >
       <div
@@ -99,7 +126,7 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
       >
         <div className={Style.bar}>
           <div
-            className={`${Style.rate} bgc-${props.$color || "main"}`}
+            className={`${Style.rate} bgc-${form.props.$color || "main"}`}
             style={{ width: rate }}
           />
         </div>
