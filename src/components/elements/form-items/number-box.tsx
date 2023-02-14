@@ -1,5 +1,5 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { useRef } from "react";
+import React, { FunctionComponent, ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
@@ -9,7 +9,7 @@ import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { NumberData } from "@/data-items/number";
 
-export type NumberBoxProps = FormItemProps<number> & {
+export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, null, D, number> & {
   $max?: number;
   $min?: number;
   $sign?: "only-positive" | "only-negative";
@@ -26,9 +26,15 @@ export type NumberBoxProps = FormItemProps<number> & {
   $hideClearButton?: boolean;
 };
 
+interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
+  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: NumberBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
 const defaultWidth = 150;
 
-const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) => {
+const NumberBox: NumberBoxFC = React.forwardRef<HTMLDivElement, NumberBoxProps>(<
+  D extends DataItem_Number | DataItem_String | undefined = undefined
+>(props: NumberBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
 
   const toString = (v?: Nullable<number>) => {
