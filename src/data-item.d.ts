@@ -204,7 +204,7 @@ type DataItem_Time = DataItem_Base & {
   type: "time";
   mode: TimeMode;
   unit: TimeUnit;
-  validations?: DataItemValidation<Time, DataItem_Time>;
+  validations?: DataItemValidation<number, DataItem_Time>;
   min?: TimeValue;
   max?: TimeValue;
   rangePair?: TimeRangePair;
