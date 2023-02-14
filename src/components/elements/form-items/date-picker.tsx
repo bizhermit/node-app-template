@@ -13,7 +13,7 @@ import { DateData, DateInput } from "@/data-items/date";
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
-export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
+export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, null, D, T> & DateInput.FCPorps & {
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
