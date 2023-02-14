@@ -299,7 +299,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
       $$form={form}
       ref={ref}
       $useHidden
-      data-has={hasData}
+      $hasData={hasData}
       $mainProps={{
         onBlur: blur,
       }}

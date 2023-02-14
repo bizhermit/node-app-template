@@ -306,7 +306,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
       $$form={form}
       ref={ref}
       $useHidden
-      data-has={hasData}
+      $hasData={hasData}
       $mainProps={{
         onBlur: blur,
       }}

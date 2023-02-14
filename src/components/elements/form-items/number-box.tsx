@@ -197,7 +197,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
       ref={ref}
       $$form={form}
       $useHidden
-      data-has={hasData}
+      $hasData={hasData}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width ?? defaultWidth),

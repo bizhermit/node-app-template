@@ -65,7 +65,7 @@ const TextArea = React.forwardRef<HTMLDivElement, TextAreaProps>((p, ref) => {
     <FormItemWrap
       ref={ref}
       $$form={form}
-      data-has={StringUtils.isNotEmpty(form.value)}
+      $hasData={StringUtils.isNotEmpty(form.value)}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(form.props.$width),

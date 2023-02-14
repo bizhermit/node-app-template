@@ -135,7 +135,7 @@ const TextBox: TextBoxFC = React.forwardRef<HTMLDivElement, TextBoxProps>(<
       ref={ref}
       $$form={form}
       data-round={form.props.$round}
-      data-has={hasData}
+      $hasData={hasData}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(form.props.$width),

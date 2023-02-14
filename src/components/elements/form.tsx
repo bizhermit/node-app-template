@@ -541,6 +541,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, {
   $clickable?: boolean;
   $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
   $useHidden?: boolean;
+  $hasData?: boolean;
   children: ReactNode;
 }>((props, ref) => {
   const fprops = props.$$form.props;
@@ -575,6 +576,7 @@ export const FormItemWrap = React.forwardRef<HTMLDivElement, {
       {...inputAttributes(fprops, Style.wrap, props.$className)}
       ref={ref}
       data-tagpad={tagPlaceholder}
+      data-has={props.$hasData}
     >
       {fprops.$tag &&
         <div
