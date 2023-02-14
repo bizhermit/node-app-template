@@ -90,6 +90,8 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
   )
   ;
 
+type LoadableArray<T = Struct> = Array<T> | (() => Array<T>) | (() => Promise<Array<T>>);
+
 /**
  * String
  */
@@ -114,6 +116,7 @@ type DataItem_String = DataItem_Base & {
   minLength?: number;
   maxLength?: number;
   charType?: StringCharType;
+  source?: LoadableArray;
   // styles
   width?: number | string;
   minWidth?: number | string;
@@ -129,6 +132,7 @@ type DataItem_Number = DataItem_Base & {
   validations?: DataItemValidation<number, DataItem_Number>;
   min?: number;
   max?: number;
+  source?: LoadableArray;
   // styles
   width?: number | string;
   minWidth?: number | string;

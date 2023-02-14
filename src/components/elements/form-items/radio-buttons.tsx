@@ -1,12 +1,15 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo } from "react";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef } from "react";
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/components/utilities/attributes";
 import { equals } from "@/data-items/utilities";
 
-export type RadioButtonsProps<T extends string | number = string | number> = Omit<FormItemProps<T, { afterData: Struct; beforeData: Struct; }>, "$tagPosition"> & {
+export type RadioButtonsProps<
+  T extends string | number = string | number,
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+> = Omit<FormItemProps<T, { afterData: Struct; beforeData: Struct; }, D>, "$tagPosition"> & {
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
@@ -17,18 +20,27 @@ export type RadioButtonsProps<T extends string | number = string | number> = Omi
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
-  <T extends string | number = string | number>(attrs: RadioButtonsProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: RadioButtonsProps<T, D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButtonsProps>(<T extends string | number = string | number>(props: RadioButtonsProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const vdn = props.$valueDataName ?? "value";
-  const ldn = props.$labelDataName ?? "label";
-  const cdn = props.$colorDataName ?? "color";
-  const [source, loading] = useLoadableArray(props.$source, {
-    preventMemorize: props.$preventSourceMemorize,
+const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButtonsProps>(<
+  T extends string | number = string | number,
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+>(p: RadioButtonsProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const vdn = p.$valueDataName ?? "value";
+  const ldn = p.$labelDataName ?? "label";
+  const cdn = p.$colorDataName ?? "color";
+  const [source, loading] = useLoadableArray(p.$source ?? p.$dataItem?.source, {
+    preventMemorize: p.$preventSourceMemorize,
   });
 
-  const form = useForm(props, {
+  const form = useForm(p, {
+    setDataItem: (d) => {
+      return {
+        $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+        $source: d.source,
+      };
+    },
     preventRequiredValidation: true,
     generateChangeCallbackData: (a, b) => {
       return {
@@ -36,7 +48,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
         beforeData: source.find(item => equals(item[vdn], b)),
       };
     },
-    generateChangeCallbackDataDeps: [source],
+    generateChangeCallbackDataDeps: () => [source],
   });
 
   const select = (value: T) => {
@@ -70,11 +82,11 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
 
   const { nodes, selectedItem } = useMemo(() => {
     let selectedItem: Struct | undefined = undefined;
-    const appearance = props.$appearance || "point";
+    const appearance = form.props.$appearance || "point";
     const nodes = source.map(item => {
       const v = item[vdn] as T;
       const l = item[ldn] as ReactNode;
-      const c = (item[cdn] as string) || props.$color;
+      const c = (item[cdn] as string) || form.props.$color;
       const selected = equals(v, form.value);
       if (selected) selectedItem = item;
       return (
@@ -116,7 +128,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       );
     });
     return { nodes, selectedItem };
-  }, [source, form.editable, form.value, props.$appearance]);
+  }, [source, form.editable, form.value, form.props.$appearance]);
 
   useEffect(() => {
     form.change(form.valueRef.current, true);
@@ -127,8 +139,8 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       form.change(source[0][vdn]);
       if (!loading && selectedItem == null && source.length > 0) {
         let target = source[0];
-        if ("$defaultValue" in props && props.$defaultValue != null) {
-          target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
+        if ("$defaultValue" in form.props && form.props.$defaultValue != null) {
+          target = source.find(item => item[vdn] === form.props.$defaultValue) ?? source[0];
         }
         form.change(target[vdn]);
       }
@@ -137,7 +149,6 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
 
   return (
     <FormItemWrap
-      {...props}
       ref={ref}
       $$form={form}
       $preventFieldLayout
@@ -145,7 +156,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       $mainProps={{
         className: Style.main,
         onKeyDown: keydownMain,
-        "data-direction": props.$direction || "horizontal",
+        "data-direction": form.props.$direction || "horizontal",
       }}
     >
       {nodes}

@@ -535,7 +535,7 @@ const convertHiddenValue = (value: any) => {
 };
 
 export const FormItemWrap = React.forwardRef<HTMLDivElement, {
-  $$form: ReturnType<typeof useForm<any, any>>;
+  $$form: ReturnType<typeof useForm<any, any, any>>;
   $preventFieldLayout?: boolean;
   $className?: string;
   $clickable?: boolean;
