@@ -1,5 +1,5 @@
 import Button, { ButtonOptions } from "@/components/elements/button";
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
 import { VscClose } from "react-icons/vsc";
@@ -25,6 +25,11 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
   const href = useRef<HTMLInputElement>(null!);
 
   const form = useForm(p, {
+    setDataItem: (d) => {
+      return {
+        $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+      };
+    },
     multipartFormData: true,
     validations: (props) => {
       const validations: Array<FormItemValidation<any>> = [];

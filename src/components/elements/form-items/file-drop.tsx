@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import LabelText from "@/components/elements/label-text";
@@ -35,6 +35,11 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
   const href = useRef<HTMLInputElement>(null!);
 
   const form = useForm(p, {
+    setDataItem: (d) => {
+      return {
+        $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+      };
+    },
     multipartFormData: true,
     multiple: (props) => props.$multiple,
     validations: (props) => {

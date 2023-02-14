@@ -1,6 +1,6 @@
 type DataItemKey = "$$";
 
-type DataValueType = string | number | boolean | Date | Array<DataValueType> | { [key: string]: DataValueType };
+type DataValueType = string | number | boolean | Date | File | Array<DataValueType> | { [key: string]: DataValueType };
 
 type DataItemValidationResultType = "error" | "warning" | "information";
 type DataItemValidationResult = {
@@ -73,6 +73,11 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
         D["required"] extends true ? number : number | null | undefined
       ) : TimeValue | null | undefined
     ) :
+    D["type"] extends DataItem_File["type"] ? (
+      Strict extends true ? (
+        D["required"] extends true ? File : File | null | undefined
+      ) : File | null | undefined
+    ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? Array<DataItemValueType<D["item"], Strict>> : Array<DataItemValueType<D["item"], Strict>> | null | undefined
@@ -82,9 +87,6 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
       Strict extends true ? (
         D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : { [P in keyof D["item"]]: D["item"][P] } | null | undefined
       ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict> }
-    ) :
-    D["type"] extends DataItem_File["type"] ? (
-      any
     ) :
     any
   ) : (
@@ -214,6 +216,7 @@ type DataItem_Time = DataItem_Base & {
 
 type DataItem_File = DataItem_Base & {
   type: "file";
+  validations?: DataItemValidation<File, DataItem_File>;
 };
 
 /**

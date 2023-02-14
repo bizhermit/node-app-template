@@ -1,11 +1,11 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
-import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
+import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "@/components/utilities/attributes";
 import { VscClearAll, VscClose, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
-export type ElectronicSignatureProps = FormItemProps<string> & {
+export type ElectronicSignatureProps<D extends DataItem_String | DataItem_File | undefined = undefined> = FormItemProps<string, null, D> & {
   $width?: number | string;
   $height?: number | string;
   $lineWidth?: number;
@@ -16,19 +16,36 @@ export type ElectronicSignatureProps = FormItemProps<string> & {
   $buttonsPosition?: "hide" | "right" | "bottom" | "top" | "left";
 };
 
-const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignatureProps>((props, ref) => {
+interface ElectronicSignatureFC extends FunctionComponent {
+  <D extends DataItem_String | DataItem_File | undefined = undefined>(attrs: ElectronicSignatureProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const ElectronicSignature: ElectronicSignatureFC = React.forwardRef<HTMLDivElement, ElectronicSignatureProps>(<
+  D extends DataItem_String | DataItem_File | undefined = undefined
+>(p: ElectronicSignatureProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const cref = useRef<HTMLCanvasElement>(null!);
   const [revision, setRevision] = useState(-1);
   const history = useRef<Array<ImageData>>([]);
-  const position = props.$buttonsPosition || "right";
   const nullValue = useRef("");
 
   const form = useForm({
     $messagePosition: "bottom-hide",
-    ...props,
-  }, {
+    ...p,
+  } as ElectronicSignatureProps<D>, {
+    setDataItem: (d) => {
+      switch (d.type) {
+        case "file":
+          return {
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+          };
+        default:
+          return {
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+          };
+      }
+    },
     preventRequiredValidation: () => true,
-    validations: () => {
+    validations: (props) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$required) {
         validations.push(v => {
@@ -42,6 +59,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     },
   });
 
+  const position = form.props.$buttonsPosition || "right";
   const canClear = StringUtils.isNotEmpty(form.value) && form.value !== nullValue.current;
   const canRedo = revision >= 0 && revision < history.current.length - 1;
   const canUndo = revision > 0;
@@ -53,7 +71,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   };
 
   const spillHistory = () => {
-    if (history.current.length > Math.max(0, props.$maxHistory ?? 100)) {
+    if (history.current.length > Math.max(0, form.props.$maxHistory ?? 100)) {
       history.current.splice(0, 1);
     }
   };
@@ -86,8 +104,8 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   const drawStart = (baseX: number, baseY: number, isTouch?: boolean) => {
     if (!form.editable || cref.current == null) return;
     const ctx = getContext();
-    const lineWidth = Math.max(1, props.$lineWidth || 2);
-    const lineColor = props.$lineColor || "black";
+    const lineWidth = Math.max(1, form.props.$lineWidth || 2);
+    const lineColor = form.props.$lineColor || "black";
     ctx.strokeStyle = lineColor;
     ctx.fillStyle = lineColor;
     ctx.lineWidth = lineWidth;
@@ -110,7 +128,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       ctx.stroke();
       ctx.closePath();
       pushHistory(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
-      if (props.$autoSave) save();
+      if (form.props.$autoSave) save();
     };
     if (isTouch) {
       const move = (e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY);
@@ -154,7 +172,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     ctx.clearRect(0, 0, cref.current.width, cref.current.height);
     pushHistory(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
     if (history) clearHistory();
-    if (props.$autoSave) save();
+    if (form.props.$autoSave) save();
   };
 
   const redo = () => {
@@ -163,7 +181,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     setRevision(r);
     const ctx = getContext();
     ctx.putImageData(history.current[r], 0, 0);
-    if (props.$autoSave) save();
+    if (form.props.$autoSave) save();
     return true;
   };
 
@@ -173,7 +191,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     setRevision(r);
     const ctx = getContext();
     ctx.putImageData(history.current[r], 0, 0);
-    if (props.$autoSave) save();
+    if (form.props.$autoSave) save();
     return true;
   };
 
@@ -194,10 +212,10 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     } else {
       clearCanvas();
     }
-    if (!("$value" in props)) {
+    if (!("$value" in form.props)) {
       clearHistory();
     }
-  }, [props.$value, props.$bind, form.bind]);
+  }, [form.props.$value, form.props.$bind, form.bind]);
 
   useEffect(() => {
     const imageData = history.current[revision];
@@ -209,7 +227,6 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
 
   return (
     <FormItemWrap
-      {...props}
       ref={ref}
       $$form={form}
       $preventFieldLayout
@@ -224,14 +241,14 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
         className={Style.canvas}
         onMouseDown={mouseDown}
         onTouchStart={touchStart}
-        width={props.$width || 500}
-        height={props.$height || 200}
+        width={form.props.$width || 500}
+        height={form.props.$height || 200}
       />
       {form.editable && position !== "hide" &&
         <div
           className={Style.buttons}
         >
-          {props.$autoSave !== true &&
+          {form.props.$autoSave !== true &&
             <Button
               onClick={() => {
                 save();
