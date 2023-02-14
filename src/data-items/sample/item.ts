@@ -61,6 +61,7 @@ export const sample_boolean = booleanItem({
 
 export const sample_date = dateItem({
   name: "sample_date",
+  typeof: "string",
   validations: [
     (v) => {
       console.log("date validation: ", typeof v, v);

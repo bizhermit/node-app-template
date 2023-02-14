@@ -59,7 +59,7 @@ const DateBox: DateBoxFC = React.forwardRef<HTMLDivElement, DateBoxProps>(<
       switch (d.type) {
         case "number":
           return {
-            $typeof: "number" as "number",
+            $typeof: "number",
             $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as DateBoxProps<D>;
         case "date":
@@ -67,7 +67,7 @@ const DateBox: DateBoxFC = React.forwardRef<HTMLDivElement, DateBoxProps>(<
         case "year":
           return {
             $type: d.type as DateType,
-            $typeof: "date" as "date",
+            $typeof: d.typeof ?? "date",
             $min: d.min,
             $max: d.max,
             $rangePair: d.rangePair,
@@ -75,7 +75,7 @@ const DateBox: DateBoxFC = React.forwardRef<HTMLDivElement, DateBoxProps>(<
           } as DateBoxProps<D>;
         default:
           return {
-            $typeof: "string" as "string",
+            $typeof: "string",
             $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as DateBoxProps<D>;
       }

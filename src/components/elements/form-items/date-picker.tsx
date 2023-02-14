@@ -79,7 +79,7 @@ const DatePicker: DatePickerFC = React.forwardRef<HTMLDivElement, DatePickerProp
       switch (d.type) {
         case "number":
           return {
-            $typeof: "number" as "number",
+            $typeof: "number",
             $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => convertDate(v))),
           } as DatePickerProps<D>;
         case "date":
@@ -87,7 +87,7 @@ const DatePicker: DatePickerFC = React.forwardRef<HTMLDivElement, DatePickerProp
         case "year":
           return {
             $type: d.type as DateType,
-            $typeof: "date" as "date",
+            $typeof: d.typeof,
             $min: d.min,
             $max: d.max,
             $rangePair: d.rangePair,
@@ -95,7 +95,7 @@ const DatePicker: DatePickerFC = React.forwardRef<HTMLDivElement, DatePickerProp
           } as DatePickerProps<D>;
         default:
           return {
-            $typeof: "string" as "string",
+            $typeof: "string",
             $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => convertDate(v))),
           } as DatePickerProps<D>;
       }

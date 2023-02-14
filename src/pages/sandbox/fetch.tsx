@@ -146,6 +146,7 @@ const Page: NextPage = () => {
                       title: "titleあ",
                       body: "hoge",
                       release_date: new Date(),
+                      sample_date: "",
                       date1: "2023-02-03",
                       date2: "2023-02-04",
                       time1: "9:00",

@@ -7,7 +7,7 @@ import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
 import numberItem from "@/data-items/number";
-import { sample_boolean, sample_number, sample_string } from "@/data-items/sample/item";
+import { sample_boolean, sample_date, sample_month, sample_number, sample_string, sample_year } from "@/data-items/sample/item";
 import stringItem from "@/data-items/string";
 import structItem from "@/data-items/struct";
 import timeItem from "@/data-items/time";
@@ -52,6 +52,9 @@ export default apiHandler({
         trueValue: 1,
         falseValue: 0,
       }),
+      sample_date: sample_date,
+      sample_month: sample_month,
+      sample_year: sample_year,
       date1: dateItem({
         required: true,
         label: "日付From",
@@ -134,6 +137,8 @@ export default apiHandler({
     data.sample_number;
     data.title;
     data.sample_boolean;
+    data.sample_date;
+    data.sample_month;
     data.number;
     data.boolean;
     data.boolean01;

@@ -255,15 +255,27 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   };
 
+  let date: Date | undefined = undefined;
   if (data) {
     const v = data[key];
     const t = typeof v;
     if (v != null) {
       try {
         if (t === "string" || t === "number") {
-          data[key] = DatetimeUtils.convert(v);
+          date = DatetimeUtils.convert(v);
         } else {
           throw new Error;
+        }
+        switch (ctx.typeof) {
+          case "date":
+            data[key] = date;
+            break;
+          case "number":
+            data[key] = date?.getTime();
+            break;
+          default:
+            data[key] = DatetimeUtils.format(date);
+            break;
         }
       } catch {
         pushMsg(`${name}を日付型に変換できません。`);
@@ -272,31 +284,31 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   }
 
-  const v = data?.[key] as Nullable<Date>;
+  // const v = data?.[key];
 
   if (ctx.required) {
-    pushMsg(DateData.requiredValidation(v, name));
+    pushMsg(DateData.requiredValidation(date, name));
   }
   if (ctx.min != null && ctx.max != null) {
-    pushMsg(DateData.rangeValidation(v, ctx.min, ctx.max, ctx.type, name));
+    pushMsg(DateData.rangeValidation(date, ctx.min, ctx.max, ctx.type, name));
   } else {
     if (ctx.min) {
-      pushMsg(DateData.minValidation(v, ctx.min, ctx.type, name));
+      pushMsg(DateData.minValidation(date, ctx.min, ctx.type, name));
     }
     if (ctx.max) {
-      pushMsg(DateData.maxValidation(v, ctx.max, ctx.type, name));
+      pushMsg(DateData.maxValidation(date, ctx.max, ctx.type, name));
     }
   }
   if (ctx.rangePair) {
     const pairCtx = pctx?.[ctx.rangePair.name];
     if (pairCtx != null && dataItemKey in pairCtx && (pairCtx.type === "date" || pairCtx.type === "month" || pairCtx.type === "year")) {
-      pushMsg(DateData.contextValidation(v, ctx.rangePair, data, ctx.type, name, pairCtx?.label));
+      pushMsg(DateData.contextValidation(date, ctx.rangePair, data, ctx.type, name, pairCtx?.label));
     }
   }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      pushMsg(validation(v, key, ctx, data, index, pctx));
+      pushMsg(validation(date, key, ctx, data, index, pctx));
     }
   }
 };

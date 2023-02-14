@@ -65,7 +65,17 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     ) :
     D["type"] extends DataItem_Date["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? Date : Date | null | undefined
+        D["required"] extends true ? (
+          D["typeof"] extends "date" ? Date :
+          D["typeof"] extends "number" ? number :
+          D["typeof"] extends "string" ? string :
+          string
+        ) : (
+          D["typeof"] extends "date" ? Date :
+          D["typeof"] extends "number" ? number :
+          D["typeof"] extends "string" ? string :
+          string
+        ) | null | undefined
       ) : DateValue | null | undefined
     ) :
     D["type"] extends DataItem_Time["type"] ? (
@@ -178,6 +188,7 @@ type ValidDaysMode = "allow" | "disallow";
 
 type DataItem_Date = DataItem_Base & {
   type: DateType;
+  typeof?: "date" | "string" | "number";
   validations?: DataItemValidation<Date, DataItem_Date>;
   min?: DateValue;
   max?: DateValue;
