@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import Time from "@bizhermit/time";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
@@ -53,12 +53,14 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
             $typeof: "number" as "number",
             $min: d.min,
             $max: d.max,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as TimePickerProps<D>;
         case "string":
           return {
             $typeof: "string" as "string",
             $min: d.minLength,
             $max: d.maxLength,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as TimePickerProps<D>;
         default:
           return {
@@ -66,6 +68,7 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
             $min: d.min,
             $max: d.max,
             $rangePair: d.rangePair,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as TimePickerProps<D>;
       }
     },

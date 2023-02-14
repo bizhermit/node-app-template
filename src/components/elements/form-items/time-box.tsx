@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
@@ -58,12 +58,14 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
             $typeof: "number" as "number",
             $min: d.min,
             $max: d.max,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as TimeBoxProps<D>;
         case "string":
           return {
             $typeof: "string" as "string",
             $min: d.minLength,
             $max: d.maxLength,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as TimeBoxProps<D>;
         default:
           return {
@@ -71,6 +73,7 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
             $min: d.min,
             $max: d.max,
             $rangePair: d.rangePair,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as TimeBoxProps<D>;
       }
     },

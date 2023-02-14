@@ -8,7 +8,7 @@ import { NextPage } from "next";
 import { useState } from "react";
 import TextBox from "@/components/elements/form-items/text-box";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
-import { sample_date, sample_number, sample_string } from "@/data-items/sample/item";
+import { sample_date, sample_month, sample_number, sample_string, sample_year } from "@/data-items/sample/item";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -114,11 +114,29 @@ const Page: NextPage = () => {
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
           // $multiple
+          $validations={[
+            (v) => {
+              console.log(v);
+              return undefined;
+            }
+          ]}
         />
         <DatePicker
           $tag="date"
           $dataItem={sample_date}
           $onChange={v => console.log("date: ", v)}
+          // $multiple
+        />
+        <DatePicker
+          $tag="month"
+          $dataItem={sample_month}
+          $onChange={v => console.log("month: ", v)}
+          // $multiple
+        />
+        <DatePicker
+          $tag="year"
+          $dataItem={sample_year}
+          $onChange={v => console.log("year: ", v)}
           // $multiple
         />
         <DatePicker

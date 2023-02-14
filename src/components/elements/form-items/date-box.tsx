@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import React, { FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
@@ -60,20 +60,23 @@ const DateBox: DateBoxFC = React.forwardRef<HTMLDivElement, DateBoxProps>(<
         case "number":
           return {
             $typeof: "number" as "number",
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as DateBoxProps<D>;
         case "date":
         case "month":
         case "year":
           return {
             $type: d.type as DateType,
+            $typeof: "date" as "date",
             $min: d.min,
             $max: d.max,
             $rangePair: d.rangePair,
-            $typeof: "date" as "date",
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as DateBoxProps<D>;
         default:
           return {
             $typeof: "string" as "string",
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           } as DateBoxProps<D>;
       }
     },

@@ -14,6 +14,12 @@ export const sample_string = stringItem({
   width: "20rem",
   validations: [
     (v) => {
+      console.log("string validation: ", typeof v, v);
+      if (v == null) return undefined;
+      if (typeof v === "string") return undefined;
+      return "not typeof string";
+    },
+    (v) => {
       if (v === "hoge") return "not allow hoge!";
       return undefined;
     },
@@ -29,28 +35,72 @@ export const sample_number = numberItem({
   width: "20rem",
   validations: [
     (v) => {
+      console.log("number validation: ", typeof v, v);
+      if (v == null) return undefined;
+      if (typeof v === "number") return undefined;
+      return "not typeof number";
+    },
+    (v) => {
       if (v === 10) return "not allow ten!";
       return undefined;
-    }
+    },
   ],
 });
 
 export const sample_boolean = booleanItem({
   name: "sample_boolean",
+  validations: [
+    (v) => {
+      console.log("boolean validation: ", typeof v, v);
+      if (v == null) return undefined;
+      if (typeof v === "boolean") return undefined;
+      return "not typeof boolean";
+    },
+  ]
 });
 
 export const sample_date = dateItem({
   name: "sample_date",
+  validations: [
+    (v) => {
+      console.log("date validation: ", typeof v, v);
+      if (v == null) return undefined;
+      if (v instanceof Date) return undefined;
+      return "not typeof date";
+    },
+  ],
 });
 
 export const sample_month = monthItem({
   name: "sample_month",
+  validations: [
+    (v) => {
+      console.log("month validation: ", typeof v, v);
+      if (v == null) return undefined;
+      if (v instanceof Date) return undefined;
+      return "not typeof date";
+    },
+  ],
 });
 
 export const sample_year = yearItem({
   name: "sample_year",
+  validations: [
+    (v) => {
+      console.log("year validation: ", typeof v, v);
+      if (v == null) return undefined;
+      if (v instanceof Date) return undefined;
+      return "not typeof date";
+    },
+  ],
 });
 
 export const sample_time = timeItem({
   name: "sample_time",
+  validations: [
+    (v) => {
+      console.log("time validation: ", typeof v, v);
+      return undefined;
+    },
+  ],
 });
