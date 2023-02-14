@@ -113,25 +113,25 @@ const Page: NextPage = () => {
         <DatePicker
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
-          $multiple
+          // $multiple
         />
         <DatePicker
           $tag="date"
           $dataItem={sample_date}
           $onChange={v => console.log("date: ", v)}
-          $multiple
+          // $multiple
         />
         <DatePicker
           $tag="string"
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
-          $multiple
+          // $multiple
         />
         <DatePicker
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
-          $multiple
+          // $multiple
         />
       </Row>
       <Row className="gap-1" $vAlign="top">

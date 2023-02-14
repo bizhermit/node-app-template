@@ -1,7 +1,8 @@
 import booleanItem from "@/data-items/boolean";
-import dateItem, { monthItem } from "@/data-items/date";
+import dateItem, { monthItem, yearItem } from "@/data-items/date";
 import numberItem from "@/data-items/number";
 import stringItem from "@/data-items/string";
+import timeItem from "@/data-items/time";
 
 export const sample_string = stringItem({
   name: "sample_text",
@@ -44,4 +45,12 @@ export const sample_date = dateItem({
 
 export const sample_month = monthItem({
   name: "sample_month",
+});
+
+export const sample_year = yearItem({
+  name: "sample_year",
+});
+
+export const sample_time = timeItem({
+  name: "sample_time",
 });
