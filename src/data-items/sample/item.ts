@@ -5,12 +5,12 @@ import stringItem from "@/data-items/string";
 import timeItem from "@/data-items/time";
 
 export const sample_string = stringItem({
-  name: "sample_text",
+  name: "sample_string",
   required: true,
   // minLength: 5,
-  // maxLength: 5,
-  length: 5,
-  charType: "alpha",
+  maxLength: 5,
+  // length: 5,
+  // charType: "alpha",
   width: "20rem",
   validations: [
     (v) => {

@@ -138,36 +138,39 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await fetchApi.post("/fetch", {
+                      sample_string: "hoget",
+                      string: "this is string",
                       sample_number: "300",
                       number: "0100",
                       sample_boolean: "1",
                       boolean: 2,
-                      boolean01: false,
-                      title: "titleあ",
-                      body: "hoge",
-                      release_date: new Date(),
-                      sample_date: "",
+                      boolean_num: true,
+                      boolean_str: false,
+                      sample_date: new Date(),
+                      sample_month: "2022-03",
+                      sample_year: 1999,
                       date1: "2023-02-03",
                       date2: "2023-02-04",
+                      sample_time: "12:34",
                       time1: "9:00",
                       time2: "18:00",
                       array: [
-                        "titleえ"
+                        "text"
                       ],
                       arrayStruct: [{
-                        title: "titleい",
-                        body: "",
-                        release_date: new Date(),
+                        sample_string: 78,
+                        sample_number: "3",
+                        sample_boolean: 1,
                       }],
                       struct: {
-                        title: "titleう",
-                        body: "",
-                        release_date: new Date(),
+                        sample_string: 91,
+                        sample_number: "3",
+                        sample_boolean: 1,
                       },
                       structItem: {
-                        title: "titleお",
-                        body: "",
-                        release_date: "2022-12-12",
+                        sample_string: 93,
+                        sample_number: "3",
+                        sample_boolean: 1,
                       }
                     });
                     setResponse(res);
