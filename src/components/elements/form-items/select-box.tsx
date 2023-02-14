@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
@@ -36,13 +37,6 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
   T extends string | number = string | number,
   D extends DataItem_String | DataItem_Number | undefined = undefined
 >(p: SelectBoxProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const vdn = p.$valueDataName ?? "value";
-  const ldn = p.$labelDataName ?? "label";
-  const [source, loading] = useLoadableArray(p.$source ?? p.$dataItem?.source, {
-    preventMemorize: p.$preventSourceMemorize,
-  });
-  const [bindSource, setBindSource] = useState(source);
-
   const form = useForm(p, {
     setDataItem: (d) => {
       return {
@@ -50,14 +44,37 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
         $source: d.source,
       };
     },
-    generateChangeCallbackData: (a, b) => {
+    addStates: (props) => {
+      const [source, loading] = useLoadableArray(props.$source, {
+        preventMemorize: props.$preventSourceMemorize,
+      });
+      const [bindSource, setBindSource] = useState(source);
       return {
-        afterData: source.find(item => equals(item[vdn], a)),
-        beforeData: source.find(item => equals(item[vdn], b)),
+        vdn: props.$valueDataName ?? "value",
+        ldn: props.$labelDataName ?? "label",
+        source,
+        loading,
+        bindSource,
+        setBindSource,
+      } as const;
+    },
+    generateChangeCallbackData: (props, states) => (a, b) => {
+      return {
+        afterData: states.source.find(item => equals(item[states.vdn], a)),
+        beforeData: states.source.find(item => equals(item[states.vdn], b)),
       };
     },
-    generateChangeCallbackDataDeps: () => [source],
+    generateChangeCallbackDataDeps: (props, states) => [states.source],
   });
+
+  const {
+    vdn,
+    ldn,
+    source,
+    loading,
+    bindSource,
+    setBindSource,
+  } = form.states;
 
   const iref = useRef<HTMLInputElement>(null!);
   const [showPicker, setShowPicker] = useState(false);

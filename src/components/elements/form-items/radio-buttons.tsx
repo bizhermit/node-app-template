@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo } from "react";
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
@@ -27,13 +28,6 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
   T extends string | number = string | number,
   D extends DataItem_String | DataItem_Number | undefined = undefined
 >(p: RadioButtonsProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const vdn = p.$valueDataName ?? "value";
-  const ldn = p.$labelDataName ?? "label";
-  const cdn = p.$colorDataName ?? "color";
-  const [source, loading] = useLoadableArray(p.$source ?? p.$dataItem?.source, {
-    preventMemorize: p.$preventSourceMemorize,
-  });
-
   const form = useForm(p, {
     setDataItem: (d) => {
       return {
@@ -41,15 +35,35 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
         $source: d.source,
       };
     },
-    preventRequiredValidation: true,
-    generateChangeCallbackData: (a, b) => {
+    addStates: (props) => {
+      const [source, loading] = useLoadableArray(props.$source, {
+        preventMemorize: props.$preventSourceMemorize,
+      });
       return {
-        afterData: source.find(item => equals(item[vdn], a)),
-        beforeData: source.find(item => equals(item[vdn], b)),
+        vdn: props.$valueDataName ?? "value",
+        ldn: props.$labelDataName ?? "label",
+        cdn: props.$colorDataName ?? "color",
+        source,
+        loading,
+      } as const;
+    },
+    preventRequiredValidation: true,
+    generateChangeCallbackData: (props, states) => (a, b) => {
+      return {
+        afterData: states.source.find(item => equals(item[states.vdn], a)),
+        beforeData: states.source.find(item => equals(item[states.vdn], b)),
       };
     },
-    generateChangeCallbackDataDeps: () => [source],
+    generateChangeCallbackDataDeps: (props, states) => [states.source],
   });
+
+  const {
+    vdn,
+    ldn,
+    cdn,
+    source,
+    loading,
+  } = form.states;
 
   const select = (value: T) => {
     if (!form.editable || loading) return;

@@ -59,7 +59,7 @@ type FormContextProps = {
   exErrors: Struct;
   setExErrors: Dispatch<SetStateAction<Struct>>;
   hasError: boolean;
-  mount: (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions<any, any, any>) => string;
+  mount: (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions<any, any, any, any>) => string;
   unmount: (name: string) => void;
   validation: () => void;
   messageDisplayMode: FormItemMessageDisplayMode;
@@ -123,11 +123,11 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
     return disabledRef.current = action;
   }, false);
-  const items = useRef<Struct<FormItemMountProps & { props: FormItemProps; options: UseFormOptions; }>>({});
+  const items = useRef<Struct<FormItemMountProps & { props: FormItemProps; options: UseFormOptions<any, any, any, any>; }>>({});
   const [errors, setErrors] = useState<Struct>({});
   const [exErrors, setExErrors] = useState<Struct>({});
 
-  const mount = (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions) => {
+  const mount = (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormOptions<any, any, any, any>) => {
     items.current[id] = { ...mountItemProps, props: itemProps, options, };
     return id;
   };
@@ -212,7 +212,7 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
     setTimeout(() => {
       Object.keys(items.current).forEach(id => {
         const item = items.current[id];
-        item.options.effect?.(item.props.$defaultValue);
+        // item.options.effect?.(item.props.$defaultValue);
         item.change(item.props.$defaultValue);
       });
     }, 0);
@@ -296,18 +296,19 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
 
 export default Form;
 
-type UseFormOptions<T = any, U = any, P extends FormItemProps = FormItemProps> = {
+type UseFormOptions<S, T = any, U = any, P extends FormItemProps = FormItemProps> = {
   setDataItem?: (dataItem: NonNullable<P["$dataItem"]>, method: string) => P,
-  effect?: (value: T | null | undefined) => void;
-  effectDeps?: (props: P) => Array<any>;
+  addStates?: (props: P) => S;
+  effect?: (value: T | null | undefined, props: P, states: S) => void;
+  effectDeps?: (props: P, states: S) => Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
-  validations?: (props: P) => Array<FormItemValidation<T | null | undefined>>;
-  validationsDeps?: (props: P) => Array<any>;
+  validations?: (props: P, states: S) => Array<FormItemValidation<T | null | undefined>>;
+  validationsDeps?: (props: P, states: S) => Array<any>;
   preventRequiredValidation?: boolean;
-  interlockValidation?: boolean;
-  generateChangeCallbackData?: (after?: T | null | undefined, before?: T | null | undefined) => U;
-  generateChangeCallbackDataDeps?: (props: P) => Array<any>;
+  interlockValidation?: (props: P, states: S) => boolean;
+  generateChangeCallbackData?: (props: P, states: S) => ((after?: T | null | undefined, before?: T | null | undefined) => U);
+  generateChangeCallbackDataDeps?: (props: P, states: S) => Array<any>;
 };
 
 export const formValidationMessages = {
@@ -316,7 +317,7 @@ export const formValidationMessages = {
   typeMissmatch: "型が不適切です。",
 } as const;
 
-export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProps>($props?: P, options?: UseFormOptions<T, U, P>) => {
+export const useForm = <S, T = any, U = any, P extends FormItemProps = FormItemProps>($props?: P, options?: UseFormOptions<S, T, U, P>) => {
   const ctx = useContext(FormContext);
   const id = useRef(StringUtils.generateUuidV4());
   const [error, setError] = useState("");
@@ -333,6 +334,8 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
     }, [$props?.$dataItem, ctx.method]),
     ...$props,
   };
+
+  const states = options?.addStates?.(props) ?? {} as S;
 
   const valueRef = useRef<T | null | undefined>((() => {
     if (props == null) return undefined;
@@ -367,7 +370,7 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
       }
     }
     if (options?.validations) {
-      rets.push(...options.validations(props));
+      rets.push(...options.validations(props, states));
     }
     if (props?.$validations) {
       if (Array.isArray(props.$validations)) {
@@ -377,7 +380,7 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
       }
     }
     return rets;
-  }, [props?.$required, options?.multiple, ...(options?.validationsDeps?.(props) ?? [])]);
+  }, [props?.$required, options?.multiple, ...(options?.validationsDeps?.(props, states) ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -451,8 +454,8 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
     } else {
       validation();
     }
-    props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [ctx.bind, props?.name, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps?.(props) ?? [])]);
+    props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(props, states)(valueRef.current, before));
+  }, [ctx.bind, props?.name, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps?.(props, states) ?? [])]);
 
   useEffect(() => {
     const name = props?.name;
@@ -460,9 +463,9 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
     const before = valueRef.current;
     setCurrentValue(getValue(ctx.bind, name));
     if (!equals(valueRef.current, before)) {
-      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(props, states)(valueRef.current, before));
     }
-    options?.effect?.(valueRef.current);
+    options?.effect?.(valueRef.current, props, states);
     validation();
   }, [ctx.bind, props?.$preventFormBind]);
 
@@ -472,16 +475,16 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
     const before = valueRef.current;
     setCurrentValue(getValue(props.$bind, name));
     if (!equals(valueRef.current, before)) {
-      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(props, states)(valueRef.current, before));
     }
-    options?.effect?.(valueRef.current);
+    options?.effect?.(valueRef.current, props, states);
     validation();
   }, [props?.$bind]);
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
     setCurrentValue(props.$value);
-    options?.effect?.(valueRef.current);
+    options?.effect?.(valueRef.current, props, states);
     validation();
   }, [props?.$value]);
 
@@ -498,8 +501,8 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
   }, [validation, change]);
 
   useEffect(() => {
-    options?.effect?.(valueRef.current);
-  }, [...(options?.effectDeps?.(props) ?? [])]);
+    options?.effect?.(valueRef.current, props, states);
+  }, [...(options?.effectDeps?.(props, states) ?? [])]);
 
   useEffect(() => {
     validation();
@@ -524,6 +527,7 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
     messageDisplayMode: props?.$messagePosition ?? ctx.messageDisplayMode,
     messageWrap: props?.$messageWrap ?? ctx.messageWrap,
     props,
+    states,
   };
 };
 
@@ -537,7 +541,7 @@ const convertHiddenValue = (value: any) => {
 };
 
 export const FormItemWrap = React.forwardRef<HTMLDivElement, {
-  $$form: ReturnType<typeof useForm<any, any, any>>;
+  $$form: ReturnType<typeof useForm<any, any, any, any>>;
   $preventFieldLayout?: boolean;
   $className?: string;
   $clickable?: boolean;
