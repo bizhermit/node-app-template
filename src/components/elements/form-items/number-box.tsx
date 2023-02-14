@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
@@ -38,6 +38,24 @@ const NumberBox: NumberBoxFC = React.forwardRef<HTMLDivElement, NumberBoxProps>(
   const iref = useRef<HTMLInputElement>(null!);
 
   const form = useForm(p, {
+    setDataItem: (d) => {
+      switch (d.type) {
+        case "string":
+          return {
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => String(v))),
+            $width: d.width,
+            $minWidth: d.minWidth,
+            $maxWidth: d.maxWidth,
+          };
+        default:
+          return {
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
+            $width: d.width,
+            $minWidth: d.minWidth,
+            $maxWidth: d.maxWidth,
+          };
+      }
+    },
     effect: () => {
       renderFormattedValue();
     },
