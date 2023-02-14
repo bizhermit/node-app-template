@@ -1,4 +1,4 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, ReactNode } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/components/elements/label-text";
@@ -29,16 +29,19 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<
           return {
             $checkedValue: "1" as T,
             $uncheckedValue: "0" as T,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           };
         case "number":
           return {
             $checkedValue: 1 as T,
             $uncheckedValue: 0 as T,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           };
         default:
           return {
             $checkedValue: d.trueValue as T,
             $uncheckedValue: d.falseValue as T,
+            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
           };
       }
     },
