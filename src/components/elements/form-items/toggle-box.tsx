@@ -4,23 +4,45 @@ import Style from "$/components/elements/form-items/toggle-box.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/components/utilities/attributes";
 
-export type ToggleBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
+export type ToggleBoxProps<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+> = Omit<FormItemProps<T, null, D>, "$tagPosition"> & {
   $checkedValue?: T;
   $uncheckedValue?: T;
   children?: ReactNode;
 };
 
 interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
-  <T extends string | number | boolean = boolean>(attrs: ToggleBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: ToggleBoxProps<T, D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(<T extends string | number | boolean = boolean>(props: ToggleBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const checkedValue = (props.$checkedValue ?? true) as T;
-  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
-
-  const form = useForm(props, {
+const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+>(p: ToggleBoxProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm(p, {
+    setDataItem: (d) => {
+      switch (d.type) {
+        case "string":
+          return {
+            $checkedValue: "1" as T,
+            $uncheckedValue: "0" as T,
+          };
+        case "number":
+          return {
+            $checkedValue: 1 as T,
+            $uncheckedValue: 0 as T,
+          };
+        default:
+          return {
+            $checkedValue: d.trueValue as T,
+            $uncheckedValue: d.falseValue as T,
+          };
+      }
+    },
     preventRequiredValidation: true,
-    validations: () => {
+    validations: (props) => {
       if (!props.$required) return [];
       return [(v) => {
         if (v === (checkedValue)) return "";
@@ -28,6 +50,8 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
       }];
     },
   });
+  const checkedValue = (form.props.$checkedValue ?? true) as T;
+  const uncheckedValue = (form.props.$uncheckedValue ?? false) as T;
 
   const toggleCheck = (check?: boolean) => {
     if (check == null) {
@@ -48,7 +72,6 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
 
   return (
     <FormItemWrap
-      {...props}
       ref={ref}
       $$form={form}
       $preventFieldLayout
@@ -58,21 +81,21 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
         className: Style.main,
         onClick: click,
         onKeyDown: keydown,
-        tabIndex: props.tabIndex ?? 0,
+        tabIndex: form.props.tabIndex ?? 0,
       }}
     >
       <div className={Style.body}>
         <div
-          className={`${Style.box} bdc-${props.$color || "border"} bgc-${props.$color || "main"}`}
+          className={`${Style.box} bdc-${form.props.$color || "border"} bgc-${form.props.$color || "main"}`}
           data-editable={form.editable}
           data-checked={form.value === checkedValue}
         />
         <div
-          className={`${Style.handle} bdc-${props.$color || "border"}`}
+          className={`${Style.handle} bdc-${form.props.$color || "border"}`}
           data-checked={form.value === checkedValue}
         />
       </div>
-      {props.children && <LabelText>{props.children}</LabelText>}
+      {form.props.children && <LabelText>{form.props.children}</LabelText>}
     </FormItemWrap>
   );
 });

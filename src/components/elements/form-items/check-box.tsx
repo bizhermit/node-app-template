@@ -35,13 +35,11 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<
             $checkedValue: 1 as T,
             $uncheckedValue: 0 as T,
           };
-        case "boolean":
+        default:
           return {
             $checkedValue: d.trueValue as T,
             $uncheckedValue: d.falseValue as T,
           };
-        default:
-          return {};
       }
     },
     preventRequiredValidation: true,
