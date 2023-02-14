@@ -47,6 +47,9 @@ const getItem = (
       case "struct":
         getStructItem(msgs, key!, ctx, data, index, pctx);
         break;
+      case "file":
+        // TODO: file
+        break;
       default:
         break;
     }

@@ -1,11 +1,11 @@
 import Button, { ButtonOptions } from "@/components/elements/button";
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { ReactNode, useEffect, useRef } from "react";
+import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
 
-export type FileButtonProps = FormItemProps<File> & ButtonOptions & {
+export type FileButtonProps<D extends DataItem_File | undefined = undefined> = FormItemProps<File, null, D> & ButtonOptions & {
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -14,13 +14,19 @@ export type FileButtonProps = FormItemProps<File> & ButtonOptions & {
   children?: ReactNode;
 };
 
-const FileButton = React.forwardRef<HTMLDivElement, FileButtonProps>((props, ref) => {
+interface FileButtonFC extends FunctionComponent {
+  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProps>(<
+  D extends DataItem_File | undefined = undefined
+>(p: FileButtonProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
   const href = useRef<HTMLInputElement>(null!);
 
-  const form = useForm(props, {
+  const form = useForm(p, {
     multipartFormData: true,
-    validations: () => {
+    validations: (props) => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
         validations.push(FileData.fileTypeValidation(props.$accept));
@@ -65,7 +71,6 @@ const FileButton = React.forwardRef<HTMLDivElement, FileButtonProps>((props, ref
 
   return (
     <FormItemWrap
-      {...props}
       $$form={form}
       ref={ref}
       $preventFieldLayout
@@ -75,22 +80,22 @@ const FileButton = React.forwardRef<HTMLDivElement, FileButtonProps>((props, ref
           className={Style.button}
           $onClick={click}
           disabled={!form.editable}
-          $fillLabel={props.$fillLabel}
-          $icon={props.$icon}
-          $iconPosition={props.$iconPosition}
-          $outline={props.$outline}
-          $round={props.$round}
-          $size={props.$size}
+          $fillLabel={form.props.$fillLabel}
+          $icon={form.props.$icon}
+          $iconPosition={form.props.$iconPosition}
+          $outline={form.props.$outline}
+          $round={form.props.$round}
+          $size={form.props.$size}
         >
-          {props.children ?? "ファイルを選択"}
+          {form.props.children ?? "ファイルを選択"}
         </Button>
       }
-      {props.$hideFileName !== true && form.value != null &&
+      {form.props.$hideFileName !== true && form.value != null &&
         <div className={Style.label}>
           {form.value.name}
         </div>
       }
-      {form.editable && props.$hideClearButton !== true && form.value != null &&
+      {form.editable && form.props.$hideClearButton !== true && form.value != null &&
         <div
           className={Style.clear}
           onClick={clear}
@@ -102,15 +107,15 @@ const FileButton = React.forwardRef<HTMLDivElement, FileButtonProps>((props, ref
         ref={iref}
         type="file"
         className={Style.file}
-        accept={props.$accept}
+        accept={form.props.$accept}
         onChange={change}
       />
-      {props.name &&
+      {form.props.name &&
         <input
           className={Style.file}
           ref={href}
           type="file"
-          name={props.name}
+          name={form.props.name}
         />
       }
     </FormItemWrap>

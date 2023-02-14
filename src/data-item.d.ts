@@ -33,6 +33,7 @@ type DataItem = (DataItem_Base & { type: "any" })
   | DataItem_Boolean<any, any>
   | DataItem_Date
   | DataItem_Time
+  | DataItem_File
   | DataItem_Array<any>
   | DataItem_Struct<any>
   ;
@@ -81,6 +82,9 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
       Strict extends true ? (
         D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : { [P in keyof D["item"]]: D["item"][P] } | null | undefined
       ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict> }
+    ) :
+    D["type"] extends DataItem_File["type"] ? (
+      any
     ) :
     any
   ) : (
@@ -202,6 +206,14 @@ type DataItem_Time = DataItem_Base & {
   min?: TimeValue;
   max?: TimeValue;
   rangePair?: TimeRangePair;
+};
+
+/**
+ * File
+ */
+
+type DataItem_File = DataItem_Base & {
+  type: "file";
 };
 
 /**

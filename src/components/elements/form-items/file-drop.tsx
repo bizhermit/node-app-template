@@ -1,11 +1,11 @@
 import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { ReactNode, useEffect, useRef } from "react";
+import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
 
-type FileDropBaseProps<T> = FormItemProps<T> & {
+type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, null, D> & {
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -14,24 +14,30 @@ type FileDropBaseProps<T> = FormItemProps<T> & {
   children?: ReactNode;
 };
 
-export type FileDropProps_Single = FileDropBaseProps<File>;
-
-export type FileDropProps_Multiple = FileDropBaseProps<Array<File>> & {
-  $append?: boolean;
+export type FileDropProps_Single<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<File, D> & {
+  $append?: false;
 };
 
-export type FileDropProps = (FileDropProps_Single & { $multiple?: false; }) | (FileDropProps_Multiple & { $multiple: true });
+export type FileDropProps_Multiple<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<Array<File>, D> & {
+  $append: true;
+};
 
-const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) => {
+export type FileDropProps<D extends DataItem_File | undefined = undefined> = (FileDropProps_Single<D> & { $multiple?: false; }) | (FileDropProps_Multiple<D> & { $multiple: true });
+
+interface FileDropFC extends FunctionComponent {
+  <D extends DataItem_File | undefined = undefined>(attrs: FileDropProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
+  D extends DataItem_File | undefined = undefined
+>(p: FileDropProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
   const href = useRef<HTMLInputElement>(null!);
-  const multiable = props.$multiple === true;
-  const fileDialog = props.$noFileDialog !== true;
 
-  const form = useForm<File | Array<File> | any>(props, {
+  const form = useForm(p, {
     multipartFormData: true,
     multiple: (props) => props.$multiple,
-    validations: () => {
+    validations: (props) => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
         validations.push(FileData.fileTypeValidation(props.$accept));
@@ -46,6 +52,9 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
     },
   });
 
+  const multiable = form.props.$multiple === true;
+  const fileDialog = form.props.$noFileDialog !== true;
+
   const click = () => {
     if (!form.editable || !fileDialog) return;
     iref.current?.click();
@@ -58,7 +67,7 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
     }
     const files = Array.from(fileList ?? []);
     if (multiable) {
-      if (props.$append) {
+      if (form.props.$append) {
         form.change([...(form.valueRef.current ?? []), ...files]);
         return;
       }
@@ -113,7 +122,6 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
 
   return (
     <FormItemWrap
-      {...props}
       $$form={form}
       ref={ref}
       $mainProps={{
@@ -124,16 +132,16 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
         ref={iref}
         type="file"
         className={Style.file}
-        multiple={props.$multiple}
-        accept={props.$accept}
+        multiple={form.props.$multiple}
+        accept={form.props.$accept}
         onChange={change}
       />
-      {props.name &&
+      {form.props.name &&
         <input
           className={Style.file}
           ref={href}
           type="file"
-          name={props.name}
+          name={form.props.name}
         />
       }
       <div
@@ -142,14 +150,14 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
         onDragOver={dragOver}
         onDragLeave={dragLeave}
         onDrop={drop}
-        tabIndex={props.tabIndex ?? 0}
+        tabIndex={form.props.tabIndex ?? 0}
         data-dialog={fileDialog}
       >
         <LabelText>
-          {props.children}
+          {form.props.children}
         </LabelText>
       </div>
-      {form.editable && props.$hideClearButton !== true &&
+      {form.editable && form.props.$hideClearButton !== true &&
         <div
           className={Style.clear}
           onClick={clear}
