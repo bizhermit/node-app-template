@@ -4,6 +4,7 @@ import Form from "@/components/elements/form";
 import TextArea from "@/components/elements/form-items/text-area";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { sample_string } from "@/data-items/sample/item";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -98,6 +99,7 @@ const Page: NextPage = () => {
           $resize
           $width={300}
           $height={300}
+          $dataItem={sample_string}
         />
         <TextArea
           name="text-area-bind"

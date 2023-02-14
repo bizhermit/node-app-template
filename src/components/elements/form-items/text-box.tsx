@@ -4,10 +4,10 @@ import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useRef } from "react";
+import React, { FunctionComponent, ReactElement, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
-export type TextBoxProps = FormItemProps<string, null, DataItem_String | DataItem_Number> & {
+export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string, null, D> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $preventInputWithinLength?: boolean;
@@ -23,7 +23,13 @@ export type TextBoxProps = FormItemProps<string, null, DataItem_String | DataIte
   $autoComplete?: string;
 };
 
-const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((p, ref) => {
+interface TextBoxFC extends FunctionComponent<TextBoxProps> {
+  <D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: TextBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const TextBox: TextBoxFC = React.forwardRef<HTMLDivElement, TextBoxProps>(<
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+>(p: TextBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
 
   const form = useForm(p, {

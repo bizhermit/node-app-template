@@ -102,10 +102,12 @@ const Page: NextPage = () => {
               $tag="string"
               $dataItem={sample_string}
               // $required
+              $onChange={v => console.log("string: ", v)}
             />
             <TextBox
               $tag="number"
               $dataItem={sample_number}
+              $onChange={v => console.log("number: ", v)}
             />
             <Button type="submit">submit</Button>
             <Button type="reset">reset</Button>
