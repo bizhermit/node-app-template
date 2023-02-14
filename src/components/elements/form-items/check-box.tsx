@@ -45,7 +45,7 @@ const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<
           };
       }
     },
-    preventRequiredValidation: true,
+    preventRequiredValidation: () => true,
     validations: (props) => {
       if (!props.$required) return [];
       return [(v) => {

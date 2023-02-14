@@ -301,11 +301,11 @@ type UseFormOptions<S, T = any, U = any, P extends FormItemProps = FormItemProps
   addStates?: (props: P) => S;
   effect?: (value: T | null | undefined, props: P, states: S) => void;
   effectDeps?: (props: P, states: S) => Array<any>;
-  multiple?: boolean;
+  multiple?: (props: P) => (boolean | undefined);
   multipartFormData?: boolean;
   validations?: (props: P, states: S) => Array<FormItemValidation<T | null | undefined>>;
   validationsDeps?: (props: P, states: S) => Array<any>;
-  preventRequiredValidation?: boolean;
+  preventRequiredValidation?: (props: P) => boolean;
   interlockValidation?: (props: P, states: S) => boolean;
   generateChangeCallbackData?: (props: P, states: S) => ((after?: T | null | undefined, before?: T | null | undefined) => U);
   generateChangeCallbackDataDeps?: (props: P, states: S) => Array<any>;
@@ -351,7 +351,7 @@ export const useForm = <S, T = any, U = any, P extends FormItemProps = FormItemP
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<T | null | undefined>> = [];
     if (props?.$required && !options?.preventRequiredValidation) {
-      if (options?.multiple) {
+      if (options?.multiple?.(props)) {
         rets.push(v => {
           if (v == null) return formValidationMessages.required;
           if (!Array.isArray(v)) {
@@ -380,7 +380,7 @@ export const useForm = <S, T = any, U = any, P extends FormItemProps = FormItemP
       }
     }
     return rets;
-  }, [props?.$required, options?.multiple, ...(options?.validationsDeps?.(props, states) ?? [])]);
+  }, [props?.$required, options?.multiple?.(props), ...(options?.validationsDeps?.(props, states) ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;

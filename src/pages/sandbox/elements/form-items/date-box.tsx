@@ -7,6 +7,7 @@ import Row from "@/components/elements/row";
 import { NextPage } from "next";
 import { useState } from "react";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
+import { sample_date, sample_number, sample_string } from "@/data-items/sample/item";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -104,6 +105,28 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row className="gap-2">
+        <DateBox
+          $tag="no item"
+          $onChange={v => console.log("no item: ", v)}
+          // $typeof="date"
+        />
+        <DateBox
+          $tag="date"
+          $dataItem={sample_date}
+          $onChange={v => console.log("date: ", v)}
+        />
+        <DateBox
+          $tag="string"
+          $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+        />
+        <DateBox
+          $tag="number"
+          $dataItem={sample_number}
+          $onChange={v => console.log("number: ", v)}
+        />
+      </Row>
       <DateBox
         $type={type}
         $tag="useState"

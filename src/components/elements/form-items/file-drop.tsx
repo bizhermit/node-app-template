@@ -30,7 +30,7 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
 
   const form = useForm<File | Array<File> | any>(props, {
     multipartFormData: true,
-    multiple: props.$multiple,
+    multiple: (props) => props.$multiple,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {

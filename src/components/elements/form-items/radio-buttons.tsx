@@ -47,7 +47,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
         loading,
       } as const;
     },
-    preventRequiredValidation: true,
+    preventRequiredValidation: () => true,
     generateChangeCallbackData: (props, states) => (a, b) => {
       return {
         afterData: states.source.find(item => equals(item[states.vdn], a)),

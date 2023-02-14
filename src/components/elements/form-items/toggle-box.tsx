@@ -44,7 +44,7 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
           };
       }
     },
-    preventRequiredValidation: true,
+    preventRequiredValidation: () => true,
     validations: (props) => {
       if (!props.$required) return [];
       return [(v) => {

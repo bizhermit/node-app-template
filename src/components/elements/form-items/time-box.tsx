@@ -71,7 +71,7 @@ const TimeBox = React.forwardRef<HTMLDivElement, TimeBoxProps>((props, ref) => {
     }
   };
 
-  const form = useForm<any>(props, {
+  const form = useForm(props, {
     interlockValidation: props.$rangePair != null,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];

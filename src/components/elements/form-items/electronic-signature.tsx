@@ -27,7 +27,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     $messagePosition: "bottom-hide",
     ...props,
   }, {
-    preventRequiredValidation: true,
+    preventRequiredValidation: () => true,
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$required) {

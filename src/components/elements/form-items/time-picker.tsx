@@ -79,7 +79,7 @@ const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>((props, ref
     scrollToSecondSelected();
   };
 
-  const form = useForm<any>(props, {
+  const form = useForm(props, {
     interlockValidation: props.$rangePair != null,
     validations: () => {
       if (props.$skipValidation) return [];

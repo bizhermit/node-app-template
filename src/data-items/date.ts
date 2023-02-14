@@ -3,12 +3,16 @@ import { dataItemKey } from "@/data-items/data-item";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import DatetimeUtils, { dateFormat, convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 
-const dateItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Date : C & DataItem_Date> => {
+const dateItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_Date, "type"> & { type: "date" } : C & Omit<DataItem_Date, "type"> & { type: "date" }> => {
   return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "date" });
 };
 
-export const monthItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Date : C & DataItem_Date> => {
+export const monthItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_Date, "type"> & { type: "month" } : C & Omit<DataItem_Date, "type"> & { type: "month" }> => {
   return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "month" });
+};
+
+export const yearItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_Date, "type"> & { type: "year" } : C & Omit<DataItem_Date, "type"> & { type: "year" }> => {
+  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "year" });
 };
 
 export namespace DateData {

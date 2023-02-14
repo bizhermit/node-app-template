@@ -47,7 +47,7 @@ const Slider: SliderFC = React.forwardRef<HTMLDivElement, SliderProps>(<
           };
       }
     },
-    preventRequiredValidation: true,
+    preventRequiredValidation: () => true,
   });
 
   const max = form.props.$max ?? defaultMax;
