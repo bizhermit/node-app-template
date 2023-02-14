@@ -15,8 +15,8 @@ type MessageContext = DataItemValidationResult | undefined;
 
 const getItem = (
   msgs: Array<MessageContext>,
-  key: Nullable<string | number> = undefined,
-  ctx: Nullable<DataItem> | DataContext = undefined,
+  key: string | number | null | undefined = undefined,
+  ctx: DataItem | DataContext | null | undefined = undefined,
   data?: Struct,
   index?: number,
   pctx?: DataContext,
@@ -222,7 +222,7 @@ const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: 
     }
   }
 
-  const v = data?.[key] as Nullable<boolean | number | string>;
+  const v = data?.[key] as boolean | number | string | null | undefined;
 
   if (ctx.required) {
     if (v !== tv && v !== fv) {

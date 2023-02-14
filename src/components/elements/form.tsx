@@ -17,6 +17,9 @@ const inputAttributes = (props: Struct, ...classNames: Array<string | null | und
   return ret;
 };
 
+type ValueType<T = any, D extends DataItem = DataItem> =
+  T extends any ? DataItemValueType<D, true> : T;
+
 type InputOmitProps = "name"
   | "defaultValue"
   | "defaultChecked"
@@ -29,13 +32,13 @@ export type FormItemProps<T = any, U = any, D extends DataItem = DataItem> = Omi
   $disabled?: boolean;
   $readOnly?: boolean;
   $required?: boolean;
-  $validations?: FormItemValidation<Nullable<T>> | Array<FormItemValidation<Nullable<T>>>;
+  $validations?: FormItemValidation<ValueType<T, D> | null | undefined> | Array<FormItemValidation<ValueType<T, D> | null | undefined>>;
   $interlockValidation?: boolean;
-  $defaultValue?: T;
-  $value?: Nullable<T>;
+  $defaultValue?: ValueType<T, D> | null | undefined;
+  $value?: ValueType<T, D> | null | undefined;
   $messagePosition?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onChange?: (after: Nullable<T>, before: Nullable<T>, data?: U) => void;
+  $onChange?: (after: ValueType<T, D> | null | undefined, before: ValueType<T, D> | null | undefined, data?: U) => void;
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
@@ -81,7 +84,7 @@ export const FormContext = createContext<FormContextProps>({
 
 type FormItemMountProps = {
   validation: () => void;
-  change: (value: Nullable<any>, absolute?: boolean) => void;
+  change: (value: any | null | undefined, absolute?: boolean) => void;
 };
 
 type PlainFormProps = {
@@ -293,15 +296,15 @@ export default Form;
 
 type UseFormOptions<T = any, U = any, P extends FormItemProps = FormItemProps> = {
   setDataItem?: (dataItem: NonNullable<P["$dataItem"]>, method: string) => P,
-  effect?: (value: Nullable<T>) => void;
+  effect?: (value: T | null | undefined) => void;
   effectDeps?: (props: P) => Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
-  validations?: (props: P) => Array<FormItemValidation<Nullable<T>>>;
+  validations?: (props: P) => Array<FormItemValidation<T | null | undefined>>;
   validationsDeps?: (props: P) => Array<any>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
-  generateChangeCallbackData?: (after?: Nullable<T>, before?: Nullable<T>) => U;
+  generateChangeCallbackData?: (after?: T | null | undefined, before?: T | null | undefined) => U;
   generateChangeCallbackDataDeps?: (props: P) => Array<any>;
 };
 
@@ -329,19 +332,19 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
     ...$props,
   };
 
-  const valueRef = useRef<Nullable<T>>((() => {
+  const valueRef = useRef<T | null | undefined>((() => {
     if (props == null) return undefined;
     if ("$value" in props) return props.$value;
     if ("$defaultValue" in props) return props.$defaultValue;
     return undefined;
   })());
   const [value, setValueImpl] = useState(valueRef.current);
-  const setCurrentValue = (value: Nullable<T>) => {
+  const setCurrentValue = (value: T | null | undefined) => {
     setValueImpl(valueRef.current = value);
   };
 
   const validations = useMemo(() => {
-    const rets: Array<FormItemValidation<Nullable<T>>> = [];
+    const rets: Array<FormItemValidation<T | null | undefined>> = [];
     if (props?.$required && !options?.preventRequiredValidation) {
       if (options?.multiple) {
         rets.push(v => {
@@ -426,7 +429,7 @@ export const useForm = <T = any, U = any, P extends FormItemProps = FormItemProp
     }
   }, [props?.$error]);
 
-  const change = useCallback((value: Nullable<T>, absolute?: boolean) => {
+  const change = useCallback((value: T | null | undefined, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
     const before = valueRef.current;
     setCurrentValue(value);

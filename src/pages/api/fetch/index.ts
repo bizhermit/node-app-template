@@ -34,6 +34,8 @@ export default apiHandler({
       boolean: booleanItem({
         // strict: true,
         // required: true,
+        // trueValue: "1",
+        // falseValue: "0",
       }),
       boolean01: booleanItem({
         // required: true,
@@ -119,6 +121,7 @@ export default apiHandler({
   post: async (ctx) => {
     const data = ctx.getData();
     // console.log(JSON.stringify(data, null, 2));
+    data.number;
     data.boolean;
     data.boolean01;
     // const date = data[notification_releaseDate.name];

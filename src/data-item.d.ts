@@ -14,8 +14,8 @@ type DataItemValidationResult = {
 };
 
 type DataItemValidation<T, D extends (DataItem | DataContext)> =
-  readonly ((v: Nullable<T>, key: string | number, ctx: D, data: Nullable<Struct | Array<any>>, index: Nullable<number>, pctx: DataContext | null | undefined)
-    => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>)| string | null | undefined))[];
+  readonly ((v: T | null | undefined, key: string | number, ctx: D, data: Struct | Array<any> | null | undefined, index: number | null | undefined, pctx: DataContext | null | undefined)
+    => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
 
 type DataItem_Base = {
   $$: any;
@@ -41,30 +41,30 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? string : Nullable<string>
-      ) : Nullable<string | number | boolean>
+        D["required"] extends true ? string : string | null | undefined
+      ) : string | number | boolea | null | undefined
     ) :
     D["type"] extends DataItem_Number["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? number : Nullable<number>
+        D["required"] extends true ? number : number | null | undefined
       ) : (
-        D["strict"] extends true ? Nullable<number> : Nullable<number | string>
+        D["strict"] extends true ? number | null | undefined : number | string | null | undefined
       )
     ) :
     D["type"] extends DataItem_Boolean["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? (
           (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)
-        ) : Nullable<(D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)>
+        ) : (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined
       ) : (
         D["strict"] extends true ?
-        Nullable<(D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)> :
-        Nullable<(D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | boolean | string | number>
+        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined :
+        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | boolean | string | number | null | undefined
       )
     ) :
     D["type"] extends DataItem_Date["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? Date : Nullable<Date>
+        D["required"] extends true ? Date : Date | null | undefined
       ) : DateValue | null | undefined
     ) :
     D["type"] extends DataItem_Time["type"] ? (
@@ -74,12 +74,12 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? Array<DataItemValueType<D["item"], Strict>> : Nullable<Array<DataItemValueType<D["item"], Strict>>>
+        D["required"] extends true ? Array<DataItemValueType<D["item"], Strict>> : Array<DataItemValueType<D["item"], Strict>> | null | undefined
       ) : Array<DataItemValueType<D["item"], Strict>> | undefined
     ) :
     D["type"] extends DataItem_Struct["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : Nullable<{ [P in keyof D["item"]]: D["item"][P] }>
+        D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : { [P in keyof D["item"]]: D["item"][P] } | null | undefined
       ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict> }
     ) :
     any
@@ -139,11 +139,11 @@ type DataItem_Number = DataItem_Base & {
  * Boolean
  */
 
-type DataItem_Boolean = DataItem_Base & {
+type DataItem_Boolean<T extends boolean | number | string = boolean | number | string, F extends boolean | number | string = boolean | number | string> = DataItem_Base & {
   type: "boolean";
-  validations?: DataItemValidation<boolean | number | string, DataItem_Boolean>;
-  trueValue?: boolean | number | string;
-  falseValue?: boolean | number | string;
+  validations?: DataItemValidation<T | F, DataItem_Boolean<T, F>>;
+  trueValue: T;
+  falseValue: F;
 };
 
 /**
@@ -161,8 +161,8 @@ type DateRangePair = {
 };
 
 type ValidDays = "weekday" | "holiday" | string
-    | Array<DateValue | { date: DateValue; valid?: boolean; }>
-    | ((date: Date) => boolean);
+  | Array<DateValue | { date: DateValue; valid?: boolean; }>
+  | ((date: Date) => boolean);
 type ValidDaysMode = "allow" | "disallow";
 
 type DataItem_Date = DataItem_Base & {
