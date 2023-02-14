@@ -7,6 +7,7 @@ import notification_body from "@/data-items/notification/body";
 import notification_releaseDate from "@/data-items/notification/release-date";
 import notification_title from "@/data-items/notification/title";
 import numberItem from "@/data-items/number";
+import { sample_boolean, sample_number, sample_string } from "@/data-items/sample/item";
 import stringItem from "@/data-items/string";
 import structItem from "@/data-items/struct";
 import timeItem from "@/data-items/time";
@@ -26,11 +27,20 @@ export default apiHandler({
   },
   $post: {
     req: {
+      sample_string: sample_string,
+      sample_number: {
+        ...sample_number,
+        required: true,
+      },
       number: numberItem({
         label: "年齢",
         // strict: true,
         required: true,
       }),
+      sample_boolean: {
+        ...sample_boolean,
+        required: true,
+      },
       boolean: booleanItem({
         // strict: true,
         // required: true,
@@ -121,6 +131,9 @@ export default apiHandler({
   post: async (ctx) => {
     const data = ctx.getData();
     // console.log(JSON.stringify(data, null, 2));
+    data.sample_number;
+    data.title;
+    data.sample_boolean;
     data.number;
     data.boolean;
     data.boolean01;

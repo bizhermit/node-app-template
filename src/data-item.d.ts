@@ -30,7 +30,7 @@ type DataContext = { [key: string]: DataItem | DataContext };
 type DataItem = (DataItem_Base & { type: "any" })
   | DataItem_String
   | DataItem_Number
-  | DataItem_Boolean
+  | DataItem_Boolean<any, any>
   | DataItem_Date
   | DataItem_Time
   | DataItem_Array<any>
@@ -42,7 +42,7 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? string : string | null | undefined
-      ) : string | number | boolea | null | undefined
+      ) : string | number | boolean | null | undefined
     ) :
     D["type"] extends DataItem_Number["type"] ? (
       Strict extends true ? (

@@ -138,7 +138,9 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await fetchApi.post("/fetch", {
+                      sample_number: "300",
                       number: "0100",
+                      sample_boolean: "1",
                       boolean: 2,
                       boolean01: false,
                       title: "titleあ",

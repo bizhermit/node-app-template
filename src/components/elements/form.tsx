@@ -17,8 +17,8 @@ const inputAttributes = (props: Struct, ...classNames: Array<string | null | und
   return ret;
 };
 
-type ValueType<T = any, D extends DataItem = DataItem> =
-  T extends any ? DataItemValueType<D, true> : T;
+type ValueType<T = null, D extends DataItem | undefined = undefined> =
+  T extends any ? (D extends undefined ? T : DataItemValueType<Exclude<D, undefined>, true>) : T;
 
 type InputOmitProps = "name"
   | "defaultValue"
@@ -26,7 +26,7 @@ type InputOmitProps = "name"
   | "color"
   | "onChange"
   | "children";
-export type FormItemProps<T = any, U = any, D extends DataItem = DataItem> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
+export type FormItemProps<T = any, U = any, D extends DataItem | undefined = DataItem> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;
   $disabled?: boolean;
