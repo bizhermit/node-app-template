@@ -17,8 +17,10 @@ const inputAttributes = (props: Struct, ...classNames: Array<string | null | und
   return ret;
 };
 
-type ValueType<T = null, D extends DataItem | undefined = undefined> =
-  T extends any ? (D extends undefined ? T : DataItemValueType<Exclude<D, undefined>, true>) : T;
+type ValueType<T = undefined, D extends DataItem | undefined = undefined, V = undefined> =
+  V extends undefined ? (
+    T extends any ? (D extends undefined ? T : DataItemValueType<Exclude<D, undefined>, true>) : T
+  ) : V;
 
 type InputOmitProps = "name"
   | "defaultValue"
@@ -26,19 +28,19 @@ type InputOmitProps = "name"
   | "color"
   | "onChange"
   | "children";
-export type FormItemProps<T = any, U = any, D extends DataItem | undefined = DataItem> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
+export type FormItemProps<T = any, U = any, D extends DataItem | undefined = DataItem, V = undefined> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;
   $disabled?: boolean;
   $readOnly?: boolean;
   $required?: boolean;
-  $validations?: FormItemValidation<ValueType<T, D> | null | undefined> | Array<FormItemValidation<ValueType<T, D> | null | undefined>>;
+  $validations?: FormItemValidation<ValueType<T, D, V> | null | undefined> | Array<FormItemValidation<ValueType<T, D, V> | null | undefined>>;
   $interlockValidation?: boolean;
-  $defaultValue?: ValueType<T, D> | null | undefined;
-  $value?: ValueType<T, D> | null | undefined;
+  $defaultValue?: ValueType<T, D, V> | null | undefined;
+  $value?: ValueType<T, D, V> | null | undefined;
   $messagePosition?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onChange?: (after: ValueType<T, D> | null | undefined, before: ValueType<T, D> | null | undefined, data?: U) => void;
+  $onChange?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data?: U) => void;
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;

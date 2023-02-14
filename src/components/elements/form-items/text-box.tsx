@@ -7,7 +7,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import React, { FunctionComponent, ReactElement, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
-export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string, null, D> & {
+export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string, null, D, string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $preventInputWithinLength?: boolean;
