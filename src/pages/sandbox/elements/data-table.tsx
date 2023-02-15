@@ -1,5 +1,6 @@
 import Button from "@/components/elements/button";
 import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import dataTableButtonColumn from "@/components/elements/data-table/button";
 import dataTableCheckBoxColumn from "@/components/elements/data-table/check-box";
 import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
@@ -26,6 +27,16 @@ const Page: NextPage = () => {
       dataTableCheckBoxColumn({
         name: "selected",
         bulkCheck: true,
+      }),
+      dataTableButtonColumn({
+        name: "button",
+        // buttonText: "button",
+        round: true,
+        outline: true,
+        width: "9rem",
+        onClick: (ctx) => {
+          console.log(ctx);
+        },
       }),
       {
         name: "col1",
@@ -120,7 +131,8 @@ const Page: NextPage = () => {
         col4: `col4 - ${index}`,
         col5: `col5 - ${index}`,
         number: index * 1000,
-        date: `2023-01-${1 + index}`
+        date: `2023-01-${1 + index}`,
+        button: `button${index}`,
       } as Data;
     }));
   };

@@ -62,11 +62,18 @@ $borderStyle: 1px solid var(--c-border);
   align-items: stretch;
   background: inherit;
   color: inherit;
+  overflow: hidden;
+  z-index: 0;
 
   &:not(:first-child) {
     &[data-border="true"] {
       border-top: #{$borderStyle};
     }
+  }
+
+  &:hover {
+    overflow: visible;
+    z-index: 1;
   }
 }
 
@@ -91,6 +98,8 @@ $borderStyle: 1px solid var(--c-border);
   align-items: center;
   background: inherit;
   color: inherit;
+  overflow: hidden;
+  z-index: 0;
 
   &[data-align="left"] {
     justify-content: flex-start;
@@ -102,6 +111,11 @@ $borderStyle: 1px solid var(--c-border);
 
   &[data-align="right"] {
     justify-content: right;
+  }
+
+  &:hover {
+    overflow: visible;
+    z-index: 1;
   }
 }
 
@@ -118,7 +132,9 @@ $borderStyle: 1px solid var(--c-border);
   justify-content: stretch;
   align-items: stretch;
 
-  >.grow {
+  >.grow,
+  >.hrow,
+  >.brow {
     flex: 1;
     max-height: 100%;
   }
@@ -127,8 +143,6 @@ $borderStyle: 1px solid var(--c-border);
 .hcell,
 .bcell,
 .rcell {
-  overflow: hidden;
-
   &:not(:first-child) {
     &[data-border="true"] {
       border-left: #{$borderStyle};
