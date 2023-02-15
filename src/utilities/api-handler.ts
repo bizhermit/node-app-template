@@ -15,8 +15,8 @@ type MessageContext = DataItemValidationResult | undefined;
 
 const getItem = (
   msgs: Array<MessageContext>,
-  key: Nullable<string | number> = undefined,
-  ctx: Nullable<DataItem> | DataContext = undefined,
+  key: string | number | null | undefined = undefined,
+  ctx: DataItem | DataContext | null | undefined = undefined,
   data?: Struct,
   index?: number,
   pctx?: DataContext,
@@ -35,6 +35,7 @@ const getItem = (
         break;
       case "date":
       case "month":
+      case "year":
         getDateItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "time":
@@ -45,6 +46,9 @@ const getItem = (
         break;
       case "struct":
         getStructItem(msgs, key!, ctx, data, index, pctx);
+        break;
+      case "file":
+        // TODO: file
         break;
       default:
         break;
@@ -186,6 +190,9 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
       pushMsg(NumberData.maxValidation(v, ctx.max, name));
     }
   }
+  if (ctx.float != null) {
+    pushMsg(NumberData.floatValidation(v, ctx.float, name));
+  }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
@@ -221,7 +228,7 @@ const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: 
     }
   }
 
-  const v = data?.[key] as Nullable<boolean | number | string>;
+  const v = data?.[key] as boolean | number | string | null | undefined;
 
   if (ctx.required) {
     if (v !== tv && v !== fv) {
@@ -248,15 +255,41 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   };
 
+  let date: Date | undefined = undefined;
   if (data) {
     const v = data[key];
     const t = typeof v;
     if (v != null) {
       try {
         if (t === "string" || t === "number") {
-          data[key] = DatetimeUtils.convert(v);
+          date = DatetimeUtils.convert(v);
+          if (date) {
+            DatetimeUtils.removeTime(date);
+            switch (ctx.type) {
+              case "year":
+                date.setDate(1);
+                date.setMonth(0);
+                break;
+              case "month":
+                date.setDate(1);
+                break;
+              default:
+                break;
+            }
+          }
         } else {
           throw new Error;
+        }
+        switch (ctx.typeof) {
+          case "date":
+            data[key] = date;
+            break;
+          case "number":
+            data[key] = date?.getTime();
+            break;
+          default:
+            data[key] = DatetimeUtils.format(date);
+            break;
         }
       } catch {
         pushMsg(`${name}を日付型に変換できません。`);
@@ -265,28 +298,29 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   }
 
-  const v = data?.[key] as Nullable<Date>;
-
   if (ctx.required) {
-    pushMsg(DateData.requiredValidation(v, name));
+    pushMsg(DateData.requiredValidation(date, name));
   }
   if (ctx.min != null && ctx.max != null) {
-    pushMsg(DateData.rangeValidation(v, ctx.min, ctx.max, ctx.type, name));
+    pushMsg(DateData.rangeValidation(date, ctx.min, ctx.max, ctx.type, name));
   } else {
     if (ctx.min) {
-      pushMsg(DateData.minValidation(v, ctx.min, ctx.type, name));
+      pushMsg(DateData.minValidation(date, ctx.min, ctx.type, name));
     }
     if (ctx.max) {
-      pushMsg(DateData.maxValidation(v, ctx.max, ctx.type, name));
+      pushMsg(DateData.maxValidation(date, ctx.max, ctx.type, name));
     }
   }
   if (ctx.rangePair) {
-    pushMsg(DateData.contextValidation(v, ctx.rangePair, data, ctx.type, name, pctx?.[ctx.rangePair.name]?.label));
+    const pairCtx = pctx?.[ctx.rangePair.name];
+    if (pairCtx != null && dataItemKey in pairCtx && (pairCtx.type === "date" || pairCtx.type === "month" || pairCtx.type === "year")) {
+      pushMsg(DateData.contextValidation(date, ctx.rangePair, data, ctx.type, name, pairCtx?.label));
+    }
   }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      pushMsg(validation(v, key, ctx, data, index, pctx));
+      pushMsg(validation(date, key, ctx, data, index, pctx));
     }
   }
 };
@@ -303,6 +337,7 @@ const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   };
 
+  let timeNum: number | undefined = undefined;
   if (data) {
     const v = data[key];
     const t = typeof v;
@@ -312,17 +347,22 @@ const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
           case "number":
             break;
           case "string":
-            data[key] = TimeUtils.convertMillisecondsToUnit(new Time(v).getTime(), ctx.unit);
+            timeNum = data[key] = TimeUtils.convertMillisecondsToUnit(new Time(v).getTime(), ctx.unit);
             break;
           default:
             if ("time" in v) {
               const tv = v.time;
               if (typeof tv === "number") {
-                data[key] = TimeUtils.convertMillisecondsToUnit(v.getTime(), ctx.unit);
+                timeNum = data[key] = TimeUtils.convertMillisecondsToUnit(v.getTime(), ctx.unit);
                 break;
               }
             }
             throw new Error;
+        }
+        if (ctx.typeof === "string") {
+          if (timeNum != null) {
+            data[key] = TimeData.format(TimeUtils.convertUnitToMilliseconds(timeNum, ctx.unit), ctx.mode);
+          }
         }
       } catch {
         pushMsg(`${name}を時間型に変換できません。`);
@@ -331,29 +371,29 @@ const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
     }
   }
 
-  const v = data?.[key] as (number | null | undefined);
-
   if (ctx.required) {
-    pushMsg(TimeData.requiredValidation(v, name));
+    pushMsg(TimeData.requiredValidation(timeNum, name));
   }
   if (ctx.min != null && ctx.max != null) {
-    pushMsg(TimeData.rangeValidation(v, ctx.min, ctx.max, ctx.mode, ctx.unit, name));
+    pushMsg(TimeData.rangeValidation(timeNum, ctx.min, ctx.max, ctx.mode, ctx.unit, name));
   } else {
     if (ctx.min) {
-      pushMsg(TimeData.minValidation(v, ctx.min, ctx.mode, ctx.unit, name));
+      pushMsg(TimeData.minValidation(timeNum, ctx.min, ctx.mode, ctx.unit, name));
     }
     if (ctx.max) {
-      pushMsg(TimeData.maxValidation(v, ctx.max, ctx.mode, ctx.unit, name));
+      pushMsg(TimeData.maxValidation(timeNum, ctx.max, ctx.mode, ctx.unit, name));
     }
   }
   if (ctx.rangePair) {
-    const pairCtx = pctx?.[ctx.rangePair.name] as DataItem_Time;
-    pushMsg(TimeData.contextValidation(v, ctx.rangePair, data, ctx.mode, ctx.unit, name, pairCtx?.unit, pairCtx?.label));
+    const pairCtx = pctx?.[ctx.rangePair.name];
+    if (pairCtx != null && dataItemKey in pairCtx && pairCtx.type === "time") {
+      pushMsg(TimeData.contextValidation(timeNum, ctx.rangePair, data, ctx.mode, ctx.unit, name, pairCtx?.unit, pairCtx?.label));
+    }
   }
 
   if (ctx.validations) {
     for (const validation of ctx.validations) {
-      pushMsg(validation(v, key, ctx, data, index, pctx));
+      pushMsg(validation(timeNum, key, ctx, data, index, pctx));
     }
   }
 };

@@ -3,6 +3,7 @@ import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { sample_boolean, sample_number, sample_string } from "@/data-items/sample/item";
 import { colors } from "@/utilities/sandbox";
 import { NextPage } from "next";
 import { useState } from "react";
@@ -86,6 +87,31 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row className="gap-2">
+        <ToggleBox
+          $onChange={v => console.log("no item: ", v)}
+        >
+          no item
+        </ToggleBox>
+        <ToggleBox
+          $dataItem={sample_boolean}
+          $onChange={v => console.log("boolean: ", v)}
+        >
+          boolean
+        </ToggleBox>
+        <ToggleBox
+          $dataItem={sample_number}
+          $onChange={v => console.log("number: ", v)}
+        >
+          number
+        </ToggleBox>
+        <ToggleBox
+          $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+        >
+          string
+        </ToggleBox>
+      </Row>
       <Row $vAlign="top" className="gap-1">
         <ToggleBox
           $tag="useState"

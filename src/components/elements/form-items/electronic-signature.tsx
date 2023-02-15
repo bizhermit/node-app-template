@@ -1,11 +1,14 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useForm } from "@/components/elements/form";
-import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "@/components/utilities/attributes";
 import { VscClearAll, VscClose, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
-export type ElectronicSignatureProps = FormItemProps<string> & {
+export type ElectronicSignatureProps<
+  D extends DataItem_String | DataItem_File | undefined = undefined
+> = FormItemProps<string, D, string> & {
+  $typeof?: FileValueType;
   $width?: number | string;
   $height?: number | string;
   $lineWidth?: number;
@@ -16,17 +19,52 @@ export type ElectronicSignatureProps = FormItemProps<string> & {
   $buttonsPosition?: "hide" | "right" | "bottom" | "top" | "left";
 };
 
-const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignatureProps>((props, ref) => {
+interface ElectronicSignatureFC extends FunctionComponent {
+  <D extends DataItem_String | DataItem_File | undefined = undefined>(attrs: ElectronicSignatureProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const ElectronicSignature: ElectronicSignatureFC = React.forwardRef<HTMLDivElement, ElectronicSignatureProps>(<
+  D extends DataItem_String | DataItem_File | undefined = undefined
+>(p: ElectronicSignatureProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "file":
+          return {
+            $typeof: dataItem.typeof,
+          };
+        default:
+          return {};
+      }
+    },
+    over: ({ dataItem, props }) => {
+      const common: FormItemProps = {
+        $messagePosition: "bottom-hide"
+      };
+      switch (dataItem.type) {
+        case "file":
+          return {
+            ...common,
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+          } as ElectronicSignatureProps<D>;
+        default:
+          return {
+            ...common,
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+          } as ElectronicSignatureProps<D>;
+      }
+    },
+  });
+
+  const href = useRef<HTMLInputElement>(null!);
   const cref = useRef<HTMLCanvasElement>(null!);
   const [revision, setRevision] = useState(-1);
   const history = useRef<Array<ImageData>>([]);
-  const position = props.$buttonsPosition || "right";
   const nullValue = useRef("");
 
-  const form = useForm({
-    $messagePosition: "bottom-hide",
-    ...props,
-  }, {
+  const ctx = useFormItemContext(form, props, {
+    multipartFormData: props.$typeof === "file",
     preventRequiredValidation: true,
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
@@ -42,14 +80,24 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     },
   });
 
-  const canClear = StringUtils.isNotEmpty(form.value) && form.value !== nullValue.current;
+  const position = props.$buttonsPosition || "right";
+  const canClear = StringUtils.isNotEmpty(ctx.value) && ctx.value !== nullValue.current;
   const canRedo = revision >= 0 && revision < history.current.length - 1;
   const canUndo = revision > 0;
   const canClearHist = history.current.length > 1;
 
+  const get2DContext = () => {
+    return cref.current.getContext("2d", { willReadFrequently: true })!;
+  };
+
   const save = () => {
     if (cref.current == null) return;
-    form.change(cref.current.toDataURL());
+    if (props.$typeof === "file") {
+      // TODO: convert to png
+      // ctx.change(cref.current.toDataURL());
+      return;
+    }
+    ctx.change(cref.current.toDataURL());
   };
 
   const spillHistory = () => {
@@ -60,8 +108,8 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
 
   const clearHistory = () => {
     history.current.splice(0, history.current.length);
-    const ctx = getContext();
-    history.current.push(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
+    const canvas = get2DContext();
+    history.current.push(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
     spillHistory();
     setRevision(0);
   };
@@ -79,18 +127,14 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     setRevision(history.current.length - 1);
   };
 
-  const getContext = () => {
-    return cref.current.getContext("2d", { willReadFrequently: true })!;
-  };
-
   const drawStart = (baseX: number, baseY: number, isTouch?: boolean) => {
-    if (!form.editable || cref.current == null) return;
-    const ctx = getContext();
+    if (!ctx.editable || cref.current == null) return;
+    const canvas = get2DContext();
     const lineWidth = Math.max(1, props.$lineWidth || 2);
     const lineColor = props.$lineColor || "black";
-    ctx.strokeStyle = lineColor;
-    ctx.fillStyle = lineColor;
-    ctx.lineWidth = lineWidth;
+    canvas.strokeStyle = lineColor;
+    canvas.fillStyle = lineColor;
+    canvas.lineWidth = lineWidth;
     const rect = cref.current.getBoundingClientRect();
     const posX = rect.left, posY = rect.top;
     let lastX = 0, lastY = 0, curX = baseX - posX, curY = baseY - posY;
@@ -99,17 +143,17 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       lastY = curY;
       curX = x - posX;
       curY = y - posY;
-      ctx.beginPath();
-      ctx.moveTo(lastX, lastY);
-      ctx.lineTo(curX, curY);
-      ctx.lineWidth = lineWidth;
-      ctx.stroke();
-      ctx.closePath();
+      canvas.beginPath();
+      canvas.moveTo(lastX, lastY);
+      canvas.lineTo(curX, curY);
+      canvas.lineWidth = lineWidth;
+      canvas.stroke();
+      canvas.closePath();
     };
     const endImpl = () => {
-      ctx.stroke();
-      ctx.closePath();
-      pushHistory(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
+      canvas.stroke();
+      canvas.closePath();
+      pushHistory(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
       if (props.$autoSave) save();
     };
     if (isTouch) {
@@ -134,9 +178,9 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
       window.addEventListener("mousemove", move);
     }
     popHistory();
-    ctx.beginPath();
-    ctx.fillRect(curX - lineWidth / 2, curY - lineWidth / 2, lineWidth, lineWidth);
-    ctx.closePath();
+    canvas.beginPath();
+    canvas.fillRect(curX - lineWidth / 2, curY - lineWidth / 2, lineWidth, lineWidth);
+    canvas.closePath();
   };
 
   const mouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -149,10 +193,10 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
 
   const clearCanvas = (history?: boolean) => {
     if (cref.current == null) return;
-    const ctx = getContext();
+    const canvas = get2DContext();
     popHistory();
-    ctx.clearRect(0, 0, cref.current.width, cref.current.height);
-    pushHistory(ctx.getImageData(0, 0, cref.current.width, cref.current.height));
+    canvas.clearRect(0, 0, cref.current.width, cref.current.height);
+    pushHistory(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
     if (history) clearHistory();
     if (props.$autoSave) save();
   };
@@ -161,8 +205,8 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     if (!canRedo) return;
     const r = Math.min(history.current.length - 1, revision + 1);
     setRevision(r);
-    const ctx = getContext();
-    ctx.putImageData(history.current[r], 0, 0);
+    const canvas = get2DContext();
+    canvas.putImageData(history.current[r], 0, 0);
     if (props.$autoSave) save();
     return true;
   };
@@ -171,8 +215,8 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     if (!canUndo) return;
     const r = Math.max(0, revision - 1);
     setRevision(r);
-    const ctx = getContext();
-    ctx.putImageData(history.current[r], 0, 0);
+    const canvas = get2DContext();
+    canvas.putImageData(history.current[r], 0, 0);
     if (props.$autoSave) save();
     return true;
   };
@@ -184,12 +228,12 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
   }, []);
 
   useEffect(() => {
-    if (StringUtils.isNotEmpty(form.valueRef.current)) {
-      const ctx = getContext();
+    if (StringUtils.isNotEmpty(ctx.valueRef.current)) {
+      const canvas = get2DContext();
       const img = new Image();
-      img.src = form.valueRef.current;
+      img.src = ctx.valueRef.current;
       img.onload = () => {
-        ctx.drawImage(img, 0, 0);
+        canvas.drawImage(img, 0, 0);
       };
     } else {
       clearCanvas();
@@ -197,23 +241,32 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
     if (!("$value" in props)) {
       clearHistory();
     }
-  }, [props.$value, props.$bind, form.bind]);
+  }, [props.$value, props.$bind, ctx.bind]);
 
   useEffect(() => {
     const imageData = history.current[revision];
     if (imageData) {
-      const ctx = getContext();
-      ctx.putImageData(imageData, 0, 0);
+      const canvas = get2DContext();
+      canvas.putImageData(imageData, 0, 0);
     }
-  }, [form.editable]);
+  }, [ctx.editable]);
+
+  useEffect(() => {
+    if (props.$typeof === "file" && href.current) {
+      const files = (Array.isArray(ctx.value) ? ctx.value : [ctx.value]).filter(file => file != null);
+      const dt = new DataTransfer();
+      files.forEach(file => dt.items.add(file));
+      href.current.files = dt.files;
+    }
+  }, [ctx.value]);
 
   return (
     <FormItemWrap
       {...props}
       ref={ref}
-      $$form={form}
+      $context={ctx}
       $preventFieldLayout
-      $useHidden
+      $useHidden={props.$typeof !== "file"}
       $mainProps={{
         className: Style.main,
         "data-position": position,
@@ -227,7 +280,7 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
         width={props.$width || 500}
         height={props.$height || 200}
       />
-      {form.editable && position !== "hide" &&
+      {ctx.editable && position !== "hide" &&
         <div
           className={Style.buttons}
         >
@@ -273,6 +326,14 @@ const ElectronicSignature = React.forwardRef<HTMLDivElement, ElectronicSignature
             <VscClearAll />
           </Button>
         </div>
+      }
+      {props.name &&
+        <input
+          className={Style.file}
+          ref={href}
+          type="file"
+          name={props.name}
+        />
       }
     </FormItemWrap>
   );

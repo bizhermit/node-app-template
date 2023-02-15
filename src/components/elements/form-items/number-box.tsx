@@ -1,5 +1,5 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { useRef } from "react";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import React, { FunctionComponent, ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
@@ -9,7 +9,7 @@ import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { NumberData } from "@/data-items/number";
 
-export type NumberBoxProps = FormItemProps<number> & {
+export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
   $max?: number;
   $min?: number;
   $sign?: "only-positive" | "only-negative";
@@ -26,10 +26,54 @@ export type NumberBoxProps = FormItemProps<number> & {
   $hideClearButton?: boolean;
 };
 
+interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
+  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: NumberBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
 const defaultWidth = 150;
 
-const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) => {
+const NumberBox: NumberBoxFC = React.forwardRef<HTMLDivElement, NumberBoxProps>(<
+  D extends DataItem_Number | DataItem_String | undefined = undefined
+>(p: NumberBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "string":
+          return {
+            $min: 0,
+            $float: 0,
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => String(v))),
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
+          };
+        default:
+          return {
+            $min: dataItem.min,
+            $max: dataItem.max,
+            $float: dataItem.float,
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v)),
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
+          };
+      }
+    },
+    over: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "string":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => String(v))),
+          };
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem)),
+          };
+      }
+    },
+  });
 
   const toString = (v?: Nullable<number>) => {
     if (props.$preventThousandSeparate) return String(v ?? "");
@@ -38,15 +82,10 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
 
   const renderFormattedValue = () => {
     if (!iref.current) return;
-    iref.current.value = toString(form.valueRef.current);
+    iref.current.value = toString(ctx.valueRef.current);
   };
 
-  const renderNumberValue = () => {
-    if (!iref.current) return;
-    iref.current.value = String(form.valueRef.current ?? "");
-  };
-
-  const form = useForm(props, {
+  const ctx = useFormItemContext(form, props, {
     effect: () => {
       renderFormattedValue();
     },
@@ -67,12 +106,17 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
     },
   });
 
+  const renderNumberValue = () => {
+    if (!iref.current) return;
+    iref.current.value = String(ctx.valueRef.current ?? "");
+  };
+
   const changeImpl = (value?: string, preventCommit?: boolean): Nullable<number> => {
     if (isEmpty(value)) {
-      if (preventCommit !== true) form.change(undefined);
+      if (preventCommit !== true) ctx.change(undefined);
       return undefined;
     }
-    let num = form.valueRef.current;
+    let num = ctx.valueRef.current;
     const float = props.$float ?? 0;
     const revert = () => {
       if (iref.current) renderNumberValue();
@@ -107,7 +151,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         }
         break;
     }
-    if (num != null && !isNaN(num!) && preventCommit !== true) form.change(num);
+    if (num != null && !isNaN(num!) && preventCommit !== true) ctx.change(num);
     return num;
   };
 
@@ -119,19 +163,19 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
   };
 
   const incrementValue = (format?: boolean, ctr?: boolean) => {
-    const num = changeImpl(String(form.valueRef.current == null ? (ctr ? props.$max : props.$min ?? 0) :
+    const num = changeImpl(String(ctx.valueRef.current == null ? (ctr ? props.$max : props.$min ?? 0) :
       ((ctr && props.$max != null) ? props.$max :
-        steppedValue(add(form.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
-    form.change(num);
+        steppedValue(add(ctx.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
+    ctx.change(num);
     if (format) renderFormattedValue();
     else renderNumberValue();
   };
 
   const decrementValue = (format?: boolean, ctr?: boolean) => {
-    const num = changeImpl(String(form.valueRef.current == null ? (props.$min ?? 0) :
+    const num = changeImpl(String(ctx.valueRef.current == null ? (props.$min ?? 0) :
       ((ctr && props.$min != null) ? props.$min :
-        steppedValue(minus(form.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
-    form.change(num);
+        steppedValue(minus(ctx.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
+    ctx.change(num);
     if (format) renderFormattedValue();
     else renderNumberValue();
   };
@@ -160,12 +204,12 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
   const keydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case "ArrowUp":
-        if (props.$preventKeydownIncrement || !form.editable) return;
+        if (props.$preventKeydownIncrement || !ctx.editable) return;
         incrementValue(false, e.ctrlKey);
         e.preventDefault();
         break;
       case "ArrowDown":
-        if (props.$preventKeydownIncrement || !form.editable) return;
+        if (props.$preventKeydownIncrement || !ctx.editable) return;
         decrementValue(false, e.ctrlKey);
         e.preventDefault();
         break;
@@ -175,7 +219,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
   };
 
   const focus = () => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     renderNumberValue();
   };
 
@@ -184,18 +228,18 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
   };
 
   const clear = () => {
-    if (!form.editable) return;
-    form.change(undefined);
+    if (!ctx.editable) return;
+    ctx.change(undefined);
     renderFormattedValue();
   };
 
-  const hasData = form.value != null;
+  const hasData = ctx.value != null;
 
   return (
     <FormItemWrap
       {...props}
       ref={ref}
-      $$form={form}
+      $context={ctx}
       $useHidden
       data-has={hasData}
       $mainProps={{
@@ -210,11 +254,11 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         ref={iref}
         type="text"
         className={Style.input}
-        placeholder={form.editable ? props.placeholder : ""}
-        disabled={form.disabled}
-        readOnly={form.readOnly}
+        placeholder={ctx.editable ? props.placeholder : ""}
+        disabled={ctx.disabled}
+        readOnly={ctx.readOnly}
         tabIndex={props.tabIndex}
-        defaultValue={toString(form.value)}
+        defaultValue={toString(ctx.value)}
         onChange={e => changeImpl(e.target.value)}
         onFocus={focus}
         onBlur={blur}
@@ -222,7 +266,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
         inputMode={props.$inputMode || (props.$float ? "decimal" : "numeric")}
         autoComplete="off"
       />
-      {form.editable && props.$hideClearButton !== true &&
+      {ctx.editable && props.$hideClearButton !== true &&
         <div
           className={Style.clear}
           onClick={clear}
@@ -231,7 +275,7 @@ const NumberBox = React.forwardRef<HTMLDivElement, NumberBoxProps>((props, ref) 
           <VscClose />
         </div>
       }
-      {form.editable && !props.$hideButtons &&
+      {ctx.editable && !props.$hideButtons &&
         <div
           className={Style.buttons}
         >

@@ -3,10 +3,8 @@
 import arrayItem from "@/data-items/array";
 import booleanItem from "@/data-items/boolean";
 import dateItem from "@/data-items/date";
-import notification_body from "@/data-items/notification/body";
-import notification_releaseDate from "@/data-items/notification/release-date";
-import notification_title from "@/data-items/notification/title";
 import numberItem from "@/data-items/number";
+import { sample_boolean, sample_date, sample_month, sample_number, sample_string, sample_time, sample_year } from "@/data-items/sample/item";
 import stringItem from "@/data-items/string";
 import structItem from "@/data-items/struct";
 import timeItem from "@/data-items/time";
@@ -26,19 +24,34 @@ export default apiHandler({
   },
   $post: {
     req: {
-      number: numberItem({
-        label: "年齢",
-        // strict: true,
-        required: true,
-      }),
-      boolean: booleanItem({
-        // strict: true,
-        // required: true,
-      }),
-      boolean01: booleanItem({
-        // required: true,
+      sample_string: sample_string,
+      string: stringItem(),
+      sample_number: sample_number,
+      number: numberItem(),
+      sample_boolean: sample_boolean,
+      boolean: booleanItem(),
+      boolean_num: booleanItem({
         trueValue: 1,
         falseValue: 0,
+      }),
+      boolean_str: booleanItem({
+        trueValue: "1",
+        falseValue: "9",
+      }),
+      sample_date: sample_date,
+      sample_month: sample_month,
+      sample_year: sample_year,
+      date_date: dateItem({
+        typeof: "date",
+        // min: "2023-02-16",
+      }),
+      date_str: dateItem({
+        typeof: "string",
+        // min: "2023-02-16",
+      }),
+      date_num: dateItem({
+        typeof: "number",
+        // min: "2023-02-16",
       }),
       date1: dateItem({
         required: true,
@@ -55,6 +68,13 @@ export default apiHandler({
           name: "date1",
           position: "before",
         },
+      }),
+      sample_time: sample_time,
+      time_num: timeItem({
+        typeof: "number",
+      }),
+      time_str: timeItem({
+        typeof: "string",
       }),
       time1: timeItem({
         required: true,
@@ -75,39 +95,27 @@ export default apiHandler({
           position: "before",
         },
       }),
-      title: {
-        ...notification_title,
-        required: true,
-      },
-      [notification_body.name]: notification_body,
-      [notification_releaseDate.name]: notification_releaseDate,
       array: arrayItem({
-        item: {
-          ...notification_title,
-          required: true,
-        },
+        item: sample_string,
         required: true,
       }),
       arrayStruct: arrayItem({
         item: {
-          [notification_title.name]: notification_title,
-          [notification_body.name]: notification_body,
-          [notification_releaseDate.name]: notification_releaseDate,
+          sample_string: sample_string,
+          sample_number: sample_number,
+          sample_boolean: sample_boolean,
         },
       }),
       struct: {
-        [notification_title.name]: notification_title,
-        [notification_body.name]: notification_body,
-        [notification_releaseDate.name]: notification_releaseDate,
+        sample_string: sample_string,
+        sample_number: sample_number,
+        sample_boolean: sample_boolean,
       },
       structItem: structItem({
         item: {
-          title: {
-            ...notification_title,
-            required: true,
-          },
-          [notification_body.name]: notification_body,
-          [notification_releaseDate.name]: notification_releaseDate,
+          sample_string: sample_string,
+          sample_number: sample_number,
+          sample_boolean: sample_boolean,
         },
         required: true,
       })
@@ -118,11 +126,9 @@ export default apiHandler({
   },
   post: async (ctx) => {
     const data = ctx.getData();
-    // console.log(JSON.stringify(data, null, 2));
-    data.boolean;
-    data.boolean01;
-    // const date = data[notification_releaseDate.name];
-    data.time1;
+    console.log("----------------");
+    console.log(data);
+    console.log("----------------");
     return {
       update: true,
     };

@@ -1,7 +1,8 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-box.module.scss";
 import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
@@ -10,19 +11,26 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { DateData, DateInput } from "@/data-items/date";
 import { equals } from "@/data-items/utilities";
 
-type DateBoxBaseProps<T> = FormItemProps<T> & DateInput.FCPorps & {
+type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
   $disallowInput?: boolean;
 };
 
-export type DateBoxProps_TypeString = DateBoxBaseProps<string>;
+export type DateBoxProps_TypeString<D extends DataItem_String | undefined = undefined> = DateBoxBaseProps<string, D>;
 
-export type DateBoxProps_TypeNumber = DateBoxBaseProps<number>;
+export type DateBoxProps_TypeNumber<D extends DataItem_Number | undefined = undefined> = DateBoxBaseProps<number, D>;
 
-export type DateBoxProps_TypeDate = DateBoxBaseProps<Date>;
+export type DateBoxProps_TypeDate<D extends DataItem_Date | undefined = undefined> = DateBoxBaseProps<Date, D>;
 
-export type DateBoxProps = (DateBoxProps_TypeString & { $typeof?: "string" })
-  | (DateBoxProps_TypeNumber & { $typeof: "number" })
-  | (DateBoxProps_TypeDate & { $typeof: "date" });
+export type DateBoxProps<D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = D extends undefined ?
+  (
+    (DateBoxProps_TypeString & { $typeof?: "string" }) | (DateBoxProps_TypeNumber & { $typeof: "number" }) | (DateBoxProps_TypeDate & { $typeof: "date" })
+  ) : (
+    D extends { type: infer T } ? (
+      T extends DataItem_Date["type"] ? (DateBoxProps_TypeDate<Exclude<D, DataItem_String | DataItem_Number>> & { $typeof?: "date" }) :
+      T extends DataItem_Number["type"] ? (DateBoxProps_TypeNumber<Exclude<D, DataItem_Date | DataItem_String>> & { $typeof?: "number" }) :
+      (DateBoxProps_TypeString<Exclude<D, DataItem_Date | DataItem_Number>> & { $typeof?: "string" })
+    ) : (DateBoxProps_TypeString & { $typeof?: "string" }) | (DateBoxProps_TypeNumber & { $typeof: "number" }) | (DateBoxProps_TypeDate & { $typeof: "date" })
+  );
 
 const today = new Date();
 
@@ -31,16 +39,66 @@ const isNumericOrEmpty = (value?: string): value is string => {
   return /^[0-9]+$/.test(value);
 };
 
-const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
+interface DateBoxFC extends FunctionComponent<DateBoxProps> {
+  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(attrs: DateBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const DateBox: DateBoxFC = React.forwardRef<HTMLDivElement, DateBoxProps>(<
+  D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
+>(p: DateBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $typeof: "number",
+          } as DateBoxProps<D>;
+        case "date":
+        case "month":
+        case "year":
+          return {
+            $type: dataItem.type as DateType,
+            $typeof: dataItem.typeof ?? "date",
+            $min: dataItem.min,
+            $max: dataItem.max,
+            $rangePair: dataItem.rangePair,
+          } as DateBoxProps<D>;
+        default:
+          return {
+            $typeof: "string",
+          } as DateBoxProps<D>;
+      }
+    },
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+          } as DateBoxProps<D>;
+        case "date":
+        case "month":
+        case "year":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+          } as DateBoxProps<D>;
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+          } as DateBoxProps<D>;
+      }
+    },
+  });
+
   const type = props.$type ?? "date";
   const minDate = useMemo(() => {
-    return DateInput.getMinDate(props);
+    return DateInput.getMinDate(p);
   }, [props.$min]);
   const maxDate = useMemo(() => {
-    return DateInput.getMaxDate(props);
+    return DateInput.getMaxDate(p);
   }, [props.$max]);
   const judgeValid = useMemo(() => {
-    return DateInput.selectableValidation(props);
+    return DateInput.selectableValidation(p);
   }, [props.$validDays, props.$validDaysMode]);
 
   const yref = useRef<HTMLInputElement>(null!);
@@ -51,21 +109,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   const cacheD = useRef<number>();
   const [showPicker, setShowPicker] = useState(false);
 
-  const setInputValues = (value?: DateValue) => {
-    const date = convertDate(value);
-    if (date == null) {
-      cacheY.current = cacheM.current = cacheD.current = undefined;
-    } else {
-      cacheY.current = date.getFullYear();
-      cacheM.current = date.getMonth() + 1;
-      cacheD.current = date.getDate();
-    }
-    if (yref.current) yref.current.value = String(cacheY.current ?? "");
-    if (mref.current) mref.current.value = String(cacheM.current ?? "");
-    if (dref.current) dref.current.value = String(cacheD.current ?? "");
-  };
-
-  const form = useForm<DateValue | any>(props, {
+  const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
@@ -107,28 +151,42 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
     ],
   });
 
+  const setInputValues = (value?: DateValue) => {
+    const date = convertDate(value);
+    if (date == null) {
+      cacheY.current = cacheM.current = cacheD.current = undefined;
+    } else {
+      cacheY.current = date.getFullYear();
+      cacheM.current = date.getMonth() + 1;
+      cacheD.current = date.getDate();
+    }
+    if (yref.current) yref.current.value = String(cacheY.current ?? "");
+    if (mref.current) mref.current.value = String(cacheM.current ?? "");
+    if (dref.current) dref.current.value = String(cacheD.current ?? "");
+  };
+
   const commitCache = () => {
     const y = cacheY.current;
     const m = type !== "year" ? cacheM.current : 1;
     const d = type === "date" ? cacheD.current : 1;
     if (y == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
-      if (form.valueRef.current == null) setInputValues(undefined);
-      else form.change(undefined);
+      if (ctx.valueRef.current == null) setInputValues(undefined);
+      else ctx.change(undefined);
       return;
     }
     const date = convertDate(`${y}-${m}-${d}`);
     if (date == null) {
-      if (form.valueRef.current == null) setInputValues(undefined);
-      else form.change(undefined);
+      if (ctx.valueRef.current == null) setInputValues(undefined);
+      else ctx.change(undefined);
       return;
     }
     const v = DateInput.convertDateToValue(date, props.$typeof);
-    if (equals(v, form.valueRef.current)) setInputValues(v);
-    else form.change(v);
+    if (equals(v, ctx.valueRef.current)) setInputValues(v);
+    else ctx.change(v);
   };
 
   const changeY = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
       e.currentTarget.value = String(cacheY.current || "");
@@ -139,7 +197,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const changeM = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
       e.currentTarget.value = String(cacheM.current || "");
@@ -150,7 +208,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const changeD = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
       e.currentTarget.value = String(cacheD.current || "");
@@ -186,7 +244,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const keydownY = (e: React.KeyboardEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     switch (e.key) {
       case "F2":
         picker();
@@ -208,7 +266,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const keydownM = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     switch (e.key) {
       case "F2":
         picker();
@@ -233,7 +291,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const keydownD = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     switch (e.key) {
       case "F2":
         picker();
@@ -263,18 +321,18 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   const picker = () => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     if (showPicker) return;
     setShowPicker(true);
   };
 
   const clear = () => {
-    if (!form.editable) return;
-    form.change(undefined);
+    if (!ctx.editable) return;
+    ctx.change(undefined);
   };
 
   const focusInput = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.currentTarget.select();
   };
 
@@ -288,16 +346,16 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
   };
 
   useEffect(() => {
-    setInputValues(form.value);
-  }, [form.value, type]);
+    setInputValues(ctx.value);
+  }, [ctx.value, type]);
 
-  const hasData = form.value != null && form.value !== "";
+  const hasData = ctx.value != null && ctx.value !== "";
 
   return (
     <FormItemWrap
       {...props}
-      $$form={form}
       ref={ref}
+      $context={ctx}
       $useHidden
       data-has={hasData}
       $mainProps={{
@@ -308,14 +366,14 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         className={Style.inputs}
         onClick={clickInputs}
         data-input={!props.$disallowInput}
-        data-editable={form.editable}
+        data-editable={ctx.editable}
       >
         <input
           ref={yref}
           className={Style.y}
           type="text"
-          disabled={props.$disallowInput || form.disabled}
-          readOnly={props.$disallowInput || form.readOnly}
+          disabled={props.$disallowInput || ctx.disabled}
+          readOnly={props.$disallowInput || ctx.readOnly}
           maxLength={4}
           defaultValue={cacheY.current || ""}
           onChange={changeY}
@@ -330,8 +388,8 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
               ref={mref}
               className={Style.m}
               type="text"
-              disabled={props.$disallowInput || form.disabled}
-              readOnly={props.$disallowInput || form.readOnly}
+              disabled={props.$disallowInput || ctx.disabled}
+              readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheM.current || ""}
               onChange={changeM}
@@ -348,8 +406,8 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
               ref={dref}
               className={Style.d}
               type="text"
-              disabled={props.$disallowInput || form.disabled}
-              readOnly={props.$disallowInput || form.readOnly}
+              disabled={props.$disallowInput || ctx.disabled}
+              readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheD.current || ""}
               onChange={changeD}
@@ -360,7 +418,7 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
           </>
         }
       </div>
-      {form.editable &&
+      {ctx.editable &&
         <>
           {!props.$disallowInput &&
             <div
@@ -394,15 +452,17 @@ const DateBox = React.forwardRef<HTMLDivElement, DateBoxProps>((props, ref) => {
         $preventClickEvent
       >
         <DatePicker
-          $value={form.value || today}
+          $value={ctx.value || today}
           $type={type}
+          $typeof={props.$typeof}
+          $multiple={false}
           $max={maxDate}
           $min={minDate}
           $validDays={props.$validDays}
           $validDaysMode={props.$validDaysMode}
           $skipValidation
-          $onClickPositive={(value) => {
-            form.change(value);
+          $onClickPositive={(value: any) => {
+            ctx.change(value);
             setShowPicker(false);
             focus();
           }}

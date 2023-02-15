@@ -1,11 +1,12 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { ReactNode, useEffect, useRef } from "react";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
 
-type FileDropBaseProps<T> = FormItemProps<T> & {
+type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & {
+  $typeof?: FileValueType;
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -14,21 +15,44 @@ type FileDropBaseProps<T> = FormItemProps<T> & {
   children?: ReactNode;
 };
 
-export type FileDropProps_Single = FileDropBaseProps<File>;
-
-export type FileDropProps_Multiple = FileDropBaseProps<Array<File>> & {
-  $append?: boolean;
+export type FileDropProps_Single<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<File, D> & {
+  $append?: false;
 };
 
-export type FileDropProps = (FileDropProps_Single & { $multiple?: false; }) | (FileDropProps_Multiple & { $multiple: true });
+export type FileDropProps_Multiple<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<Array<File>, D> & {
+  $append: true;
+};
 
-const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) => {
+export type FileDropProps<D extends DataItem_File | undefined = undefined> = (FileDropProps_Single<D> & { $multiple?: false; }) | (FileDropProps_Multiple<D> & { $multiple: true });
+
+interface FileDropFC extends FunctionComponent {
+  <D extends DataItem_File | undefined = undefined>(attrs: FileDropProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
+  D extends DataItem_File | undefined = undefined
+>(p: FileDropProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      return {
+        $typeof: dataItem.typeof,
+        $accept: dataItem.accept,
+        $fileSize: dataItem.fileSize,
+        $totalFileSize: dataItem.totalFileSize,
+      };
+    },
+    over: ({ dataItem, props }) => {
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+      };
+    },
+  });
+
   const iref = useRef<HTMLInputElement>(null!);
   const href = useRef<HTMLInputElement>(null!);
-  const multiable = props.$multiple === true;
-  const fileDialog = props.$noFileDialog !== true;
 
-  const form = useForm<File | Array<File> | any>(props, {
+  const ctx = useFormItemContext(form, props, {
     multipartFormData: true,
     multiple: props.$multiple,
     validations: () => {
@@ -46,44 +70,47 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
     },
   });
 
+  const multiable = props.$multiple === true;
+  const fileDialog = props.$noFileDialog !== true;
+
   const click = () => {
-    if (!form.editable || !fileDialog) return;
+    if (!ctx.editable || !fileDialog) return;
     iref.current?.click();
   };
 
   const commit = (fileList: FileList | null) => {
     if (fileList == null) {
-      form.change(undefined);
+      ctx.change(undefined);
       return;
     }
     const files = Array.from(fileList ?? []);
     if (multiable) {
       if (props.$append) {
-        form.change([...(form.valueRef.current ?? []), ...files]);
+        ctx.change([...(ctx.valueRef.current ?? []), ...files]);
         return;
       }
-      form.change(files);
+      ctx.change(files);
       return;
     }
-    form.change(files?.[0]);
+    ctx.change(files?.[0]);
   };
 
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const files = e.currentTarget.files;
     if (files?.length === 0) return;
     commit(files);
   };
 
   const dragLeave = (e: React.DragEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.stopPropagation();
     e.preventDefault();
     e.currentTarget.removeAttribute("data-active");
   };
 
   const dragOver = (e: React.DragEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.stopPropagation();
     e.preventDefault();
     if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
@@ -91,7 +118,7 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
   };
 
   const drop = (e: React.DragEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.stopPropagation();
     e.preventDefault();
     e.currentTarget.removeAttribute("data-active");
@@ -99,23 +126,23 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
   };
 
   const clear = () => {
-    form.change(undefined);
+    ctx.change(undefined);
   };
 
   useEffect(() => {
     if (href.current) {
-      const files = (Array.isArray(form.value) ? form.value : [form.value]).filter(file => file != null);
+      const files = (Array.isArray(ctx.value) ? ctx.value : [ctx.value]).filter(file => file != null);
       const dt = new DataTransfer();
       files.forEach(file => dt.items.add(file));
       href.current.files = dt.files;
     }
-  }, [form.value]);
+  }, [ctx.value]);
 
   return (
     <FormItemWrap
       {...props}
-      $$form={form}
       ref={ref}
+      $context={ctx}
       $mainProps={{
         className: Style.main,
       }}
@@ -149,7 +176,7 @@ const FileDrop = React.forwardRef<HTMLDivElement, FileDropProps>((props, ref) =>
           {props.children}
         </LabelText>
       </div>
-      {form.editable && props.$hideClearButton !== true &&
+      {ctx.editable && props.$hideClearButton !== true &&
         <div
           className={Style.clear}
           onClick={clear}

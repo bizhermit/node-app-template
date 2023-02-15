@@ -1,5 +1,6 @@
-import { FormItemProps, FormItemValidation, FormItemWrap, multiValidationIterator, useForm } from "@/components/elements/form";
-import React, { Key, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, multiValidationIterator, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import React, { FunctionComponent, Key, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { VscCalendar, VscChevronLeft, VscChevronRight, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
@@ -12,7 +13,7 @@ import { DateData, DateInput } from "@/data-items/date";
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
-export type DatePickerBaseProps<T> = FormItemProps<T> & DateInput.FCPorps & {
+export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
@@ -24,32 +25,111 @@ export type DatePickerBaseProps<T> = FormItemProps<T> & DateInput.FCPorps & {
   $skipValidation?: boolean;
 };
 
-export type DatePickerProps_TypeString_Single = DatePickerBaseProps<string>;
-export type DatePickerProps_TypeString_Multiple = DatePickerBaseProps<Array<string>>;
-export type DatePickerProps_TypeString = (DatePickerProps_TypeString_Single & { $multiple?: false; })
-  | (DatePickerProps_TypeString_Multiple & { $multiple: true; });
+export type DatePickerProps_TypeString_Single<D extends DataItem_String | undefined = undefined> = DatePickerBaseProps<string, D>;
+export type DatePickerProps_TypeString_Multiple<D extends DataItem_String | undefined = undefined> = DatePickerBaseProps<Array<string>, D>;
+export type DatePickerProps_TypeString<D extends DataItem_String | undefined = undefined> = (DatePickerProps_TypeString_Single<D> & { $multiple?: false; })
+  | (DatePickerProps_TypeString_Multiple<D> & { $multiple: true; });
 
-export type DatePickerProps_TypeNumber_Single = DatePickerBaseProps<number>;
-export type DatePickerProps_TypeNumber_Multiple = DatePickerBaseProps<Array<number>>;
-export type DatePickerProps_TypeNumber = (DatePickerProps_TypeNumber_Single & { $multiple?: false; })
-  | (DatePickerProps_TypeNumber_Multiple & { $multiple: true; });
+export type DatePickerProps_TypeNumber_Single<D extends DataItem_Number | undefined = undefined> = DatePickerBaseProps<number, D>;
+export type DatePickerProps_TypeNumber_Multiple<D extends DataItem_Number | undefined = undefined> = DatePickerBaseProps<Array<number>, D>;
+export type DatePickerProps_TypeNumber<D extends DataItem_Number | undefined = undefined> = (DatePickerProps_TypeNumber_Single<D> & { $multiple?: false; })
+  | (DatePickerProps_TypeNumber_Multiple<D> & { $multiple: true; });
 
-export type DatePickerProps_TypeDate_Single = DatePickerBaseProps<Date>;
-export type DatePickerProps_TypeDate_Multiple = DatePickerBaseProps<Array<Date>>;
-export type DatePickerProps_TypeDate = (DatePickerProps_TypeDate_Single & { $multiple?: false; })
-  | (DatePickerProps_TypeDate_Multiple & { $multiple: true; });
+export type DatePickerProps_TypeDate_Single<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<Date, D>;
+export type DatePickerProps_TypeDate_Multiple<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<Array<Date>, D>;
+export type DatePickerProps_TypeDate<D extends DataItem_Date | undefined = undefined> = (DatePickerProps_TypeDate_Single<D> & { $multiple?: false; })
+  | (DatePickerProps_TypeDate_Multiple<D> & { $multiple: true; });
 
-export type DatePickerProps = (DatePickerProps_TypeString & { $typeof?: "string" })
-  | (DatePickerProps_TypeNumber & { $typeof: "number" })
-  | (DatePickerProps_TypeDate & { $typeof: "date" });
+export type DatePickerProps<D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = D extends undefined ?
+  (
+    (DatePickerProps_TypeString & { $typeof?: "string" }) | (DatePickerProps_TypeNumber & { $typeof: "number" }) | (DatePickerProps_TypeDate & { $typeof: "date" })
+  ) :
+  (
+    D extends { type: infer T } ? (
+      T extends DataItem_Date["type"] ? (DatePickerProps_TypeDate<Exclude<D, DataItem_String | DataItem_Number>> & { $typeof?: "date" }) :
+      T extends DataItem_Number["type"] ? (DatePickerProps_TypeNumber<Exclude<D, DataItem_Date | DataItem_String>> & { $typeof?: "number" }) :
+      (DatePickerProps_TypeString<Exclude<D, DataItem_Date | DataItem_Number>> & { $typeof?: "string" })
+    ) : (DatePickerProps_TypeString & { $typeof?: "string" }) | (DatePickerProps_TypeNumber & { $typeof: "number" }) | (DatePickerProps_TypeDate & { $typeof: "date" })
+  );
 
 const today = new Date();
 const threshold = 2;
 
-const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref) => {
+interface DatePickerFC extends FunctionComponent<DatePickerProps> {
+  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(attrs: DatePickerProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
+
+const DatePicker: DatePickerFC = React.forwardRef<HTMLDivElement, DatePickerProps>(<
+  D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
+>(p: DatePickerProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $typeof: "number",
+          } as DatePickerProps<D>;
+        case "date":
+        case "month":
+        case "year":
+          return {
+            $type: dataItem.type,
+            $typeof: dataItem.typeof,
+            $min: dataItem.min,
+            $max: dataItem.max,
+            $rangePair: dataItem.rangePair,
+          } as DatePickerProps<D>;
+        default:
+          return {
+            $typeof: "string",
+          } as DatePickerProps<D>;
+      }
+    },
+    over: ({ dataItem, props }) => {
+      const common: FormItemProps = {
+        $messagePosition: "bottom-hide",
+      };
+      switch (dataItem.type) {
+        case "number":
+          return {
+            ...common,
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, key, ctx, data, index, pctx) => {
+              if (value == null || !Array.isArray(value)) return f(value, key, ctx, data, index, pctx);
+              return value.map(v => f(v, key, ctx, data, index, pctx))[0];
+            }, props, dataItem)),
+          } as DatePickerProps<D>;
+        case "date":
+        case "month":
+        case "year":
+          return {
+            ...common,
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, key, ctx, data, index, pctx) => {
+              if (value == null || !Array.isArray(value)) return f(convertDate(value), key, ctx, data, index, pctx);
+              return value.map(v => f(convertDate(v), key, ctx, data, index, pctx))[0];
+            }, props, dataItem)),
+          } as DatePickerProps<D>;
+        default:
+          return {
+            ...common,
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, key, ctx, data, index, pctx) => {
+              if (value == null || !Array.isArray(value)) return f(value, key, ctx, data, index, pctx);
+              return value.map(v => f(v, key, ctx, data, index, pctx))[0];
+            }, props, dataItem)),
+          } as DatePickerProps<D>;
+      }
+    },
+  });
+
   const yearElemRef = useRef<HTMLDivElement>(null!);
   const monthElemRef = useRef<HTMLDivElement>(null!);
   const dayElemRef = useRef<HTMLDivElement>(null!);
+  const [year, setYear] = useState<number>();
+  const [month, setMonth] = useState<number>();
+  const [days, setDays] = useState<Array<Date>>([]);
+  const [showYear, setShowYear] = useState(false);
+  const [showMonth, setShowMonth] = useState(false);
+
   const type = props.$type ?? "date";
   const multiple = props.$multiple === true;
   const [mode, setMode] = useState<DatePickerMode>(() => {
@@ -57,9 +137,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     if (multiple) return "calendar";
     return props.$mode || "calendar";
   });
-  const [year, setYear] = useState<number>();
-  const [month, setMonth] = useState<number>();
-  const [days, setDays] = useState<Array<Date>>([]);
   const monthTexts = useMemo(() => {
     if (props.$monthTexts == null || props.$monthTexts === "num") return monthTextsNum;
     if (props.$monthTexts === "en") return DatetimeUtils.Month.En;
@@ -83,13 +160,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   const judgeValid = useMemo(() => {
     return DateInput.selectableValidation(props);
   }, [props.$validDays, props.$validDaysMode]);
-  const [showYear, setShowYear] = useState(false);
-  const [showMonth, setShowMonth] = useState(false);
 
-  const form = useForm<string | number | Date | Array<string | number | Date> | any>({
-    $messagePosition: "bottom-hide",
-    ...props,
-  }, {
+  const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
     multiple: props.$multiple,
     validations: () => {
@@ -166,7 +238,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
   });
 
   const getArrayValue = () => {
-    const v = form.valueRef.current;
+    const v = ctx.valueRef.current;
     if (v == null) return [];
     if (Array.isArray(v)) return v;
     return [v];
@@ -197,19 +269,19 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     };
     const select = (num: number, selected: boolean) => {
       if (!multiple) {
-        form.change(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
+        ctx.change(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
         return;
       }
       if (selected) {
         const vals = [...getArrayValue()];
         const index = vals.findIndex(v => convertDate(v)?.getFullYear() === num);
         vals.splice(index, 1);
-        form.change(vals);
+        ctx.change(vals);
         return;
       }
       const vals = [...getArrayValue()];
       vals.push(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
-      form.change(vals.sort((d1, d2) => {
+      ctx.change(vals.sort((d1, d2) => {
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
     };
@@ -225,7 +297,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           data-today={isToday(i)}
           onClick={() => {
             if (type === "year") {
-              if (form.editable) {
+              if (ctx.editable) {
                 select(i, selected);
               }
             }
@@ -238,7 +310,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     }
     return nodes;
   }, [
-    year, form.editable,
+    year, ctx.editable,
     type === "year" ? days : undefined,
     type === "year" ? maxDate : undefined,
     type === "year" ? minDate : undefined,
@@ -273,19 +345,19 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     };
     const select = (date: Date, selected: boolean) => {
       if (!multiple) {
-        form.change(DateInput.convertDateToValue(date, props.$typeof));
+        ctx.change(DateInput.convertDateToValue(date, props.$typeof));
         return;
       }
       if (selected) {
         const vals = [...getArrayValue()];
         const index = vals.findIndex(v => DatetimeUtils.equalYearMonth(convertDate(v), date));
         vals.splice(index, 1);
-        form.change(vals);
+        ctx.change(vals);
         return;
       }
       const vals = [...getArrayValue()];
       vals.push(DateInput.convertDateToValue(date, props.$typeof));
-      form.change(vals.sort((d1, d2) => {
+      ctx.change(vals.sort((d1, d2) => {
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
     };
@@ -302,7 +374,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           data-today={isToday(cursor)}
           onClick={() => {
             if (type === "month") {
-              if (form.editable && inRange) {
+              if (ctx.editable && inRange) {
                 select(cursor, selected);
               }
               return;
@@ -315,7 +387,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       );
     });
   }, [
-    month, year, form.editable, monthTexts,
+    month, year, ctx.editable, monthTexts,
     type === "month" ? days : undefined,
     type === "month" ? maxDate : undefined,
     type === "month" ? minDate : undefined,
@@ -351,19 +423,19 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     const select = (dateStr: string, selected: boolean) => {
       const date = convertDate(dateStr)!;
       if (!multiple) {
-        form.change(DateInput.convertDateToValue(date, props.$typeof));
+        ctx.change(DateInput.convertDateToValue(date, props.$typeof));
         return;
       }
       if (selected) {
         const vals = [...getArrayValue()];
         const index = vals.findIndex(v => DatetimeUtils.equalDate(convertDate(v), date));
         vals.splice(index, 1);
-        form.change(vals);
+        ctx.change(vals);
         return;
       }
       const vals = [...getArrayValue()];
       vals.push(DateInput.convertDateToValue(date, props.$typeof));
-      form.change(vals.sort((d1, d2) => {
+      ctx.change(vals.sort((d1, d2) => {
         return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
       }));
     };
@@ -380,7 +452,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           data-selected={selected}
           data-today={isToday(date)}
           data-week={cursor.getDay()}
-          onClick={(form.editable && inRange) ?
+          onClick={(ctx.editable && inRange) ?
             () => {
               select(dateStr, selected);
             } : undefined
@@ -429,7 +501,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       }
     }
     return nodes;
-  }, [month, year, days, form.editable, minDate, maxDate, mode, type, judgeValid]);
+  }, [month, year, days, ctx.editable, minDate, maxDate, mode, type, judgeValid]);
 
   const weekNodes = useMemo(() => {
     if (type !== "date") return [];
@@ -489,10 +561,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     setYear(today.getFullYear());
     setMonth(today.getMonth());
     if (multiple) {
-      form.change([]);
+      ctx.change([]);
       return;
     }
-    form.change(undefined);
+    ctx.change(undefined);
   };
 
   const todayIsInRange = useMemo(() => {
@@ -524,10 +596,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         break;
     }
     if (multiple) {
-      form.change([DateInput.convertDateToValue(date, props.$typeof)]);
+      ctx.change([DateInput.convertDateToValue(date, props.$typeof)]);
       return;
     }
-    form.change(DateInput.convertDateToValue(date, props.$typeof));
+    ctx.change(DateInput.convertDateToValue(date, props.$typeof));
   };
 
   const toggleMode = () => {
@@ -550,7 +622,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     );
     if (showYear) setShowYear(false);
     if (showMonth) setShowMonth(false);
-  }, [form.value]);
+  }, [ctx.value]);
 
   useEffect(() => {
     if (yearElemRef.current == null || (mode === "calendar" && !showYear)) return;
@@ -560,7 +632,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     yearElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - (yearElemRef.current.hasAttribute("data-show") ? 100 : yearElemRef.current.clientHeight / 2);
-  }, [mode, yearNodes, showYear, form.editable]);
+  }, [mode, yearNodes, showYear, ctx.editable]);
 
   useEffect(() => {
     if (monthElemRef.current == null || (mode === "calendar" && !showMonth)) return;
@@ -570,7 +642,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     monthElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - (monthElemRef.current.hasAttribute("data-show") ? 100 : monthElemRef.current.clientHeight / 2);
-  }, [mode, monthNodes, showMonth, form.editable]);
+  }, [mode, monthNodes, showMonth, ctx.editable]);
 
   useEffect(() => {
     if (mode !== "list" || dayElemRef.current == null) return;
@@ -580,7 +652,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
     ) as HTMLDivElement;
     if (elem == null) return;
     dayElemRef.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - dayElemRef.current.clientHeight / 2;
-  }, [mode, dayNodes, form.editable]);
+  }, [mode, dayNodes, ctx.editable]);
 
   useEffect(() => {
     if (type === "year") {
@@ -601,13 +673,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
       setYear(date.getFullYear());
       setMonth(date.getMonth());
     }
-  }, [props.$value, props.$bind, form.bind]);
+  }, [props.$value, props.$bind, ctx.bind]);
 
   return (
     <FormItemWrap
       {...props}
-      $$form={form}
       ref={ref}
+      $context={ctx}
       $preventFieldLayout
       $useHidden
       $mainProps={{
@@ -730,7 +802,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
         }
       </div>
       <div className={Style.buttons}>
-        {form.editable &&
+        {ctx.editable &&
           <>
             <div
               className={Style.clear}
@@ -758,13 +830,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>((props, ref
           <div
             className={Style.positive}
             onClick={() => {
-              props.$onClickPositive?.(form.value as never);
+              props.$onClickPositive?.(ctx.value as never);
             }}
           >
             <LabelText>{props.$positiveText ?? "OK"}</LabelText>
           </div>
         }
-        {type !== "year" && !multiple && form.editable &&
+        {type !== "year" && !multiple && ctx.editable &&
           <div
             className={Style.switch}
             onClick={toggleMode}

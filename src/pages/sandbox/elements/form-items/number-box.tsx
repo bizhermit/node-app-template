@@ -4,6 +4,7 @@ import Form from "@/components/elements/form";
 import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { sample_number, sample_string } from "@/data-items/sample/item";
 import { NextPage } from "next";
 import { useState } from "react";
 
@@ -86,6 +87,18 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row className="gap-1">
+        <NumberBox
+          $tag="number"
+          $dataItem={sample_number}
+          $onChange={v => console.log("number: ", v)}
+        />
+        <NumberBox
+          $tag="string"
+          $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+        />
+      </Row>
       <NumberBox
         $tag="useState"
         $tagPosition="placeholder"

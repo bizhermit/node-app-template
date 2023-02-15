@@ -1,13 +1,13 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useRef } from "react";
+import React, { FunctionComponent, ReactElement, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
-export type TextBoxProps = FormItemProps<string> & {
+export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $preventInputWithinLength?: boolean;
@@ -23,10 +23,53 @@ export type TextBoxProps = FormItemProps<string> & {
   $autoComplete?: string;
 };
 
-const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
-  const iref = useRef<HTMLInputElement>(null!);
+interface TextBoxFC extends FunctionComponent<TextBoxProps> {
+  <D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: TextBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
 
-  const form = useForm(props, {
+const TextBox: TextBoxFC = React.forwardRef<HTMLDivElement, TextBoxProps>(<
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+>(p: TextBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const iref = useRef<HTMLInputElement>(null!);
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem, method }) => {
+      const isSearch = method === "get";
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $charType: "h-num" as StringCharType,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
+          };
+        default:
+          return {
+            $length: isSearch ? undefined : dataItem.length,
+            $minLength: isSearch ? undefined : dataItem.minLength,
+            $maxLength: dataItem.maxLength ?? dataItem.length,
+            $charType: dataItem.charType,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
+          };
+      }
+    },
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => Number(v))),
+          };
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+          };
+      }
+    },
+  });
+
+  const ctx = useFormItemContext(form, props, {
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
@@ -93,18 +136,18 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
   });
 
   const clear = () => {
-    if (!form.editable) return;
-    form.change(undefined);
+    if (!ctx.editable) return;
+    ctx.change(undefined);
     if (iref.current) iref.current.value = "";
   };
 
-  const hasData = StringUtils.isNotEmpty(form.value);
+  const hasData = StringUtils.isNotEmpty(ctx.value);
 
   return (
     <FormItemWrap
       {...props}
       ref={ref}
-      $$form={form}
+      $context={ctx}
       data-round={props.$round}
       data-has={hasData}
       $mainProps={{
@@ -120,18 +163,18 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         className={Style.input}
         name={props.name}
         type={props.$type || "text"}
-        placeholder={form.editable ? props.placeholder : ""}
-        disabled={form.disabled}
-        readOnly={form.readOnly}
+        placeholder={ctx.editable ? props.placeholder : ""}
+        disabled={ctx.disabled}
+        readOnly={ctx.readOnly}
         maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
         tabIndex={props.tabIndex}
-        defaultValue={form.value ?? ""}
-        onChange={e => form.change(e.target.value)}
+        defaultValue={ctx.value ?? ""}
+        onChange={e => ctx.change(e.target.value)}
         data-round={props.$round}
-        data-clear={form.editable && props.$hideClearButton !== true}
+        data-clear={ctx.editable && props.$hideClearButton !== true}
         autoComplete={props.$autoComplete ?? "off"}
       />
-      {form.editable && props.$hideClearButton !== true &&
+      {ctx.editable && props.$hideClearButton !== true &&
         <div
           className={Style.button}
           onClick={clear}
