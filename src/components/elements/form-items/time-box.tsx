@@ -26,7 +26,9 @@ export type TimeBoxProps<D extends DataItem_Time | DataItem_Number | DataItem_St
     D extends { type: infer T } ? (
       T extends DataItem_String["type"] ? (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof?: "string" }) :
       T extends DataItem_Number["type"] ? (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" }) :
-      (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof: "string" }) | (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof: "number" })
+      D extends { typeof: infer R } ? (
+        R extends "string" ? (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof?: "string" }) : (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" })
+      ) : (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" })
     ) : (TimeBoxProps_TypeNumber & { $typeof?: "number" }) | (TimeBoxProps_TypeString & { $typeof: "string" })
   );
 
