@@ -80,7 +80,15 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     ) :
     D["type"] extends DataItem_Time["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? number : number | null | undefined
+        D["required"] extends true ? (
+          D["typeof"] extends "string" ? string :
+          D["typeof"] extends "number" ? number :
+          number
+        ) : (
+          D["typeof"] extends "string" ? string :
+          D["typeof"] extends "number" ? number :
+          number
+        ) | null | undefined
       ) : TimeValue | null | undefined
     ) :
     D["type"] extends DataItem_File["type"] ? (
@@ -213,6 +221,7 @@ type TimeRangePair = {
 
 type DataItem_Time = DataItem_Base & {
   type: "time";
+  typeof?: "number" | "string";
   mode: TimeMode;
   unit: TimeUnit;
   validations?: DataItemValidation<number, DataItem_Time>;

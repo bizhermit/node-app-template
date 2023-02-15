@@ -70,6 +70,12 @@ export default apiHandler({
         },
       }),
       sample_time: sample_time,
+      time_num: timeItem({
+        typeof: "number",
+      }),
+      time_str: timeItem({
+        typeof: "string",
+      }),
       time1: timeItem({
         required: true,
         // min: "9:00",

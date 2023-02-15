@@ -155,6 +155,8 @@ const Page: NextPage = () => {
                       date1: "2023-02-03",
                       date2: "2023-02-04",
                       sample_time: "12:34",
+                      time_num: "12:34",
+                      time_str: "12:34",
                       time1: "9:00",
                       time2: "18:00",
                       array: [
