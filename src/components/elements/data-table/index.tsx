@@ -12,7 +12,7 @@ import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { equals, getValue } from "@/data-items/utilities";
 
-type DataTableCellContext<T extends Struct = Struct> = {
+export type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
   data: T;
   index: number;
