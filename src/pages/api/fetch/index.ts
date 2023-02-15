@@ -41,6 +41,18 @@ export default apiHandler({
       sample_date: sample_date,
       sample_month: sample_month,
       sample_year: sample_year,
+      date_date: dateItem({
+        typeof: "date",
+        // min: "2023-02-16",
+      }),
+      date_str: dateItem({
+        typeof: "string",
+        // min: "2023-02-16",
+      }),
+      date_num: dateItem({
+        typeof: "number",
+        // min: "2023-02-16",
+      }),
       date1: dateItem({
         required: true,
         label: "日付From",

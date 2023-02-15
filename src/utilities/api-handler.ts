@@ -263,6 +263,20 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
       try {
         if (t === "string" || t === "number") {
           date = DatetimeUtils.convert(v);
+          if (date) {
+            DatetimeUtils.removeTime(date);
+            switch (ctx.type) {
+              case "year":
+                date.setDate(1);
+                date.setMonth(0);
+                break;
+              case "month":
+                date.setDate(1);
+                break;
+              default:
+                break;
+            }
+          }
         } else {
           throw new Error;
         }
@@ -283,8 +297,6 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
       }
     }
   }
-
-  // const v = data?.[key];
 
   if (ctx.required) {
     pushMsg(DateData.requiredValidation(date, name));
