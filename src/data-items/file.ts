@@ -1,3 +1,9 @@
+import { dataItemKey } from "@/data-items/data-item";
+
+const fileItem = <C extends Omit<DataItem_File, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_File, "type"> & { type: "file" } : C & Omit<DataItem_File, "type"> & { type: "file" }> => {
+  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "file" });
+};
+
 export namespace FileData {
 
   export const getSizeText = (size: number) => {
@@ -52,3 +58,5 @@ export namespace FileData {
   };
 
 }
+
+export default fileItem;

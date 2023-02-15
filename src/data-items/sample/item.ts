@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
 import booleanItem from "@/data-items/boolean";
 import dateItem, { monthItem, yearItem } from "@/data-items/date";
+import fileItem from "@/data-items/file";
 import numberItem from "@/data-items/number";
 import stringItem from "@/data-items/string";
 import timeItem from "@/data-items/time";
@@ -101,6 +103,17 @@ export const sample_time = timeItem({
   validations: [
     (v) => {
       console.log("time validation: ", typeof v, v);
+      return undefined;
+    },
+  ],
+});
+
+export const sample_file = fileItem({
+  name: "sample_file",
+  // accept: "image/*",
+  validations: [
+    (v) => {
+      console.log("file validation: ", typeof v, v);
       return undefined;
     },
   ],

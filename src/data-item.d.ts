@@ -93,8 +93,14 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     ) :
     D["type"] extends DataItem_File["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? File : File | null | undefined
-      ) : File | null | undefined
+        D["required"] extends true ? (
+          D["typeof"] extends "base64" ? string :
+          File
+        ) : (
+          D["typeof"] extends "base64" ? string :
+          File
+        ) | null | undefined
+      ) : File | string | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
@@ -181,6 +187,7 @@ type DataItem_Boolean<T extends boolean | number | string = boolean | number | s
 
 type DateType = "date" | "month" | "year";
 type DateValue = string | number | Date;
+type DateValueType = "string" | "number" | "date";
 
 type DateRangePair = {
   name: string;
@@ -196,7 +203,7 @@ type ValidDaysMode = "allow" | "disallow";
 
 type DataItem_Date = DataItem_Base & {
   type: DateType;
-  typeof?: "date" | "string" | "number";
+  typeof?: DateValueType;
   validations?: DataItemValidation<Date, DataItem_Date>;
   min?: DateValue;
   max?: DateValue;
@@ -234,8 +241,14 @@ type DataItem_Time = DataItem_Base & {
  * File
  */
 
+type FileValueType = "file" | "base64";
+
 type DataItem_File = DataItem_Base & {
   type: "file";
+  typeof?: FileValueType;
+  accept?: string;
+  fileSize?: number;
+  totalFileSize?: number;
   validations?: DataItemValidation<File, DataItem_File>;
 };
 

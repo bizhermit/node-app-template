@@ -107,7 +107,7 @@ export namespace DateInput {
     $validDaysMode?: ValidDaysMode;
   };
 
-  export const convertDateToValue = (date: Date, $typeof: "string" | "number" | "date" | undefined) => {
+  export const convertDateToValue = (date: Date, $typeof: DateValueType | undefined) => {
     switch ($typeof) {
       case "date":
         return date;

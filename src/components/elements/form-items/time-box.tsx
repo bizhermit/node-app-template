@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import React, { FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
@@ -11,7 +11,7 @@ import TimePicker from "@/components/elements/form-items/time-picker";
 import { TimeData, TimeInput } from "@/data-items/time";
 import { equals } from "@/data-items/utilities";
 
-type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, null, D> & TimeInput.FCProps & {
+type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   $disallowInput?: boolean;
 };
 
@@ -26,7 +26,7 @@ export type TimeBoxProps<D extends DataItem_Time | DataItem_Number | DataItem_St
     D extends { type: infer T } ? (
       T extends DataItem_String["type"] ? (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof?: "string" }) :
       T extends DataItem_Number["type"] ? (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" }) :
-      (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof?: "string" }) | (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" })
+      (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof: "string" }) | (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof: "number" })
     ) : (TimeBoxProps_TypeNumber & { $typeof?: "number" }) | (TimeBoxProps_TypeString & { $typeof: "string" })
   );
 
@@ -42,100 +42,102 @@ interface TimeBoxFC extends FunctionComponent<TimeBoxProps> {
 const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
 >(p: TimeBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $typeof: "number",
+            $min: dataItem.min,
+            $max: dataItem.max,
+          } as TimeBoxProps<D>;
+        case "string":
+          return {
+            $typeof: "string",
+            $min: dataItem.minLength,
+            $max: dataItem.maxLength,
+          } as TimeBoxProps<D>;
+        default:
+          return {
+            $typeof: "number",
+            $min: dataItem.min,
+            $max: dataItem.max,
+            $rangePair: dataItem.rangePair,
+          } as TimeBoxProps<D>;
+      }
+    },
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          } as TimeBoxProps<D>;
+        case "string":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          } as TimeBoxProps<D>;
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          } as TimeBoxProps<D>;
+      }
+    },
+  });
+
+  const type = props.$type ?? "hm";
+  const unit = useMemo(() => {
+    return TimeInput.getUnit(props, type);
+  }, [type, props.$unit]);
+  const minTime = useMemo(() => {
+    return TimeInput.getMinTime(props, unit);
+  }, [props.$min]);
+  const maxTime = useMemo(() => {
+    return TimeInput.getMaxTime(props, unit);
+  }, [props.$max]);
+
   const href = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
   const sref = useRef<HTMLInputElement>(null!);
   const cacheH = useRef<number>();
   const cacheM = useRef<number>();
   const cacheS = useRef<number>();
+  const needH = type !== "ms";
+  const needM = type !== "h";
+  const needS = type === "hms" || type === "ms";
   const [showPicker, setShowPicker] = useState(false);
 
-  const form = useForm(p, {
-    setDataItem: (d) => {
-      switch (d.type) {
-        case "number":
-          return {
-            $typeof: "number" as "number",
-            $min: d.min,
-            $max: d.max,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-          } as TimeBoxProps<D>;
-        case "string":
-          return {
-            $typeof: "string" as "string",
-            $min: d.minLength,
-            $max: d.maxLength,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-          } as TimeBoxProps<D>;
-        default:
-          return {
-            $typeof: "number" as "number",
-            $min: d.min,
-            $max: d.max,
-            $rangePair: d.rangePair,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-          } as TimeBoxProps<D>;
-      }
-    },
-    addStates: (props) => {
-      const type = props.$type ?? "hm";
-      const unit = useMemo(() => {
-        return TimeInput.getUnit(props, type);
-      }, [type, props.$unit]);
-      const minTime = useMemo(() => {
-        return TimeInput.getMinTime(props, unit);
-      }, [props.$min]);
-      const maxTime = useMemo(() => {
-        return TimeInput.getMaxTime(props, unit);
-      }, [props.$max]);
-      return {
-        type,
-        unit,
-        minTime,
-        maxTime,
-      };
-    },
-    interlockValidation: (props) => props.$rangePair != null,
-    validations: (props, states) => {
+  const ctx = useFormItemContext(form, props, {
+    interlockValidation: props.$rangePair != null,
+    validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
-      if (states.maxTime != null && states.minTime != null) {
-        validations.push(TimeInput.rangeValidation(states.minTime, states.maxTime, states.type, states.unit));
+      if (maxTime != null && minTime != null) {
+        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit));
       } else {
-        if (states.maxTime != null) {
-          validations.push(TimeInput.maxValidation(states.maxTime, states.type, states.unit));
+        if (maxTime != null) {
+          validations.push(TimeInput.maxValidation(maxTime, type, unit));
         }
-        if (states.minTime != null) {
-          validations.push(TimeInput.minValidation(states.minTime, states.type, states.unit));
+        if (minTime != null) {
+          validations.push(TimeInput.minValidation(minTime, type, unit));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = TimeInput.contextValidation(rangePair, states.type, states.unit);
+        const { validation } = TimeInput.contextValidation(rangePair, type, unit);
         validations.push(validation);
       }
       return validations;
     },
-    validationsDeps: (props, states) => [
-      states.type,
-      states.unit,
-      states.minTime,
-      states.maxTime,
+    validationsDeps: [
+      type,
+      unit,
+      minTime,
+      maxTime,
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
     ],
   });
-
-  const {
-    type,
-    unit,
-    minTime,
-    maxTime,
-  } = form.states;
-
-  const needH = type !== "ms";
-  const needM = type !== "h";
-  const needS = type === "hms" || type === "ms";
 
   const setInputValues = (value?: TimeValue) => {
     const time = TimeData.convertTime(value, unit);
@@ -160,19 +162,19 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
 
   const optimizedIntervalHour = (h: number | undefined) => {
     if (h == null) return h;
-    const i = form.props.$hourInterval ?? 1;
+    const i = props.$hourInterval ?? 1;
     return Math.floor(h / i) * i;
   };
 
   const optimizedIntervalMinute = (m: number | undefined) => {
     if (m == null) return m;
-    const i = form.props.$minuteInterval ?? 1;
+    const i = props.$minuteInterval ?? 1;
     return Math.floor(m / i) * i;
   };
 
   const optimizedIntervalSecond = (s: number | undefined) => {
     if (s == null) return s;
-    const i = form.props.$secondInterval ?? 1;
+    const i = props.$secondInterval ?? 1;
     return Math.floor(s / i) * i;
   };
 
@@ -181,24 +183,24 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
     const m = optimizedIntervalMinute(needM ? cacheM.current : 0);
     const s = optimizedIntervalSecond(needS ? cacheS.current : 0);
     if ((needH && h == null) || (needM && m == null) || (needS && m == null)) {
-      if (form.valueRef.current == null) setInputValues(undefined);
-      else form.change(undefined);
+      if (ctx.valueRef.current == null) setInputValues(undefined);
+      else ctx.change(undefined);
       return;
     }
     const v = TimeInput.convertTimeToValue((
       (h ?? 0) * 3600 +
       (m ?? 0) * 60 +
       (s ?? 0)
-    ) * 1000, unit, type, form.props.$typeof);
-    if (equals(v, form.valueRef.current)) {
+    ) * 1000, unit, type, props.$typeof);
+    if (equals(v, ctx.valueRef.current)) {
       setInputValues(v);
     } else {
-      form.change(v);
+      ctx.change(v);
     }
   };
 
   const changeH = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
       e.currentTarget.value = String(cacheH.current || "");
@@ -209,7 +211,7 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const changeM = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
       e.currentTarget.value = String(cacheM.current || "");
@@ -220,7 +222,7 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const changeS = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const v = e.currentTarget.value;
     if (!isNumericOrEmpty(v)) {
       e.currentTarget.value = String(cacheS.current || "");
@@ -248,7 +250,7 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const keydownH = (e: React.KeyboardEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     switch (e.key) {
       case "F2":
         picker();
@@ -257,11 +259,11 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
         commitCache();
         break;
       case "ArrowUp":
-        updown((form.props.$hourInterval ?? 1), 0, 0);
+        updown((props.$hourInterval ?? 1), 0, 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown((form.props.$hourInterval ?? 1) * -1, 0, 0);
+        updown((props.$hourInterval ?? 1) * -1, 0, 0);
         e.preventDefault();
         break;
       default:
@@ -270,7 +272,7 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const keydownM = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     switch (e.key) {
       case "F2":
         picker();
@@ -282,11 +284,11 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
         if (e.currentTarget.value.length === 0) href.current?.focus();
         break;
       case "ArrowUp":
-        updown(0, (form.props.$minuteInterval ?? 1), 0);
+        updown(0, (props.$minuteInterval ?? 1), 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown(0, (form.props.$minuteInterval ?? 1) * -1, 0);
+        updown(0, (props.$minuteInterval ?? 1) * -1, 0);
         e.preventDefault();
         break;
       default:
@@ -295,7 +297,7 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const keydownS = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     switch (e.key) {
       case "F2":
         picker();
@@ -307,11 +309,11 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
         if (e.currentTarget.value.length === 0) mref.current?.focus();
         break;
       case "ArrowUp":
-        updown(0, 0, (form.props.$secondInterval ?? 1));
+        updown(0, 0, (props.$secondInterval ?? 1));
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown(0, 0, (form.props.$secondInterval ?? 1) * -1);
+        updown(0, 0, (props.$secondInterval ?? 1) * -1);
         e.preventDefault();
         break;
       default:
@@ -325,23 +327,23 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const picker = () => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     if (showPicker) return;
     setShowPicker(true);
   };
 
   const clear = () => {
-    if (!form.editable) return;
-    form.change(undefined);
+    if (!ctx.editable) return;
+    ctx.change(undefined);
   };
 
   const focusInput = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.currentTarget.select();
   };
 
   const clickInputs = () => {
-    if (!form.props.$disallowInput) return;
+    if (!props.$disallowInput) return;
     picker();
   };
 
@@ -350,17 +352,18 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   useEffect(() => {
-    setInputValues(form.value);
-  }, [form.value, type, unit]);
+    setInputValues(ctx.value);
+  }, [ctx.value, type, unit]);
 
-  const hasData = form.value != null && form.value !== "";
+  const hasData = ctx.value != null && ctx.value !== "";
 
   return (
     <FormItemWrap
-      $$form={form}
+      {...props}
       ref={ref}
+      $context={ctx}
       $useHidden
-      $hasData={hasData}
+      data-has={hasData}
       $mainProps={{
         onBlur: blur,
       }}
@@ -368,15 +371,15 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
       <div
         className={Style.inputs}
         onClick={clickInputs}
-        data-input={!form.props.$disallowInput}
+        data-input={!props.$disallowInput}
       >
         {needH &&
           <input
             ref={href}
             className={Style.h}
             type="text"
-            disabled={form.props.$disallowInput || form.disabled}
-            readOnly={form.props.$disallowInput || form.readOnly}
+            disabled={props.$disallowInput || ctx.disabled}
+            readOnly={props.$disallowInput || ctx.readOnly}
             maxLength={2}
             defaultValue={cacheH.current || ""}
             onFocus={focusInput}
@@ -390,8 +393,8 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
             ref={mref}
             className={Style.m}
             type="text"
-            disabled={form.props.$disallowInput || form.disabled}
-            readOnly={form.props.$disallowInput || form.readOnly}
+            disabled={props.$disallowInput || ctx.disabled}
+            readOnly={props.$disallowInput || ctx.readOnly}
             maxLength={2}
             defaultValue={cacheM.current || ""}
             onFocus={focusInput}
@@ -406,8 +409,8 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
               ref={sref}
               className={Style.s}
               type="text"
-              disabled={form.props.$disallowInput || form.disabled}
-              readOnly={form.props.$disallowInput || form.readOnly}
+              disabled={props.$disallowInput || ctx.disabled}
+              readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheS.current || ""}
               onFocus={focusInput}
@@ -417,9 +420,9 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
           </>
         }
       </div>
-      {form.editable &&
+      {ctx.editable &&
         <>
-          {!form.props.$disallowInput &&
+          {!props.$disallowInput &&
             <div
               className={Style.picker}
               onClick={picker}
@@ -449,18 +452,18 @@ const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
         $preventClickEvent
       >
         <TimePicker
-          $value={form.value}
+          $value={ctx.value}
           $type={type}
           $unit={unit}
-          $typeof={form.props.$typeof}
-          $max={form.props.$max}
-          $min={form.props.$min}
-          $hourInterval={form.props.$hourInterval}
-          $minuteInterval={form.props.$minuteInterval}
-          $secondInterval={form.props.$secondInterval}
+          $typeof={props.$typeof}
+          $max={props.$max}
+          $min={props.$min}
+          $hourInterval={props.$hourInterval}
+          $minuteInterval={props.$minuteInterval}
+          $secondInterval={props.$secondInterval}
           $skipValidation
           $onClickPositive={(value: any) => {
-            form.change(value);
+            ctx.change(value);
             setShowPicker(false);
             focus();
           }}

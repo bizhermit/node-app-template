@@ -1,11 +1,12 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
 
-type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, null, D> & {
+type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & {
+  $typeof?: FileValueType;
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -31,18 +32,30 @@ interface FileDropFC extends FunctionComponent {
 const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
   D extends DataItem_File | undefined = undefined
 >(p: FileDropProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      return {
+        $typeof: dataItem.typeof,
+        $accept: dataItem.accept,
+        $fileSize: dataItem.fileSize,
+        $totalFileSize: dataItem.totalFileSize,
+      };
+    },
+    over: ({ dataItem, props }) => {
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+      };
+    },
+  });
+
   const iref = useRef<HTMLInputElement>(null!);
   const href = useRef<HTMLInputElement>(null!);
 
-  const form = useForm(p, {
-    setDataItem: (d) => {
-      return {
-        $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-      };
-    },
+  const ctx = useFormItemContext(form, props, {
     multipartFormData: true,
-    multiple: (props) => props.$multiple,
-    validations: (props) => {
+    multiple: props.$multiple,
+    validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
         validations.push(FileData.fileTypeValidation(props.$accept));
@@ -57,47 +70,47 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
     },
   });
 
-  const multiable = form.props.$multiple === true;
-  const fileDialog = form.props.$noFileDialog !== true;
+  const multiable = props.$multiple === true;
+  const fileDialog = props.$noFileDialog !== true;
 
   const click = () => {
-    if (!form.editable || !fileDialog) return;
+    if (!ctx.editable || !fileDialog) return;
     iref.current?.click();
   };
 
   const commit = (fileList: FileList | null) => {
     if (fileList == null) {
-      form.change(undefined);
+      ctx.change(undefined);
       return;
     }
     const files = Array.from(fileList ?? []);
     if (multiable) {
-      if (form.props.$append) {
-        form.change([...(form.valueRef.current ?? []), ...files]);
+      if (props.$append) {
+        ctx.change([...(ctx.valueRef.current ?? []), ...files]);
         return;
       }
-      form.change(files);
+      ctx.change(files);
       return;
     }
-    form.change(files?.[0]);
+    ctx.change(files?.[0]);
   };
 
   const change = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     const files = e.currentTarget.files;
     if (files?.length === 0) return;
     commit(files);
   };
 
   const dragLeave = (e: React.DragEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.stopPropagation();
     e.preventDefault();
     e.currentTarget.removeAttribute("data-active");
   };
 
   const dragOver = (e: React.DragEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.stopPropagation();
     e.preventDefault();
     if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
@@ -105,7 +118,7 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
   };
 
   const drop = (e: React.DragEvent) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     e.stopPropagation();
     e.preventDefault();
     e.currentTarget.removeAttribute("data-active");
@@ -113,22 +126,23 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
   };
 
   const clear = () => {
-    form.change(undefined);
+    ctx.change(undefined);
   };
 
   useEffect(() => {
     if (href.current) {
-      const files = (Array.isArray(form.value) ? form.value : [form.value]).filter(file => file != null);
+      const files = (Array.isArray(ctx.value) ? ctx.value : [ctx.value]).filter(file => file != null);
       const dt = new DataTransfer();
       files.forEach(file => dt.items.add(file));
       href.current.files = dt.files;
     }
-  }, [form.value]);
+  }, [ctx.value]);
 
   return (
     <FormItemWrap
-      $$form={form}
+      {...props}
       ref={ref}
+      $context={ctx}
       $mainProps={{
         className: Style.main,
       }}
@@ -137,16 +151,16 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
         ref={iref}
         type="file"
         className={Style.file}
-        multiple={form.props.$multiple}
-        accept={form.props.$accept}
+        multiple={props.$multiple}
+        accept={props.$accept}
         onChange={change}
       />
-      {form.props.name &&
+      {props.name &&
         <input
           className={Style.file}
           ref={href}
           type="file"
-          name={form.props.name}
+          name={props.name}
         />
       }
       <div
@@ -155,14 +169,14 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
         onDragOver={dragOver}
         onDragLeave={dragLeave}
         onDrop={drop}
-        tabIndex={form.props.tabIndex ?? 0}
+        tabIndex={props.tabIndex ?? 0}
         data-dialog={fileDialog}
       >
         <LabelText>
-          {form.props.children}
+          {props.children}
         </LabelText>
       </div>
-      {form.editable && form.props.$hideClearButton !== true &&
+      {ctx.editable && props.$hideClearButton !== true &&
         <div
           className={Style.clear}
           onClick={clear}

@@ -163,7 +163,7 @@ const Page: NextPage = () => {
           name="select-box-form-bind"
           $required
           $source={async () => {
-            return new Promise(resolve => {
+            return new Promise<Array<Struct>>(resolve => {
               setTimeout(() => {
                 resolve(colors.map(color => {
                   return {

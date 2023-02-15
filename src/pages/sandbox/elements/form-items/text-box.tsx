@@ -99,6 +99,10 @@ const Page: NextPage = () => {
         >
           <Row className="gap-1" $vAlign="bottom">
             <TextBox
+              $tag="no item"
+              $onChange={v => console.log("no item: ", v)}
+            />
+            <TextBox
               $tag="string"
               $dataItem={sample_string}
               // $required

@@ -1,4 +1,4 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
@@ -6,7 +6,7 @@ import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { StringData } from "@/data-items/string";
 
-export type TextAreaProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, null, D, string> & {
+export type TextAreaProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & {
   $length?: number;
   $preventInputWithinLength?: boolean;
   $minLength?: number;
@@ -29,24 +29,31 @@ const TextArea: TextAreaFC = React.forwardRef<HTMLDivElement, TextAreaProps>(<
   D extends DataItem_String | undefined = undefined
 >(p: TextAreaProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLTextAreaElement>(null!);
-
-  const form = useForm(p, {
-    setDataItem: (d, m) => {
-      const isSearch = m === "get";
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem, method }) => {
+      const isSearch = method === "get";
       return {
-        $length: isSearch ? undefined : d.length,
-        $minLength: isSearch ? undefined : d.minLength,
-        $maxLength: d.maxLength ?? d.length,
-        $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-        $width: d.width,
-        $minWidth: d.minWidth,
-        $maxWidth: d.maxWidth,
+        $length: isSearch ? undefined : dataItem.length,
+        $minLength: isSearch ? undefined : dataItem.minLength,
+        $maxLength: dataItem.maxLength ?? dataItem.length,
+        $width: dataItem.width,
+        $minWidth: dataItem.minWidth,
+        $maxWidth: dataItem.maxWidth,
       };
     },
+    over: ({ dataItem, props }) => {
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+      };
+    },
+  });
+
+  const ctx = useFormItemContext(form, props, {
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: (props) => {
+    validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
         validations.push(v => StringData.lengthValidation(v, props.$length!));
@@ -60,7 +67,7 @@ const TextArea: TextAreaFC = React.forwardRef<HTMLDivElement, TextAreaProps>(<
       }
       return validations;
     },
-    validationsDeps: (props) => [
+    validationsDeps: [
       props.$length,
       props.$minLength,
       props.$maxLength,
@@ -69,35 +76,36 @@ const TextArea: TextAreaFC = React.forwardRef<HTMLDivElement, TextAreaProps>(<
 
   return (
     <FormItemWrap
+      {...props}
       ref={ref}
-      $$form={form}
-      $hasData={StringUtils.isNotEmpty(form.value)}
+      $context={ctx}
+      data-has={StringUtils.isNotEmpty(ctx.value)}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(form.props.$width),
-          maxWidth: convertSizeNumToStr(form.props.$maxWidth),
-          minWidth: convertSizeNumToStr(form.props.$minWidth),
-          height: convertSizeNumToStr(form.props.$height),
-          maxHeight: convertSizeNumToStr(form.props.$maxHeight),
-          minHeight: convertSizeNumToStr(form.props.$minHeight),
+          width: convertSizeNumToStr(props.$width),
+          maxWidth: convertSizeNumToStr(props.$maxWidth),
+          minWidth: convertSizeNumToStr(props.$minWidth),
+          height: convertSizeNumToStr(props.$height),
+          maxHeight: convertSizeNumToStr(props.$maxHeight),
+          minHeight: convertSizeNumToStr(props.$minHeight),
         }
       }}
     >
       <textarea
         ref={iref}
         className={Style.input}
-        name={form.props.name}
-        placeholder={form.editable ? form.props.placeholder : ""}
-        disabled={form.disabled}
-        readOnly={form.readOnly}
-        maxLength={form.props.$maxLength ?? (form.props.$preventInputWithinLength ? undefined : form.props.$length)}
-        tabIndex={form.props.tabIndex}
-        defaultValue={form.value ?? ""}
-        onChange={e => form.change(e.target.value)}
-        autoComplete={form.props.$autoComplete ?? "off"}
+        name={props.name}
+        placeholder={ctx.editable ? props.placeholder : ""}
+        disabled={ctx.disabled}
+        readOnly={ctx.readOnly}
+        maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
+        tabIndex={props.tabIndex}
+        defaultValue={ctx.value ?? ""}
+        onChange={e => ctx.change(e.target.value)}
+        autoComplete={props.$autoComplete ?? "off"}
       />
-      {form.props.$resize &&
-        <Resizer direction={typeof form.props.$resize === "boolean" ? "xy" : form.props.$resize} />
+      {props.$resize &&
+        <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
       }
     </FormItemWrap>
   );

@@ -1,9 +1,9 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, useMemo, useRef } from "react";
 import Style from "$/components/elements/form-items/slider.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
-export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, null, D, number> & {
+export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
   $max?: number;
   $min?: number;
   $step?: number;
@@ -24,48 +24,61 @@ const Slider: SliderFC = React.forwardRef<HTMLDivElement, SliderProps>(<
   D extends DataItem_Number | DataItem_String | undefined = undefined
 >(p: SliderProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const railRef = useRef<HTMLDivElement>(null!);
-
-  const form = useForm(p, {
-    setDataItem: (d) => {
-      switch (d.type) {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
         case "string":
           return {
             $min: 0,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v == null ? v : String(v))),
-            $width: d.width,
-            $minWidth: d.minWidth,
-            $maxWidth: d.maxWidth,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
           };
         default:
           return {
-            $min: d.min,
-            $max: d.max,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-            $width: d.width,
-            $minWidth: d.minWidth,
-            $maxWidth: d.maxWidth,
+            $min: dataItem.min,
+            $max: dataItem.max,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
           };
       }
     },
-    preventRequiredValidation: () => true,
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "string":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v == null ? v : String(v))),
+          };
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+          };
+      }
+    },
   });
 
-  const max = form.props.$max ?? defaultMax;
-  const min = form.props.$min ?? defaultMin;
+  const ctx = useFormItemContext(form, props, {
+    preventRequiredValidation: true,
+  });
+
+  const max = props.$max ?? defaultMax;
+  const min = props.$min ?? defaultMin;
 
   const rate = useMemo(() => {
-    if (form.value == null) return "0%";
-    return Math.round((form.value - min) * 100 / (max - min)) + "%";
-  }, [form.value]);
+    if (ctx.value == null) return "0%";
+    return Math.round((ctx.value - min) * 100 / (max - min)) + "%";
+  }, [ctx.value]);
 
   const changeStart = (clientX: number, isTouch?: boolean) => {
-    if (!form.editable || railRef.current == null) return;
+    if (!ctx.editable || railRef.current == null) return;
     const width = railRef.current.clientWidth;
-    const cVal = form.value ?? min;
+    const cVal = ctx.value ?? min;
     const range = max - min;
 
     const moveImpl = (cx: number) => {
-      form.change(Math.min(max, Math.max(min, cVal + Math.round(range * (cx - clientX) / width))));
+      ctx.change(Math.min(max, Math.max(min, cVal + Math.round(range * (cx - clientX) / width))));
     };
     if (isTouch) {
       const move = (e: TouchEvent) => moveImpl(e.touches[0].clientX);
@@ -87,16 +100,16 @@ const Slider: SliderFC = React.forwardRef<HTMLDivElement, SliderProps>(<
   };
 
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     switch (e.key) {
       case "ArrowLeft":
-        if (e.ctrlKey) form.change(min);
-        else form.change(Math.max(min, (form.value ?? min) - (form.props.$step ?? 1)));
+        if (e.ctrlKey) ctx.change(min);
+        else ctx.change(Math.max(min, (ctx.value ?? min) - (props.$step ?? 1)));
         e.preventDefault();
         break;
       case "ArrowRight":
-        if (e.ctrlKey) form.change(max);
-        else form.change(Math.min(max, (form.value ?? min) + (form.props.$step ?? 1)));
+        if (e.ctrlKey) ctx.change(max);
+        else ctx.change(Math.min(max, (ctx.value ?? min) + (props.$step ?? 1)));
         e.preventDefault();
         break;
       default:
@@ -106,19 +119,20 @@ const Slider: SliderFC = React.forwardRef<HTMLDivElement, SliderProps>(<
 
   return (
     <FormItemWrap
+      {...props}
       ref={ref}
-      $$form={form}
+      $context={ctx}
       $useHidden
       $preventFieldLayout
       $mainProps={{
         className: Style.main,
         style: {
-          width: convertSizeNumToStr(form.props.$width ?? defaultWidth),
-          maxWidth: convertSizeNumToStr(form.props.$maxWidth),
-          minWidth: convertSizeNumToStr(form.props.$minWidth),
+          width: convertSizeNumToStr(props.$width ?? defaultWidth),
+          maxWidth: convertSizeNumToStr(props.$maxWidth),
+          minWidth: convertSizeNumToStr(props.$minWidth),
         },
         onKeyDown: keydown,
-        tabIndex: form.props.tabIndex ?? 0,
+        tabIndex: props.tabIndex ?? 0,
       }}
     >
       <div
@@ -126,7 +140,7 @@ const Slider: SliderFC = React.forwardRef<HTMLDivElement, SliderProps>(<
       >
         <div className={Style.bar}>
           <div
-            className={`${Style.rate} bgc-${form.props.$color || "main"}`}
+            className={`${Style.rate} bgc-${props.$color || "main"}`}
             style={{ width: rate }}
           />
         </div>

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Time from "@bizhermit/time";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
@@ -7,7 +7,7 @@ import { VscClose } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
 import { TimeData, TimeInput } from "@/data-items/time";
 
-export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, null, D> & TimeInput.FCProps & {
+export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   $onClickPositive?: (value: Nullable<T>) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
@@ -38,101 +38,103 @@ interface TimePickerFC extends FunctionComponent<TimePickerProps> {
 const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProps>(<
   D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
 >(p: TimePickerProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $typeof: "number" as "number",
+            $min: dataItem.min,
+            $max: dataItem.max,
+          } as TimePickerProps<D>;
+        case "string":
+          return {
+            $typeof: "string" as "string",
+            $min: dataItem.minLength,
+            $max: dataItem.maxLength,
+          } as TimePickerProps<D>;
+        default:
+          return {
+            $typeof: "number" as "number",
+            $min: dataItem.min,
+            $max: dataItem.max,
+            $rangePair: dataItem.rangePair,
+          } as TimePickerProps<D>;
+      }
+    },
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          } as TimePickerProps<D>;
+        case "string":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          } as TimePickerProps<D>;
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          } as TimePickerProps<D>;
+      }
+    },
+  });
+
+  const type = props.$type ?? "hm";
+  const unit = useMemo(() => {
+    return TimeInput.getUnit(props, type);
+  }, [type, props.$unit]);
+  const minTime = useMemo(() => {
+    return TimeInput.getMinTime(props, unit);
+  }, [props.$min]);
+  const maxTime = useMemo(() => {
+    return TimeInput.getMaxTime(props, unit);
+  }, [props.$max]);
+
   const hourElemRef = useRef<HTMLDivElement>(null!);
   const minuteElemRef = useRef<HTMLDivElement>(null!);
   const secondElemRef = useRef<HTMLDivElement>(null!);
   const [hour, setHour] = useState<number | undefined>(undefined);
   const [minute, setMinute] = useState<number | undefined>(undefined);
   const [second, setSecond] = useState<number | undefined>(undefined);
+  const needH = type !== "ms";
+  const needM = type !== "h";
+  const needS = type === "hms" || type === "ms";
 
-  const form = useForm(p, {
-    setDataItem: (d) => {
-      switch (d.type) {
-        case "number":
-          return {
-            $typeof: "number" as "number",
-            $min: d.min,
-            $max: d.max,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-          } as TimePickerProps<D>;
-        case "string":
-          return {
-            $typeof: "string" as "string",
-            $min: d.minLength,
-            $max: d.maxLength,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-          } as TimePickerProps<D>;
-        default:
-          return {
-            $typeof: "number" as "number",
-            $min: d.min,
-            $max: d.max,
-            $rangePair: d.rangePair,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-          } as TimePickerProps<D>;
-      }
-    },
-    addStates: (props) => {
-      const type = props.$type ?? "hm";
-      const unit = useMemo(() => {
-        return TimeInput.getUnit(props, type);
-      }, [type, props.$unit]);
-      const minTime = useMemo(() => {
-        return TimeInput.getMinTime(props, unit);
-      }, [props.$min]);
-      const maxTime = useMemo(() => {
-        return TimeInput.getMaxTime(props, unit);
-      }, [props.$max]);
-      return {
-        type,
-        unit,
-        minTime,
-        maxTime,
-      };
-    },
-    interlockValidation: (props) => props.$rangePair != null,
-    validations: (props, states) => {
+  const ctx = useFormItemContext(form, props, {
+    interlockValidation: props.$rangePair != null,
+    validations: () => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
-      if (states.maxTime != null && states.minTime != null) {
-        validations.push(TimeInput.rangeValidation(states.minTime, states.maxTime, states.type, states.unit));
+      if (maxTime != null && minTime != null) {
+        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit));
       } else {
-        if (states.maxTime != null) {
-          validations.push(TimeInput.maxValidation(states.maxTime, states.type, states.unit));
+        if (maxTime != null) {
+          validations.push(TimeInput.maxValidation(maxTime, type, unit));
         }
-        if (states.minTime != null) {
-          validations.push(TimeInput.minValidation(states.minTime, states.type, states.unit));
+        if (minTime != null) {
+          validations.push(TimeInput.minValidation(minTime, type, unit));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = TimeInput.contextValidation(rangePair, states.type, states.unit);
+        const { validation } = TimeInput.contextValidation(rangePair, type, unit);
         validations.push(validation);
       }
       return validations;
     },
-    validationsDeps: (props, states) => [
-      states.type,
-      states.unit,
-      states.minTime,
-      states.maxTime,
+    validationsDeps: [
+      type,
+      unit,
+      minTime,
+      maxTime,
       props.$rangePair?.name,
       props.$rangePair?.position,
       props.$rangePair?.disallowSame,
       props.$skipValidation,
     ],
   });
-
-  const {
-    type,
-    unit,
-    minTime,
-    maxTime,
-  } = form.states;
-
-  const needH = type !== "ms";
-  const needM = type !== "h";
-  const needS = type === "hms" || type === "ms";
 
   const scrollToHourSelected = () => {
     if (hourElemRef.current == null) return;
@@ -179,8 +181,8 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
     if (needH) setHour(time.getHours());
     setMinute(time.getMinutes(!needH));
     if (needS) setSecond(time.getSeconds());
-    form.change(TimeInput.convertTimeToValue(time.getTime(), unit, type, form.props.$typeof));
-    if (form.props.$onClickPositive == null) {
+    ctx.change(TimeInput.convertTimeToValue(time.getTime(), unit, type, props.$typeof));
+    if (props.$onClickPositive == null) {
       setTimeout(scrollToSelected, 20);
     }
   };
@@ -188,7 +190,7 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
   const hourNodes = useMemo(() => {
     if (!needH) return [];
     const nodes = [];
-    const interval = form.props.$hourInterval || 1;
+    const interval = props.$hourInterval || 1;
     const select = (h: number) => {
       selectCell(h, minute, second);
     };
@@ -203,7 +205,7 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
           data-selectable={min <= i && i <= max}
           data-selected={hour === i}
           data-current={false}
-          onClick={form.editable ? () => {
+          onClick={ctx.editable ? () => {
             select(i);
           } : undefined}
         >
@@ -217,16 +219,16 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
     minute,
     second,
     needH,
-    form.editable,
+    ctx.editable,
     minTime,
     maxTime,
-    form.props.$hourInterval,
+    props.$hourInterval,
   ]);
 
   const minuteNodes = useMemo(() => {
     if (!needM) return [];
     const nodes = [];
-    const interval = form.props.$minuteInterval || 1;
+    const interval = props.$minuteInterval || 1;
     const select = (m: number) => {
       selectCell(hour, m, second);
     };
@@ -242,7 +244,7 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
           data-selectable={min <= i && i <= max}
           data-selected={minute === i}
           data-current={false}
-          onClick={form.editable ? () => {
+          onClick={ctx.editable ? () => {
             select(i);
           } : undefined}
         >
@@ -255,17 +257,17 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
     hour,
     minute,
     second,
-    form.editable,
+    ctx.editable,
     needM,
     minTime,
     maxTime,
-    form.props.$minuteInterval,
+    props.$minuteInterval,
   ]);
 
   const secondNodes = useMemo(() => {
     if (!needS) return [];
     const nodes = [];
-    const interval = form.props.$secondInterval || 1;
+    const interval = props.$secondInterval || 1;
     const select = (s: number) => {
       selectCell(hour, minute, s);
     };
@@ -281,7 +283,7 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
           data-selectable={min <= i && i <= max}
           data-selected={second === i}
           data-current={false}
-          onClick={form.editable ? () => {
+          onClick={ctx.editable ? () => {
             select(i);
           } : undefined}
         >
@@ -294,29 +296,29 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
     hour,
     minute,
     second,
-    form.editable,
+    ctx.editable,
     needS,
     minTime,
     maxTime,
-    form.props.$secondInterval,
+    props.$secondInterval,
   ]);
 
   const clear = () => {
-    if (form.valueRef.current == null) {
+    if (ctx.valueRef.current == null) {
       setHour(undefined);
       setMinute(undefined);
       setSecond(undefined);
     } else {
-      form.change(undefined);
+      ctx.change(undefined);
     }
   };
 
   useEffect(() => {
     scrollToSecondSelected();
-  }, [form.editable]);
+  }, [ctx.editable]);
 
   useEffect(() => {
-    const time = TimeData.convertTime(form.valueRef.current, unit);
+    const time = TimeData.convertTime(ctx.valueRef.current, unit);
     if (time == null) {
       setHour(undefined);
       setMinute(undefined);
@@ -330,12 +332,13 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
       else setSecond(undefined);
     }
     setTimeout(scrollToSelected, 20);
-  }, [form.props.$value, form.props.$bind, form.bind]);
+  }, [props.$value, props.$bind, ctx.bind]);
 
   return (
     <FormItemWrap
-      $$form={form}
+      {...props}
       ref={ref}
+      $context={ctx}
       $preventFieldLayout
       $useHidden
       $mainProps={{
@@ -372,7 +375,7 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
         }
       </div>
       <div className={Style.buttons}>
-        {form.editable &&
+        {ctx.editable &&
           <div
             className={Style.clear}
             onClick={clear}
@@ -380,26 +383,26 @@ const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProp
             <VscClose />
           </div>
         }
-        {form.props.$onClickNegative != null &&
+        {props.$onClickNegative != null &&
           <div
             className={Style.negative}
             onClick={() => {
               scrollToSelected();
-              form.props.$onClickNegative?.();
+              props.$onClickNegative?.();
             }}
           >
-            <LabelText>{form.props.$negativeText ?? "キャンセル"}</LabelText>
+            <LabelText>{props.$negativeText ?? "キャンセル"}</LabelText>
           </div>
         }
-        {form.props.$onClickPositive != null &&
+        {props.$onClickPositive != null &&
           <div
             className={Style.positive}
             onClick={() => {
               scrollToSelected();
-              form.props.$onClickPositive?.(form.value as never);
+              props.$onClickPositive?.(ctx.value as never);
             }}
           >
-            <LabelText>{form.props.$positiveText ?? "OK"}</LabelText>
+            <LabelText>{props.$positiveText ?? "OK"}</LabelText>
           </div>
         }
       </div>

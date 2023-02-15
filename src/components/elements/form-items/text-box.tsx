@@ -1,5 +1,5 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
@@ -7,7 +7,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import React, { FunctionComponent, ReactElement, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
-export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string, null, D, string> & {
+export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $preventInputWithinLength?: boolean;
@@ -30,37 +30,50 @@ interface TextBoxFC extends FunctionComponent<TextBoxProps> {
 const TextBox: TextBoxFC = React.forwardRef<HTMLDivElement, TextBoxProps>(<
   D extends DataItem_String | DataItem_Number | undefined = undefined
 >(p: TextBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
-
-  const form = useForm(p, {
-    setDataItem: (d, m) => {
-      const isSearch = m === "get";
-      switch (d.type) {
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem, method }) => {
+      const isSearch = method === "get";
+      switch (dataItem.type) {
         case "number":
           return {
             $charType: "h-num" as StringCharType,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => Number(v))),
-            $width: d.width,
-            $minWidth: d.minWidth,
-            $maxWidth: d.maxWidth,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
           };
         default:
           return {
-            $length: isSearch ? undefined : d.length,
-            $minLength: isSearch ? undefined : d.minLength,
-            $maxLength: d.maxLength ?? d.length,
-            $charType: d.charType,
-            $validations: d.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, d, v => v)),
-            $width: d.width,
-            $minWidth: d.minWidth,
-            $maxWidth: d.maxWidth,
+            $length: isSearch ? undefined : dataItem.length,
+            $minLength: isSearch ? undefined : dataItem.minLength,
+            $maxLength: dataItem.maxLength ?? dataItem.length,
+            $charType: dataItem.charType,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
           };
       }
     },
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => Number(v))),
+          };
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+          };
+      }
+    },
+  });
+
+  const ctx = useFormItemContext(form, props, {
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: (props) => {
+    validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
         validations.push(v => StringData.lengthValidation(v, props.$length!));
@@ -114,7 +127,7 @@ const TextBox: TextBoxFC = React.forwardRef<HTMLDivElement, TextBoxProps>(<
       }
       return validations;
     },
-    validationsDeps: (props) => [
+    validationsDeps: [
       props.$length,
       props.$minLength,
       props.$maxLength,
@@ -123,54 +136,55 @@ const TextBox: TextBoxFC = React.forwardRef<HTMLDivElement, TextBoxProps>(<
   });
 
   const clear = () => {
-    if (!form.editable) return;
-    form.change(undefined);
+    if (!ctx.editable) return;
+    ctx.change(undefined);
     if (iref.current) iref.current.value = "";
   };
 
-  const hasData = StringUtils.isNotEmpty(form.value);
+  const hasData = StringUtils.isNotEmpty(ctx.value);
 
   return (
     <FormItemWrap
+      {...props}
       ref={ref}
-      $$form={form}
-      data-round={form.props.$round}
-      $hasData={hasData}
+      $context={ctx}
+      data-round={props.$round}
+      data-has={hasData}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(form.props.$width),
-          maxWidth: convertSizeNumToStr(form.props.$maxWidth),
-          minWidth: convertSizeNumToStr(form.props.$minWidth),
+          width: convertSizeNumToStr(props.$width),
+          maxWidth: convertSizeNumToStr(props.$maxWidth),
+          minWidth: convertSizeNumToStr(props.$minWidth),
         },
       }}
     >
       <input
         ref={iref}
         className={Style.input}
-        name={form.props.name}
-        type={form.props.$type || "text"}
-        placeholder={form.editable ? form.props.placeholder : ""}
-        disabled={form.disabled}
-        readOnly={form.readOnly}
-        maxLength={form.props.$maxLength ?? (form.props.$preventInputWithinLength ? undefined : form.props.$length)}
-        tabIndex={form.props.tabIndex}
-        defaultValue={form.value ?? ""}
-        onChange={e => form.change(e.target.value)}
-        data-round={form.props.$round}
-        data-clear={form.editable && form.props.$hideClearButton !== true}
-        autoComplete={form.props.$autoComplete ?? "off"}
+        name={props.name}
+        type={props.$type || "text"}
+        placeholder={ctx.editable ? props.placeholder : ""}
+        disabled={ctx.disabled}
+        readOnly={ctx.readOnly}
+        maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
+        tabIndex={props.tabIndex}
+        defaultValue={ctx.value ?? ""}
+        onChange={e => ctx.change(e.target.value)}
+        data-round={props.$round}
+        data-clear={ctx.editable && props.$hideClearButton !== true}
+        autoComplete={props.$autoComplete ?? "off"}
       />
-      {form.editable && form.props.$hideClearButton !== true &&
+      {ctx.editable && props.$hideClearButton !== true &&
         <div
           className={Style.button}
           onClick={clear}
           data-disabled={!hasData}
-          data-round={form.props.$round}
+          data-round={props.$round}
         >
           <VscClose />
         </div>
       }
-      {form.props.$resize && <Resizer direction="x" />}
+      {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
 });
