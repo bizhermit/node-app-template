@@ -82,7 +82,7 @@ const Page: NextPage = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row className="gap-1">
+              <Row key={idx} className="gap-1">
                 <VscAccount />
                 <span className="box pt-t">{idx}</span>
               </Row>
@@ -99,7 +99,7 @@ const Page: NextPage = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row className="gap-1">
+              <Row key={idx} className="gap-1">
                 <VscAccount />
                 <span className="box pt-t">{idx}</span>
               </Row>
