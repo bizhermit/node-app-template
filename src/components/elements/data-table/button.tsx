@@ -19,6 +19,7 @@ const dataTableButtonColumn = <T extends Struct>(props: Props<T>): DataTableColu
   return {
     align: "center",
     width: "10rem",
+    resize: false,
     body: (bprops) => {
       return (
         <Button

@@ -20,6 +20,7 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
   return {
     align: "center",
     width: "4rem",
+    resize: false,
     header: props.bulkCheck ? ({ items, setBodyRev }) => {
       const [checked, setChecked] = useState(isAllChecked(items));
       setBulkChecked = setChecked;

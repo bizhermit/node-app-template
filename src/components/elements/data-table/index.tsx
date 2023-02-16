@@ -187,6 +187,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   name: rowNumberColumnName,
   width: `${calcRowNumberColumnWidth(0)}rem`,
   align: "center",
+  resize: false,
   body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
 } as const;
 
@@ -379,7 +380,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
             }
           </div>
           {column.sort && <div className={Style.sort} data-direction={sort?.direction || ""} />}
-          {column.resize &&
+          {(column.resize ?? true) &&
             <Resizer
               direction="x"
               resized={({ width }) => {
