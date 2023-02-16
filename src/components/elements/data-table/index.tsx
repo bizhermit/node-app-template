@@ -84,8 +84,8 @@ type Pagination = {
 
 type OmitAttributes = "children";
 export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $columns: Array<DataTableColumn<T>>;
-  $value: LoadableArray<T>;
+  $columns?: Array<DataTableColumn<T>>;
+  $value?: LoadableArray<T>;
   $idDataName?: string;
   $multiSort?: boolean;
   $sorts?: Array<DataTableSort>;
@@ -279,7 +279,7 @@ const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(
     }
     return {
       rowNumColWidth,
-      items: pagination ? items.slice(firstIndex, lastIndex) : items,
+      items: (pagination && props.$total == null) ? items.slice(firstIndex, lastIndex) : items,
       total: props.$total ?? originItems.length,
     };
   }, [originItems, sorts, columns, pagination, props.$total]);
