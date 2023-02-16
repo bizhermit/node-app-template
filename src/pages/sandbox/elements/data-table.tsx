@@ -42,8 +42,8 @@ const Page: NextPage = () => {
         name: "col1",
         label: "Col1",
         width: 120,
-        resize: true,
         sort: true,
+        resize: false,
         sortNeutral: false,
         href: (ctx) => {
           return `/sandbox/elements/data-table?id=${ctx.data.id}`;
@@ -63,7 +63,6 @@ const Page: NextPage = () => {
               name: "col2",
               label: "Col2",
               align: "left",
-              resize: true,
               width: 200,
               wrap: true,
             },
