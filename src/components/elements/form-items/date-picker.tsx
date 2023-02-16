@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, multiValidationIterator, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import React, { FunctionComponent, Key, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";

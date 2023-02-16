@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo } from "react";
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";

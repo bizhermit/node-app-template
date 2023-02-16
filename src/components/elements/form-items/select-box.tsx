@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";

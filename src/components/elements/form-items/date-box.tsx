@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";

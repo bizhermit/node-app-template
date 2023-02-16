@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Time from "@bizhermit/time";
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
