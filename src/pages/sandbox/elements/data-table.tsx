@@ -26,7 +26,7 @@ const Page: NextPage = () => {
       dataTableRowNumberColumn,
       dataTableCheckBoxColumn({
         name: "selected",
-        bulkCheck: true,
+        bulk: true,
       }),
       dataTableButtonColumn({
         name: "button",

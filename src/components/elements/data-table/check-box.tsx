@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {
   checkBoxProps?: CheckBoxProps;
-  bulkCheck?: boolean;
+  bulk?: boolean;
 };
 
 const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableColumn<T> => {
@@ -21,7 +21,7 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
     align: "center",
     width: "4rem",
     resize: false,
-    header: props.bulkCheck ? ({ items, setBodyRev }) => {
+    header: props.bulk ? ({ items, setBodyRev }) => {
       const [checked, setChecked] = useState(isAllChecked(items));
       setBulkChecked = setChecked;
       useEffect(() => {
@@ -48,13 +48,15 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
     body: ({ data, items }) => {
       return (
         <CheckBox
+          {...props.checkBoxProps}
           name={dataName}
           $bind={{ ...data }}
-          $onChange={v => {
-            setValue(data, dataName, v);
-            if (props.bulkCheck) {
+          $onChange={(a, b, d) => {
+            setValue(data, dataName, a);
+            if (props.bulk) {
               setBulkChecked(isAllChecked(items));
             }
+            props.checkBoxProps?.$onChange?.(a, b, d);
           }}
         />
       );
