@@ -44,7 +44,9 @@ const convertToRequestInit = (params?: any, _options?: FetchOptions): RequestIni
     return {};
   }
   if (params instanceof FormData) {
-    return { body: params };
+    return {
+      body: params,
+    };
   }
   const t = typeof params;
   if (t === "string" || t === "bigint" || t === "number" || t === "boolean") {
@@ -53,7 +55,7 @@ const convertToRequestInit = (params?: any, _options?: FetchOptions): RequestIni
   return {
     body: JSON.stringify(params),
     headers: {
-      "Content-Type": "application/json; charset=utf-8",
+      "Content-Type": "application/json;charset=utf-8",
     },
   };
 };
