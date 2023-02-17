@@ -20,7 +20,7 @@ export type FileDropProps_Single<D extends DataItem_File | undefined = undefined
 };
 
 export type FileDropProps_Multiple<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<Array<File>, D> & {
-  $append: true;
+  $append?: boolean;
 };
 
 export type FileDropProps<D extends DataItem_File | undefined = undefined> = (FileDropProps_Single<D> & { $multiple?: false; }) | (FileDropProps_Multiple<D> & { $multiple: true });
