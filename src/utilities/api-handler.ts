@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as os from "os";
 import { dataItemKey } from "@/data-items/data-item";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import Time, { TimeUtils } from "@bizhermit/time";
@@ -7,6 +6,16 @@ import { StringData } from "@/data-items/string";
 import { NumberData } from "@/data-items/number";
 import { DateData } from "@/data-items/date";
 import { TimeData } from "@/data-items/time";
+import formidable from "formidable";
+
+export type NextApiConfig = {
+  api?: {
+    bodyParser?: false | {
+      sizeLimit?: string; // "10mb"
+    };
+    externalResolver?: boolean;
+  };
+};
 
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
@@ -543,39 +552,73 @@ const apiHandler = <
       const dataContext = methods[`$${method}`]?.req;
       const reqData = await (async () => {
         let retData: Struct = { ...req.query };
-        if (req.body != null) {
-          const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
-          if (contentType === "multipart/form-data" && typeof req.body === "string") {
+        const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
+        if (req.body == null) {
+          if (contentType === "multipart/form-data") {
+            await new Promise<void>((resolve, reject) => {
+              const form = new formidable.IncomingForm({
+                multiples: true,
+              });
+              form.parse(req, (err, fields, files) => {
+                if (err) {
+                  reject(err);
+                  return;
+                }
+                retData = {
+                  ...retData,
+                  ...fields,
+                  ...files,
+                };
+                resolve();
+              });
+            });
+          }
+        } else {
+          if (contentType === "multipart/form-data") {
             const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
             if (key) {
               const body: { [key: string]: any } = {};
-              req.body.split(key).forEach(item => {
-                if (item.startsWith("--")) return;
+              const items = (req.body as string).split(key);
+              for (const item of items) {
+                if (item.startsWith("--")) continue;
                 const lines = item.split(/\r?\n/);
                 lines.splice(lines.length - 1, 1);
                 lines.splice(0, 1);
                 const name = lines[0]?.match(/\sname="([^\"]*)"/)?.[1];
-                if (!name) return;
+                if (!name) continue;
+                let value: any = undefined;
                 const headerEndLineIndex = lines.findIndex(line => line === "");
-                let value = lines.slice(headerEndLineIndex + 1).join(os.EOL) as any;
-                if (headerEndLineIndex > 1) {
-                  if (value) {
-                    value = {
-                      fileName: lines[0]?.match(/\sfilename="([^\"]*)"/)?.[1],
-                      contentType: lines[1].match(/Content-Type:\s([^\s|\r?\n|;]*)/)?.[1],
-                      value,
-                    };
-                  } else {
-                    value = undefined;
+                const fileName = lines[0]?.match(/\sfilename="([^\"]*)"/)?.[1] ?? undefined;
+                if (fileName == null) {
+                  value = item
+                    .replace(lines[0], "")
+                    .replace(/^\r?\n\r?\n\r?\n/, "")
+                    .replace(/\r?\n$/, "");
+                } else {
+                  if (headerEndLineIndex > 1) {
+                    value = item
+                      .replace(lines[0], "")
+                      .replace(lines[1], "")
+                      .replace(/^\r?\n\r?\n\r?\n\r?\n/, "")
+                      .replace(/\r?\n$/, "");
+                    if (fileName && value) {
+                      value = {
+                        originFileName: fileName,
+                        mimeType: lines[1].match(/Content-Type:\s([^\s|\r?\n|;]*)/)?.[1],
+                        content: value,
+                      };
+                    } else {
+                      value = undefined;
+                    }
                   }
                 }
                 if (name in body) {
                   if (!Array.isArray(body[name])) body[name] = [body[name]];
                   body[name].push(value);
-                  return;
+                  continue;
                 }
                 body[name] = value;
-              });
+              }
               retData = { ...retData, ...body };
             }
           } else {
