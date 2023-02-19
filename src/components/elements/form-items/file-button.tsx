@@ -131,7 +131,7 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
           {props.children ?? "ファイルを選択"}
         </Button>
       }
-      {props.$hideFileName !== true && ctx.value != null &&
+      {props.$hideFileName !== true && !props.$multiple && ctx.value != null &&
         <div className={Style.label}>
           {ctx.value.name}
         </div>
