@@ -2,6 +2,7 @@ import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import FileButton from "@/components/elements/form-items/file-button";
+import FileDrop from "@/components/elements/form-items/file-drop";
 import TextArea from "@/components/elements/form-items/text-area";
 import TextBox from "@/components/elements/form-items/text-box";
 import GroupBox from "@/components/elements/group-box";
@@ -241,7 +242,11 @@ const Page: NextPage = () => {
         <GroupBox $caption="form" $bodyClassName="p-1">
           <Form
             className="flex-start gap-1"
-            action="/api/form"
+            // action="/api/form"
+            $onSubmit={async (fd) => {
+              const res = await api.post("/form", fd);
+              console.log(res);
+            }}
           >
             <TextBox name="textbox" />
             <TextBox name="textbox" />
@@ -252,16 +257,24 @@ const Page: NextPage = () => {
             </Row>
           </Form>
         </GroupBox>
-        <GroupBox $caption="form (file)" $bodyClassName="p-1" className="none">
+        <GroupBox $caption="form (file)" $bodyClassName="p-1" className="">
           <Form
             className="flex-start gap-1"
-            action="/api/form"
+            // action="/api/form"
+            $onSubmit={async (fd) => {
+              const res = await api.post("/form", fd);
+              console.log(res);
+            }}
           >
             <TextBox name="textbox" />
             <TextBox name="textbox" />
             <TextArea name="textarea" />
-            <FileButton name="filebutton1" />
-            <FileButton name="filebutton2" />
+            <FileButton name="filebutton" />
+            <FileDrop
+              name="filedrop"
+              $multiple
+              style={{ height: "5rem", width: "20rem"}}
+            />
             <Row className="gap-1">
               <Button type="submit" formMethod="get">get</Button>
               <Button type="submit" formMethod="post">post</Button>

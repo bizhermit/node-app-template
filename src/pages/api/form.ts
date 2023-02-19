@@ -1,5 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-import apiHandler from "@/utilities/api-handler";
+import apiHandler, { NextApiConfig } from "@/utilities/api-handler";
+
+export const config: NextApiConfig = {
+  api: {
+    // bodyParser: {
+    //   sizeLimit: "10mb",
+    // }
+    bodyParser: false,
+  },
+};
 
 export default apiHandler({
   get: async (ctx) => {
