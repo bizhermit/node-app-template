@@ -38,7 +38,7 @@ type DataItem = (DataItem_Base & { type: "any" })
   | DataItem_Struct<any>
   ;
 
-type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false> =
+type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "f" | "b" = "f"> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
@@ -95,12 +95,12 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
       Strict extends true ? (
         D["required"] extends true ? (
           D["typeof"] extends "base64" ? string :
-          File
+          (Side extends "b" ? FileAsBack : File)
         ) : (
           D["typeof"] extends "base64" ? string :
-          File
+          (Side extends "b" ? FileAsBack : File)
         ) | null | undefined
-      ) : File | string | null | undefined
+      ) : (Side extends "b" ? FileAsBack : File) | string | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
@@ -250,6 +250,10 @@ type DataItem_File = DataItem_Base & {
   fileSize?: number;
   totalFileSize?: number;
   validations?: DataItemValidation<File, DataItem_File>;
+};
+
+type FileAsBack = {
+
 };
 
 /**

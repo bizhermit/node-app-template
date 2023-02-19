@@ -509,8 +509,8 @@ type MethodProcess<Req extends DataContext, Res extends DataContext> =
     getSession: () => SessionStruct;
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => DataItemValueType<Req, true>;
-  }) => Promise<void | DataItemValueType<Res, true>>;
+    getData: () => DataItemValueType<Req, true, "b">;
+  }) => Promise<void | DataItemValueType<Res, true, "b">>;
 
 const apiHandler = <
   GetReq extends DataContext = DataContext,
