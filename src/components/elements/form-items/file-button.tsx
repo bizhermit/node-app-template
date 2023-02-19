@@ -39,8 +39,10 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
         $typeof: dataItem.typeof,
         $accept: dataItem.accept,
         $fileSize: dataItem.fileSize,
-        $totalFileSize: dataItem.totalFileSize,
-        $multiple: dataItem.multiple,
+        ...(dataItem.multiple ? {
+          $totalFileSize: dataItem.totalFileSize,
+          $multiple: dataItem.multiple,
+        } : {})
       };
     },
     over: ({ dataItem, props }) => {
