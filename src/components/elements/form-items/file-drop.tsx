@@ -40,6 +40,7 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
         $accept: dataItem.accept,
         $fileSize: dataItem.fileSize,
         $totalFileSize: dataItem.totalFileSize,
+        $multiple: dataItem.multiple,
       };
     },
     over: ({ dataItem, props }) => {
