@@ -7,6 +7,7 @@ import { NumberData } from "@/data-items/number";
 import { DateData } from "@/data-items/date";
 import { TimeData } from "@/data-items/time";
 import formidable from "formidable";
+import { FileData } from "@/data-items/file";
 
 export type NextApiConfig = {
   api?: {
@@ -57,7 +58,7 @@ const getItem = (
         getStructItem(msgs, key!, ctx, data, index, pctx);
         break;
       case "file":
-        // TODO: file
+        getFileItem(msgs, key!, ctx, data, index, pctx);
         break;
       default:
         break;
@@ -407,6 +408,96 @@ const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   }
 };
 
+const getFileItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_File, data?: Struct, index?: number, pctx?: DataContext) => {
+  const name = ctx.label || ctx.name || String(key);
+  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
+    if (res) {
+      if (typeof res === "string") {
+        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ type, key, name, index, value: data?.[key], ...res });
+      }
+    }
+  };
+
+  if (data) {
+    const v = data[key];
+    if (ctx.multiple) {
+      if (v != null && !Array.isArray(v)) {
+        data[key] = [v];
+      }
+      data[key] = (data[key] as Array<FileValue>)?.filter(item => item != null);
+    } else {
+      if (v != null && Array.isArray(v)) {
+        if (v.length <= 1) {
+          data[key] = v[0];
+        } else {
+          pushMsg(`${name}にファイルが複数設定されています。`);
+          return;
+        }
+      }
+    }
+  }
+
+  if (ctx.multiple) {
+    const v = data?.[key] as Nullable<Array<FileValue>>;
+    let hasData = true;
+
+    if (ctx.required) {
+      if (v == null || v.length === 0) {
+        pushMsg(`${name}をアップロードしてください。`);
+        hasData = false;
+      }
+    }
+
+    if (ctx.accept) {
+      v?.forEach(item => {
+
+      });
+    }
+
+    if (ctx.fileSize != null) {
+      v?.forEach(item => {
+        // TODO: check item size
+        // pushMsg(`${name}のサイズは${FileData.getSizeText(ctx.fileSize!)}以内でアップロードしてください。`);
+      });
+    }
+
+    if (ctx.totalFileSize != null) {
+      const size = v?.reduce((pv, item) => {
+        // TODO: add item size
+        return 0;
+      }, 0) as number ?? 0;
+      if (size > ctx.totalFileSize) {
+        pushMsg(`${name}の合計サイズは${FileData.getSizeText(ctx.totalFileSize)}以内でアップロードしてください。`);
+      }
+    }
+  } else {
+    const v = data?.[key] as Nullable<FileValue>;
+    let hasData = true;
+
+    if (ctx.required) {
+      if (v == null) {
+        pushMsg(`${name}をアップロードしてください。`);
+        hasData = false;
+      }
+    }
+
+    if (hasData && ctx.accept != null) {
+    }
+
+    if (hasData && ctx.fileSize != null) {
+      // pushMsg(`${name}のサイズは${FileData.getSizeText(ctx.fileSize!)}以内でアップロードしてください。`);
+    }
+  }
+
+  if (ctx.validations) {
+    for (const validation of ctx.validations) {
+      pushMsg(validation(data?.[key], key, ctx, data, index, pctx));
+    }
+  }
+};
+
 const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
@@ -509,8 +600,8 @@ type MethodProcess<Req extends DataContext, Res extends DataContext> =
     getSession: () => SessionStruct;
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => DataItemValueType<Req, true, "b">;
-  }) => Promise<void | DataItemValueType<Res, true, "b">>;
+    getData: () => DataItemValueType<Req, true, "server">;
+  }) => Promise<void | DataItemValueType<Res, true, "server">>;
 
 const apiHandler = <
   GetReq extends DataContext = DataContext,

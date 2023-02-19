@@ -47,7 +47,10 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
     },
     over: ({ dataItem, props }) => {
       return {
-        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => {
+          if (v == null || Array.isArray(v)) return v;
+          return [v];
+        })),
       };
     }
   });

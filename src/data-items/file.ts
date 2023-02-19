@@ -1,6 +1,14 @@
 import { dataItemKey } from "@/data-items/data-item";
 
-const fileItem = <C extends Omit<DataItem_File, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_File, "type"> & { type: "file" } : C & Omit<DataItem_File, "type"> & { type: "file" }> => {
+const fileItem = <C extends Omit<DataItem_File, DataItemKey | "type" | "validations" | "multiple"> & (
+  {
+    multiple: false | undefined;
+    validations?: DataItemValidation<FileValue, DataItem_File>;
+  } | {
+    multiple: true
+    validations?: DataItemValidation<Array<FileValue | null | undefined>, DataItem_File>;
+  }
+)>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_File, "type"> & { type: "file" } : C & Omit<DataItem_File, "type"> & { type: "file" }> => {
   return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "file" });
 };
 

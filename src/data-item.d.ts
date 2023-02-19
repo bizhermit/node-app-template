@@ -38,7 +38,7 @@ type DataItem = (DataItem_Base & { type: "any" })
   | DataItem_Struct<any>
   ;
 
-type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "f" | "b" = "f"> =
+type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "client" | "server" = "client"> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
@@ -94,13 +94,21 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     D["type"] extends DataItem_File["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? (
-          D["typeof"] extends "base64" ? string :
-          (Side extends "b" ? FileAsBack : File)
+          D["multiple"] extends true ? (
+            Array<D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)>
+          ) : (
+            D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)
+          )
         ) : (
-          D["typeof"] extends "base64" ? string :
-          (Side extends "b" ? FileAsBack : File)
-        ) | null | undefined
-      ) : (Side extends "b" ? FileAsBack : File) | string | null | undefined
+          D["multiple"] extends true ? (
+            Array<(D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)) | null | undefined> | null | undefined
+          ) : (
+            (D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)) | null | undefined
+          )
+        )
+      ) : D["multiple"] extends true ? (
+        Array<(Side extends "server" ? FileValue : File) | string | null | undefined> | null | undefined
+      ) : (Side extends "server" ? FileValue : File) | string | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
@@ -248,11 +256,16 @@ type DataItem_File = DataItem_Base & {
   typeof?: FileValueType;
   accept?: string;
   fileSize?: number;
+} & ({
+  multiple?: false;
+  validations?: DataItemValidation<FileValue, DataItem_File>;
+} | {
+  multiple: true;
   totalFileSize?: number;
-  validations?: DataItemValidation<File, DataItem_File>;
-};
+  validations?: DataItemValidation<Array<FileValue | null | undefined>, DataItem_File>;
+});
 
-type FileAsBack = {
+type FileValue = File | {
 
 };
 
