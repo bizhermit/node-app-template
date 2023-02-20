@@ -112,7 +112,7 @@ export const sample_file = fileItem({
   name: "sample_file",
   // accept: "image/*",
   // multiple: true,
-  multiple: false,
+  // multiple: false,
   validations: [
     (v) => {
       console.log("file validation: ", typeof v, v);
