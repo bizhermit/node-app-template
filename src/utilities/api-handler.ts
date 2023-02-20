@@ -8,6 +8,7 @@ import { DateData } from "@/data-items/date";
 import { TimeData } from "@/data-items/time";
 import formidable from "formidable";
 import { FileData } from "@/data-items/file";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type NextApiConfig = {
   api?: {
@@ -426,7 +427,10 @@ const getFileItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
       if (v != null && !Array.isArray(v)) {
         data[key] = [v];
       }
-      data[key] = (data[key] as Array<FileValue>)?.filter(item => item != null);
+      data[key] = (data[key] as Array<FileValue>)?.filter(item => {
+        if (item == null) return false;
+        return !StringUtils.isEmpty(item.originalFilename);
+      });
     } else {
       if (v != null && Array.isArray(v)) {
         if (v.length <= 1) {
@@ -436,58 +440,62 @@ const getFileItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
           return;
         }
       }
+      const vc = data[key] as FileValue;
+      if (vc != null && StringUtils.isEmpty(vc.originalFilename)) {
+        data[key] = undefined;
+      }
     }
   }
 
   if (ctx.multiple) {
-    const v = data?.[key] as Nullable<Array<FileValue>>;
-    let hasData = true;
+    const v = data?.[key] as Array<FileValue> | null | undefined;
 
     if (ctx.required) {
       if (v == null || v.length === 0) {
         pushMsg(`${name}をアップロードしてください。`);
-        hasData = false;
       }
     }
 
     if (ctx.accept) {
+      const f = FileData.fileTypeValidationAsServer(ctx.accept);
       v?.forEach(item => {
-
+        pushMsg(f(item));
       });
     }
 
     if (ctx.fileSize != null) {
       v?.forEach(item => {
-        // TODO: check item size
-        // pushMsg(`${name}のサイズは${FileData.getSizeText(ctx.fileSize!)}以内でアップロードしてください。`);
+        if (item.size > ctx.fileSize!) {
+          pushMsg(`${name}のサイズは${FileData.getSizeText(ctx.fileSize!)}以内でアップロードしてください。`);
+        }
       });
     }
 
     if (ctx.totalFileSize != null) {
       const size = v?.reduce((pv, item) => {
-        // TODO: add item size
-        return 0;
+        return pv + item.size;
       }, 0) as number ?? 0;
       if (size > ctx.totalFileSize) {
         pushMsg(`${name}の合計サイズは${FileData.getSizeText(ctx.totalFileSize)}以内でアップロードしてください。`);
       }
     }
   } else {
-    const v = data?.[key] as Nullable<FileValue>;
-    let hasData = true;
+    const v = data?.[key] as FileValue | null | undefined;
 
     if (ctx.required) {
       if (v == null) {
         pushMsg(`${name}をアップロードしてください。`);
-        hasData = false;
       }
     }
 
-    if (hasData && ctx.accept != null) {
+    if (v != null && ctx.accept != null) {
+      pushMsg(FileData.fileTypeValidationAsServer(ctx.accept)(v));
     }
 
-    if (hasData && ctx.fileSize != null) {
-      // pushMsg(`${name}のサイズは${FileData.getSizeText(ctx.fileSize!)}以内でアップロードしてください。`);
+    if (v != null && ctx.fileSize != null) {
+      if (v.size > ctx.fileSize) {
+        pushMsg(`${name}のサイズは${FileData.getSizeText(ctx.fileSize!)}以内でアップロードしてください。`);
+      }
     }
   }
 
