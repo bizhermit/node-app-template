@@ -39,12 +39,18 @@ const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
         $typeof: dataItem.typeof,
         $accept: dataItem.accept,
         $fileSize: dataItem.fileSize,
-        $totalFileSize: dataItem.totalFileSize,
+        ...(dataItem.multiple ? {
+          $totalFileSize: dataItem.totalFileSize,
+          $multiple: dataItem.multiple,
+        } : {}),
       };
     },
     over: ({ dataItem, props }) => {
       return {
-        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => {
+          if (v == null || Array.isArray(v)) return v;
+          return [v];
+        })),
       };
     },
   });

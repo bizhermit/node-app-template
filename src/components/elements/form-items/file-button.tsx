@@ -5,7 +5,7 @@ import Style from "$/components/elements/form-items/file-button.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
 
-export type FileButtonProps<D extends DataItem_File | undefined = undefined> = FormItemProps<File, D, File> & ButtonOptions & {
+type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & ButtonOptions & {
   $typeof?: FileValueType;
   $accept?: string;
   $fileSize?: number;
@@ -15,8 +15,18 @@ export type FileButtonProps<D extends DataItem_File | undefined = undefined> = F
   children?: ReactNode;
 };
 
+export type FileButtonProps_Single<D extends DataItem_File | undefined = undefined> = FileButtonBaseProps<File, D> & {
+  $append?: false;
+};
+
+export type FileButtonProps_Multiple<D extends DataItem_File | undefined = undefined> = FileButtonBaseProps<Array<File>, D> & {
+  $append?: boolean;
+};
+
+export type FileButtonProps<D extends DataItem_File | undefined = undefined> = (FileButtonProps_Single<D> & { $multiple?: false; }) | (FileButtonProps_Multiple<D> & { $multiple: true });
+
 interface FileButtonFC extends FunctionComponent {
-  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonBaseProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProps>(<
@@ -29,12 +39,18 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
         $typeof: dataItem.typeof,
         $accept: dataItem.accept,
         $fileSize: dataItem.fileSize,
-        $totalFileSize: dataItem.totalFileSize,
+        ...(dataItem.multiple ? {
+          $totalFileSize: dataItem.totalFileSize,
+          $multiple: dataItem.multiple,
+        } : {})
       };
     },
     over: ({ dataItem, props }) => {
       return {
-        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => {
+          if (v == null || Array.isArray(v)) return v;
+          return [v];
+        })),
       };
     }
   });
@@ -44,6 +60,7 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
 
   const ctx = useFormItemContext(form, props, {
     multipartFormData: true,
+    multiple: props.$multiple,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
@@ -59,6 +76,8 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
     },
   });
 
+  const multiable = props.$multiple === true;
+
   const click = () => {
     if (!ctx.editable) return;
     if (iref.current) {
@@ -71,6 +90,14 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
     if (!ctx.editable) return;
     const files = Array.from(e.currentTarget.files ?? []);
     if (files?.length === 0) return;
+    if (multiable) {
+      if (props.$append) {
+        ctx.change([...(ctx.valueRef.current ?? []), ...files]);
+        return;
+      }
+      ctx.change(files);
+      return;
+    }
     ctx.change(files[0]);
   };
 
@@ -109,7 +136,7 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
           {props.children ?? "ファイルを選択"}
         </Button>
       }
-      {props.$hideFileName !== true && ctx.value != null &&
+      {props.$hideFileName !== true && !props.$multiple && ctx.value != null &&
         <div className={Style.label}>
           {ctx.value.name}
         </div>
@@ -128,6 +155,7 @@ const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProp
         className={Style.file}
         accept={props.$accept}
         onChange={change}
+        multiple={props.$multiple}
       />
       {props.name &&
         <input

@@ -111,7 +111,7 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <Row $vAlign="top" className="gap-1">
-        <GroupBox $caption="fetch">
+        <GroupBox $caption="fetch" className="none">
           <Form
             className="flex-start p-1 gap-1"
             $bind
@@ -239,13 +239,14 @@ const Page: NextPage = () => {
             </Row>
           </Form>
         </GroupBox>
-        <GroupBox $caption="form" $bodyClassName="p-1">
+        <GroupBox className="none" $caption="form" $bodyClassName="p-1">
           <Form
             className="flex-start gap-1"
             // action="/api/form"
             $onSubmit={async (fd) => {
               const res = await api.post("/form", fd);
               console.log(res);
+              setResponse(res);
             }}
           >
             <TextBox name="textbox" />
@@ -264,8 +265,10 @@ const Page: NextPage = () => {
             $onSubmit={async (fd) => {
               const res = await api.post("/form", fd);
               console.log(res);
+              setResponse(res);
             }}
           >
+            {/* <input name="hoge" type="file" /> */}
             <TextBox name="textbox" />
             <TextBox name="textbox" />
             <TextArea name="textarea" />

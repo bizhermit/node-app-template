@@ -38,7 +38,7 @@ type DataItem = (DataItem_Base & { type: "any" })
   | DataItem_Struct<any>
   ;
 
-type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false> =
+type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "client" | "server" = "client"> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
@@ -94,29 +94,37 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     D["type"] extends DataItem_File["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? (
-          D["typeof"] extends "base64" ? string :
-          File
+          D["multiple"] extends true ? (
+            Array<D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)>
+          ) : (
+            D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)
+          )
         ) : (
-          D["typeof"] extends "base64" ? string :
-          File
-        ) | null | undefined
-      ) : File | string | null | undefined
+          D["multiple"] extends true ? (
+            Array<(D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File))> | null | undefined
+          ) : (
+            (D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)) | null | undefined
+          )
+        )
+      ) : D["multiple"] extends true ? (
+        Array<(Side extends "server" ? FileValue : File) | string | null | undefined> | null | undefined
+      ) : (Side extends "server" ? FileValue : File) | string | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
-        D["required"] extends true ? Array<DataItemValueType<D["item"], Strict>> : Array<DataItemValueType<D["item"], Strict>> | null | undefined
-      ) : Array<DataItemValueType<D["item"], Strict>> | undefined
+        D["required"] extends true ? Array<DataItemValueType<D["item"], Strict, Side>> : Array<DataItemValueType<D["item"], Strict, Side>> | null | undefined
+      ) : Array<DataItemValueType<D["item"], Strict, Side>> | undefined
     ) :
     D["type"] extends DataItem_Struct["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : { [P in keyof D["item"]]: D["item"][P] } | null | undefined
-      ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict> }
+      ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict, Side> }
     ) :
     any
   ) : (
     Strict extends true ?
-    { [P in keyof D]: DataItemValueType<D[P], Strict> } :
-    { [P in keyof D]?: DataItemValueType<D[P], Strict> }
+    { [P in keyof D]: DataItemValueType<D[P], Strict, Side> } :
+    { [P in keyof D]?: DataItemValueType<D[P], Strict, Side> }
   )
   ;
 
@@ -248,8 +256,19 @@ type DataItem_File = DataItem_Base & {
   typeof?: FileValueType;
   accept?: string;
   fileSize?: number;
+  multiple?: boolean;
   totalFileSize?: number;
-  validations?: DataItemValidation<File, DataItem_File>;
+  validations?: DataItemValidation<Array<File | FileValue> | (File | FileValue), DataItem_File>;
+};
+
+type FileValue = {
+  lastModifiedDate: string;
+  filepath: string;
+  newFilename: string;
+  originalFilename: string;
+  mimetype: string;
+  hashAlgorithm: boolean,
+  size: number;
 };
 
 /**
