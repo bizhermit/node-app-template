@@ -111,7 +111,7 @@ export const sample_time = timeItem({
 export const sample_file = fileItem({
   name: "sample_file",
   // accept: "image/*",
-  // multiple: true,
+  multiple: true,
   // multiple: false,
   validations: [
     (v) => {

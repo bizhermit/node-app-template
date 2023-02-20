@@ -251,14 +251,14 @@ type DataItem_Time = DataItem_Base & {
 
 type FileValueType = "file" | "base64";
 
-type DataItem_File<Multiple extends boolean> = DataItem_Base & {
+type DataItem_File = DataItem_Base & {
   type: "file";
   typeof?: FileValueType;
   accept?: string;
   fileSize?: number;
-  multiple?: Multiple;
+  multiple?: boolean;
   totalFileSize?: number;
-  validations?: DataItemValidation<Multiple extends true ? Array<File | FileValue> : (File | FileValue), DataItem_File>;
+  validations?: DataItemValidation<Array<File | FileValue> | (File | FileValue), DataItem_File>;
 };
 
 type FileValue = {

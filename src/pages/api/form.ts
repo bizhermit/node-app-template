@@ -20,13 +20,10 @@ export default apiHandler({
   $post: {
     req: {
       filedrop: fileItem({
-        // fileSize: 10000,
-        // multiple: true,
         multiple: true,
       }),
       filebutton: fileItem({
-        // multiple: false,
-        // multiple: false,
+        multiple: false,
       }),
     }
   },

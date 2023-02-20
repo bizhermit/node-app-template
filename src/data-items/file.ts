@@ -1,15 +1,7 @@
 import { dataItemKey } from "@/data-items/data-item";
 
-const fileItem = <C extends Omit<DataItem_File, DataItemKey | "type" | "validations" | "multiple"> & (
-  {
-    multiple: false | undefined;
-    validations?: DataItemValidation<FileValue, DataItem_File>;
-  } | {
-    multiple: true
-    validations?: DataItemValidation<Array<FileValue | null | undefined>, DataItem_File>;
-  }
-)>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_File, "type"> & { type: "file" } : C & Omit<DataItem_File, "type"> & { type: "file" }> => {
-  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "file" });
+const fileItem = <C extends Omit<DataItem_File, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_File : C & DataItem_File> => {
+  return Object.freeze({ multiple: false, ...(ctx as any), [dataItemKey]: undefined, type: "file" });
 };
 
 export namespace FileData {
@@ -50,6 +42,28 @@ export namespace FileData {
       for (const file of values) {
         if (file == null || file.size <= fileSize) continue;
         ret = `ファイルサイズは${getSizeText(fileSize)}以内でアップロードしてください`;
+        break;
+      }
+      return ret;
+    };
+  };
+
+  export const fileTypeValidationAsServer = (accept: string) => {
+    const accepts = accept.split(",");
+    const validAccept = (file: FileValue) => {
+      if (file == null) return true;
+      return accepts.some(accept => {
+        if (accept.startsWith(".")) return file.originalFilename.endsWith(accept);
+        const reg = new RegExp(accept);
+        return (file.mimetype || "").match(reg);
+      });
+    };
+    return (files: FileValue | Array<FileValue>) => {
+      const values = Array.isArray(files) ? files : [files];
+      let ret = "";
+      for (const file of values) {
+        if (validAccept(file)) continue;
+        ret = "許可されていないファイル拡張子です。";
         break;
       }
       return ret;
