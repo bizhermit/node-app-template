@@ -128,6 +128,7 @@ const Page: NextPage = () => {
             label: `item ${idx}`,
           };
         })}
+        $emptyItem="(未選択)"
       />
       <SelectBox
         $tag="bind"
