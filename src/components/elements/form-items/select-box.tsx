@@ -24,11 +24,12 @@ export type SelectBoxProps<
   $width?: number | string;
   $maxWidth?: number | string;
   $minWidth?: number | string;
-  $emptyItem?: boolean | { value: T; label: string; };
+  $emptyItem?: boolean | { value: T | null | undefined; label: string; };
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
-  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>(attrs: SelectBoxProps<T, D, S>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>
+    (attrs: SelectBoxProps<T, D, S>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const defaultWidth = 200;
