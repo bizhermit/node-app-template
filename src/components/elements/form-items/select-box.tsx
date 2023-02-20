@@ -24,7 +24,7 @@ export type SelectBoxProps<
   $width?: number | string;
   $maxWidth?: number | string;
   $minWidth?: number | string;
-  $emptyItem?: boolean | { value: T | null | undefined; label: string; };
+  $emptyItem?: boolean | string | { value: T | null | undefined; label: string; };
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
@@ -106,11 +106,9 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
 
   const clear = () => {
     if (!ctx.editable) return;
-    if (props.$emptyItem) {
-      if (!(typeof props.$emptyItem === "boolean")) {
-        ctx.change(props.$emptyItem.value);
-        return;
-      }
+    if (props.$emptyItem != null && !(typeof props.$emptyItem === "boolean" || typeof props.$emptyItem === "string")) {
+      ctx.change(props.$emptyItem.value);
+      return;
     }
     ctx.change(undefined);
   };
@@ -331,21 +329,32 @@ const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(
           onKeyDown={keydownItem}
         >
           {useMemo(() => {
-            if (props.$emptyItem) {
+            if (props.$emptyItem != null) {
               const emptyValue = bindSource[0]?.[vdn];
               if (emptyValue != null && emptyValue !== "") {
-                if (typeof props.$emptyItem === "boolean") {
-                  bindSource.unshift({
-                    [vdn]: undefined,
-                    [ldn]: "",
-                  } as S);
-                } else {
-                  if (emptyValue !== props.$emptyItem.value) {
+                switch (typeof props.$emptyItem) {
+                  case "boolean":
+                    if (props.$emptyItem) {
+                      bindSource.unshift({
+                        [vdn]: undefined,
+                        [ldn]: "",
+                      } as S);
+                    }
+                    break;
+                  case "string":
                     bindSource.unshift({
-                      [vdn]: props.$emptyItem.value,
-                      [ldn]: props.$emptyItem.label,
+                      [vdn]: undefined,
+                      [ldn]: props.$emptyItem || "",
                     } as S);
-                  }
+                    break;
+                  default:
+                    if (props.$emptyItem && emptyValue !== props.$emptyItem.value) {
+                      bindSource.unshift({
+                        [vdn]: props.$emptyItem.value,
+                        [ldn]: props.$emptyItem.label,
+                      } as S);
+                    }
+                    break;
                 }
               }
             }
