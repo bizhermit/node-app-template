@@ -702,10 +702,11 @@ const apiHandler = <
                       .replace(/\r?\n$/, "");
                     if (fileName && value) {
                       value = {
-                        originFileName: fileName,
-                        mimeType: lines[1].match(/Content-Type:\s([^\s|\r?\n|;]*)/)?.[1],
+                        mimetype: lines[1].match(/Content-Type:\s([^\s|\r?\n|;]*)/)?.[1],
+                        originalFilename: fileName,
+                        size: Buffer.from(value, "ascii").byteLength,
                         content: value,
-                      };
+                      } as FileValue;
                     } else {
                       value = undefined;
                     }
