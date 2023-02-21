@@ -30,8 +30,8 @@ export default apiHandler({
   post: async (ctx) => {
     console.log("--post--");
     const data = ctx.getData();
-    // console.log(data);
-    data.filedrop;
-    data.filebutton;
+    console.log(data);
+    // data.filedrop;
+    // data.filebutton;
   },
 });

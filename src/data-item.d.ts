@@ -262,13 +262,14 @@ type DataItem_File = DataItem_Base & {
 };
 
 type FileValue = {
-  lastModifiedDate: string;
-  filepath: string;
-  newFilename: string;
+  lastModifiedDate?: string;
+  filepath?: string;
+  newFilename?: string;
+  hashAlgorithm?: boolean,
   originalFilename: string;
   mimetype: string;
-  hashAlgorithm: boolean,
   size: number;
+  content?: string;
 };
 
 /**
