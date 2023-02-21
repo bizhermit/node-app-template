@@ -19,9 +19,9 @@ $darkenRate: 10%;
 $colorMap: (
   "base": $baseColor,
   "pure": (
-    "light": #fff,
+    "light": rgb(255, 255, 255),
     "light_r": #000,
-    "dark": #000,
+    "dark": rgb(20, 20, 23),
     "dark_r": #fff,
   ),
   "dull": (
