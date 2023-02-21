@@ -19,7 +19,7 @@ const inputAttributes = (props: Struct, ...classNames: Array<string | null | und
 
 type ValueType<T, D extends DataItem | undefined = undefined, V = undefined> =
   V extends undefined ? (
-    T extends any ? (D extends undefined ? T : DataItemValueType<Exclude<D, undefined>, true, "f">) : T
+    T extends any ? (D extends undefined ? T : DataItemValueType<Exclude<D, undefined>, true, "client">) : T
   ) : V;
 
 type InputOmitProps = "name"
