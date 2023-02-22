@@ -12,13 +12,11 @@ export type FetchApiResponse<T> = {
 
 const electron = (global as any).electron;
 
-const handleResponse = <T>(status: number, text?: string) => {
-  if (status === 204 || !text) {
-    return {
-      messages: [],
-      data: undefined as T,
-    };
-  }
+const toJson = <T>(text: string | null | undefined): { data: T; messages: Array<Message> } => {
+  if (text == null) return {
+    messages: [],
+    data: undefined as T,
+  };
   try {
     const json = JSON.parse(text);
     return {
@@ -33,24 +31,30 @@ const handleResponse = <T>(status: number, text?: string) => {
   }
 };
 
+const handleResponse = <T>(
+  ok: boolean,
+  status: number,
+  statusText: string | null | undefined,
+  text: string | null | undefined
+): FetchApiResponse<T> => {
+  const json = toJson(text);
+  return {
+    ok,
+    status,
+    statusText: statusText || "",
+    messages: json.messages ?? [],
+    data: (status === 204 ? undefined : json.data) as T,
+  };
+};
+
 const fetchElectron = async <T>(url: string, init?: RequestInit) => {
   const res = await electron.fetch(url, init);
-  return {
-    ok: res.ok as boolean,
-    status: res.status as number,
-    statusText: res.statusText as string,
-    ...handleResponse<T>(res.status, res.text),
-  } as FetchApiResponse<T>;
+  return handleResponse<T>(res.ok as boolean, res.status, res.statusText as string, res.text);
 };
 
 const fetchServer = async <T>(url: string, init?: RequestInit) => {
   const res = await fetch(url, init);
-  return {
-    ok: res.ok,
-    status: res.status,
-    statusText: res.statusText,
-    ...handleResponse<T>(res.status, await res.text()),
-  } as FetchApiResponse<T>;
+  return handleResponse<T>(res.ok, res.status, res.statusText, await res.text());
 };
 
 const crossFetch = async <T>(url: string, init?: RequestInit) => {

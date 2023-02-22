@@ -1,4 +1,5 @@
-import { createContext, FC, ReactNode, useContext, useReducer } from "react";
+import useMessageBox from "@/hooks/message-box";
+import { createContext, FC, ReactNode, useContext, useEffect, useReducer } from "react";
 
 type ArgMessages = Message | Array<Message | null | undefined> | null | undefined;
 
@@ -46,11 +47,12 @@ const arrangeMessages = (messages: ArgMessages): Array<ProviderMessage> => {
 export const MessageProvider: FC<{
   children?: ReactNode;
 }> = ({ children }) => {
+  const msgBox = useMessageBox({ preventUnmountClose: true });
   const [messages, setMessages] = useReducer((state: Array<ProviderMessage>, action: {
     mode: "set" | "append" | "clear";
     messages?: ArgMessages;
   }) => {
-    const msgs = arrangeMessages(messages);
+    const msgs = arrangeMessages(action.messages);
     switch (action.mode) {
       case "clear":
         if (state.length === 0) return state;
@@ -84,6 +86,24 @@ export const MessageProvider: FC<{
   const clear = () => {
     setMessages({ mode: "clear" });
   };
+
+  useEffect(() => {
+    const msg = messages[messages.length - 1];
+    if (msg && !msg.popuped) {
+      msg.popuped = true;
+      msgBox.alert({
+        header: msg.title,
+        body: msg.body,
+        color: (() => {
+          switch (msg.type) {
+            case "error": return "danger";
+            case "warning": return "warning";
+            default: return "main";
+          }
+        })(),
+      });
+    }
+  }, [messages]);
 
   return (
     <MessageContext.Provider

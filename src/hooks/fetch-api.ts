@@ -1,11 +1,43 @@
 import useMessage from "@/components/providers/message";
+import { equals } from "@/data-items/utilities";
 import fetchApi, { FetchApiResponse, FetchOptions } from "@/utilities/fetch-api";
+
+const optimizeMessages = (messages: Array<Message>) => {
+  const msgs: Array<Message> = [];
+  messages.forEach(msg => {
+    const lastMsg = msgs[msgs.length - 1];
+    if (lastMsg == null) {
+      msgs.push(msg);
+      return;
+    }
+    if (!equals(lastMsg.title, msg.title) || lastMsg.type !== msg.type) {
+      msgs.push(msg);
+      return;
+    }
+    lastMsg.body = lastMsg.body + "\n" + msg.body;
+  });
+  return msgs;
+};
 
 const useFetch = () => {
   const msg = useMessage();
 
   const handle = <T extends FetchApiResponse<any>>(res: T): T => {
-    msg.append(res.messages);
+    const msgs = optimizeMessages(res.messages);
+    if (res.ok) {
+      msg.append(msgs);
+      return res;
+    }
+    if (msgs.filter(msg => msg.type === "error").length > 0) {
+      msg.append(msgs);
+    } else {
+      msg.append({
+        type: "error",
+        title: "システムエラー",
+        body: `[${res.status}] ${res.statusText}`,
+      });
+    }
+    // throw new Error("fetch api failed.");
     return res;
   };
 
