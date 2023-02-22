@@ -23,6 +23,19 @@ type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
 type ValidationResult = Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>
 
+const getPushValidationMsgFunc = (msgs: Array<Message>, key: string | number, ctx: DataItem, data?: Struct, index?: number, _pctx?: DataContext) => {
+  const name = ctx.label || ctx.name || String(key);
+  return (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
+    if (res) {
+      if (typeof res === "string") {
+        msgs.push({ title: "入力エラー", type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
+      } else {
+        msgs.push({ title: "入力エラー", type, key, name, index, value: data?.[key], ...res });
+      }
+    }
+  };
+};
+
 const getItem = (
   msgs: Array<Message>,
   key: string | number | null | undefined = undefined,
@@ -76,15 +89,7 @@ const getItem = (
 
 const getStringItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   if (data) {
     const v = data[key];
@@ -153,15 +158,7 @@ const getStringItem = (msgs: Array<Message>, key: string | number, ctx: DataItem
 
 const getNumberItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   if (data) {
     const v = data[key];
@@ -213,15 +210,7 @@ const getNumberItem = (msgs: Array<Message>, key: string | number, ctx: DataItem
 
 const getBooleanItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   const tv = ctx.trueValue ?? true;
   const fv = ctx.falseValue ?? false;
@@ -255,15 +244,7 @@ const getBooleanItem = (msgs: Array<Message>, key: string | number, ctx: DataIte
 
 const getDateItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   let date: Date | undefined = undefined;
   if (data) {
@@ -337,15 +318,7 @@ const getDateItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_D
 
 const getTimeItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Time, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   let timeNum: number | undefined = undefined;
   if (data) {
@@ -410,15 +383,7 @@ const getTimeItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_T
 
 const getFileItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_File, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   if (data) {
     const v = data[key];
@@ -507,15 +472,7 @@ const getFileItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_F
 
 const getArrayItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   const v = data?.[key] as Nullable<Array<any>>;
 
@@ -563,15 +520,7 @@ const getArrayItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_
 
 const getStructItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
-  const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
-    if (res) {
-      if (typeof res === "string") {
-        msgs.push({ type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
-      } else {
-        msgs.push({ type, key, name, index, value: data?.[key], ...res });
-      }
-    }
-  };
+  const pushMsg = getPushValidationMsgFunc(msgs, key, ctx, data, index, pctx);
 
   const v = data?.[key] as Nullable<Struct<any>>;
 
