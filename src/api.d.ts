@@ -1,3 +1,5 @@
+type Message = DataItemValidationResult;
+
 type AnyRequestParameter = FormData | string | Struct | undefined | null;
 type AnyResponseParameter = string | Struct | undefined | null;
 

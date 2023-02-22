@@ -5,10 +5,10 @@ type DataValueType = string | number | boolean | Date | File | Array<DataValueTy
 type DataItemValidationResultType = "error" | "warning" | "information";
 type DataItemValidationResult = {
   type: DataItemValidationResultType;
-  key: string | number;
+  key?: string | number;
   index?: number;
   value?: any;
-  name: string;
+  name?: string;
   title?: string;
   body: string;
 };

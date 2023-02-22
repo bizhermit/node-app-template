@@ -8,7 +8,7 @@ import TextBox from "@/components/elements/form-items/text-box";
 import GroupBox from "@/components/elements/group-box";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
-import useFetch from "@/hooks/fetch";
+import useFetch from "@/hooks/fetch-api";
 import fetchApi from "@/utilities/fetch-api";
 import { getDynamicUrlContext } from "@/utilities/url";
 import { NextPage } from "next";
@@ -111,7 +111,7 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <Row $vAlign="top" className="gap-1">
-        <GroupBox $caption="fetch" className="none">
+        <GroupBox $caption="fetch">
           <Form
             className="flex-start p-1 gap-1"
             $bind
@@ -138,7 +138,7 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                    const res = await fetchApi.post("/fetch", {
+                    const res = await api.post("/fetch", {
                       sample_string: "hoget",
                       string: "this is string",
                       sample_number: "300",
@@ -180,8 +180,8 @@ const Page: NextPage = () => {
                       }
                     });
                     setResponse(res);
-                    console.log(res.data.messages);
-                    console.log(res.data.data);
+                    // console.log(res.messages);
+                    // console.log(res.data);
                   } finally {
                     unlock();
                   }
@@ -192,7 +192,7 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                    const res = await fetchApi.put("/fetch", { hoge: 10 });
+                    const res = await api.put("/fetch", { hoge: 10 });
                     // (await (await fetchApi.get("/notfound")).data);
                     setResponse(res);
                   } finally {
@@ -205,7 +205,7 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                    const res = await fetchApi.delete("/fetch", { hoge: 100 });
+                    const res = await api.delete("/fetch", { hoge: 100 });
                     setResponse(res);
                   } finally {
                     unlock();

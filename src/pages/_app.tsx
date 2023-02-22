@@ -12,22 +12,25 @@ import { TbComponents } from "react-icons/tb";
 import { LoadingProvider } from "@/components/elements/loading";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { FC } from "react";
+import { MessageProvider } from "@/components/providers/message";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
-      <IconContext.Provider value={{ className: "icon", size: "0" }}>
-        <LoadingProvider $appearance="circle">
-          <NavigationContainer
-            className="w-100 h-100"
-          >
-            <Header />
-            <Navigation />
-            <Component {...pageProps} />
-            <Footer />
-          </NavigationContainer>
-        </LoadingProvider>
-      </IconContext.Provider>
+      <MessageProvider>
+        <IconContext.Provider value={{ className: "icon", size: "0" }}>
+          <LoadingProvider $appearance="circle">
+            <NavigationContainer
+              className="w-100 h-100"
+            >
+              <Header />
+              <Navigation />
+              <Component {...pageProps} />
+              <Footer />
+            </NavigationContainer>
+          </LoadingProvider>
+        </IconContext.Provider>
+      </MessageProvider>
     </LayoutProvider>
   );
 };
