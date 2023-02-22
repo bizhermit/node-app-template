@@ -22,10 +22,9 @@ export type NextApiConfig = {
 type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
 type SessionStruct = { [key: string]: any };
 type ValidationResult = Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>
-type MessageContext = DataItemValidationResult | undefined;
 
 const getItem = (
-  msgs: Array<MessageContext>,
+  msgs: Array<Message>,
   key: string | number | null | undefined = undefined,
   ctx: DataItem | DataContext | null | undefined = undefined,
   data?: Struct,
@@ -75,7 +74,7 @@ const getItem = (
   });
 };
 
-const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number, pctx?: DataContext) => {
+const getStringItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_String, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -152,7 +151,7 @@ const getStringItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
 };
 
-const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number, pctx?: DataContext) => {
+const getNumberItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Number, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -212,7 +211,7 @@ const getNumberItem = (msgs: Array<MessageContext>, key: string | number, ctx: D
   }
 };
 
-const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number, pctx?: DataContext) => {
+const getBooleanItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Boolean, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -254,7 +253,7 @@ const getBooleanItem = (msgs: Array<MessageContext>, key: string | number, ctx: 
   }
 };
 
-const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number, pctx?: DataContext) => {
+const getDateItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Date, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -336,7 +335,7 @@ const getDateItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   }
 };
 
-const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Time, data?: Struct, index?: number, pctx?: DataContext) => {
+const getTimeItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Time, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -409,7 +408,7 @@ const getTimeItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   }
 };
 
-const getFileItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_File, data?: Struct, index?: number, pctx?: DataContext) => {
+const getFileItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_File, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -506,7 +505,7 @@ const getFileItem = (msgs: Array<MessageContext>, key: string | number, ctx: Dat
   }
 };
 
-const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number, pctx?: DataContext) => {
+const getArrayItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Array, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -562,7 +561,7 @@ const getArrayItem = (msgs: Array<MessageContext>, key: string | number, ctx: Da
   });
 };
 
-const getStructItem = (msgs: Array<MessageContext>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number, pctx?: DataContext) => {
+const getStructItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_Struct, data?: Struct, index?: number, pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
   const pushMsg = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
@@ -632,7 +631,7 @@ const apiHandler = <
 }) => {
   const f = async (req: NextApiRequest, res: NextApiResponse) => {
     let statusCode: number | undefined = undefined;
-    const msgs: Array<MessageContext> = [];
+    const msgs: Array<Message> = [];
     const hasError = () => {
       return msgs.some(msg => msg?.type === "error");
     };

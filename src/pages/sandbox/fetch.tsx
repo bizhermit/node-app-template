@@ -111,7 +111,7 @@ const Page: NextPage = () => {
       </Row>
       <Divider />
       <Row $vAlign="top" className="gap-1">
-        <GroupBox $caption="fetch" className="none">
+        <GroupBox $caption="fetch">
           <Form
             className="flex-start p-1 gap-1"
             $bind
@@ -180,8 +180,8 @@ const Page: NextPage = () => {
                       }
                     });
                     setResponse(res);
-                    console.log(res.data.messages);
-                    console.log(res.data.data);
+                    console.log(res.messages);
+                    console.log(res.data);
                   } finally {
                     unlock();
                   }

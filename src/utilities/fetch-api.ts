@@ -1,16 +1,35 @@
 import { getDynamicUrlContext } from "@/utilities/url";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 
-type FetchOptions = {};
+export type FetchOptions = {};
+export type FetchApiResponse<T> = {
+  ok: boolean;
+  status: number;
+  statusText: string;
+  messages: Array<Message>;
+  data: T;
+};
 
 const electron = (global as any).electron;
 
-const toData = (status: number, text?: string) => {
-  if (status === 204 || !text) return undefined;
+const handleResponse = <T>(status: number, text?: string) => {
+  if (status === 204 || !text) {
+    return {
+      messages: [],
+      data: undefined as T,
+    };
+  }
   try {
-    return JSON.parse(text);
+    const json = JSON.parse(text);
+    return {
+      messages: json.messages ?? [],
+      data: json.data as T,
+    };
   } catch {
-    return text;
+    return {
+      messages: [],
+      data: text as T,
+    };
   }
 };
 
@@ -20,8 +39,8 @@ const fetchElectron = async <T>(url: string, init?: RequestInit) => {
     ok: res.ok as boolean,
     status: res.status as number,
     statusText: res.statusText as string,
-    data: toData(res.status, res.text) as T,
-  };
+    ...handleResponse<T>(res.status, res.text),
+  } as FetchApiResponse<T>;
 };
 
 const fetchServer = async <T>(url: string, init?: RequestInit) => {
@@ -30,8 +49,8 @@ const fetchServer = async <T>(url: string, init?: RequestInit) => {
     ok: res.ok,
     status: res.status,
     statusText: res.statusText,
-    data: toData(res.status, await res.text()) as T,
-  };
+    ...handleResponse<T>(res.status, await res.text()),
+  } as FetchApiResponse<T>;
 };
 
 const crossFetch = async <T>(url: string, init?: RequestInit) => {

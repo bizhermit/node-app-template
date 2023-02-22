@@ -14,13 +14,13 @@ export default apiHandler({
       }),
     },
     res: {
-      data: dataItem(),
+      requestData: dataItem(),
     },
   },
   get: async (ctx) => {
     const data = ctx.getData();
     return {
-      data: data,
+      requestData: data,
     };
   },
 });
