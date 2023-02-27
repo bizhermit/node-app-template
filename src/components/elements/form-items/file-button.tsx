@@ -1,6 +1,6 @@
 import Button, { ButtonOptions } from "@/components/elements/button";
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
+import { forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
@@ -29,7 +29,7 @@ interface FileButtonFC extends FunctionComponent {
   <D extends DataItem_File | undefined = undefined>(attrs: FileButtonBaseProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const FileButton: FileButtonFC = React.forwardRef<HTMLDivElement, FileButtonProps>(<
+const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<
   D extends DataItem_File | undefined = undefined
 >(p: FileButtonProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const form = useForm();

@@ -1,5 +1,5 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
-import React, { createContext, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, forwardRef, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
@@ -64,7 +64,7 @@ const defaultNavigationMode: NavigationMode = "auto";
 const defaultHeaderVisible: NavigationHeaderVisible = "always";
 const defaultFooterVisible: NavigationFooterVisible = "end";
 
-const NavigationContainer = React.forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
+const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
   const layout = useLayout();
   const navRef = useRef<HTMLElement>(null!);
   const maskRef = useRef<HTMLDivElement>(null!);

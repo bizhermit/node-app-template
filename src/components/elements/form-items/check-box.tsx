@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode } from "react";
+import { forwardRef, FunctionComponent, ReactElement, ReactNode } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/components/utilities/attributes";
@@ -18,7 +18,7 @@ interface CheckBoxFC extends FunctionComponent<CheckBoxProps> {
   <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: CheckBoxProps<T, D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const CheckBox: CheckBoxFC = React.forwardRef<HTMLDivElement, CheckBoxProps>(<
+const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 >(p: CheckBoxProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {

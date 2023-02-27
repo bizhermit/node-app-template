@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, formValidationMessages, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { FC, forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "@/components/utilities/attributes";
 import { VscClearAll, VscClose, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
@@ -23,7 +23,7 @@ interface ElectronicSignatureFC extends FunctionComponent {
   <D extends DataItem_String | DataItem_File | undefined = undefined>(attrs: ElectronicSignatureProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const ElectronicSignature: ElectronicSignatureFC = React.forwardRef<HTMLDivElement, ElectronicSignatureProps>(<
+const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, ElectronicSignatureProps>(<
   D extends DataItem_String | DataItem_File | undefined = undefined
 >(p: ElectronicSignatureProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const form = useForm();

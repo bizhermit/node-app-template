@@ -1,7 +1,7 @@
 import Style from "$/components/elements/stepper.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import React, { HTMLAttributes, ReactNode, useImperativeHandle, useRef } from "react";
+import { forwardRef, HTMLAttributes, ReactNode, useImperativeHandle, useRef } from "react";
 
 export type StepState = "done" | "current" | "future";
 
@@ -18,7 +18,7 @@ export type StepperProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> 
   children: [ReactNode, ...Array<ReactNode>];
 };
 
-const Stepper = React.forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
+const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
   const ref = useRef<HTMLInputElement>(null!);
   useImperativeHandle($ref, () => ref.current);
 

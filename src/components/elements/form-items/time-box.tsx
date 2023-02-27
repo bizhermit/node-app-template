@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import React, { FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { BsClock } from "react-icons/bs";
@@ -40,7 +40,7 @@ interface TimeBoxFC extends FunctionComponent<TimeBoxProps> {
   <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(attrs: TimeBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const TimeBox: TimeBoxFC = React.forwardRef<HTMLDivElement, TimeBoxProps>(<
+const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
 >(p: TimeBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const form = useForm();

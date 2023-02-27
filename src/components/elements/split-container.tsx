@@ -1,5 +1,5 @@
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
-import React, { FC, HTMLAttributes, ReactElement, ReactNode, useEffect, useImperativeHandle, useRef } from "react";
+import { FC, forwardRef, HTMLAttributes, ReactElement, ReactNode, useEffect, useImperativeHandle, useRef } from "react";
 import Style from "$/components/elements/split-container.module.scss";
 import Resizer from "./resizer";
 
@@ -15,7 +15,7 @@ export type SplitContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttri
   children: [ReactElement, ReactElement];
 };
 
-const SplitContainer = React.forwardRef<HTMLDivElement, SplitContainerProps>((props, $ref) => {
+const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>((props, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const child1Ref = useRef<HTMLDivElement>(null!);

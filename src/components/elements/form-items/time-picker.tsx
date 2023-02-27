@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Time from "@bizhermit/time";
-import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import { VscClose } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
@@ -34,7 +34,7 @@ interface TimePickerFC extends FunctionComponent<TimePickerProps> {
   <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(attrs: TimePickerProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const TimePicker: TimePickerFC = React.forwardRef<HTMLDivElement, TimePickerProps>(<
+const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
   D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
 >(p: TimePickerProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const form = useForm();

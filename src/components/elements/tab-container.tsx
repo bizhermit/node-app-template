@@ -1,5 +1,5 @@
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import React, { FC, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { FC, forwardRef, HTMLAttributes, Key, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/tab-container.module.scss";
 
 type OmitAttributes = "color" | "children";
@@ -16,7 +16,7 @@ export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttribu
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
-const TabContainer = React.forwardRef<HTMLDivElement, TabContainerProps>((props, ref) => {
+const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>((props, ref) => {
   const color = props.$color || "main";
   const bodyColor = props.$bodyColor || "base";
 

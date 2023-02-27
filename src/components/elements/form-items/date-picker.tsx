@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, multiValidationIterator, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FunctionComponent, Key, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, FunctionComponent, Key, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { VscCalendar, VscChevronLeft, VscChevronRight, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
@@ -58,7 +58,7 @@ interface DatePickerFC extends FunctionComponent<DatePickerProps> {
   <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(attrs: DatePickerProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const DatePicker: DatePickerFC = React.forwardRef<HTMLDivElement, DatePickerProps>(<
+const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
   D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
 >(p: DatePickerProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const form = useForm();

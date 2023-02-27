@@ -1,4 +1,4 @@
-import React, { FC, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, forwardRef, HTMLAttributes, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
@@ -36,7 +36,7 @@ export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $judgeSelected?: (props: AddonMenuItemProps) => boolean;
 };
 
-const Menu = React.forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
+const Menu = forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}

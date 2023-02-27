@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, useRef } from "react";
+import { forwardRef, FunctionComponent, ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
@@ -25,7 +25,7 @@ interface TextAreaFC extends FunctionComponent<TextAreaProps> {
   <D extends DataItem_String | undefined = undefined>(attrs: TextAreaProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const TextArea: TextAreaFC = React.forwardRef<HTMLDivElement, TextAreaProps>(<
+const TextArea: TextAreaFC = forwardRef<HTMLDivElement, TextAreaProps>(<
   D extends DataItem_String | undefined = undefined
 >(p: TextAreaProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLTextAreaElement>(null!);

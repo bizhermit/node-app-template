@@ -1,4 +1,4 @@
-import React, { CSSProperties, Dispatch, FC, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, Dispatch, FC, forwardRef, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import NextLink from "@/components/elements/link";
@@ -191,7 +191,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
 } as const;
 
-const DataTable: DataTableFC = React.forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
+const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
   const [pagination, setPagination] = useState<Pagination | undefined>(() => {

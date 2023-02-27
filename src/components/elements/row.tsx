@@ -1,6 +1,6 @@
 import Style from "$/components/elements/row.module.scss";
 import { attributes } from "@/components/utilities/attributes";
-import React, { HTMLAttributes } from "react";
+import { forwardRef, HTMLAttributes } from "react";
 
 export type RowProps = HTMLAttributes<HTMLDivElement> & {
   $hAlign?: "left" | "center" | "right" | "stretch" | "around" | "between" | "evenly";
@@ -8,7 +8,7 @@ export type RowProps = HTMLAttributes<HTMLDivElement> & {
   $nowrap?: boolean;
 };
 
-const Row = React.forwardRef<HTMLDivElement, RowProps>((props, ref) => {
+const Row = forwardRef<HTMLDivElement, RowProps>((props, ref) => {
   return (
     <div
       {...attributes(props, Style.wrap)}

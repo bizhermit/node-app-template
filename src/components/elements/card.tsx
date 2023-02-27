@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode, useEffect, useRef, useState } from "react";
+import { forwardRef, HTMLAttributes, ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
@@ -32,7 +32,7 @@ export type CardProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   children?: ReactNode | [ReactNode] | [ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode];
 };
 
-const Card = React.forwardRef<HTMLDivElement, CardProps>((props, ref) => {
+const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   const bref = useRef<HTMLDivElement>(null!);
   const [opened, setOpened] = useState(props.$accordion ? (props.$opened ?? props.$defaultOpened ?? true) : true);
   const mounted = useRef(props.$accordion ? (props.$defaultMount ?? false) : true);

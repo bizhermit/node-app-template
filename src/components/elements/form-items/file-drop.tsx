@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
+import { forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
@@ -29,7 +29,7 @@ interface FileDropFC extends FunctionComponent {
   <D extends DataItem_File | undefined = undefined>(attrs: FileDropProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
+const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
   D extends DataItem_File | undefined = undefined
 >(p: FileDropProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
