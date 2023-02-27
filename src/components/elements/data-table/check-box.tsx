@@ -1,7 +1,7 @@
 import { DataTableBaseColumn, DataTableColumn } from "@/components/elements/data-table";
 import CheckBox, { CheckBoxProps } from "@/components/elements/form-items/check-box";
 import { getValue, setValue } from "@/data-items/utilities";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {
   checkBoxProps?: CheckBoxProps;
@@ -9,7 +9,7 @@ type Props<T extends Struct> = DataTableBaseColumn<T> & {
 };
 
 const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableColumn<T> => {
-  let setBulkChecked: React.Dispatch<React.SetStateAction<boolean>> = () => { };
+  let setBulkChecked: Dispatch<SetStateAction<boolean>> = () => { };
   const checkedValue = props.checkBoxProps?.$checkedValue ?? true;
   const uncheckedValue = props.checkBoxProps?.$uncheckedValue ?? false;
   const dataName = props.displayName || props.name;

@@ -1,4 +1,4 @@
-import { CSSProperties, Dispatch, FC, forwardRef, FunctionComponent, HTMLAttributes, ReactElement, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, Dispatch, FC, ForwardedRef, forwardRef, FunctionComponent, HTMLAttributeAnchorTarget, HTMLAttributes, ReactElement, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import NextLink from "@/components/elements/link";
@@ -32,7 +32,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   align?: "left" | "center" | "right";
   href?: (ctx: DataTableCellContext<T>) => string;
   hrefOptions?: {
-    target?: React.HTMLAttributeAnchorTarget;
+    target?: HTMLAttributeAnchorTarget;
     decoration?: boolean;
     rel?: string;
   };
@@ -41,9 +41,9 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   sortNeutral?: boolean;
   resize?: boolean;
   wrap?: boolean;
-  header?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
-  body?: React.FunctionComponent<DataTableCellContext<T> & { children: ReactNode; }>;
-  footer?: React.FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
+  header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
+  body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; }>;
+  footer?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
 };
 
 export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
@@ -110,7 +110,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
-  <T extends Struct = Struct>(attrs: DataTableProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends Struct = Struct>(attrs: DataTableProps<T>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const DefaultEmptyText: FC = () => {
@@ -191,7 +191,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
 } as const;
 
-const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
+const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
   const [pagination, setPagination] = useState<Pagination | undefined>(() => {

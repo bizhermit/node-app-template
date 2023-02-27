@@ -1,5 +1,5 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
-import { createContext, forwardRef, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, ElementType, forwardRef, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
@@ -52,10 +52,10 @@ export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, Omit
   $defaultNavigationMode?: NavigationMode;
   $defaultHeaderVisible?: NavigationHeaderVisible;
   $defaultFooterVisible?: NavigationFooterVisible;
-  $headerTag?: React.ElementType;
-  $footerTag?: React.ElementType;
-  $navTag?: React.ElementType;
-  $mainTag?: React.ElementType;
+  $headerTag?: ElementType;
+  $footerTag?: ElementType;
+  $navTag?: ElementType;
+  $mainTag?: ElementType;
   children: [ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode, ReactNode];
 };
 

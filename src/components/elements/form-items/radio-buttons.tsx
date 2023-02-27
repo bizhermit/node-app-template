@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo } from "react";
+import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo } from "react";
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
@@ -22,14 +22,14 @@ export type RadioButtonsProps<
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
   <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>
-    (attrs: RadioButtonsProps<T, D, S>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+    (attrs: RadioButtonsProps<T, D, S>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProps>(<
   T extends string | number = string | number,
   D extends DataItem_String | DataItem_Number | undefined = undefined,
   S extends Struct = Struct
->(p: RadioButtonsProps<T, D, S>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: RadioButtonsProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {

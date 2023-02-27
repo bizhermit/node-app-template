@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { forwardRef, FunctionComponent, ReactElement, ReactNode } from "react";
+import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, ReactNode } from "react";
 import Style from "$/components/elements/form-items/toggle-box.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/components/utilities/attributes";
@@ -14,13 +14,13 @@ export type ToggleBoxProps<
 };
 
 interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
-  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: ToggleBoxProps<T, D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: ToggleBoxProps<T, D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const ToggleBox: ToggleBoxFC = forwardRef<HTMLDivElement, ToggleBoxProps>(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
->(p: ToggleBoxProps<T, D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: ToggleBoxProps<T, D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {

@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { forwardRef, FunctionComponent, ReactElement, useMemo, useRef } from "react";
+import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, useMemo, useRef } from "react";
 import Style from "$/components/elements/form-items/slider.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 
@@ -13,7 +13,7 @@ export type SliderProps<D extends DataItem_Number | DataItem_String | undefined 
 };
 
 interface SliderFC extends FunctionComponent<SliderProps> {
-  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: SliderProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: SliderProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const defaultWidth = 160;
@@ -22,7 +22,7 @@ const defaultMin = 0;
 
 const Slider: SliderFC = forwardRef<HTMLDivElement, SliderProps>(<
   D extends DataItem_Number | DataItem_String | undefined = undefined
->(p: SliderProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: SliderProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const railRef = useRef<HTMLDivElement>(null!);
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {

@@ -1,7 +1,7 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { forwardRef, FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-box.module.scss";
 import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
@@ -39,12 +39,12 @@ const isNumericOrEmpty = (value?: string): value is string => {
 };
 
 interface DateBoxFC extends FunctionComponent<DateBoxProps> {
-  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(attrs: DateBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(attrs: DateBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
->(p: DateBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: DateBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {

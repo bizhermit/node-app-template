@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Time from "@bizhermit/time";
-import { forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import { VscClose } from "react-icons/vsc";
 import LabelText from "@/components/elements/label-text";
@@ -31,12 +31,12 @@ export type TimePickerProps<D extends DataItem_Time | DataItem_Number | DataItem
   )
 
 interface TimePickerFC extends FunctionComponent<TimePickerProps> {
-  <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(attrs: TimePickerProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(attrs: TimePickerProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
   D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
->(p: TimePickerProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: TimePickerProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {

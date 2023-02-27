@@ -1,6 +1,6 @@
 import Button, { ButtonOptions } from "@/components/elements/button";
 import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
+import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
@@ -26,12 +26,12 @@ export type FileButtonProps_Multiple<D extends DataItem_File | undefined = undef
 export type FileButtonProps<D extends DataItem_File | undefined = undefined> = (FileButtonProps_Single<D> & { $multiple?: false; }) | (FileButtonProps_Multiple<D> & { $multiple: true });
 
 interface FileButtonFC extends FunctionComponent {
-  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonBaseProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonBaseProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<
   D extends DataItem_File | undefined = undefined
->(p: FileButtonProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: FileButtonProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
