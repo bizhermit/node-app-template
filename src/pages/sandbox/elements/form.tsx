@@ -2,12 +2,11 @@ import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import CheckBox from "@/components/elements/form-items/check-box";
-import DateBox from "@/components/elements/form-items/date-box";
 import TextBox from "@/components/elements/form-items/text-box";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {

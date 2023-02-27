@@ -1,5 +1,5 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, useRef } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";

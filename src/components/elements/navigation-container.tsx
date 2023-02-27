@@ -1,5 +1,5 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
-import { createContext, ElementType, forwardRef, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, type ElementType, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/navigation-container.module.scss";
 import { VscChromeClose, VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";

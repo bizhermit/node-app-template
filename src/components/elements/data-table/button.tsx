@@ -1,6 +1,6 @@
-import Button, { ButtonProps } from "@/components/elements/button";
-import { DataTableBaseColumn, DataTableCellContext, DataTableColumn } from "@/components/elements/data-table";
-import { ReactNode } from "react";
+import Button, { type ButtonProps } from "@/components/elements/button";
+import { type DataTableBaseColumn, type DataTableCellContext, type DataTableColumn } from "@/components/elements/data-table";
+import type { ReactNode } from "react";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {
   onClick?: (ctx: DataTableCellContext<T>, unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);

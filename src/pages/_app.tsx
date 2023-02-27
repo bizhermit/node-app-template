@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import type { FC } from "react";
 import { IconContext } from "react-icons";
 import "$/globals.scss";
 import "$/color.scss";
@@ -11,7 +12,6 @@ import { MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbComponents } from "react-icons/tb";
 import { LoadingProvider } from "@/components/elements/loading";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { FC } from "react";
 import { MessageProvider } from "@/components/providers/message";
 
 const App = ({ Component, pageProps }: AppProps) => {

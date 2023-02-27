@@ -1,5 +1,5 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, useMemo, useRef } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useMemo, useRef } from "react";
 import Style from "$/components/elements/form-items/slider.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 

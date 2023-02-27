@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
 import Style from "$/components/elements/divider.module.scss";
 import LabelText from "@/components/elements/label-text";

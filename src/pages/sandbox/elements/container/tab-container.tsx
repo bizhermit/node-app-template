@@ -5,8 +5,8 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import TabContainer, { TabContent } from "@/components/elements/tab-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
-import { Key, useState } from "react";
+import type { NextPage } from "next";
+import { type Key, useState } from "react";
 import { VscBrowser } from "react-icons/vsc";
 
 const Page: NextPage = () => {

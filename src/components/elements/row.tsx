@@ -1,6 +1,6 @@
 import Style from "$/components/elements/row.module.scss";
 import { attributes } from "@/components/utilities/attributes";
-import { forwardRef, HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 
 export type RowProps = HTMLAttributes<HTMLDivElement> & {
   $hAlign?: "left" | "center" | "right" | "stretch" | "around" | "between" | "evenly";

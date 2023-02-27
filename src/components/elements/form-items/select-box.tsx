@@ -1,6 +1,6 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
-import { FC, ForwardedRef, forwardRef, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import useLoadableArray, { type LoadableArray } from "@/hooks/loadable-array";
+import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { VscChevronDown, VscClose } from "react-icons/vsc";
 import Style from "$/components/elements/form-items/select-box.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";

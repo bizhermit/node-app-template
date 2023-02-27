@@ -4,7 +4,7 @@ import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import { sample_date, sample_month, sample_number, sample_string, sample_year } from "@/data-items/sample/item";

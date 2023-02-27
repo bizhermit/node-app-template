@@ -5,8 +5,8 @@ import Row from "@/components/elements/row";
 import Stepper from "@/components/elements/stepper";
 import { sizes } from "@/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
-import { ReactNode, useMemo, useState } from "react";
+import type { NextPage } from "next";
+import { type ReactNode, useMemo, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
 
 const maxStep = 10;

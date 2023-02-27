@@ -1,5 +1,5 @@
 import usePortalElement from "@/hooks/portal-element";
-import { forwardRef, HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, type HTMLAttributes, type MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";

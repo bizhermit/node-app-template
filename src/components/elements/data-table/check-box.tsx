@@ -1,7 +1,7 @@
-import { DataTableBaseColumn, DataTableColumn } from "@/components/elements/data-table";
-import CheckBox, { CheckBoxProps } from "@/components/elements/form-items/check-box";
+import type { DataTableBaseColumn, DataTableColumn } from "@/components/elements/data-table";
+import CheckBox, { type CheckBoxProps } from "@/components/elements/form-items/check-box";
 import { getValue, setValue } from "@/data-items/utilities";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {
   checkBoxProps?: CheckBoxProps;

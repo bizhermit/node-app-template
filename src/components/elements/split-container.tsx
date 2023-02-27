@@ -1,5 +1,5 @@
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
-import { FC, forwardRef, HTMLAttributes, ReactElement, ReactNode, useEffect, useImperativeHandle, useRef } from "react";
+import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useImperativeHandle, useRef } from "react";
 import Style from "$/components/elements/split-container.module.scss";
 import Resizer from "./resizer";
 

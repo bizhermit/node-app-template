@@ -1,6 +1,6 @@
 import LabelText from "@/components/elements/label-text";
 import { attributesWithoutChildren, joinClassNames } from "@/components/utilities/attributes";
-import { forwardRef, HTMLAttributes, ReactNode } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import Style from "$/components/elements/group-box.module.scss";
 
 type OmitAttributes = "color";

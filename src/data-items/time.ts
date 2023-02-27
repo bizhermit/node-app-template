@@ -1,4 +1,4 @@
-import { FormItemValidation } from "@/components/elements/form";
+import type { FormItemValidation } from "@/components/elements/form";
 import { dataItemKey } from "@/data-items/data-item";
 import Time, { TimeUtils } from "@bizhermit/time";
 

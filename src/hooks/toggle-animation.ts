@@ -1,6 +1,6 @@
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
-import { CSSProperties, MutableRefObject, useEffect, useMemo, useRef } from "react";
+import { type CSSProperties, type MutableRefObject, useEffect, useMemo, useRef } from "react";
 
 type Props<T extends Struct = {}> = {
   disabled?: boolean;

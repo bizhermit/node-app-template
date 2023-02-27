@@ -4,7 +4,7 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import LabelText from "@/components/elements/label-text";
 import Row from "@/components/elements/row";
 import { useLocalState, useSessionState } from "@/hooks/storage";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {

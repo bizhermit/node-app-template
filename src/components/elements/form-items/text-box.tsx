@@ -1,10 +1,10 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { ForwardedRef, forwardRef, FunctionComponent, ReactElement, useRef } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
 export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {

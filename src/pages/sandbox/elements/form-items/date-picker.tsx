@@ -4,7 +4,7 @@ import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 import TextBox from "@/components/elements/form-items/text-box";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";

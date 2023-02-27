@@ -1,6 +1,6 @@
 import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (

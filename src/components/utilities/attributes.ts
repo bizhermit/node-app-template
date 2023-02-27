@@ -1,5 +1,5 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
+import type { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
 
 export const joinClassNames = (...classNames: Array<string | null | undefined>) => {
   return StringUtils.join(" ", ...classNames);

@@ -1,10 +1,10 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
-import { NavigationFooterVisible, NavigationHeaderVisible, NavigationMode, NavigationPosition, useNavigation } from "@/components/elements/navigation-container";
+import { type NavigationFooterVisible, type NavigationHeaderVisible, type NavigationMode, type NavigationPosition, useNavigation } from "@/components/elements/navigation-container";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Page: NextPage = () => {
   const navigation = useNavigation();

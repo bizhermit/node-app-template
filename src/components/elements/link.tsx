@@ -1,7 +1,7 @@
 import { attributes } from "@/components/utilities/attributes";
-import Link, { LinkProps } from "next/link";
-import { UrlObject } from "url";
-import { AnchorHTMLAttributes, ElementType, FC, ReactNode } from "react";
+import Link, { type LinkProps } from "next/link";
+import type { UrlObject } from "url";
+import type { AnchorHTMLAttributes, ElementType, FC, ReactNode } from "react";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {

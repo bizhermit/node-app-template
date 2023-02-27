@@ -1,6 +1,6 @@
 import Popup from "@/components/elements/popup";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import { forwardRef, HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
 
 type OmitAttributes = "color" | "children";
 type TooltipProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {

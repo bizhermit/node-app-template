@@ -1,4 +1,4 @@
-import { CSSProperties, Dispatch, FC, ForwardedRef, forwardRef, FunctionComponent, HTMLAttributeAnchorTarget, HTMLAttributes, ReactElement, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, type Dispatch, type FC, type ForwardedRef, forwardRef, type FunctionComponent, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import NextLink from "@/components/elements/link";

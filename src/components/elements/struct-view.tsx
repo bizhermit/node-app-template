@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes, ReactNode } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import Style from "$/components/elements/struct-view.module.scss";
 import { attributesWithoutChildren, joinClassNames } from "@/components/utilities/attributes";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";

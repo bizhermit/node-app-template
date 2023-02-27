@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes, ReactNode, useEffect, useRef, useState } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";

@@ -11,7 +11,7 @@ import StructView from "@/components/elements/struct-view";
 import useFetch from "@/hooks/fetch-api";
 import fetchApi from "@/utilities/fetch-api";
 import { getDynamicUrlContext } from "@/utilities/url";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {

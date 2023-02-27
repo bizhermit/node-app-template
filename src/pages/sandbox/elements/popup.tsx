@@ -6,8 +6,8 @@ import TextBox from "@/components/elements/form-items/text-box";
 import Popup from "@/components/elements/popup";
 import Row from "@/components/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
-import { FC, useRef, useState } from "react";
+import type { NextPage } from "next";
+import { type FC, useRef, useState } from "react";
 
 const Page: NextPage = () => {
   return <Component />;

@@ -1,5 +1,5 @@
 import Style from "$/components/elements/button.module.scss";
-import { ButtonHTMLAttributes, forwardRef, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { type ButtonHTMLAttributes, forwardRef, type ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import { useForm } from "@/components/elements/form";
 import LabelText from "@/components/elements/label-text";

@@ -1,7 +1,7 @@
 import Button from "@/components/elements/button";
 import useMessageBox from "@/hooks/message-box";
 import useRouter from "@/hooks/route";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Page: NextPage = () => {
   const msg = useMessageBox({ preventUnmountClose: true });

@@ -1,4 +1,4 @@
-import { FC, forwardRef, HTMLAttributes, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/slide-container.module.scss";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import LabelText from "@/components/elements/label-text";

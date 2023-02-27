@@ -1,5 +1,5 @@
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import { forwardRef, HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import Style from "$/components/elements/badge.module.scss";
 import LabelText from "@/components/elements/label-text";
 

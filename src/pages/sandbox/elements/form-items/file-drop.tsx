@@ -6,7 +6,7 @@ import FileDrop from "@/components/elements/form-items/file-drop";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { sample_file } from "@/data-items/sample/item";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {

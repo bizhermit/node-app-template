@@ -1,4 +1,4 @@
-import { createContext, FC, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, type FC, type ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
 export const WindowSize = {
   xs: 1,

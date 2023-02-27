@@ -5,7 +5,7 @@ import FileButton from "@/components/elements/form-items/file-button";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { sample_file } from "@/data-items/sample/item";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 import { VscFile } from "react-icons/vsc";
 
