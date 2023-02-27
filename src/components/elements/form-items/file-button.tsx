@@ -26,7 +26,7 @@ export type FileButtonProps_Multiple<D extends DataItem_File | undefined = undef
 export type FileButtonProps<D extends DataItem_File | undefined = undefined> = (FileButtonProps_Single<D> & { $multiple?: false; }) | (FileButtonProps_Multiple<D> & { $multiple: true });
 
 interface FileButtonFC extends FunctionComponent {
-  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonBaseProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<

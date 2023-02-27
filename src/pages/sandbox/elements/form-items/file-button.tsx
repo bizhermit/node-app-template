@@ -75,6 +75,7 @@ const Page: NextPage = () => {
         $tag="file"
         $dataItem={sample_file}
         $onChange={v => console.log("file: ", v)}
+        // $multiple
       />
       <FileButton
         $tag="useState"
