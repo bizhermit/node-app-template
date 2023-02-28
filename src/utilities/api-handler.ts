@@ -601,7 +601,7 @@ const apiHandler = <
         let retData: Struct = { ...req.query };
         const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
         if (req.body == null) {
-          if (contentType === "multipart/form-data") {
+          if (method !== "get") {
             await new Promise<void>((resolve, reject) => {
               const form = new formidable.IncomingForm({
                 multiples: true,
