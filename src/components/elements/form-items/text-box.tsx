@@ -1,29 +1,19 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
-import { FormItemProps, FormItemValidation, FormItemWrap, useForm } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
+import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { useRef } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
-export type TextBoxProps = FormItemProps<string> & {
+export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
   $length?: number;
   $preventInputWithinLength?: boolean;
-  $maxLength?: number;
   $minLength?: number;
-  $charType?: "int"
-  | "h-num"
-  | "f-num"
-  | "num"
-  | "h-alpha"
-  | "f-alpha"
-  | "alpha"
-  | "h-alpha-num"
-  | "h-alpha-num-syn"
-  | "h-katakana"
-  | "f-katakana"
-  | "katakana";
+  $maxLength?: number;
+  $charType?: StringCharType;
   $round?: boolean;
   $resize?: boolean;
   $width?: number | string;
@@ -33,77 +23,104 @@ export type TextBoxProps = FormItemProps<string> & {
   $autoComplete?: string;
 };
 
-const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
-  const iref = useRef<HTMLInputElement>(null!);
+interface TextBoxFC extends FunctionComponent<TextBoxProps> {
+  <D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: TextBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+}
 
-  const form = useForm(props, {
+const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+>(p: TextBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const iref = useRef<HTMLInputElement>(null!);
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem, method }) => {
+      const isSearch = method === "get";
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $charType: "h-num" as StringCharType,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
+          };
+        default:
+          return {
+            $length: isSearch ? undefined : dataItem.length,
+            $minLength: isSearch ? undefined : dataItem.minLength,
+            $maxLength: dataItem.maxLength ?? dataItem.length,
+            $charType: dataItem.charType,
+            $width: dataItem.width,
+            $minWidth: dataItem.minWidth,
+            $maxWidth: dataItem.maxWidth,
+          };
+      }
+    },
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "number":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => Number(v))),
+          };
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+          };
+      }
+    },
+  });
+
+  const ctx = useFormItemContext(form, props, {
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
     validations: () => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
-        validations.push(v => {
-          if (v != null && v.length === props.$length) return "";
-          return `${props.$length}文字で入力してください。`;
-        });
+        validations.push(v => StringData.lengthValidation(v, props.$length!));
       } else {
-        if (props.$maxLength != null) {
-          validations.push(v => {
-            if (v != null && v.length > props.$maxLength!) return `${props.$maxLength}文字以内で入力してください。`;
-            return "";
-          });
-        }
         if (props.$minLength != null) {
-          validations.push(v => {
-            if (v == null || v.length < props.$minLength!) return `${props.$minLength}文字以上で入力してください。`;
-            return "";
-          });
+          validations.push(v => StringData.minLengthValidation(v, props.$minLength!));
+        }
+        if (props.$maxLength != null) {
+          validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!));
         }
       }
-      const addCharTypeValidation = (func: (v: string) => boolean, message: string) => {
-        validations.push(v => {
-          if (!v) return "";
-          if (func(v)) return "";
-          return message;
-        });
-      };
       switch (props.$charType) {
         case "h-num":
-          addCharTypeValidation(StringUtils.isHalfWidthNumeric, "半角数字で入力してください。");
+          validations.push(v => StringData.halfWidthNumericValidation(v));
           break;
         case "f-num":
-          addCharTypeValidation(/^[０-９]+$/.test, "全角数字で入力してください。");
+          validations.push(v => StringData.fullWidthNumericValidation(v));
           break;
         case "num":
-          addCharTypeValidation(/^[0-9０-９]+$/.test, "数字で入力してください。");
+          validations.push(v => StringData.numericValidation(v));
           break;
         case "h-alpha":
-          addCharTypeValidation(StringUtils.isHalfWidthAlphabet, "半角英字で入力してください。");
+          validations.push(v => StringData.halfWidthAlphabetValidation(v));
           break;
         case "f-alpha":
-          addCharTypeValidation(/^[ａ-ｚＡ-Ｚ]+$/.test, "全角英字で入力してください。");
+          validations.push(v => StringData.fullWidthAlphabetValidation(v));
           break;
         case "alpha":
-          addCharTypeValidation(/^[a-zA-Zａ-ｚＡ-Ｚ]+$/.test, "英字で入力してください。");
+          validations.push(v => StringData.alphabetValidation(v));
           break;
         case "h-alpha-num":
-          addCharTypeValidation(StringUtils.isHalfWidthAlphanumeric, "半角英数字で入力してください");
+          validations.push(v => StringData.halfWidthAlphaNumericValidation(v));
           break;
         case "h-alpha-num-syn":
-          addCharTypeValidation(StringUtils.isHalfWidthAlphanumericAndSymbols, "半角英数字記号で入力してください。");
+          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v));
           break;
         case "int":
-          addCharTypeValidation(StringUtils.isInteger, "数値で入力してください。");
+          validations.push(v => StringData.integerValidation(v));
           break;
         case "h-katakana":
-          addCharTypeValidation(StringUtils.isHalfWidthKatakana, "半角カタカナで入力してください。");
+          validations.push(v => StringData.halfWidthKatakanaValidation(v));
           break;
         case "f-katakana":
-          addCharTypeValidation(StringUtils.isKatakana, "全角カタカナで入力してください。");
+          validations.push(v => StringData.fullWidthKatakanaValidation(v));
           break;
         case "katakana":
-          addCharTypeValidation(StringUtils.isFullOrHalfWidthKatakana, "カタカナで入力してください。");
+          validations.push(v => StringData.katakanaValidation(v));
           break;
         default:
           break;
@@ -119,18 +136,18 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
   });
 
   const clear = () => {
-    if (!form.editable) return;
-    form.change(undefined);
+    if (!ctx.editable) return;
+    ctx.change(undefined);
     if (iref.current) iref.current.value = "";
   };
 
-  const hasData = StringUtils.isNotEmpty(form.value);
+  const hasData = StringUtils.isNotEmpty(ctx.value);
 
   return (
     <FormItemWrap
       {...props}
       ref={ref}
-      $$form={form}
+      $context={ctx}
       data-round={props.$round}
       data-has={hasData}
       $mainProps={{
@@ -146,18 +163,18 @@ const TextBox = React.forwardRef<HTMLDivElement, TextBoxProps>((props, ref) => {
         className={Style.input}
         name={props.name}
         type={props.$type || "text"}
-        placeholder={form.editable ? props.placeholder : ""}
-        disabled={form.disabled}
-        readOnly={form.readOnly}
+        placeholder={ctx.editable ? props.placeholder : ""}
+        disabled={ctx.disabled}
+        readOnly={ctx.readOnly}
         maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
         tabIndex={props.tabIndex}
-        defaultValue={form.value ?? ""}
-        onChange={e => form.change(e.target.value)}
+        defaultValue={ctx.value ?? ""}
+        onChange={e => ctx.change(e.target.value)}
         data-round={props.$round}
-        data-clear={form.editable && props.$hideClearButton !== true}
+        data-clear={ctx.editable && props.$hideClearButton !== true}
         autoComplete={props.$autoComplete ?? "off"}
       />
-      {form.editable && props.$hideClearButton !== true &&
+      {ctx.editable && props.$hideClearButton !== true &&
         <div
           className={Style.button}
           onClick={clear}

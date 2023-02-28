@@ -93,3 +93,12 @@
 }
 
 @include mixins.hoverAnimation;
+
+.file {
+  display: none !important;
+  visibility: hidden;
+  max-height: 0;
+  max-width: 0;
+  opacity: 0;
+  z-index: -2;
+}

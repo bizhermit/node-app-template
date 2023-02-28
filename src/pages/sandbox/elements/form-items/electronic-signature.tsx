@@ -5,7 +5,8 @@ import ElectronicSignature from "@/components/elements/form-items/electronic-sig
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import { sample_file, sample_string } from "@/data-items/sample/item";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
@@ -85,6 +86,20 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <ElectronicSignature
+        $tag="no item"
+        $onChange={v => console.log("no item: ", v)}
+      />
+      <ElectronicSignature
+        $tag="base64"
+        $dataItem={sample_string}
+        $onChange={v => console.log("base64: ", v)}
+      />
+      <ElectronicSignature
+        $tag="file"
+        $dataItem={sample_file}
+        $onChange={v => console.log("file: ", v)}
+      />
       <Row className="gap-1">
         <ElectronicSignature
           $tag="useState"

@@ -1,6 +1,6 @@
-import Button, { ButtonProps } from "@/components/elements/button";
-import { FC, ReactElement, ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { createRoot, Root } from "react-dom/client";
+import Button, { type ButtonProps } from "@/components/elements/button";
+import { type FC, type ReactElement, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { createRoot, type Root } from "react-dom/client";
 import Style from "$/hooks/message-box.module.scss";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
@@ -82,11 +82,13 @@ const MessageBox: FC<{
       >
         {mount && props.children}
       </div>
-      <div
-        className={Style.mask2}
-        tabIndex={0}
-        onKeyDown={keydownMask2}
-      />
+      {showed &&
+        <div
+          className={Style.mask2}
+          tabIndex={0}
+          onKeyDown={keydownMask2}
+        />
+      }
     </>
   );
 };
@@ -223,11 +225,16 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
     showed.current = false;
     setTimeout(() => {
       if (root.current) {
-        root.current?.unmount();
+        const internalRootKey = Object.keys(root.current).find(key => key.startsWith("_"));
+        if (internalRootKey == null || (root.current as any)[internalRootKey] != null) {
+          root.current.unmount();
+        }
+        root.current = undefined;
       }
       if (elemRef.current) {
         if (document.body.contains(elemRef.current)) {
           document.body.removeChild(elemRef.current);
+          elemRef.current = undefined;
         }
       }
     });

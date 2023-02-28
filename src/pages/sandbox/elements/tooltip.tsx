@@ -1,6 +1,6 @@
 import TextBox from "@/components/elements/form-items/text-box";
 import Tooltip from "@/components/elements/tooltip";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (

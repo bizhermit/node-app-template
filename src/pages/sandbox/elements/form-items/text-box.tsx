@@ -4,8 +4,9 @@ import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { sample_number, sample_string } from "@/data-items/sample/item";
 import { colors } from "@/utilities/sandbox";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
@@ -87,6 +88,36 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <section>
+        <h2>DataItem</h2>
+        <Form
+          method="post"
+          $bind
+          $onSubmit={(bindData) => {
+            console.log(bindData);
+          }}
+        >
+          <Row className="gap-1" $vAlign="bottom">
+            <TextBox
+              $tag="no item"
+              $onChange={v => console.log("no item: ", v)}
+            />
+            <TextBox
+              $tag="string"
+              $dataItem={sample_string}
+              // $required
+              $onChange={v => console.log("string: ", v)}
+            />
+            <TextBox
+              $tag="number"
+              $dataItem={sample_number}
+              $onChange={v => console.log("number: ", v)}
+            />
+            <Button type="submit">submit</Button>
+            <Button type="reset">reset</Button>
+          </Row>
+        </Form>
+      </section>
       <Row className="gap-1">
         <TextBox
           $tag="useState"

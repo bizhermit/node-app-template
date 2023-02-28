@@ -4,7 +4,7 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Menu from "@/components/elements/menu";
 import Popup from "@/components/elements/popup";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useRef, useState } from "react";
 import { VscArrowDown, VscArrowLeft } from "react-icons/vsc";
 

@@ -3,9 +3,9 @@ import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import SlideContainer, { SlideContent, SlideDirection } from "@/components/elements/slide-container";
+import SlideContainer, { SlideContent, type SlideDirection } from "@/components/elements/slide-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 import { VscBrowser } from "react-icons/vsc";
 

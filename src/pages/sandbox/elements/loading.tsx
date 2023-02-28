@@ -1,8 +1,8 @@
 import Button from "@/components/elements/button";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
-import Loading, { ScreenLoading, useLoading } from "@/components/elements/loading";
+import Loading, { useLoading } from "@/components/elements/loading";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {

@@ -4,7 +4,8 @@ import Form from "@/components/elements/form";
 import FileButton from "@/components/elements/form-items/file-button";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import { sample_file } from "@/data-items/sample/item";
+import type { NextPage } from "next";
 import { useState } from "react";
 import { VscFile } from "react-icons/vsc";
 
@@ -66,6 +67,16 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <FileButton
+        $tag="no item"
+        $onChange={v => console.log("no item", v)}
+      />
+      <FileButton
+        $tag="file"
+        $dataItem={sample_file}
+        $onChange={v => console.log("file: ", v)}
+        // $multiple
+      />
       <FileButton
         $tag="useState"
         $disabled={disabled}

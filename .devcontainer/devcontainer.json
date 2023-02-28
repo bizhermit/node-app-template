@@ -6,8 +6,9 @@
   "postStartCommand": "npm install",
   "remoteUser": "node",
   "remoteEnv": {
-    "PORT": "3000"
+    "PORT": "3003"
   },
+  "forwardPorts": [3003],
   "extensions": [
     "MS-CEINTL.vscode-language-pack-ja",
     "eamodio.gitlens",
@@ -18,6 +19,9 @@
     "PulkitGangwar.nextjs-snippets",
     "Divlo.vscode-styled-jsx-languageserver",
     "Divlo.vscode-styled-jsx-syntax",
-    "jock.svg"
+    "Pivotal.vscode-manifest-yaml",
+    "jock.svg",
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced"
   ]
 }

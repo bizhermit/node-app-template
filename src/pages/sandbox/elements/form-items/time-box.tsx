@@ -4,7 +4,8 @@ import Form from "@/components/elements/form";
 import TimeBox from "@/components/elements/form-items/time-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import { sample_number, sample_string, sample_time } from "@/data-items/sample/item";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
@@ -95,6 +96,27 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row className="gap-1">
+        <TimeBox
+          $tag="no item"
+          $onChange={v => console.log("no item: ", v)}
+        />
+        <TimeBox
+          $tag="time"
+          $dataItem={sample_time}
+          $onChange={v => console.log("time: ", v)}
+        />
+        <TimeBox
+          $tag="number"
+          $dataItem={sample_number}
+          $onChange={v => console.log("number: ", v)}
+        />
+        <TimeBox
+          $tag="string"
+          $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+        />
+      </Row>
       <Row $vAlign="top" className="gap-3">
         <TimeBox
           $tag="useState"

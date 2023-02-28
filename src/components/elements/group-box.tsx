@@ -1,6 +1,6 @@
 import LabelText from "@/components/elements/label-text";
 import { attributesWithoutChildren, joinClassNames } from "@/components/utilities/attributes";
-import React, { HTMLAttributes, ReactNode } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import Style from "$/components/elements/group-box.module.scss";
 
 type OmitAttributes = "color";
@@ -10,7 +10,7 @@ export type GroupBoxProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes>
   $color?: Color;
 };
 
-const GroupBox = React.forwardRef<HTMLDivElement, GroupBoxProps>((props, ref) => {
+const GroupBox = forwardRef<HTMLDivElement, GroupBoxProps>((props, ref) => {
   const borderColorClassName = `bdc-${props.$color || "border"}`;
 
   return (

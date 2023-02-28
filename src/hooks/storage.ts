@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 
 const getSessionValue = <V>(key: string) => {
   if (typeof window === "undefined") return undefined;
@@ -22,32 +22,13 @@ const setSessionValue = <V = any>(key: string, value: V) => {
   return value;
 };
 
-type Action<S> = { value: S | ((state: S) => S); save?: boolean; };
 type Options = {
   autoSave?: boolean;
 };
 
 export const useSessionState = <S = undefined>(key: string, initialState: S | (() => S), options?: Options) => {
   const [loaded, setLoaded] = useState(false);
-  const [val, setImpl] = useReducer<(state: S, action: Action<S>) => S>((state, { value, save }) => {
-    const s = save || (options?.autoSave !== false && save !== false);
-    const v = (() => {
-      if (typeof value === "function") {
-        return (value as Function)(state) as S;
-      }
-      return value;
-    })();
-    if (Object.is(state, v)) return state;
-    if (s) {
-      setSessionValue(key, v);
-    }
-    return v;
-  }, (() => {
-    if (initialState instanceof Function) {
-      return initialState();
-    }
-    return initialState;
-  })());
+  const [val, setImpl] = useState(initialState);
 
   const clear = () => {
     removeSessionValue(key);
@@ -57,21 +38,27 @@ export const useSessionState = <S = undefined>(key: string, initialState: S | ((
     setSessionValue(key, val);
   };
 
-  const set = (v: S | ((current: S) => S), save?: boolean) => {
+  const set = (value: S | ((current: S) => S), save?: boolean) => {
     let l = loaded;
     setLoaded(cur => l = cur);
     if (!l) return false;
-    setImpl({ value: v, save });
+    setImpl(state => {
+      const v = (() => {
+        if (typeof value === "function") {
+          return (value as Function)(state) as S;
+        }
+        return value;
+      })();
+      if (!Object.is(state, v) && (save || (options?.autoSave !== false && save !== false))) {
+        setSessionValue(key, v);
+      }
+      return v;
+    });
     return true;
   };
 
   useEffect(() => {
-    const v = getSessionValue<S>(key);
-    if (v == null) {
-      setImpl({ value: initialState });
-    } else {
-      setImpl({ value: v });
-    }
+    set(getSessionValue<S>(key) ?? initialState);
     setLoaded(true);
   }, []);
 
@@ -102,25 +89,7 @@ const setLocalValue = <V = any>(key: string, value: V) => {
 
 export const useLocalState = <S = undefined>(key: string, initialState: S | (() => S), options?: Options) => {
   const [loaded, setLoaded] = useState(false);
-  const [val, setImpl] = useReducer<(state: S, action: Action<S>) => S>((state, { value, save }) => {
-    const s = save || (options?.autoSave !== false && save !== false);
-    const v = (() => {
-      if (typeof value === "function") {
-        return (value as Function)(state) as S;
-      }
-      return value;
-    })();
-    if (Object.is(state, v)) return state;
-    if (s) {
-      setLocalValue(key, v);
-    }
-    return v;
-  }, (() => {
-    if (initialState instanceof Function) {
-      return initialState();
-    }
-    return initialState;
-  })());
+  const [val, setImpl] = useState(initialState);
 
   const clear = () => {
     removeLocalValue(key);
@@ -130,21 +99,27 @@ export const useLocalState = <S = undefined>(key: string, initialState: S | (() 
     setLocalValue(key, val);
   };
 
-  const set = (v: S | ((current: S) => S), save?: boolean) => {
+  const set = (value: S | ((current: S) => S), save?: boolean) => {
     let l = loaded;
     setLoaded(cur => l = cur);
     if (!l) return false;
-    setImpl({ value: v, save });
+    setImpl(state => {
+      const v = (() => {
+        if (typeof value === "function") {
+          return (value as Function)(state) as S;
+        }
+        return value;
+      })();
+      if (!Object.is(state, v) && (save || (options?.autoSave !== false && save !== false))) {
+        setLocalValue(key, v);
+      }
+      return v;
+    });
     return true;
   };
 
   useEffect(() => {
-    const v = getLocalValue<S>(key);
-    if (v == null) {
-      setImpl({ value: initialState });
-    } else {
-      setImpl({ value: v });
-    }
+    set(getLocalValue<S>(key) ?? initialState);
     setLoaded(true);
   }, []);
 

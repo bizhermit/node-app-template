@@ -5,8 +5,8 @@ import Row from "@/components/elements/row";
 import Stepper from "@/components/elements/stepper";
 import { sizes } from "@/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
-import { ReactNode, useMemo, useState } from "react";
+import type { NextPage } from "next";
+import { type ReactNode, useMemo, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
 
 const maxStep = 10;
@@ -82,7 +82,7 @@ const Page: NextPage = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row className="gap-1">
+              <Row key={idx} className="gap-1">
                 <VscAccount />
                 <span className="box pt-t">{idx}</span>
               </Row>
@@ -99,7 +99,7 @@ const Page: NextPage = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row className="gap-1">
+              <Row key={idx} className="gap-1">
                 <VscAccount />
                 <span className="box pt-t">{idx}</span>
               </Row>

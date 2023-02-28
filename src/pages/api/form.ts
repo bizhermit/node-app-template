@@ -1,23 +1,37 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-import apiHandler from "@/utilities/api-handler";
+import fileItem from "@/data-items/file";
+import apiHandler, { type NextApiConfig } from "@/utilities/api-handler";
+
+export const config: NextApiConfig = {
+  api: {
+    // bodyParser: {
+    //   sizeLimit: "10mb",
+    // }
+    bodyParser: false,
+  },
+};
 
 export default apiHandler({
-  common: async (ctx) => {
-    console.log(ctx.req.method);
-  },
   get: async (ctx) => {
-    console.log("- query");
-    console.log(ctx.getQuery());
-    console.log("- body");
-    console.log(ctx.getBody());
-    ctx.setStatus(204);
+    console.log("--get--");
+    console.log(ctx.getData());
+  },
+  $post: {
+    req: {
+      filedrop: fileItem({
+        multiple: true,
+      }),
+      filebutton: fileItem({
+        multiple: false,
+      }),
+    }
   },
   post: async (ctx) => {
-    console.log("- query");
-    console.log(ctx.getQuery());
-    console.log("- body");
-    console.log(ctx.getBody());
-    // console.log(ctx.getBody().textbox)
-    ctx.setStatus(204);
+    console.log("--post--");
+    const data = ctx.getData();
+    console.log(data);
+    // data.filedrop;
+    // data.filebutton;
   },
 });

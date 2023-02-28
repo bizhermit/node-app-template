@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
 import Style from "$/components/elements/divider.module.scss";
 import LabelText from "@/components/elements/label-text";
@@ -12,7 +12,7 @@ export type DividerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> 
   $shortWidth?: number | string;
 };
 
-const Divider = React.forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
+const Divider = forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
   const align = props.children ? props.$align || "center" : undefined;
   const colorClassName = `bgc-${props.$color || "border"}${props.$reverseColor ? "_r" : ""}`;
 

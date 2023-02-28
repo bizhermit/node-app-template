@@ -1,24 +1,66 @@
-import { FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import Style from "$/components/elements/form-items/toggle-box.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/components/utilities/attributes";
 
-export type ToggleBoxProps<T extends string | number | boolean = boolean> = Omit<FormItemProps<T>, "$tagPosition"> & {
+export type ToggleBoxProps<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+> = Omit<FormItemProps<T, D>, "$tagPosition"> & {
   $checkedValue?: T;
   $uncheckedValue?: T;
   children?: ReactNode;
 };
 
 interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
-  <T extends string | number | boolean = boolean>(attrs: ToggleBoxProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: ToggleBoxProps<T, D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(<T extends string | number | boolean = boolean>(props: ToggleBoxProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
-  const checkedValue = (props.$checkedValue ?? true) as T;
-  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
+const ToggleBox: ToggleBoxFC = forwardRef<HTMLDivElement, ToggleBoxProps>(<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+>(p: ToggleBoxProps<T, D>, ref: ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      switch (dataItem.type) {
+        case "string":
+          return {
+            $checkedValue: "1" as T,
+            $uncheckedValue: "0" as T,
+          };
+        case "number":
+          return {
+            $checkedValue: 1 as T,
+            $uncheckedValue: 0 as T,
+          };
+        default:
+          return {
+            $checkedValue: dataItem.trueValue as T,
+            $uncheckedValue: dataItem.falseValue as T,
+          };
+      }
+    },
+    over: ({ dataItem, props }) => {
+      switch (dataItem.type) {
+        case "string":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          };
+        case "number":
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          };
+        default:
+          return {
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+          };
+      }
+    }
+  });
 
-  const form = useForm(props, {
+  const ctx = useFormItemContext(form, props, {
     preventRequiredValidation: true,
     validations: () => {
       if (!props.$required) return [];
@@ -28,21 +70,23 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
       }];
     },
   });
+  const checkedValue = (props.$checkedValue ?? true) as T;
+  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
 
   const toggleCheck = (check?: boolean) => {
     if (check == null) {
-      form.change(form.valueRef.current === checkedValue ? uncheckedValue : checkedValue);
+      ctx.change(ctx.valueRef.current === checkedValue ? uncheckedValue : checkedValue);
       return;
     }
-    form.change(check ? checkedValue : uncheckedValue);
+    ctx.change(check ? checkedValue : uncheckedValue);
   };
 
   const click = () => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     toggleCheck();
   };
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!form.editable) return;
+    if (!ctx.editable) return;
     pressPositiveKey(e, () => toggleCheck());
   };
 
@@ -50,7 +94,7 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
     <FormItemWrap
       {...props}
       ref={ref}
-      $$form={form}
+      $context={ctx}
       $preventFieldLayout
       $clickable
       $useHidden
@@ -64,12 +108,12 @@ const ToggleBox: ToggleBoxFC = React.forwardRef<HTMLDivElement, ToggleBoxProps>(
       <div className={Style.body}>
         <div
           className={`${Style.box} bdc-${props.$color || "border"} bgc-${props.$color || "main"}`}
-          data-editable={form.editable}
-          data-checked={form.value === checkedValue}
+          data-editable={ctx.editable}
+          data-checked={ctx.value === checkedValue}
         />
         <div
           className={`${Style.handle} bdc-${props.$color || "border"}`}
-          data-checked={form.value === checkedValue}
+          data-checked={ctx.value === checkedValue}
         />
       </div>
       {props.children && <LabelText>{props.children}</LabelText>}

@@ -1,9 +1,13 @@
 import Button from "@/components/elements/button";
-import DataTable, { DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "@/components/elements/data-table";
+import dataTableButtonColumn from "@/components/elements/data-table/button";
+import dataTableCheckBoxColumn from "@/components/elements/data-table/check-box";
+import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { joinClassNames } from "@/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useMemo, useState } from "react";
 
 type Data = {
@@ -20,18 +24,34 @@ const Page: NextPage = () => {
     const cols: Array<DataTableColumn<Data>> = [];
     cols.push(
       dataTableRowNumberColumn,
+      dataTableCheckBoxColumn({
+        name: "selected",
+        bulk: true,
+      }),
+      dataTableButtonColumn({
+        name: "button",
+        // buttonText: "button",
+        round: true,
+        outline: true,
+        width: "9rem",
+        onClick: (ctx) => {
+          console.log(ctx);
+        },
+      }),
       {
         name: "col1",
         label: "Col1",
         width: 120,
-        resize: true,
         sort: true,
+        resize: false,
+        sortNeutral: false,
         href: (ctx) => {
           return `/sandbox/elements/data-table?id=${ctx.data.id}`;
         },
         hrefOptions: {
           rel: ""
         },
+        // wrap: true,
       },
       {
         name: "group",
@@ -43,8 +63,8 @@ const Page: NextPage = () => {
               name: "col2",
               label: "Col2",
               align: "left",
-              resize: true,
               width: 200,
+              wrap: true,
             },
             {
               name: "col3",
@@ -63,6 +83,7 @@ const Page: NextPage = () => {
         name: "col5",
         label: "Col5",
         align: "center",
+        // minWidth: "30rem",
         sort: true,
         header: (props) => {
           return (
@@ -71,7 +92,9 @@ const Page: NextPage = () => {
         },
         body: (props) => {
           return (
-            <div>custom cell: {props.data.col5}</div>
+            <DataTableCellLabel>
+              custom cell: {props.data.col5}
+            </DataTableCellLabel>
           );
         },
       },
@@ -107,7 +130,8 @@ const Page: NextPage = () => {
         col4: `col4 - ${index}`,
         col5: `col5 - ${index}`,
         number: index * 1000,
-        date: `2023-01-${1 + index}`
+        date: `2023-01-${1 + index}`,
+        button: `button${index}`,
       } as Data;
     }));
   };
@@ -115,26 +139,36 @@ const Page: NextPage = () => {
   const [outline, setOutline] = useState(true);
   const [rowBorder, setRowBorder] = useState(true);
   const [cellBorder, setCellBorder] = useState(true);
+  const [scroll, setScroll] = useState(true);
+  const [page, setPage] = useState(false);
+  const [perPage, setPerPage] = useState(10);
 
   return (
     <div className="flex-start w-100 h-100 gap-1 p-1">
       <Row className="gap-1">
         <Row className="gap-1">
-          <Button $fitContent $onClick={() => setItems(null!)}>null</Button>
-          <Button $fitContent $onClick={() => generateItems(0)}>0</Button>
-          <Button $fitContent $onClick={() => generateItems(1)}>1</Button>
-          <Button $fitContent $onClick={() => generateItems(10)}>10</Button>
-          <Button $fitContent $onClick={() => generateItems(50)}>50</Button>
-          <Button $fitContent $onClick={() => generateItems(100)}>100</Button>
+          <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(0)}>0</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(1)}>1</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(10)}>10</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(50)}>50</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(99)}>99</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(100)}>100</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(101)}>101</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(1000)}>1000</Button>
+          <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
         </Row>
         <Row className="gap-1">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>
           <ToggleBox $value={rowBorder} $onChange={v => setRowBorder(v!)}>row border</ToggleBox>
           <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>
+          <ToggleBox $value={scroll} $onChange={v => setScroll(v!)}>scroll</ToggleBox>
+          <ToggleBox $value={page} $onChange={v => setPage(v!)}>page</ToggleBox>
+          <NumberBox $value={perPage} $onChange={v => setPerPage(v ?? 20)} $min={1} $max={100} $width={100} $hideClearButton />
         </Row>
       </Row>
       <DataTable<Data>
-        className="w-100 flex-1"
+        className={joinClassNames("w-100", scroll ? "flex-1" : undefined)}
         $columns={columns}
         $value={items}
         $header
@@ -142,10 +176,16 @@ const Page: NextPage = () => {
         $headerHeight="6rem"
         $rowHeight="3.6rem"
         $multiSort
-        $scroll
+        $scroll={scroll}
         $outline={outline}
         $rowBorder={rowBorder}
         $cellBorder={cellBorder}
+        $page={page}
+        $perPage={perPage}
+        $onChangePage={(index) => {
+          console.log(index);
+          return true;
+        }}
       />
     </div>
   );

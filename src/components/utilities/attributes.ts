@@ -1,18 +1,19 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
+import type { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
 
 export const joinClassNames = (...classNames: Array<string | null | undefined>) => {
   return StringUtils.join(" ", ...classNames);
 };
 
 export const attributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
-  const ret: Struct = {
-    ...props,
-    className: StringUtils.join(" ", ...classNames, props.className),
-  };
-  Object.keys(ret).forEach(key => {
-    if (key[0] === "$") delete ret[key];
-  });
+  const ret: Struct = {};
+  if (props) {
+    Object.keys(props).forEach(key => {
+      if (key[0] === "$") return;
+      ret[key] = props[key];
+    });
+  }
+  ret.className = StringUtils.join(" ", ...classNames, props.className) || undefined;
   return ret;
 };
 

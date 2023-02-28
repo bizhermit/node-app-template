@@ -4,9 +4,10 @@ import Form from "@/components/elements/form";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
+import { sample_number, sample_string } from "@/data-items/sample/item";
 import { colors } from "@/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 import { VscAccount, VscActivateBreakpoints, VscArchive } from "react-icons/vsc";
 
@@ -101,6 +102,24 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row>
+        <RadioButtons
+          $tag="number"
+          $dataItem={sample_number}
+          $onChange={v => console.log("number: ", v)}
+          $source={ArrayUtils.generateArray(3, (value) => {
+            return { value, label: `item ${value}` };
+          })}
+        />
+        <RadioButtons
+          $tag="string"
+          $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+          $source={ArrayUtils.generateArray(3, (value) => {
+            return { value: String(value), label: `item ${value}` };
+          })}
+        />
+      </Row>
       <RadioButtons
         style={{ width: 500 }}
         $tag="useState"

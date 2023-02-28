@@ -5,7 +5,8 @@ import CheckBox from "@/components/elements/form-items/check-box";
 import FileDrop from "@/components/elements/form-items/file-drop";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import { sample_file } from "@/data-items/sample/item";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
@@ -66,12 +67,25 @@ const Page: NextPage = () => {
         </Button>
       </Row>
       <Divider />
+      <Row className="gap-1">
+        <FileDrop
+          $tag="no item"
+          $onChange={v => console.log("no item: ", v)}
+          style={{ height: 100, width: 100, }}
+        />
+        <FileDrop
+          $tag="file"
+          $dataItem={sample_file}
+          $onChange={v => console.log("file: ", v)}
+          style={{ height: 100, width: 100, }}
+        />
+      </Row>
       <Row className="w-100 gap-1">
         <FileDrop
           $tag="useState"
           $disabled={disabled}
           $readOnly={readOnly}
-          $value={value}
+          // $value={value}
           $onChange={v => setValue(v!)}
           $required
           $append

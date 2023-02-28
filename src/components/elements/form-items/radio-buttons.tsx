@@ -1,25 +1,49 @@
-import { equals, FormItemProps, FormItemWrap, useForm } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useMemo } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo } from "react";
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
-import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
 import { pressPositiveKey } from "@/components/utilities/attributes";
+import { equals } from "@/data-items/utilities";
 
-export type RadioButtonsProps<T extends string | number = string | number> = Omit<FormItemProps<T, { afterData: Struct; beforeData: Struct; }>, "$tagPosition"> & {
+export type RadioButtonsProps<
+  T extends string | number = string | number,
+  D extends DataItem_String | DataItem_Number | undefined = undefined,
+  S extends Struct = Struct
+> = Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, "$tagPosition"> & {
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
   $direction?: "horizontal" | "vertical";
   $appearance?: "point" | "check" | "check-outline" | "button";
-  $source?: LoadableArray<Struct>;
+  $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
-  <T extends string | number = string | number>(attrs: RadioButtonsProps<T>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>
+    (attrs: RadioButtonsProps<T, D, S>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButtonsProps>(<T extends string | number = string | number>(props: RadioButtonsProps<T>, ref: React.ForwardedRef<HTMLDivElement>) => {
+const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProps>(<
+  T extends string | number = string | number,
+  D extends DataItem_String | DataItem_Number | undefined = undefined,
+  S extends Struct = Struct
+>(p: RadioButtonsProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
+  const form = useForm();
+  const props = useDataItemMergedProps(form, p, {
+    under: ({ dataItem }) => {
+      return {
+        $source: dataItem.source as LoadableArray<S>,
+      };
+    },
+    over: ({ dataItem, props }) => {
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+      };
+    },
+  });
+
   const vdn = props.$valueDataName ?? "value";
   const ldn = props.$labelDataName ?? "label";
   const cdn = props.$colorDataName ?? "color";
@@ -27,7 +51,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
     preventMemorize: props.$preventSourceMemorize,
   });
 
-  const form = useForm(props, {
+  const ctx = useFormItemContext(form, props, {
     preventRequiredValidation: true,
     generateChangeCallbackData: (a, b) => {
       return {
@@ -39,8 +63,8 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
   });
 
   const select = (value: T) => {
-    if (!form.editable || loading) return;
-    form.change(value);
+    if (!ctx.editable || loading) return;
+    ctx.change(value);
   };
 
   const moveFocus = (next?: boolean) => {
@@ -74,7 +98,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       const v = item[vdn] as T;
       const l = item[ldn] as ReactNode;
       const c = (item[cdn] as string) || props.$color;
-      const selected = equals(v, form.value);
+      const selected = equals(v, ctx.value);
       if (selected) selectedItem = item;
       return (
         <div
@@ -82,8 +106,8 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
           className={Style.item}
           data-selected={selected}
           tabIndex={0}
-          onClick={form.editable ? () => select(v) : undefined}
-          onKeyDown={form.editable ? e => pressPositiveKey(e, () => select(v)) : undefined}
+          onClick={ctx.editable ? () => select(v) : undefined}
+          onKeyDown={ctx.editable ? e => pressPositiveKey(e, () => select(v)) : undefined}
           data-appearance={appearance}
         >
           {(appearance === "point" || appearance === "check" || appearance === "check-outline") &&
@@ -115,21 +139,21 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
       );
     });
     return { nodes, selectedItem };
-  }, [source, form.editable, form.value, props.$appearance]);
+  }, [source, ctx.editable, ctx.value, props.$appearance]);
 
   useEffect(() => {
-    form.change(form.valueRef.current, true);
+    ctx.change(ctx.valueRef.current, true);
   }, [source]);
 
   useEffect(() => {
     if (selectedItem == null && source.length > 0) {
-      form.change(source[0][vdn]);
+      ctx.change(source[0][vdn]);
       if (!loading && selectedItem == null && source.length > 0) {
         let target = source[0];
         if ("$defaultValue" in props && props.$defaultValue != null) {
           target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
         }
-        form.change(target[vdn]);
+        ctx.change(target[vdn]);
       }
     }
   }, [selectedItem, source]);
@@ -138,7 +162,7 @@ const RadioButtons: RadioButtonsFC = React.forwardRef<HTMLDivElement, RadioButto
     <FormItemWrap
       {...props}
       ref={ref}
-      $$form={form}
+      $context={ctx}
       $preventFieldLayout
       $useHidden
       $mainProps={{

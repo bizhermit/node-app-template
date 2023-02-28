@@ -1,6 +1,6 @@
 import NextLink from "@/components/elements/link";
 import { attributes } from "@/components/utilities/attributes";
-import { FC, HTMLAttributes, useEffect, useState } from "react";
+import { type FC, type HTMLAttributes, useEffect, useState } from "react";
 
 const Page404: FC<Omit<HTMLAttributes<HTMLDivElement>, "children">> = (props) => {
   const getUrl = () => {

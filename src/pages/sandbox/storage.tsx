@@ -1,14 +1,28 @@
 import Button from "@/components/elements/button";
+import Divider from "@/components/elements/divider";
+import ToggleBox from "@/components/elements/form-items/toggle-box";
+import LabelText from "@/components/elements/label-text";
 import Row from "@/components/elements/row";
 import { useLocalState, useSessionState } from "@/hooks/storage";
-import { NextPage } from "next";
+import type { NextPage } from "next";
+import { useState } from "react";
 
 const Page: NextPage = () => {
-  const session = useSessionState("session", () => 10, { autoSave: true });
+  const [autoSave, setAutoSave] = useState(true);
+  const session = useSessionState("session", () => 3, { autoSave });
   const local = useLocalState("local", () => 3);
 
   return (
     <div className="flex-stretch p-1">
+      <Row>
+        <ToggleBox
+          $value={autoSave}
+          $onChange={v => setAutoSave(v!)}
+        >
+          Auto save
+        </ToggleBox>
+      </Row>
+      <Divider className="my-1" />
       <Row className="gap-1">
         <Button
           $onClick={() => {
@@ -19,7 +33,9 @@ const Page: NextPage = () => {
             local[1]((cur) => cur + 1);
           }}
         >
-          count up {session[0]}/{local[0]}
+          <LabelText>
+            count up {session[0]}/{local[0]}
+          </LabelText>
         </Button>
         <Button
           $onClick={() => {
@@ -38,6 +54,15 @@ const Page: NextPage = () => {
           }}
         >
           save
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log("clear");
+            session[2].clear();
+            local[2].clear();
+          }}
+        >
+          clear
         </Button>
       </Row>
     </div>

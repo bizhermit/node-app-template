@@ -7,9 +7,22 @@ $borderStyle: 1px solid var(--c-border);
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: stretch;
+  overflow: visible;
+  row-gap: 0.2rem;
+}
+
+.table {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
   min-height: 0;
   overflow: auto;
   border-radius: var(--radius);
+  flex: 1;
+  z-index: 0;
 
   &[data-border="true"] {
     border: #{$borderStyle};
@@ -39,7 +52,8 @@ $borderStyle: 1px solid var(--c-border);
 }
 
 .hrow,
-.brow {
+.brow,
+.grow {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -48,16 +62,31 @@ $borderStyle: 1px solid var(--c-border);
   align-items: stretch;
   background: inherit;
   color: inherit;
+  overflow: hidden;
+  z-index: 0;
 
   &:not(:first-child) {
     &[data-border="true"] {
       border-top: #{$borderStyle};
     }
   }
+
+  &:hover {
+    overflow: visible;
+    z-index: 1;
+  }
 }
 
 .brow {
   background: var(--c-pure);
+
+  &:nth-child(2n) {
+    background: var(--c-dull);
+  }
+
+  &:hover {
+    background: var(--c-hover);
+  }
 }
 
 .hcell,
@@ -69,6 +98,8 @@ $borderStyle: 1px solid var(--c-border);
   align-items: center;
   background: inherit;
   color: inherit;
+  overflow: hidden;
+  z-index: 0;
 
   &[data-align="left"] {
     justify-content: flex-start;
@@ -80,6 +111,11 @@ $borderStyle: 1px solid var(--c-border);
 
   &[data-align="right"] {
     justify-content: right;
+  }
+
+  &:hover {
+    overflow: visible;
+    z-index: 1;
   }
 }
 
@@ -96,9 +132,11 @@ $borderStyle: 1px solid var(--c-border);
   justify-content: stretch;
   align-items: stretch;
 
+  >.grow,
   >.hrow,
   >.brow {
     flex: 1;
+    max-height: 100%;
   }
 }
 
@@ -112,6 +150,16 @@ $borderStyle: 1px solid var(--c-border);
   }
 }
 
+.bcell {
+  > a {
+    max-width: 100%;
+  }
+
+  &:hover {
+    background: var(--c-selected);
+  }
+}
+
 .content {
   box-sizing: border-box;
   display: flex;
@@ -122,7 +170,16 @@ $borderStyle: 1px solid var(--c-border);
 }
 
 .label {
+  box-sizing: border-box;
+  display: block;
   padding: var(--padding-top-text) 1rem 0 1rem;
+  max-width: 100%;
+  overflow: hidden;
+
+  &[data-wrap="false"] {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .sort {
@@ -132,6 +189,7 @@ $borderStyle: 1px solid var(--c-border);
   width: calc(var(--size) * 0.4);
   overflow: visible;
   margin-right: 0.5rem;
+  flex: none;
 
   &::before,
   &::after {
@@ -187,4 +245,26 @@ $borderStyle: 1px solid var(--c-border);
   flex: 1;
   min-height: 0;
   opacity: 0.5;
+}
+
+.pagination {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1rem;
+  overflow: visible;
+  z-index: 1;
+  
+  .number {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: var(--padding-top-text);
+    column-gap: 0.2rem;
+  }
 }

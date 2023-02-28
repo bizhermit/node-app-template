@@ -1,6 +1,6 @@
 import Button from "@/components/elements/button";
 import NextLink from "@/components/elements/link";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (

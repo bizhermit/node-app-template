@@ -1,6 +1,6 @@
 import Popup from "@/components/elements/popup";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import React, { HTMLAttributes, ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
 
 type OmitAttributes = "color" | "children";
 type TooltipProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
@@ -18,7 +18,7 @@ type MousePosition = { pageX: number; pageY: number };
 
 const cursorMargin = 5;
 
-const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => {
+const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
 
