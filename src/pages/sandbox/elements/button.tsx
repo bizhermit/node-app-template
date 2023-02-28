@@ -3,8 +3,8 @@ import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
 import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
-import { NextPage } from "next";
-import { CSSProperties } from "react";
+import type { NextPage } from "next";
+import type { CSSProperties } from "react";
 import { VscCloudDownload } from "react-icons/vsc";
 
 const style: CSSProperties = {

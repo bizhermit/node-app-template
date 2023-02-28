@@ -1,6 +1,6 @@
-import Button, { ButtonProps } from "@/components/elements/button";
-import { FC, ReactElement, ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { createRoot, Root } from "react-dom/client";
+import Button, { type ButtonProps } from "@/components/elements/button";
+import { type FC, type ReactElement, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { createRoot, type Root } from "react-dom/client";
 import Style from "$/hooks/message-box.module.scss";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";

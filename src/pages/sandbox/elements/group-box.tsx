@@ -1,6 +1,6 @@
 import GroupBox from "@/components/elements/group-box";
 import Row from "@/components/elements/row";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (

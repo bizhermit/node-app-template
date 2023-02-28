@@ -1,7 +1,7 @@
 import Divider from "@/components/elements/divider";
 import TextBox from "@/components/elements/form-items/text-box";
 import { colors } from "@/utilities/sandbox";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (

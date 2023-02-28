@@ -1,5 +1,5 @@
 import Style from "$/components/elements/button.module.scss";
-import React, { ButtonHTMLAttributes, ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { type ButtonHTMLAttributes, forwardRef, type ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import { useForm } from "@/components/elements/form";
 import LabelText from "@/components/elements/label-text";
@@ -21,7 +21,7 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, OmitAttr
   $ignoreFormValidation?: boolean;
 };
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
   const ref = useRef<HTMLButtonElement>(null!);
   useImperativeHandle($ref, () => ref.current);
 

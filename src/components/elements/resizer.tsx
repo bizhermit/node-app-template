@@ -1,4 +1,4 @@
-import { CSSProperties, FC, MutableRefObject } from "react";
+import type { CSSProperties, FC, MutableRefObject } from "react";
 import Style from "$/components/elements/resizer.module.scss";
 import { convertSizeNumToStr, releaseCursor, setCursor } from "@/components/utilities/attributes";
 

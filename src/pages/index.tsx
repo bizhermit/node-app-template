@@ -1,7 +1,7 @@
+import type { NextPage } from "next";
 import NextLink from "@/components/elements/link";
 import Row from "@/components/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
 
 const Page: NextPage = () => {
   return (

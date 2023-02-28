@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import fileItem from "@/data-items/file";
-import apiHandler, { NextApiConfig } from "@/utilities/api-handler";
+import apiHandler, { type NextApiConfig } from "@/utilities/api-handler";
 
 export const config: NextApiConfig = {
   api: {

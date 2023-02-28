@@ -1,5 +1,5 @@
 import { isReactNode } from "@/components/utilities/attributes";
-import { FC, HTMLAttributes } from "react";
+import type { FC, HTMLAttributes } from "react";
 
 const LabelText: FC<HTMLAttributes<HTMLSpanElement>> = (props) => {
   if (props.children == null) return <></>;

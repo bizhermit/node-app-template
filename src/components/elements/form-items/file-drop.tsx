@@ -1,5 +1,5 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, ReactNode, useEffect, useRef } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import LabelText from "@/components/elements/label-text";
 import { VscClose } from "react-icons/vsc";
@@ -26,12 +26,12 @@ export type FileDropProps_Multiple<D extends DataItem_File | undefined = undefin
 export type FileDropProps<D extends DataItem_File | undefined = undefined> = (FileDropProps_Single<D> & { $multiple?: false; }) | (FileDropProps_Multiple<D> & { $multiple: true });
 
 interface FileDropFC extends FunctionComponent {
-  <D extends DataItem_File | undefined = undefined>(attrs: FileDropProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_File | undefined = undefined>(attrs: FileDropProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const FileDrop: FileDropFC = React.forwardRef<HTMLDivElement, FileDropProps>(<
+const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
   D extends DataItem_File | undefined = undefined
->(p: FileDropProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: FileDropProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {

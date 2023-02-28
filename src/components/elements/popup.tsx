@@ -1,5 +1,5 @@
 import usePortalElement from "@/hooks/portal-element";
-import React, { HTMLAttributes, MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, type HTMLAttributes, type MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
@@ -35,7 +35,7 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
 
 const baseZIndex = 10000000;
 
-const Popup = React.forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
+const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const aref = useRef<HTMLDivElement>(null!);

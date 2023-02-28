@@ -1,5 +1,5 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import React, { FunctionComponent, ReactElement, useRef } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
@@ -27,14 +27,14 @@ export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefin
 };
 
 interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
-  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: NumberBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: NumberBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const defaultWidth = 150;
 
-const NumberBox: NumberBoxFC = React.forwardRef<HTMLDivElement, NumberBoxProps>(<
+const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
   D extends DataItem_Number | DataItem_String | undefined = undefined
->(p: NumberBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: NumberBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {

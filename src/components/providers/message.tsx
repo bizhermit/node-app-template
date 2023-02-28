@@ -1,5 +1,5 @@
 import useMessageBox from "@/hooks/message-box";
-import { createContext, FC, ReactNode, useContext, useEffect, useReducer } from "react";
+import { createContext, type FC, type ReactNode, useContext, useEffect, useReducer } from "react";
 
 type ArgMessages = Message | Array<Message | null | undefined> | null | undefined;
 

@@ -1,6 +1,6 @@
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
-import React, { FC, FunctionComponent, ReactElement, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import useLoadableArray, { type LoadableArray } from "@/hooks/loadable-array";
+import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { VscChevronDown, VscClose } from "react-icons/vsc";
 import Style from "$/components/elements/form-items/select-box.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
@@ -29,16 +29,16 @@ export type SelectBoxProps<
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
   <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>
-    (attrs: SelectBoxProps<T, D, S>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+    (attrs: SelectBoxProps<T, D, S>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const defaultWidth = 200;
 
-const SelectBox: SelectBoxFC = React.forwardRef<HTMLDivElement, SelectBoxProps>(<
+const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
   T extends string | number = string | number,
   D extends DataItem_String | DataItem_Number | undefined = undefined,
   S extends Struct = Struct
->(p: SelectBoxProps<T, D, S>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: SelectBoxProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {

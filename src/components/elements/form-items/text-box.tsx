@@ -1,10 +1,10 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
-import { convertDataItemValidationToFormItemValidation, FormItemProps, FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import React, { FunctionComponent, ReactElement, useRef } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import { VscClose } from "react-icons/vsc";
 
 export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
@@ -24,12 +24,12 @@ export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined
 };
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
-  <D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: TextBoxProps<D>, ref?: React.ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: TextBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
-const TextBox: TextBoxFC = React.forwardRef<HTMLDivElement, TextBoxProps>(<
+const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
   D extends DataItem_String | DataItem_Number | undefined = undefined
->(p: TextBoxProps<D>, ref: React.ForwardedRef<HTMLDivElement>) => {
+>(p: TextBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
   const props = useDataItemMergedProps(form, p, {

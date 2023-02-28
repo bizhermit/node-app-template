@@ -1,5 +1,5 @@
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import React, { createContext, FC, HTMLAttributes, ReactNode, useCallback, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { createContext, type FC, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
 import Style from "$/components/elements/loading.module.scss";
 import usePortalElement from "@/hooks/portal-element";
 import { createPortal } from "react-dom";
@@ -16,7 +16,7 @@ export type LoadingProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> 
   $appearance?: LoadingAppearance;
 };
 
-const Loading = React.forwardRef<HTMLDivElement, LoadingProps>((props, $ref) => {
+const Loading = forwardRef<HTMLDivElement, LoadingProps>((props, $ref) => {
   const appearance = props.$appearance || "bar";
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
@@ -92,7 +92,7 @@ const Mask2: FC<LoadingProps> = (props) => {
 
 export default Loading;
 
-export const ScreenLoading = React.forwardRef<HTMLDivElement, LoadingProps>((props, ref) => {
+export const ScreenLoading = forwardRef<HTMLDivElement, LoadingProps>((props, ref) => {
   const portal = usePortalElement({
     mount: (elem) => {
       elem.classList.add(Style.root);

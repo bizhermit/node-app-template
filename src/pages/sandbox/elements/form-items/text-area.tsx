@@ -5,7 +5,7 @@ import TextArea from "@/components/elements/form-items/text-area";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { sample_string } from "@/data-items/sample/item";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {

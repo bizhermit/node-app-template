@@ -7,7 +7,7 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { joinClassNames } from "@/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useMemo, useState } from "react";
 
 type Data = {
