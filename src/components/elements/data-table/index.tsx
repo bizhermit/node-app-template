@@ -213,15 +213,15 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
 
   const columns = useRef<Array<DataTableColumn<T>>>(null!);
   columns.current = useMemo(() => {
-    const clone = (columns?: Array<DataTableColumn<T>>): Array<DataTableColumn<T>> => {
-      return columns?.map(col => {
+    const clone = (cols?: Array<DataTableColumn<T>>): Array<DataTableColumn<T>> => {
+      return cols?.map(col => {
         if ("rows" in col) {
           return {
             ...col,
             rows: col.rows.map(cols => clone(cols)),
           };
         }
-        const buf = findColumn(columns, col.name);
+        const buf = findColumn(columns.current, col.name);
         return {
           ...col,
           width: buf?.width ?? col.width,
