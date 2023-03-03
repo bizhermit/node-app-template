@@ -136,7 +136,7 @@ $arrowMargin: 0.15rem;
   border-radius: 9999px;
   border: 0.25rem solid var(--c-border);
   z-index: 1;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 .arrow {
@@ -148,7 +148,7 @@ $arrowMargin: 0.15rem;
   left: calc(var(--point-size) / 4 + #{$arrowMargin});
   z-index: 0;
   overflow: visible;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 
   &::before,
   &::after {

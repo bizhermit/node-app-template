@@ -34,7 +34,7 @@ $animationTime: 0.3s;
 .box {
   box-sizing: border-box;
   z-index: 0;
-  transition: background #{$animationTime};
+  transition: background-color #{$animationTime};
 
   &::before {
     box-sizing: border-box;

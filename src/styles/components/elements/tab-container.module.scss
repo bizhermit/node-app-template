@@ -202,7 +202,7 @@ $borderWidth: 0.2rem;
   justify-content: center;
   align-items: center;
   user-select: none;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 
   &:not([data-selected="true"]) {
     cursor: pointer;
