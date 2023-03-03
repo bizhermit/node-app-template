@@ -129,6 +129,7 @@ $shadowPadding: .2rem;
   &[data-pos="left"],
   &[data-pos="right"] {
     flex-direction: column;
+    height: 0;
     min-height: 100%;
     max-width: 100%;
 
