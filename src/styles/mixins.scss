@@ -19,6 +19,19 @@
   }
 }
 
+@mixin crossHover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+  @media (hover: none) {
+    &:active {
+      @content;
+    }
+  }
+}
+
 @mixin inputButton {
   box-sizing: border-box;
   display: flex;
