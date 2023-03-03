@@ -71,7 +71,7 @@ $width7: 14.285%;
     >.date {
       height: 100%;
       flex-flow: column nowrap;
-      justify-content: center;
+      justify-content: flex-start;
       overflow-y: auto;
       overflow-x: visible;
       flex: 1;
