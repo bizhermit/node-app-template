@@ -27,19 +27,16 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => {
   const posX = props.$position?.x || "outer";
   const posY = props.$position?.y || "outer";
 
-  const move = useCallback((e: MouseEvent) => {
+  const move = useCallback((e: { pageX: number; pageY: number; }) => {
     mousePosition.current = {
-      pageX: e.pageX,
-      pageY: e.pageY,
+      pageX: e.pageX - document.documentElement.scrollLeft - document.body.scrollLeft,
+      pageY: e.pageY - document.documentElement.scrollTop - document.body.scrollTop,
     };
   }, []);
 
   const enter = (e: React.MouseEvent<HTMLDivElement>) => {
     if (props.$disabled) return;
-    mousePosition.current = {
-      pageX: e.pageX,
-      pageY: e.pageY,
-    };
+    move(e);
     window.addEventListener("mousemove", move);
     setTimeout(() => {
       if (mousePosition.current == null) return;
