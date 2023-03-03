@@ -343,6 +343,12 @@
   align-items: center;
 }
 
+.flex-top {
+  @include flexBox;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .flex-stretch {
   @include flexBox;
   justify-content: stretch;
