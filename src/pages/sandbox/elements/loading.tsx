@@ -11,7 +11,7 @@ const Page: NextPage = () => {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="flex-stretch w-100 p-1">
+    <div className="flex-top w-100 p-1">
       <h1>Loading</h1>
       <section>
         <h2>appearance</h2>
@@ -54,7 +54,9 @@ const Page: NextPage = () => {
             $color="main"
             $mask
           >
-            <Button $onClick={() => setShow(false)}>hide</Button>
+            <div className="flex-center h-100">
+              <Button $onClick={() => setShow(false)}>hide</Button>
+            </div>
           </Loading>
         }
       </section>
