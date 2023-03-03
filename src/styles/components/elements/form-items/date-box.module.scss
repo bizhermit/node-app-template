@@ -29,14 +29,7 @@
 .y,
 .m,
 .d {
-  box-sizing: border-box;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  z-index: 1;
-  resize: none;
+  @include mixins.inputProps(true);
   height: var(--size);
   min-width: 0;
   padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
