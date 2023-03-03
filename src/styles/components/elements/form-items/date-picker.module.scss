@@ -1,5 +1,6 @@
 @use "$/mixins";
 $width7: 14.285%;
+$pulldownTransitionTime: 0.5s;
 
 .main {
   flex-direction: column !important;
@@ -202,7 +203,7 @@ $width7: 14.285%;
     height: 0rem;
     width: 100%;
     overflow: hidden;
-    transition: height 0.5s;
+    transition: height #{$pulldownTransitionTime};
 
     &[data-show="true"] {
       height: 20rem;

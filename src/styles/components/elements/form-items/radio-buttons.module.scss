@@ -1,3 +1,4 @@
+@use "$/var";
 @use "$/mixins";
 
 .main {
@@ -214,7 +215,7 @@
   position: absolute;
   border-radius: 9999px;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity #{var.$transitionTime};
 
   &[data-selected="true"] {
     opacity: 1;
@@ -229,5 +230,5 @@
   align-items: center;
   height: 100%;
   flex: 1;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime};
 }

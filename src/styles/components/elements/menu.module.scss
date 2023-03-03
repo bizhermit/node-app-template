@@ -1,3 +1,4 @@
+@use "$/var";
 @use "$/mixins";
 
 .wrap {
@@ -61,7 +62,7 @@
   height: var(--nav-size);
   z-index: 0;
   overflow: visible;
-  transition: padding-left 0.2s;
+  transition: padding-left #{var.$transitionTime};
 
   &[data-selectable="true"] {
     cursor: pointer;

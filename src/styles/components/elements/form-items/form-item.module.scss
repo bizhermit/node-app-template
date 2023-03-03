@@ -1,4 +1,6 @@
+@use "$/var";
 $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
+$tagMoveTransitionTime: 0.5s;
 
 .wrap {
   box-sizing: border-box;
@@ -56,7 +58,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
     height: var(--size);
     left: 1rem;
     z-index: 1;
-    transition: left 0.5s, top 0.5s, height 0.5s, padding-top 0.5s, opacity 0.5s;
+    transition: left #{$tagMoveTransitionTime}, top #{$tagMoveTransitionTime}, height #{$tagMoveTransitionTime}, padding-top #{$tagMoveTransitionTime}, opacity #{$tagMoveTransitionTime};
     opacity: 0.6;
   }
 }
@@ -73,6 +75,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
   min-width: 0;
   border-radius: var(--radius);
   border-color: var(--c-border);
+  transition: color #{var.$transitionTime};
 
   &[data-field="true"] {
     &::before {
@@ -86,7 +89,7 @@ $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
       border-color: inherit;
       border-radius: var(--radius);
       z-index: 0;
-      transition: background-color 0.2s;
+      transition: background-color #{var.$transitionTime}, border-color #{var.$transitionTime};
     }
   }
 

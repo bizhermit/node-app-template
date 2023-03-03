@@ -33,7 +33,6 @@ $animationTime: 0.6s;
 
 .box {
   box-sizing: border-box;
-  transition: background-color #{$animationTime};
 
   &::before {
     box-sizing: border-box;
@@ -48,6 +47,7 @@ $animationTime: 0.6s;
     border-style: solid;
     border-color: inherit;
     background: inherit;
+    transition: background-color #{$animationTime};
   }
 
   &[data-editable="true"] {
@@ -83,7 +83,6 @@ $animationTime: 0.6s;
     border-style: solid;
     border-color: inherit;
     background: var(--c-input);
-    transition: border-width 0.1s, outline 0.1s;
   }
 
   &[data-checked="true"] {

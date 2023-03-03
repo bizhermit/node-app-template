@@ -1,3 +1,4 @@
+@use "$/var";
 @use "$/mixins";
 
 .input {
@@ -36,7 +37,7 @@
   overflow: hidden;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.1s, color 0.1s;
+  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime};
 
   > :global(.icon) {
     height: 1.2rem;
