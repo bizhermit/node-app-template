@@ -41,6 +41,7 @@
   font-size: inherit;
   z-index: 1;
   resize: none;
+  outline: none;
   @if $customWidth == false {
     flex: 1;
     padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
