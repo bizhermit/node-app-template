@@ -43,7 +43,7 @@
     width: 1.2rem;
   }
 
-  &:hover {
+  @include mixins.crossHover {
     @include mixins.hover;
   }
 

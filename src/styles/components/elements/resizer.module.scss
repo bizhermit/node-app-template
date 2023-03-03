@@ -16,7 +16,9 @@ $size: 0.8rem;
   opacity: 0.6;
   transition: opacity 0.2s;
 
-  &:hover,
+  @include mixins.crossHover {
+    opacity: 1;
+  }
   &:active {
     opacity: 1;
   }

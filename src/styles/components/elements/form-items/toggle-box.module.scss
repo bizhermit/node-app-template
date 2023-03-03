@@ -3,7 +3,7 @@ $animationTime: 0.3s;
 
 .main {
   &[data-editable="true"] {
-    &:hover {
+    @include mixins.crossHover {
       .handle {
         &::before {
           @include mixins.hover;

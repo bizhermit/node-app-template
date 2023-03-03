@@ -2,7 +2,7 @@
 
 .main {
   &[data-editable="true"] {
-    &:hover {
+    @include mixins.crossHover {
       .box {
         &::before {
           @include mixins.hover;

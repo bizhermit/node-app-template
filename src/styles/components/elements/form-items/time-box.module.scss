@@ -80,7 +80,7 @@
   cursor: pointer;
   user-select: none;
 
-  &:hover {
+  @include mixins.crossHover {
     z-index: 2;
     @include mixins.hover;
 
