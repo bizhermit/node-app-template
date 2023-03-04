@@ -62,6 +62,16 @@
         }
       }
     }
+
+    &[data-error="true"] {
+      >.item {
+        >.box {
+          &::before {
+            background: var(--c-error);
+          }
+        }
+      }
+    }
   }
 
   &[data-direction="horizontal"] {

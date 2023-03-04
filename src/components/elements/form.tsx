@@ -66,7 +66,7 @@ type FormContextProps = {
   bind?: Struct;
   disabled?: boolean;
   readOnly?: boolean;
-  method: string;
+  method?: string;
   errors: Struct;
   setErrors: Dispatch<SetStateAction<Struct>>;
   exErrors: Struct;
@@ -79,13 +79,10 @@ type FormContextProps = {
   messageWrap?: boolean;
 };
 
-const defaultMethod = "get";
-
 const FormContext = createContext<FormContextProps>({
   bind: undefined,
   disabled: false,
   readOnly: false,
-  method: defaultMethod,
   errors: {},
   setErrors: () => { },
   exErrors: {},
@@ -125,7 +122,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
 const Form = forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
-  const method = props.method ?? defaultMethod;
+  const method = props.method ?? "get";
 
   const bind = useMemo(() => {
     if (!props.$bind || props.$bind === true) return {};
@@ -320,8 +317,8 @@ export const useForm = () => {
 };
 
 export const useDataItemMergedProps = <T, D extends DataItem | undefined, P extends FormItemProps<T, D, any, any>>(form: ReturnType<typeof useForm>, props: P, merge?: {
-  under?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method: string; }) => Partial<P>;
-  over?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method: string; }) => Partial<P>;
+  under?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
+  over?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
 }) => {
   const p = {
     ...useMemo(() => {
