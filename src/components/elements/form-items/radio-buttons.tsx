@@ -3,7 +3,7 @@ import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElemen
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { type LoadableArray } from "@/hooks/loadable-array";
 import LabelText from "@/components/elements/label-text";
-import { pressPositiveKey } from "@/components/utilities/attributes";
+import { joinClassNames, pressPositiveKey } from "@/components/utilities/attributes";
 import { equals } from "@/data-items/utilities";
 
 export type RadioButtonsProps<
@@ -16,8 +16,10 @@ export type RadioButtonsProps<
   $colorDataName?: string;
   $direction?: "horizontal" | "vertical";
   $appearance?: "point" | "check" | "check-outline" | "button";
+  $outline?: boolean;
   $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
+  $allowNull?: boolean;
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
@@ -32,8 +34,9 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
 >(p: RadioButtonsProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem }) => {
+    under: ({ dataItem, method }) => {
       return {
+        $required: method === "get" ? undefined : dataItem.required,
         $source: dataItem.source as LoadableArray<S>,
       };
     },
@@ -52,7 +55,6 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
   });
 
   const ctx = useFormItemContext(form, props, {
-    preventRequiredValidation: true,
     generateChangeCallbackData: (a, b) => {
       return {
         afterData: source.find(item => equals(item[vdn], a)),
@@ -91,6 +93,8 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
     }
   };
 
+  const outline = props.$appearance !== "button" && props.$outline;
+
   const { nodes, selectedItem } = useMemo(() => {
     let selectedItem: Struct | undefined = undefined;
     const appearance = props.$appearance || "point";
@@ -103,12 +107,13 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       return (
         <div
           key={v ?? null}
-          className={Style.item}
+          className={joinClassNames(Style.item, c ? `bdc-${c}` : undefined)}
           data-selected={selected}
           tabIndex={0}
           onClick={ctx.editable ? () => select(v) : undefined}
           onKeyDown={ctx.editable ? e => pressPositiveKey(e, () => select(v)) : undefined}
           data-appearance={appearance}
+          data-outline={outline}
         >
           {(appearance === "point" || appearance === "check" || appearance === "check-outline") &&
             <div
@@ -139,13 +144,14 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       );
     });
     return { nodes, selectedItem };
-  }, [source, ctx.editable, ctx.value, props.$appearance]);
+  }, [source, ctx.editable, ctx.value, props.$appearance, outline]);
 
   useEffect(() => {
     ctx.change(ctx.valueRef.current, true);
   }, [source]);
 
   useEffect(() => {
+    if (props.$allowNull) return;
     if (selectedItem == null && source.length > 0) {
       ctx.change(source[0][vdn]);
       if (!loading && selectedItem == null && source.length > 0) {
@@ -156,7 +162,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
         ctx.change(target[vdn]);
       }
     }
-  }, [selectedItem, source]);
+  }, [selectedItem, source, props.$allowNull]);
 
   return (
     <FormItemWrap
@@ -169,6 +175,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
         className: Style.main,
         onKeyDown: keydownMain,
         "data-direction": props.$direction || "horizontal",
+        "data-outline": outline,
       }}
     >
       {nodes}

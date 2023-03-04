@@ -76,12 +76,13 @@
   overflow: hidden;
   background: transparent;
   z-index: 0;
+  border-radius: var(--radius);
   
   &:not(:disabled) {
     cursor: pointer;
     user-select: none;
 
-    &:hover {
+    @include mixins.crossHover {
       @include mixins.hover;
       z-index: 1;
   

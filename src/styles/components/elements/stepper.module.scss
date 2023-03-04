@@ -1,3 +1,4 @@
+@use "$/var";
 @use "$/mixins";
 
 $lineWidth: 0.15rem;
@@ -94,7 +95,7 @@ $arrowMargin: 0.15rem;
   overflow: hidden;
   max-width: 100%;
   text-align: center;
-  transition: color 0.2s;
+  transition: color #{var.$transitionTime};
 }
 
 .line {
@@ -136,7 +137,7 @@ $arrowMargin: 0.15rem;
   border-radius: 9999px;
   border: 0.25rem solid var(--c-border);
   z-index: 1;
-  transition: background 0.2s;
+  transition: background-color #{var.$transitionTime};
 }
 
 .arrow {
@@ -148,7 +149,7 @@ $arrowMargin: 0.15rem;
   left: calc(var(--point-size) / 4 + #{$arrowMargin});
   z-index: 0;
   overflow: visible;
-  transition: background 0.2s;
+  transition: background-color #{var.$transitionTime};
 
   &::before,
   &::after {
