@@ -86,6 +86,10 @@
   }
 }
 
+@mixin pickerShadow {
+  box-shadow: 0 .1rem .8rem 0 var(--c-shadow) !important;
+}
+
 @mixin scrollOverlay($thumbColor: var(--c-scroll), $noOverflow: false) {
   @if $noOverflow == false {
     overflow: auto;

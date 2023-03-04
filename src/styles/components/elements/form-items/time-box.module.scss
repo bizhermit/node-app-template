@@ -90,4 +90,8 @@
   }
 }
 
+.popup {
+  @include mixins.pickerShadow;
+}
+
 @include mixins.hoverAnimation;

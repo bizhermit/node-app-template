@@ -438,7 +438,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
         </>
       }
       <Popup
-        className="es-4"
+        className={Style.popup}
         $show={showPicker}
         $onToggle={setShowPicker}
         $anchor="parent"

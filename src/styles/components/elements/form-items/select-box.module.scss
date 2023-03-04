@@ -23,6 +23,7 @@
   align-items: stretch;
   overflow: auto;
   outline: none;
+  border-radius: var(--radius);
 }
 
 .item {
@@ -62,4 +63,10 @@
   &[data-empty="true"] {
     color: var(--c-dull_);
   }
+}
+
+.popup {
+  @include mixins.pickerShadow;
+  border-radius: var(--radius);
+  background: var(--c-input);
 }

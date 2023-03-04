@@ -81,4 +81,8 @@
   @include mixins.inputButton;
 }
 
+.popup {
+  @include mixins.pickerShadow;
+}
+
 @include mixins.hoverAnimation;
