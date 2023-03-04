@@ -1,3 +1,5 @@
+@use "$/var";
+@use "$/mixins";
 $size: 0.8rem;
 
 @mixin pseudoBase {
@@ -14,9 +16,11 @@ $size: 0.8rem;
   z-index: 999;
   overflow: hidden;
   opacity: 0.6;
-  transition: opacity 0.2s;
+  transition: opacity #{var.$transitionTime};
 
-  &:hover,
+  @include mixins.crossHover {
+    opacity: 1;
+  }
   &:active {
     opacity: 1;
   }

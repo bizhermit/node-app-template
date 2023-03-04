@@ -26,7 +26,7 @@
   cursor: pointer;
   border-radius: var(--radius);
 
-  &:hover {
+  @include mixins.crossHover {
     @include mixins.hover;
 
     &:active {

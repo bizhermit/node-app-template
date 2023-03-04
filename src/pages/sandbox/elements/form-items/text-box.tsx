@@ -231,6 +231,13 @@ const Page: NextPage = () => {
             $tag="bottom-hide"
             $messagePosition="bottom-hide"
           />
+          <TextBox
+            $disabled={disabled}
+            $readOnly={readOnly}
+            $required
+            $tag="hide"
+            $messagePosition="hide"
+          />
         </Row>
       </section>
       <section>

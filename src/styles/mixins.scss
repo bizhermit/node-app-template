@@ -1,3 +1,5 @@
+@use "$/var";
+
 @mixin hover {
   outline: solid;
   outline-offset: 0rem;
@@ -19,6 +21,35 @@
   }
 }
 
+@mixin crossHover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+  @media (hover: none) {
+    &:active {
+      @content;
+    }
+  }
+}
+
+@mixin inputProps($customWidth: false) {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  z-index: 1;
+  resize: none;
+  outline: none;
+  @if $customWidth == false {
+    flex: 1;
+    padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
+  }
+}
+
 @mixin inputButton {
   box-sizing: border-box;
   display: flex;
@@ -31,7 +62,7 @@
   z-index: 1;
   user-select: none;
   border-radius: var(--radius);
-  transition: opacity 0.2;
+  transition: opacity #{var.$transitionTime};
 
   &[data-round="true"] {
     border-radius: 9999px;
@@ -53,6 +84,10 @@
       }
     }
   }
+}
+
+@mixin pickerShadow {
+  box-shadow: 0 .1rem .8rem 0 var(--c-shadow) !important;
 }
 
 @mixin scrollOverlay($thumbColor: var(--c-scroll), $noOverflow: false) {

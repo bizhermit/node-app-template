@@ -1,5 +1,6 @@
 @use "$/mixins";
 $width7: 14.285%;
+$pulldownTransitionTime: 0.5s;
 
 .main {
   flex-direction: column !important;
@@ -24,7 +25,7 @@ $width7: 14.285%;
       >.date,
       >.yearmonth>.label>.year,
       >.yearmonth>.label>.month {
-        &:hover {
+        @include mixins.crossHover {
           z-index: 1;
         }
 
@@ -32,7 +33,7 @@ $width7: 14.285%;
           &[data-selectable="true"] {
             cursor: pointer;
 
-            &:hover {
+            @include mixins.crossHover {
               @include mixins.hover;
               z-index: 1;
 
@@ -173,6 +174,7 @@ $width7: 14.285%;
   align-items: center;
   flex: none;
   height: calc(var(--size) * 0.8);
+  z-index: 2;
 
   &[data-reverse="true"] {
     flex-direction: row-reverse;
@@ -202,7 +204,8 @@ $width7: 14.285%;
     height: 0rem;
     width: 100%;
     overflow: hidden;
-    transition: height 0.5s;
+    transition: height #{$pulldownTransitionTime};
+    @include mixins.pickerShadow;
 
     &[data-show="true"] {
       height: 20rem;
@@ -226,8 +229,9 @@ $width7: 14.285%;
   width: calc(var(--size) * 0.8);
   cursor: pointer;
   user-select: none;
+  border-radius: var(--radius);
 
-  &:hover {
+  @include mixins.crossHover {
     @include mixins.hover;
 
     &:active {
@@ -334,7 +338,7 @@ $width7: 14.285%;
   width: 100%;
   user-select: none;
 
-  &:hover {
+  @include mixins.crossHover {
     z-index: 1;
   }
 
@@ -357,7 +361,7 @@ $width7: 14.285%;
   user-select: none;
   border-radius: var(--radius);
 
-  &:hover {
+  @include mixins.crossHover {
     @include mixins.hover;
 
     &:active {

@@ -177,6 +177,7 @@ const Page: NextPage = () => {
               color,
             };
           })}
+          $outline
         />
         <Button type="submit">submit</Button>
       </Form>

@@ -7,7 +7,7 @@ import { equals, getValue, setValue } from "@/data-items/utilities";
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null | undefined);
 
-export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide";
+export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide";
 
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
@@ -563,7 +563,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, a
   $useHidden?: boolean;
   children: ReactNode;
 }>((props, ref) => {
-  const errorNode = (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
+  const errorNode = props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
       data-mode={props.$context.messageDisplayMode}

@@ -19,7 +19,7 @@
       user-select: none;
 
       >.list {
-        &:hover {
+        @include mixins.crossHover {
           z-index: 1;
         }
 
@@ -27,7 +27,7 @@
           &[data-selectable="true"] {
             cursor: pointer;
 
-            &:hover {
+            @include mixins.crossHover {
               @include mixins.hover;
               z-index: 1;
 
@@ -121,7 +121,7 @@
   width: 100%;
   user-select: none;
 
-  &:hover {
+  @include mixins.crossHover {
     z-index: 1;
   }
 
@@ -141,7 +141,7 @@
   cursor: pointer;
   user-select: none;
 
-  &:hover {
+  @include mixins.crossHover {
     @include mixins.hover;
 
     &:active {

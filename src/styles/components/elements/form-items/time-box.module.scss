@@ -27,14 +27,7 @@
 .h,
 .m,
 .s {
-  box-sizing: border-box;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  z-index: 1;
-  resize: none;
+  @include mixins.inputProps(true);
   height: var(--size);
   width: 2.8rem;
   padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
@@ -87,7 +80,7 @@
   cursor: pointer;
   user-select: none;
 
-  &:hover {
+  @include mixins.crossHover {
     z-index: 2;
     @include mixins.hover;
 
@@ -95,6 +88,10 @@
       @include mixins.hoverActive;
     }
   }
+}
+
+.popup {
+  @include mixins.pickerShadow;
 }
 
 @include mixins.hoverAnimation;
