@@ -76,6 +76,7 @@
   overflow: hidden;
   background: transparent;
   z-index: 0;
+  border-radius: var(--radius);
   
   &:not(:disabled) {
     cursor: pointer;
