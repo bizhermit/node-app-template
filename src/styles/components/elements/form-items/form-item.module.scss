@@ -150,6 +150,7 @@ $tagMoveTransitionTime: 0.5s;
   &[data-mode="bottom-hide"] {
     padding: 0 .5rem;
     max-width: fit-content;
+    color: var(--c-danger);
 
     >.text {
       &[data-nowrap="true"] {
