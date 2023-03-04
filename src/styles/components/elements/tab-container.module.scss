@@ -1,4 +1,5 @@
 @use "$/var";
+@use "$/mixins";
 $borderWidth: 0.2rem;
 $hTransitionTime: 0.8s;
 $vTransitionTime: 0.5s;
@@ -195,7 +196,11 @@ $vTransitionTime: 0.5s;
   justify-content: stretch;
   align-items: stretch;
   flex-wrap: nowrap;
-  gap: 1rem;
+  gap: 0.8rem;
+
+  @include mixins.crossHover {
+    z-index: 2;
+  }
 }
 
 .tab {
@@ -209,8 +214,21 @@ $vTransitionTime: 0.5s;
 
   &:not([data-selected="true"]) {
     cursor: pointer;
+
+    @include mixins.crossHover {
+      &:hover {
+        @include mixins.hover;
+        z-index: 1;
+
+        &:active {
+          @include mixins.hoverActive;
+        }
+      }
+    }
   }
 }
+
+@include mixins.hoverAnimation;
 
 .body {
   box-sizing: border-box;
