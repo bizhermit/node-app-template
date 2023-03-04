@@ -15,18 +15,35 @@
 
       @include mixins.crossHover {
         z-index: 1;
+      }
 
-        >.box {
-          &::before {
-            @include mixins.hover;
-          }
-        }
-
-        &:active {
+      &:not([data-outline="true"]) {
+        @include mixins.crossHover {
           >.box {
             &::before {
-              @include mixins.hoverActive;
+              @include mixins.hover;
             }
+          }
+
+          &:active {
+            >.box {
+              &::before {
+                @include mixins.hoverActive;
+              }
+            }
+          }
+        }
+      }
+
+      &[data-outline="true"] {
+        border: 0.15rem solid var(--c-border);
+        border-radius: 9999px;
+
+        @include mixins.crossHover {
+          @include mixins.hover;
+
+          &:active {
+            @include mixins.hoverActive;
           }
         }
       }
@@ -102,6 +119,10 @@
         padding-right: 1rem;
       }
     }
+  }
+
+  &[data-outline="true"] {
+    gap: 0.8rem;
   }
 }
 
@@ -230,5 +251,6 @@
   align-items: center;
   height: 100%;
   flex: 1;
-  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime};
+  transition: background-color #{var.$transitionTime},
+  color #{var.$transitionTime};
 }
