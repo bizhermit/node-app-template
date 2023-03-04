@@ -19,6 +19,7 @@ export type RadioButtonsProps<
   $outline?: boolean;
   $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
+  $allowNull?: boolean;
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
@@ -33,8 +34,9 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
 >(p: RadioButtonsProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem }) => {
+    under: ({ dataItem, method }) => {
       return {
+        $required: method === "get" ? undefined : dataItem.required,
         $source: dataItem.source as LoadableArray<S>,
       };
     },
@@ -53,7 +55,6 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
   });
 
   const ctx = useFormItemContext(form, props, {
-    preventRequiredValidation: true,
     generateChangeCallbackData: (a, b) => {
       return {
         afterData: source.find(item => equals(item[vdn], a)),
@@ -150,6 +151,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
   }, [source]);
 
   useEffect(() => {
+    if (props.$allowNull) return;
     if (selectedItem == null && source.length > 0) {
       ctx.change(source[0][vdn]);
       if (!loading && selectedItem == null && source.length > 0) {
@@ -160,7 +162,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
         ctx.change(target[vdn]);
       }
     }
-  }, [selectedItem, source]);
+  }, [selectedItem, source, props.$allowNull]);
 
   return (
     <FormItemWrap
