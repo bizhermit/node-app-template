@@ -2,6 +2,7 @@ import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, 
 import Row from "@/components/elements/row";
 import Text from "@/components/elements/text";
 import { NextPage } from "next";
+import { BsClock } from "react-icons/bs";
 
 const Page: NextPage = () => {
   return (

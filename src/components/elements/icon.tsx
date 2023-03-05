@@ -13,9 +13,9 @@ const svgAttrs = (props: IconProps) => {
     if (typeof props.$size === "number") return props.$size;
     switch (props.$size) {
       case "xs":
-        return 8;
+        return 10;
       case "s":
-        return 12;
+        return 13;
       case "l":
         return 20;
       case "xl":
@@ -29,7 +29,7 @@ const svgAttrs = (props: IconProps) => {
     width: size,
     className: joinClassNames("icon", props.className),
     style: props.style,
-    viewBox: "viewBox 0 0 20 20",
+    viewBox: "0 0 20 20",
     xmlns: "http://www.w3.org/2000/svg",
   };
 };
@@ -71,8 +71,7 @@ export const MenuIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 
 export const LeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <line x1="70%" x2="30%" y1="15%" y2="50%" />
-    <line x2="70%" x1="30%" y2="85%" y1="50%" />
+    <path d="M14,2 L5,10 14,18" fill="none" />
   </svg>
 ));
 (LeftIcon as any).name = "LeftIcon";
@@ -80,10 +79,7 @@ export const LeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleLeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <g id="dblLeft">
-        <line x1="70%" x2="30%" y1="15%" y2="50%" />
-        <line x2="70%" x1="30%" y2="85%" y1="50%" />
-      </g>
+      <path id="dblLeft" d="M14,2 L5,10 14,18" fill="none" />
     </defs>
     <use x="-12%" href="#dblLeft" />
     <use x="12%" href="#dblLeft" />
@@ -93,8 +89,7 @@ export const DoubleLeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) 
 
 export const RightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <line x1="30%" x2="70%" y1="15%" y2="50%" />
-    <line x2="30%" x1="70%" y2="85%" y1="50%" />
+    <path d="M6,2 L15,10 6,18" fill="none" />
   </svg>
 ));
 (RightIcon as any).name = "RightIcon";
@@ -102,10 +97,7 @@ export const RightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleRightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <g id="dblRight">
-        <line x1="30%" x2="70%" y1="15%" y2="50%" />
-        <line x2="30%" x1="70%" y2="85%" y1="50%" />
-      </g>
+      <path id="dblRight" d="M6,2 L15,10 6,18" fill="none" />
     </defs>
     <use x="-12%" href="#dblRight" />
     <use x="12%" href="#dblRight" />
@@ -115,8 +107,7 @@ export const DoubleRightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref)
 
 export const UpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <line y1="30%" y2="70%" x1="50%" x2="15%" />
-    <line y2="30%" y1="70%" x2="50%" x1="85%" />
+    <path d="M2,14 L10,5 18,14" fill="none" />
   </svg>
 ));
 (UpIcon as any).name = "UpIcon";
@@ -124,10 +115,7 @@ export const UpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleUpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <g id="dblUp">
-        <line y1="30%" y2="70%" x1="50%" x2="15%" />
-        <line y2="30%" y1="70%" x2="50%" x1="85%" />
-      </g>
+      <path id="dblUp" d="M2,14 L10,5 18,14" fill="none" />
     </defs>
     <use y="-12%" href="#dblUp" />
     <use y="12%" href="#dblUp" />
@@ -137,8 +125,7 @@ export const DoubleUpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) =>
 
 export const DownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <line y1="70%" y2="30%" x1="50%" x2="15%" />
-    <line y2="70%" y1="30%" x2="50%" x1="85%" />
+    <path d="M2,6 L10,15 18,6" fill="none" />
   </svg>
 ));
 (DownIcon as any).name = "DownIcon";
@@ -146,13 +133,25 @@ export const DownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleDownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <g id="dblDown">
-        <line y1="70%" y2="30%" x1="50%" x2="15%" />
-        <line y2="70%" y1="30%" x2="50%" x1="85%" />
-      </g>
+      <path id="dblDown" d="M2,6 L10,15 18,6" fill="none" />
     </defs>
     <use y="-12%" href="#dblDown" />
     <use y="12%" href="#dblDown" />
   </svg>
 ));
 (DoubleDownIcon as any).name = "DoubleDownIcon";
+
+// calendar
+// today
+
+// clock
+
+// list
+
+// save
+
+// discard
+
+// redo
+
+// clear all
