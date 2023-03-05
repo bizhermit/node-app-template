@@ -1,7 +1,7 @@
 import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/slide-container.module.scss";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 
 type SlideState = "before" | "previous" | "current" | "next" | "after";
 export type SlideDirection = "horizontal" | "horizontal-reverse" | "vertical" | "vertical-reverse";
@@ -129,7 +129,7 @@ const Breadcrumb: FC<{
       data-state={state}
       onTransitionEnd={transitionEnd}
     >
-      <LabelText>{props.children}</LabelText>
+      <Text>{props.children}</Text>
     </div>
   );
 };

@@ -300,7 +300,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
       }
       {props.$resize && <Resizer direction="x" />}
       <Popup
-        className="es-4 c-input r-2"
+        className={Style.popup}
         $show={showPicker && ctx.editable && !loading}
         $onToggle={setShowPicker}
         $anchor="parent"

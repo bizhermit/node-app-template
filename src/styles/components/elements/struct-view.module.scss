@@ -1,3 +1,4 @@
+@use "$/mixins";
 $space: 0.3rem;
 
 .table {
@@ -50,7 +51,7 @@ $space: 0.3rem;
     }
   }
 
-  &:hover {
+  @include mixins.crossHover {
     >.bcell {
       background: var(--c-selected);
       color: var(--c-selected_);

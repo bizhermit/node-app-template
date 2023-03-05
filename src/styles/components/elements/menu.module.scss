@@ -1,3 +1,4 @@
+@use "$/var";
 @use "$/mixins";
 
 .wrap {
@@ -19,7 +20,7 @@
   align-items: stretch;
   z-index: 0;
 
-  &:hover {
+  @include mixins.crossHover {
     z-index: 1;
   }
 
@@ -46,7 +47,7 @@
   flex: 1 0 auto;
   z-index: 0;
   
-  &:hover {
+  @include mixins.crossHover {
     z-index: 1;
   }
 }
@@ -61,12 +62,12 @@
   height: var(--nav-size);
   z-index: 0;
   overflow: visible;
-  transition: padding-left 0.2s;
+  transition: padding-left #{var.$transitionTime};
 
   &[data-selectable="true"] {
     cursor: pointer;
 
-    &:hover {
+    @include mixins.crossHover {
       @include mixins.hover;
       z-index: 1;
 

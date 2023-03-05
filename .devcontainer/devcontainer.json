@@ -8,7 +8,9 @@
   "remoteEnv": {
     "PORT": "3003"
   },
-  "forwardPorts": [3003],
+  "forwardPorts": [
+    3003
+  ],
   "customizations": {
     "vscode": {
       "extensions": [

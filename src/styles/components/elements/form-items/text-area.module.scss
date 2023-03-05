@@ -1,15 +1,8 @@
+@use "$/mixins";
+
 .input {
-  box-sizing: border-box;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  z-index: 1;
+  @include mixins.inputProps;
   min-height: var(--size);
   min-width: var(--size);
-  flex: 1;
-  padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
-  resize: none;
   align-self: stretch;
 }

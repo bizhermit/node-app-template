@@ -149,7 +149,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
       }
       const func = () => {
         setTimeout(() => {
-          if (!alive) {
+          if (!alive || props.elementRef.current == null) {
             end();
             return;
           }
@@ -274,7 +274,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
 
       const func = () => {
         setTimeout(() => {
-          if (!alive) {
+          if (!alive || props.elementRef.current == null) {
             end();
             return;
           }

@@ -1,7 +1,7 @@
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes } from "react";
 import Style from "$/components/elements/badge.module.scss";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 
 type OmitAttributes = "color";
 export type BadgeProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
@@ -17,7 +17,7 @@ const Badge = forwardRef<HTMLDivElement, BadgeProps>((props, ref) => {
       data-size={props.$size || "m"}
       data-pos={props.$position || "right-top"}
     >
-      <LabelText>{props.children}</LabelText>
+      <Text>{props.children}</Text>
     </div>
   );
 });

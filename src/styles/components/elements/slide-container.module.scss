@@ -1,4 +1,6 @@
 @use "$/mixins";
+$hTransitionTime: 0.8s;
+$vTransitionTime: 0.5s;
 
 .wrap {
   box-sizing: border-box;
@@ -86,7 +88,7 @@
     >.body {
       >.content {
         top: 0;
-        transition: left 0.8s, opacity 0.8s;
+        transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -117,7 +119,7 @@
     >.body {
       >.content {
         top: 0;
-        transition: left 0.8s, opacity 0.8s;
+        transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -148,7 +150,7 @@
     >.body {
       >.content {
         left: 0;
-        transition: top 0.5s, opacity 0.5s;
+        transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -179,7 +181,7 @@
     >.body {
       >.content {
         left: 0;
-        transition: top 0.5s, opacity 0.5s;
+        transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -231,7 +233,7 @@
   overflow: hidden;
   flex: none;
   opacity: 0;
-  transition: opacity 0.5s;
+  transition: opacity #{$vTransitionTime};
 
   &[data-state="before"],
   &[data-state="previous"],

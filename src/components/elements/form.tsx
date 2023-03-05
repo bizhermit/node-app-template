@@ -7,7 +7,7 @@ import { equals, getValue, setValue } from "@/data-items/utilities";
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null | undefined);
 
-export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide";
+export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide";
 
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
@@ -66,7 +66,7 @@ type FormContextProps = {
   bind?: Struct;
   disabled?: boolean;
   readOnly?: boolean;
-  method: string;
+  method?: string;
   errors: Struct;
   setErrors: Dispatch<SetStateAction<Struct>>;
   exErrors: Struct;
@@ -79,13 +79,10 @@ type FormContextProps = {
   messageWrap?: boolean;
 };
 
-const defaultMethod = "get";
-
 const FormContext = createContext<FormContextProps>({
   bind: undefined,
   disabled: false,
   readOnly: false,
-  method: defaultMethod,
   errors: {},
   setErrors: () => { },
   exErrors: {},
@@ -125,7 +122,7 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
 const Form = forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
-  const method = props.method ?? defaultMethod;
+  const method = props.method ?? "get";
 
   const bind = useMemo(() => {
     if (!props.$bind || props.$bind === true) return {};
@@ -320,8 +317,8 @@ export const useForm = () => {
 };
 
 export const useDataItemMergedProps = <T, D extends DataItem | undefined, P extends FormItemProps<T, D, any, any>>(form: ReturnType<typeof useForm>, props: P, merge?: {
-  under?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method: string; }) => Partial<P>;
-  over?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method: string; }) => Partial<P>;
+  under?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
+  over?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
 }) => {
   const p = {
     ...useMemo(() => {
@@ -563,7 +560,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, a
   $useHidden?: boolean;
   children: ReactNode;
 }>((props, ref) => {
-  const errorNode = (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
+  const errorNode = props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
       data-mode={props.$context.messageDisplayMode}

@@ -6,7 +6,7 @@ $circleWidth: 1.2rem;
 .wrap {
   box-sizing: border-box;
   position: absolute;
-  z-index: 999;
+  z-index: 998;
   overflow: hidden;
   outline: none;
 
@@ -62,7 +62,7 @@ $circleWidth: 1.2rem;
   left: 0 !important;
   height: 100% !important;
   width: 100% !important;
-  z-index: 998;
+  z-index: 999;
   overflow: hidden;
 
   &[data-fixed="true"] {

@@ -129,6 +129,9 @@ const Page: NextPage = () => {
         $color="danger"
         $value={value}
         $onChange={v => setValue(v)}
+        $required
+        $allowNull
+        $messagePosition="bottom"
         $source={[{
           value: 0,
           label: <VscAccount />
@@ -147,6 +150,9 @@ const Page: NextPage = () => {
         $bind={bind}
         $disabled={disabled}
         $readOnly={readOnly}
+        $required
+        $allowNull
+        $messagePosition="bottom"
         $source={ArrayUtils.generateArray(5, idx => {
           return {
             value: idx,
@@ -177,6 +183,7 @@ const Page: NextPage = () => {
               color,
             };
           })}
+          $outline
         />
         <Button type="submit">submit</Button>
       </Form>
