@@ -6,7 +6,7 @@ import useToggleAnimation from "@/hooks/toggle-animation";
 import { useRouter } from "next/router";
 import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 
 type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick" | "onKeyDown">;
 
@@ -180,11 +180,11 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     >
       {props.icon &&
         <div className={Style.icon}>
-          <LabelText>{props.icon}</LabelText>
+          <Text>{props.icon}</Text>
         </div>
       }
       <div className={Style.node}>
-        <LabelText className={Style.label}>{props.label}</LabelText>
+        <Text className={Style.label}>{props.label}</Text>
       </div>
       <div className={Style.toggle}>
         {props.items == null || props.items.length === 0 ? <></> :

@@ -1,7 +1,7 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import Row from "@/components/elements/row";
 import { useLocalState, useSessionState } from "@/hooks/storage";
 import type { NextPage } from "next";
@@ -33,9 +33,9 @@ const Page: NextPage = () => {
             local[1]((cur) => cur + 1);
           }}
         >
-          <LabelText>
+          <Text>
             count up {session[0]}/{local[0]}
-          </LabelText>
+          </Text>
         </Button>
         <Button
           $onClick={() => {

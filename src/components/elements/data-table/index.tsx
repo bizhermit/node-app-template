@@ -3,7 +3,7 @@ import Style from "$/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 import NextLink from "@/components/elements/link";
 import useLoadableArray, { LoadableArray } from "@/hooks/loadable-array";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import Resizer from "@/components/elements/resizer";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
@@ -114,7 +114,7 @@ interface DataTableFC extends FunctionComponent<DataTableProps> {
 }
 
 const DefaultEmptyText: FC = () => {
-  return <LabelText>データが存在しません。</LabelText>;
+  return <Text>データが存在しません。</Text>;
 };
 
 const defaultColumnWidth = "10rem";
@@ -188,7 +188,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   width: `${calcRowNumberColumnWidth(0)}rem`,
   align: "center",
   resize: false,
-  body: props => <LabelText>{(props.index + props.pageFirstIndex) + 1}</LabelText>,
+  body: props => <Text>{(props.index + props.pageFirstIndex) + 1}</Text>,
 } as const;
 
 const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {

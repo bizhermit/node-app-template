@@ -1,7 +1,7 @@
 import { forwardRef, type HTMLAttributes } from "react";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
 import Style from "$/components/elements/divider.module.scss";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 
 type OmitAttributes = "color";
 export type DividerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
@@ -32,7 +32,7 @@ const Divider = forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
       {props.children &&
         <>
           <div className={Style.children}>
-            <LabelText className={Style.text}>{props.children}</LabelText>
+            <Text className={Style.text}>{props.children}</Text>
           </div>
           <div
             className={`${Style.border} ${colorClassName}`}

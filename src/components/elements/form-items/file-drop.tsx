@@ -1,7 +1,7 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
 
@@ -178,9 +178,9 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
         tabIndex={props.tabIndex ?? 0}
         data-dialog={fileDialog}
       >
-        <LabelText>
+        <Text>
           {props.children}
-        </LabelText>
+        </Text>
       </div>
       {ctx.editable && props.$hideClearButton !== true &&
         <div

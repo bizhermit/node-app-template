@@ -6,7 +6,7 @@ import { VscCalendar, VscChevronLeft, VscChevronRight, VscClose, VscListFlat, Vs
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import { DateData, DateInput } from "@/data-items/date";
 
 type DatePickerMode = "calendar" | "list";
@@ -822,7 +822,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
             className={Style.negative}
             onClick={props.$onClickNegative}
           >
-            <LabelText>{props.$negativeText ?? "キャンセル"}</LabelText>
+            <Text>{props.$negativeText ?? "キャンセル"}</Text>
           </div>
         }
         {props.$onClickPositive != null &&
@@ -832,7 +832,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
               props.$onClickPositive?.(ctx.value as never);
             }}
           >
-            <LabelText>{props.$positiveText ?? "OK"}</LabelText>
+            <Text>{props.$positiveText ?? "OK"}</Text>
           </div>
         }
         {type !== "year" && !multiple && ctx.editable &&

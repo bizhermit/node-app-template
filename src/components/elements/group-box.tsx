@@ -1,4 +1,4 @@
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import { attributesWithoutChildren, joinClassNames } from "@/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import Style from "$/components/elements/group-box.module.scss";
@@ -21,9 +21,9 @@ const GroupBox = forwardRef<HTMLDivElement, GroupBoxProps>((props, ref) => {
       {props.$caption &&
         <div className={`${Style.caption} fgc-${props.$color || "base"}`}>
           <div className={`${Style.prev} ${borderColorClassName}`} />
-          <LabelText>
+          <Text>
             {props.$caption}
-          </LabelText>
+          </Text>
           <div className={`${Style.next} ${borderColorClassName}`} />
         </div>
       }

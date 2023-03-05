@@ -3,7 +3,7 @@ import Time from "@bizhermit/time";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import { VscClose } from "react-icons/vsc";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import { TimeData, TimeInput } from "@/data-items/time";
 
 export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
@@ -390,7 +390,7 @@ const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
               props.$onClickNegative?.();
             }}
           >
-            <LabelText>{props.$negativeText ?? "キャンセル"}</LabelText>
+            <Text>{props.$negativeText ?? "キャンセル"}</Text>
           </div>
         }
         {props.$onClickPositive != null &&
@@ -401,7 +401,7 @@ const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
               props.$onClickPositive?.(ctx.value as never);
             }}
           >
-            <LabelText>{props.$positiveText ?? "OK"}</LabelText>
+            <Text>{props.$positiveText ?? "OK"}</Text>
           </div>
         }
       </div>

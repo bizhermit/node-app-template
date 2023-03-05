@@ -3,7 +3,7 @@ import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import Resizer from "@/components/elements/resizer";
 
 type ReactNodeArray = Array<ReactNode>;
@@ -119,9 +119,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
             className={Style.content}
             data-align={props.$headerAlign || "start"}
           >
-            <LabelText className={Style.text}>
+            <Text className={Style.text}>
               {(props.children as ReactNodeArray)[childCtx.header]}
-            </LabelText>
+            </Text>
           </div>
           {toggleTriger.header && (iconPosCtx.header === "end" || iconPosCtx.header === "both") && iconNode}
         </div>
@@ -150,9 +150,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
             className={Style.content}
             data-align={props.$footerAlign || "start"}
           >
-            <LabelText className={Style.text}>
+            <Text className={Style.text}>
               {(props.children as ReactNodeArray)[childCtx.footer]}
-            </LabelText>
+            </Text>
           </div>
           {toggleTriger.footer && (iconPosCtx.footer === "end" || iconPosCtx.footer === "both") && iconNode}
         </div>
