@@ -2,13 +2,12 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-box.module.scss";
-import { VscClose } from "react-icons/vsc";
-import { BsClock } from "react-icons/bs";
 import Time from "@bizhermit/time";
 import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
 import { TimeData, TimeInput } from "@/data-items/time";
 import { equals } from "@/data-items/utilities";
+import { ClockIcon, CrossIcon } from "@/components/elements/icon";
 
 type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   $disallowInput?: boolean;
@@ -427,15 +426,17 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             <div
               className={Style.picker}
               onClick={picker}
+              data-disabled={showPicker}
             >
-              <BsClock />
+              <ClockIcon />
             </div>
           }
           <div
             className={Style.clear}
             onClick={clear}
+            data-disabled={!hasData}
           >
-            <VscClose />
+            <CrossIcon />
           </div>
         </>
       }

@@ -18,7 +18,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
       <MessageProvider>
-        <IconContext.Provider value={{ className: "icon", size: "0" }}>
+        <IconContext.Provider value={{ className: "react-icon icon", size: "0" }}>
           <LoadingProvider $appearance="circle">
             <NavigationContainer
               className="w-100 h-100"
@@ -74,6 +74,11 @@ const Navigation: FC = () => {
           icon: <TbComponents />,
           label: "Elements",
           items: [{
+            key: "icon",
+            label: "Icon",
+            icon: "I",
+            pathname: "/sandbox/elements/icons"
+          }, {
             key: "form",
             label: "Form",
             icon: "F",

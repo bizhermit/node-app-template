@@ -2,9 +2,9 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import Time from "@bizhermit/time";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
-import { VscClose } from "react-icons/vsc";
 import Text from "@/components/elements/text";
 import { TimeData, TimeInput } from "@/data-items/time";
+import { CrossIcon } from "@/components/elements/icon";
 
 export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   $onClickPositive?: (value: Nullable<T>) => void;
@@ -379,7 +379,7 @@ const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
             className={Style.clear}
             onClick={clear}
           >
-            <VscClose />
+            <CrossIcon />
           </div>
         }
         {props.$onClickNegative != null &&

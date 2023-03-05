@@ -2,12 +2,12 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
-import { VscClose, VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { NumberData } from "@/data-items/number";
+import { CrossIcon, DownIcon, UpIcon } from "@/components/elements/icon";
 
 export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
   $max?: number;
@@ -272,7 +272,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
           onClick={clear}
           data-disabled={!hasData}
         >
-          <VscClose />
+          <CrossIcon />
         </div>
       }
       {ctx.editable && !props.$hideButtons &&
@@ -283,13 +283,15 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
             className={Style.button}
             onMouseDown={e => mousedown(true, e.ctrlKey)}
           >
-            <VscTriangleUp />
+            <UpIcon $size="xs" />
+            {/* <VscTriangleUp /> */}
           </div>
           <div
             className={Style.button}
             onMouseDown={e => mousedown(false, e.ctrlKey)}
           >
-            <VscTriangleDown />
+            <DownIcon $size="xs" />
+            {/* <VscTriangleDown /> */}
           </div>
         </div>
       }

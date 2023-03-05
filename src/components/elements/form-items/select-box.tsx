@@ -1,7 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import useLoadableArray, { type LoadableArray } from "@/hooks/loadable-array";
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { VscChevronDown, VscClose } from "react-icons/vsc";
 import Style from "$/components/elements/form-items/select-box.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import Resizer from "@/components/elements/resizer";
@@ -9,6 +8,7 @@ import Popup from "@/components/elements/popup";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { equals } from "@/data-items/utilities";
+import { CrossIcon, DownIcon } from "@/components/elements/icon";
 
 export type SelectBoxProps<
   T extends string | number = string | number,
@@ -283,7 +283,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
               onClick={clear}
               data-disabled={!hasData}
             >
-              <VscClose />
+              <CrossIcon />
             </div>
           }
           <div
@@ -294,7 +294,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
             }}
             data-disabled={showPicker}
           >
-            <VscChevronDown />
+            <DownIcon />
           </div>
         </>
       }

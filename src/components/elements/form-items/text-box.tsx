@@ -1,11 +1,11 @@
 import Style from "$/components/elements/form-items/text-box.module.scss";
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { CrossIcon } from "@/components/elements/icon";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { StringData } from "@/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
-import { VscClose } from "react-icons/vsc";
 
 export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
   $type?: "email" | "password" | "search" | "tel" | "text" | "url";
@@ -181,7 +181,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
           data-disabled={!hasData}
           data-round={props.$round}
         >
-          <VscClose />
+          <CrossIcon />
         </div>
       }
       {props.$resize && <Resizer direction="x" />}

@@ -8,9 +8,8 @@ import Resizer from "@/components/elements/resizer";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import Button from "@/components/elements/button";
-import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
-import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { equals, getValue } from "@/data-items/utilities";
+import { DoubleLeftIcon, DoubleRightIcon, LeftIcon, RightIcon } from "@/components/elements/icon";
 
 export type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
@@ -585,7 +584,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           $outline
           $color={color}
           $onClick={() => clickPage(0)}
-          $icon={<AiOutlineDoubleLeft />}
+          $icon={<DoubleLeftIcon />}
         />
         <Button
           disabled={index <= 0}
@@ -593,7 +592,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           $outline
           $color={color}
           $onClick={() => clickPage(index - 1)}
-          $icon={<MdOutlineKeyboardArrowLeft />}
+          $icon={<LeftIcon />}
         />
         <div className={Style.number}>
           <span>{index + 1}</span>
@@ -606,7 +605,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           $outline
           $color={color}
           $onClick={() => clickPage(index + 1)}
-          $icon={<MdOutlineKeyboardArrowRight />}
+          $icon={<RightIcon />}
         />
         <Button
           disabled={index >= lastIndex}
@@ -614,7 +613,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           $outline
           $color={color}
           $onClick={() => clickPage(lastIndex)}
-          $icon={<AiOutlineDoubleRight />}
+          $icon={<DoubleRightIcon />}
         />
       </>
     );

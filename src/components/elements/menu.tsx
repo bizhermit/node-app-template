@@ -1,12 +1,12 @@
 import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
-import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { useRouter } from "next/router";
 import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
 import Text from "@/components/elements/text";
+import { MinusIcon, PlusIcon } from "@/components/elements/icon";
 
 type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick" | "onKeyDown">;
 
@@ -189,8 +189,8 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       <div className={Style.toggle}>
         {props.items == null || props.items.length === 0 ? <></> :
           showItems ?
-            props.openedIcon ?? props.$defaultOpenedIcon ?? <VscChromeMinimize /> :
-            props.closedIcon ?? props.$defaultClosedIcon ?? <VscAdd />
+            props.openedIcon ?? props.$defaultOpenedIcon ?? <MinusIcon /> :
+            props.closedIcon ?? props.$defaultClosedIcon ?? <PlusIcon />
         }
       </div>
     </div>

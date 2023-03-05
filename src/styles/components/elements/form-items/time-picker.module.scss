@@ -133,21 +133,7 @@
 .clear,
 .positive,
 .negative {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-
-  @include mixins.crossHover {
-    @include mixins.hover;
-
-    &:active {
-      @include mixins.hoverActive;
-    }
-  }
+  @include mixins.inputButton(true);
 }
 
 @include mixins.hoverAnimation;
