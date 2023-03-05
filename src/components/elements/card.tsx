@@ -2,9 +2,9 @@ import { forwardRef, type HTMLAttributes, type ReactNode, useEffect, useRef, use
 import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
-import { VscAdd, VscChromeMinimize } from "react-icons/vsc";
 import Text from "@/components/elements/text";
 import Resizer from "@/components/elements/resizer";
+import { MinusIcon, PlusIcon } from "@/components/elements/icon";
 
 type ReactNodeArray = Array<ReactNode>;
 type IconPosition = "start" | "end" | "both" | "none";
@@ -85,8 +85,8 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   const iconNode = (
     <div className={Style.icon}>
       {opened ?
-        props.$openedIcon ?? <VscChromeMinimize /> :
-        props.$closedIcon ?? <VscAdd />
+        props.$openedIcon ?? <MinusIcon /> :
+        props.$closedIcon ?? <PlusIcon />
       }
     </div>
   );

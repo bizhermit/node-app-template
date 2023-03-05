@@ -2,8 +2,9 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "@/components/utilities/attributes";
-import { VscClearAll, VscClose, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
+import { VscClearAll, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { CrossIcon } from "@/components/elements/icon";
 
 export type ElectronicSignatureProps<
   D extends DataItem_String | DataItem_File | undefined = undefined
@@ -315,7 +316,7 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
               clearCanvas();
             }}
           >
-            <VscClose />
+            <CrossIcon />
           </Button>
           <Button
             disabled={!canClearHist}

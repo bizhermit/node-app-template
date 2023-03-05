@@ -2,8 +2,8 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-drop.module.scss";
 import Text from "@/components/elements/text";
-import { VscClose } from "react-icons/vsc";
 import { FileData } from "@/data-items/file";
+import { CrossIcon } from "@/components/elements/icon";
 
 type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & {
   $typeof?: FileValueType;
@@ -187,7 +187,7 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
           className={Style.clear}
           onClick={clear}
         >
-          <VscClose />
+          <CrossIcon />
         </div>
       }
     </FormItemWrap >

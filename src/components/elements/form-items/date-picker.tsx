@@ -2,12 +2,13 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { type ForwardedRef, forwardRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { VscCalendar, VscChevronLeft, VscChevronRight, VscClose, VscListFlat, VscRecord } from "react-icons/vsc";
+import { VscCalendar, VscChevronLeft, VscChevronRight, VscListFlat, VscRecord } from "react-icons/vsc";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import Text from "@/components/elements/text";
 import { DateData, DateInput } from "@/data-items/date";
+import { CrossIcon } from "@/components/elements/icon";
 
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
@@ -807,7 +808,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
               className={Style.clear}
               onClick={clear}
             >
-              <VscClose />
+              <CrossIcon />
             </div>
             <div
               className={Style.today}

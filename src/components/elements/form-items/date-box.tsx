@@ -5,10 +5,11 @@ import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElemen
 import Style from "$/components/elements/form-items/date-box.module.scss";
 import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
-import { VscCalendar, VscClose } from "react-icons/vsc";
+import { VscCalendar } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { DateData, DateInput } from "@/data-items/date";
 import { equals } from "@/data-items/utilities";
+import { CrossIcon } from "@/components/elements/icon";
 
 type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
   $disallowInput?: boolean;
@@ -433,7 +434,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
             onClick={clear}
             data-disabled={!hasData}
           >
-            <VscClose />
+            <CrossIcon />
           </div>
         </>
       }
