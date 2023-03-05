@@ -234,6 +234,11 @@ const Navigation: FC = () => {
             icon: "B",
             pathname: "/sandbox/elements/badge",
           }, {
+            key: "label",
+            label: "Label",
+            icon: "L",
+            pathname: "/sandbox/elements/label"
+          }, {
             key: "group-box",
             label: "GroupBox",
             icon: "G",

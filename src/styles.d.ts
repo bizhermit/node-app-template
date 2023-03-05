@@ -30,4 +30,9 @@ type Color = SystemColor
   | "pretty"
   ;
 
-type Size = "xs" | "s" | "m" | "l" | "xl";
+type Size = "xs"
+  | "s"
+  | "m"
+  | "l"
+  | "xl"
+  ;

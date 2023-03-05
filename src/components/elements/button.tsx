@@ -2,7 +2,7 @@ import Style from "$/components/elements/button.module.scss";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import { useForm } from "@/components/elements/form";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 
 export type ButtonOptions = {
   $size?: Size;
@@ -83,7 +83,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
         {props.$icon != null && props.$iconPosition !== "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }
-        <LabelText className={Style.label} data-fill={props.$fillLabel}>{props.children}</LabelText>
+        <Text className={Style.label} data-fill={props.$fillLabel}>{props.children}</Text>
         {props.$icon != null && props.$iconPosition === "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }

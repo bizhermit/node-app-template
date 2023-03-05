@@ -2,7 +2,7 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, Form
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo } from "react";
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { type LoadableArray } from "@/hooks/loadable-array";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import { joinClassNames, pressPositiveKey } from "@/components/utilities/attributes";
 import { equals } from "@/data-items/utilities";
 
@@ -138,7 +138,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
               }`
             }
           >
-            <LabelText>{l}</LabelText>
+            <Text>{l}</Text>
           </div>
         </div>
       );

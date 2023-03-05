@@ -1,5 +1,5 @@
 import Style from "$/components/elements/stepper.module.scss";
-import LabelText from "@/components/elements/label-text";
+import Text from "@/components/elements/text";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes, type ReactNode, useImperativeHandle, useRef } from "react";
 
@@ -64,7 +64,7 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
             <div
               className={`${Style.label}${appearance === "arrow" ? ` fgc-${color}_r` : ""}`}
             >
-              <LabelText>{step}</LabelText>
+              <Text>{step}</Text>
             </div>
             {appearance === "arrow" ?
               <div className={`${Style.arrow} c-${color}`} /> :
