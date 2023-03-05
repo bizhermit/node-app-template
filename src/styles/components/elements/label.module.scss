@@ -1,0 +1,47 @@
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  box-sizing: border-box;
+  border-radius: 9999px;  
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+
+  &:empty {
+    visibility: hidden;
+  }
+
+  &[data-size="xs"] {
+    font-size: 1rem;
+    padding: 0 .6rem;
+  }
+
+  &[data-size="s"] {
+    font-size: 1.3rem;
+    padding: 0 .9rem;
+  }
+
+  &[data-size="m"],
+  &:not([data-size]) {
+    font-size: 1.6rem;
+    padding: 0 1.3rem;
+  }
+
+  &[data-size="l"] {
+    font-size: 1.9rem;
+    padding: 0 1.6rem;
+  }
+
+  &[data-size="xl"] {
+    font-size: 2.2rem;
+    padding: 0 1.9rem;
+  }
+}
