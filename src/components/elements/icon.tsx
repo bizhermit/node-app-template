@@ -178,7 +178,13 @@ export const ListIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 ));
 (ListIcon as any).name = "ListIcon";
 
-// save
+export const SaveIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,2H15L18,5 18,18 2,18Z M5,2v4h8v-4z" fill="none" />
+    <rect x="5" y="10" width="10" height="7" fill="none" />
+  </svg>
+));
+(SaveIcon as any).name = "SaveIcon";
 
 // discard
 

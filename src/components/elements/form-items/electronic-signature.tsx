@@ -4,7 +4,7 @@ import Style from "$/components/elements/form-items/electronic-signature.module.
 import { releaseCursor, setCursor } from "@/components/utilities/attributes";
 import { VscClearAll, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { CrossIcon } from "@/components/elements/icon";
+import { CrossIcon, SaveIcon } from "@/components/elements/icon";
 
 export type ElectronicSignatureProps<
   D extends DataItem_String | DataItem_File | undefined = undefined
@@ -291,7 +291,7 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
                 save();
               }}
             >
-              <VscSave />
+              <SaveIcon />
             </Button>
           }
           <Button

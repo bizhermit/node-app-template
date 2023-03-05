@@ -1,19 +1,27 @@
 import Button from "@/components/elements/button";
-import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon } from "@/components/elements/icon";
+import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import Text from "@/components/elements/text";
 import { NextPage } from "next";
-import { VscCalendar } from "react-icons/vsc";
+import { VscClearAll, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-start p-2 w-100 flex-1_0_0 fgc-danger bgc-pure gap-1">
+    <div
+      className="flex-start p-2 w-100 flex-1_0_0 fgc-danger bgc-pure gap-1"
+      style={{
+        "flexWrap": "wrap",
+      }}
+    >
       <Row className="gap-2">
         <Button $icon={<PlusIcon />}>Button</Button>
         <Button $icon={<CrossIcon />} $outline />
         <Button $icon={<CrossIcon />} $outline $size="s" />
       </Row>
-      <VscCalendar />
+      <VscClearAll />
+      <VscDiscard />
+      <VscRedo />
+      <VscSave />
       {[
         PlusIcon,
         MinusIcon,
@@ -31,6 +39,7 @@ const Page: NextPage = () => {
         TodayIcon,
         ClockIcon,
         ListIcon,
+        SaveIcon,
       ].map(Component => {
         const name = Component.name;
         return (
