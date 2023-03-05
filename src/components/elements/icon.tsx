@@ -148,9 +148,11 @@ export const CalendarIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) =>
 ));
 (CalendarIcon as any).name = "CalendarIcon";
 
+// M11,11l2,0 0,2 -2,0Z
 export const TodayIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <path d="M2,4H18V18H2Z M5,2V5Z M15,2V5Z M2,7H18Z" fill="none" />
+    <rect x="11" y="11" width="2" height="2" strokeLinejoin="miter" />
   </svg>
 ));
 (TodayIcon as any).name = "TodayIcon";
