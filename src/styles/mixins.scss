@@ -27,6 +27,7 @@
       @content;
     }
   }
+
   @media (hover: none) {
     &:active {
       @content;
@@ -44,25 +45,29 @@
   z-index: 1;
   resize: none;
   outline: none;
-  @if $customWidth == false {
+
+  @if $customWidth ==false {
     flex: 1;
     padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
   }
 }
 
-@mixin inputButton {
+@mixin inputButton($customSize: false) {
   box-sizing: border-box;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  width: calc(var(--size) * 0.9);
-  height: var(--size);
   flex: none;
   z-index: 1;
   user-select: none;
   border-radius: var(--radius);
   transition: opacity #{var.$transitionTime};
+
+  @if $customSize ==false {
+    height: var(--size);
+    width: calc(var(--size) * 0.9);
+  }
 
   &[data-round="true"] {
     border-radius: 9999px;
@@ -73,12 +78,12 @@
     cursor: inherit;
   }
 
-  &[data-disabled="false"] {
+  &:not([data-disabled="true"]) {
     cursor: pointer;
-    
-    &:hover {
+
+    @include crossHover {
       @include hover;
-  
+
       &:active {
         @include hoverActive;
       }
@@ -91,7 +96,7 @@
 }
 
 @mixin scrollOverlay($thumbColor: var(--c-scroll), $noOverflow: false) {
-  @if $noOverflow == false {
+  @if $noOverflow ==false {
     overflow: auto;
     overflow: overlay;
   }
