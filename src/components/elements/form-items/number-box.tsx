@@ -2,7 +2,6 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
 import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
-import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
