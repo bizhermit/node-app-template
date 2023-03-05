@@ -8,7 +8,7 @@ import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
 import { TimeData, TimeInput } from "@/data-items/time";
 import { equals } from "@/data-items/utilities";
-import { CrossIcon } from "@/components/elements/icon";
+import { ClockIcon, CrossIcon } from "@/components/elements/icon";
 
 type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   $disallowInput?: boolean;
@@ -428,7 +428,8 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
               className={Style.picker}
               onClick={picker}
             >
-              <BsClock />
+              {/* <BsClock /> */}
+              <ClockIcon />
             </div>
           }
           <div

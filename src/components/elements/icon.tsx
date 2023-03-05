@@ -144,7 +144,13 @@ export const DoubleDownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) 
 // calendar
 // today
 
-// clock
+export const ClockIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <circle cx="10" cy="10" r="9" fill="none" />
+    <path d="M10,4 L10,11 15,11" fill="none" />
+  </svg>
+));
+(ClockIcon as any).name = "ClockIcon";
 
 // list
 
