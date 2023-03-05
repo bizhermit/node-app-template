@@ -1,9 +1,10 @@
 import useLayout, { WindowSize } from "@/components/providers/layout";
 import { createContext, type ElementType, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/navigation-container.module.scss";
-import { VscChromeClose, VscMenu } from "react-icons/vsc";
+import { VscMenu } from "react-icons/vsc";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
+import { CrossIcon } from "@/components/elements/icon";
 
 export type NavigationPosition = "left" | "right" | "top" | "bottom";
 
@@ -220,7 +221,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
                   className={Style.button}
                   onClick={() => toggleNav()}
                 >
-                  {showedNav ? <VscChromeClose /> : <VscMenu />}
+                  {showedNav ? <CrossIcon /> : <VscMenu />}
                 </div>
                 <div
                   className={Style.contents}
