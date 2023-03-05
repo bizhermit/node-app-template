@@ -180,8 +180,7 @@ export const ListIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 
 export const SaveIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M2,2H15L18,5 18,18 2,18Z M5,2v4h8v-4z" fill="none" />
-    <rect x="5" y="10" width="10" height="7" fill="none" />
+    <path d="M2,2H15L18,5 18,18 2,18Z M5,2v4h8v-4z M5,18l0,-7 10,0 0,7" fill="none" />
   </svg>
 ));
 (SaveIcon as any).name = "SaveIcon";
@@ -190,4 +189,9 @@ export const SaveIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 
 // redo
 
-// clear all
+export const ClearAllIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,4h16Z M2,8h16Z M2,12h9z M2,16h9z M14,12l4,4Z M14,16l4,-4" />
+  </svg>
+));
+(ClearAllIcon as any).name = "ClearAllIcon";
