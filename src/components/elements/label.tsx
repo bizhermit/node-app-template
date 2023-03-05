@@ -15,7 +15,7 @@ const Label = forwardRef<HTMLDivElement, LabelProps>((props, ref) => {
       ref={ref}
     >
       <div
-        className={joinClassNames(Style.main, `c-${props.$color || "danger"}`)}
+        className={joinClassNames(Style.main, `c-${props.$color || "main"}`)}
         data-size={props.$size}
       >
         <Text>{props.children}</Text>

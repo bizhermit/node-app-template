@@ -9,7 +9,7 @@ const Page: NextPage = () => {
   return (
     <div className="flex-start gap-1 p-2">
       <Row className="gap-1">
-        <Label $size="xs">必須</Label>
+        <Label $size="xs" $color="danger">必須</Label>
         <TextBox />
       </Row>
       <Row className="gap-1">
