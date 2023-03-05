@@ -141,8 +141,19 @@ export const DoubleDownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) 
 ));
 (DoubleDownIcon as any).name = "DoubleDownIcon";
 
-// calendar
-// today
+export const CalendarIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,4H18V18H2Z M5,2V5Z M15,2V5Z M2,7H18Z" fill="none" />
+  </svg>
+));
+(CalendarIcon as any).name = "CalendarIcon";
+
+export const TodayIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,4H18V18H2Z M5,2V5Z M15,2V5Z M2,7H18Z" fill="none" />
+  </svg>
+));
+(TodayIcon as any).name = "TodayIcon";
 
 export const ClockIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
