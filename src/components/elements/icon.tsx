@@ -56,3 +56,15 @@ export const CrossIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   </svg>
 ));
 (CrossIcon as any).name = "CrossIcon";
+
+export const MenuIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <defs>
+      <line id="menu" x1="10%" x2="90%" />
+    </defs>
+    <use y="25%" xlinkHref="#menu" />
+    <use y="50%" xlinkHref="#menu" />
+    <use y="75%" xlinkHref="#menu" />
+  </svg>
+));
+(MenuIcon as any).name = "MenuIcon";
