@@ -62,9 +62,81 @@ export const MenuIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
     <defs>
       <line id="menu" x1="10%" x2="90%" />
     </defs>
-    <use y="25%" xlinkHref="#menu" />
-    <use y="50%" xlinkHref="#menu" />
-    <use y="75%" xlinkHref="#menu" />
+    <use y="25%" href="#menu" />
+    <use y="50%" href="#menu" />
+    <use y="75%" href="#menu" />
   </svg>
 ));
 (MenuIcon as any).name = "MenuIcon";
+
+export const LeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M14,2 L5,10 14,18" fill="none" />
+  </svg>
+));
+(LeftIcon as any).name = "LeftIcon";
+
+export const DoubleLeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <defs>
+      <path id="dblLeft" d="M14,2 L5,10 14,18" fill="none" />
+    </defs>
+    <use x="-12%" href="#dblLeft" />
+    <use x="12%" href="#dblLeft" />
+  </svg>
+));
+(DoubleLeftIcon as any).name = "DoubleLeftIcon";
+
+export const RightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M6,2 L15,10 6,18" fill="none" />
+  </svg>
+));
+(RightIcon as any).name = "RightIcon";
+
+export const DoubleRightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <defs>
+      <path id="dblRight" d="M6,2 L15,10 6,18" fill="none" />
+    </defs>
+    <use x="-12%" href="#dblRight" />
+    <use x="12%" href="#dblRight" />
+  </svg>
+));
+(DoubleRightIcon as any).name = "DoubleRightIcon";
+
+export const UpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,14 L10,5 18,14" fill="none" />
+  </svg>
+));
+(UpIcon as any).name = "UpIcon";
+
+export const DoubleUpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <defs>
+      <path id="dblUp" d="M2,14 L10,5 18,14" fill="none" />
+    </defs>
+    <use y="-12%" href="#dblUp" />
+    <use y="12%" href="#dblUp" />
+  </svg>
+));
+(DoubleUpIcon as any).name = "DoubleUpIcon";
+
+export const DownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,6 L10,15 18,6" fill="none" />
+  </svg>
+));
+(DownIcon as any).name = "DownIcon";
+
+export const DoubleDownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <defs>
+      <path id="dblDown" d="M2,6 L10,15 18,6" fill="none" />
+    </defs>
+    <use y="-12%" href="#dblDown" />
+    <use y="12%" href="#dblDown" />
+  </svg>
+));
+(DoubleDownIcon as any).name = "DoubleDownIcon";
