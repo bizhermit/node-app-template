@@ -426,6 +426,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             <div
               className={Style.picker}
               onClick={picker}
+              data-disabled={showPicker}
             >
               <ClockIcon />
             </div>
@@ -433,6 +434,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
           <div
             className={Style.clear}
             onClick={clear}
+            data-disabled={!hasData}
           >
             <CrossIcon />
           </div>
