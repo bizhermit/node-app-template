@@ -2,9 +2,8 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "@/components/utilities/attributes";
-import { VscClearAll, VscDiscard, VscRedo, VscSave } from "react-icons/vsc";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { CrossIcon, SaveIcon } from "@/components/elements/icon";
+import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "@/components/elements/icon";
 
 export type ElectronicSignatureProps<
   D extends DataItem_String | DataItem_File | undefined = undefined
@@ -300,7 +299,7 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
               undo();
             }}
           >
-            <VscDiscard />
+            <UndoIcon />
           </Button>
           <Button
             disabled={!canRedo}
@@ -308,7 +307,7 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
               redo();
             }}
           >
-            <VscRedo />
+            <RedoIcon />
           </Button>
           <Button
             disabled={!canClear}
@@ -324,7 +323,7 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
               clearCanvas(true);
             }}
           >
-            <VscClearAll />
+            <ClearAllIcon />
           </Button>
         </div>
       }

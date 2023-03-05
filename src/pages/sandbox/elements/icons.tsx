@@ -1,5 +1,5 @@
 import Button from "@/components/elements/button";
-import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon } from "@/components/elements/icon";
+import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon, UndoIcon, RedoIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import Text from "@/components/elements/text";
 import { NextPage } from "next";
@@ -19,7 +19,7 @@ const Page: NextPage = () => {
         <Button $icon={<CrossIcon />} $outline $size="s" />
       </Row>
       <VscClearAll />
-      <VscDiscard />
+      <VscDiscard className="bgc-base" />
       <VscRedo />
       {[
         PlusIcon,
@@ -40,6 +40,8 @@ const Page: NextPage = () => {
         ListIcon,
         SaveIcon,
         ClearAllIcon,
+        UndoIcon,
+        RedoIcon,
       ].map(Component => {
         const name = Component.name;
         return (
