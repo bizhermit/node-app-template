@@ -152,7 +152,18 @@ export const ClockIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 ));
 (ClockIcon as any).name = "ClockIcon";
 
-// list
+export const ListIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <defs>
+      <line id="list" x1="2" x2="18" />
+    </defs>
+    <use y="4" href="#list" />
+    <use y="8" href="#list" />
+    <use y="12" href="#list" />
+    <use y="16" href="#list" />
+  </svg>
+));
+(ListIcon as any).name = "ListIcon";
 
 // save
 
