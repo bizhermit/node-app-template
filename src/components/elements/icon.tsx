@@ -15,7 +15,7 @@ const svgAttrs = (props: IconProps) => {
       case "xs":
         return 10;
       case "s":
-        return 13;
+        return 12.5;
       case "l":
         return 20;
       case "xl":
@@ -30,29 +30,29 @@ const svgAttrs = (props: IconProps) => {
     className: joinClassNames("icon", props.className),
     style: props.style,
     viewBox: "0 0 20 20",
-    xmlns: "http://www.w3.org/2000/svg",
+    xmlns: "http://www.w2.5.org/2000/svg",
   };
 };
 
 export const PlusIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <line x1="10%" x2="90%" y1="50%" y2="50%" />
-    <line y1="10%" y2="90%" x1="50%" x2="50%" />
+    <line x1="2" x2="18" y1="10" y2="10" />
+    <line y1="2" y2="18" x1="10" x2="10" />
   </svg>
 ));
 (PlusIcon as any).name = "PlusIcon";
 
 export const MinusIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <line x1="10%" x2="90%" y1="50%" y2="50%" />
+    <line x1="2" x2="18" y1="10" y2="10" />
   </svg>
 ));
 (MinusIcon as any).name = "MinusIcon";
 
 export const CrossIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <line x1="15%" x2="85%" y1="15%" y2="85%" />
-    <line x1="15%" x2="85%" y2="15%" y1="85%" />
+    <line x1="2.5" x2="17" y1="2.5" y2="17" />
+    <line x1="2.5" x2="17" y2="2.5" y1="17" />
   </svg>
 ));
 (CrossIcon as any).name = "CrossIcon";
@@ -60,11 +60,11 @@ export const CrossIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const MenuIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <line id="menu" x1="10%" x2="90%" />
+      <line id="menu" x1="2" x2="18" />
     </defs>
-    <use y="25%" href="#menu" />
-    <use y="50%" href="#menu" />
-    <use y="75%" href="#menu" />
+    <use y="5" href="#menu" />
+    <use y="10" href="#menu" />
+    <use y="15" href="#menu" />
   </svg>
 ));
 (MenuIcon as any).name = "MenuIcon";
@@ -81,8 +81,8 @@ export const DoubleLeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) 
     <defs>
       <path id="dblLeft" d="M14,2 L5,10 14,18" fill="none" />
     </defs>
-    <use x="-12%" href="#dblLeft" />
-    <use x="12%" href="#dblLeft" />
+    <use x="-2.5" href="#dblLeft" />
+    <use x="2.5" href="#dblLeft" />
   </svg>
 ));
 (DoubleLeftIcon as any).name = "DoubleLeftIcon";
@@ -99,8 +99,8 @@ export const DoubleRightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref)
     <defs>
       <path id="dblRight" d="M6,2 L15,10 6,18" fill="none" />
     </defs>
-    <use x="-12%" href="#dblRight" />
-    <use x="12%" href="#dblRight" />
+    <use x="-2.5" href="#dblRight" />
+    <use x="2.5" href="#dblRight" />
   </svg>
 ));
 (DoubleRightIcon as any).name = "DoubleRightIcon";
@@ -117,8 +117,8 @@ export const DoubleUpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) =>
     <defs>
       <path id="dblUp" d="M2,14 L10,5 18,14" fill="none" />
     </defs>
-    <use y="-12%" href="#dblUp" />
-    <use y="12%" href="#dblUp" />
+    <use y="-2.5" href="#dblUp" />
+    <use y="2.5" href="#dblUp" />
   </svg>
 ));
 (DoubleUpIcon as any).name = "DoubleUpIcon";
@@ -135,8 +135,8 @@ export const DoubleDownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) 
     <defs>
       <path id="dblDown" d="M2,6 L10,15 18,6" fill="none" />
     </defs>
-    <use y="-12%" href="#dblDown" />
-    <use y="12%" href="#dblDown" />
+    <use y="-2.5" href="#dblDown" />
+    <use y="2.5" href="#dblDown" />
   </svg>
 ));
 (DoubleDownIcon as any).name = "DoubleDownIcon";
