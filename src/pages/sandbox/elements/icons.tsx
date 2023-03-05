@@ -23,6 +23,7 @@ const Page: NextPage = () => {
         const name = Component.name;
         return (
           <Row key={name} className="gap-2">
+            <Component className="bgc-base" />
             <Component className="bgc-base" $size="xs" />
             <Component className="bgc-base" $size="s" />
             <Component className="bgc-base" $size="m" />

@@ -2,13 +2,13 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { type ForwardedRef, forwardRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { VscCalendar, VscChevronLeft, VscChevronRight, VscListFlat, VscRecord } from "react-icons/vsc";
+import { VscCalendar, VscListFlat, VscRecord } from "react-icons/vsc";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import Text from "@/components/elements/text";
 import { DateData, DateInput } from "@/data-items/date";
-import { CrossIcon } from "@/components/elements/icon";
+import { CrossIcon, LeftIcon, RightIcon } from "@/components/elements/icon";
 
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
@@ -724,7 +724,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
                   className={Style.prev}
                   onClick={prevYear}
                 >
-                  <VscChevronLeft />
+                  <LeftIcon />
                 </div>
                 <span
                   className={Style.text}
@@ -736,7 +736,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
                   className={Style.next}
                   onClick={nextYear}
                 >
-                  <VscChevronRight />
+                  <RightIcon />
                 </div>
                 <div
                   ref={yearElemRef}
@@ -753,7 +753,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
                     className={Style.prev}
                     onClick={prevMonth}
                   >
-                    <VscChevronLeft />
+                    <LeftIcon />
                   </div>
                   <span
                     className={Style.text}
@@ -765,7 +765,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
                     className={Style.next}
                     onClick={nextMonth}
                   >
-                    <VscChevronRight />
+                    <RightIcon />
                   </div>
                   <div
                     ref={monthElemRef}

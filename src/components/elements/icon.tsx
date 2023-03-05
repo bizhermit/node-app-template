@@ -13,15 +13,15 @@ const svgAttrs = (props: IconProps) => {
     if (typeof props.$size === "number") return props.$size;
     switch (props.$size) {
       case "xs":
-        return 14;
+        return 8;
       case "s":
-        return 18;
+        return 12;
       case "l":
-        return 26;
+        return 20;
       case "xl":
-        return 30;
+        return 24;
       default:
-        return 22;
+        return 16;
     }
   })();
   return {
@@ -71,7 +71,8 @@ export const MenuIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 
 export const LeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M14,2 L5,10 14,18" fill="none" />
+    <line x1="70%" x2="30%" y1="15%" y2="50%" />
+    <line x2="70%" x1="30%" y2="85%" y1="50%" />
   </svg>
 ));
 (LeftIcon as any).name = "LeftIcon";
@@ -79,7 +80,10 @@ export const LeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleLeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <path id="dblLeft" d="M14,2 L5,10 14,18" fill="none" />
+      <g id="dblLeft">
+        <line x1="70%" x2="30%" y1="15%" y2="50%" />
+        <line x2="70%" x1="30%" y2="85%" y1="50%" />
+      </g>
     </defs>
     <use x="-12%" href="#dblLeft" />
     <use x="12%" href="#dblLeft" />
@@ -89,7 +93,8 @@ export const DoubleLeftIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) 
 
 export const RightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M6,2 L15,10 6,18" fill="none" />
+    <line x1="30%" x2="70%" y1="15%" y2="50%" />
+    <line x2="30%" x1="70%" y2="85%" y1="50%" />
   </svg>
 ));
 (RightIcon as any).name = "RightIcon";
@@ -97,7 +102,10 @@ export const RightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleRightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <path id="dblRight" d="M6,2 L15,10 6,18" fill="none" />
+      <g id="dblRight">
+        <line x1="30%" x2="70%" y1="15%" y2="50%" />
+        <line x2="30%" x1="70%" y2="85%" y1="50%" />
+      </g>
     </defs>
     <use x="-12%" href="#dblRight" />
     <use x="12%" href="#dblRight" />
@@ -107,7 +115,8 @@ export const DoubleRightIcon = forwardRef<SVGSVGElement, IconProps>((props, ref)
 
 export const UpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M2,14 L10,5 18,14" fill="none" />
+    <line y1="30%" y2="70%" x1="50%" x2="15%" />
+    <line y2="30%" y1="70%" x2="50%" x1="85%" />
   </svg>
 ));
 (UpIcon as any).name = "UpIcon";
@@ -115,7 +124,10 @@ export const UpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleUpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <path id="dblUp" d="M2,14 L10,5 18,14" fill="none" />
+      <g id="dblUp">
+        <line y1="30%" y2="70%" x1="50%" x2="15%" />
+        <line y2="30%" y1="70%" x2="50%" x1="85%" />
+      </g>
     </defs>
     <use y="-12%" href="#dblUp" />
     <use y="12%" href="#dblUp" />
@@ -125,7 +137,8 @@ export const DoubleUpIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) =>
 
 export const DownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M2,6 L10,15 18,6" fill="none" />
+    <line y1="70%" y2="30%" x1="50%" x2="15%" />
+    <line y2="70%" y1="30%" x2="50%" x1="85%" />
   </svg>
 ));
 (DownIcon as any).name = "DownIcon";
@@ -133,7 +146,10 @@ export const DownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 export const DoubleDownIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <defs>
-      <path id="dblDown" d="M2,6 L10,15 18,6" fill="none" />
+      <g id="dblDown">
+        <line y1="70%" y2="30%" x1="50%" x2="15%" />
+        <line y2="70%" y1="30%" x2="50%" x1="85%" />
+      </g>
     </defs>
     <use y="-12%" href="#dblDown" />
     <use y="12%" href="#dblDown" />
