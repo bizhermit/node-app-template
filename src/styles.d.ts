@@ -20,8 +20,7 @@ type SystemColor = "base"
   | "sub-dark"
   ;
 
-type Color = SystemColor
-  | "primary"
+type CustomColor = | "primary"
   | "secondary"
   | "tertiary"
   | "warning"
@@ -29,6 +28,8 @@ type Color = SystemColor
   | "cool"
   | "pretty"
   ;
+
+type Color = SystemColor | CustomColor;
 
 type Size = "xs"
   | "s"
