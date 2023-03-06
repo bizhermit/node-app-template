@@ -17,11 +17,12 @@ export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | D
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
   $weekTexts?: "en" | "ja" | [ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode, ReactNode];
-  $onClickPositive?: (value: Nullable<T>) => void;
+  $onClickPositive?: (value: T | null | undefined) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
   $negativeText?: ReactNode;
   $skipValidation?: boolean;
+  $buttonless?: boolean;
 };
 
 export type DatePickerProps_TypeString_Single<D extends DataItem_String | undefined = undefined> = DatePickerBaseProps<string, D>;
@@ -268,7 +269,13 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     };
     const select = (num: number, selected: boolean) => {
       if (!multiple) {
-        ctx.change(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
+        const v = DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof);
+        ctx.change(v);
+        if (props.$buttonless) {
+          setTimeout(() => {
+            props.$onClickPositive?.(v as never);
+          }, 0);
+        }
         return;
       }
       if (selected) {
@@ -344,7 +351,13 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     };
     const select = (date: Date, selected: boolean) => {
       if (!multiple) {
-        ctx.change(DateInput.convertDateToValue(date, props.$typeof));
+        const v = DateInput.convertDateToValue(date, props.$typeof);
+        ctx.change(v);
+        if (props.$buttonless) {
+          setTimeout(() => {
+            props.$onClickPositive?.(v as never);
+          }, 0);
+        }
         return;
       }
       if (selected) {
@@ -422,7 +435,13 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     const select = (dateStr: string, selected: boolean) => {
       const date = convertDate(dateStr)!;
       if (!multiple) {
-        ctx.change(DateInput.convertDateToValue(date, props.$typeof));
+        const v = DateInput.convertDateToValue(date, props.$typeof);
+        ctx.change(v);
+        if (props.$buttonless) {
+          setTimeout(() => {
+            props.$onClickPositive?.(v as never);
+          }, 0);
+        }
         return;
       }
       if (selected) {
@@ -800,50 +819,52 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
           </div>
         }
       </div>
-      <div className={Style.buttons}>
-        {ctx.editable &&
-          <>
+      {!props.$buttonless &&
+        <div className={Style.buttons}>
+          {ctx.editable &&
+            <>
+              <div
+                className={Style.clear}
+                onClick={clear}
+              >
+                <CrossIcon />
+              </div>
+              <div
+                className={Style.today}
+                onClick={selectToday}
+              >
+                <TodayIcon />
+              </div>
+            </>
+          }
+          {props.$onClickNegative != null &&
             <div
-              className={Style.clear}
-              onClick={clear}
+              className={Style.negative}
+              onClick={props.$onClickNegative}
             >
-              <CrossIcon />
+              <Text>{props.$negativeText ?? "キャンセル"}</Text>
             </div>
+          }
+          {props.$onClickPositive != null &&
             <div
-              className={Style.today}
-              onClick={selectToday}
+              className={Style.positive}
+              onClick={() => {
+                props.$onClickPositive?.(ctx.value as never);
+              }}
             >
-              <TodayIcon />
+              <Text>{props.$positiveText ?? "OK"}</Text>
             </div>
-          </>
-        }
-        {props.$onClickNegative != null &&
-          <div
-            className={Style.negative}
-            onClick={props.$onClickNegative}
-          >
-            <Text>{props.$negativeText ?? "キャンセル"}</Text>
-          </div>
-        }
-        {props.$onClickPositive != null &&
-          <div
-            className={Style.positive}
-            onClick={() => {
-              props.$onClickPositive?.(ctx.value as never);
-            }}
-          >
-            <Text>{props.$positiveText ?? "OK"}</Text>
-          </div>
-        }
-        {type !== "year" && !multiple && ctx.editable &&
-          <div
-            className={Style.switch}
-            onClick={toggleMode}
-          >
-            {mode === "list" ? <CalendarIcon /> : <ListIcon />}
-          </div>
-        }
-      </div>
+          }
+          {type !== "year" && !multiple && ctx.editable &&
+            <div
+              className={Style.switch}
+              onClick={toggleMode}
+            >
+              {mode === "list" ? <CalendarIcon /> : <ListIcon />}
+            </div>
+          }
+        </div>
+      }
     </FormItemWrap>
   );
 });

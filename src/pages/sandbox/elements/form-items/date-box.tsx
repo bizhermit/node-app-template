@@ -110,6 +110,7 @@ const Page: NextPage = () => {
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
           // $typeof="date"
+          $disallowInput
         />
         <DateBox
           $tag="date"

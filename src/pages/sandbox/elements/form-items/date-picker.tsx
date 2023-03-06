@@ -17,6 +17,7 @@ const Page: NextPage = () => {
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState<Struct>({ "pair-date": "2022-12-11" });
   const [type, setType] = useState<"date" | "month" | "year">("date");
+  const [buttonless, setButtonless] = useState(false);
 
   return (
     <div className="flex-start p-1 w-100 h-100 gap-1">
@@ -30,6 +31,11 @@ const Page: NextPage = () => {
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
+        />
+        <ToggleBox
+          $tag="buttonless"
+          $value={buttonless}
+          $onChange={v => setButtonless(v!)}
         />
         <RadioButtons
           $tag="type"
@@ -120,36 +126,42 @@ const Page: NextPage = () => {
               return undefined;
             }
           ]}
+          $buttonless={buttonless}
         />
         <DatePicker
           $tag="date"
           $dataItem={sample_date}
           $onChange={v => console.log("date: ", v)}
           $multiple
+          $buttonless={buttonless}
         />
         <DatePicker
           $tag="month"
           $dataItem={sample_month}
           $onChange={v => console.log("month: ", v)}
           // $multiple
+          $buttonless={buttonless}
         />
         <DatePicker
           $tag="year"
           $dataItem={sample_year}
           $onChange={v => console.log("year: ", v)}
           // $multiple
+          $buttonless={buttonless}
         />
         <DatePicker
           $tag="string"
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
           // $multiple
+          $buttonless={buttonless}
         />
         <DatePicker
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
           // $multiple
+          $buttonless={buttonless}
         />
       </Row>
       <Row className="gap-1" $vAlign="top">
