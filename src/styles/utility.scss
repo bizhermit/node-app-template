@@ -393,6 +393,23 @@
   flex: none !important;
 }
 
+// grid
+
+@for $i from 0 through 12 {
+  .grid-#{$i} {
+    display: grid;
+    grid-template-columns: repeat(#{$i}, 1fr);
+  }
+
+  .grid-c#{$i} {
+    grid-column: span #{$i};
+  }
+
+  .grid-c#{$i} {
+    grid-row: span #{$i};
+  }
+}
+
 // border
 
 .border {
