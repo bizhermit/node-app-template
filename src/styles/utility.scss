@@ -395,17 +395,26 @@
 
 // grid
 
+.grid {
+  display: grid;
+}
+
 @for $i from 1 through 12 {
-  .grid-#{$i} {
-    display: grid;
-    grid-template-columns: repeat(#{$i}, 1fr);
+  .grid {
+    &.cols-#{$i} {
+      grid-template-columns: repeat(#{$i}, 1fr);
+    }
+  
+    &.rows-#{$i} {
+      grid-template-rows: repeat(#{$i}, 1fr);
+    }
   }
 
-  .grid-c#{$i} {
+  .col-#{$i} {
     grid-column: span #{$i};
   }
 
-  .grid-c#{$i} {
+  .row-#{$i} {
     grid-row: span #{$i};
   }
 }
