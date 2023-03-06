@@ -30,6 +30,8 @@ $tagMoveTransitionTime: 0.5s;
 
   &[data-round="true"] {
     >.main {
+      border-radius: 9999px !important;
+
       &::before {
         border-radius: 9999px !important;
       }

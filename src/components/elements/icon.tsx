@@ -148,7 +148,6 @@ export const CalendarIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) =>
 ));
 (CalendarIcon as any).name = "CalendarIcon";
 
-// M11,11l2,0 0,2 -2,0Z
 export const TodayIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <path d="M2,4H18V18H2Z M5,2V5Z M15,2V5Z M2,7H18Z" fill="none" />
@@ -185,7 +184,6 @@ export const SaveIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
 ));
 (SaveIcon as any).name = "SaveIcon";
 
-// M3.5 2v3.5L4 6h3.5V5H4.979l.941-.941a3.552 3.552 0 1 1 5.023 5.023L5.746 14.28l.72.72 5.198-5.198A4.57 4.57 0 0 0 5.2 3.339l-.7.7V2h-1z
 export const UndoIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <path d="M4,3l0,5 5,0M4,8l2,-2a4 4.5 45 1 1 9.3,5l-6,6" fill="none" />

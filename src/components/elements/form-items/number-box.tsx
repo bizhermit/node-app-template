@@ -284,14 +284,12 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
             onMouseDown={e => mousedown(true, e.ctrlKey)}
           >
             <UpIcon $size="xs" />
-            {/* <VscTriangleUp /> */}
           </div>
           <div
             className={Style.button}
             onMouseDown={e => mousedown(false, e.ctrlKey)}
           >
             <DownIcon $size="xs" />
-            {/* <VscTriangleDown /> */}
           </div>
         </div>
       }
