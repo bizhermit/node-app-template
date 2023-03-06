@@ -36,9 +36,6 @@
       }
 
       &[data-outline="true"] {
-        border: 0.15rem solid var(--c-border);
-        border-radius: 9999px;
-
         @include mixins.crossHover {
           @include mixins.hover;
 
@@ -230,6 +227,11 @@
     >.label {
       padding-left: 0.5rem;
     }
+  }
+
+  &[data-outline="true"] {
+    border: 0.15rem solid var(--c-border);
+    border-radius: 9999px;
   }
 }
 
