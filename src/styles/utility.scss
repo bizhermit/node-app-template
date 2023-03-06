@@ -393,6 +393,32 @@
   flex: none !important;
 }
 
+// grid
+
+.grid {
+  display: grid;
+}
+
+@for $i from 1 through 12 {
+  .grid {
+    &.cols-#{$i} {
+      grid-template-columns: repeat(#{$i}, 1fr);
+    }
+  
+    &.rows-#{$i} {
+      grid-template-rows: repeat(#{$i}, 1fr);
+    }
+  }
+
+  .col-#{$i} {
+    grid-column: span #{$i};
+  }
+
+  .row-#{$i} {
+    grid-row: span #{$i};
+  }
+}
+
 // border
 
 .border {
