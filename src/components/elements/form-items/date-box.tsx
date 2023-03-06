@@ -12,6 +12,7 @@ import { CalendarIcon, CrossIcon } from "@/components/elements/icon";
 
 type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
   $disallowInput?: boolean;
+  $pickerButtonless?: boolean;
 };
 
 export type DateBoxProps_TypeString<D extends DataItem_String | undefined = undefined> = DateBoxBaseProps<string, D>;
@@ -469,6 +470,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
             setShowPicker(false);
             focus();
           }}
+          $buttonless={props.$pickerButtonless}
         />
       </Popup>
     </FormItemWrap>

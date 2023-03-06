@@ -93,6 +93,7 @@
 
 @mixin pickerShadow {
   box-shadow: 0 .1rem .8rem 0 var(--c-shadow) !important;
+  border-radius: var(--radius);
 }
 
 @mixin scrollOverlay($thumbColor: var(--c-scroll), $noOverflow: false) {
