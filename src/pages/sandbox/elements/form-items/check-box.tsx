@@ -114,12 +114,16 @@ const Page: NextPage = () => {
         </CheckBox>
         <CheckBox
           $outline
+          $disabled={disabled}
+          $readOnly={readOnly}
         >
           outline
         </CheckBox>
         <CheckBox
           $outline
           $circle
+          $disabled={disabled}
+          $readOnly={readOnly}
         >
           outline/circle
         </CheckBox>
