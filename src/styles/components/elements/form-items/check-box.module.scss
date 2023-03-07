@@ -3,17 +3,29 @@ $checkTransitionTime: 0.1s;
 
 .main {
   &[data-editable="true"] {
-    @include mixins.crossHover {
-      .box {
-        &::before {
-          @include mixins.hover;
+    &[data-outline="true"] {
+      @include mixins.crossHover {
+        @include mixins.hover;
+        
+        &:active {
+          @include mixins.hoverActive;
         }
       }
+    }
 
-      &:active {
+    &:not([data-outline="true"]) {
+      @include mixins.crossHover {
         .box {
           &::before {
-            @include mixins.hoverActive;
+            @include mixins.hover;
+          }
+        }
+  
+        &:active {
+          .box {
+            &::before {
+              @include mixins.hoverActive;
+            }
           }
         }
       }
@@ -26,9 +38,9 @@ $checkTransitionTime: 0.1s;
 
     >.body {
       &:not([data-circle="true"]) {
-        // &:not(:only-child) {
+        &:not(:only-child) {
           margin-left: calc(var(--size) / 4);
-        // }
+        }
       }
     }
   }
