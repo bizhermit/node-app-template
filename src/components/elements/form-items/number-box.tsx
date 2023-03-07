@@ -75,8 +75,10 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
   });
 
   const toString = (v?: Nullable<number>) => {
-    if (props.$preventThousandSeparate) return String(v ?? "");
-    return numFormat(v, { fpad: props.$float ?? 0 }) ?? "";
+    return numFormat(v, {
+      thou: !props.$preventThousandSeparate,
+      fpad: props.$float ?? 0,
+    }) ?? "";
   };
 
   const renderFormattedValue = () => {
@@ -107,7 +109,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
 
   const renderNumberValue = () => {
     if (!iref.current) return;
-    iref.current.value = String(ctx.valueRef.current ?? "");
+    iref.current.value = numFormat(ctx.valueRef.current, { fpad: props.$float ?? 0 }) || "";
   };
 
   const changeImpl = (value?: string, preventCommit?: boolean): Nullable<number> => {
