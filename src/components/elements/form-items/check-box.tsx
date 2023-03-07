@@ -12,6 +12,7 @@ export type CheckBoxProps<
   $uncheckedValue?: T;
   $borderCheck?: boolean;
   $outline?: boolean;
+  $circle?: boolean;
   children?: ReactNode;
 };
 
@@ -108,7 +109,10 @@ const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
         "data-outline": props.$outline,
       }}
     >
-      <div className={Style.body}>
+      <div
+        className={Style.body}
+        data-circle={props.$circle}
+      >
         <div
           className={`${Style.box} bdc-${props.$color || "border"}`}
           data-editable={ctx.editable}

@@ -117,6 +117,12 @@ const Page: NextPage = () => {
         >
           outline
         </CheckBox>
+        <CheckBox
+          $outline
+          $circle
+        >
+          outline/circle
+        </CheckBox>
       </Row>
       <Row>
         <CheckBox

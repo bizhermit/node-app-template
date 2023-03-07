@@ -23,6 +23,14 @@ $checkTransitionTime: 0.1s;
   &[data-outline="true"] {
     border: .1rem solid var(--c-border);
     border-radius: 9999px;
+
+    >.body {
+      &:not([data-circle="true"]) {
+        // &:not(:only-child) {
+          margin-left: calc(var(--size) / 4);
+        // }
+      }
+    }
   }
 }
 
@@ -34,6 +42,16 @@ $checkTransitionTime: 0.1s;
   display: block;
   height: var(--size);
   width: var(--size);
+
+  &[data-circle="true"] {
+
+    >.box,
+    >.check {
+      &::before {
+        border-radius: 9999px;
+      }
+    }
+  }
 }
 
 @mixin box {
@@ -85,10 +103,10 @@ $checkTransitionTime: 0.1s;
     box-sizing: border-box;
     position: absolute;
     content: "";
-    top: 16%;
-    left: 35%;
-    width: 30%;
-    height: 50%;
+    top: 22%;
+    left: 37%;
+    width: 28%;
+    height: 45%;
     border-bottom-width: 0.25rem;
     border-bottom-style: solid;
     border-bottom-color: inherit;
@@ -101,6 +119,6 @@ $checkTransitionTime: 0.1s;
 
 .label {
   display: inline-block;
-  padding-left: calc(var(--size) / 5);
+  padding-left: calc(var(--size) / 8);
   padding-right: calc(var(--size) / 2);
 }
