@@ -19,6 +19,11 @@ $checkTransitionTime: 0.1s;
       }
     }
   }
+
+  &[data-outline="true"] {
+    border: .1rem solid var(--c-border);
+    border-radius: 9999px;
+  }
 }
 
 @include mixins.hoverAnimation;
@@ -96,4 +101,6 @@ $checkTransitionTime: 0.1s;
 
 .label {
   display: inline-block;
+  padding-left: calc(var(--size) / 5);
+  padding-right: calc(var(--size) / 2);
 }
