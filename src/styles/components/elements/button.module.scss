@@ -54,8 +54,8 @@ $buttonSize: (
 
       >.main {
         >.label {
-          padding-left: 1.2rem * $value;
-          padding-right: 1.2rem * $value;
+          padding-left: calc(var(--size) / 2 * #{$value});
+          padding-right: calc(var(--size) / 2 * #{$value});
         }
       
         >.icon {

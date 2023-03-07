@@ -25,14 +25,13 @@ export type SelectBoxProps<
   $maxWidth?: number | string;
   $minWidth?: number | string;
   $emptyItem?: boolean | string | { value: T | null | undefined; label: string; };
+  $align?: "left" | "center" | "right";
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
   <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>
     (attrs: SelectBoxProps<T, D, S>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
-
-const defaultWidth = 200;
 
 const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
   T extends string | number = string | number,
@@ -253,7 +252,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
       data-has={hasLabel}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width ?? defaultWidth),
+          width: convertSizeNumToStr(props.$width),
           maxWidth: convertSizeNumToStr(props.$maxWidth),
           minWidth: convertSizeNumToStr(props.$minWidth),
         },
@@ -274,6 +273,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
         onKeyDown={keydown}
         autoComplete="off"
         data-has={!isEmptyValue}
+        data-align={props.$align}
       />
       {ctx.editable && !loading &&
         <>

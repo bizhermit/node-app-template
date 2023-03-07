@@ -2,7 +2,7 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, Form
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import Text from "@/components/elements/text";
-import { pressPositiveKey } from "@/components/utilities/attributes";
+import { joinClassNames, pressPositiveKey } from "@/components/utilities/attributes";
 
 export type CheckBoxProps<
   T extends string | number | boolean = boolean,
@@ -10,7 +10,9 @@ export type CheckBoxProps<
 > = Omit<FormItemProps<T, D>, "$tagPosition"> & {
   $checkedValue?: T;
   $uncheckedValue?: T;
+  $borderCheck?: boolean;
   $outline?: boolean;
+  $circle?: boolean;
   children?: ReactNode;
 };
 
@@ -100,24 +102,28 @@ const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
       $clickable
       $useHidden
       $mainProps={{
-        className: Style.main,
+        className: joinClassNames(Style.main, props.$outline && props.$color ? `bdc-${props.$color || "input"}` : undefined),
         onClick: click,
         onKeyDown: keydown,
         tabIndex: props.tabIndex ?? 0,
+        "data-outline": props.$outline,
       }}
     >
-      <div className={Style.body}>
+      <div
+        className={Style.body}
+        data-circle={props.$circle}
+      >
         <div
           className={`${Style.box} bdc-${props.$color || "border"}`}
           data-editable={ctx.editable}
         />
         <div
-          className={`${Style.check} ${props.$outline ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "main"}_r bgc-${props.$color || "main"}`}`}
+          className={`${Style.check} ${props.$borderCheck ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "main"}_r bgc-${props.$color || "main"}`}`}
           data-checked={ctx.value === checkedValue}
         />
       </div>
       {props.children &&
-        <Text>{props.children}</Text>
+        <Text className={Style.label}>{props.children}</Text>
       }
     </FormItemWrap>
   );

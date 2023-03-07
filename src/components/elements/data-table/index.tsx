@@ -10,6 +10,7 @@ import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import Button from "@/components/elements/button";
 import { equals, getValue } from "@/data-items/utilities";
 import { DoubleLeftIcon, DoubleRightIcon, LeftIcon, RightIcon } from "@/components/elements/icon";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
@@ -43,6 +44,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
   body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; }>;
   footer?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
+  pointer?: boolean;
 };
 
 export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
@@ -106,6 +108,10 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $outline?: boolean;
   $rowBorder?: boolean;
   $cellBorder?: boolean;
+  $onClick?: (ctx: DataTableCellContext<T>, element: { cell: HTMLDivElement; row: HTMLDivElement; }) => (void | boolean | Promise<void>);
+  $rowPointer?: boolean;
+  $radio?: boolean;
+  $stripes?: boolean;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -191,6 +197,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
 } as const;
 
 const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
+  const uniqueKey = useRef(StringUtils.generateUuidV4());
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
   const [pagination, setPagination] = useState<Pagination | undefined>(() => {
@@ -472,6 +479,8 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           style={getColumnStyle(column, nestLevel)}
           data-align={getCellAlign(column)}
           data-border={column.border ?? props.$cellBorder}
+          data-name={column.name}
+          data-pointer={column.pointer}
         >
           <NextLink
             href={column.href?.({
@@ -512,7 +521,16 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           className={Style.brow}
           style={rowStyle}
           data-border={props.$rowBorder}
+          data-stripes={props.$stripes}
+          data-pointer={props.$rowPointer}
         >
+          {props.$radio &&
+            <input
+              className={Style.radio}
+              type="radio"
+              name={uniqueKey.current}
+            />
+          }
           {columns.current?.map(col => generateCell(index, item, col))}
         </div>
       );
@@ -526,6 +544,8 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
     props.$rowMaxHeight,
     props.$rowBorder,
     props.$cellBorder,
+    props.$stripes,
+    props.$rowPointer,
     rowNumColWidth,
   ]);
 
@@ -619,6 +639,36 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
     );
   };
 
+  const clickBody = (e: React.MouseEvent<HTMLDivElement>) => {
+    let elem: HTMLElement | null = e.target as HTMLElement;
+    let cellElem: HTMLElement | null = null;
+    do {
+      if (elem.classList.contains(Style.bcell)) cellElem = elem;
+      if (elem.classList.contains(Style.brow)) break;
+      elem = elem?.parentElement;
+    } while (elem);
+    if (cellElem == null || elem == null) return;
+    const radioElem = elem.querySelector(`input[name="${uniqueKey.current}"]`) as HTMLInputElement;
+    if (radioElem) {
+      radioElem.checked = true;
+    }
+    if (props.$onClick == null) return;
+    const index = [].slice.call(elem.parentElement!.childNodes).indexOf(elem as never);
+    const column = findColumn(columns.current, cellElem.getAttribute("data-name")!)!;
+    props.$onClick({
+      column,
+      data: items[index],
+      index,
+      items,
+      pageFirstIndex: pagination ? pagination.index * pagination.perPage : 0,
+      setHeaderRev,
+      setBodyRev,
+    }, {
+      row: elem as HTMLDivElement,
+      cell: cellElem as HTMLDivElement,
+    });
+  };
+
   return (
     <div
       {...attributes(props, Style.wrap)}
@@ -645,6 +695,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           <div
             className={Style.body}
             data-scroll={props.$scroll}
+            onClick={clickBody}
           >
             {body}
           </div>

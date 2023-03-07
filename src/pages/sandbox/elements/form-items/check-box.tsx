@@ -112,6 +112,21 @@ const Page: NextPage = () => {
         >
           string
         </CheckBox>
+        <CheckBox
+          $outline
+          $disabled={disabled}
+          $readOnly={readOnly}
+        >
+          outline
+        </CheckBox>
+        <CheckBox
+          $outline
+          $circle
+          $disabled={disabled}
+          $readOnly={readOnly}
+        >
+          outline/circle
+        </CheckBox>
       </Row>
       <Row>
         <CheckBox
@@ -127,14 +142,14 @@ const Page: NextPage = () => {
           $tag="bind"
           $bind={bind}
           name="check-box-bind"
-          $outline
+          $borderCheck
           $checkedValue={"1"}
           $uncheckedValue={"0"}
           $disabled={disabled}
           $readOnly={readOnly}
           $onChange={v => console.log(v)}
         >
-          outline
+          border check
         </CheckBox>
         <Form
           $bind={formBind}
@@ -156,7 +171,7 @@ const Page: NextPage = () => {
         return (
           <Row key={color}>
             <CheckBox $color={color} $defaultValue name={color} />
-            <CheckBox $color={color} $outline $defaultValue />
+            <CheckBox $color={color} $borderCheck $defaultValue />
             <span className={`pt-t px-1 c-${color}`}>{color}</span>
           </Row>
         );

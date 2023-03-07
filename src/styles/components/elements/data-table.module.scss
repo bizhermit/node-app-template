@@ -81,12 +81,22 @@ $borderStyle: 1px solid var(--c-border);
 .brow {
   background: var(--c-pure);
 
-  &:nth-child(2n) {
-    background: var(--c-dull);
+  &[data-stripes="true"] {
+    &:nth-child(2n) {
+      background: var(--c-dull);
+    }
   }
 
   @include mixins.crossHover {
     background: var(--c-hover);
+  }
+
+  &:has(>.radio:checked) {
+    background: var(--c-selected) !important;
+  }
+
+  &[data-pointer="true"] {
+    cursor: pointer;
   }
 }
 
@@ -158,6 +168,10 @@ $borderStyle: 1px solid var(--c-border);
 
   @include mixins.crossHover {
     background: var(--c-selected);
+  }
+
+  &[data-pointer="true"] {
+    cursor: pointer;
   }
 }
 
@@ -268,4 +282,8 @@ $borderStyle: 1px solid var(--c-border);
     padding-top: var(--padding-top-text);
     column-gap: 0.2rem;
   }
+}
+
+.radio {
+  display: none !important;
 }

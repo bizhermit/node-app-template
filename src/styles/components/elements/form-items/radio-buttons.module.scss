@@ -91,10 +91,15 @@
             border-bottom-right-radius: var(--radius);
           }
         }
+
+        >.label {
+          padding-left: calc(var(--size) / 2);
+          padding-right: calc(var(--size) / 2);
+        }
       }
 
       >.label {
-        padding-right: 1rem
+        padding-right: calc(var(--size) / 4);
       }
     }
   }
@@ -123,7 +128,7 @@
       }
 
       >.label {
-        padding-right: 1rem;
+        padding-right: calc(var(--size) / 4);
       }
     }
   }
@@ -149,7 +154,7 @@
 
   &[data-appearance="button"] {
     >.label {
-      padding-left: 1rem;
+      padding-left: calc(var(--size) / 4);;
       border-width: 0.1rem;
       border-style: solid;
       border-color: inherit;
@@ -225,7 +230,7 @@
     }
 
     >.label {
-      padding-left: 0.5rem;
+      padding-left: calc(var(--size) / 8);
     }
   }
 

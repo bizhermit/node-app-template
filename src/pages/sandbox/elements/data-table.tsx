@@ -186,6 +186,12 @@ const Page: NextPage = () => {
           console.log(index);
           return true;
         }}
+        $onClick={(ctx, elem) => {
+          console.log(ctx, elem);
+        }}
+        $radio
+        $stripes
+        $rowPointer
       />
     </div>
   );

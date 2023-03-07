@@ -30,7 +30,7 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
       return (
         <CheckBox
           className="mx-auto"
-          $outline
+          $borderCheck
           $disabled={items.length === 0}
           $value={checked}
           $onChange={v => {

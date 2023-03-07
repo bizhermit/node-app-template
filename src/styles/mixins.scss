@@ -50,6 +50,18 @@
     flex: 1;
     padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
   }
+
+  &[data-align="left"] {
+    text-align: left;
+  }
+
+  &[data-align="center"] {
+    text-align: center;
+  }
+
+  &[data-align="right"] {
+    text-align: right;
+  }
 }
 
 @mixin inputButton($customSize: false) {
