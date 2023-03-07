@@ -24,13 +24,12 @@ export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefin
   $maxWidth?: number | string;
   $minWidth?: number | string;
   $hideClearButton?: boolean;
+  $align?: "left" | "center" | "right";
 };
 
 interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
   <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: NumberBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
-
-const defaultWidth = 150;
 
 const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
   D extends DataItem_Number | DataItem_String | undefined = undefined
@@ -244,7 +243,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
       data-has={hasData}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width ?? defaultWidth),
+          width: convertSizeNumToStr(props.$width),
           maxWidth: convertSizeNumToStr(props.$maxWidth),
           minWidth: convertSizeNumToStr(props.$minWidth),
         },
@@ -265,6 +264,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
         onKeyDown={keydown}
         inputMode={props.$inputMode || (props.$float ? "decimal" : "numeric")}
         autoComplete="off"
+        data-align={props.$align || "right"}
       />
       {ctx.editable && props.$hideClearButton !== true &&
         <div

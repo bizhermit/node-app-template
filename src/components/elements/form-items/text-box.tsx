@@ -21,6 +21,7 @@ export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined
   $minWidth?: number | string;
   $hideClearButton?: boolean;
   $autoComplete?: string;
+  $align?: "left" | "center" | "right"
 };
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
@@ -172,6 +173,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
         onChange={e => ctx.change(e.target.value)}
         data-round={props.$round}
         data-clear={ctx.editable && props.$hideClearButton !== true}
+        data-align={props.$align}
         autoComplete={props.$autoComplete ?? "off"}
       />
       {ctx.editable && props.$hideClearButton !== true &&
