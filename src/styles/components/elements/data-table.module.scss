@@ -94,6 +94,10 @@ $borderStyle: 1px solid var(--c-border);
   &:has(>.radio:checked) {
     background: var(--c-selected) !important;
   }
+
+  &[data-pointer="true"] {
+    cursor: pointer;
+  }
 }
 
 .hcell,
@@ -164,6 +168,10 @@ $borderStyle: 1px solid var(--c-border);
 
   @include mixins.crossHover {
     background: var(--c-selected);
+  }
+
+  &[data-pointer="true"] {
+    cursor: pointer;
   }
 }
 

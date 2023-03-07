@@ -44,6 +44,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
   body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; }>;
   footer?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
+  pointer?: boolean;
 };
 
 export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
@@ -108,6 +109,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $rowBorder?: boolean;
   $cellBorder?: boolean;
   $onClick?: (ctx: DataTableCellContext<T>, element: { cell: HTMLDivElement; row: HTMLDivElement; }) => (void | boolean | Promise<void>);
+  $rowPointer?: boolean;
   $radio?: boolean;
   $stripes?: boolean;
 };
@@ -478,6 +480,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           data-align={getCellAlign(column)}
           data-border={column.border ?? props.$cellBorder}
           data-name={column.name}
+          data-pointer={column.pointer}
         >
           <NextLink
             href={column.href?.({
@@ -517,8 +520,9 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           key={getValue(item, idDn) ?? index}
           className={Style.brow}
           style={rowStyle}
-          data-stripes={props.$stripes}
           data-border={props.$rowBorder}
+          data-stripes={props.$stripes}
+          data-pointer={props.$rowPointer}
         >
           {props.$radio &&
             <input
@@ -540,6 +544,8 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
     props.$rowMaxHeight,
     props.$rowBorder,
     props.$cellBorder,
+    props.$stripes,
+    props.$rowPointer,
     rowNumColWidth,
   ]);
 

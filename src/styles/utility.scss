@@ -460,3 +460,10 @@
     z-index: #{$i};
   }
 }
+
+// cursor
+
+.pointer {
+  cursor: pointer;
+  user-select: none;
+}

@@ -191,6 +191,7 @@ const Page: NextPage = () => {
         }}
         $radio
         $stripes
+        $rowPointer
       />
     </div>
   );
