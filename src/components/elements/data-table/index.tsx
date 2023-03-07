@@ -106,6 +106,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $outline?: boolean;
   $rowBorder?: boolean;
   $cellBorder?: boolean;
+  $onClick?: (ctx: DataTableCellContext<T>, element: { cell: HTMLDivElement; row: HTMLDivElement; }) => (void | boolean | Promise<void>);
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -472,6 +473,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           style={getColumnStyle(column, nestLevel)}
           data-align={getCellAlign(column)}
           data-border={column.border ?? props.$cellBorder}
+          data-name={column.name}
         >
           <NextLink
             href={column.href?.({
@@ -645,6 +647,30 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           <div
             className={Style.body}
             data-scroll={props.$scroll}
+            onClick={props.$onClick ? (e) => {
+              let elem: HTMLElement | null = e.target as HTMLElement;
+              let cellElem: HTMLElement | null = null;
+              do {
+                if (elem.classList.contains(Style.bcell)) cellElem = elem;
+                if (elem.classList.contains(Style.brow)) break;
+                elem = elem?.parentElement;
+              } while (elem);
+              if (cellElem == null || elem == null) return;
+              const index = [].slice.call(elem.parentElement!.childNodes).indexOf(elem as never);
+              const column = findColumn(columns.current, cellElem.getAttribute("data-name")!)!;
+              props.$onClick?.({
+                column,
+                data: items[index],
+                index,
+                items,
+                pageFirstIndex: pagination ? pagination.index * pagination.perPage : 0,
+                setHeaderRev,
+                setBodyRev,
+              }, {
+                row: elem as HTMLDivElement,
+                cell: cellElem as HTMLDivElement,
+              });
+            } : undefined}
           >
             {body}
           </div>
