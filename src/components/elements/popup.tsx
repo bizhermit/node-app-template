@@ -321,7 +321,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   if (portal == null) return <></>;
   return (
     <>
-      {props.$anchor === "parent" && <div ref={aref} />}
+      {props.$anchor === "parent" && <div className={Style.anchor} ref={aref} />}
       {createPortal(
         <>
           {props.$mask &&
