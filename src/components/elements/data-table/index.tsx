@@ -109,6 +109,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $cellBorder?: boolean;
   $onClick?: (ctx: DataTableCellContext<T>, element: { cell: HTMLDivElement; row: HTMLDivElement; }) => (void | boolean | Promise<void>);
   $radio?: boolean;
+  $stripes?: boolean;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -516,6 +517,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           key={getValue(item, idDn) ?? index}
           className={Style.brow}
           style={rowStyle}
+          data-stripes={props.$stripes}
           data-border={props.$rowBorder}
         >
           {props.$radio &&

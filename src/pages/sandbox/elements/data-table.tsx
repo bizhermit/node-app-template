@@ -190,6 +190,7 @@ const Page: NextPage = () => {
           console.log(ctx, elem);
         }}
         $radio
+        // $stripes
       />
     </div>
   );

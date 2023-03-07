@@ -81,8 +81,10 @@ $borderStyle: 1px solid var(--c-border);
 .brow {
   background: var(--c-pure);
 
-  &:nth-child(2n) {
-    background: var(--c-dull);
+  &[data-stripes="true"] {
+    &:nth-child(2n) {
+      background: var(--c-dull);
+    }
   }
 
   @include mixins.crossHover {
