@@ -189,6 +189,7 @@ const Page: NextPage = () => {
         $onClick={(ctx, elem) => {
           console.log(ctx, elem);
         }}
+        $radio
       />
     </div>
   );

@@ -10,6 +10,7 @@ import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import Button from "@/components/elements/button";
 import { equals, getValue } from "@/data-items/utilities";
 import { DoubleLeftIcon, DoubleRightIcon, LeftIcon, RightIcon } from "@/components/elements/icon";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 export type DataTableCellContext<T extends Struct = Struct> = {
   column: DataTableColumn<T>;
@@ -107,6 +108,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $rowBorder?: boolean;
   $cellBorder?: boolean;
   $onClick?: (ctx: DataTableCellContext<T>, element: { cell: HTMLDivElement; row: HTMLDivElement; }) => (void | boolean | Promise<void>);
+  $radio?: boolean;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -192,6 +194,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
 } as const;
 
 const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
+  const uniqueKey = useRef(StringUtils.generateUuidV4());
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
   const [pagination, setPagination] = useState<Pagination | undefined>(() => {
@@ -515,6 +518,13 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           style={rowStyle}
           data-border={props.$rowBorder}
         >
+          {props.$radio &&
+            <input
+              className={Style.radio}
+              type="radio"
+              name={uniqueKey.current}
+            />
+          }
           {columns.current?.map(col => generateCell(index, item, col))}
         </div>
       );
@@ -647,7 +657,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
           <div
             className={Style.body}
             data-scroll={props.$scroll}
-            onClick={props.$onClick ? (e) => {
+            onClick={(e) => {
               let elem: HTMLElement | null = e.target as HTMLElement;
               let cellElem: HTMLElement | null = null;
               do {
@@ -656,9 +666,14 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
                 elem = elem?.parentElement;
               } while (elem);
               if (cellElem == null || elem == null) return;
+              const radioElem = elem.querySelector(`input[name="${uniqueKey.current}"]`) as HTMLInputElement;
+              if (radioElem) {
+                radioElem.checked = true;
+              }
+              if (props.$onClick == null) return;
               const index = [].slice.call(elem.parentElement!.childNodes).indexOf(elem as never);
               const column = findColumn(columns.current, cellElem.getAttribute("data-name")!)!;
-              props.$onClick?.({
+              props.$onClick({
                 column,
                 data: items[index],
                 index,
@@ -670,7 +685,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
                 row: elem as HTMLDivElement,
                 cell: cellElem as HTMLDivElement,
               });
-            } : undefined}
+            }}
           >
             {body}
           </div>

@@ -88,6 +88,10 @@ $borderStyle: 1px solid var(--c-border);
   @include mixins.crossHover {
     background: var(--c-hover);
   }
+
+  &:has(>.radio:checked) {
+    background: var(--c-selected) !important;
+  }
 }
 
 .hcell,
@@ -268,4 +272,8 @@ $borderStyle: 1px solid var(--c-border);
     padding-top: var(--padding-top-text);
     column-gap: 0.2rem;
   }
+}
+
+.radio {
+  display: none !important;
 }
