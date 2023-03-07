@@ -20,6 +20,7 @@ export type RadioButtonsProps<
   $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
   $allowNull?: boolean;
+  $unselectable?: boolean;
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
@@ -66,6 +67,12 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
 
   const select = (value: T) => {
     if (!ctx.editable || loading) return;
+    if (props.$allowNull && props.$unselectable) {
+      if (ctx.valueRef.current === value) {
+        ctx.change(undefined);
+        return;
+      }
+    }
     ctx.change(value);
   };
 

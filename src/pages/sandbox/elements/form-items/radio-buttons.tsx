@@ -119,6 +119,15 @@ const Page: NextPage = () => {
             return { value: String(value), label: `item ${value}` };
           })}
         />
+        <RadioButtons
+          $allowNull
+          $unselectable
+          $source={[{
+            value: 1,
+            label: "selected",
+          }]}
+          $onChange={console.log}
+        />
       </Row>
       <RadioButtons
         style={{ width: 500 }}
@@ -131,6 +140,7 @@ const Page: NextPage = () => {
         $onChange={v => setValue(v)}
         $required
         $allowNull
+        $unselectable
         $messagePosition="bottom"
         $source={[{
           value: 0,
