@@ -1,5 +1,5 @@
 import Button from "@/components/elements/button";
-import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon, UndoIcon, RedoIcon } from "@/components/elements/icon";
+import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon, UndoIcon, RedoIcon, CloudIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import Text from "@/components/elements/text";
 import { NextPage } from "next";
@@ -41,6 +41,7 @@ const Page: NextPage = () => {
           ClearAllIcon,
           UndoIcon,
           RedoIcon,
+          CloudIcon,
         ].map(Component => {
           const name = Component.name;
           return (

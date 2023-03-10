@@ -204,3 +204,10 @@ export const ClearAllIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) =>
   </svg>
 ));
 (ClearAllIcon as any).name = "ClearAllIcon";
+
+export const CloudIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M6.5,16.5a4 4 0 1 1 0 -8a4 4 -180 0 1 8,0v1a3.5 3.5 -90 0 1 0,7z" fill="none" />
+  </svg>
+));
+(CloudIcon as any).name = "CloudIcon";
