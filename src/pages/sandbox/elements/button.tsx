@@ -1,6 +1,7 @@
 import Button from "@/components/elements/button";
 import Form from "@/components/elements/form";
 import TextBox from "@/components/elements/form-items/text-box";
+import { CloudDownloadIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import type { NextPage } from "next";
@@ -75,6 +76,11 @@ const Page: NextPage = () => {
           <Button $icon={<VscCloudDownload />} $size="m" $round />
           <Button $icon={<VscCloudDownload />} $size="l" $round />
           <Button $icon={<VscCloudDownload />} $size="xl" $round />
+          <Button $icon={<CloudDownloadIcon />} $size="xs" $round />
+          <Button $icon={<CloudDownloadIcon />} $size="s" $round />
+          <Button $icon={<CloudDownloadIcon />} $size="m" $round />
+          <Button $icon={<CloudDownloadIcon />} $size="l" $round />
+          <Button $icon={<CloudDownloadIcon />} $size="xl" $round />
         </Row>
       </section>
       <section>

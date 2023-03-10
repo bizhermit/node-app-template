@@ -1,7 +1,6 @@
 import Button from "@/components/elements/button";
-import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon, UndoIcon, RedoIcon, CloudIcon } from "@/components/elements/icon";
+import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon, UndoIcon, RedoIcon, CloudIcon, CloudDownloadIcon, CloudUploadIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
-import Text from "@/components/elements/text";
 import { NextPage } from "next";
 
 const Page: NextPage = () => {
@@ -42,16 +41,18 @@ const Page: NextPage = () => {
           UndoIcon,
           RedoIcon,
           CloudIcon,
+          CloudDownloadIcon,
+          CloudUploadIcon,
         ].map(Component => {
           const name = Component.name;
           return (
             <Row key={name} className="gap-2">
-              <Component className="bgc-base" $size="xs" />
-              <Component className="bgc-base" $size="s" />
-              <Component className="bgc-base" $size="m" />
-              <Component className="bgc-base" $size="l" />
-              <Component className="bgc-base" $size="xl" />
-              <Component className="bgc-base" />
+              <Component className="bgc-cool" $size="xs" />
+              <Component className="bgc-cool" $size="s" />
+              <Component className="bgc-cool" $size="m" />
+              <Component className="bgc-cool" $size="l" />
+              <Component className="bgc-cool" $size="xl" />
+              <Component className="bgc-cool" />
               <Button $icon={<Component />} />
               <Button $icon={<Component />} $outline />
               <Button $icon={<Component />}>{name}</Button>
