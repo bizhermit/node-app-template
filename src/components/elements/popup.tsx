@@ -1,9 +1,23 @@
 import usePortalElement from "@/hooks/portal-element";
-import { forwardRef, type HTMLAttributes, type MutableRefObject, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, type HTMLAttributes, type MutableRefObject, useEffect, useImperativeHandle, useRef, useState, createContext, useContext } from "react";
 import { createPortal } from "react-dom";
 import Style from "$/components/elements/popup.module.scss";
 import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
+
+type PopupContextProps = {
+  showed: boolean;
+  resetPosition: () => void;
+};
+
+const PopupContext = createContext<PopupContextProps>({
+  showed: true,
+  resetPosition: () => {},
+});
+
+export const usePopup = () => {
+  return useContext(PopupContext);
+};
 
 const defaultAnimationDuration = 150;
 const defaultAnimationInterval = 10;
@@ -88,6 +102,164 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     setShowed(show);
   }, [props.$show]);
 
+  const resetPosition = () => {
+    const hMax = ref.current.offsetHeight;
+    const wMax = ref.current.offsetWidth;
+    let posX = props.$position?.x || "center";
+    let posY = props.$position?.y || "center";
+    const posAbs = props.$position?.absolute === true;
+    const marginX = props.$position?.marginX ?? 0;
+    const marginY = props.$position?.marginY ?? 0;
+    let rect = {
+      top: 0, bottom: 0, left: 0, right: 0,
+      width: 0, height: 0,
+    };
+    if (props.$anchor == null) {
+      rect = document.body.getBoundingClientRect();
+      if (posX.startsWith("outer")) posX = "center";
+      if (posY.startsWith("outer")) posY = "center";
+    } else if (props.$anchor === "parent") {
+      const anchor = aref.current?.parentElement as HTMLElement;
+      rect = anchor.getBoundingClientRect();
+    } else if ("current" in props.$anchor) {
+      const anchor = props.$anchor.current;
+      if (anchor == null) {
+        rect = document.body.getBoundingClientRect();
+        if (posX.startsWith("outer")) posX = "center";
+        if (posY.startsWith("outer")) posY = "center";
+      } else {
+        rect = anchor.getBoundingClientRect();
+      }
+    } else {
+      const anchor = props.$anchor;
+      rect.top = rect.bottom = anchor.pageY;
+      rect.left = rect.right = anchor.pageX;
+    }
+    if (marginX) {
+      rect.width += marginX * 2;
+      rect.left -= marginX;
+      rect.right += marginX;
+    }
+    if (marginY) {
+      rect.height += marginY * 2;
+      rect.top -= marginY;
+      rect.bottom += marginY;
+    }
+
+    switch (posX) {
+      case "center":
+        ref.current.style.removeProperty("right");
+        ref.current.style.left = convertSizeNumToStr(posAbs ?
+          rect.left + rect.width / 2 - wMax / 2 :
+          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2), document.body.clientWidth - ref.current.offsetWidth)
+        )!;
+        break;
+      case "inner":
+        if (document.body.clientWidth - rect.left < wMax && rect.left > document.body.clientWidth - rect.right) {
+          ref.current.style.removeProperty("left");
+          ref.current.style.right = convertSizeNumToStr(document.body.clientWidth - rect.right)!;
+        } else {
+          ref.current.style.removeProperty("right");
+          ref.current.style.left = convertSizeNumToStr(rect.left)!;
+        }
+        break;
+      case "inner-left":
+        ref.current.style.removeProperty("right");
+        ref.current.style.left = convertSizeNumToStr(posAbs ?
+          rect.left :
+          Math.min(rect.left, document.body.clientWidth - ref.current.offsetWidth)
+        )!;
+        break;
+      case "inner-right":
+        ref.current.style.removeProperty("left");
+        ref.current.style.right = convertSizeNumToStr(posAbs ?
+          document.body.clientWidth - rect.right :
+          Math.min(document.body.clientWidth - rect.right, document.body.clientWidth - ref.current.offsetWidth)
+        )!;
+        break;
+      case "outer":
+        if (document.body.clientWidth - rect.right < wMax && rect.left > document.body.clientWidth - rect.right) {
+          ref.current.style.removeProperty("left");
+          ref.current.style.right = convertSizeNumToStr(document.body.clientWidth - rect.left)!;
+        } else {
+          ref.current.style.removeProperty("right");
+          ref.current.style.left = convertSizeNumToStr(rect.right)!;
+        }
+        break;
+      case "outer-left":
+        ref.current.style.removeProperty("left");
+        ref.current.style.right = convertSizeNumToStr(posAbs ?
+          document.body.clientWidth - rect.left :
+          Math.min(document.body.clientWidth - rect.left, document.body.clientWidth - ref.current.offsetWidth)
+        )!;
+        break;
+      case "outer-right":
+        ref.current.style.removeProperty("right");
+        ref.current.style.left = convertSizeNumToStr(posAbs ?
+          rect.right :
+          Math.min(rect.right, document.body.clientWidth - ref.current.offsetWidth)
+        )!;
+        break;
+      default: break;
+    }
+    switch (posY) {
+      case "center":
+        ref.current.style.removeProperty("bottom");
+        ref.current.style.top = convertSizeNumToStr(posAbs ?
+          rect.top + rect.height / 2 - hMax / 2 :
+          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2), document.body.clientHeight - ref.current.offsetHeight)
+        )!;
+        break;
+      case "inner":
+        if (document.body.clientHeight - rect.top < hMax && rect.top > document.body.clientHeight - rect.bottom) {
+          ref.current.style.removeProperty("top");
+          ref.current.style.bottom = convertSizeNumToStr(document.body.clientHeight - rect.bottom)!;
+        } else {
+          ref.current.style.removeProperty("bottom");
+          ref.current.style.top = convertSizeNumToStr(rect.top)!;
+        }
+        break;
+      case "inner-top":
+        ref.current.style.removeProperty("bottom");
+        ref.current.style.top = convertSizeNumToStr(posAbs ?
+          rect.top :
+          Math.min(rect.top, document.body.clientHeight - ref.current.offsetHeight)
+        )!;
+        break;
+      case "inner-bottom":
+        ref.current.style.removeProperty("top");
+        ref.current.style.bottom = convertSizeNumToStr(posAbs ?
+          document.body.clientHeight - rect.bottom :
+          Math.min(document.body.clientHeight - rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
+        )!;
+        break;
+      case "outer":
+        if (document.body.clientHeight - rect.bottom < hMax && rect.top > document.body.clientHeight - rect.bottom) {
+          ref.current.style.removeProperty("top");
+          ref.current.style.bottom = convertSizeNumToStr(document.body.clientHeight - rect.top)!;
+        } else {
+          ref.current.style.removeProperty("bottom");
+          ref.current.style.top = convertSizeNumToStr(rect.bottom)!;
+        }
+        break;
+      case "outer-top":
+        ref.current.style.removeProperty("top");
+        ref.current.style.bottom = convertSizeNumToStr(posAbs ?
+          document.body.clientHeight - rect.top :
+          Math.min(document.body.clientHeight - rect.top, document.body.clientHeight - ref.current.offsetHeight)
+        )!;
+        break;
+      case "outer-bottom":
+        ref.current.style.removeProperty("bottom");
+        ref.current.style.top = convertSizeNumToStr(posAbs ?
+          rect.bottom :
+          Math.min(rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
+        )!;
+        break;
+      default: break;
+    }
+  };
+
   const toggleAnimationInitStyle = useToggleAnimation({
     elementRef: ref,
     open: showed,
@@ -105,162 +277,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "0";
         }
-
-        const hMax = ref.current.offsetHeight;
-        const wMax = ref.current.offsetWidth;
-        let posX = props.$position?.x || "center";
-        let posY = props.$position?.y || "center";
-        const posAbs = props.$position?.absolute === true;
-        const marginX = props.$position?.marginX ?? 0;
-        const marginY = props.$position?.marginY ?? 0;
-        let rect = {
-          top: 0, bottom: 0, left: 0, right: 0,
-          width: 0, height: 0,
-        };
-        if (props.$anchor == null) {
-          rect = document.body.getBoundingClientRect();
-          if (posX.startsWith("outer")) posX = "center";
-          if (posY.startsWith("outer")) posY = "center";
-        } else if (props.$anchor === "parent") {
-          const anchor = aref.current?.parentElement as HTMLElement;
-          rect = anchor.getBoundingClientRect();
-        } else if ("current" in props.$anchor) {
-          const anchor = props.$anchor.current;
-          if (anchor == null) {
-            rect = document.body.getBoundingClientRect();
-            if (posX.startsWith("outer")) posX = "center";
-            if (posY.startsWith("outer")) posY = "center";
-          } else {
-            rect = anchor.getBoundingClientRect();
-          }
-        } else {
-          const anchor = props.$anchor;
-          rect.top = rect.bottom = anchor.pageY;
-          rect.left = rect.right = anchor.pageX;
-        }
-        if (marginX) {
-          rect.width += marginX * 2;
-          rect.left -= marginX;
-          rect.right += marginX;
-        }
-        if (marginY) {
-          rect.height += marginY * 2;
-          rect.top -= marginY;
-          rect.bottom += marginY;
-        }
-
-        switch (posX) {
-          case "center":
-            ref.current.style.removeProperty("right");
-            ref.current.style.left = convertSizeNumToStr(posAbs ?
-              rect.left + rect.width / 2 - wMax / 2 :
-              Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2), document.body.clientWidth - ref.current.offsetWidth)
-            )!;
-            break;
-          case "inner":
-            if (document.body.clientWidth - rect.left < wMax && rect.left > document.body.clientWidth - rect.right) {
-              ref.current.style.removeProperty("left");
-              ref.current.style.right = convertSizeNumToStr(document.body.clientWidth - rect.right)!;
-            } else {
-              ref.current.style.removeProperty("right");
-              ref.current.style.left = convertSizeNumToStr(rect.left)!;
-            }
-            break;
-          case "inner-left":
-            ref.current.style.removeProperty("right");
-            ref.current.style.left = convertSizeNumToStr(posAbs ?
-              rect.left :
-              Math.min(rect.left, document.body.clientWidth - ref.current.offsetWidth)
-            )!;
-            break;
-          case "inner-right":
-            ref.current.style.removeProperty("left");
-            ref.current.style.right = convertSizeNumToStr(posAbs ?
-              document.body.clientWidth - rect.right :
-              Math.min(document.body.clientWidth - rect.right, document.body.clientWidth - ref.current.offsetWidth)
-            )!;
-            break;
-          case "outer":
-            if (document.body.clientWidth - rect.right < wMax && rect.left > document.body.clientWidth - rect.right) {
-              ref.current.style.removeProperty("left");
-              ref.current.style.right = convertSizeNumToStr(document.body.clientWidth - rect.left)!;
-            } else {
-              ref.current.style.removeProperty("right");
-              ref.current.style.left = convertSizeNumToStr(rect.right)!;
-            }
-            break;
-          case "outer-left":
-            ref.current.style.removeProperty("left");
-            ref.current.style.right = convertSizeNumToStr(posAbs ?
-              document.body.clientWidth - rect.left :
-              Math.min(document.body.clientWidth - rect.left, document.body.clientWidth - ref.current.offsetWidth)
-            )!;
-            break;
-          case "outer-right":
-            ref.current.style.removeProperty("right");
-            ref.current.style.left = convertSizeNumToStr(posAbs ?
-              rect.right :
-              Math.min(rect.right, document.body.clientWidth - ref.current.offsetWidth)
-            )!;
-            break;
-          default: break;
-        }
-        switch (posY) {
-          case "center":
-            ref.current.style.removeProperty("bottom");
-            ref.current.style.top = convertSizeNumToStr(posAbs ?
-              rect.top + rect.height / 2 - hMax / 2 :
-              Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2), document.body.clientHeight - ref.current.offsetHeight)
-            )!;
-            break;
-          case "inner":
-            if (document.body.clientHeight - rect.top < hMax && rect.top > document.body.clientHeight - rect.bottom) {
-              ref.current.style.removeProperty("top");
-              ref.current.style.bottom = convertSizeNumToStr(document.body.clientHeight - rect.bottom)!;
-            } else {
-              ref.current.style.removeProperty("bottom");
-              ref.current.style.top = convertSizeNumToStr(rect.top)!;
-            }
-            break;
-          case "inner-top":
-            ref.current.style.removeProperty("bottom");
-            ref.current.style.top = convertSizeNumToStr(posAbs ?
-              rect.top :
-              Math.min(rect.top, document.body.clientHeight - ref.current.offsetHeight)
-            )!;
-            break;
-          case "inner-bottom":
-            ref.current.style.removeProperty("top");
-            ref.current.style.bottom = convertSizeNumToStr(posAbs ?
-              document.body.clientHeight - rect.bottom :
-              Math.min(document.body.clientHeight - rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
-            )!;
-            break;
-          case "outer":
-            if (document.body.clientHeight - rect.bottom < hMax && rect.top > document.body.clientHeight - rect.bottom) {
-              ref.current.style.removeProperty("top");
-              ref.current.style.bottom = convertSizeNumToStr(document.body.clientHeight - rect.top)!;
-            } else {
-              ref.current.style.removeProperty("bottom");
-              ref.current.style.top = convertSizeNumToStr(rect.bottom)!;
-            }
-            break;
-          case "outer-top":
-            ref.current.style.removeProperty("top");
-            ref.current.style.bottom = convertSizeNumToStr(posAbs ?
-              document.body.clientHeight - rect.top :
-              Math.min(document.body.clientHeight - rect.top, document.body.clientHeight - ref.current.offsetHeight)
-            )!;
-            break;
-          case "outer-bottom":
-            ref.current.style.removeProperty("bottom");
-            ref.current.style.top = convertSizeNumToStr(posAbs ?
-              rect.bottom :
-              Math.min(rect.bottom, document.body.clientHeight - ref.current.offsetHeight)
-            )!;
-            break;
-          default: break;
-        }
+        resetPosition();
       } else {
         if (mref.current) {
           mref.current.style.removeProperty("display");
@@ -323,7 +340,12 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     <>
       {props.$anchor === "parent" && <div className={Style.anchor} ref={aref} />}
       {createPortal(
-        <>
+        <PopupContext.Provider
+          value={{
+            showed,
+            resetPosition,
+          }}
+        >
           {props.$mask &&
             <div
               ref={mref}
@@ -349,7 +371,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
               onKeyDown={keydownMask2}
             />
           }
-        </>
+        </PopupContext.Provider>
         , portal)}
     </>
   );
