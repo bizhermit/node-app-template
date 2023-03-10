@@ -6,11 +6,13 @@ import { attributesWithoutChildren, convertSizeNumToStr } from "@/components/uti
 import useToggleAnimation from "@/hooks/toggle-animation";
 
 type PopupContextProps = {
+  isPopup?: boolean;
   showed: boolean;
   resetPosition: () => void;
 };
 
 const PopupContext = createContext<PopupContextProps>({
+  isPopup: false,
   showed: true,
   resetPosition: () => {},
 });
@@ -342,6 +344,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       {createPortal(
         <PopupContext.Provider
           value={{
+            isPopup: true,
             showed,
             resetPosition,
           }}
