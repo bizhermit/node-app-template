@@ -43,7 +43,6 @@
 
   @include mixins.crossHover {
     @include mixins.hover;
-    z-index: 1;
 
     &:active {
       @include mixins.hoverActive;

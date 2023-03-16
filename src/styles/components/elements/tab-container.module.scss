@@ -218,7 +218,6 @@ $vTransitionTime: 0.5s;
     @include mixins.crossHover {
       &:hover {
         @include mixins.hover;
-        z-index: 1;
 
         &:active {
           @include mixins.hoverActive;
