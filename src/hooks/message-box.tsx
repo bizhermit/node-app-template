@@ -5,10 +5,13 @@ import Style from "$/hooks/message-box.module.scss";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 
-const MessageBox: FC<{
+type MessageBoxFCProps = {
+  close: (params?: any) => void;
   showed: boolean;
   children?: ReactNode;
-}> = (props) => {
+};
+
+const MessageBox: FC<MessageBoxFCProps> = (props) => {
   const ref = useRef<HTMLDialogElement>(null!);
   const mref = useRef<HTMLDivElement>(null!);
   const [showed, setShowed] = useState(false);
@@ -70,7 +73,7 @@ const MessageBox: FC<{
 
   useEffect(() => {
     return () => {
-      ref.current?.close();
+      ref.current?.close?.();
     };
   }, []);
 
@@ -79,6 +82,10 @@ const MessageBox: FC<{
       ref={ref}
       className={Style.wrap}
       style={style}
+      onCancel={e => {
+        e.preventDefault();
+        props.close(false);
+      }}
     >
       <div
         ref={mref}
@@ -146,7 +153,7 @@ const convertToProps = (message: string | MessageBoxProps, initProps: Partial<Me
   return props;
 };
 
-const getAlertComponent = (props: AlertProps): MessageBoxContentComponent => {
+const getAlertComponent = (props: AlertProps): MessageBoxContentComponent<boolean> => {
   const color = props.color;
   const btnProps: ButtonProps = {
     children: "OK",
@@ -171,7 +178,7 @@ const getAlertComponent = (props: AlertProps): MessageBoxContentComponent => {
         <Button
           {...btnProps}
           $onClick={() => {
-            close();
+            close(true);
           }}
         />
       </div>
@@ -259,14 +266,18 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
     }
     showed.current = true;
     return new Promise<T>(resolve => {
+      const close = (params: any) => {
+        root.current?.render(<MessageBoxComponent showed={false} />);
+        if (!showed.current) unmount();
+        showed.current = false;
+        resolve(params as T);
+      };
       const MessageBoxComponent: FC<{ showed: boolean; }> = (props) => (
-        <MessageBox showed={props.showed}>
-          <Component close={(params: any) => {
-            root.current?.render(<MessageBoxComponent showed={false} />);
-            if (!showed.current) unmount();
-            showed.current = false;
-            resolve(params as T);
-          }} />
+        <MessageBox
+          showed={props.showed}
+          close={close}
+        >
+          <Component close={close} />
         </MessageBox>
       );
       root.current?.render(<MessageBoxComponent showed={true} />);
