@@ -5,8 +5,12 @@ import Style from "$/hooks/message-box.module.scss";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 
-type MessageBoxFCProps = {
-  close: (params?: any) => void;
+type ShowOptions = {
+  preventEscape?: boolean;
+};
+
+type MessageBoxFCProps = ShowOptions & {
+  onClose: (params?: any) => void;
   showed: boolean;
   children?: ReactNode;
 };
@@ -84,7 +88,8 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
       style={style}
       onCancel={e => {
         e.preventDefault();
-        props.close(false);
+        if (props.preventEscape) return;
+        props.onClose(false);
       }}
     >
       <div
@@ -255,7 +260,7 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
     });
   }, []);
 
-  const show = useCallback(async <T = void>(Component: MessageBoxContentComponent<T>) => {
+  const show = useCallback(async <T = void>(Component: MessageBoxContentComponent<T>, showOptions?: ShowOptions) => {
     if (typeof window === "undefined") return new Promise<void>(resolve => resolve());
     if (elemRef.current == null) {
       elemRef.current = document.createElement("div");
@@ -274,8 +279,9 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
       };
       const MessageBoxComponent: FC<{ showed: boolean; }> = (props) => (
         <MessageBox
+          {...showOptions}
           showed={props.showed}
-          close={close}
+          onClose={close}
         >
           <Component close={close} />
         </MessageBox>
@@ -296,13 +302,13 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
 
   return {
     show,
-    alert: (message: string | AlertProps) => {
+    alert: (message: string | AlertProps, showOptions?: ShowOptions) => {
       const props = convertToProps(message, { color: "main-light" });
-      return show(getAlertComponent(props));
+      return show(getAlertComponent(props), showOptions);
     },
-    confirm: (message: string | ConfirmProps) => {
+    confirm: (message: string | ConfirmProps, showOptions?: ShowOptions) => {
       const props = convertToProps(message, { color: "main" });
-      return show(getConfirmComponent(props));
+      return show(getConfirmComponent(props), showOptions);
     }
   };
 };
