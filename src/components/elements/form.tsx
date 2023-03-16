@@ -497,6 +497,14 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
     setCurrentValue(props.$value);
+    if (props.name) {
+      if (props.$bind) {
+        setValue(props.$bind, props.name, props.$value);
+      }
+      if (form.bind && !props.$preventFormBind) {
+        setValue(form.bind, props.name, props.$value);
+      }
+    }
     options?.effect?.(valueRef.current);
     validation();
   }, [props?.$value]);
@@ -558,7 +566,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, a
   $clickable?: boolean;
   $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
   $useHidden?: boolean;
-  children: ReactNode;
+  children?: ReactNode;
 }>((props, ref) => {
   const errorNode = props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
     <div

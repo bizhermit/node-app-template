@@ -18,7 +18,10 @@ export namespace FileData {
     const validAccept = (file: File) => {
       if (file == null) return true;
       return accepts.some(accept => {
-        if (accept.startsWith(".")) return file.name.endsWith(accept);
+        if (accept.startsWith(".")) {
+          const reg = new RegExp(`${accept}$`, "i");
+          return (file.name || "").match(reg);
+        }
         const reg = new RegExp(accept);
         return (file.type || "").match(reg);
       });

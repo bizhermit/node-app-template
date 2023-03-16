@@ -3,12 +3,18 @@ import { createContext, type FC, type ReactNode, useContext, useEffect, useReduc
 
 type ArgMessages = Message | Array<Message | null | undefined> | null | undefined;
 
+type ProviderMessage = Message & {
+  verified: boolean;
+  displayed: boolean;
+  timestamp: number;
+};
+
 type MessageContextProps = {
   set: (messages: ArgMessages) => void;
   append: (messages: ArgMessages) => void;
   error: (e: any) => void;
   clear: () => void;
-  messages: Array<Message>;
+  messages: Array<ProviderMessage>;
 };
 
 const MessageContext = createContext<MessageContextProps>({
@@ -23,12 +29,6 @@ export const useMessage = () => {
   return useContext(MessageContext);
 };
 
-type ProviderMessage = Message & {
-  verified: boolean;
-  popuped: boolean;
-  timestamp: number;
-};
-
 const arrangeMessages = (messages: ArgMessages): Array<ProviderMessage> => {
   if (messages == null) return [];
   const timestamp = Date.now();
@@ -38,7 +38,7 @@ const arrangeMessages = (messages: ArgMessages): Array<ProviderMessage> => {
       return {
         ...msg!,
         timestamp,
-        popuped: false,
+        displayed: false,
         verified: false,
       };
     });
@@ -89,8 +89,8 @@ export const MessageProvider: FC<{
 
   useEffect(() => {
     const msg = messages[messages.length - 1];
-    if (msg && !msg.popuped) {
-      msg.popuped = true;
+    if (msg && !msg.displayed) {
+      msg.displayed = true;
       msgBox.alert({
         header: msg.title,
         body: msg.body,

@@ -227,6 +227,14 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const blur = (e: React.FocusEvent) => {
     if (e.relatedTarget === iref.current || e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current) return;
     setShowPicker(false);
+    const label = iref.current.value;
+    const item = source.find(item => equals(item[ldn], label));
+    if (item) {
+      if (!equals(item[vdn], ctx.valueRef.current)) {
+        ctx.change(item[vdn]);
+        return;
+      }
+    }
     renderLabel();
   };
 

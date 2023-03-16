@@ -162,6 +162,11 @@ const Navigation: FC = () => {
               label: "TimeBox",
               icon: "TB",
               pathname: "/sandbox/elements/form-items/time-box",
+            }, {
+              key: "hidden",
+              label: "Hidden",
+              icon: "H",
+              pathname: "/sandbox/elements/form-items/hidden",
             }]
           }, {
             key: "container",

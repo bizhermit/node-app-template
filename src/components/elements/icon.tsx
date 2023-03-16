@@ -204,3 +204,24 @@ export const ClearAllIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) =>
   </svg>
 ));
 (ClearAllIcon as any).name = "ClearAllIcon";
+
+export const CloudIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M6.5,16a4.1 4.1 0 1 1 0 -8a3.9 3.9 -180 0 1 8,0v1a3 3.5 -90 0 1 0,7.1z" fill="none" />
+  </svg>
+));
+(CloudIcon as any).name = "CloudIcon";
+
+export const CloudDownloadIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M6.5,16a4.1 4.1 0 1 1 0 -8a3.9 3.9 -180 0 1 8,0v1a3 3.5 -90 0 1 0,7.1M10 8v8M7 13l3,3 3,-3" fill="none" />
+  </svg>
+));
+(CloudDownloadIcon as any).name = "CloudDownloadIcon";
+
+export const CloudUploadIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M6.5,16a4.1 4.1 0 1 1 0 -8a3.9 3.9 -180 0 1 8,0v1a3 3.5 -90 0 1 0,7.1M10 11v6M7 12.5l3,-3 3,3" fill="none" />
+  </svg>
+));
+(CloudUploadIcon as any).name = "CloudUploadIcon";

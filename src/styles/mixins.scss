@@ -4,6 +4,7 @@
   outline: solid;
   outline-offset: 0rem;
   animation: hover 1s infinite;
+  z-index: 9;
 }
 
 @mixin hoverActive {

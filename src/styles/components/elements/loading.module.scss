@@ -45,8 +45,8 @@ $circleWidth: 1.2rem;
   &[data-fixed="true"] {
     position: fixed;
     z-index: 99997;
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 100% !important;
+    height: 100% !important;
   }
 }
 
@@ -68,8 +68,8 @@ $circleWidth: 1.2rem;
   &[data-fixed="true"] {
     position: fixed;
     z-index: 99998;
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 100% !important;
+    height: 100% !important;
   }
 }
 
