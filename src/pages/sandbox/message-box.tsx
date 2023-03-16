@@ -11,7 +11,7 @@ const Page: NextPage = () => {
     <div className="flex-start p-1 w-100 h-100 gap-1">
       <Button
         $onClick={async (unlock) => {
-          const res = await msg.alert("alert");
+          const res = await msg.alert("alert", { preventEscape: true });
           console.log(res);
           unlock();
         }}
@@ -24,7 +24,7 @@ const Page: NextPage = () => {
             header: "お知らせ",
             body: "アラート",
             color: "warning",
-          });
+          }, { preventEscape: true });
           console.log(res);
           unlock();
         }}
@@ -62,7 +62,6 @@ const Page: NextPage = () => {
             console.log("close");
           });
           setTimeout(() => {
-            // router.push("/sandbox/color");
             router.push("/sandbox/color");
           }, 1000);
           unlock();

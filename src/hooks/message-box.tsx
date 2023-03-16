@@ -5,11 +5,18 @@ import Style from "$/hooks/message-box.module.scss";
 import useToggleAnimation from "@/hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "@/components/utilities/attributes";
 
-const MessageBox: FC<{
+type ShowOptions = {
+  preventEscape?: boolean;
+};
+
+type MessageBoxFCProps = ShowOptions & {
+  onClose: (params?: any) => void;
   showed: boolean;
   children?: ReactNode;
-}> = (props) => {
-  const ref = useRef<HTMLDivElement>(null!);
+};
+
+const MessageBox: FC<MessageBoxFCProps> = (props) => {
+  const ref = useRef<HTMLDialogElement>(null!);
   const mref = useRef<HTMLDivElement>(null!);
   const [showed, setShowed] = useState(false);
   const [mount, setMount] = useState(false);
@@ -28,6 +35,7 @@ const MessageBox: FC<{
     animationDuration: 50,
     onToggle: (open) => {
       if (open) {
+        ref.current?.showModal?.();
         if (ref.current) {
           ref.current.style.top = convertSizeNumToStr((document.body.clientHeight - ref.current.offsetHeight) / 2)!;
           ref.current.style.left = convertSizeNumToStr((document.body.clientWidth - ref.current.offsetWidth) / 2)!;
@@ -52,6 +60,7 @@ const MessageBox: FC<{
         }
       } else {
         setMount(false);
+        ref.current?.close?.();
         if (mref.current) {
           mref.current.style.display = "none";
           mref.current.style.opacity = "0";
@@ -66,8 +75,23 @@ const MessageBox: FC<{
     setShowed(props.showed);
   }, [props.showed]);
 
+  useEffect(() => {
+    return () => {
+      ref.current?.close?.();
+    };
+  }, []);
+
   return (
-    <>
+    <dialog
+      ref={ref}
+      className={Style.wrap}
+      style={style}
+      onCancel={e => {
+        e.preventDefault();
+        if (props.preventEscape) return;
+        props.onClose(false);
+      }}
+    >
       <div
         ref={mref}
         className={Style.mask1}
@@ -75,11 +99,7 @@ const MessageBox: FC<{
         onKeyDown={keydownMask1}
         style={{ opacity: "0" }}
       />
-      <div
-        ref={ref}
-        className={Style.main}
-        style={style}
-      >
+      <div className={Style.main}>
         {mount && props.children}
       </div>
       {showed &&
@@ -89,7 +109,7 @@ const MessageBox: FC<{
           onKeyDown={keydownMask2}
         />
       }
-    </>
+    </dialog>
   );
 };
 
@@ -138,19 +158,13 @@ const convertToProps = (message: string | MessageBoxProps, initProps: Partial<Me
   return props;
 };
 
-const getAlertComponent = (props: AlertProps): MessageBoxContentComponent => {
-  const color = props.color;
-  const btnProps: ButtonProps = {
-    children: "OK",
-    $outline: true,
-    $color: color,
-    ...props.buttonProps
-  };
-
-  return ({ close }) => (
+const MessageBoxContent: FC<MessageBoxProps & {
+  children: ReactNode;
+}> = (props) => {
+  return (
     <>
       {props.header != null &&
-        <div className={joinClassNames(Style.header, color ? `c-${color}` : "")}>
+        <div className={joinClassNames(Style.header, props.color ? `c-${props.color}` : "")}>
           {props.header}
         </div>
       }
@@ -160,14 +174,33 @@ const getAlertComponent = (props: AlertProps): MessageBoxContentComponent => {
         </div>
       </div>
       <div className={Style.footer}>
-        <Button
-          {...btnProps}
-          $onClick={() => {
-            close();
-          }}
-        />
+        {props.children}
       </div>
     </>
+  );
+};
+
+const getAlertComponent = (props: AlertProps): MessageBoxContentComponent<boolean> => {
+  const color = props.color;
+  const btnProps: ButtonProps = {
+    children: "OK",
+    $outline: true,
+    $color: color,
+    ...props.buttonProps
+  };
+
+  return ({ close }) => (
+    <MessageBoxContent
+      {...props}
+      color={color}
+    >
+      <Button
+        {...btnProps}
+        $onClick={() => {
+          close(true);
+        }}
+      />
+    </MessageBoxContent>
   );
 };
 
@@ -186,32 +219,23 @@ const getConfirmComponent = (props: ConfirmProps): MessageBoxContentComponent<bo
   };
 
   return ({ close }) => (
-    <>
-      {props.header != null &&
-        <div className={joinClassNames(Style.header, color ? `c-${color}` : "")}>
-          {props.header}
-        </div>
-      }
-      <div className={Style.body}>
-        <div className={Style.content}>
-          {props.body}
-        </div>
-      </div>
-      <div className={Style.footer}>
-        <Button
-          {...negativeBtnProps}
-          $onClick={() => {
-            close(false);
-          }}
-        />
-        <Button
-          {...positiveBtnProps}
-          $onClick={() => {
-            close(true);
-          }}
-        />
-      </div>
-    </>
+    <MessageBoxContent
+      {...props}
+      color={color}
+    >
+      <Button
+        {...negativeBtnProps}
+        $onClick={() => {
+          close(false);
+        }}
+      />
+      <Button
+        {...positiveBtnProps}
+        $onClick={() => {
+          close(true);
+        }}
+      />
+    </MessageBoxContent>
   );
 };
 
@@ -240,7 +264,7 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
     });
   }, []);
 
-  const show = useCallback(async <T = void>(Component: MessageBoxContentComponent<T>) => {
+  const show = useCallback(async <T = void>(Component: MessageBoxContentComponent<T>, showOptions?: ShowOptions) => {
     if (typeof window === "undefined") return new Promise<void>(resolve => resolve());
     if (elemRef.current == null) {
       elemRef.current = document.createElement("div");
@@ -251,14 +275,19 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
     }
     showed.current = true;
     return new Promise<T>(resolve => {
+      const close = (params: any) => {
+        root.current?.render(<MessageBoxComponent showed={false} />);
+        if (!showed.current) unmount();
+        showed.current = false;
+        resolve(params as T);
+      };
       const MessageBoxComponent: FC<{ showed: boolean; }> = (props) => (
-        <MessageBox showed={props.showed}>
-          <Component close={(params: any) => {
-            root.current?.render(<MessageBoxComponent showed={false} />);
-            if (!showed.current) unmount();
-            showed.current = false;
-            resolve(params as T);
-          }} />
+        <MessageBox
+          {...showOptions}
+          showed={props.showed}
+          onClose={close}
+        >
+          <Component close={close} />
         </MessageBox>
       );
       root.current?.render(<MessageBoxComponent showed={true} />);
@@ -277,13 +306,13 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
 
   return {
     show,
-    alert: (message: string | AlertProps) => {
+    alert: (message: string | AlertProps, showOptions?: ShowOptions) => {
       const props = convertToProps(message, { color: "main-light" });
-      return show(getAlertComponent(props));
+      return show(getAlertComponent(props), showOptions);
     },
-    confirm: (message: string | ConfirmProps) => {
+    confirm: (message: string | ConfirmProps, showOptions?: ShowOptions) => {
       const props = convertToProps(message, { color: "main" });
-      return show(getConfirmComponent(props));
+      return show(getConfirmComponent(props), showOptions);
     }
   };
 };
