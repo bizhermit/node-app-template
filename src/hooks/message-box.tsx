@@ -158,6 +158,28 @@ const convertToProps = (message: string | MessageBoxProps, initProps: Partial<Me
   return props;
 };
 
+const MessageBoxContent: FC<MessageBoxProps & {
+  children: ReactNode;
+}> = (props) => {
+  return (
+    <>
+      {props.header != null &&
+        <div className={joinClassNames(Style.header, props.color ? `c-${props.color}` : "")}>
+          {props.header}
+        </div>
+      }
+      <div className={Style.body}>
+        <div className={Style.content}>
+          {props.body}
+        </div>
+      </div>
+      <div className={Style.footer}>
+        {props.children}
+      </div>
+    </>
+  );
+};
+
 const getAlertComponent = (props: AlertProps): MessageBoxContentComponent<boolean> => {
   const color = props.color;
   const btnProps: ButtonProps = {
@@ -168,26 +190,17 @@ const getAlertComponent = (props: AlertProps): MessageBoxContentComponent<boolea
   };
 
   return ({ close }) => (
-    <>
-      {props.header != null &&
-        <div className={joinClassNames(Style.header, color ? `c-${color}` : "")}>
-          {props.header}
-        </div>
-      }
-      <div className={Style.body}>
-        <div className={Style.content}>
-          {props.body}
-        </div>
-      </div>
-      <div className={Style.footer}>
-        <Button
-          {...btnProps}
-          $onClick={() => {
-            close(true);
-          }}
-        />
-      </div>
-    </>
+    <MessageBoxContent
+      {...props}
+      color={color}
+    >
+      <Button
+        {...btnProps}
+        $onClick={() => {
+          close(true);
+        }}
+      />
+    </MessageBoxContent>
   );
 };
 
@@ -206,32 +219,23 @@ const getConfirmComponent = (props: ConfirmProps): MessageBoxContentComponent<bo
   };
 
   return ({ close }) => (
-    <>
-      {props.header != null &&
-        <div className={joinClassNames(Style.header, color ? `c-${color}` : "")}>
-          {props.header}
-        </div>
-      }
-      <div className={Style.body}>
-        <div className={Style.content}>
-          {props.body}
-        </div>
-      </div>
-      <div className={Style.footer}>
-        <Button
-          {...negativeBtnProps}
-          $onClick={() => {
-            close(false);
-          }}
-        />
-        <Button
-          {...positiveBtnProps}
-          $onClick={() => {
-            close(true);
-          }}
-        />
-      </div>
-    </>
+    <MessageBoxContent
+      {...props}
+      color={color}
+    >
+      <Button
+        {...negativeBtnProps}
+        $onClick={() => {
+          close(false);
+        }}
+      />
+      <Button
+        {...positiveBtnProps}
+        $onClick={() => {
+          close(true);
+        }}
+      />
+    </MessageBoxContent>
   );
 };
 
