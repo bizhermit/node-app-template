@@ -9,7 +9,7 @@ const MessageBox: FC<{
   showed: boolean;
   children?: ReactNode;
 }> = (props) => {
-  const ref = useRef<HTMLDivElement>(null!);
+  const ref = useRef<HTMLDialogElement>(null!);
   const mref = useRef<HTMLDivElement>(null!);
   const [showed, setShowed] = useState(false);
   const [mount, setMount] = useState(false);
@@ -28,6 +28,7 @@ const MessageBox: FC<{
     animationDuration: 50,
     onToggle: (open) => {
       if (open) {
+        ref.current?.showModal?.();
         if (ref.current) {
           ref.current.style.top = convertSizeNumToStr((document.body.clientHeight - ref.current.offsetHeight) / 2)!;
           ref.current.style.left = convertSizeNumToStr((document.body.clientWidth - ref.current.offsetWidth) / 2)!;
@@ -52,6 +53,7 @@ const MessageBox: FC<{
         }
       } else {
         setMount(false);
+        ref.current?.close?.();
         if (mref.current) {
           mref.current.style.display = "none";
           mref.current.style.opacity = "0";
@@ -66,8 +68,18 @@ const MessageBox: FC<{
     setShowed(props.showed);
   }, [props.showed]);
 
+  useEffect(() => {
+    return () => {
+      ref.current?.close();
+    };
+  }, []);
+
   return (
-    <>
+    <dialog
+      ref={ref}
+      className={Style.wrap}
+      style={style}
+    >
       <div
         ref={mref}
         className={Style.mask1}
@@ -75,11 +87,7 @@ const MessageBox: FC<{
         onKeyDown={keydownMask1}
         style={{ opacity: "0" }}
       />
-      <div
-        ref={ref}
-        className={Style.main}
-        style={style}
-      >
+      <div className={Style.main}>
         {mount && props.children}
       </div>
       {showed &&
@@ -89,7 +97,7 @@ const MessageBox: FC<{
           onKeyDown={keydownMask2}
         />
       }
-    </>
+    </dialog>
   );
 };
 
