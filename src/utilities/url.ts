@@ -42,13 +42,13 @@ export const getDynamicUrlContext = <T extends Struct | FormData | undefined | n
         if (Array.isArray(v)) {
           // eslint-disable-next-line no-console
           console.warn("too many keys: ", key);
-          return String(v[0] || "");
+          return String(v[0] ?? "");
         }
         // eslint-disable-next-line no-console
         console.error("value is not supported type: ", key);
         return "";
       }
-      return String(v || "");
+      return String(v ?? "");
     })());
   });
 
