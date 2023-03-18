@@ -106,7 +106,11 @@ module.exports = {
     ],
     "space-before-function-paren": [
       "warn",
-      "always",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
     ],
     "arrow-spacing": "warn",
     "no-multiple-empty-lines": [
