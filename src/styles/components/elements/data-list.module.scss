@@ -1,0 +1,15 @@
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.class {
+  box-sizing: border-box;
+  min-height: 0;
+  width: 100%;
+  flex: 1;
+  background-color: grey;
+}
