@@ -40,7 +40,7 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
       {...attributes(props, Style.wrap)}
       ref={ref}
     >
-      <div ref={eref} />
+      {useMemo(() => <div ref={eref} />, [])}
     </div>
   );
 });
