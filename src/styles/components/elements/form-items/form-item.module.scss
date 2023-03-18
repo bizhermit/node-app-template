@@ -1,4 +1,5 @@
 @use "$/var";
+@use "$/mixins";
 $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
 $tagMoveTransitionTime: 0.5s;
 
@@ -37,6 +38,8 @@ $tagMoveTransitionTime: 0.5s;
       }
     }
   }
+
+  @include mixins.crossHover {}
 }
 
 .tag {
@@ -60,7 +63,11 @@ $tagMoveTransitionTime: 0.5s;
     height: var(--size);
     left: 1rem;
     z-index: 1;
-    transition: left #{$tagMoveTransitionTime}, top #{$tagMoveTransitionTime}, height #{$tagMoveTransitionTime}, padding-top #{$tagMoveTransitionTime}, opacity #{$tagMoveTransitionTime};
+    transition: left #{$tagMoveTransitionTime},
+    top #{$tagMoveTransitionTime},
+    height #{$tagMoveTransitionTime},
+    padding-top #{$tagMoveTransitionTime},
+    opacity #{$tagMoveTransitionTime};
     opacity: 0.6;
   }
 }
@@ -91,7 +98,8 @@ $tagMoveTransitionTime: 0.5s;
       border-color: inherit;
       border-radius: var(--radius);
       z-index: 0;
-      transition: background-color #{var.$transitionTime}, border-color #{var.$transitionTime};
+      transition: background-color #{var.$transitionTime},
+      border-color #{var.$transitionTime};
     }
   }
 
