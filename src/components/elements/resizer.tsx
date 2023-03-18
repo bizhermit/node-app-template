@@ -2,11 +2,12 @@ import type { CSSProperties, FC, MutableRefObject } from "react";
 import Style from "$/components/elements/resizer.module.scss";
 import { convertSizeNumToStr, releaseCursor, setCursor } from "@/components/utilities/attributes";
 
+export type ResizeDirection = "x" | "y" | "xy";
 export type ResizerProps = {
   className?: string;
   style?: CSSProperties;
   disabled?: boolean;
-  direction?: "x" | "y" | "xy";
+  direction?: ResizeDirection;
   reverse?: boolean;
   targetRef?: MutableRefObject<HTMLElement>;
   resizing?: (ctx: { width?: number; height?: number; }) => void;

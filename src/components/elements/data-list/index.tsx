@@ -3,10 +3,12 @@ import { attributes } from "@/components/utilities/attributes";
 import useLoadableArray from "@/hooks/loadable-array";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type HTMLAttributes, type ReactElement, useEffect, useMemo, useRef } from "react";
 import Style from "$/components/elements/data-list.module.scss";
+import Resizer, { type ResizeDirection } from "@/components/elements/resizer";
 
 type OmitAttributes = "children";
 type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $value?: LoadableArray<T>;
+  $resize?: ResizeDirection;
 };
 
 interface DataListFC extends FunctionComponent<DataListProps> {
@@ -41,6 +43,7 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
       ref={ref}
     >
       {useMemo(() => <div ref={eref} />, [])}
+      {props.$resize && <Resizer direction={props.$resize} />}
     </div>
   );
 });
