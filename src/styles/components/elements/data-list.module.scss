@@ -5,6 +5,7 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
+  overflow: visible;
 }
 
 .class {
@@ -12,5 +13,83 @@
   min-height: 0;
   width: 100%;
   flex: 1;
-  background-color: grey;
+  outline: none;
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.header,
+.footer,
+.body {
+  box-sizing: border-box;
+  position: sticky;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+  width: 100%;
+  left: 0;
+}
+
+.header {
+  z-index: 2;
+  top: 0;
+}
+
+.footer {
+  z-index: 2;
+}
+
+.body {
+  z-index: 1;
+  cursor: cell;
+}
+
+.dummy {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  background: transparent;
+  visibility: hidden;
+  flex: none;
+}
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: none;
+}
+
+.cell {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.label {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 1rem;
 }

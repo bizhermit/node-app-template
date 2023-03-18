@@ -5,6 +5,7 @@ type DomEventProps<K extends keyof HTMLElementEventMap> = {
 };
 
 class DomClassComponent {
+
   protected events: Array<DomEventProps<any>>;
 
   constructor() {
@@ -53,6 +54,7 @@ class DomClassComponent {
     }
     return this;
   }
+
 }
 
 export const cloneDomElement = <T extends HTMLElement>(element: T, func?: (elem: T) => void) => {
