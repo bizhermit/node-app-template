@@ -76,7 +76,7 @@ const Page: NextPage = () => {
         </Row>
       </Row>
       <DataList
-        className={joinClassNames("", scroll ? "" : undefined)}
+        className={joinClassNames("w-100", scroll ? "flex-1" : undefined)}
         // $columns={columns}
         $value={items}
         $resize="xy"

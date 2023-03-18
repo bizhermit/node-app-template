@@ -1,11 +1,11 @@
-type DomEventProps = {
+type DomEventProps<K extends keyof HTMLElementEventMap> = {
   element: HTMLElement | Window;
-  type: keyof HTMLElementEventMap;
-  listener: EventListenerOrEventListenerObject;
+  type: K;
+  listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any;
 };
 
 class DomClassComponent {
-  protected events: Array<DomEventProps>;
+  protected events: Array<DomEventProps<any>>;
 
   constructor() {
     this.events = [];
@@ -19,14 +19,14 @@ class DomClassComponent {
     });
   }
 
-  public addEvent<T extends HTMLElement | Window>(element: T, type: keyof HTMLElementEventMap, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
+  public addEvent<T extends HTMLElement | Window, K extends keyof HTMLElementEventMap>(element: T, type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions) {
     if (element == null) return element;
     this.events.push({ element, type, listener });
-    element.addEventListener(type, listener, options);
+    element.addEventListener(type, listener as any, options);
     return element;
   }
 
-  public removeEvent<T extends HTMLElement | Window>(element: T, type?: keyof HTMLElementEventMap, listener?: EventListenerOrEventListenerObject) {
+  public removeEvent<T extends HTMLElement | Window, K extends keyof HTMLElementEventMap>(element: T, type?: K, listener?: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any) {
     if (element == null) return element;
     for (let i = this.events.length - 1; i >= 0; i--) {
       const props = this.events[i];
@@ -41,7 +41,7 @@ class DomClassComponent {
     return element;
   }
 
-  public removeEventIterator(func: (props: DomEventProps) => boolean | void) {
+  public removeEventIterator(func: (props: DomEventProps<any>) => boolean | void) {
     for (let i = this.events.length - 1; i >= 0; i--) {
       const props = this.events[i];
       if (func(props) === true) {
@@ -56,9 +56,8 @@ class DomClassComponent {
 }
 
 export const cloneDomElement = <T extends HTMLElement>(element: T, func?: (elem: T) => void) => {
-  if (element == null) return undefined;
-  const elem = element.cloneNode(true) as T;
-  func?.(elem);
+  const elem = element?.cloneNode(true) as T;
+  if (elem) func?.(elem);
   return elem;
 };
 
