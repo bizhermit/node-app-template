@@ -71,7 +71,13 @@ module.exports = {
       }
     ],
     "brace-style": "warn",
-    "padded-blocks": ["warn", "never"],
+    "padded-blocks": [
+      "warn",
+      {
+        "blocks": "never",
+        "classes": "always"
+      }
+    ],
     "keyword-spacing": "warn",
     "space-infix-ops": "warn",
     "comma-spacing": [
