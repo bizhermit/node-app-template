@@ -13,9 +13,7 @@
         }
       }
 
-      @include mixins.crossHover {
-        z-index: 1;
-      }
+      @include mixins.crossHover {}
 
       &:not([data-outline="true"]) {
         @include mixins.crossHover {
@@ -154,7 +152,8 @@
 
   &[data-appearance="button"] {
     >.label {
-      padding-left: calc(var(--size) / 4);;
+      padding-left: calc(var(--size) / 4);
+      ;
       border-width: 0.1rem;
       border-style: solid;
       border-color: inherit;

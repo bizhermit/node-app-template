@@ -4,7 +4,6 @@
   outline: solid;
   outline-offset: 0rem;
   animation: hover 1s infinite;
-  z-index: 9;
 }
 
 @mixin hoverActive {
@@ -22,16 +21,24 @@
   }
 }
 
-@mixin crossHover {
+@mixin crossHover($zindex: 9) {
   @media (hover: hover) {
     &:hover {
       @content;
+
+      @if $zindex !=false {
+        z-index: #{$zindex};
+      }
     }
   }
 
   @media (hover: none) {
     &:active {
       @content;
+
+      @if $zindex !=false {
+        z-index: #{$zindex};
+      }
     }
   }
 }

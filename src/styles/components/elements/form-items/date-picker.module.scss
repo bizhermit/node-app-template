@@ -25,9 +25,7 @@ $pulldownTransitionTime: 0.5s;
       >.date,
       >.yearmonth>.label>.year,
       >.yearmonth>.label>.month {
-        @include mixins.crossHover {
-          z-index: 1;
-        }
+        @include mixins.crossHover {}
 
         >.cell {
           &[data-selectable="true"] {
@@ -337,9 +335,7 @@ $pulldownTransitionTime: 0.5s;
   width: 100%;
   user-select: none;
 
-  @include mixins.crossHover {
-    z-index: 1;
-  }
+  @include mixins.crossHover {}
 
   &:empty {
     display: none;

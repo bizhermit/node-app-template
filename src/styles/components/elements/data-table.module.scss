@@ -74,7 +74,6 @@ $borderStyle: 1px solid var(--c-border);
 
   @include mixins.crossHover {
     overflow: visible;
-    z-index: 1;
   }
 }
 
@@ -126,7 +125,6 @@ $borderStyle: 1px solid var(--c-border);
 
   @include mixins.crossHover {
     overflow: visible;
-    z-index: 1;
   }
 }
 
