@@ -17,6 +17,22 @@ type Data = {
   col5?: string;
 };
 
+const generateArray = (length = 0) => {
+  return ArrayUtils.generateArray(length, index => {
+    return {
+      id: index,
+      col1: `col1 - ${index}`,
+      col2: `col2 - ${index}`,
+      col3: `col3 - ${index}`,
+      col4: `col4 - ${index}`,
+      col5: `col5 - ${index}`,
+      number: index * 1000,
+      date: `2023-01-${1 + index}`,
+      button: `button${index}`,
+    } as Data;
+  });
+};
+
 const Page: NextPage = () => {
   const columns = useMemo(() => {
     const cols: Array<any> = [];
@@ -28,20 +44,8 @@ const Page: NextPage = () => {
 
   const [items, setItems] = useState<Array<Data>>(null!);
 
-  const generateItems = (length = 0) => {
-    setItems(ArrayUtils.generateArray(length, index => {
-      return {
-        id: index,
-        col1: `col1 - ${index}`,
-        col2: `col2 - ${index}`,
-        col3: `col3 - ${index}`,
-        col4: `col4 - ${index}`,
-        col5: `col5 - ${index}`,
-        number: index * 1000,
-        date: `2023-01-${1 + index}`,
-        button: `button${index}`,
-      } as Data;
-    }));
+  const setAndGenerateItems = (length = 0) => {
+    setItems(generateArray(length));
   };
 
   const [outline, setOutline] = useState(true);
@@ -56,14 +60,17 @@ const Page: NextPage = () => {
       <Row className="gap-1">
         <Row className="gap-1">
           <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(0)}>0</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(1)}>1</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(10)}>10</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(50)}>50</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(99)}>99</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(100)}>100</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(101)}>101</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(1000)}>1000</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(0)}>0</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(1)}>1</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(10)}>10</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(50)}>50</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(99)}>99</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(100)}>100</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(101)}>101</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(1000)}>1000</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(10000)}>10000</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(100000)}>100000</Button>
+          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(1000000)}>1000000</Button>
           <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
         </Row>
         <Row className="gap-1">

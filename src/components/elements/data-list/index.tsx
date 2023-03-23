@@ -1,7 +1,7 @@
 import DataListClass from "@/components/elements/data-list/class";
 import { attributes } from "@/components/utilities/attributes";
 import useLoadableArray from "@/hooks/loadable-array";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type HTMLAttributes, type ReactElement, useEffect, useMemo, useRef } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type HTMLAttributes, type ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/data-list.module.scss";
 import Resizer, { type ResizeDirection } from "@/components/elements/resizer";
 
@@ -18,7 +18,7 @@ interface DataListFC extends FunctionComponent<DataListProps> {
 const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extends Struct = Struct>(props: DataListProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
   const eref = useRef<HTMLDivElement>(null!);
   const dl = useRef<DataListClass<T>>(null!);
-  const init = useRef(false);
+  const initRef = useRef(false);
 
   const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
   const { items } = useMemo(() => {
@@ -31,11 +31,15 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
     dl.current = new DataListClass<T>(eref.current, {
       value: items,
     });
-    init.current = true;
+    initRef.current = true;
     return () => {
       dl.current?.dispose();
     };
   }, []);
+
+  useEffect(() => {
+    dl.current.setValue(items);
+  }, [items]);
 
   return (
     <div

@@ -15,7 +15,9 @@ type Column<T extends Struct = Struct> = {
 
 type Data<T extends Struct = Struct> = {
   origin: T;
+  display: { [key in keyof T]: string };
   id: number;
+  init: boolean;
   rowSelected: boolean;
   cellSelected: Struct<boolean>;
 };
@@ -33,7 +35,6 @@ type Row<T extends Struct = Struct> = {
   index: number;
   id: number;
   cache: Struct<string>;
-  init: boolean;
   selected: boolean;
   oddEven: 0 | 1;
   cells: Array<Cell<T>>;
@@ -77,15 +78,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.columns = [];
     this.rows = [];
     this.items = [];
-    // this.sortedItems = [];
-    this.sortedItems = ArrayUtils.generateArray(30, idx => {
-      return {
-        id: idx,
-        origin: {} as T,
-        rowSelected: false,
-        cellSelected: {},
-      };
-    });
+    this.sortedItems = [];
 
     this.firstIndex = -1;
     this.maxFirstIndex = -1;
@@ -146,7 +139,9 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       }, 5);
     }, { passive: true });
 
+    this.setValue(props.value);
     this.render();
+    this.initialized = true;
   }
 
   protected findColumn(func: (column: Column<T>) => boolean): Column<T> | null {
@@ -208,15 +203,16 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     if (row.element.style.visibility) {
       row.element.style.removeProperty("visibility");
     }
-    if (!row.init) {
+    if (!data.init) {
+      data.display = { ...data.origin };
       // TODO: init
     }
     // TODO:
-    row.element.textContent = JSON.stringify(row.index);
+    row.element.textContent = JSON.stringify(data.display);
   }
 
   protected renderWhenResized() {
-    let need = false;
+    let abs = false;
     const maxRowLen = Math.min(Math.max(0, Math.ceil(this.bodyElement.clientHeight / this.rowHeight || 0)) + 1, Math.max(1, this.sortedItems.length));
     if (this.rows.length !== maxRowLen) {
       for (let i = 0; i < maxRowLen; i++) {
@@ -229,26 +225,31 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
             index: -1,
             cache: {},
             cells: [],
-            init: false,
             oddEven: 0,
             selected: false,
           };
-          need = true;
-          // row.element.style.visibility = "hidden"
+          abs = true;
+          row.element.style.visibility = "hidden";
           // TODO: cell
           this.bodyElement.appendChild(row.element);
           this.rows[i] = row;
         }
       }
+      this.disposeRows(maxRowLen);
     }
+    this.optimizeMaxFirstIndex();
+    this.renderWhenScrolled(abs);
   }
 
-  protected renderWhenScrolled() {
+  protected renderWhenScrolled(absolute?: boolean) {
     const st = this.element.scrollTop;
     const index = Math.min(this.maxFirstIndex, Math.floor(st / this.rowHeight));
     if (this.lastScrolledTop !== st) {
       this.bodyElement.scrollTop = st - this.rowHeight * index;
       this.lastScrolledTop = st;
+    }
+    if (absolute !== true) {
+      if (this.firstIndex === index) return;
     }
     for (let i = 0, il = this.rows.length; i < il; i++) {
       const row = this.rows[i];
@@ -263,6 +264,27 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.optimizeMaxFirstIndex();
     this.renderWhenResized();
     this.renderWhenScrolled();
+  }
+
+  protected bind(items: Array<T> | null | undefined): void {
+    this.items = [];
+    if (items == null) return;
+    items.forEach((item, index) => {
+      this.items[index] = {
+        id: index,
+        origin: item,
+        display: {} as T,
+        init: false,
+        rowSelected: false,
+        cellSelected: {},
+      };
+    });
+    this.sortedItems = [...this.items];
+  }
+
+  public setValue(items: Array<T> | null | undefined): void {
+    this.bind(items);
+    if (this.initialized) this.render();
   }
 
 }
