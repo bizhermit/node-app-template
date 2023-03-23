@@ -26,6 +26,7 @@ export type SelectBoxProps<
   $minWidth?: number | string;
   $emptyItem?: boolean | string | { value: T | null | undefined; label: string; };
   $align?: "left" | "center" | "right";
+  $disallowInput?: boolean;
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
@@ -273,7 +274,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
         defaultValue={label}
         type="text"
         disabled={ctx.disabled || loading}
-        readOnly={!ctx.editable}
+        readOnly={props.$disallowInput || !ctx.editable}
         placeholder={ctx.editable ? props.placeholder : ""}
         tabIndex={props.tabIndex}
         onClick={picker}
@@ -282,6 +283,8 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
         autoComplete="off"
         data-has={!isEmptyValue}
         data-align={props.$align}
+        data-editable={ctx.editable}
+        data-input={!props.$disallowInput}
       />
       {ctx.editable && !loading &&
         <>
