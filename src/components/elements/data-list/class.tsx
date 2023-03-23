@@ -1,7 +1,6 @@
 import DomClassComponent, { cloneDomElement } from "@/components/utilities/dom-class-component";
 import Style from "$/components/elements/data-list.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 
 type Column<T extends Struct = Struct> = {
   name: string;
@@ -48,6 +47,8 @@ export type DataListClassProps<T extends Struct = Struct> = {
 class DataListClass<T extends Struct = Struct> extends DomClassComponent {
 
   protected initialized: boolean;
+  protected resizeObserver: ResizeObserver;
+
   protected columns: Array<Column<T>>;
   protected rows: Array<Row<T>>;
   protected items: Array<Data<T>>;
@@ -139,6 +140,11 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       }, 5);
     }, { passive: true });
 
+    this.resizeObserver = new ResizeObserver(() => {
+      this.renderWhenResized();
+    });
+    this.resizeObserver.observe(element);
+
     this.setValue(props.value);
     this.render();
     this.initialized = true;
@@ -181,6 +187,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
 
   public dispose(): void {
     this.disposeRows();
+    if (this.resizeObserver) this.resizeObserver.disconnect();
     super.dispose();
   }
 
@@ -204,8 +211,8 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       row.element.style.removeProperty("visibility");
     }
     if (!data.init) {
-      data.display = { ...data.origin };
       // TODO: init
+      data.display = { ...data.origin };
     }
     // TODO:
     row.element.textContent = JSON.stringify(data.display);
@@ -284,6 +291,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
 
   public setValue(items: Array<T> | null | undefined): void {
     this.bind(items);
+    this.firstIndex = -1;
     if (this.initialized) this.render();
   }
 
