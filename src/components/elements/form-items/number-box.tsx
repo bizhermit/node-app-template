@@ -25,6 +25,7 @@ export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefin
   $minWidth?: number | string;
   $hideClearButton?: boolean;
   $align?: "left" | "center" | "right";
+  $disallowInput?: boolean;
 };
 
 interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
@@ -257,7 +258,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
         className={Style.input}
         placeholder={ctx.editable ? props.placeholder : ""}
         disabled={ctx.disabled}
-        readOnly={ctx.readOnly}
+        readOnly={props.$disallowInput || ctx.readOnly}
         tabIndex={props.tabIndex}
         defaultValue={toString(ctx.value)}
         onChange={e => changeImpl(e.target.value)}
