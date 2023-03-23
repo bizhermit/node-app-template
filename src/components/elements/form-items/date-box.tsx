@@ -74,7 +74,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
       switch (dataItem.type) {
         case "number":
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
           } as DateBoxProps<D>;
         case "date":
         case "month":
@@ -84,7 +84,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           } as DateBoxProps<D>;
         default:
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
           } as DateBoxProps<D>;
       }
     },
