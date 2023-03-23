@@ -10,15 +10,17 @@
 
 .class {
   box-sizing: border-box;
+  position: relative;
   min-height: 0;
   width: 100%;
-  flex: 1;
+  flex: 1 1 0rem;
   outline: none;
   position: relative;
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
+  overflow: auto;
 }
 
 .header,
@@ -38,10 +40,12 @@
 .header {
   z-index: 2;
   top: 0;
+  background: green;
 }
 
 .footer {
   z-index: 2;
+  background: green;
 }
 
 .body {
@@ -58,6 +62,7 @@
   background: transparent;
   visibility: hidden;
   flex: none;
+  width: 100%;
 }
 
 .row {
@@ -67,6 +72,8 @@
   justify-content: flex-start;
   align-items: flex-start;
   flex: none;
+  border-bottom: 1px solid red;
+  width: 100%;
 }
 
 .cell {
