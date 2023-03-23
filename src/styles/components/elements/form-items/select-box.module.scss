@@ -8,6 +8,12 @@
   &[data-has="false"] {
     color: var(--c-dull_);
   }
+
+  &[data-editable="true"] {
+    &[data-input="false"] {
+      cursor: pointer;
+    }
+  }
 }
 
 .button {

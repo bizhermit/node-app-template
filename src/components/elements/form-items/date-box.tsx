@@ -74,7 +74,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
       switch (dataItem.type) {
         case "number":
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
           } as DateBoxProps<D>;
         case "date":
         case "month":
@@ -84,7 +84,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           } as DateBoxProps<D>;
         default:
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
           } as DateBoxProps<D>;
       }
     },
@@ -372,9 +372,10 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           ref={yref}
           className={Style.y}
           type="text"
-          disabled={props.$disallowInput || ctx.disabled}
+          disabled={ctx.disabled}
           readOnly={props.$disallowInput || ctx.readOnly}
           maxLength={4}
+          tabIndex={-1}
           defaultValue={cacheY.current || ""}
           onChange={changeY}
           onFocus={focusInput}
@@ -388,7 +389,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               ref={mref}
               className={Style.m}
               type="text"
-              disabled={props.$disallowInput || ctx.disabled}
+              disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheM.current || ""}
@@ -406,7 +407,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               ref={dref}
               className={Style.d}
               type="text"
-              disabled={props.$disallowInput || ctx.disabled}
+              disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheD.current || ""}

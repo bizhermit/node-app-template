@@ -9,7 +9,7 @@
         cursor: pointer;
         user-select: none;
 
-        @include mixins.crossHover {
+        @include mixins.crossHover(false) {
           @include mixins.hover;
 
           &:active {
@@ -37,7 +37,6 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  z-index: 0;
   border-radius: var(--radius);
   overflow: hidden;
 }
@@ -62,7 +61,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 1;
+  z-index: 2;
   cursor: pointer;
   border-radius: var(--radius);
 

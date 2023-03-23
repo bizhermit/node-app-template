@@ -20,9 +20,7 @@
   align-items: stretch;
   z-index: 0;
 
-  @include mixins.crossHover {
-    z-index: 1;
-  }
+  @include mixins.crossHover {}
 
   &[data-direction="horizontal"] {
     &.root {
@@ -46,10 +44,8 @@
   overflow: visible;
   flex: 1 0 auto;
   z-index: 0;
-  
-  @include mixins.crossHover {
-    z-index: 1;
-  }
+
+  @include mixins.crossHover {}
 }
 
 .content {

@@ -37,7 +37,8 @@ $vTransitionTime: 0.5s;
       >.content {
         left: 0;
         top: -100%;
-        transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+        transition: top #{$vTransitionTime},
+        opacity #{$vTransitionTime};
 
         &[data-selected="true"] {
           top: 0%;
@@ -72,7 +73,8 @@ $vTransitionTime: 0.5s;
       >.content {
         left: 0;
         top: 100%;
-        transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+        transition: top #{$vTransitionTime},
+        opacity #{$vTransitionTime};
 
         &[data-selected="true"] {
           top: 0%;
@@ -130,7 +132,8 @@ $vTransitionTime: 0.5s;
       >.content {
         top: 0;
         left: -100%;
-        transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+        transition: left #{$hTransitionTime},
+        opacity #{$hTransitionTime};
 
         &[data-selected="true"] {
           left: 0%;
@@ -165,7 +168,8 @@ $vTransitionTime: 0.5s;
       >.content {
         top: 0;
         left: 100%;
-        transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+        transition: left #{$hTransitionTime},
+        opacity #{$hTransitionTime};
 
         &[data-selected="true"] {
           left: 0%;
@@ -198,9 +202,7 @@ $vTransitionTime: 0.5s;
   flex-wrap: nowrap;
   gap: 0.8rem;
 
-  @include mixins.crossHover {
-    z-index: 2;
-  }
+  @include mixins.crossHover {}
 }
 
 .tab {
@@ -210,7 +212,9 @@ $vTransitionTime: 0.5s;
   justify-content: center;
   align-items: center;
   user-select: none;
-  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime}, border-color #{var.$transitionTime};
+  transition: background-color #{var.$transitionTime},
+  color #{var.$transitionTime},
+  border-color #{var.$transitionTime};
 
   &:not([data-selected="true"]) {
     cursor: pointer;

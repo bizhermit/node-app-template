@@ -19,9 +19,7 @@
       user-select: none;
 
       >.list {
-        @include mixins.crossHover {
-          z-index: 1;
-        }
+        @include mixins.crossHover {}
 
         >.cell {
           &[data-selectable="true"] {
@@ -120,9 +118,7 @@
   width: 100%;
   user-select: none;
 
-  @include mixins.crossHover {
-    z-index: 1;
-  }
+  @include mixins.crossHover {}
 
   &:empty {
     display: none;
