@@ -14,6 +14,7 @@ const Page: NextPage = () => {
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState<Struct>({ "pair-time": "12:00" });
+  const [disallowInput, setDisallowInput] = useState(false);
 
   return (
     <div className="flex-start gap-1 p-1 w-100">
@@ -27,6 +28,11 @@ const Page: NextPage = () => {
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
+        />
+        <ToggleBox
+          $tag="disallow input"
+          $value={disallowInput}
+          $onChange={v => setDisallowInput(v!)}
         />
       </Row>
       <Row className="gap-1">
@@ -129,6 +135,7 @@ const Page: NextPage = () => {
           $min="01:00"
           $minuteInterval={10}
           $required
+          $disallowInput={disallowInput}
         />
         <TimeBox
           $tag="bind"
@@ -138,6 +145,7 @@ const Page: NextPage = () => {
           $readOnly={readOnly}
           $typeof="string"
           $minuteInterval={5}
+          $disallowInput={disallowInput}
         />
         <Form
           className="flex-start gap-1"
@@ -156,6 +164,7 @@ const Page: NextPage = () => {
                 position: "after",
                 disallowSame: true,
               }}
+              $disallowInput={disallowInput}
             />
             <TimeBox
               $tag="form bind to"
@@ -165,6 +174,7 @@ const Page: NextPage = () => {
                 position: "before",
                 disallowSame: true,
               }}
+              $disallowInput={disallowInput}
             />
           </Row>
           <Button type="submit">submit</Button>

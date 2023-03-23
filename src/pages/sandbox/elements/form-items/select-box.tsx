@@ -16,6 +16,7 @@ const Page: NextPage = () => {
   const [value, setValue] = useState<number>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const [disallowInput, setDisallowInput] = useState(false);
 
   return (
     <div className="flex-start p-1 w-100 gap-1">
@@ -29,6 +30,11 @@ const Page: NextPage = () => {
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
+        />
+        <ToggleBox
+          $tag="disallow input"
+          $value={disallowInput}
+          $onChange={v => setDisallowInput(v!)}
         />
       </Row>
       <Row className="gap-1">
@@ -129,6 +135,7 @@ const Page: NextPage = () => {
           };
         })}
         $emptyItem="(未選択)"
+        $disallowInput={disallowInput}
       />
       <SelectBox
         $tag="bind"
@@ -150,6 +157,7 @@ const Page: NextPage = () => {
             };
           })
         }}
+        $disallowInput={disallowInput}
       />
       <Form
         className="flex-start gap-1"
@@ -175,6 +183,7 @@ const Page: NextPage = () => {
               }, 1000);
             });
           }}
+          $disallowInput={disallowInput}
         />
         <Button type="submit">submit</Button>
       </Form>
