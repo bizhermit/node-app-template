@@ -528,7 +528,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.optimizeDummySize();
     this.optimizeMaxFirstIndex();
     this.renderWhenResized();
-    this.renderWhenScrolled();
+    this.renderWhenScrolled(true);
   }
 
   public setColumns(columns: Array<DataListColumn<T>> | null | undefined): void {
@@ -542,9 +542,10 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       let sumWidth = 0;
       let hasFill = false;
       oCols.forEach((oCol, index) => {
+        const displayName = oCol.displayName || oCol.name;
         const col: Column<T> = {
           name: oCol.name,
-          displayName: oCol.displayName || oCol.name,
+          displayName,
           label: oCol.label ?? "",
           align: oCol.align ?? (() => {
             switch (oCol.dataType) {
@@ -583,7 +584,14 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
             };
           })(),
           sort: typeof oCol.sort === "boolean" ?
-            () => 0 : // TODO
+            (d1, d2) => {
+              const v1 = getValue(d1, displayName);
+              const v2 = getValue(d2, displayName);
+              if (v1 == null && v2 == null) return 0;
+              if (v1 == null) return -1;
+              if (v2 == null) return 1;
+              return v1 < v2 ? -1 : 1;
+            } :
             oCol.sort,
           sortNeutral: oCol.sortNeutral === true,
           toDisplay: oCol.toDisplay ?? (() => {
@@ -673,6 +681,10 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
   public setValue(items: Array<T> | null | undefined): void {
     this.bind(items);
     this.firstIndex = -1;
+    const st = (this.sortedItems.length - this.rows.length + 1) * this.rowHeight;
+    if (this.element.scrollTop > st) {
+      this.element.scrollTop = st;
+    }
     if (this.initialized) this.render();
   }
 

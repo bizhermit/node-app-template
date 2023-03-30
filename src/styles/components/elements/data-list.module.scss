@@ -56,6 +56,10 @@ $borderStyle: 1px solid var(--c-border);
 .body {
   z-index: 1;
   cursor: cell;
+
+  .row {
+    background: var(--c-pure);
+  }
 }
 
 .dummy {
@@ -80,6 +84,7 @@ $borderStyle: 1px solid var(--c-border);
   flex: none;
   width: 100%;
   white-space: nowrap;
+  background: inherit;
 
   &:not(:first-child) {
     &[data-border] {
@@ -101,6 +106,7 @@ $borderStyle: 1px solid var(--c-border);
   height: 100%;
   overflow: hidden;
   z-index: 0;
+  background: inherit;
 
   &[data-align="left"] {
     justify-content: flex-start;
