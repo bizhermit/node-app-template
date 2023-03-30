@@ -81,12 +81,36 @@
   box-sizing: border-box;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: center;
   align-items: center;
   flex: none;
   height: 100%;
   overflow: hidden;
   z-index: 0;
+
+  &[data-align="left"] {
+    justify-content: flex-start;
+  }
+
+  &[data-align="center"] {
+    justify-content: center;
+  }
+
+  &[data-align="right"] {
+    justify-content: flex-end;
+  }
+
+  &[data-fill] {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &[data-fixed] {
+    position: sticky;
+  }
+
+  &[data-row] {
+    flex-flow: column nowrap;
+  }
 }
 
 .label {
@@ -95,7 +119,6 @@
   display: block;
   max-height: 100%;
   max-width: 100%;
-  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

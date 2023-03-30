@@ -1,4 +1,4 @@
-import DataListClass from "@/components/elements/data-list/class";
+import DataListClass, { type DataListColumn } from "@/components/elements/data-list/class";
 import { attributes } from "@/components/utilities/attributes";
 import useLoadableArray from "@/hooks/loadable-array";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type HTMLAttributes, type ReactElement, useEffect, useMemo, useRef } from "react";
@@ -7,6 +7,7 @@ import Resizer, { type ResizeDirection } from "@/components/elements/resizer";
 
 type OmitAttributes = "children";
 type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+  $columns?: Array<DataListColumn<T>>;
   $value?: LoadableArray<T>;
   $resize?: ResizeDirection;
 };
@@ -29,6 +30,7 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
 
   useEffect(() => {
     dl.current = new DataListClass<T>(eref.current, {
+      columns: props.$columns,
       value: items,
     });
     initRef.current = true;
@@ -36,6 +38,10 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
       dl.current?.dispose();
     };
   }, []);
+
+  useEffect(() => {
+    dl.current.setColumns(props.$columns);
+  }, [props.$columns]);
 
   useEffect(() => {
     dl.current.setValue(items);

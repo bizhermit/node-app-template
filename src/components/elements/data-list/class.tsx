@@ -1,15 +1,53 @@
 import DomClassComponent, { cloneDomElement } from "@/components/utilities/dom-class-component";
 import Style from "$/components/elements/data-list.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
+import { getValue, setValue } from "@/data-items/utilities";
+
+export type DataListColumn<T extends Struct = Struct> = {
+  name: string;
+  displayName?: string;
+  label?: string;
+  width?: number | string | null;
+  minWidth?: number | string | null;
+  maxWidth?: number | string | null;
+  align?: "left" | "center" | "right";
+  fill?: boolean;
+  fixed?: boolean;
+  border?: boolean;
+  sort?: ((data1: T, data2: T) => number) | boolean;
+  sortNeutral?: boolean;
+  resize?: boolean;
+  wrap?: boolean;
+  rows?: Array<{
+    columns: Array<DataListColumn<T>>;
+  }>;
+  onClick?: (data: Data<T>) => void;
+  toDisplay?: ((originData: T, column: Column<T>) => string) | null;
+};
 
 type Column<T extends Struct = Struct> = {
   name: string;
-  onClick: (data: Data<T>) => void;
+  displayName: string;
+  label: string;
+  width: number | string | null | undefined;
+  minWidth: number | string | null | undefined;
+  maxWidth: number | string | null | undefined;
+  align: "left" | "center" | "right";
+  fill: boolean;
+  fixed: boolean;
+  border: boolean;
+  sort: ((data1: T, data2: T) => number) | null | undefined;
+  sortNeutral: boolean;
+  resize: boolean;
+  wrap: boolean;
   rows: Array<{
     columns: Array<Column<T>>;
-  }>;
+  }> | null | undefined;
   cells: Array<Cell<T>>;
-  disposeCell?: (cell: Cell<T>, dl: DataListClass<T>) => void;
+  onClick: ((data: Data<T>) => void) | null | undefined;
+  disposeCell: ((cell: Cell<T>, dl: DataListClass<T>) => void) | null | undefined;
+  toDisplay: ((originData: T, column: Column<T>) => string) | null | undefined;
+  origin: DataListColumn<T> | null | undefined;
 };
 
 type Data<T extends Struct = Struct> = {
@@ -23,9 +61,13 @@ type Data<T extends Struct = Struct> = {
 
 type Cell<T extends Struct = Struct> = {
   element: HTMLDivElement;
+  elements: Array<HTMLDivElement>;
   column: Column<T>;
   row: Row<T>;
-  cache: Struct<string>;
+  cache: {
+    display: string;
+    selected: boolean;
+  };
 };
 
 type Row<T extends Struct = Struct> = {
@@ -49,6 +91,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
   protected initialized: boolean;
   protected resizeObserver: ResizeObserver;
 
+  protected originColumns: Array<DataListColumn<T>> | null | undefined;
   protected columns: Array<Column<T>>;
   protected rows: Array<Row<T>>;
   protected items: Array<Data<T>>;
@@ -66,6 +109,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     div: HTMLDivElement;
     row: HTMLDivElement;
     cell: HTMLDivElement;
+    cellRow: HTMLDivElement | null;
     label: HTMLDivElement;
   };
   protected headerElement: HTMLDivElement;
@@ -103,6 +147,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       cell: cloneDomElement(div, elem => {
         elem.classList.add(Style.cell);
       }),
+      cellRow: null,
       label: cloneDomElement(div, elem => {
         elem.classList.add(Style.label);
       }),
@@ -145,6 +190,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     });
     this.resizeObserver.observe(element);
 
+    this.setColumns(props.columns);
     this.setValue(props.value);
     this.render();
     this.initialized = true;
@@ -167,6 +213,19 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     search(this.columns);
     return ret;
   }
+
+  protected columnIterator = (func: (column: Column<T>) => void) => {
+    const f = (columns: Array<Column<T>>) => {
+      if (columns == null) return;
+      columns.forEach(column => {
+        func(column);
+        column.rows?.forEach(row => {
+          f(row.columns);
+        });
+      });
+    };
+    f(this.columns);
+  };
 
   protected disposeRows(maxRowLen?: number): void {
     const len = maxRowLen || 0;
@@ -199,6 +258,13 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.maxFirstIndex = Math.max(0, this.sortedItems.length - this.rows.length);
   }
 
+  protected renderCell(cell: Cell<T>): void {
+    const display = getValue(cell.row.data?.display!, cell.column.displayName);
+    if (cell.cache.display !== display) {
+      cell.cache.display = cell.elements[0].textContent = display;
+    }
+  }
+
   protected renderRow(row: Row<T>) {
     const data = row.data;
     if (data == null) {
@@ -211,12 +277,66 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       row.element.style.removeProperty("visibility");
     }
     if (!data.init) {
-      // TODO: init
-      data.display = { ...data.origin };
+      this.columnIterator(column => {
+        setValue(data.display, column.displayName, (() => {
+          if (column.toDisplay) {
+            return column.toDisplay(data.origin, column);
+          }
+          return getValue(data.origin, column.displayName);
+        })());
+      });
     }
-    // TODO:
-    row.element.textContent = JSON.stringify(data.display);
+    row.cells.forEach(cell => {
+      this.renderCell(cell);
+    });
   }
+
+  protected generateRowElement = (row: Row<T>) => {
+    const f = (pElem: HTMLDivElement, col: Column<T>) => {
+      const cell: Cell<T> = {
+        row,
+        cache: {
+          display: "",
+          selected: false,
+        },
+        column: col,
+        element: cloneDomElement(this.cloneBase.cell, elem => {
+          elem.setAttribute("data-align", col.align);
+          if (col.fill) elem.setAttribute("data-fill", "");
+          if (col.fixed) elem.setAttribute("data-fixed", "");
+          if (col.width != null) elem.style.width = convertSizeNumToStr(col.width)!;
+          if (col.minWidth != null) elem.style.width = convertSizeNumToStr(col.minWidth)!;
+          if (col.maxWidth != null) elem.style.maxWidth = convertSizeNumToStr(col.maxWidth)!;
+        }),
+        elements: [],
+      };
+      row.cells.push(cell);
+      col.cells.push(cell);
+      if (col.rows) {
+        cell.element.setAttribute("data-row", "");
+        col.rows.forEach(row => {
+          if (this.cloneBase.cellRow == null) {
+            this.cloneBase.cellRow = cloneDomElement(this.cloneBase.div, elem => {
+              elem.classList.add(Style.crow);
+            });
+          }
+          const relem = cloneDomElement(this.cloneBase.cellRow);
+          cell.elements.push(relem);
+          row.columns.forEach(c => {
+            f(relem, c);
+          });
+        });
+      } else {
+        const lelem = cloneDomElement(this.cloneBase.label);
+        cell.elements.push(lelem);
+        cell.element.appendChild(lelem);
+      }
+      pElem.appendChild(cell.element);
+    };
+    this.columns.forEach(col => {
+      f(row.element, col);
+    });
+  };
 
   protected renderWhenResized() {
     let abs = false;
@@ -237,7 +357,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           };
           abs = true;
           row.element.style.visibility = "hidden";
-          // TODO: cell
+          this.generateRowElement(row);
           this.bodyElement.appendChild(row.element);
           this.rows[i] = row;
         }
@@ -271,6 +391,73 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.optimizeMaxFirstIndex();
     this.renderWhenResized();
     this.renderWhenScrolled();
+  }
+
+  public setColumns(columns: Array<DataListColumn<T>> | null | undefined): void {
+    if (this.originColumns === columns) return;
+    this.originColumns = columns;
+    this.disposeRows();
+    this.columns = [];
+    const f = (oCols: Array<DataListColumn<T>>, cols: Array<Column<T>>) => {
+      oCols.forEach(oCol => {
+        const col: Column<T> = {
+          name: oCol.name,
+          displayName: oCol.displayName || oCol.name,
+          label: oCol.label ?? "",
+          align: oCol.align ?? "left",
+          wrap: oCol.wrap === true,
+          border: oCol.border !== false,
+          fixed: oCol.fixed === true,
+          ...(() => {
+            const fill = oCol.fill === true;
+            if (fill) {
+              return {
+                fill,
+                width: null,
+                minWidth: null,
+                maxWidth: null,
+                resize: false,
+              };
+            }
+            return {
+              fill,
+              width: oCol.width ?? 100,
+              minWidth: oCol.minWidth ?? oCol.width ?? 100,
+              maxWidth: oCol.maxWidth,
+              resize: oCol.resize !== false,
+            };
+          })(),
+          sort: typeof oCol.sort === "boolean" ?
+            () => 0 : // TODO
+            oCol.sort,
+          sortNeutral: oCol.sortNeutral === true,
+          toDisplay: oCol.toDisplay,
+          onClick: oCol.onClick,
+          rows: null,
+          disposeCell: null,
+          cells: [],
+          origin: oCol,
+        };
+        cols.push(col);
+        if (oCol.rows) {
+          col.rows = [];
+          oCol.rows.forEach(row => {
+            const rcols: Array<Column<T>> = [];
+            col.rows!.push({
+              columns: rcols,
+            });
+            f(row.columns, rcols);
+          });
+        }
+      });
+    };
+    f(columns ?? [{
+      name: "json",
+      fill: true,
+      toDisplay: (d) => JSON.stringify(d),
+    }], this.columns);
+
+    if (this.initialized) this.render();
   }
 
   protected bind(items: Array<T> | null | undefined): void {

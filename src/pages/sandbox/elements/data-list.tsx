@@ -1,10 +1,12 @@
 import Button from "@/components/elements/button";
 import DataList from "@/components/elements/data-list";
+import { DataListColumn } from "@/components/elements/data-list/class";
 import NumberBox from "@/components/elements/form-items/number-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { joinClassNames } from "@/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import type { NextPage } from "next";
 import { useMemo, useState } from "react";
 
@@ -15,6 +17,8 @@ type Data = {
   col3?: string;
   col4?: string;
   col5?: string;
+  number: number;
+  date: string;
 };
 
 const generateArray = (length = 0) => {
@@ -35,10 +39,24 @@ const generateArray = (length = 0) => {
 
 const Page: NextPage = () => {
   const columns = useMemo(() => {
-    const cols: Array<any> = [];
-    cols.push({
-      name: "col1",
-    });
+    const cols: Array<DataListColumn<Data>> = [];
+    cols.push(
+      {
+        name: "col1",
+      },
+      {
+        name: "number",
+        align: "right",
+        // fill: true,
+      },
+      {
+        name: "date",
+        width: 200,
+        toDisplay: (data, col) => {
+          return DatetimeUtils.format(data.date, "yyyy/MM/dd") ?? "";
+        }
+      },
+    );
     return cols;
   }, []);
 
@@ -84,30 +102,30 @@ const Page: NextPage = () => {
       </Row>
       <DataList
         className={joinClassNames("w-100", scroll ? "flex-1" : undefined)}
-        // $columns={columns}
+        $columns={columns}
         $value={items}
         $resize="xy"
-        // $header
-        // $emptyText
-        // $headerHeight="6rem"
-        // $rowHeight="3.6rem"
-        // $multiSort
-        // $scroll={scroll}
-        // $outline={outline}
-        // $rowBorder={rowBorder}
-        // $cellBorder={cellBorder}
-        // $page={page}
-        // $perPage={perPage}
-        // $onChangePage={(index) => {
-        //   console.log(index);
-        //   return true;
-        // }}
-        // $onClick={(ctx, elem) => {
-        //   console.log(ctx, elem);
-        // }}
-        // $radio
-        // $stripes
-        // $rowPointer
+      // $header
+      // $emptyText
+      // $headerHeight="6rem"
+      // $rowHeight="3.6rem"
+      // $multiSort
+      // $scroll={scroll}
+      // $outline={outline}
+      // $rowBorder={rowBorder}
+      // $cellBorder={cellBorder}
+      // $page={page}
+      // $perPage={perPage}
+      // $onChangePage={(index) => {
+      //   console.log(index);
+      //   return true;
+      // }}
+      // $onClick={(ctx, elem) => {
+      //   console.log(ctx, elem);
+      // }}
+      // $radio
+      // $stripes
+      // $rowPointer
       />
     </div>
   );
