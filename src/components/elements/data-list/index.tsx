@@ -11,6 +11,9 @@ type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivEleme
   $value?: LoadableArray<T>;
   $header?: boolean;
   $footer?: boolean;
+  $outline?: boolean;
+  $rowBorder?: boolean;
+  $cellBorder?: boolean;
   $resize?: ResizeDirection;
 };
 
@@ -36,6 +39,9 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
       value: items,
       header: props.$header,
       footer: props.$footer,
+      outline: props.$outline,
+      rowBorder: props.$rowBorder,
+      cellBorder: props.$cellBorder,
     });
     initRef.current = true;
     return () => {

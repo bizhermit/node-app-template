@@ -44,7 +44,7 @@ type Column<T extends Struct = Struct> = {
   footerAlign: DataListCellAlign;
   fill: boolean;
   fixed: boolean;
-  border: boolean;
+  border: boolean | null | undefined;
   sort: ((data1: T, data2: T) => number) | null | undefined;
   sortNeutral: boolean;
   resize: boolean;
@@ -99,6 +99,10 @@ export type DataListClassProps<T extends Struct = Struct> = {
   columns?: Array<any>;
   header?: boolean;
   footer?: boolean;
+  outline?: boolean;
+  rowBorder?: boolean;
+  cellBorder?: boolean;
+  color?: Color;
 };
 
 class DataListClass<T extends Struct = Struct> extends DomClassComponent {
@@ -134,13 +138,21 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
   protected bodyElement: HTMLDivElement;
   protected dummyElement: HTMLDivElement;
 
+  protected color: Color;
   protected header: boolean;
   protected footer: boolean;
+  protected outline: boolean;
+  protected rowBorder: boolean;
+  protected cellBorder: boolean;
 
   constructor(protected element: HTMLDivElement, props: DataListClassProps<T>) {
     super();
+    this.color = props.color || "main";
     this.header = props.header !== false;
     this.footer = props.footer === true;
+    this.outline = props.outline !== false;
+    this.rowBorder = props.rowBorder !== false;
+    this.cellBorder = props.cellBorder !== false;
 
     this.initialized = false;
     this.columns = [];
@@ -161,6 +173,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     element.classList.add(Style.class);
     element.tabIndex = -1;
     element.textContent = "";
+    if (this.outline) element.setAttribute("data-border", "");
 
     const div = document.createElement("div");
     this.cloneBase = {
@@ -168,6 +181,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       row: cloneDomElement(div, elem => {
         elem.classList.add(Style.row);
         elem.style.height = convertSizeNumToStr(this.rowHeight)!;
+        if (this.rowBorder) elem.setAttribute("data-border", "");
       }),
       cell: cloneDomElement(div, elem => {
         elem.classList.add(Style.cell);
@@ -184,7 +198,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       this.element.appendChild(elem);
     });
     this.headerElement = this.header ? cloneDomElement(div, elem => {
-      elem.classList.add(Style.header, Style.row);
+      elem.classList.add(Style.header, Style.row, `c-${this.color}`);
       elem.style.height = convertSizeNumToStr(this.headerHeight)!;
       this.element.appendChild(elem);
     }) : undefined;
@@ -195,7 +209,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       this.element.appendChild(elem);
     });
     this.footerElement = this.footer ? cloneDomElement(div, elem => {
-      elem.classList.add(Style.footer, Style.row);
+      elem.classList.add(Style.footer, Style.row, `c-${this.color}`);
       elem.style.height = convertSizeNumToStr(this.footerHeight)!;
       elem.style.top = `calc(100% - ${convertSizeNumToStr(this.footerHeight)})`;
       this.element.appendChild(elem);
@@ -357,6 +371,11 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       if (col.width != null) elem.style.width = convertSizeNumToStr(col.width)!;
       if (col.minWidth != null) elem.style.width = convertSizeNumToStr(col.minWidth)!;
       if (col.maxWidth != null) elem.style.maxWidth = convertSizeNumToStr(col.maxWidth)!;
+      if (col.border == null) {
+        if (this.cellBorder) elem.setAttribute("data-border", "");
+      } else {
+        if (col.border) elem.setAttribute("data-border", "");
+      }
     });
   }
 
@@ -391,7 +410,9 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
             elem.classList.add(Style.crow);
           });
         }
-        const relem = cloneDomElement(this.cloneBase.cellRow);
+        const relem = cloneDomElement(this.cloneBase.cellRow, elem => {
+          if (this.rowBorder) elem.setAttribute("data-border", "");
+        });
         cell.elements.push(relem);
         crow.columns.forEach(c => {
           this.generateColumnElement(relem, c, row, mode);
@@ -513,7 +534,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           headerAlign: oCol.headerAlign ?? "left",
           footerAlign: oCol.footerAlign ?? "left",
           wrap: oCol.wrap === true,
-          border: oCol.border !== false,
+          border: oCol.border,
           fixed: oCol.fixed === true,
           ...(() => {
             const fill = oCol.fill === true;

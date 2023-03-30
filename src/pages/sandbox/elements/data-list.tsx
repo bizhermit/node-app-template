@@ -54,7 +54,35 @@ const Page: NextPage = () => {
         dataType: "date",
         label: "Date",
         width: 200,
+        border: false,
       },
+      {
+        name: "multi",
+        rows: [{
+          columns: [
+            {
+              name: "multi1-string",
+              displayName: "string",
+              label: "String",
+            },
+            {
+              name: "multi1-number",
+              displayName: "number",
+              label: "Number",
+              dataType: "number",
+            },
+          ],
+        }, {
+          columns: [
+            {
+              name: "multi1-date",
+              displayName: "date",
+              label: "Date",
+              dataType: "date",
+            },
+          ]
+        }]
+      }
     );
     return cols;
   }, []);
@@ -104,6 +132,9 @@ const Page: NextPage = () => {
         $columns={columns}
         $value={items}
         $resize="xy"
+        // $outline={false}
+        // $rowBorder={false}
+        // $cellBorder={false}
       // $header
       // $emptyText
       // $headerHeight="6rem"

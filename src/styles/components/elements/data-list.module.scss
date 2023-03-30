@@ -1,3 +1,5 @@
+$borderStyle: 1px solid var(--c-border);
+
 .wrap {
   box-sizing: border-box;
   position: relative;
@@ -21,6 +23,11 @@
   justify-content: flex-start;
   align-items: flex-start;
   overflow: auto;
+  border-radius: var(--radius);
+
+  &[data-border] {
+    border: #{$borderStyle};
+  }
 }
 
 .header,
@@ -40,12 +47,10 @@
 .header {
   z-index: 2;
   top: 0;
-  background: green;
 }
 
 .footer {
   z-index: 2;
-  background: green;
 }
 
 .body {
@@ -65,16 +70,26 @@
   min-width: 100%;
 }
 
-.row {
+.row,
+.crow {
   box-sizing: border-box;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: flex-start;
   flex: none;
-  border-bottom: 1px solid red;
   width: 100%;
   white-space: nowrap;
+
+  &:not(:first-child) {
+    &[data-border] {
+      border-top: #{$borderStyle};
+    }
+  }
+}
+
+.crow {
+  flex: 1;
 }
 
 .cell {
@@ -110,6 +125,18 @@
 
   &[data-row] {
     flex-flow: column nowrap;
+
+    &:not(:first-child) {
+      &[data-border] {
+        border-top: #{$borderStyle};
+      }
+    }
+  }
+
+  &:not(:first-child) {
+    &[data-border] {
+      border-left: #{$borderStyle};
+    }
   }
 }
 
@@ -122,5 +149,5 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 0 1rem;
+  padding: var(--padding-top-text) 1rem 0 1rem;
 }
