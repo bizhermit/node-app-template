@@ -9,6 +9,8 @@ type OmitAttributes = "children";
 type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $columns?: Array<DataListColumn<T>>;
   $value?: LoadableArray<T>;
+  $header?: boolean;
+  $footer?: boolean;
   $resize?: ResizeDirection;
 };
 
@@ -32,6 +34,8 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
     dl.current = new DataListClass<T>(eref.current, {
       columns: props.$columns,
       value: items,
+      header: props.$header,
+      footer: props.$footer,
     });
     initRef.current = true;
     return () => {

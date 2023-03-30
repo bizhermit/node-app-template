@@ -1,9 +1,11 @@
 import DomClassComponent, { cloneDomElement } from "@/components/utilities/dom-class-component";
 import Style from "$/components/elements/data-list.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { getValue, setValue } from "@/data-items/utilities";
+import { getValue } from "@/data-items/utilities";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
+
+type DataListCellAlign = "left" | "center" | "right";
 
 export type DataListColumn<T extends Struct = Struct> = {
   name: string;
@@ -13,7 +15,9 @@ export type DataListColumn<T extends Struct = Struct> = {
   width?: number | string | null;
   minWidth?: number | string | null;
   maxWidth?: number | string | null;
-  align?: "left" | "center" | "right";
+  align?: DataListCellAlign;
+  headerAlign?: DataListCellAlign;
+  footerAlign?: DataListCellAlign;
   fill?: boolean;
   fixed?: boolean;
   border?: boolean;
@@ -35,7 +39,9 @@ type Column<T extends Struct = Struct> = {
   width: number | string | null | undefined;
   minWidth: number | string | null | undefined;
   maxWidth: number | string | null | undefined;
-  align: "left" | "center" | "right";
+  align: DataListCellAlign;
+  headerAlign: DataListCellAlign;
+  footerAlign: DataListCellAlign;
   fill: boolean;
   fixed: boolean;
   border: boolean;
@@ -47,15 +53,19 @@ type Column<T extends Struct = Struct> = {
     columns: Array<Column<T>>;
   }> | null | undefined;
   cells: Array<Cell<T>>;
+  headerCell: Cell<T> | null;
+  footerCell: Cell<T> | null;
   onClick: ((data: Data<T>) => void) | null | undefined;
   disposeCell: ((cell: Cell<T>, dl: DataListClass<T>) => void) | null | undefined;
+  disposeHeaderCell: ((cell: Cell<T>, dl: DataListClass<T>) => void) | null | undefined;
+  disposeFooterCell: ((cell: Cell<T>, dl: DataListClass<T>) => void) | null | undefined;
   toDisplay: ((originData: T, column: Column<T>) => string) | null | undefined;
   origin: DataListColumn<T> | null | undefined;
 };
 
 type Data<T extends Struct = Struct> = {
   origin: T;
-  display: { [key in keyof T]: string };
+  display: { [key: string]: string };
   id: number;
   init: boolean;
   rowSelected: boolean;
@@ -66,7 +76,7 @@ type Cell<T extends Struct = Struct> = {
   element: HTMLDivElement;
   elements: Array<HTMLDivElement>;
   column: Column<T>;
-  row: Row<T>;
+  row: Row<T> | null;
   cache: {
     display: string;
     selected: boolean;
@@ -87,6 +97,8 @@ type Row<T extends Struct = Struct> = {
 export type DataListClassProps<T extends Struct = Struct> = {
   value?: Array<T>;
   columns?: Array<any>;
+  header?: boolean;
+  footer?: boolean;
 };
 
 class DataListClass<T extends Struct = Struct> extends DomClassComponent {
@@ -96,6 +108,8 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
 
   protected originColumns: Array<DataListColumn<T>> | null | undefined;
   protected columns: Array<Column<T>>;
+  protected headerCells: Array<Cell<T>>;
+  protected footerCells: Array<Cell<T>>;
   protected rows: Array<Row<T>>;
   protected items: Array<Data<T>>;
   protected sortedItems: Array<Data<T>>;
@@ -115,15 +129,23 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     cellRow: HTMLDivElement | null;
     label: HTMLDivElement;
   };
-  protected headerElement: HTMLDivElement;
-  protected footerElement: HTMLDivElement;
+  protected headerElement: HTMLDivElement | undefined;
+  protected footerElement: HTMLDivElement | undefined;
   protected bodyElement: HTMLDivElement;
   protected dummyElement: HTMLDivElement;
 
+  protected header: boolean;
+  protected footer: boolean;
+
   constructor(protected element: HTMLDivElement, props: DataListClassProps<T>) {
     super();
+    this.header = props.header !== false;
+    this.footer = props.footer === true;
+
     this.initialized = false;
     this.columns = [];
+    this.headerCells = [];
+    this.footerCells = [];
     this.rows = [];
     this.items = [];
     this.sortedItems = [];
@@ -132,8 +154,8 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.maxFirstIndex = -1;
     this.lastScrolledTop = -1;
 
-    this.headerHeight = 30;
-    this.footerHeight = 30;
+    this.headerHeight = this.header ? 30 : 0;
+    this.footerHeight = this.footer ? 30 : 0;
     this.rowHeight = 30;
 
     element.classList.add(Style.class);
@@ -161,23 +183,23 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       elem.style.height = convertSizeNumToStr(this.rowHeight * this.sortedItems.length)!;
       this.element.appendChild(elem);
     });
-    this.headerElement = cloneDomElement(div, elem => {
-      elem.classList.add(Style.header);
+    this.headerElement = this.header ? cloneDomElement(div, elem => {
+      elem.classList.add(Style.header, Style.row);
       elem.style.height = convertSizeNumToStr(this.headerHeight)!;
       this.element.appendChild(elem);
-    });
+    }) : undefined;
     this.bodyElement = cloneDomElement(div, elem => {
       elem.classList.add(Style.body);
       elem.style.top = convertSizeNumToStr(this.headerHeight)!;
       elem.style.height = `calc(100% - ${convertSizeNumToStr(this.headerHeight + this.footerHeight)})`;
       this.element.appendChild(elem);
     });
-    this.footerElement = cloneDomElement(div, elem => {
-      elem.classList.add(Style.footer);
+    this.footerElement = this.footer ? cloneDomElement(div, elem => {
+      elem.classList.add(Style.footer, Style.row);
       elem.style.height = convertSizeNumToStr(this.footerHeight)!;
       elem.style.top = `calc(100% - ${convertSizeNumToStr(this.footerHeight)})`;
       this.element.appendChild(elem);
-    });
+    }) : undefined;
 
     let et: NodeJS.Timeout | null = null;
     this.addEvent(this.element, "scroll", () => {
@@ -239,6 +261,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
         if (cell.column.disposeCell) {
           cell.column.disposeCell(cell, this);
         }
+        this.removeEvent(cell.element);
         cell.column.cells.pop();
       }
       this.removeEvent(row.element);
@@ -247,8 +270,30 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     }
   }
 
+  protected disposeHeader(): void {
+    this.headerCells.forEach(cell => {
+      cell.column.disposeHeaderCell?.(cell, this);
+      this.removeEvent(cell.element);
+      cell.column.headerCell = null;
+    });
+    this.headerCells = [];
+    if (this.headerElement) this.headerElement.textContent = "";
+  }
+
+  protected disposeFooter(): void {
+    this.footerCells.forEach(cell => {
+      cell.column.disposeFooterCell?.(cell, this);
+      this.removeEvent(cell.element);
+      cell.column.footerCell = null;
+    });
+    this.footerCells = [];
+    if (this.footerElement) this.footerElement.textContent = "";
+  }
+
   public dispose(): void {
     this.disposeRows();
+    this.disposeHeader();
+    this.disposeFooter();
     if (this.resizeObserver) this.resizeObserver.disconnect();
     super.dispose();
   }
@@ -262,7 +307,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
   }
 
   protected renderCell(cell: Cell<T>): void {
-    const display = getValue(cell.row.data?.display!, cell.column.displayName);
+    const display = cell.row!.data?.display[cell.column.displayName] ?? "";
     if (cell.cache.display !== display) {
       cell.cache.display = cell.elements[0].textContent = display;
     }
@@ -280,13 +325,14 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       row.element.style.removeProperty("visibility");
     }
     if (!data.init) {
+      data.init = true;
       this.columnIterator(column => {
-        setValue(data.display, column.displayName, (() => {
+        data.display[column.displayName] = (() => {
           if (column.toDisplay) {
             return column.toDisplay(data.origin, column);
           }
           return String(getValue(data.origin, column.displayName) ?? "");
-        })());
+        })();
       });
     }
     row.cells.forEach(cell => {
@@ -294,50 +340,97 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     });
   }
 
-  protected generateRowElement = (row: Row<T>) => {
-    const f = (pElem: HTMLDivElement, col: Column<T>) => {
-      const cell: Cell<T> = {
-        row,
-        cache: {
-          display: "",
-          selected: false,
-        },
-        column: col,
-        element: cloneDomElement(this.cloneBase.cell, elem => {
-          elem.setAttribute("data-align", col.align);
-          if (col.fill) elem.setAttribute("data-fill", "");
-          if (col.fixed) elem.setAttribute("data-fixed", "");
-          if (col.width != null) elem.style.width = convertSizeNumToStr(col.width)!;
-          if (col.minWidth != null) elem.style.width = convertSizeNumToStr(col.minWidth)!;
-          if (col.maxWidth != null) elem.style.maxWidth = convertSizeNumToStr(col.maxWidth)!;
-        }),
-        elements: [],
-      };
-      row.cells.push(cell);
-      col.cells.push(cell);
-      if (col.rows) {
-        cell.element.setAttribute("data-row", "");
-        col.rows.forEach(row => {
-          if (this.cloneBase.cellRow == null) {
-            this.cloneBase.cellRow = cloneDomElement(this.cloneBase.div, elem => {
-              elem.classList.add(Style.crow);
-            });
-          }
-          const relem = cloneDomElement(this.cloneBase.cellRow);
-          cell.elements.push(relem);
-          row.columns.forEach(c => {
-            f(relem, c);
-          });
-        });
-      } else {
-        const lelem = cloneDomElement(this.cloneBase.label);
-        cell.elements.push(lelem);
-        cell.element.appendChild(lelem);
-      }
-      pElem.appendChild(cell.element);
+  protected generateCellElement(col: Column<T>, mode: "header" | "footer" | "body"): HTMLDivElement {
+    return cloneDomElement(this.cloneBase.cell, elem => {
+      elem.setAttribute("data-align", (() => {
+        switch (mode) {
+          case "header":
+            return "left";
+          case "footer":
+            return "left";
+          default:
+            return col.align;
+        }
+      })());
+      if (col.fill) elem.setAttribute("data-fill", "");
+      if (col.fixed) elem.setAttribute("data-fixed", "");
+      if (col.width != null) elem.style.width = convertSizeNumToStr(col.width)!;
+      if (col.minWidth != null) elem.style.width = convertSizeNumToStr(col.minWidth)!;
+      if (col.maxWidth != null) elem.style.maxWidth = convertSizeNumToStr(col.maxWidth)!;
+    });
+  }
+
+  protected generateColumnElement(pElem: HTMLDivElement, col: Column<T>, row: Row<T> | null, mode: "header" | "footer" | "body"): void {
+    const cell: Cell<T> = {
+      row,
+      cache: {
+        display: "",
+        selected: false,
+      },
+      column: col,
+      element: this.generateCellElement(col, mode),
+      elements: [],
     };
+    switch (mode) {
+      case "header":
+        this.headerCells.push(col.headerCell = cell);
+        break;
+      case "footer":
+        this.footerCells.push(col.footerCell = cell);
+        break;
+      default:
+        row?.cells.push(cell);
+        col.cells.push(cell);
+        break;
+    }
+    if (col.rows) {
+      cell.element.setAttribute("data-row", "");
+      col.rows.forEach(crow => {
+        if (this.cloneBase.cellRow == null) {
+          this.cloneBase.cellRow = cloneDomElement(this.cloneBase.div, elem => {
+            elem.classList.add(Style.crow);
+          });
+        }
+        const relem = cloneDomElement(this.cloneBase.cellRow);
+        cell.elements.push(relem);
+        crow.columns.forEach(c => {
+          this.generateColumnElement(relem, c, row, mode);
+        });
+      });
+    } else {
+      const lelem = cloneDomElement(this.cloneBase.label);
+      cell.elements.push(lelem);
+      cell.element.appendChild(lelem);
+      switch (mode) {
+        case "header":
+          cell.elements[0].textContent = col.label;
+          break;
+        case "footer":
+          break;
+        default:
+          break;
+      }
+    }
+    pElem.appendChild(cell.element);
+  }
+
+  protected generateHeader(): void {
+    if (!this.header) return;
     this.columns.forEach(col => {
-      f(row.element, col);
+      this.generateColumnElement(this.headerElement!, col, null, "header");
+    });
+  }
+
+  protected generateFooter(): void {
+    if (!this.footer) return;
+    this.columns.forEach(col => {
+      this.generateColumnElement(this.footerElement!, col, null, "header");
+    });
+  }
+
+  protected generateRowElement = (row: Row<T>) => {
+    this.columns.forEach(col => {
+      this.generateColumnElement(row.element, col, row, "body");
     });
   };
 
@@ -400,6 +493,8 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     if (this.originColumns === columns) return;
     this.originColumns = columns;
     this.disposeRows();
+    this.disposeHeader();
+    this.disposeFooter();
     this.columns = [];
     const f = (oCols: Array<DataListColumn<T>>, cols: Array<Column<T>>) => {
       oCols.forEach(oCol => {
@@ -407,7 +502,16 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           name: oCol.name,
           displayName: oCol.displayName || oCol.name,
           label: oCol.label ?? "",
-          align: oCol.align ?? "left",
+          align: oCol.align ?? (() => {
+            switch (oCol.dataType) {
+              case "number":
+                return "right";
+              default:
+                return "left";
+            }
+          })(),
+          headerAlign: oCol.headerAlign ?? "left",
+          footerAlign: oCol.footerAlign ?? "left",
           wrap: oCol.wrap === true,
           border: oCol.border !== false,
           fixed: oCol.fixed === true,
@@ -438,11 +542,11 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
             switch (oCol.dataType) {
               case "number":
                 return (data, col) => {
-                  return NumberUtils.format(getValue(data, col.displayName)) ?? "";
+                  return NumberUtils.format(data[col.displayName]) ?? "";
                 };
               case "date":
                 return (data, col) => {
-                  return DatetimeUtils.format(getValue(data, col.displayName), "yyyy/MM/dd") ?? "";
+                  return DatetimeUtils.format(data[col.displayName], "yyyy/MM/dd") ?? "";
                 };
               default:
                 return undefined;
@@ -451,7 +555,11 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           onClick: oCol.onClick,
           rows: null,
           disposeCell: null,
+          disposeHeaderCell: null,
+          disposeFooterCell: null,
           cells: [],
+          headerCell: null,
+          footerCell: null,
           origin: oCol,
         };
         cols.push(col);
@@ -472,6 +580,9 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       fill: true,
       toDisplay: (d) => JSON.stringify(d),
     }], this.columns);
+
+    this.generateHeader();
+    this.generateFooter();
 
     if (this.initialized) {
       this.items.forEach(item => item.init = false);

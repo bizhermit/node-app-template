@@ -17,6 +17,7 @@ type Data = {
   col3?: string;
   col4?: string;
   col5?: string;
+  string: string;
   number: number;
   date: string;
 };
@@ -25,11 +26,7 @@ const generateArray = (length = 0) => {
   return ArrayUtils.generateArray(length, index => {
     return {
       id: index,
-      col1: `col1 - ${index}`,
-      col2: `col2 - ${index}`,
-      col3: `col3 - ${index}`,
-      col4: `col4 - ${index}`,
-      col5: `col5 - ${index}`,
+      string: `data ${index}`,
       number: index * 1000,
       date: `2023-01-${1 + index}`,
       button: `button${index}`,
@@ -42,17 +39,20 @@ const Page: NextPage = () => {
     const cols: Array<DataListColumn<Data>> = [];
     cols.push(
       {
-        name: "col1",
+        name: "string",
+        label: "String",
       },
       {
         name: "number",
         dataType: "number",
-        align: "right",
+        label: "Number",
+        // align: "left",
         // fill: true,
       },
       {
         name: "date",
         dataType: "date",
+        label: "Date",
         width: 200,
       },
     );
