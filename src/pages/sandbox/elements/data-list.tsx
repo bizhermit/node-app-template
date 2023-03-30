@@ -46,15 +46,14 @@ const Page: NextPage = () => {
       },
       {
         name: "number",
+        dataType: "number",
         align: "right",
         // fill: true,
       },
       {
         name: "date",
+        dataType: "date",
         width: 200,
-        toDisplay: (data, col) => {
-          return DatetimeUtils.format(data.date, "yyyy/MM/dd") ?? "";
-        }
       },
     );
     return cols;

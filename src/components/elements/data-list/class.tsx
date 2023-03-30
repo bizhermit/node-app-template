@@ -2,10 +2,13 @@ import DomClassComponent, { cloneDomElement } from "@/components/utilities/dom-c
 import Style from "$/components/elements/data-list.module.scss";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { getValue, setValue } from "@/data-items/utilities";
+import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
+import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 
 export type DataListColumn<T extends Struct = Struct> = {
   name: string;
   displayName?: string;
+  dataType?: "string" | "number" | "date";
   label?: string;
   width?: number | string | null;
   minWidth?: number | string | null;
@@ -282,7 +285,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           if (column.toDisplay) {
             return column.toDisplay(data.origin, column);
           }
-          return getValue(data.origin, column.displayName);
+          return String(getValue(data.origin, column.displayName) ?? "");
         })());
       });
     }
@@ -431,7 +434,20 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
             () => 0 : // TODO
             oCol.sort,
           sortNeutral: oCol.sortNeutral === true,
-          toDisplay: oCol.toDisplay,
+          toDisplay: oCol.toDisplay ?? (() => {
+            switch (oCol.dataType) {
+              case "number":
+                return (data, col) => {
+                  return NumberUtils.format(getValue(data, col.displayName)) ?? "";
+                };
+              case "date":
+                return (data, col) => {
+                  return DatetimeUtils.format(getValue(data, col.displayName), "yyyy/MM/dd") ?? "";
+                };
+              default:
+                return undefined;
+            }
+          })(),
           onClick: oCol.onClick,
           rows: null,
           disposeCell: null,
@@ -457,7 +473,10 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       toDisplay: (d) => JSON.stringify(d),
     }], this.columns);
 
-    if (this.initialized) this.render();
+    if (this.initialized) {
+      this.items.forEach(item => item.init = false);
+      this.render();
+    }
   }
 
   protected bind(items: Array<T> | null | undefined): void {
