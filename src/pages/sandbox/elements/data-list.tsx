@@ -6,7 +6,6 @@ import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
 import { joinClassNames } from "@/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import type { NextPage } from "next";
 import { useMemo, useState } from "react";
 
@@ -53,20 +52,21 @@ const Page: NextPage = () => {
         name: "date",
         dataType: "date",
         label: "Date",
-        width: 200,
-        border: false,
+        width: 120,
+        align: "center",
+        // border: false,
       },
       {
         name: "multi",
         rows: [{
           columns: [
             {
-              name: "multi1-string",
+              name: "multi-string",
               displayName: "string",
               label: "String",
             },
             {
-              name: "multi1-number",
+              name: "multi-number",
               displayName: "number",
               label: "Number",
               dataType: "number",
@@ -75,14 +75,40 @@ const Page: NextPage = () => {
         }, {
           columns: [
             {
-              name: "multi1-date",
+              name: "multi-date",
               displayName: "date",
               label: "Date",
               dataType: "date",
             },
-          ]
-        }]
-      }
+          ],
+        }],
+      },
+      {
+        name: "group",
+        rows: [{
+          columns: [
+            {
+              name: "group-caption",
+              label: "Group",
+            }
+          ],
+          body: false,
+        }, {
+          columns: [
+            {
+              name: "group-string",
+              displayName: "string",
+              label: "String",
+            },
+            {
+              name: "group-number",
+              displayName: "number",
+              label: "Number",
+              dataType: "number",
+            },
+          ],
+        }],
+      },
     );
     return cols;
   }, []);
@@ -135,6 +161,9 @@ const Page: NextPage = () => {
         // $outline={false}
         // $rowBorder={false}
         // $cellBorder={false}
+        $headerHeight={60}
+        $footerHeight={60}
+        $rowHeight={60}
       // $header
       // $emptyText
       // $headerHeight="6rem"

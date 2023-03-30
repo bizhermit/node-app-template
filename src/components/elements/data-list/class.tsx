@@ -12,9 +12,9 @@ export type DataListColumn<T extends Struct = Struct> = {
   displayName?: string;
   dataType?: "string" | "number" | "date";
   label?: string;
-  width?: number | string | null;
-  minWidth?: number | string | null;
-  maxWidth?: number | string | null;
+  width?: number | null;
+  minWidth?: number | null;
+  maxWidth?: number | null;
   align?: DataListCellAlign;
   headerAlign?: DataListCellAlign;
   footerAlign?: DataListCellAlign;
@@ -27,6 +27,9 @@ export type DataListColumn<T extends Struct = Struct> = {
   wrap?: boolean;
   rows?: Array<{
     columns: Array<DataListColumn<T>>;
+    header?: boolean;
+    body?: boolean;
+    footer?: boolean;
   }>;
   onClick?: (data: Data<T>) => void;
   toDisplay?: ((originData: T, column: Column<T>) => string) | null;
@@ -36,9 +39,9 @@ type Column<T extends Struct = Struct> = {
   name: string;
   displayName: string;
   label: string;
-  width: number | string | null | undefined;
-  minWidth: number | string | null | undefined;
-  maxWidth: number | string | null | undefined;
+  width: number | null | undefined;
+  minWidth: number | null | undefined;
+  maxWidth: number | null | undefined;
   align: DataListCellAlign;
   headerAlign: DataListCellAlign;
   footerAlign: DataListCellAlign;
@@ -51,6 +54,9 @@ type Column<T extends Struct = Struct> = {
   wrap: boolean;
   rows: Array<{
     columns: Array<Column<T>>;
+    header: boolean;
+    body: boolean;
+    footer: boolean;
   }> | null | undefined;
   cells: Array<Cell<T>>;
   headerCell: Cell<T> | null;
@@ -98,7 +104,10 @@ export type DataListClassProps<T extends Struct = Struct> = {
   value?: Array<T>;
   columns?: Array<any>;
   header?: boolean;
+  headerHeight?: number;
   footer?: boolean;
+  footerHeight?: number;
+  rowHeight?: number;
   outline?: boolean;
   rowBorder?: boolean;
   cellBorder?: boolean;
@@ -166,9 +175,9 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.maxFirstIndex = -1;
     this.lastScrolledTop = -1;
 
-    this.headerHeight = this.header ? 30 : 0;
-    this.footerHeight = this.footer ? 30 : 0;
-    this.rowHeight = 30;
+    this.headerHeight = this.header ? (props.headerHeight || 30) : 0;
+    this.footerHeight = this.footer ? (props.footerHeight || 30) : 0;
+    this.rowHeight = props.rowHeight || 30;
 
     element.classList.add(Style.class);
     element.tabIndex = -1;
@@ -405,6 +414,17 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     if (col.rows) {
       cell.element.setAttribute("data-row", "");
       col.rows.forEach(crow => {
+        switch (mode) {
+          case "header":
+            if (!crow.header) return;
+            break;
+          case "footer":
+            if (!crow.footer) return;
+            break;
+          default:
+            if (!crow.body) return;
+            break;
+        }
         if (this.cloneBase.cellRow == null) {
           this.cloneBase.cellRow = cloneDomElement(this.cloneBase.div, elem => {
             elem.classList.add(Style.crow);
@@ -414,6 +434,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           if (this.rowBorder) elem.setAttribute("data-border", "");
         });
         cell.elements.push(relem);
+        cell.element.appendChild(relem);
         crow.columns.forEach(c => {
           this.generateColumnElement(relem, c, row, mode);
         });
@@ -517,8 +538,10 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
     this.disposeHeader();
     this.disposeFooter();
     this.columns = [];
-    const f = (oCols: Array<DataListColumn<T>>, cols: Array<Column<T>>) => {
-      oCols.forEach(oCol => {
+    const f = (oCols: Array<DataListColumn<T>>, cols: Array<Column<T>>, pCol?: Column<T>) => {
+      let sumWidth = 0;
+      let hasFill = false;
+      oCols.forEach((oCol, index) => {
         const col: Column<T> = {
           name: oCol.name,
           displayName: oCol.displayName || oCol.name,
@@ -537,12 +560,16 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           border: oCol.border,
           fixed: oCol.fixed === true,
           ...(() => {
-            const fill = oCol.fill === true;
+            let fill = !hasFill && oCol.fill === true;
+            if (pCol != null && !hasFill && oCols.length - 1 === index) {
+              fill = true;
+            }
+            hasFill = hasFill || fill;
             if (fill) {
               return {
                 fill,
                 width: null,
-                minWidth: null,
+                minWidth: oCol.minWidth ?? 100,
                 maxWidth: null,
                 resize: false,
               };
@@ -583,18 +610,34 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
           footerCell: null,
           origin: oCol,
         };
+        sumWidth += Math.max(col.width ?? 0, col.minWidth ?? 0);
         cols.push(col);
         if (oCol.rows) {
           col.rows = [];
+          let maxWidth = 0;
           oCol.rows.forEach(row => {
             const rcols: Array<Column<T>> = [];
             col.rows!.push({
               columns: rcols,
+              header: row.header !== false,
+              body: row.body !== false,
+              footer: row.footer !== false,
             });
-            f(row.columns, rcols);
+            const ret = f(row.columns, rcols, col);
+            maxWidth = Math.max(maxWidth, ret.width);
           });
+          if (col.fill) {
+            col.minWidth = maxWidth;
+          } else {
+            col.width = oCol.width ?? maxWidth;
+            col.minWidth = oCol.minWidth ?? maxWidth;
+          }
         }
       });
+      return {
+        width: sumWidth,
+        hasFill,
+      };
     };
     f(columns ?? [{
       name: "json",

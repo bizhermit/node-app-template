@@ -10,7 +10,10 @@ type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivEleme
   $columns?: Array<DataListColumn<T>>;
   $value?: LoadableArray<T>;
   $header?: boolean;
+  $headerHeight?: number;
   $footer?: boolean;
+  $footerHeight?: number;
+  $rowHeight?: number;
   $outline?: boolean;
   $rowBorder?: boolean;
   $cellBorder?: boolean;
@@ -38,7 +41,10 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<T extend
       columns: props.$columns,
       value: items,
       header: props.$header,
+      headerHeight: props.$headerHeight,
       footer: props.$footer,
+      footerHeight: props.$footerHeight,
+      rowHeight: props.$rowHeight,
       outline: props.$outline,
       rowBorder: props.$rowBorder,
       cellBorder: props.$cellBorder,

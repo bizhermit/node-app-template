@@ -125,12 +125,6 @@ $borderStyle: 1px solid var(--c-border);
 
   &[data-row] {
     flex-flow: column nowrap;
-
-    &:not(:first-child) {
-      &[data-border] {
-        border-top: #{$borderStyle};
-      }
-    }
   }
 
   &:not(:first-child) {
