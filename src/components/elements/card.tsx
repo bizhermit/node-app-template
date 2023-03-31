@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes, type ReactNode, useEffect, useRef, useState } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode, useEffect, useRef, useState, useReducer } from "react";
 import Style from "$/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
@@ -25,6 +25,7 @@ export type CardProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $defaultOpened?: boolean;
   $opened?: boolean;
   $defaultMount?: boolean;
+  $unmountBody?: boolean;
   $toggleTriger?: "header" | "footer" | "h&f";
   $onToggle?: (open: boolean) => void;
   $onToggled?: (open: boolean) => void;
@@ -36,6 +37,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   const bref = useRef<HTMLDivElement>(null!);
   const [opened, setOpened] = useState(props.$accordion ? (props.$opened ?? props.$defaultOpened ?? true) : true);
   const mounted = useRef(props.$accordion ? (props.$defaultMount ?? false) : true);
+  const [mount, setMount] = useReducer((_: boolean, action: boolean) => {
+    return mounted.current = action;
+  }, mounted.current);
 
   const toggle = () => {
     if (!props.$accordion) return;
@@ -51,7 +55,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   useEffect(() => {
     if (!props.$accordion) return;
     if (props.$opened == null) return;
-    if (props.$opened) mounted.current = true;
+    if (props.$opened) setMount(true);
     setOpened(props.$opened);
   }, [props.$opened]);
 
@@ -59,7 +63,10 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     elementRef: bref,
     open: opened || !props.$accordion,
     direction: props.$direction || "vertical",
-    onToggled: props.$onToggled
+    onToggled: (open) => {
+      if (!open && props.$unmountBody) setMount(false);
+      props.$onToggled?.(open);
+    }
   });
 
   const childCtx = (() => {
@@ -131,7 +138,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
         style={toggleAnimationInitStyle}
         ref={bref}
       >
-        {(mounted.current || opened) &&
+        {(mounted.current || opened) && mount &&
           (childCtx.body === -1 ?
             props.children :
             (props.children as ReactNodeArray)[childCtx.body]
