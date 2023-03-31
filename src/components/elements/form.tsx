@@ -413,7 +413,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     }
     const msg = msgs[0] || "";
     setError(msg);
-    if (props?.name) {
+    if (!props?.$preventFormBind) {
       form.setErrors(cur => {
         if (msg) {
           if (cur[id.current] === msg) return cur;
@@ -428,23 +428,21 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
         return ret;
       });
     }
-  }, [validations, form.bind, props?.name, props?.$bind, props?.$preventFormBind]);
+  }, [validations, form.bind, props?.$bind, props?.$preventFormBind]);
 
   useEffect(() => {
-    if (props?.name) {
-      form.setExErrors(cur => {
-        if (props?.$error) {
-          return {
-            ...cur,
-            [id.current]: props.$error,
-          };
-        }
-        if (!(id.current in cur)) return cur;
-        const ret = { ...cur };
-        delete ret[id.current];
-        return ret;
-      });
-    }
+    form.setExErrors(cur => {
+      if (props?.$error) {
+        return {
+          ...cur,
+          [id.current]: props.$error,
+        };
+      }
+      if (!(id.current in cur)) return cur;
+      const ret = { ...cur };
+      delete ret[id.current];
+      return ret;
+    });
   }, [props?.$error]);
 
   const change = useCallback((value: ValueType<T, D, V> | null | undefined, absolute?: boolean) => {
