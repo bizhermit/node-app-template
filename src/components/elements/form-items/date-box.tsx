@@ -10,9 +10,14 @@ import { DateData, DateInput } from "@/data-items/date";
 import { equals } from "@/data-items/utilities";
 import { CalendarIcon, CrossIcon } from "@/components/elements/icon";
 
-type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
+type OmitAttributes = "placeholder";
+type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = Omit<FormItemProps<T, D>, OmitAttributes> & DateInput.FCPorps & {
   $disallowInput?: boolean;
   $pickerButtonless?: boolean;
+  $yearPlaceholder?: string;
+  $monthPlaceholder?: string;
+  $dayPlaceholder?: string;
+  $showSeparatorAlwarys?: boolean;
 };
 
 export type DateBoxProps_TypeString<D extends DataItem_String | undefined = undefined> = DateBoxBaseProps<string, D>;
@@ -381,10 +386,17 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           onFocus={focusInput}
           onKeyDown={keydownY}
           autoComplete="off"
+          placeholder={props.$yearPlaceholder}
         />
         {type !== "year" &&
           <>
-            <span className={Style.sep} data-has={hasData}>/</span>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+              data-show={hasData || props.$showSeparatorAlwarys === true}
+            >
+              /
+            </span>
             <input
               ref={mref}
               className={Style.m}
@@ -397,12 +409,19 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               onFocus={focusInput}
               onKeyDown={keydownM}
               autoComplete="off"
+              placeholder={props.$monthPlaceholder}
             />
           </>
         }
         {type === "date" &&
           <>
-            <span className={Style.sep} data-has={hasData}>/</span>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+              data-show={hasData || props.$showSeparatorAlwarys === true}
+            >
+              /
+            </span>
             <input
               ref={dref}
               className={Style.d}
@@ -415,6 +434,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               onFocus={focusInput}
               onKeyDown={keydownD}
               autoComplete="off"
+              placeholder={props.$dayPlaceholder}
             />
           </>
         }

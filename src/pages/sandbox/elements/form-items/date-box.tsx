@@ -111,6 +111,7 @@ const Page: NextPage = () => {
           $onChange={v => console.log("no item: ", v)}
           // $typeof="date"
           $pickerButtonless
+          $showSeparatorAlwarys
         />
         <DateBox
           $tag="date"

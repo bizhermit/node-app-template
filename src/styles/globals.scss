@@ -50,6 +50,11 @@ h6 {
   margin-block: unset;
 }
 
+::placeholder {
+  color: var(--c-placeholder_);
+  opacity: #{var.$placeholderOpacity};
+}
+
 .icon {
   &[height="0"] {
     height: var(--icon-size);

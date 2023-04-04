@@ -106,6 +106,7 @@ const Page: NextPage = () => {
         <TimeBox
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
+          $showSeparatorAlwarys
         />
         <TimeBox
           $tag="time"

@@ -1,4 +1,5 @@
 @use "$/mixins";
+@use "$/var";
 
 .inputs {
   box-sizing: border-box;
@@ -17,9 +18,12 @@
     }
   }
 
-  &:focus-within {
-    >.sep {
-      color: inherit
+  &[data-editable="true"] {
+    &:focus-within {
+      >.sep {
+        color: inherit !important;
+        opacity: 1;
+      }
     }
   }
 }
@@ -55,8 +59,18 @@
   padding-top: var(--padding-top-text);
   cursor: inherit;
 
-  &[data-has="false"] {
+  &[data-show="false"] {
     color: transparent;
+  }
+
+  &[data-show="true"] {
+    transition: color #{var.$transitionTime},
+    opacity #{var.$transitionTime};
+
+    &[data-has="false"] {
+      color: var(--c-placeholder_);
+      opacity: #{var.$placeholderOpacity};
+    }
   }
 
   &:first-child,

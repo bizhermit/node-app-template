@@ -11,6 +11,10 @@ import { ClockIcon, CrossIcon } from "@/components/elements/icon";
 
 type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   $disallowInput?: boolean;
+  $hourPlaceholder?: string;
+  $minutePlaceholder?: string;
+  $secondPlaceholder?: string;
+  $showSeparatorAlwarys?: boolean;
 };
 
 type TimeBoxProps_TypeString<D extends DataItem_Time | DataItem_String | undefined = undefined> = TimeBoxBaseProps<string, D>;
@@ -372,6 +376,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
         className={Style.inputs}
         onClick={clickInputs}
         data-input={!props.$disallowInput}
+        data-editable={ctx.editable}
       >
         {needH &&
           <input
@@ -385,9 +390,17 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onFocus={focusInput}
             onKeyDown={keydownH}
             onChange={changeH}
+            autoComplete="off"
+            placeholder={props.$hourPlaceholder}
           />
         }
-        <span className={Style.sep} data-has={hasData}>:</span>
+        <span
+          className={Style.sep}
+          data-has={hasData}
+          data-show={hasData || props.$showSeparatorAlwarys === true}
+        >
+          :
+        </span>
         {needM &&
           <input
             ref={mref}
@@ -400,11 +413,19 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onFocus={focusInput}
             onKeyDown={keydownM}
             onChange={changeM}
+            autoComplete="off"
+            placeholder={props.$minutePlaceholder}
           />
         }
         {needS &&
           <>
-            <span className={Style.sep} data-has={hasData}>:</span>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+              data-show={hasData || props.$showSeparatorAlwarys === true}
+            >
+              :
+            </span>
             <input
               ref={sref}
               className={Style.s}
@@ -416,6 +437,8 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
               onFocus={focusInput}
               onKeyDown={keydownS}
               onChange={changeS}
+              autoComplete="off"
+              placeholder={props.$secondPlaceholder}
             />
           </>
         }
