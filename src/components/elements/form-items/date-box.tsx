@@ -230,7 +230,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
       }
     }
     if (maxDate) {
-      if (DatetimeUtils.isAfterDate(maxDate, date)) {
+      if (!DatetimeUtils.isBeforeDate(maxDate, date)) {
         year = maxDate.getFullYear();
         month = maxDate.getMonth() + 1;
         day = maxDate.getDate();

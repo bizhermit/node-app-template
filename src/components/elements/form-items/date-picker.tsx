@@ -344,7 +344,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
       if (!afterMin && !DatetimeUtils.isBeforeDate(minFirstDate, date)) {
         afterMin = true;
       }
-      if (beforeMax && DatetimeUtils.isAfterDate(maxLastDate, date)) {
+      if (beforeMax && !DatetimeUtils.isBeforeDate(maxLastDate, date)) {
         beforeMax = false;
       }
       return afterMin && beforeMax;
@@ -427,7 +427,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
       if (!afterMin && !DatetimeUtils.isBeforeDate(minDate, date)) {
         afterMin = true;
       }
-      if (beforeMax && DatetimeUtils.isAfterDate(maxDate, date)) {
+      if (beforeMax && !DatetimeUtils.isBeforeDate(maxDate, date)) {
         beforeMax = false;
       }
       return afterMin && beforeMax;
