@@ -37,6 +37,7 @@ if (isDev) {
   if (existsSync(devEnvPath)) {
     dotenv.config({
       path: devEnvPath,
+      override: true,
       debug: true,
     });
   }
@@ -44,6 +45,7 @@ if (isDev) {
   if (existsSync(devLocalEnvPath)) {
     dotenv.config({
       path: devLocalEnvPath,
+      override: true,
       debug: true,
     });
   }
@@ -52,12 +54,14 @@ if (isDev) {
   if (existsSync(prodEnvPath)) {
     dotenv.config({
       path: prodEnvPath,
+      override: true,
     });
   }
   const prodLocalEnvPath = path.join(appRoot, ".env.production.local");
   if (existsSync(prodLocalEnvPath)) {
     dotenv.config({
       path: prodLocalEnvPath,
+      override: true,
     });
   }
 }
