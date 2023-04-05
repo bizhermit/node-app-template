@@ -46,6 +46,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     mounted.current = true;
     if (props.$opened == null) {
       setOpened(c => !c);
+      setMount(true);
       props.$onToggle?.(!opened);
       return;
     }
