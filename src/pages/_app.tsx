@@ -70,6 +70,11 @@ const Navigation: FC = () => {
           label: "Color",
           pathname: "/sandbox/color",
         }, {
+          key: "env",
+          icon: "E",
+          label: "Env",
+          pathname: "/sandbox/env",
+        }, {
           key: "elements",
           icon: <TbComponents />,
           label: "Elements",

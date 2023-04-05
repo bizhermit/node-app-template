@@ -40,6 +40,7 @@ type PagePath = "/"
   | "/sandbox/elements/stepper"
   | "/sandbox/elements/struct-view"
   | "/sandbox/elements/tooltip"
+  | "/sandbox/env"
   | "/sandbox/fetch"
   | "/sandbox/message-box"
   | "/sandbox/storage";

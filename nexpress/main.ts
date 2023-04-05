@@ -9,18 +9,7 @@ import csrf from "csurf";
 import cookieParser from "cookie-parser";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-
-const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
-dotenv.config({
-  debug: isDev,
-});
-
-const basePath = process.env.BASE_PATH || "";
-const port = Number(process.env.PORT || (isDev ? 8000 : 80));
-const sessionName = process.env.SESSION_NAME || undefined;
-const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4();
-const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
-const corsOrigin = process.env.CORS_ORIGIN || undefined;
+import { existsSync } from "fs";
 
 const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
 const log = {
@@ -36,9 +25,51 @@ const log = {
   },
 };
 
+const appRoot = path.join(__dirname, "../");
+const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
 log.info(`::: nexpress :::${isDev ? " [dev]" : ""}`);
 
-const appRoot = path.join(__dirname, "../");
+dotenv.config({
+  debug: isDev,
+});
+if (isDev) {
+  const devEnvPath = path.join(appRoot, ".env.development");
+  if (existsSync(devEnvPath)) {
+    dotenv.config({
+      path: devEnvPath,
+      debug: true,
+    });
+  }
+  const devLocalEnvPath = path.join(appRoot, ".env.development.local");
+  if (existsSync(devLocalEnvPath)) {
+    dotenv.config({
+      path: devLocalEnvPath,
+      debug: true,
+    });
+  }
+} else {
+  const prodEnvPath = path.join(appRoot, ".env.production");
+  if (existsSync(prodEnvPath)) {
+    dotenv.config({
+      path: prodEnvPath,
+    });
+  }
+  const prodLocalEnvPath = path.join(appRoot, ".env.production.local");
+  if (existsSync(prodLocalEnvPath)) {
+    dotenv.config({
+      path: prodLocalEnvPath,
+    });
+  }
+}
+log.debug(JSON.stringify(process.env, null, 2));
+
+const basePath = process.env.BASE_PATH || "";
+const port = Number(process.env.PORT || (isDev ? 8000 : 80));
+const sessionName = process.env.SESSION_NAME || undefined;
+const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4();
+const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
+const corsOrigin = process.env.CORS_ORIGIN || undefined;
+
 const nextApp = next({
   dev: isDev,
   dir: appRoot,
