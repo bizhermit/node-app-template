@@ -32,38 +32,21 @@ log.info(`::: nexpress :::${isDev ? " [dev]" : ""}`);
 dotenv.config({
   debug: isDev,
 });
+const loadNextEnv = (name: string) => {
+  const envPath = path.join(appRoot, name);
+  if (!existsSync(envPath)) return;
+  dotenv.config({
+    path: envPath,
+    override: true,
+    debug: isDev,
+  });
+};
 if (isDev) {
-  const devEnvPath = path.join(appRoot, ".env.development");
-  if (existsSync(devEnvPath)) {
-    dotenv.config({
-      path: devEnvPath,
-      override: true,
-      debug: true,
-    });
-  }
-  const devLocalEnvPath = path.join(appRoot, ".env.development.local");
-  if (existsSync(devLocalEnvPath)) {
-    dotenv.config({
-      path: devLocalEnvPath,
-      override: true,
-      debug: true,
-    });
-  }
+  loadNextEnv(".env.development");
+  loadNextEnv(".env.development.local");
 } else {
-  const prodEnvPath = path.join(appRoot, ".env.production");
-  if (existsSync(prodEnvPath)) {
-    dotenv.config({
-      path: prodEnvPath,
-      override: true,
-    });
-  }
-  const prodLocalEnvPath = path.join(appRoot, ".env.production.local");
-  if (existsSync(prodLocalEnvPath)) {
-    dotenv.config({
-      path: prodLocalEnvPath,
-      override: true,
-    });
-  }
+  loadNextEnv(".env.production");
+  loadNextEnv(".env.production.local");
 }
 log.debug(JSON.stringify(process.env, null, 2));
 
