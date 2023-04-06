@@ -351,10 +351,21 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   const [error, setError] = useState("");
 
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
-    if (props == null) return undefined;
-    if ("$value" in props) return props.$value;
-    if ("$defaultValue" in props) return props.$defaultValue;
-    return undefined;
+    const v = (() => {
+      if (props == null) return undefined;
+      if ("$value" in props) return props.$value;
+      if ("$defaultValue" in props) return props.$defaultValue;
+      return undefined;
+    })();
+    if (props.name) {
+      if (props.$bind) {
+        setValue(props.$bind, props.name, v);
+      }
+      if (form.bind && !props.$preventFormBind) {
+        setValue(form.bind, props.name, v);
+      }
+    }
+    return v;
   })());
   const [value, setValueImpl] = useState(valueRef.current);
   const setCurrentValue = (value: ValueType<T, D, V> | null | undefined) => {
