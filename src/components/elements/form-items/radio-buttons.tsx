@@ -151,25 +151,18 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       );
     });
     return { nodes, selectedItem };
-  }, [source, ctx.editable, ctx.value, props.$appearance, outline]);
+  }, [source, ctx.editable, ctx.value, props.$appearance, outline, ctx.change]);
 
   useEffect(() => {
     ctx.change(ctx.valueRef.current, true);
   }, [source]);
 
   useEffect(() => {
-    if (props.$allowNull) return;
-    if (selectedItem == null && source.length > 0) {
-      ctx.change(source[0][vdn]);
-      if (!loading && selectedItem == null && source.length > 0) {
-        let target = source[0];
-        if ("$defaultValue" in props && props.$defaultValue != null) {
-          target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
-        }
-        ctx.change(target[vdn]);
-      }
-    }
-  }, [selectedItem, source, props.$allowNull]);
+    if (loading || props.$allowNull || selectedItem != null || source.length === 0) return;
+    const v = ctx.valueRef.current ?? props.$defaultValue;
+    const target = source.find(item => item[vdn] === v) ?? source[0];
+    ctx.change(target[vdn]);
+  }, [selectedItem, source, props.$allowNull, ctx.change]);
 
   return (
     <FormItemWrap

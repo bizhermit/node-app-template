@@ -354,13 +354,17 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     if (props == null) return undefined;
     if ("$value" in props) return props.$value;
     if ("$defaultValue" in props) return props.$defaultValue;
+    if (props.name) {
+      if (props.$bind) return getValue(props.$bind, props.name);
+      if (form.bind) return getValue(form.bind, props.name);
+    }
     return undefined;
   })());
   const [value, setValueImpl] = useState(valueRef.current);
   const setCurrentValue = (value: ValueType<T, D, V> | null | undefined) => {
     setValueImpl(valueRef.current = value);
   };
-  const setBind = (value: ValueType<T, D, V> | null | undefined) => {
+  const setBind = useCallback((value: ValueType<T, D, V> | null | undefined) => {
     if (!props.name) return;
     if (props.$bind) {
       setValue(props.$bind, props.name, value);
@@ -368,7 +372,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     if (form.bind && !props.$preventFormBind) {
       setValue(form.bind, props.name, value);
     }
-  };
+  }, [props.name, props.$bind, form.bind, props.$preventFormBind]);
   useMemo(() => {
     setBind(value);
   }, []);
@@ -468,7 +472,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       validation();
     }
     props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-  }, [form.bind, props?.name, props?.$bind, props?.$onChange, validation, props?.$preventFormBind, ...(options?.generateChangeCallbackDataDeps ?? [])]);
+  }, [setBind, props?.$onChange, validation, ...(options?.generateChangeCallbackDataDeps ?? [])]);
 
   useEffect(() => {
     const name = props?.name;
@@ -500,7 +504,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     setBind(props.$value);
     options?.effect?.(valueRef.current);
     validation();
-  }, [props?.$value]);
+  }, [props?.$value, setBind]);
 
   useEffect(() => {
     if (props) {
