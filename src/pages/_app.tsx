@@ -13,10 +13,14 @@ import { TbComponents } from "react-icons/tb";
 import { LoadingProvider } from "@/components/elements/loading";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { MessageProvider } from "@/components/providers/message";
+import Head from "next/head";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <LayoutProvider initWindowSize={WindowSize.xl}>
+      <Head>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+      </Head>
       <MessageProvider>
         <IconContext.Provider value={{ className: "react-icon icon", size: "0" }}>
           <LoadingProvider $appearance="circle">
