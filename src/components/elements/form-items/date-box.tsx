@@ -97,13 +97,13 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
 
   const type = props.$type ?? "date";
   const minDate = useMemo(() => {
-    return DateInput.getMinDate(p);
+    return DateInput.getMinDate(props);
   }, [props.$min]);
   const maxDate = useMemo(() => {
-    return DateInput.getMaxDate(p);
+    return DateInput.getMaxDate(props);
   }, [props.$max]);
   const judgeValid = useMemo(() => {
-    return DateInput.selectableValidation(p);
+    return DateInput.selectableValidation(props);
   }, [props.$validDays, props.$validDaysMode]);
 
   const yref = useRef<HTMLInputElement>(null!);
