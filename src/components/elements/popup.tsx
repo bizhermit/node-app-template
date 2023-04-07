@@ -148,12 +148,13 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
       rect.bottom += marginY;
     }
 
+    const scrollLeft = document.documentElement.scrollLeft + document.body.scrollLeft;
     switch (posX) {
       case "center":
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
-          rect.left + rect.width / 2 - wMax / 2 :
-          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2), document.body.clientWidth - ref.current.offsetWidth)
+          rect.left + rect.width / 2 - wMax / 2 + scrollLeft :
+          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2 + scrollLeft), document.body.clientWidth - ref.current.offsetWidth + scrollLeft)
         )!;
         break;
       case "inner":
@@ -204,12 +205,14 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         break;
       default: break;
     }
+
+    const scrollTop = document.documentElement.scrollTop + document.body.scrollTop;
     switch (posY) {
       case "center":
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
-          rect.top + rect.height / 2 - hMax / 2 :
-          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2), document.body.clientHeight - ref.current.offsetHeight)
+          rect.top + rect.height / 2 - hMax / 2 + scrollTop :
+          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2 + scrollTop), document.body.clientHeight - ref.current.offsetHeight + scrollTop)
         )!;
         break;
       case "inner":
