@@ -354,7 +354,8 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const focus = () => {
-    (href.current ?? mref.current ?? sref.current)?.focus();
+    if (props.$disallowInput) (href.current ?? mref.current ?? sref.current).parentElement?.focus();
+    else (href.current ?? mref.current ?? sref.current)?.focus();
   };
 
   useEffect(() => {
@@ -497,11 +498,11 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
           $onClickPositive={(value: any) => {
             ctx.change(value);
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
           $onClickNegative={() => {
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
         />
       </Popup>

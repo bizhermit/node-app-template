@@ -349,7 +349,8 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   };
 
   const focus = () => {
-    (dref.current ?? mref.current ?? yref.current)?.focus();
+    if (props.$disallowInput) yref.current.parentElement?.focus();
+    else (dref.current ?? mref.current ?? yref.current)?.focus();
   };
 
   useEffect(() => {
@@ -491,11 +492,11 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           $onClickPositive={(value: any) => {
             ctx.change(value);
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
           $onClickNegative={() => {
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
           $buttonless={props.$pickerButtonless}
         />
