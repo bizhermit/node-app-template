@@ -9,6 +9,7 @@
   align-items: center;
   flex: 1 0 auto;
   z-index: 0;
+  outline: none;
 
   &[data-input="false"] {
     cursor: pointer;
