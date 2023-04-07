@@ -9,8 +9,7 @@ $arrowMargin: 0.15rem;
   display: flex;
   flex-flow: row nowrap;
   justify-content: stretch;
-  align-items: stretch;
-  min-height: var(--point-size);
+  align-items: flex-end;
 
   @include mixins.scrollOverlay;
   overflow-y: visible;
@@ -58,6 +57,7 @@ $arrowMargin: 0.15rem;
   &[data-appearance="arrow"] {
     flex-flow: row nowrap;
     justify-content: center;
+    height: var(--point-size);
   }
 
   &:first-child {
