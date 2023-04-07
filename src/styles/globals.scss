@@ -28,6 +28,10 @@ body {
   height: 100%;
   width: 100%;
   font-size: var(--font-size);
+
+  &:has(dialog[open]) {
+    overflow: hidden;
+  }
 }
 
 #__next {
@@ -48,6 +52,11 @@ h4,
 h5,
 h6 {
   margin-block: unset;
+}
+
+::placeholder {
+  color: var(--c-placeholder_);
+  opacity: #{var.$placeholderOpacity};
 }
 
 .icon {

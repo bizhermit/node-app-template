@@ -1,11 +1,15 @@
 @use "$/mixins";
+@use "$/var";
 
 .inputs {
   box-sizing: border-box;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  flex: 1 0 auto;
+  z-index: 0;
+  outline: none;
 
   &[data-input="false"] {
     cursor: pointer;
@@ -20,7 +24,8 @@
   &[data-editable="true"] {
     &:focus-within {
       >.sep {
-        color: inherit
+        color: inherit;
+        opacity: 1;
       }
     }
   }
@@ -37,21 +42,21 @@
   flex: none;
 
   &:first-child {
-    margin-left: 0.5rem;
+    margin-left: calc(var(--size) / 5);
   }
 
   &:last-child {
-    margin-right: 0.5rem;
+    margin-right: calc(var(--size) / 5);
   }
 }
 
 .y {
-  width: 5rem;
+  width: calc(var(--size) * 1.4);
 }
 
 .m,
 .d {
-  width: 2.8rem;
+  width: calc(var(--size) * 0.8);
 }
 
 .sep {
@@ -66,12 +71,22 @@
   padding-top: var(--padding-top-text);
   cursor: inherit;
 
-  &[data-has="false"] {
+  &[data-show="false"] {
     color: transparent;
   }
 
+  &[data-show="true"] {
+    transition: color #{var.$transitionTime},
+    opacity #{var.$transitionTime};
+
+    &[data-has="false"] {
+      color: var(--c-placeholder_);
+      opacity: #{var.$placeholderOpacity};
+    }
+  }
+
   &:first-child,
-  &:last-child  {
+  &:last-child {
     display: none;
   }
 }

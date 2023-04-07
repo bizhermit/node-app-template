@@ -37,7 +37,6 @@
     "@bizhermit/basic-utils": "^2.0.0",
     "@bizhermit/time": "^2.0.0",
     "cookie-parser": "^1.4.6",
-    "cookies-next": "^2.1.1",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
     "electron-is-dev": "^2.0.0",

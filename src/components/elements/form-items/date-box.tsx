@@ -10,9 +10,14 @@ import { DateData, DateInput } from "@/data-items/date";
 import { equals } from "@/data-items/utilities";
 import { CalendarIcon, CrossIcon } from "@/components/elements/icon";
 
-type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
+type OmitAttributes = "placeholder";
+type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = Omit<FormItemProps<T, D>, OmitAttributes> & DateInput.FCPorps & {
   $disallowInput?: boolean;
   $pickerButtonless?: boolean;
+  $yearPlaceholder?: string;
+  $monthPlaceholder?: string;
+  $dayPlaceholder?: string;
+  $showSeparatorAlwarys?: boolean;
 };
 
 export type DateBoxProps_TypeString<D extends DataItem_String | undefined = undefined> = DateBoxBaseProps<string, D>;
@@ -92,18 +97,19 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
 
   const type = props.$type ?? "date";
   const minDate = useMemo(() => {
-    return DateInput.getMinDate(p);
+    return DateInput.getMinDate(props);
   }, [props.$min]);
   const maxDate = useMemo(() => {
-    return DateInput.getMaxDate(p);
+    return DateInput.getMaxDate(props);
   }, [props.$max]);
   const judgeValid = useMemo(() => {
-    return DateInput.selectableValidation(p);
+    return DateInput.selectableValidation(props);
   }, [props.$validDays, props.$validDaysMode]);
 
   const yref = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
   const dref = useRef<HTMLInputElement>(null!);
+  const pref = useRef<HTMLDivElement>(null!);
   const cacheY = useRef<number>();
   const cacheM = useRef<number>();
   const cacheD = useRef<number>();
@@ -230,7 +236,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
       }
     }
     if (maxDate) {
-      if (DatetimeUtils.isAfterDate(maxDate, date)) {
+      if (!DatetimeUtils.isBeforeDate(maxDate, date)) {
         year = maxDate.getFullYear();
         month = maxDate.getMonth() + 1;
         day = maxDate.getDate();
@@ -316,8 +322,9 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   };
 
   const blur = (e: React.FocusEvent) => {
-    if (e.relatedTarget === yref.current || e.relatedTarget === mref.current || e.relatedTarget === dref.current) return;
+    if (e.relatedTarget === yref.current || e.relatedTarget === mref.current || e.relatedTarget === dref.current || e.relatedTarget === pref.current) return;
     commitCache();
+    setShowPicker(false);
   };
 
   const picker = () => {
@@ -342,7 +349,8 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   };
 
   const focus = () => {
-    (dref.current ?? mref.current ?? yref.current)?.focus();
+    if (props.$disallowInput) yref.current.parentElement?.focus();
+    else (dref.current ?? mref.current ?? yref.current)?.focus();
   };
 
   useEffect(() => {
@@ -367,6 +375,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
         onClick={clickInputs}
         data-input={!props.$disallowInput}
         data-editable={ctx.editable}
+        tabIndex={props.$disallowInput ? 0 : undefined}
       >
         <input
           ref={yref}
@@ -375,16 +384,23 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           disabled={ctx.disabled}
           readOnly={props.$disallowInput || ctx.readOnly}
           maxLength={4}
-          tabIndex={-1}
+          tabIndex={props.$disallowInput ? -1 : undefined}
           defaultValue={cacheY.current || ""}
           onChange={changeY}
           onFocus={focusInput}
           onKeyDown={keydownY}
           autoComplete="off"
+          placeholder={props.$yearPlaceholder}
         />
         {type !== "year" &&
           <>
-            <span className={Style.sep} data-has={hasData}>/</span>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+              data-show={hasData || props.$showSeparatorAlwarys === true}
+            >
+              /
+            </span>
             <input
               ref={mref}
               className={Style.m}
@@ -392,17 +408,25 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
+              tabIndex={props.$disallowInput ? -1 : undefined}
               defaultValue={cacheM.current || ""}
               onChange={changeM}
               onFocus={focusInput}
               onKeyDown={keydownM}
               autoComplete="off"
+              placeholder={props.$monthPlaceholder}
             />
           </>
         }
         {type === "date" &&
           <>
-            <span className={Style.sep} data-has={hasData}>/</span>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+              data-show={hasData || props.$showSeparatorAlwarys === true}
+            >
+              /
+            </span>
             <input
               ref={dref}
               className={Style.d}
@@ -410,11 +434,13 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
+              tabIndex={props.$disallowInput ? -1 : undefined}
               defaultValue={cacheD.current || ""}
               onChange={changeD}
               onFocus={focusInput}
               onKeyDown={keydownD}
               autoComplete="off"
+              placeholder={props.$dayPlaceholder}
             />
           </>
         }
@@ -453,6 +479,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
         $preventClickEvent
       >
         <DatePicker
+          ref={pref}
           $value={ctx.value || today}
           $type={type}
           $typeof={props.$typeof}
@@ -465,11 +492,11 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           $onClickPositive={(value: any) => {
             ctx.change(value);
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
           $onClickNegative={() => {
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
           $buttonless={props.$pickerButtonless}
         />

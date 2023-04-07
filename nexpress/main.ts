@@ -21,7 +21,6 @@ const sessionName = process.env.SESSION_NAME || undefined;
 const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4();
 const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
 const corsOrigin = process.env.CORS_ORIGIN || undefined;
-const csrfPath = process.env.CSRF_PATH || "/csrf";
 
 const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
 const log = {

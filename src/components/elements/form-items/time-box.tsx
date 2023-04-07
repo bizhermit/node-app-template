@@ -11,6 +11,10 @@ import { ClockIcon, CrossIcon } from "@/components/elements/icon";
 
 type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   $disallowInput?: boolean;
+  $hourPlaceholder?: string;
+  $minutePlaceholder?: string;
+  $secondPlaceholder?: string;
+  $showSeparatorAlwarys?: boolean;
 };
 
 type TimeBoxProps_TypeString<D extends DataItem_Time | DataItem_String | undefined = undefined> = TimeBoxBaseProps<string, D>;
@@ -99,6 +103,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   const href = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
   const sref = useRef<HTMLInputElement>(null!);
+  const pref = useRef<HTMLDivElement>(null!);
   const cacheH = useRef<number>();
   const cacheM = useRef<number>();
   const cacheS = useRef<number>();
@@ -322,8 +327,9 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const blur = (e: React.FocusEvent) => {
-    if (e.relatedTarget === href.current || e.relatedTarget === mref.current || e.relatedTarget === sref.current) return;
+    if (e.relatedTarget === href.current || e.relatedTarget === mref.current || e.relatedTarget === sref.current || e.relatedTarget === pref.current) return;
     commitCache();
+    setShowPicker(false);
   };
 
   const picker = () => {
@@ -348,7 +354,8 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const focus = () => {
-    (href.current ?? mref.current ?? sref.current)?.focus();
+    if (props.$disallowInput) (href.current ?? mref.current ?? sref.current).parentElement?.focus();
+    else (href.current ?? mref.current ?? sref.current)?.focus();
   };
 
   useEffect(() => {
@@ -372,6 +379,8 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
         className={Style.inputs}
         onClick={clickInputs}
         data-input={!props.$disallowInput}
+        data-editable={ctx.editable}
+        tabIndex={props.$disallowInput ? 0 : undefined}
       >
         {needH &&
           <input
@@ -381,13 +390,22 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             disabled={ctx.disabled}
             readOnly={props.$disallowInput || ctx.readOnly}
             maxLength={2}
+            tabIndex={props.$disallowInput ? -1 : undefined}
             defaultValue={cacheH.current || ""}
             onFocus={focusInput}
             onKeyDown={keydownH}
             onChange={changeH}
+            autoComplete="off"
+            placeholder={props.$hourPlaceholder}
           />
         }
-        <span className={Style.sep} data-has={hasData}>:</span>
+        <span
+          className={Style.sep}
+          data-has={hasData}
+          data-show={hasData || props.$showSeparatorAlwarys === true}
+        >
+          :
+        </span>
         {needM &&
           <input
             ref={mref}
@@ -396,15 +414,24 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             disabled={ctx.disabled}
             readOnly={props.$disallowInput || ctx.readOnly}
             maxLength={2}
+            tabIndex={props.$disallowInput ? -1 : undefined}
             defaultValue={cacheM.current || ""}
             onFocus={focusInput}
             onKeyDown={keydownM}
             onChange={changeM}
+            autoComplete="off"
+            placeholder={props.$minutePlaceholder}
           />
         }
         {needS &&
           <>
-            <span className={Style.sep} data-has={hasData}>:</span>
+            <span
+              className={Style.sep}
+              data-has={hasData}
+              data-show={hasData || props.$showSeparatorAlwarys === true}
+            >
+              :
+            </span>
             <input
               ref={sref}
               className={Style.s}
@@ -412,10 +439,13 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
               disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
+              tabIndex={props.$disallowInput ? -1 : undefined}
               defaultValue={cacheS.current || ""}
               onFocus={focusInput}
               onKeyDown={keydownS}
               onChange={changeS}
+              autoComplete="off"
+              placeholder={props.$secondPlaceholder}
             />
           </>
         }
@@ -454,6 +484,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
         $preventClickEvent
       >
         <TimePicker
+          ref={pref}
           $value={ctx.value}
           $type={type}
           $unit={unit}
@@ -467,11 +498,11 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
           $onClickPositive={(value: any) => {
             ctx.change(value);
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
           $onClickNegative={() => {
             setShowPicker(false);
-            focus();
+            setTimeout(focus);
           }}
         />
       </Popup>
