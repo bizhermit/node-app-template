@@ -142,6 +142,7 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
       files.forEach(file => dt.items.add(file));
       href.current.files = dt.files;
     }
+    if (iref.current) iref.current.value = "";
   }, [ctx.value]);
 
   return (

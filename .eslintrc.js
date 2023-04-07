@@ -30,11 +30,11 @@ module.exports = {
       {
         "SwitchCase": 1,
         "VariableDeclarator": "first",
-        "outerIIFEBody": 0,
+        "outerIIFEBody": 1,
         "MemberExpression": 1,
         "ArrayExpression": 1,
         "ObjectExpression": 1,
-        "ignoreComments": true
+        "ignoreComments": true,
       }
     ],
     "semi": ["warn", "always"],
