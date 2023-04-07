@@ -9,18 +9,7 @@ import csrf from "csurf";
 import cookieParser from "cookie-parser";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-
-const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
-dotenv.config({
-  debug: isDev,
-});
-
-const basePath = process.env.BASE_PATH || "";
-const port = Number(process.env.PORT || (isDev ? 8000 : 80));
-const sessionName = process.env.SESSION_NAME || undefined;
-const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4();
-const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
-const corsOrigin = process.env.CORS_ORIGIN || undefined;
+import { existsSync } from "fs";
 
 const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
 const log = {
@@ -36,9 +25,38 @@ const log = {
   },
 };
 
+const appRoot = path.join(__dirname, "../");
+const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
 log.info(`::: nexpress :::${isDev ? " [dev]" : ""}`);
 
-const appRoot = path.join(__dirname, "../");
+dotenv.config({
+  debug: isDev,
+});
+const loadNextEnv = (name: string) => {
+  const envPath = path.join(appRoot, name);
+  if (!existsSync(envPath)) return;
+  dotenv.config({
+    path: envPath,
+    override: true,
+    debug: isDev,
+  });
+};
+if (isDev) {
+  loadNextEnv(".env.development");
+  loadNextEnv(".env.development.local");
+} else {
+  loadNextEnv(".env.production");
+  loadNextEnv(".env.production.local");
+}
+log.debug(JSON.stringify(process.env, null, 2));
+
+const basePath = process.env.BASE_PATH || "";
+const port = Number(process.env.PORT || (isDev ? 8000 : 80));
+const sessionName = process.env.SESSION_NAME || undefined;
+const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4();
+const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
+const corsOrigin = process.env.CORS_ORIGIN || undefined;
+
 const nextApp = next({
   dev: isDev,
   dir: appRoot,
