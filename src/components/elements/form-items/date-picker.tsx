@@ -341,7 +341,6 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     const minFirstDate = DatetimeUtils.getFirstDateAtMonth(minDate);
     const maxLastDate = DatetimeUtils.getLastDateAtMonth(maxDate);
     const isInRange = (date: Date) => {
-      if (type !== "month") return true;
       if (!afterMin && !DatetimeUtils.isBeforeDate(minFirstDate, date)) {
         afterMin = true;
       }
@@ -377,7 +376,8 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     return ArrayUtils.generateArray(12, num => {
       const cursor = new Date(year, num, 1);
       const selected = type === "month" ? isSelected(cursor) : month === num;
-      const inRange = isInRange(cursor);
+      const inRange = type === "month" ? isInRange(cursor) :
+        isInRange(cursor) || isInRange(DatetimeUtils.getLastDateAtMonth(cursor));
       return (
         <div
           key={num}
