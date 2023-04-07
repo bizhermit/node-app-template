@@ -187,6 +187,7 @@ type DataItem_Boolean<T extends boolean | number | string = boolean | number | s
   validations?: DataItemValidation<T | F, DataItem_Boolean<T, F>>;
   trueValue: T;
   falseValue: F;
+  source?: LoadableArray;
 };
 
 /**

@@ -3,6 +3,7 @@ $size: 3.6rem;
 $fontSize: 1.6rem;
 $iconSize: 1.6rem;
 $transitionTime: 0.2s;
+$placeholderOpacity: 0.6;
 
 $baseColor: (
   "light": rgb(240, 240, 247),
@@ -50,6 +51,12 @@ $colorMap: (
     "light_r": map-get($baseColor, light_r),
     "dark": rgb(50, 50, 53),
     "dark_r": map-get($baseColor, dark_r),
+  ),
+  "placeholder": (
+    "light": #fff,
+    "light_r": #999,
+    "dark": rgb(50, 50, 53),
+    "dark_r": #888,
   ),
   "error": (
     "light": rgb(255, 225, 225),

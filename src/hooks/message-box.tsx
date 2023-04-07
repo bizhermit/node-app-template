@@ -10,7 +10,7 @@ type ShowOptions = {
 };
 
 type MessageBoxFCProps = ShowOptions & {
-  onClose: (params?: any) => void;
+  onClose?: (params?: any) => void;
   showed: boolean;
   children?: ReactNode;
 };
@@ -89,7 +89,7 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
       onCancel={e => {
         e.preventDefault();
         if (props.preventEscape) return;
-        props.onClose(false);
+        props.onClose?.(false);
       }}
     >
       <div

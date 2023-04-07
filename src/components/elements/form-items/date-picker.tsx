@@ -1,5 +1,5 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, multiValidationIterator, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import Style from "$/components/elements/form-items/date-picker.module.scss";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
@@ -13,6 +13,7 @@ type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
 export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
+  ref?: Ref<HTMLDivElement>;
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
@@ -340,11 +341,10 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     const minFirstDate = DatetimeUtils.getFirstDateAtMonth(minDate);
     const maxLastDate = DatetimeUtils.getLastDateAtMonth(maxDate);
     const isInRange = (date: Date) => {
-      if (type !== "month") return true;
       if (!afterMin && !DatetimeUtils.isBeforeDate(minFirstDate, date)) {
         afterMin = true;
       }
-      if (beforeMax && DatetimeUtils.isAfterDate(maxLastDate, date)) {
+      if (beforeMax && !DatetimeUtils.isBeforeDate(maxLastDate, date)) {
         beforeMax = false;
       }
       return afterMin && beforeMax;
@@ -376,7 +376,8 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     return ArrayUtils.generateArray(12, num => {
       const cursor = new Date(year, num, 1);
       const selected = type === "month" ? isSelected(cursor) : month === num;
-      const inRange = isInRange(cursor);
+      const inRange = type === "month" ? isInRange(cursor) :
+        isInRange(cursor) || isInRange(DatetimeUtils.getLastDateAtMonth(cursor));
       return (
         <div
           key={num}
@@ -427,7 +428,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
       if (!afterMin && !DatetimeUtils.isBeforeDate(minDate, date)) {
         afterMin = true;
       }
-      if (beforeMax && DatetimeUtils.isAfterDate(maxDate, date)) {
+      if (beforeMax && !DatetimeUtils.isBeforeDate(maxDate, date)) {
         beforeMax = false;
       }
       return afterMin && beforeMax;
@@ -695,6 +696,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
 
   return (
     <FormItemWrap
+      tabIndex={-1}
       {...props}
       ref={ref}
       $context={ctx}

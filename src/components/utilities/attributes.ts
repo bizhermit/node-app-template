@@ -24,6 +24,9 @@ export const attributesWithoutChildren = (props: Struct, ...classNames: Array<st
 };
 
 export const isNotReactNode = (node: ReactNode): node is string | number | boolean => {
+  if (Array.isArray(node)) {
+    return !node.some(item => isReactNode(item));
+  }
   const t = typeof node;
   return t === "string" || t === "number" || t === "boolean";
 };

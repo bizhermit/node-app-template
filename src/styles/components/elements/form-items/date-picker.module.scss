@@ -171,7 +171,7 @@ $pulldownTransitionTime: 0.5s;
   align-items: center;
   flex: none;
   height: calc(var(--size) * 0.8);
-  z-index: 2;
+  z-index: 10;
 
   &[data-reverse="true"] {
     flex-direction: row-reverse;

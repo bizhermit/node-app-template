@@ -7,8 +7,8 @@ import { joinClassNames, pressPositiveKey } from "@/components/utilities/attribu
 import { equals } from "@/data-items/utilities";
 
 export type RadioButtonsProps<
-  T extends string | number = string | number,
-  D extends DataItem_String | DataItem_Number | undefined = undefined,
+  T extends string | number | boolean = string | number | boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Struct = Struct
 > = Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, "$tagPosition"> & {
   $labelDataName?: string;
@@ -24,13 +24,13 @@ export type RadioButtonsProps<
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
-  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>
+  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Struct = Struct>
     (attrs: RadioButtonsProps<T, D, S>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
 }
 
 const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProps>(<
-  T extends string | number = string | number,
-  D extends DataItem_String | DataItem_Number | undefined = undefined,
+  T extends string | number | boolean = string | number | boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Struct = Struct
 >(p: RadioButtonsProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -113,7 +113,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       if (selected) selectedItem = item;
       return (
         <div
-          key={v ?? null}
+          key={typeof v === "boolean" ? String(v) : v ?? null}
           className={joinClassNames(Style.item, c ? `bdc-${c}` : undefined)}
           data-selected={selected}
           tabIndex={0}
@@ -151,25 +151,18 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       );
     });
     return { nodes, selectedItem };
-  }, [source, ctx.editable, ctx.value, props.$appearance, outline]);
+  }, [source, ctx.editable, ctx.value, props.$appearance, outline, ctx.change]);
 
   useEffect(() => {
     ctx.change(ctx.valueRef.current, true);
   }, [source]);
 
   useEffect(() => {
-    if (props.$allowNull) return;
-    if (selectedItem == null && source.length > 0) {
-      ctx.change(source[0][vdn]);
-      if (!loading && selectedItem == null && source.length > 0) {
-        let target = source[0];
-        if ("$defaultValue" in props && props.$defaultValue != null) {
-          target = source.find(item => item[vdn] === props.$defaultValue) ?? source[0];
-        }
-        ctx.change(target[vdn]);
-      }
-    }
-  }, [selectedItem, source, props.$allowNull]);
+    if (loading || props.$allowNull || selectedItem != null || source.length === 0) return;
+    const v = ctx.valueRef.current ?? props.$defaultValue;
+    const target = source.find(item => item[vdn] === v) ?? source[0];
+    ctx.change(target[vdn]);
+  }, [selectedItem, source, props.$allowNull, ctx.change]);
 
   return (
     <FormItemWrap

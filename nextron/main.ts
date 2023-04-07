@@ -28,14 +28,11 @@ log.info(`::: dev :::${isDev ? " [dev]" : ""}`);
 const appRoot = path.join(__dirname, "../../");
 
 app.on("ready", async () => {
-  const port = Number(process.env.PORT || "8008");
-  if (isDev) await prepareNext(appRoot, port);
-
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
     title: "dev",
-    icon: path.join(appRoot, "src/public/favicon.ico"),
+    icon: path.join(appRoot, "public/favicons/favicon.ico"),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -45,12 +42,14 @@ app.on("ready", async () => {
 
   let loadUrl = "";
   if (isDev) {
+    const port = 8000;
+    await prepareNext(appRoot, port);
     loadUrl = `http://localhost:${port}${process.env.BASE_PATH || ""}/`;
     mainWindow.webContents.openDevTools();
     log.info("app listen start", loadUrl);
   } else {
     mainWindow.setMenu(null);
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
     loadUrl = url.format({
       pathname: "index.html",
       protocol: "file:",

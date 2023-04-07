@@ -3,6 +3,9 @@
   position: fixed;
   visibility: hidden;
   z-index: inherit;
+  max-height: 100vh;
+  max-width: 100vw;
+  overflow: auto;
 }
 
 .mask1,
