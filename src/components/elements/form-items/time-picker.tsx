@@ -1,12 +1,13 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import Time from "@bizhermit/time";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import Text from "@/components/elements/text";
 import { TimeData, TimeInput } from "@/data-items/time";
 import { CrossIcon } from "@/components/elements/icon";
 
 export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
+  ref?: Ref<HTMLDivElement>;
   $onClickPositive?: (value: Nullable<T>) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
@@ -335,6 +336,7 @@ const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
 
   return (
     <FormItemWrap
+      tabIndex={-1}
       {...props}
       ref={ref}
       $context={ctx}

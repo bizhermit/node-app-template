@@ -109,6 +109,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   const yref = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
   const dref = useRef<HTMLInputElement>(null!);
+  const pref = useRef<HTMLDivElement>(null!);
   const cacheY = useRef<number>();
   const cacheM = useRef<number>();
   const cacheD = useRef<number>();
@@ -321,7 +322,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   };
 
   const blur = (e: React.FocusEvent) => {
-    if (e.relatedTarget === yref.current || e.relatedTarget === mref.current || e.relatedTarget === dref.current) return;
+    if (e.relatedTarget === yref.current || e.relatedTarget === mref.current || e.relatedTarget === dref.current || e.relatedTarget === pref.current) return;
     commitCache();
     setShowPicker(false);
   };
@@ -373,6 +374,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
         onClick={clickInputs}
         data-input={!props.$disallowInput}
         data-editable={ctx.editable}
+        tabIndex={props.$disallowInput ? 0 : undefined}
       >
         <input
           ref={yref}
@@ -474,6 +476,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
         $preventClickEvent
       >
         <DatePicker
+          ref={pref}
           $value={ctx.value || today}
           $type={type}
           $typeof={props.$typeof}

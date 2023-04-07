@@ -103,6 +103,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   const href = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
   const sref = useRef<HTMLInputElement>(null!);
+  const pref = useRef<HTMLDivElement>(null!);
   const cacheH = useRef<number>();
   const cacheM = useRef<number>();
   const cacheS = useRef<number>();
@@ -326,7 +327,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const blur = (e: React.FocusEvent) => {
-    if (e.relatedTarget === href.current || e.relatedTarget === mref.current || e.relatedTarget === sref.current) return;
+    if (e.relatedTarget === href.current || e.relatedTarget === mref.current || e.relatedTarget === sref.current || e.relatedTarget === pref.current) return;
     commitCache();
     setShowPicker(false);
   };
@@ -478,6 +479,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
         $preventClickEvent
       >
         <TimePicker
+          ref={pref}
           $value={ctx.value}
           $type={type}
           $unit={unit}

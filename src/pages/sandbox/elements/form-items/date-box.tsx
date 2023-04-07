@@ -117,6 +117,7 @@ const Page: NextPage = () => {
           $tag="date"
           $dataItem={sample_date}
           $onChange={v => console.log("date: ", v)}
+          $disallowInput
         />
         <DateBox
           $tag="month"
