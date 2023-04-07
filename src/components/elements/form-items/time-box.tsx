@@ -328,6 +328,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   const blur = (e: React.FocusEvent) => {
     if (e.relatedTarget === href.current || e.relatedTarget === mref.current || e.relatedTarget === sref.current) return;
     commitCache();
+    setShowPicker(false);
   };
 
   const picker = () => {
