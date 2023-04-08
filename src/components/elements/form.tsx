@@ -622,6 +622,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, a
           : <Tooltip
             {...attrs}
             $disabled={StringUtils.isEmpty(props.$context.error)}
+            $popupClassName={Style.tooltip}
           >
             {props.children}
             {errorNode}

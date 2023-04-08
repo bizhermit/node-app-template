@@ -29,6 +29,7 @@ const Component: FC = () => {
         show
       </Button>
       <Popup
+        className="e-4 overflow"
         $show={show}
         $onToggle={(v) => {
           setShow(v);
@@ -45,7 +46,7 @@ const Component: FC = () => {
         // $animationDirection="horizontal"
         // $animationDirection="vertical"
       >
-        <div className="flex-start c-pure">
+        <div className="flex-start c-pure r-2 p-2">
           <Form
             className="flex-start p-1 gap-1 border"
             action="/api/form"
