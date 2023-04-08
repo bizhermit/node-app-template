@@ -32,7 +32,7 @@ const Page: NextPage = () => {
         popup menu
       </Button>
       <Popup
-        className="es-3"
+        className="es-3 r-2"
         $show={show}
         $onToggle={v => setShow(v)}
         $anchor={buttonRef}

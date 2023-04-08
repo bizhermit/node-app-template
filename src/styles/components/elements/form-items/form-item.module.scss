@@ -175,6 +175,10 @@ $tagMoveTransitionTime: 0.5s;
   }
 }
 
+.tooltip {
+  overflow: visible;
+}
+
 .text {
   padding-top: var(padding-top-text);
 }

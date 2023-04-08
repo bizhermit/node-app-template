@@ -89,6 +89,7 @@
 
 .popup {
   @include mixins.pickerShadow;
+  overflow: visible !important;
 }
 
 @include mixins.hoverAnimation;

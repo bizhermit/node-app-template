@@ -4,6 +4,7 @@ import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useImpera
 
 type OmitAttributes = "color" | "children";
 type TooltipProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+  $popupClassName?: string;
   $disabled?: boolean;
   $showDelay?: number;
   $position?: {
@@ -62,6 +63,7 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => {
       </div>
       {Array.isArray(props.children) && props.children[1] != null &&
         <Popup
+          className={props.$popupClassName}
           $show={showed && mousePosition.current != null}
           $onToggle={showed => {
             if (!showed) {
