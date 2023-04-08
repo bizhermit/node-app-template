@@ -1,3 +1,4 @@
+@use "$/mixins";
 $borderStyle: 1px solid var(--c-border);
 
 .wrap {
@@ -56,10 +57,6 @@ $borderStyle: 1px solid var(--c-border);
 .body {
   z-index: 1;
   cursor: cell;
-
-  .row {
-    background: var(--c-pure);
-  }
 }
 
 .dummy {
@@ -95,6 +92,24 @@ $borderStyle: 1px solid var(--c-border);
 
 .crow {
   flex: 1;
+}
+
+.brow {
+  background: var(--c-pure);
+
+  &[data-stripes="true"] {
+    &:nth-child(2n) {
+      background: var(--c-dull);
+    }
+  }
+
+  @include mixins.crossHover {
+    background: var(--c-hover) !important;
+  }
+
+  &:has(>.radio:checked) {
+    background: var(--c-selected) !important;
+  }
 }
 
 .cell {
@@ -137,6 +152,12 @@ $borderStyle: 1px solid var(--c-border);
     &[data-border] {
       border-left: #{$borderStyle};
     }
+  }
+}
+
+.bcell {
+  @include mixins.crossHover {
+    background: var(--c-selected);
   }
 }
 

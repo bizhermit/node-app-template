@@ -365,16 +365,18 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
 
   protected generateCellElement(col: Column<T>, mode: "header" | "footer" | "body"): HTMLDivElement {
     return cloneDomElement(this.cloneBase.cell, elem => {
-      elem.setAttribute("data-align", (() => {
-        switch (mode) {
-          case "header":
-            return "left";
-          case "footer":
-            return "left";
-          default:
-            return col.align;
-        }
-      })());
+      switch (mode) {
+        case "header":
+          elem.setAttribute("data-align", "left");
+          break;
+        case "footer":
+          elem.setAttribute("data-align", "left");
+          break;
+        default:
+          elem.setAttribute("data-align", col.align);
+          if (col.rows == null) elem.classList.add(Style.bcell);
+          break;
+      }
       if (col.fill) elem.setAttribute("data-fill", "");
       if (col.fixed) elem.setAttribute("data-fixed", "");
       if (col.width != null) elem.style.width = convertSizeNumToStr(col.width)!;
@@ -484,7 +486,10 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
         let row = this.rows[i];
         if (row == null) {
           row = {
-            element: cloneDomElement(this.cloneBase.row),
+            element: cloneDomElement(this.cloneBase.row, elem => {
+              elem.classList.add(Style.brow);
+              elem.style.visibility = "hidden";
+            }),
             id: i,
             data: null,
             index: -1,
@@ -494,7 +499,6 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
             selected: false,
           };
           abs = true;
-          row.element.style.visibility = "hidden";
           this.generateRowElement(row);
           this.bodyElement.appendChild(row.element);
           this.rows[i] = row;
