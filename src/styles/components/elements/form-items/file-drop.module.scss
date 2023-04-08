@@ -9,7 +9,7 @@
         cursor: pointer;
         user-select: none;
 
-        @include mixins.crossHover(false) {
+        @include mixins.crossHover(false, false) {
           @include mixins.hover;
 
           &:active {
