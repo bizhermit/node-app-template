@@ -21,7 +21,7 @@ $buttonSize: (
   &:not(:disabled) {
     cursor: pointer;
 
-    @include mixins.crossHover {
+    @include mixins.crossHover(true) {
       @include mixins.hover;
 
       &:active {
