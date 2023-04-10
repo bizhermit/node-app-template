@@ -18,6 +18,16 @@ $animationTime: 0.4s;
         }
       }
     }
+
+    &[data-error="true"] {
+      >.body {
+        >.handle {
+          &::before {
+            background: var(--c-error);
+          }
+        }
+      }
+    }
   }
 }
 
