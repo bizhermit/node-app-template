@@ -165,11 +165,19 @@ const Page: NextPage = () => {
           action="/api/form"
           method="post"
         >
-          <Row $vAlign="bottom">
+          <Row className="gap-2" $vAlign="bottom">
             <CheckBox
               $tag="form bind"
               name="check-box-form-bind"
+              $required
             />
+            <CheckBox
+              $outline
+              $required
+              $circle
+            >
+              チェックボックス
+            </CheckBox>
             <Button type="submit">submit</Button>
           </Row>
         </Form>

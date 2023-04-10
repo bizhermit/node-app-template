@@ -580,7 +580,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, a
   );
 
   const attrs = {
-    ...attributes(props.$mainProps ?? {}, Style.main, props.$color ? `bdc-${props.$color}` : ""),
+    ...attributes(props.$mainProps ?? {}, Style.main, props.$preventFieldLayout ? undefined : (props.$color ? `bdc-${props.$color}` : undefined)),
     "data-editable": props.$context.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$context.disabled,

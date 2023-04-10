@@ -30,6 +30,16 @@ $checkTransitionTime: 0.1s;
         }
       }
     }
+
+    &[data-error="true"] {
+      >.body {
+        >.box {
+          &::before {
+            background: var(--c-error);
+          }
+        }
+      }
+    }
   }
 
   &[data-outline="true"] {
