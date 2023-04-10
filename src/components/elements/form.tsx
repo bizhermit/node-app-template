@@ -665,3 +665,17 @@ export const convertDataItemValidationToFormItemValidation = <T, U, P extends Fo
     return res.body;
   };
 };
+
+export const useFormBindState = <T extends any>(name: string, init?: T | (() => T)) => {
+  const form = useForm();
+  const state = useState<T>(() => {
+    const v = getValue(form.bind, name);
+    if (v != null || init == null) return v;
+    return setValue(form.bind, name, init === "function" ? (init as (() => T))() : init);
+  });
+  return {
+    value: state[0],
+    set: state[1],
+    name,
+  } as const;
+};
