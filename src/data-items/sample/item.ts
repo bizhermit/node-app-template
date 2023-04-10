@@ -10,7 +10,7 @@ export const sample_string = stringItem({
   name: "sample_string",
   required: true,
   minLength: 5,
-  maxLength: 5,
+  // maxLength: 5,
   // length: 5,
   // charType: "alpha",
   width: "20rem",

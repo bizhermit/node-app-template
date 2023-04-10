@@ -22,7 +22,7 @@ export namespace StringData {
 
   export const minLengthValidation = (v: Nullable<string>, minLength: number, itemName?: string) => {
     if (v != null && StringUtils.length(v) >= minLength) return undefined;
-    return `${itemName || defaultItemName}は${minLength}文字以下で入力してください。`;
+    return `${itemName || defaultItemName}は${minLength}文字以上で入力してください。`;
   };
 
   export const maxLengthValidation = (v: Nullable<string>, maxLength: number, itemName?: string) => {
