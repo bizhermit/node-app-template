@@ -4,12 +4,13 @@ import Form, { type FormItemMessageDisplayMode } from "@/components/elements/for
 import Hidden from "@/components/elements/form-items/hidden";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import Row from "@/components/elements/row";
+import StructView from "@/components/elements/struct-view";
 import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
   const [value, setValue] = useState<any>();
-  const [messagePos, setMessagePos] = useState<Nullable<FormItemMessageDisplayMode>>();
+  const [messagePos, setMessagePos] = useState<Nullable<FormItemMessageDisplayMode>>("bottom");
 
   return (
     <div className="flex-start p-1 w-100 h-100 gap-1">
@@ -41,8 +42,17 @@ const Page: NextPage = () => {
           $value={value}
           $onChange={setValue}
         />
+        <Hidden
+          name="show"
+          $required
+          $value={value}
+          $show
+        />
         <Row className="gap-1">
-          <Button type="submit" $ignoreFormValidation>
+          <Button
+            type="submit"
+            $ignoreFormValidation
+          >
             submit
           </Button>
           <Button type="reset">
@@ -76,6 +86,9 @@ const Page: NextPage = () => {
             set struct
           </Button>
         </Row>
+        <pre>
+          {JSON.stringify(value, null, 2)}
+        </pre>
       </Form>
     </div>
   );

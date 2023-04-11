@@ -2,7 +2,7 @@ import { FormItemProps, FormItemWrap, convertHiddenValue, useDataItemMergedProps
 import { type ForwardedRef, type ReactElement, type FunctionComponent, forwardRef } from "react";
 
 export type HiddenProps<D extends DataItem | undefined = undefined> = FormItemProps<any, D, any> & {
-  $noWrap?: boolean;
+  $show?: boolean;
 };
 
 interface HiddenFC extends FunctionComponent<HiddenProps> {
@@ -16,27 +16,25 @@ const Hidden: HiddenFC = forwardRef<HTMLDivElement, HiddenProps>(<
   const props = useDataItemMergedProps(form, p);
   const ctx = useFormItemContext(form, props);
 
-  if (props.$noWrap) {
-    return (
+  if (props.name == null) return <></>;
+  return (
+    props.$show ?
+      <FormItemWrap
+        {...props}
+        ref={ref}
+        $context={ctx}
+        $useHidden
+        $preventFieldLayout
+        $tag={undefined}
+        $mainProps={{
+          style: { display: "none" }
+        }}
+      /> :
       <input
         name={props.name}
         type="hidden"
         value={convertHiddenValue(ctx.value)}
       />
-    );
-  }
-  return (
-    <FormItemWrap
-      {...props}
-      ref={ref}
-      $context={ctx}
-      $useHidden
-      $preventFieldLayout
-      $tag={undefined}
-      $mainProps={{
-        style: { display: "none" }
-      }}
-    />
   );
 });
 
