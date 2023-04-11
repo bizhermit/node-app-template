@@ -1,6 +1,6 @@
 import Tooltip from "@/components/elements/tooltip";
 import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
-import { createContext, type Dispatch, type FormHTMLAttributes, forwardRef, type HTMLAttributes, type ReactNode, type SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState } from "react";
+import { createContext, type Dispatch, type FormHTMLAttributes, forwardRef, type HTMLAttributes, type ReactNode, type SetStateAction, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FunctionComponent, type ForwardedRef, type ReactElement } from "react";
 import Style from "$/components/elements/form-items/form-item.module.scss";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { equals, getValue, setValue } from "@/data-items/utilities";
@@ -100,16 +100,17 @@ type FormItemMountProps = {
 };
 
 type PlainFormProps = {
-  $bind?: undefined | null | false;
+  $submitDataType: "formData";
   $onSubmit?: (((data: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
 };
 
-type BindFormProps = {
-  $bind: Struct | true;
-  $onSubmit?: (((data: Struct, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+type BindFormProps<T extends Struct = Struct> = {
+  $submitDataType?: "struct";
+  $onSubmit?: (((data: T, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
 };
 
-export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
+export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
+  $bind?: boolean | Struct | null | undefined;
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
@@ -117,9 +118,13 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
-} & (PlainFormProps | BindFormProps);
+} & (PlainFormProps | BindFormProps<T>);
 
-const Form = forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
+interface FormFC extends FunctionComponent<FormProps> {
+  <T extends Struct = Struct>(attrs: FormProps<T>, ref?: ForwardedRef<HTMLFormElement>): ReactElement<any> | null;
+}
+
+const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = Struct>(props: FormProps<T>, $ref: ForwardedRef<HTMLFormElement>) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const method = props.method ?? "get";
@@ -202,7 +207,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>((props, $ref) => {
       setDisabled(false);
       return;
     }
-    const ret = props.$onSubmit((!props.$bind ? new FormData(e.currentTarget) : bind) as any, e);
+    const ret = props.$onSubmit((props.$submitDataType === "formData" ? new FormData(e.currentTarget) : bind) as any, e);
     if (ret == null || typeof ret === "boolean") {
       if (ret !== true) {
         e.preventDefault();
@@ -444,7 +449,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
         return ret;
       });
     }
-  }, [validations, form.bind, props?.$bind, props?.$preventFormBind]);
+  }, [validations, form.bind, props?.name, props?.$bind, props?.$preventFormBind]);
 
   useEffect(() => {
     form.setExErrors(cur => {
@@ -556,7 +561,7 @@ const convertHiddenValue = (value: any) => {
   return JSON.stringify(value);
 };
 
-export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, any, any> & {
+type FormItemWrapProps = FormItemProps<any, any, any, any> & {
   $context: ReturnType<typeof useFormItemContext<any, any, any, any>>;
   $preventFieldLayout?: boolean;
   $className?: string;
@@ -564,7 +569,9 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, a
   $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
   $useHidden?: boolean;
   children?: ReactNode;
-}>((props, ref) => {
+};
+
+export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props, ref) => {
   const errorNode = props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
@@ -584,7 +591,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemProps<any, any, a
     "data-editable": props.$context.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$context.disabled,
-    "data-error": Boolean(props.$context.error),
+    "data-error": props.$context.messageDisplayMode === "hide" ? undefined : Boolean(props.$context.error),
     "data-clickable": props.$clickable,
   };
 
@@ -675,7 +682,7 @@ export const useFormBindState = <T extends any>(name: string, init?: T | (() => 
   });
   return {
     value: state[0],
-    set: state[1],
+    set: (v: T) => state[1](setValue(form.bind, name, v)),
     name,
   } as const;
 };
