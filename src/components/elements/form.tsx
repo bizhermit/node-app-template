@@ -552,7 +552,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   };
 };
 
-const convertHiddenValue = (value: any) => {
+export const convertHiddenValue = (value: any) => {
   if (value == null) return "";
   const t = typeof value;
   if (t === "string" || t === "number" || t === "bigint" || t === "boolean") {
