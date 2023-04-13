@@ -8,7 +8,16 @@ import { sample_boolean, sample_date, sample_month, sample_number, sample_string
 import stringItem from "@/data-items/string";
 import structItem from "@/data-items/struct";
 import timeItem from "@/data-items/time";
-import apiHandler from "@/utilities/api-handler";
+import apiHandler, { type NextApiConfig } from "@/utilities/api-handler";
+
+export const config: NextApiConfig = {
+  api: {
+    // bodyParser: {
+    //   sizeLimit: "10mb",
+    // }
+    bodyParser: false,
+  },
+};
 
 export default apiHandler({
   $get: {
