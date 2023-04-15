@@ -1,7 +1,13 @@
 import { dataItemKey } from "@/data-items/_base";
 
-const fileItem = <C extends Omit<DataItem_File, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_File : C & DataItem_File> => {
-  return Object.freeze({ multiple: false, ...(ctx as any), [dataItemKey]: undefined, type: "file" });
+const fileItem = <
+  C extends Omit<DataItem_File, DataItemKey | "type">
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "file";
+    multiple: C extends { multiple: infer Multiple } ? Multiple : false;
+  }>>({ multiple: false, ...(ctx as any), [dataItemKey]: undefined, type: "file" });
 };
 
 export namespace FileData {

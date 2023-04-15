@@ -2,8 +2,13 @@ import { dataItemKey } from "@/data-items/_base";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 
-const stringItem = <C extends Omit<DataItem_String, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_String : C & DataItem_String> => {
-  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "string" });
+const stringItem = <
+  C extends Omit<DataItem_String, DataItemKey | "type">
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "string";
+  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "string" });
 };
 
 export namespace StringData {

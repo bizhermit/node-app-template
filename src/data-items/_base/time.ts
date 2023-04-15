@@ -2,8 +2,15 @@ import type { FormItemValidation } from "@/components/elements/form";
 import { dataItemKey } from "@/data-items/_base";
 import Time, { TimeUtils } from "@bizhermit/time";
 
-const timeItem = <C extends Omit<DataItem_Time, DataItemKey | "type" | "mode" | "unit"> & Partial<Pick<DataItem_Time, "mode" | "unit">>>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Time : C & DataItem_Time> => {
-  return Object.freeze({
+const timeItem = <
+  C extends Omit<DataItem_Time, DataItemKey | "type" | "mode" | "unit"> & Partial<Pick<DataItem_Time, "mode" | "unit">>
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "time";
+    mode: C extends { mode: infer Mode } ? Mode : "hm";
+    unit: C extends { unit: infer Unit } ? Unit : "minute";
+  }>>({
     mode: "hm",
     unit: "minute",
     ...(ctx as any),
@@ -47,7 +54,14 @@ export namespace TimeData {
     return undefined;
   };
 
-  export const minValidation = (v: number | null | undefined, min: TimeValue, mode: TimeMode, unit: TimeUnit, itemName?: string, formattedMin?: string) => {
+  export const minValidation = (
+    v: number | null | undefined,
+    min: TimeValue,
+    mode: TimeMode,
+    unit: TimeUnit,
+    itemName?: string,
+    formattedMin?: string
+  ) => {
     if (v == null || min == null) return undefined;
     const minTime = convertTime(min, unit);
     const minUnitTime = TimeUtils.convertMillisecondsToUnit(minTime, unit);
@@ -55,7 +69,14 @@ export namespace TimeData {
     return `${itemName || defaultItemName}は${formattedMin || format(minTime, mode)}以降で入力してください。`;
   };
 
-  export const maxValidation = (v: number | null | undefined, max: TimeValue, mode: TimeMode, unit: TimeUnit, itemName?: string, formattedMax?: string) => {
+  export const maxValidation = (
+    v: number | null | undefined,
+    max: TimeValue,
+    mode: TimeMode,
+    unit: TimeUnit,
+    itemName?: string,
+    formattedMax?: string
+  ) => {
     if (v == null || max == null) return undefined;
     const maxTime = convertTime(max, unit);
     const maxUnitTime = TimeUtils.convertMillisecondsToUnit(maxTime, unit);
@@ -63,7 +84,16 @@ export namespace TimeData {
     return `${itemName || defaultItemName}は${formattedMax || format(maxTime, mode)}以前で入力してください。`;
   };
 
-  export const rangeValidation = (v: number | null | undefined, min: TimeValue, max: TimeValue, mode: TimeMode, unit: TimeUnit, itemName?: string, formattedMin?: string, formattedMax?: string) => {
+  export const rangeValidation = (
+    v: number | null | undefined,
+    min: TimeValue,
+    max: TimeValue,
+    mode: TimeMode,
+    unit: TimeUnit,
+    itemName?: string,
+    formattedMin?: string,
+    formattedMax?: string
+  ) => {
     if (v == null || max == null || min == null) return undefined;
     const minTime = convertTime(min, unit);
     const minUnitTime = TimeUtils.convertMillisecondsToUnit(minTime, unit);
@@ -73,7 +103,16 @@ export namespace TimeData {
     return `${itemName || defaultItemName}は${formattedMin || format(minTime, mode)}～${formattedMax || format(maxTime, mode)}の範囲で入力してください。`;
   };
 
-  export const contextValidation = (v: number | null | undefined, rangePair: TimeRangePair, data: Struct | undefined, mode: TimeMode, unit: TimeUnit, itemName?: string, pairUnit?: TimeUnit, pairItemName?: string) => {
+  export const contextValidation = (
+    v: number | null | undefined,
+    rangePair: TimeRangePair,
+    data: Struct | undefined,
+    mode: TimeMode,
+    unit: TimeUnit,
+    itemName?: string,
+    pairUnit?: TimeUnit,
+    pairItemName?: string
+  ) => {
     if (v == null) return undefined;
     const { pairTime, pairUnitTime } = (() => {
       const pv = data?.[rangePair.name];
@@ -128,7 +167,12 @@ export namespace TimeInput {
     }
   };
 
-  export const convertTimeToValue = (value: number | undefined, unit: TimeUnit, mode: TimeMode, $typeof?: "number" | "string") => {
+  export const convertTimeToValue = (
+    value: number | undefined,
+    unit: TimeUnit,
+    mode: TimeMode,
+    $typeof?: "number" | "string"
+  ) => {
     if ($typeof === "string") {
       return new Time(value).format((() => {
         switch (mode) {
@@ -173,23 +217,55 @@ export namespace TimeInput {
   export const rangeValidation = (minTime: number, maxTime: number, mode: TimeMode, unit: TimeUnit) => {
     const maxTimeStr = formatByTimeMode(maxTime, mode);
     const minTimeStr = formatByTimeMode(minTime, mode);
-    return (v: any) => TimeData.rangeValidation(TimeData.convertTime(v, unit), minTime, maxTime, mode, "millisecond", undefined, minTimeStr, maxTimeStr);
+    return (v: any) => TimeData.rangeValidation(
+      TimeData.convertTime(v, unit),
+      minTime,
+      maxTime,
+      mode,
+      "millisecond",
+      undefined,
+      minTimeStr,
+      maxTimeStr
+    );
   };
 
   export const minValidation = (minTime: number, mode: TimeMode, unit: TimeUnit) => {
     const minTimeStr = formatByTimeMode(minTime, mode);
-    return (v: any) => TimeData.minValidation(TimeData.convertTime(v, unit), minTime, mode, "millisecond", undefined, minTimeStr);
+    return (v: any) => TimeData.minValidation(
+      TimeData.convertTime(v, unit),
+      minTime,
+      mode,
+      "millisecond",
+      undefined,
+      minTimeStr
+    );
   };
 
   export const maxValidation = (maxTime: number, mode: TimeMode, unit: TimeUnit) => {
     const maxTimeStr = formatByTimeMode(maxTime, mode);
-    return (v: any) => TimeData.maxValidation(TimeData.convertTime(v, unit), maxTime, mode, "millisecond", undefined, maxTimeStr);
+    return (v: any) => TimeData.maxValidation(
+      TimeData.convertTime(v, unit),
+      maxTime,
+      mode,
+      "millisecond",
+      undefined,
+      maxTimeStr
+    );
   };
 
   export const contextValidation = (rangePair: TimeRangePair, mode: TimeMode, unit: TimeUnit) => {
     const pairTimeUnit = rangePair.unit ?? "minute";
     const compare = (value: TimeValue, pairTime: number) =>
-      TimeData.contextValidation(TimeData.convertTime(value, unit), rangePair, { [rangePair.name]: pairTime }, mode, "millisecond", undefined, undefined, undefined);
+      TimeData.contextValidation(
+        TimeData.convertTime(value, unit),
+        rangePair,
+        { [rangePair.name]: pairTime },
+        mode,
+        "millisecond",
+        undefined,
+        undefined,
+        undefined
+      );
     const getPairTime = (data: Struct) => {
       if (data == null) return undefined;
       const pairValue = data[rangePair.name];

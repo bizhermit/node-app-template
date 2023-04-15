@@ -1,7 +1,12 @@
 import { dataItemKey } from "@/data-items/_base";
 
-const structItem = <C extends Omit<DataItem_Struct, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Struct : C & DataItem_Struct> => {
-  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "struct" });
+const structItem = <
+  C extends Omit<DataItem_Struct, DataItemKey | "type">
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "struct";
+  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "struct" });
 };
 
 export default structItem;

@@ -3,16 +3,31 @@ import { dataItemKey } from "@/data-items/_base";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import DatetimeUtils, { dateFormat, convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 
-const dateItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_Date, "type"> & { type: "date" } : C & Omit<DataItem_Date, "type"> & { type: "date" }> => {
-  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "date" });
+const dateItem = <
+  C extends Omit<DataItem_Date, DataItemKey | "type">
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "date";
+  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "date" });
 };
 
-export const monthItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_Date, "type"> & { type: "month" } : C & Omit<DataItem_Date, "type"> & { type: "month" }> => {
-  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "month" });
+export const monthItem = <
+  C extends Omit<DataItem_Date, DataItemKey | "type">
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "month";
+  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "month" });
 };
 
-export const yearItem = <C extends Omit<DataItem_Date, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? Omit<DataItem_Date, "type"> & { type: "year" } : C & Omit<DataItem_Date, "type"> & { type: "year" }> => {
-  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "year" });
+export const yearItem = <
+  C extends Omit<DataItem_Date, DataItemKey | "type">
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "year";
+  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "year" });
 };
 
 export namespace DateData {
@@ -55,21 +70,41 @@ export namespace DateData {
     return undefined;
   };
 
-  export const minValidation = (v: Nullable<Date>, min: DateValue, type: DateType = "date", itemName?: string, formattedMin?: string) => {
+  export const minValidation = (
+    v: Nullable<Date>,
+    min: DateValue,
+    type: DateType = "date",
+    itemName?: string,
+    formattedMin?: string
+  ) => {
     if (v == null) return undefined;
     const minDate = dateAsFirst(min, type);
     if (minDate == null || v.getTime() >= minDate.getTime()) return undefined;
     return `${itemName || defaultItemName}は${formattedMin || format(minDate, type)}以降で入力してください。`;
   };
 
-  export const maxValidation = (v: Nullable<Date>, max: DateValue, type: DateType = "date", itemName?: string, formattedMax?: string) => {
+  export const maxValidation = (
+    v: Nullable<Date>,
+    max: DateValue,
+    type: DateType = "date",
+    itemName?: string,
+    formattedMax?: string
+  ) => {
     if (v == null) return undefined;
     const maxDate = dateAsLast(max, type);
     if (maxDate == null || v.getTime() <= maxDate.getTime()) return undefined;
     return `${itemName || defaultItemName}は${formattedMax || format(maxDate, type)}以前で入力してください。`;
   };
 
-  export const rangeValidation = (v: Nullable<Date>, min: DateValue, max: DateValue, type: DateType = "date", itemName?: string, formattedMin?: string, formattedMax?: string) => {
+  export const rangeValidation = (
+    v: Nullable<Date>,
+    min: DateValue,
+    max: DateValue,
+    type: DateType = "date",
+    itemName?: string,
+    formattedMin?: string,
+    formattedMax?: string
+  ) => {
     if (v == null) return undefined;
     const minDate = dateAsFirst(min, type);
     const maxDate = dateAsLast(max, type);
@@ -77,7 +112,14 @@ export namespace DateData {
     return `${itemName || defaultItemName}は${formattedMin || format(minDate, type)}～${formattedMax || format(maxDate, type)}の範囲で入力してください。`;
   };
 
-  export const contextValidation = (v: Nullable<Date>, rangePair: DateRangePair, data: Struct | undefined, type: DateType = "date", itemName?: string, pairItemName?: string) => {
+  export const contextValidation = (
+    v: Nullable<Date>,
+    rangePair: DateRangePair,
+    data: Struct | undefined,
+    type: DateType = "date",
+    itemName?: string,
+    pairItemName?: string
+  ) => {
     if (v == null) return undefined;
     const pairDate = (() => {
       const pv = data?.[rangePair.name];
