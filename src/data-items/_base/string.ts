@@ -1,4 +1,4 @@
-import { dataItemKey } from "@/data-items/data-item";
+import { dataItemKey } from "@/data-items/_base";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 

@@ -1,4 +1,4 @@
-import { dataItemKey } from "@/data-items/data-item";
+import { dataItemKey } from "@/data-items/_base";
 
 const fileItem = <C extends Omit<DataItem_File, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_File : C & DataItem_File> => {
   return Object.freeze({ multiple: false, ...(ctx as any), [dataItemKey]: undefined, type: "file" });

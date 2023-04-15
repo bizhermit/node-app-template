@@ -5,7 +5,7 @@ import Style from "$/components/elements/form-items/time-box.module.scss";
 import Time from "@bizhermit/time";
 import Popup from "@/components/elements/popup";
 import TimePicker from "@/components/elements/form-items/time-picker";
-import { TimeData, TimeInput } from "@/data-items/time";
+import { TimeData, TimeInput } from "@/data-items/_base/time";
 import { equals } from "@/data-items/utilities";
 import { ClockIcon, CrossIcon } from "@/components/elements/icon";
 

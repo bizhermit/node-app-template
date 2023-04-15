@@ -3,7 +3,7 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import { CrossIcon } from "@/components/elements/icon";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { StringData } from "@/data-items/string";
+import { StringData } from "@/data-items/_base/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 

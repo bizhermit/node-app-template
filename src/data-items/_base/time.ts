@@ -1,5 +1,5 @@
 import type { FormItemValidation } from "@/components/elements/form";
-import { dataItemKey } from "@/data-items/data-item";
+import { dataItemKey } from "@/data-items/_base";
 import Time, { TimeUtils } from "@bizhermit/time";
 
 const timeItem = <C extends Omit<DataItem_Time, DataItemKey | "type" | "mode" | "unit"> & Partial<Pick<DataItem_Time, "mode" | "unit">>>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Time : C & DataItem_Time> => {

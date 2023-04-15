@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
-import booleanItem from "@/data-items/boolean";
-import dateItem, { monthItem, yearItem } from "@/data-items/date";
-import fileItem from "@/data-items/file";
-import numberItem from "@/data-items/number";
-import stringItem from "@/data-items/string";
-import timeItem from "@/data-items/time";
+import booleanItem from "@/data-items/_base/boolean";
+import dateItem, { monthItem, yearItem } from "@/data-items/_base/date";
+import fileItem from "@/data-items/_base/file";
+import numberItem from "@/data-items/_base/number";
+import stringItem from "@/data-items/_base/string";
+import timeItem from "@/data-items/_base/time";
 
 export const sample_string = stringItem({
   name: "sample_string",

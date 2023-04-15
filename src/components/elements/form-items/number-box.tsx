@@ -6,7 +6,7 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { NumberData } from "@/data-items/number";
+import { NumberData } from "@/data-items/_base/number";
 import { CrossIcon, DownIcon, UpIcon } from "@/components/elements/icon";
 
 export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {

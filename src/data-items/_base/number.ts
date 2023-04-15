@@ -1,4 +1,4 @@
-import { dataItemKey } from "@/data-items/data-item";
+import { dataItemKey } from "@/data-items/_base";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 
 const numberItem = <C extends Omit<DataItem_Number, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_Number : C & DataItem_Number> => {

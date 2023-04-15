@@ -1,4 +1,4 @@
-import stringItem from "@/data-items/string";
+import stringItem from "@/data-items/_base/string";
 
 const notification_body = stringItem({
   name: "body",
