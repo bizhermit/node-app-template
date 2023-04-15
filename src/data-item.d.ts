@@ -38,18 +38,23 @@ type DataItem = (DataItem_Base & { type: "any" })
   | DataItem_Struct<any>
   ;
 
+type StringValue = string | number | boolean;
+type NumberValue = number | string;
+type BooleanValue = boolean | string | number;
+type DateValue = string | number | Date;
+
 type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "client" | "server" = "client"> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? string : string | null | undefined
-      ) : string | number | boolean | null | undefined
+      ) : StringValue | null | undefined
     ) :
     D["type"] extends DataItem_Number["type"] ? (
       Strict extends true ? (
         D["required"] extends true ? number : number | null | undefined
       ) : (
-        D["strict"] extends true ? number | null | undefined : number | string | null | undefined
+        D["strict"] extends true ? number | null | undefined : NumberValue | null | undefined
       )
     ) :
     D["type"] extends DataItem_Boolean["type"] ? (
@@ -60,7 +65,7 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
       ) : (
         D["strict"] extends true ?
         (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined :
-        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | boolean | string | number | null | undefined
+        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | BooleanValue | null | undefined
       )
     ) :
     D["type"] extends DataItem_Date["type"] ? (
@@ -195,7 +200,6 @@ type DataItem_Boolean<T extends boolean | number | string = boolean | number | s
  */
 
 type DateType = "date" | "month" | "year";
-type DateValue = string | number | Date;
 type DateValueType = "string" | "number" | "date";
 
 type DateRangePair = {
