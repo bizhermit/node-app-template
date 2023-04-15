@@ -137,7 +137,6 @@ export default apiHandler({
     const data = ctx.getData();
     console.log("----------------");
     console.log(data);
-    data.boolean_str
     console.log("----------------");
     return {
       update: true,
