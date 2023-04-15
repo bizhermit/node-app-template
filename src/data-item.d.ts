@@ -27,7 +27,7 @@ type DataItem_Base = {
 
 type DataContext = { [key: string]: DataItem | DataContext };
 
-type DataItem = (DataItem_Base & { type: "any" })
+type DataItem = Readonly<DataItem_Base & { type: "any" }>
   | DataItem_String
   | DataItem_Number
   | DataItem_Boolean<any, any>
@@ -152,7 +152,7 @@ type StringCharType = "int"
   | "f-katakana"
   | "katakana";
 
-type DataItem_String = DataItem_Base & {
+type DataItem_String = Readonly<DataItem_Base & {
   type: "string";
   validations?: DataItemValidation<string, DataItem_String>;
   length?: number;
@@ -164,13 +164,13 @@ type DataItem_String = DataItem_Base & {
   width?: number | string;
   minWidth?: number | string;
   maxWidth?: number | string;
-};
+}>;
 
 /**
  * Number
  */
 
-type DataItem_Number = DataItem_Base & {
+type DataItem_Number = Readonly<DataItem_Base & {
   type: "number";
   validations?: DataItemValidation<number, DataItem_Number>;
   min?: number;
@@ -181,19 +181,22 @@ type DataItem_Number = DataItem_Base & {
   width?: number | string;
   minWidth?: number | string;
   maxWidth?: number | string;
-};
+}>;
 
 /**
  * Boolean
  */
 
-type DataItem_Boolean<T extends boolean | number | string = boolean | number | string, F extends boolean | number | string = boolean | number | string> = DataItem_Base & {
+type DataItem_Boolean<
+  T extends boolean | number | string = boolean | number | string,
+  F extends boolean | number | string = boolean | number | string
+> = Readonly<DataItem_Base & {
   type: "boolean";
   validations?: DataItemValidation<T | F, DataItem_Boolean<T, F>>;
   trueValue: T;
   falseValue: F;
   source?: LoadableArray;
-};
+}>;
 
 /**
  * Date
@@ -214,14 +217,14 @@ type ValidDays = "weekday" | "holiday" | string
   | ((date: Date) => boolean);
 type ValidDaysMode = "allow" | "disallow";
 
-type DataItem_Date = DataItem_Base & {
+type DataItem_Date = Readonly<DataItem_Base & {
   type: DateType;
   typeof?: DateValueType;
   validations?: DataItemValidation<Date, DataItem_Date>;
   min?: DateValue;
   max?: DateValue;
   rangePair?: DateRangePair;
-};
+}>;
 
 /**
  * Time
@@ -239,7 +242,7 @@ type TimeRangePair = {
   unit?: TimeUnit;
 };
 
-type DataItem_Time = DataItem_Base & {
+type DataItem_Time = Readonly<DataItem_Base & {
   type: "time";
   typeof?: "number" | "string";
   mode: TimeMode;
@@ -248,7 +251,7 @@ type DataItem_Time = DataItem_Base & {
   min?: TimeValue;
   max?: TimeValue;
   rangePair?: TimeRangePair;
-};
+}>;
 
 /**
  * File
@@ -256,7 +259,7 @@ type DataItem_Time = DataItem_Base & {
 
 type FileValueType = "file" | "base64";
 
-type DataItem_File = DataItem_Base & {
+type DataItem_File = Readonly<DataItem_Base & {
   type: "file";
   typeof?: FileValueType;
   accept?: string;
@@ -264,7 +267,7 @@ type DataItem_File = DataItem_Base & {
   multiple?: boolean;
   totalFileSize?: number;
   validations?: DataItemValidation<Array<File | FileValue> | (File | FileValue), DataItem_File>;
-};
+}>;
 
 type FileValue = {
   lastModifiedDate?: string;
@@ -281,21 +284,21 @@ type FileValue = {
  * Array
  */
 
-type DataItem_Array<T extends DataItem | DataContext = DataItem | DataContext> = DataItem_Base & {
+type DataItem_Array<T extends DataItem | DataContext = DataItem | DataContext> = Readonly<DataItem_Base & {
   type: "array";
   validations?: DataItemValidation<Array<any>, DataItem_Array<T>>;
   item: T;
   length?: number;
   minLength?: number;
   maxLength?: number;
-};
+}>;
 
 /**
  * Struct
  */
 
-type DataItem_Struct<T extends DataContext = DataContext> = DataItem_Base & {
+type DataItem_Struct<T extends DataContext = DataContext> = Readonly<DataItem_Base & {
   type: "struct";
   validations?: DataItemValidation<Struct<any>, DataItem_Struct<T>>;
   item: T;
-};
+}>;
