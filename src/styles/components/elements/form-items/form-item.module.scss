@@ -106,16 +106,20 @@ $tagMoveTransitionTime: 0.5s;
     }
   }
 
+  &[data-disabled="false"] {
+    &[data-field="true"] {
+      &:focus-within {
+        outline: var.$outline;
+      }
+    }
+  }
+
   &[data-editable="true"] {
     &[data-field="true"] {
       color: var(--c-input_);
 
       &::before {
         background: var(--c-input);
-      }
-
-      &:focus-within {
-        outline: auto;
       }
 
       &[data-error="true"] {

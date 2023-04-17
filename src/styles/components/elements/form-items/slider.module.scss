@@ -1,6 +1,13 @@
+@use "$/var";
 @use "$/mixins";
 
 .main {
+  &[data-disabled="false"] {
+    &:focus {
+      outline: var.$outline;
+    }
+  }
+
   &[data-editable="true"] {
     .handle {
       @include mixins.crossHover {

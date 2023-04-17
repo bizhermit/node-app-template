@@ -1,7 +1,14 @@
+@use "$/var";
 @use "$/mixins";
 $animationTime: 0.4s;
 
 .main {
+  &[data-disabled="false"] {
+    &:focus {
+      outline: var.$outline;
+    }
+  }
+
   &[data-editable="true"] {
     @include mixins.crossHover {
       .handle {
@@ -102,4 +109,5 @@ $animationTime: 0.4s;
 
 .label {
   display: inline-block;
+  padding-right: 0.8rem;
 }

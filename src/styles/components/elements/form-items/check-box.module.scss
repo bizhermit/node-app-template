@@ -1,9 +1,18 @@
+@use "$/var";
 @use "$/mixins";
 $checkTransitionTime: 0.1s;
 
 .main {
+  &[data-disabled="false"] {
+    &:focus {
+      outline: var.$outline;
+    }
+  }
+
   &[data-editable="true"] {
     &[data-outline="true"] {
+      outline-offset: 0.1rem;
+
       @include mixins.crossHover {
         @include mixins.hover;
 

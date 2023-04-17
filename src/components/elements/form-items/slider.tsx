@@ -132,7 +132,7 @@ const Slider: SliderFC = forwardRef<HTMLDivElement, SliderProps>(<
           minWidth: convertSizeNumToStr(props.$minWidth),
         },
         onKeyDown: keydown,
-        tabIndex: props.tabIndex ?? 0,
+        tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
       }}
     >
       <div
