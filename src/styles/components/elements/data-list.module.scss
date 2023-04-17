@@ -172,3 +172,55 @@ $borderStyle: 1px solid var(--c-border);
   white-space: nowrap;
   padding: var(--padding-top-text) 1rem 0 1rem;
 }
+
+.sort {
+  box-sizing: border-box;
+  position: relative;
+  height: 100%;
+  width: calc(var(--size) * 0.4);
+  overflow: visible;
+  margin-right: 0.5rem;
+  flex: none;
+
+  &::before,
+  &::after {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    width: 100%;
+  }
+
+  &[data-direction=""] {
+    &::before {
+      bottom: calc(50% + 0.2rem);
+      height: calc(var(--size) * 0.2);
+      background: var(--c-border);
+      clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+    }
+
+    &::after {
+      top: calc(50% + 0.2rem);
+      height: calc(var(--size) * 0.2);
+      background: var(--c-border);
+      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+    }
+  }
+
+  &[data-direction="asc"] {
+    &::before {
+      top: calc(50% - (var(--size) * 0.125));
+      height: calc(var(--size) * 0.25);
+      background: var(--c-border);
+      clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+    }
+  }
+
+  &[data-direction="desc"] {
+    &::before {
+      top: calc(50% - (var(--size) * 0.125));
+      height: calc(var(--size) * 0.25);
+      background: var(--c-border);
+      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+    }
+  }
+}

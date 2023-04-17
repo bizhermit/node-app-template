@@ -60,6 +60,7 @@ type Column<T extends Struct = Struct> = {
   }> | null | undefined;
   cells: Array<Cell<T>>;
   headerCell: Cell<T> | null;
+  sortElement?: HTMLDivElement,
   footerCell: Cell<T> | null;
   onClick: ((data: Data<T>) => void) | null | undefined;
   disposeCell: ((cell: Cell<T>, dl: DataListClass<T>) => void) | null | undefined;
@@ -298,6 +299,7 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       cell.column.disposeHeaderCell?.(cell, this);
       this.removeEvent(cell.element);
       cell.column.headerCell = null;
+      if (cell.column.sortElement) this.removeEvent(cell.column.sortElement);
     });
     this.headerCells = [];
     if (this.headerElement) this.headerElement.textContent = "";
@@ -448,6 +450,13 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       switch (mode) {
         case "header":
           cell.elements[0].textContent = col.label;
+          if (col.sort != null) {
+            cell.element.appendChild(cloneDomElement(this.cloneBase.div, (sortElem => {
+              col.sortElement = sortElem;
+              sortElem.classList.add(Style.sort);
+              // TODO: add sort event
+            })));
+          }
           break;
         case "footer":
           break;
@@ -587,16 +596,18 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
               resize: oCol.resize !== false,
             };
           })(),
-          sort: typeof oCol.sort === "boolean" ?
-            (d1, d2) => {
+          sort: (() => {
+            if (oCol.sort === false) return undefined;
+            if (oCol.sort != null && oCol.sort !== true) return oCol.sort;
+            return (d1, d2) => {
               const v1 = getValue(d1, displayName);
               const v2 = getValue(d2, displayName);
               if (v1 == null && v2 == null) return 0;
               if (v1 == null) return -1;
               if (v2 == null) return 1;
               return v1 < v2 ? -1 : 1;
-            } :
-            oCol.sort,
+            };
+          })(),
           sortNeutral: oCol.sortNeutral === true,
           toDisplay: oCol.toDisplay ?? (() => {
             switch (oCol.dataType) {
