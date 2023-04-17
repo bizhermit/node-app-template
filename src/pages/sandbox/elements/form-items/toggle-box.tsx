@@ -138,6 +138,7 @@ const Page: NextPage = () => {
           <ToggleBox
             $tag="form bind"
             name="toggle-box-form-bind"
+            $required
           />
           <Button type="submit">submit</Button>
         </Form>

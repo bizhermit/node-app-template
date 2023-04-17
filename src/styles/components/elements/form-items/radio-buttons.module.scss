@@ -2,6 +2,14 @@
 @use "$/mixins";
 
 .main {
+  &[data-disabled="false"] {
+    >.item {
+      &:focus {
+        outline: var.$outline;
+      }
+    }
+  }
+
   &[data-editable="true"] {
     >.item {
       cursor: pointer;
@@ -34,6 +42,8 @@
       }
 
       &[data-outline="true"] {
+        outline-offset: 0.1rem;
+
         @include mixins.crossHover {
           @include mixins.hover;
 
@@ -149,6 +159,7 @@
   min-height: var(--size);
   z-index: 0;
   flex: 1 0 auto;
+  border-radius: var(--radius);
 
   &[data-appearance="button"] {
     >.label {
@@ -234,7 +245,7 @@
   }
 
   &[data-outline="true"] {
-    border: 0.15rem solid var(--c-border);
+    border: 0.1rem solid var(--c-border);
     border-radius: 9999px;
   }
 }

@@ -6,7 +6,7 @@ import Style from "$/components/elements/form-items/date-box.module.scss";
 import Popup from "@/components/elements/popup";
 import DatePicker from "@/components/elements/form-items/date-picker";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import { DateData, DateInput } from "@/data-items/date";
+import { DateData, DateInput } from "@/data-items/_base/date";
 import { equals } from "@/data-items/utilities";
 import { CalendarIcon, CrossIcon } from "@/components/elements/icon";
 

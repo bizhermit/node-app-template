@@ -135,7 +135,7 @@ $arrowMargin: 0.15rem;
   height: var(--point-size);
   width: var(--point-size);
   border-radius: 9999px;
-  border: 0.25rem solid var(--c-border);
+  border: 0.2rem solid var(--c-border);
   z-index: 1;
   transition: background-color #{var.$transitionTime};
 }

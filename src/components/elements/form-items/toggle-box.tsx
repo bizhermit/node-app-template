@@ -102,7 +102,7 @@ const ToggleBox: ToggleBoxFC = forwardRef<HTMLDivElement, ToggleBoxProps>(<
         className: Style.main,
         onClick: click,
         onKeyDown: keydown,
-        tabIndex: props.tabIndex ?? 0,
+        tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
       }}
     >
       <div className={Style.body}>
@@ -116,7 +116,7 @@ const ToggleBox: ToggleBoxFC = forwardRef<HTMLDivElement, ToggleBoxProps>(<
           data-checked={ctx.value === checkedValue}
         />
       </div>
-      {props.children && <Text>{props.children}</Text>}
+      {props.children && <Text className={Style.label}>{props.children}</Text>}
     </FormItemWrap>
   );
 });

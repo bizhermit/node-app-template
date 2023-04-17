@@ -29,7 +29,7 @@ $hoverStyle: "float";
     @keyframes hover {
       100% {
         outline-color: transparent;
-        outline-offset: .6rem;
+        outline-offset: .4rem;
       }
     }
   } @else if $hoverStyle == "float" {

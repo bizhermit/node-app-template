@@ -2,7 +2,7 @@ import Button, { type ButtonOptions } from "@/components/elements/button";
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef } from "react";
 import Style from "$/components/elements/form-items/file-button.module.scss";
-import { FileData } from "@/data-items/file";
+import { FileData } from "@/data-items/_base/file";
 import { CrossIcon } from "@/components/elements/icon";
 
 type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & ButtonOptions & {

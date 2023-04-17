@@ -1,7 +1,7 @@
-import arrayItem from "@/data-items/array";
-import dataItem from "@/data-items/data-item";
-import numberItem from "@/data-items/number";
-import stringItem from "@/data-items/string";
+import arrayItem from "@/data-items/_base/array";
+import dataItem from "@/data-items/_base";
+import numberItem from "@/data-items/_base/number";
+import stringItem from "@/data-items/_base/string";
 import apiHandler from "@/utilities/api-handler";
 
 export default apiHandler({

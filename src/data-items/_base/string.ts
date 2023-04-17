@@ -1,9 +1,18 @@
-import { dataItemKey } from "@/data-items/data-item";
+import { dataItemKey } from "@/data-items/_base";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 
-const stringItem = <C extends Omit<DataItem_String, DataItemKey | "type">>(ctx?: C): Readonly<C extends (undefined | null) ? DataItem_String : C & DataItem_String> => {
-  return Object.freeze({ ...(ctx as any), [dataItemKey]: undefined, type: "string" });
+const stringItem = <
+  C extends Omit<DataItem_String, DataItemKey | "type">
+>(ctx?: Readonly<C>) => {
+  return Object.freeze<C & Readonly<{
+    [dataItemKey]: undefined;
+    type: "string";
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "string",
+  });
 };
 
 export namespace StringData {
@@ -22,7 +31,7 @@ export namespace StringData {
 
   export const minLengthValidation = (v: Nullable<string>, minLength: number, itemName?: string) => {
     if (v != null && StringUtils.length(v) >= minLength) return undefined;
-    return `${itemName || defaultItemName}は${minLength}文字以下で入力してください。`;
+    return `${itemName || defaultItemName}は${minLength}文字以上で入力してください。`;
   };
 
   export const maxLengthValidation = (v: Nullable<string>, maxLength: number, itemName?: string) => {

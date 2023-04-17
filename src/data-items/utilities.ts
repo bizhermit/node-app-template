@@ -1,4 +1,5 @@
-export const getValue = <T extends Struct = Struct, U = any>(data: T, name: string): U => {
+export const getValue = <T extends Struct = Struct, U = any>(data: T | null | undefined, name: string): U => {
+  if (data == null) return undefined as any;
   const names = name.split(".");
   let v: any = data;
   for (const n of names) {
@@ -12,7 +13,8 @@ export const getValue = <T extends Struct = Struct, U = any>(data: T, name: stri
   return v;
 };
 
-export const setValue = <T extends Struct = Struct, U = any>(data: T, name: string, value: U): U => {
+export const setValue = <T extends Struct = Struct, U = any>(data: T | null | undefined, name: string, value: U): U => {
+  if (data == null) return value;
   const names = name.split(".");
   let v: any = data;
   for (const n of names.slice(0, names.length - 1)) {
