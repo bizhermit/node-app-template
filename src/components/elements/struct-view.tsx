@@ -86,16 +86,6 @@ const StructView = forwardRef<HTMLTableElement, StructViewProps>((props, ref) =>
   const color = props.$color || "main";
   const baseColor = props.$baseColor || "base";
 
-  const keys = (() => {
-    if (props.$keys != null) return props.$keys;
-    if (props.$value == null) return [];
-    return Object.keys(props.$value).map(key => {
-      return {
-        key,
-      } as StructKey;
-    });
-  })();
-
   return (
     <table
       {...attributesWithoutChildren(props, Style.table, `c-${baseColor}`, `bdc-${color}`)}
@@ -103,7 +93,15 @@ const StructView = forwardRef<HTMLTableElement, StructViewProps>((props, ref) =>
       data-outline={props.$outline}
     >
       <tbody>
-        {keys.map(item => {
+        {(() => {
+          if (props.$keys != null) return props.$keys;
+          if (props.$value == null) return [];
+          return Object.keys(props.$value).map(key => {
+            return {
+              key,
+            } as StructKey;
+          });
+        })().map(item => {
           const v = props.$value?.[item.key];
           const node = (() => {
             if (item.format != null) {

@@ -6,7 +6,7 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { NumberData } from "@/data-items/number";
+import { NumberData } from "@/data-items/_base/number";
 import { CrossIcon, DownIcon, UpIcon } from "@/components/elements/icon";
 
 export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
@@ -44,7 +44,8 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
           return {
             $min: 0,
             $float: 0,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => String(v))),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v?.toString())),
+            $align: dataItem.align || "left",
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
@@ -55,6 +56,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
             $max: dataItem.max,
             $float: dataItem.float,
             $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v)),
+            $align: dataItem.align,
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
@@ -65,7 +67,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
       switch (dataItem.type) {
         case "string":
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => String(v))),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v?.toString())),
           };
         default:
           return {
@@ -110,7 +112,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
 
   const renderNumberValue = () => {
     if (!iref.current) return;
-    iref.current.value = numFormat(ctx.valueRef.current, { fpad: props.$float ?? 0 }) || "";
+    iref.current.value = numFormat(ctx.valueRef.current, { fpad: props.$float ?? 0, thou: false }) || "";
   };
 
   const changeImpl = (value?: string, preventCommit?: boolean): Nullable<number> => {

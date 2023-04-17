@@ -1,4 +1,4 @@
-import stringItem from "@/data-items/string";
+import stringItem from "@/data-items/_base/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 const user_password = stringItem({

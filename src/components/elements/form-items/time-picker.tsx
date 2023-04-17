@@ -3,7 +3,7 @@ import Time from "@bizhermit/time";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import Style from "$/components/elements/form-items/time-picker.module.scss";
 import Text from "@/components/elements/text";
-import { TimeData, TimeInput } from "@/data-items/time";
+import { TimeData, TimeInput } from "@/data-items/_base/time";
 import { CrossIcon } from "@/components/elements/icon";
 
 export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {

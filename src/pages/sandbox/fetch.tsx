@@ -8,11 +8,21 @@ import TextBox from "@/components/elements/form-items/text-box";
 import GroupBox from "@/components/elements/group-box";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
+import { sample_boolean, sample_string } from "@/data-items/sample/item";
 import useFetch from "@/hooks/fetch-api";
 import fetchApi from "@/utilities/fetch-api";
 import { getDynamicUrlContext } from "@/utilities/url";
 import type { NextPage } from "next";
 import { useState } from "react";
+
+type Data = {
+  [sample_string.name]: DataItemValueType<typeof sample_string, true>;
+  [sample_boolean.name]: DataItemValueType<typeof sample_boolean, true>;
+};
+const _data: Data = {
+  sample_string: "",
+  sample_boolean: false,
+};
 
 const Page: NextPage = () => {
   const api = useFetch();

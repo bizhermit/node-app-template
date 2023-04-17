@@ -105,7 +105,7 @@ const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
         className: joinClassNames(Style.main, props.$outline && props.$color ? `bdc-${props.$color || "input"}` : undefined),
         onClick: click,
         onKeyDown: keydown,
-        tabIndex: props.tabIndex ?? 0,
+        tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
         "data-outline": props.$outline,
       }}
     >

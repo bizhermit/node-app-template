@@ -1,6 +1,13 @@
+@use "$/var";
 @use "$/mixins";
 
 .main {
+  &[data-disabled="false"] {
+    &:focus {
+      outline: var.$outline;
+    }
+  }
+
   &[data-editable="true"] {
     .handle {
       @include mixins.crossHover {
@@ -43,7 +50,7 @@
   height: var(--size);
   width: var(--size);
   border-radius: 9999px;
-  border: 0.15rem solid var(--c-border);
+  border: 0.1rem solid var(--c-border);
   background: var(--c-input);
   user-select: none;
 }
@@ -53,7 +60,7 @@
   position: absolute;
   height: 1rem;
   width: calc(100% - var(--size));
-  border: 0.15rem solid var(--c-border);
+  border: 0.1rem solid var(--c-border);
   top: calc(50% - 0.5rem);
   left: calc(var(--size) / 2);
   border-radius: 9999px;

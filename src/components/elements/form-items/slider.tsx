@@ -49,7 +49,7 @@ const Slider: SliderFC = forwardRef<HTMLDivElement, SliderProps>(<
       switch (dataItem.type) {
         case "string":
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v == null ? v : String(v))),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v?.toString())),
           };
         default:
           return {
@@ -132,7 +132,7 @@ const Slider: SliderFC = forwardRef<HTMLDivElement, SliderProps>(<
           minWidth: convertSizeNumToStr(props.$minWidth),
         },
         onKeyDown: keydown,
-        tabIndex: props.tabIndex ?? 0,
+        tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
       }}
     >
       <div

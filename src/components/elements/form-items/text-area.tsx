@@ -4,7 +4,7 @@ import Style from "$/components/elements/form-items/text-area.module.scss";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { StringData } from "@/data-items/string";
+import { StringData } from "@/data-items/_base/string";
 
 export type TextAreaProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & {
   $length?: number;

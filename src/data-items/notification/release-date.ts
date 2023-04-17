@@ -1,4 +1,4 @@
-import dateItem from "@/data-items/date";
+import dateItem from "@/data-items/_base/date";
 
 const notification_releaseDate = dateItem({
   name: "release_date",

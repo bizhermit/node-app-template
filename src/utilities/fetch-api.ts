@@ -1,7 +1,9 @@
 import { getDynamicUrlContext } from "@/utilities/url";
 import type { RequestInit } from "next/dist/server/web/spec-extension/request";
 
-export type FetchOptions = {};
+export type FetchOptions = {
+  contentType?: "json" | "formData";
+};
 export type FetchApiResponse<T> = {
   ok: boolean;
   status: number;
@@ -62,21 +64,42 @@ const crossFetch = async <T>(url: string, init?: RequestInit) => {
   return fetchServer<T>(url, init);
 };
 
-const convertToRequestInit = (params?: any, _options?: FetchOptions): RequestInit => {
-  if (params == null) {
-    return {};
-  }
-  if (params instanceof FormData) {
+const isValidBodyParams = (params?: any) => {
+  if (params == null) return true;
+  const t = typeof params;
+  return !(t === "string" || t === "bigint" || t === "number" || t === "boolean");
+};
+
+const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit => {
+  const contentType = options?.contentType ?? "json";
+  if (contentType === "formData") {
     return {
-      body: params,
+      body: (() => {
+        if (params instanceof FormData) return params;
+        const fd = new FormData();
+        if (params == null || !isValidBodyParams(params)) return fd;
+        Object.keys(params).forEach(key => {
+          const v = params[key];
+          if (v == null) return;
+          fd.append(key, JSON.stringify(v));
+        });
+      })(),
     };
   }
-  const t = typeof params;
-  if (t === "string" || t === "bigint" || t === "number" || t === "boolean") {
-    return { body: String(params) };
-  }
   return {
-    body: JSON.stringify(params),
+    body: (() => {
+      if (params instanceof FormData) {
+        const struct: { [key: string]: any } = {};
+        Array.from(params.keys()).forEach(key => {
+          const v = params.get(key);
+          if (v == null) return;
+          struct[key] = v;
+        });
+        return JSON.stringify(struct);
+      }
+      if (!isValidBodyParams(params)) return "{}";
+      return JSON.stringify(params);
+    })(),
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
@@ -87,7 +110,7 @@ const update = <T>(url: ApiPath, method: ApiMethods, params: any = undefined, op
   const ctx = getDynamicUrlContext(url, params);
   return crossFetch<T>(`/api${ctx.url}`, {
     method,
-    ...(convertToRequestInit(ctx.data, options)),
+    ...convertToRequestInit(ctx.data, options),
   });
 };
 
