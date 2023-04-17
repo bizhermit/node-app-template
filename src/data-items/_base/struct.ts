@@ -6,7 +6,11 @@ const structItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "struct";
-  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "struct" });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "struct",
+  });
 };
 
 export default structItem;

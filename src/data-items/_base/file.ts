@@ -7,7 +7,12 @@ const fileItem = <
     [dataItemKey]: undefined;
     type: "file";
     multiple: C extends { multiple: infer Multiple } ? Multiple : false;
-  }>>({ multiple: false, ...(ctx as any), [dataItemKey]: undefined, type: "file" });
+  }>>({
+    multiple: false,
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "file",
+  });
 };
 
 export namespace FileData {

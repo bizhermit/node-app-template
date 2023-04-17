@@ -7,7 +7,11 @@ const numberItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "number";
-  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "number" });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "number",
+  });
 };
 
 export namespace NumberData {

@@ -9,7 +9,11 @@ const dateItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "date";
-  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "date" });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "date",
+  });
 };
 
 export const monthItem = <
@@ -18,7 +22,11 @@ export const monthItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "month";
-  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "month" });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "month",
+  });
 };
 
 export const yearItem = <
@@ -27,7 +35,11 @@ export const yearItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "year";
-  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "year" });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "year",
+  });
 };
 
 export namespace DateData {

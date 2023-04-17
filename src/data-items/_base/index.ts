@@ -5,7 +5,10 @@ const dataItem = <
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
-  }>>({ ...(ctx as any), [dataItemKey]: undefined });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+  });
 };
 
 export default dataItem;

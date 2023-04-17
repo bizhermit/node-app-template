@@ -8,7 +8,11 @@ const stringItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "string";
-  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "string" });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "string",
+  });
 };
 
 export namespace StringData {

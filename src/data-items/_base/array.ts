@@ -6,7 +6,11 @@ const arrayItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "array";
-  }>>({ ...(ctx as any), [dataItemKey]: undefined, type: "array" });
+  }>>({
+    ...(ctx as any),
+    [dataItemKey]: undefined,
+    type: "array",
+  });
 };
 
 export default arrayItem;
