@@ -109,5 +109,5 @@ $animationTime: 0.4s;
 
 .label {
   display: inline-block;
-  padding-right: 0.8rem;
+  padding-right: calc(var(--size) / 3);
 }
