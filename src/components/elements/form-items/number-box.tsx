@@ -44,7 +44,8 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
           return {
             $min: 0,
             $float: 0,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => String(v))),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v?.toString())),
+            $align: dataItem.align || "left",
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
@@ -55,6 +56,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
             $max: dataItem.max,
             $float: dataItem.float,
             $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v)),
+            $align: dataItem.align,
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
@@ -65,7 +67,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
       switch (dataItem.type) {
         case "string":
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => String(v))),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v?.toString())),
           };
         default:
           return {

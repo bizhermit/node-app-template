@@ -161,6 +161,7 @@ type DataItem_String = Readonly<DataItem_Base & {
   charType?: StringCharType;
   source?: LoadableArray;
   // styles
+  align?: "left" | "center" | "right";
   width?: number | string;
   minWidth?: number | string;
   maxWidth?: number | string;
@@ -178,6 +179,7 @@ type DataItem_Number = Readonly<DataItem_Base & {
   float?: number;
   source?: LoadableArray;
   // styles
+  align?: "left" | "center" | "right";
   width?: number | string;
   minWidth?: number | string;
   maxWidth?: number | string;

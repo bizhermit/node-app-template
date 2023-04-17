@@ -44,6 +44,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
     under: ({ dataItem }) => {
       return {
         $source: dataItem.source as LoadableArray<S>,
+        $align: dataItem.align,
         $width: dataItem.width,
         $minWidth: dataItem.minWidth,
         $maxWidth: dataItem.maxWidth,

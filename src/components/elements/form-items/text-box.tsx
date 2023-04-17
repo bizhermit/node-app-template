@@ -40,6 +40,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
         case "number":
           return {
             $charType: "h-num" as StringCharType,
+            $align: dataItem.align,
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
@@ -50,6 +51,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
             $minLength: isSearch ? undefined : dataItem.minLength,
             $maxLength: dataItem.maxLength ?? dataItem.length,
             $charType: dataItem.charType,
+            $align: dataItem.align,
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
