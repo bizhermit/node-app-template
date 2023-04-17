@@ -110,7 +110,7 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
 
   const renderNumberValue = () => {
     if (!iref.current) return;
-    iref.current.value = numFormat(ctx.valueRef.current, { fpad: props.$float ?? 0 }) || "";
+    iref.current.value = numFormat(ctx.valueRef.current, { fpad: props.$float ?? 0, thou: false }) || "";
   };
 
   const changeImpl = (value?: string, preventCommit?: boolean): Nullable<number> => {
