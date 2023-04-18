@@ -3,13 +3,17 @@ import { dataItemKey } from "@/data-items/_base";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import DatetimeUtils, { dateFormat, convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 
+const dateDefaultTypeof: DateValueType = "string";
+
 const dateItem = <
   C extends Omit<DataItem_Date, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "date";
+    typeof: C extends { typeof: infer TypeOf } ? TypeOf : typeof dateDefaultTypeof;
   }>>({
+    typeof: dateDefaultTypeof,
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "date",
@@ -22,7 +26,9 @@ export const monthItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "month";
+    typeof: C extends { typeof: infer TypeOf } ? TypeOf : typeof dateDefaultTypeof;
   }>>({
+    typeof: dateDefaultTypeof,
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "month",
@@ -35,7 +41,9 @@ export const yearItem = <
   return Object.freeze<C & Readonly<{
     [dataItemKey]: undefined;
     type: "year";
+    typeof: C extends { typeof: infer TypeOf } ? TypeOf : typeof dateDefaultTypeof;
   }>>({
+    typeof: dateDefaultTypeof,
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "year",
@@ -162,7 +170,7 @@ export namespace DateInput {
   };
 
   export const convertDateToValue = (date: Date, $typeof: DateValueType | undefined) => {
-    switch ($typeof) {
+    switch ($typeof || dateDefaultTypeof) {
       case "date":
         return date;
       case "number":

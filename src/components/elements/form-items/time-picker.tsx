@@ -44,19 +44,19 @@ const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
       switch (dataItem.type) {
         case "number":
           return {
-            $typeof: "number" as "number",
+            $typeof: "number",
             $min: dataItem.min,
             $max: dataItem.max,
           } as TimePickerProps<D>;
         case "string":
           return {
-            $typeof: "string" as "string",
+            $typeof: "string",
             $min: dataItem.minLength,
             $max: dataItem.maxLength,
           } as TimePickerProps<D>;
         default:
           return {
-            $typeof: "number" as "number",
+            $typeof: dataItem.typeof,
             $min: dataItem.min,
             $max: dataItem.max,
             $rangePair: dataItem.rangePair,
