@@ -50,8 +50,8 @@
   &:active {
     @include mixins.hoverActive;
     outline: none;
-    background: var(--c-border);
-    color: var(--c-border_);
+    background: var(--c-selected);
+    color: var(--c-selected_);
   }
 
   &:first-child {
