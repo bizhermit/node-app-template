@@ -48,7 +48,7 @@
       }
 
       &[data-outline="true"] {
-        outline-offset: 0.1rem;
+        outline-offset: -0.1rem;
         @include mixins.hoverTransition;
 
         @include mixins.crossHover {

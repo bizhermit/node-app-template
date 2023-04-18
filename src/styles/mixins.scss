@@ -1,6 +1,7 @@
 @use "$/var";
 // $hoverStyle: "outline";
 $hoverStyle: "float";
+$hoverTransition: box-shadow 0.1s;
 
 @mixin hover {
   @if $hoverStyle == "outline" {
@@ -37,7 +38,6 @@ $hoverStyle: "float";
   }
 }
 
-$hoverTransition: box-shadow 0.3s;
 @mixin hoverTransition($others: null) {
   @if $hoverStyle == "outline" {
   } @else if $hoverStyle == "float" {

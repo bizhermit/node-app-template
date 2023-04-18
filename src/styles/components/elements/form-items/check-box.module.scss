@@ -11,7 +11,8 @@ $checkTransitionTime: 0.1s;
 
   &[data-editable="true"] {
     &[data-outline="true"] {
-      outline-offset: 0.1rem;
+      outline-offset: -0.1rem;
+      @include mixins.hoverTransition;
 
       @include mixins.crossHover {
         @include mixins.hover;
