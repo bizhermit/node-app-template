@@ -5,7 +5,7 @@ $animationTime: 0.4s;
 .main {
   &[data-disabled="false"] {
     &:focus {
-      outline: var.$outline;
+      @include mixins.outline;
     }
   }
 
@@ -100,6 +100,7 @@ $animationTime: 0.4s;
     border-style: solid;
     border-color: inherit;
     background: var(--c-input);
+    @include mixins.hoverTransition;
   }
 
   &[data-checked="true"] {

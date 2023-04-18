@@ -235,6 +235,7 @@ type DataItem_Date = Readonly<DataItem_Base & {
 type TimeMode = "hms" | "hm" | "h" | "ms";
 type TimeUnit = "hour" | "minute" | "second" | "millisecond";
 type TimeValue = number | string;
+type TimeValueType = "number" | "string";
 
 type TimeRangePair = {
   name: string;
@@ -246,7 +247,7 @@ type TimeRangePair = {
 
 type DataItem_Time = Readonly<DataItem_Base & {
   type: "time";
-  typeof?: "number" | "string";
+  typeof?: TimeValueType;
   mode: TimeMode;
   unit: TimeUnit;
   validations?: DataItemValidation<number, DataItem_Time>;

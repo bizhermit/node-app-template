@@ -4,6 +4,7 @@ import Style from "$/components/elements/form-items/file-drop.module.scss";
 import Text from "@/components/elements/text";
 import { FileData } from "@/data-items/_base/file";
 import { CrossIcon } from "@/components/elements/icon";
+import { pressPositiveKey } from "@/components/utilities/attributes";
 
 type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & {
   $typeof?: FileValueType;
@@ -74,6 +75,9 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
       }
       return validations;
     },
+    messages: {
+      required: "ファイルを選択してください。",
+    },
   });
 
   const multiable = props.$multiple === true;
@@ -131,6 +135,10 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
     commit(e.dataTransfer.files);
   };
 
+  const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    pressPositiveKey(e, () => click());
+  };
+
   const clear = () => {
     ctx.change(undefined);
   };
@@ -152,6 +160,7 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
       $context={ctx}
       $mainProps={{
         className: Style.main,
+        tabIndex: undefined,
       }}
     >
       <input
@@ -176,8 +185,9 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
         onDragOver={dragOver}
         onDragLeave={dragLeave}
         onDrop={drop}
-        tabIndex={props.tabIndex ?? 0}
+        tabIndex={ctx.disabled ? undefined : props.tabIndex ?? 0}
         data-dialog={fileDialog}
+        onKeyDown={keydown}
       >
         <Text>
           {props.children}

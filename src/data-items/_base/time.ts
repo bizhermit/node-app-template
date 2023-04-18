@@ -2,6 +2,8 @@ import type { FormItemValidation } from "@/components/elements/form";
 import { dataItemKey } from "@/data-items/_base";
 import Time, { TimeUtils } from "@bizhermit/time";
 
+const timeDefaultTypeof: TimeValueType = "number";
+
 const timeItem = <
   C extends Omit<DataItem_Time, DataItemKey | "type" | "mode" | "unit"> & Partial<Pick<DataItem_Time, "mode" | "unit">>
 >(ctx?: Readonly<C>) => {
@@ -10,9 +12,11 @@ const timeItem = <
     type: "time";
     mode: C extends { mode: infer Mode } ? Mode : "hm";
     unit: C extends { unit: infer Unit } ? Unit : "minute";
+    typeof: C extends { typeof: infer TypeOf } ? TypeOf : typeof timeDefaultTypeof;
   }>>({
     mode: "hm",
     unit: "minute",
+    typeof: timeDefaultTypeof,
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "time",
@@ -171,7 +175,7 @@ export namespace TimeInput {
     value: number | undefined,
     unit: TimeUnit,
     mode: TimeMode,
-    $typeof?: "number" | "string"
+    $typeof?: TimeValueType,
   ) => {
     if ($typeof === "string") {
       return new Time(value).format((() => {

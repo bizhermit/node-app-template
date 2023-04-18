@@ -36,7 +36,7 @@
   overflow: hidden;
   cursor: pointer;
   user-select: none;
-  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime};
+  @include mixins.hoverTransition("background-color #{var.$transitionTime}, color #{var.$transitionTime}");
 
   > :global(.icon) {
     height: 1.2rem;
@@ -50,8 +50,8 @@
   &:active {
     @include mixins.hoverActive;
     outline: none;
-    background: var(--c-border);
-    color: var(--c-border_);
+    background: var(--c-selected);
+    color: var(--c-selected_);
   }
 
   &:first-child {

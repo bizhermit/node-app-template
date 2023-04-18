@@ -111,10 +111,10 @@ const StructView = forwardRef<HTMLTableElement, StructViewProps>((props, ref) =>
           })();
           return (
             <tr key={item.key} className={Style.row}>
-              <th className={joinClassNames(Style.hcell, `c-${color}`)}>
+              <th className={`${Style.hcell} c-${color}`}>
                 {item.label ?? item.key}
               </th>
-              <td className={joinClassNames(Style.bcell, `bdc-${color}`)}>
+              <td className={`${Style.bcell} bdc-${color}`}>
                 {node}
               </td>
             </tr>

@@ -1,6 +1,17 @@
 @use "$/var";
 // $hoverStyle: "outline";
 $hoverStyle: "float";
+$hoverTransition: box-shadow 0.1s;
+$listHoverTransition: background-color 0.1s, color 0.1s;
+
+@mixin outline($variableColor: true) {
+  @if $variableColor== true {
+    outline-width: 0.2rem;
+    outline-style: solid;
+  } @else {
+    outline: 0.2rem solid var(--c-main);
+  }
+}
 
 @mixin hover {
   @if $hoverStyle == "outline" {
@@ -11,6 +22,10 @@ $hoverStyle: "float";
     box-shadow: 0 0.1rem 0.6rem 0.2rem var(--c-shadow) !important;
   } @else {
   }
+}
+
+@mixin hoverable {
+  box-shadow: 0 0.1rem 0.3rem 0.1rem var(--c-shadow) !important;
 }
 
 @mixin hoverActive {
@@ -37,16 +52,35 @@ $hoverStyle: "float";
   }
 }
 
-@mixin crossHover($hoverableAppearance: false, $zindex: 9) {
+@mixin hoverTransition($others: null) {
   @if $hoverStyle == "outline" {
   } @else if $hoverStyle == "float" {
-    transition: box-shadow 0.1s;
-    @if $hoverableAppearance == true {
-      box-shadow: 0 0.1rem 0.3rem 0.1rem var(--c-shadow) !important;
+    @if ($others == null) {
+      transition: #{$hoverTransition};
+    } @else {
+      transition: #{$others}, #{$hoverTransition};
     }
   } @else {
   }
+}
 
+@mixin listHover {
+  background: var(--c-hover);
+}
+
+@mixin listHoverActive {
+  background: var(--c-selected);
+}
+
+@mixin listHoverTransition($others: null) {
+  @if ($others == null) {
+    transition: #{$listHoverTransition};
+  } @else {
+    transition: #{$others}, #{$listHoverTransition};
+  }
+}
+
+@mixin crossHover($zindex: 9) {
   @media (hover: hover) {
     &:hover {
       @content;
@@ -125,6 +159,7 @@ $hoverStyle: "float";
 
   &:not([data-disabled="true"]) {
     cursor: pointer;
+    @include hoverTransition;
 
     @include crossHover {
       @include hover;
