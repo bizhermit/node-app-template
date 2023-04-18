@@ -75,7 +75,8 @@ $pulldownTransitionTime: 0.5s;
       overflow-x: visible;
       flex: 1;
       z-index: 0;
-      padding: calc(var(--size) * 2.85) 0;
+      padding: calc(var(--size) * 2.85) 0.6rem;
+      gap: 0.6rem;
 
       >.cell {
         height: calc(var(--size) * 0.75);

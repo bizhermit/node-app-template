@@ -2,6 +2,7 @@
 // $hoverStyle: "outline";
 $hoverStyle: "float";
 $hoverTransition: box-shadow 0.1s;
+$listHoverTransition: background-color 0.1s, color 0.1s;
 
 @mixin outline($variableColor: true) {
   @if $variableColor== true {
@@ -60,6 +61,22 @@ $hoverTransition: box-shadow 0.1s;
       transition: #{$others}, #{$hoverTransition};
     }
   } @else {
+  }
+}
+
+@mixin listHover {
+  background: var(--c-hover);
+}
+
+@mixin listHoverActive {
+  background: var(--c-selected);
+}
+
+@mixin listHoverTransition($others: null) {
+  @if ($others == null) {
+    transition: #{$listHoverTransition};
+  } @else {
+    transition: #{$others}, #{$listHoverTransition};
   }
 }
 

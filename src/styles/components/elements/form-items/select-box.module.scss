@@ -47,14 +47,13 @@
   color: var(--c-input_);
   z-index: 0;
   outline: none;
-  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime};
+  @include mixins.listHoverTransition;
 
-  // TODO: change list hover type
   @include mixins.crossHover {
-    @include mixins.hover;
+    @include mixins.listHover;
 
     &:active {
-      @include mixins.hoverActive;
+      @include mixins.listHoverActive;
     }
   }
 
