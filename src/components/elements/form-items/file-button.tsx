@@ -74,6 +74,9 @@ const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<
       }
       return validations;
     },
+    messages: {
+      required: "ファイルを選択してください。",
+    },
   });
 
   const multiable = props.$multiple === true;

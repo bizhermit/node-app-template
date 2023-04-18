@@ -1,4 +1,4 @@
-import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, formValidationMessages, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
+import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import Style from "$/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "@/components/utilities/attributes";
@@ -66,17 +66,20 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
   const ctx = useFormItemContext(form, props, {
     multipartFormData: props.$typeof === "file",
     preventRequiredValidation: true,
-    validations: () => {
+    validations: (getMessage) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$required) {
         validations.push(v => {
           if (v == null || v === "" || v === nullValue.current) {
-            return formValidationMessages.required;
+            return getMessage("required");
           }
           return "";
         });
       }
       return validations;
+    },
+    messages: {
+      required: "記入してください。",
     },
   });
 
