@@ -18,20 +18,29 @@ $buttonSize: (
   background: none;
   border: none;
   border-radius: var(--radius);
+  outline: none;
 
   &:not(:disabled) {
     cursor: pointer;
 
-    &:focus {
-      outline: var.$outline;
-      outline-offset: 0.1rem;
+    >.main {
+      @include mixins.hoverable;
     }
 
-    @include mixins.crossHover(true) {
-      @include mixins.hover;
+    &:focus {
+      > .main {
+        @include mixins.outline;
+        outline-offset: 0.1rem;
+      }
+    }
 
-      &:active {
-        @include mixins.hoverActive;
+    @include mixins.crossHover {
+      .main {
+        @include mixins.hover;
+  
+        &:active {
+          @include mixins.hoverActive;
+        }
       }
     }
   }
@@ -94,6 +103,7 @@ $buttonSize: (
   height: 100%;
   width: 100%;
   border: 0.15rem solid var(--c-border);
+  @include mixins.hoverTransition;
 
   &[data-icon="left"] {
     >.label {

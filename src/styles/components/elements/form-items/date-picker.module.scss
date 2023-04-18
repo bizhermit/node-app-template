@@ -30,6 +30,7 @@ $pulldownTransitionTime: 0.5s;
         >.cell {
           &[data-selectable="true"] {
             cursor: pointer;
+            @include mixins.hoverTransition;
 
             @include mixins.crossHover {
               @include mixins.hover;
@@ -227,6 +228,7 @@ $pulldownTransitionTime: 0.5s;
   cursor: pointer;
   user-select: none;
   border-radius: var(--radius);
+  @include mixins.hoverTransition;
 
   @include mixins.crossHover {
     @include mixins.hover;

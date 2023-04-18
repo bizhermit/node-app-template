@@ -8,8 +8,9 @@
       &[data-dialog="true"] {
         cursor: pointer;
         user-select: none;
+        @include mixins.hoverTransition;
 
-        @include mixins.crossHover(false, false) {
+        @include mixins.crossHover(false) {
           @include mixins.hover;
 
           &:active {
@@ -39,6 +40,7 @@
   height: 100%;
   border-radius: var(--radius);
   overflow: hidden;
+  outline: none;
 }
 
 .file {
@@ -64,6 +66,7 @@
   z-index: 2;
   cursor: pointer;
   border-radius: var(--radius);
+  @include mixins.hoverTransition;
 
   @include mixins.crossHover {
     @include mixins.hover;
