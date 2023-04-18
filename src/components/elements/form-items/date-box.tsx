@@ -37,8 +37,6 @@ export type DateBoxProps<D extends DataItem_Date | DataItem_String | DataItem_Nu
     ) : (DateBoxProps_TypeString & { $typeof?: "string" }) | (DateBoxProps_TypeNumber & { $typeof: "number" }) | (DateBoxProps_TypeDate & { $typeof: "date" })
   );
 
-const today = new Date();
-
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
   return /^[0-9]+$/.test(value);
@@ -105,6 +103,10 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   const judgeValid = useMemo(() => {
     return DateInput.selectableValidation(props);
   }, [props.$validDays, props.$validDaysMode]);
+
+  const initValue = useMemo(() => {
+    return DateInput.getInitValue(props);
+  }, [props.$initValue]);
 
   const yref = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
@@ -224,9 +226,9 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   };
 
   const updown = (y = 0, m = 0, d = 0) => {
-    let year = cacheY.current == null ? today.getFullYear() : cacheY.current + y;
-    let month = type === "year" ? 0 : (cacheM.current == null ? today.getMonth() + 1 : cacheM.current + m);
-    let day = type === "date" ? (cacheD.current == null ? today.getDate() : cacheD.current + d) : 1;
+    let year = cacheY.current == null ? initValue.getFullYear() : cacheY.current + y;
+    let month = type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current + m);
+    let day = type === "date" ? (cacheD.current == null ? initValue.getDate() : cacheD.current + d) : 1;
     const date = new Date(year, month - 1, day);
     if (minDate) {
       if (DatetimeUtils.isBeforeDate(minDate, date)) {
@@ -480,7 +482,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
       >
         <DatePicker
           ref={pref}
-          $value={ctx.value || today}
+          $value={ctx.value || initValue}
           $type={type}
           $typeof={props.$typeof}
           $multiple={false}
