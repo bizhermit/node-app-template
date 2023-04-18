@@ -5,7 +5,7 @@ $checkTransitionTime: 0.1s;
 .main {
   &[data-disabled="false"] {
     &:focus {
-      outline: var.$outline;
+      @include mixins.outline;
     }
   }
 

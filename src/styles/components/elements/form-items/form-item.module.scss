@@ -109,7 +109,7 @@ $tagMoveTransitionTime: 0.5s;
   &[data-disabled="false"] {
     &[data-field="true"] {
       &:focus-within {
-        outline: var.$outline;
+        @include mixins.outline;
       }
     }
   }

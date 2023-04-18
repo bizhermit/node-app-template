@@ -5,7 +5,7 @@ $animationTime: 0.4s;
 .main {
   &[data-disabled="false"] {
     &:focus {
-      outline: var.$outline;
+      @include mixins.outline;
     }
   }
 

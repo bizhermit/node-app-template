@@ -3,6 +3,15 @@
 $hoverStyle: "float";
 $hoverTransition: box-shadow 0.1s;
 
+@mixin outline($variableColor: true) {
+  @if $variableColor== true {
+    outline-width: 0.2rem;
+    outline-style: solid;
+  } @else {
+    outline: 0.2rem solid var(--c-main);
+  }
+}
+
 @mixin hover {
   @if $hoverStyle == "outline" {
     outline: solid;
@@ -12,6 +21,10 @@ $hoverTransition: box-shadow 0.1s;
     box-shadow: 0 0.1rem 0.6rem 0.2rem var(--c-shadow) !important;
   } @else {
   }
+}
+
+@mixin hoverable {
+  box-shadow: 0 0.1rem 0.3rem 0.1rem var(--c-shadow) !important;
 }
 
 @mixin hoverActive {
@@ -50,16 +63,7 @@ $hoverTransition: box-shadow 0.1s;
   }
 }
 
-@mixin crossHover($hoverableAppearance: false, $zindex: 9) {
-  @if $hoverStyle == "outline" {
-  } @else if $hoverStyle == "float" {
-    @if $hoverableAppearance == true {
-      @include hoverTransition;
-      box-shadow: 0 0.1rem 0.3rem 0.1rem var(--c-shadow) !important;
-    }
-  } @else {
-  }
-
+@mixin crossHover($zindex: 9) {
   @media (hover: hover) {
     &:hover {
       @content;

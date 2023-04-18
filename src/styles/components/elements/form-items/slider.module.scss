@@ -4,7 +4,7 @@
 .main {
   &[data-disabled="false"] {
     &:focus {
-      outline: var.$outline;
+      @include mixins.outline;
     }
   }
 
