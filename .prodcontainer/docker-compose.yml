@@ -1,15 +1,15 @@
-version: "3"
+version: '3'
 services:
   node:
-    container_name: "node_prod"
+    container_name: 'node_prod'
     build:
-      context: "."
-      dockerfile: "Dockerfile"
-    image: "node_prod_image"
+      context: '.'
+      dockerfile: 'Dockerfile'
+    image: 'node_prod_image'
     tty: true
     volumes:
-      - "../:/workspace"
+      - '../:/workspace'
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
     ports:
-      - "3000:3000"
+      - '3000:3000'
