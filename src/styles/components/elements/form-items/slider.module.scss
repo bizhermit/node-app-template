@@ -10,6 +10,8 @@
 
   &[data-editable="true"] {
     .handle {
+      @include mixins.hoverTransition;
+
       @include mixins.crossHover {
         @include mixins.hover;
       }

@@ -100,6 +100,7 @@ $animationTime: 0.4s;
     border-style: solid;
     border-color: inherit;
     background: var(--c-input);
+    @include mixins.hoverTransition;
   }
 
   &[data-checked="true"] {

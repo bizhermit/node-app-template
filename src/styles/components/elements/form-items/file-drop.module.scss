@@ -8,6 +8,7 @@
       &[data-dialog="true"] {
         cursor: pointer;
         user-select: none;
+        @include mixins.hoverTransition;
 
         @include mixins.crossHover(false, false) {
           @include mixins.hover;
@@ -64,6 +65,7 @@
   z-index: 2;
   cursor: pointer;
   border-radius: var(--radius);
+  @include mixins.hoverTransition;
 
   @include mixins.crossHover {
     @include mixins.hover;

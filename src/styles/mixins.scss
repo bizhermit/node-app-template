@@ -37,11 +37,24 @@ $hoverStyle: "float";
   }
 }
 
+$hoverTransition: box-shadow 0.3s;
+@mixin hoverTransition($others: null) {
+  @if $hoverStyle == "outline" {
+  } @else if $hoverStyle == "float" {
+    @if ($others == null) {
+      transition: #{$hoverTransition};
+    } @else {
+      transition: #{$others}, #{$hoverTransition};
+    }
+  } @else {
+  }
+}
+
 @mixin crossHover($hoverableAppearance: false, $zindex: 9) {
   @if $hoverStyle == "outline" {
   } @else if $hoverStyle == "float" {
-    transition: box-shadow 0.1s;
     @if $hoverableAppearance == true {
+      @include hoverTransition;
       box-shadow: 0 0.1rem 0.3rem 0.1rem var(--c-shadow) !important;
     }
   } @else {
@@ -125,6 +138,7 @@ $hoverStyle: "float";
 
   &:not([data-disabled="true"]) {
     cursor: pointer;
+    @include hoverTransition;
 
     @include crossHover {
       @include hover;

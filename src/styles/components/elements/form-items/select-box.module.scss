@@ -1,3 +1,4 @@
+@use "$/var";
 @use "$/mixins";
 
 .input {
@@ -46,7 +47,9 @@
   color: var(--c-input_);
   z-index: 0;
   outline: none;
+  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime};
 
+  // TODO: change list hover type
   @include mixins.crossHover {
     @include mixins.hover;
 

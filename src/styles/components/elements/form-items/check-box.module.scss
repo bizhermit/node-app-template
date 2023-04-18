@@ -105,6 +105,7 @@ $checkTransitionTime: 0.1s;
     border-width: 0.1rem;
     border-style: solid;
     border-color: inherit;
+    @include mixins.hoverTransition;
   }
 
   &[data-editable="true"] {

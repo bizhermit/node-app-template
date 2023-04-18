@@ -24,7 +24,7 @@ $buttonSize: (
 
     &:focus {
       outline: var.$outline;
-      outline-offset: 0.1rem;
+      outline-offset: -0.1rem;
     }
 
     @include mixins.crossHover(true) {

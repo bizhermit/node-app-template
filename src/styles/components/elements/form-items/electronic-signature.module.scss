@@ -81,6 +81,7 @@
   &:not(:disabled) {
     cursor: pointer;
     user-select: none;
+    @include mixins.hoverTransition;
 
     @include mixins.crossHover {
       @include mixins.hover;

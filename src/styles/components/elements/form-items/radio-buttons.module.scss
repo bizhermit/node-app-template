@@ -24,6 +24,12 @@
       @include mixins.crossHover {}
 
       &:not([data-outline="true"]) {
+        >.box {
+          &::before {
+            @include mixins.hoverTransition;
+          }
+        }
+
         @include mixins.crossHover {
           >.box {
             &::before {
@@ -43,6 +49,7 @@
 
       &[data-outline="true"] {
         outline-offset: 0.1rem;
+        @include mixins.hoverTransition;
 
         @include mixins.crossHover {
           @include mixins.hover;
