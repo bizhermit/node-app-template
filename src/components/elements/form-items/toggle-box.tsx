@@ -66,7 +66,7 @@ const ToggleBox: ToggleBoxFC = forwardRef<HTMLDivElement, ToggleBoxProps>(<
       if (!props.$required) return [];
       return [(v) => {
         if (v === (checkedValue)) return "";
-        return "有効にしてください。";
+        return props.$messages?.required ?? "有効にしてください。";
       }];
     },
   });

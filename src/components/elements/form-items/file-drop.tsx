@@ -74,6 +74,9 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
       }
       return validations;
     },
+    messages: {
+      required: "ファイルを選択してください。",
+    },
   });
 
   const multiable = props.$multiple === true;

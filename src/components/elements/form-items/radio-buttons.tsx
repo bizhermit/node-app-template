@@ -63,6 +63,9 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       };
     },
     generateChangeCallbackDataDeps: [source],
+    messages: {
+      required: "値を選択してください。"
+    },
   });
 
   const select = (value: T) => {
