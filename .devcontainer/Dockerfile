@@ -1,4 +1,4 @@
-FROM node:18.14.2-bullseye
+FROM node:18-bullseye
 
 ARG HOST=0.0.0.0
 ARG PORT=3000
