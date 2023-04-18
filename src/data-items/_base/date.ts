@@ -167,6 +167,7 @@ export namespace DateInput {
     $rangePair?: DateRangePair;
     $validDays?: ValidDays;
     $validDaysMode?: ValidDaysMode;
+    $initValue?: DateValue;
   };
 
   export const convertDateToValue = (date: Date, $typeof: DateValueType | undefined) => {
@@ -186,6 +187,10 @@ export namespace DateInput {
 
   export const getMaxDate = (props: FCPorps) => {
     return convertDate(props.$max) ?? new Date(2100, 0, 0);
+  };
+
+  export const getInitValue = (props: FCPorps) => {
+    return convertDate(props.$initValue) || DatetimeUtils.removeTime(new Date());
   };
 
   export const selectableValidation = (props: FCPorps): ((date: Date) => boolean) => {
