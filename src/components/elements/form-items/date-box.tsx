@@ -64,7 +64,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
         case "year":
           return {
             $type: dataItem.type as DateType,
-            $typeof: dataItem.typeof ?? "date",
+            $typeof: dataItem.typeof,
             $min: dataItem.min,
             $max: dataItem.max,
             $rangePair: dataItem.rangePair,
