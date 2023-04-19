@@ -110,6 +110,7 @@ const Page: NextPage = () => {
           $source={ArrayUtils.generateArray(3, (value) => {
             return { value, label: `item ${value}` };
           })}
+          $outline
         />
         <RadioButtons
           $tag="string"

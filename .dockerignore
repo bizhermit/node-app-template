@@ -1,0 +1,19 @@
+node_modules
+.next
+out
+build
+dist
+*.log
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+.git
+.vscode
+.next
+.main
+.nexpress
+.renderer
+resources/config.json
+nextron
+# nexpress

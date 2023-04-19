@@ -5,7 +5,7 @@
   &[data-disabled="false"] {
     >.item {
       &:focus {
-        outline: var.$outline;
+        @include mixins.outline;
       }
     }
   }
@@ -24,6 +24,14 @@
       @include mixins.crossHover {}
 
       &:not([data-outline="true"]) {
+        outline-color: var(--c-main);
+        
+        >.box {
+          &::before {
+            @include mixins.hoverTransition;
+          }
+        }
+
         @include mixins.crossHover {
           >.box {
             &::before {
@@ -42,7 +50,8 @@
       }
 
       &[data-outline="true"] {
-        outline-offset: 0.1rem;
+        outline-offset: -0.1rem;
+        @include mixins.hoverTransition;
 
         @include mixins.crossHover {
           @include mixins.hover;

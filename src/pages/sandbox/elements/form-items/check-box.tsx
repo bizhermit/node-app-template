@@ -187,7 +187,9 @@ const Page: NextPage = () => {
           <Row key={color}>
             <CheckBox $color={color} $defaultValue name={color} />
             <CheckBox $color={color} $borderCheck $defaultValue />
-            <span className={`pt-t px-1 c-${color}`}>{color}</span>
+            <CheckBox $color={color} $outline $defaultValue $circle>
+              {color}
+            </CheckBox>
           </Row>
         );
       })}

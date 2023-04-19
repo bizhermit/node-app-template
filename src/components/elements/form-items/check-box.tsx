@@ -2,7 +2,7 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, Form
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import Style from "$/components/elements/form-items/check-box.module.scss";
 import Text from "@/components/elements/text";
-import { joinClassNames, pressPositiveKey } from "@/components/utilities/attributes";
+import { pressPositiveKey } from "@/components/utilities/attributes";
 
 export type CheckBoxProps<
   T extends string | number | boolean = boolean,
@@ -69,7 +69,7 @@ const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
       if (!props.$required) return [];
       return [(v) => {
         if (v === (checkedValue)) return "";
-        return "チェックを入れてください。";
+        return props.$messages?.required ?? "チェックを入れてください。";
       }];
     },
   });
@@ -102,7 +102,7 @@ const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
       $clickable
       $useHidden
       $mainProps={{
-        className: joinClassNames(Style.main, props.$outline && props.$color ? `bdc-${props.$color || "input"}` : undefined),
+        className: Style.main,
         onClick: click,
         onKeyDown: keydown,
         tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,

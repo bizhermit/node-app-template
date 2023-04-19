@@ -15,6 +15,10 @@ export const sample_string = stringItem({
   // charType: "alpha",
   width: "20rem",
   validations: [
+    (...args) => {
+      console.log(args);
+      return "";
+    },
     (v) => {
       console.log("string validation: ", typeof v, v);
       if (v == null) return undefined;

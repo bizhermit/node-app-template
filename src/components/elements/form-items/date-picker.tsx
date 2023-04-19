@@ -162,6 +162,10 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     return DateInput.selectableValidation(props);
   }, [props.$validDays, props.$validDaysMode]);
 
+  const initValue = useMemo(() => {
+    return DateInput.getInitValue(props);
+  }, [props.$initValue]);
+
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
     multiple: props.$multiple,
@@ -577,8 +581,8 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
   };
 
   const clear = () => {
-    setYear(today.getFullYear());
-    setMonth(today.getMonth());
+    setYear(initValue.getFullYear());
+    setMonth(initValue.getMonth());
     if (multiple) {
       ctx.change([]);
       return;
@@ -686,8 +690,8 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
   useEffect(() => {
     const date = getLatestDate();
     if (date == null) {
-      setYear(today.getFullYear());
-      setMonth(today.getMonth());
+      setYear(initValue.getFullYear());
+      setMonth(initValue.getMonth());
     } else {
       setYear(date.getFullYear());
       setMonth(date.getMonth());

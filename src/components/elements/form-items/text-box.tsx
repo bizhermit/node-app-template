@@ -21,7 +21,7 @@ export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined
   $minWidth?: number | string;
   $hideClearButton?: boolean;
   $autoComplete?: string;
-  $align?: "left" | "center" | "right"
+  $align?: "left" | "center" | "right";
 };
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {

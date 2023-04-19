@@ -5,7 +5,14 @@ import Style from "$/components/elements/form-items/form-item.module.scss";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { equals, getValue, setValue } from "@/data-items/utilities";
 
-export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number) => (boolean | string | null | undefined);
+type FormItemMessages = {
+  default: string;
+  required: string;
+  typeMissmatch: string;
+};
+type FormItemMessageFunc = (key: keyof FormItemMessages) => string;
+
+export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number, getMessage: FormItemMessageFunc) => (boolean | string | null | undefined);
 
 export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide";
 
@@ -47,6 +54,7 @@ export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V 
   $preventFormBind?: boolean;
   $error?: string;
   $dataItem?: D;
+  $messages?: Partial<FormItemMessages>;
 };
 
 type UseFormItemContextOptions<T = any, U = undefined> = {
@@ -54,12 +62,13 @@ type UseFormItemContextOptions<T = any, U = undefined> = {
   effectDeps?: Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
-  validations?: () => Array<FormItemValidation<T | null | undefined>>;
+  validations?: (getMessage: FormItemMessageFunc) => Array<FormItemValidation<T | null | undefined>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: T | null | undefined, before?: T | null | undefined) => U;
   generateChangeCallbackDataDeps?: Array<any>;
+  messages?: Partial<FormItemMessages>;
 };
 
 type FormContextProps = {
@@ -311,11 +320,11 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
 
 export default Form;
 
-export const formValidationMessages = {
+export const formValidationMessages: FormItemMessages = {
   default: "入力エラーです。",
   required: "値を入力してください。",
   typeMissmatch: "型が不適切です。",
-} as const;
+};
 
 export const useForm = () => {
   return useContext(FormContext);
@@ -382,29 +391,29 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     setBind(value);
   }, []);
 
+  const getMessage = useCallback((key: keyof FormItemMessages) => {
+    return props.$messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
+  }, []);
+
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<ValueType<T, D, V> | null | undefined>> = [];
     if (props.$required && !options?.preventRequiredValidation) {
       if (options?.multiple) {
         rets.push(v => {
-          if (v == null) return formValidationMessages.required;
-          if (!Array.isArray(v)) {
-            return formValidationMessages.typeMissmatch;
-          }
-          if (v.length === 0 || v[0] === null) {
-            return formValidationMessages.required;
-          }
+          if (v == null) return getMessage("required");
+          if (!Array.isArray(v)) return getMessage("typeMissmatch");
+          if (v.length === 0 || v[0] === null) return getMessage("required");
           return "";
         });
       } else {
         rets.push((v) => {
-          if (v == null || v === "") return formValidationMessages.required;
+          if (v == null || v === "") return getMessage("required");
           return "";
         });
       }
     }
     if (options?.validations) {
-      rets.push(...options.validations());
+      rets.push(...options.validations(getMessage));
     }
     if (props?.$validations) {
       if (Array.isArray(props.$validations)) {
@@ -414,7 +423,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       }
     }
     return rets;
-  }, [props.$required, options?.multiple, props?.$validations, ...(options?.validationsDeps ?? [])]);
+  }, [props.$required, options?.multiple, props?.$validations, getMessage, ...(options?.validationsDeps ?? [])]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -426,10 +435,10 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       return {};
     })();
     for (let i = 0, il = validations.length; i < il; i++) {
-      const result = validations[i](value, bind, i);
+      const result = validations[i](value, bind, i, getMessage);
       if (result == null || result === "" || result === false) continue;
       if (typeof result === "string") msgs.push(result);
-      msgs.push(formValidationMessages.default);
+      msgs.push(getMessage("default"));
       break;
     }
     const msg = msgs[0] || "";
@@ -449,7 +458,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
         return ret;
       });
     }
-  }, [validations, form.bind, props?.name, props?.$bind, props?.$preventFormBind]);
+  }, [validations, form.bind, props?.name, props?.$bind, props?.$preventFormBind, getMessage]);
 
   useEffect(() => {
     form.setExErrors(cur => {
@@ -549,6 +558,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     effect: options?.effect,
     messageDisplayMode: props?.$messagePosition ?? form.messageDisplayMode,
     messageWrap: props?.$messageWrap ?? form.messageWrap,
+    getMessage,
   };
 };
 
@@ -587,7 +597,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
   );
 
   const attrs = {
-    ...attributes(props.$mainProps ?? {}, Style.main, props.$preventFieldLayout ? undefined : (props.$color ? `bdc-${props.$color}` : undefined)),
+    ...attributes(props.$mainProps ?? {}, Style.main, `bdc-${props.$color || "border"}`),
     "data-editable": props.$context.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$context.disabled,

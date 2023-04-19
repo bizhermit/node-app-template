@@ -5,13 +5,14 @@ $checkTransitionTime: 0.1s;
 .main {
   &[data-disabled="false"] {
     &:focus {
-      outline: var.$outline;
+      @include mixins.outline;
     }
   }
 
   &[data-editable="true"] {
     &[data-outline="true"] {
-      outline-offset: 0.1rem;
+      outline-offset: -0.1rem;
+      @include mixins.hoverTransition;
 
       @include mixins.crossHover {
         @include mixins.hover;
@@ -105,6 +106,7 @@ $checkTransitionTime: 0.1s;
     border-width: 0.1rem;
     border-style: solid;
     border-color: inherit;
+    @include mixins.hoverTransition;
   }
 
   &[data-editable="true"] {

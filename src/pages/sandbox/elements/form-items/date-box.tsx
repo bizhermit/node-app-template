@@ -112,12 +112,14 @@ const Page: NextPage = () => {
           // $typeof="date"
           $pickerButtonless
           $showSeparatorAlwarys
+          $initValue={"2000-1-1"}
         />
         <DateBox
           $tag="date"
           $dataItem={sample_date}
           $onChange={v => console.log("date: ", v)}
           $disallowInput
+          $initValue={"2000-1-1"}
         />
         <DateBox
           $tag="month"

@@ -64,7 +64,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
           } as TimeBoxProps<D>;
         default:
           return {
-            $typeof: "number",
+            $typeof: dataItem.typeof,
             $min: dataItem.min,
             $max: dataItem.max,
             $rangePair: dataItem.rangePair,

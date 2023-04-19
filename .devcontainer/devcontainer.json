@@ -5,12 +5,7 @@
   "workspaceFolder": "/workspace",
   "postStartCommand": "npm install",
   "remoteUser": "node",
-  "remoteEnv": {
-    "PORT": "3003"
-  },
-  "forwardPorts": [
-    3003
-  ],
+  "overrideCommand": true,
   "customizations": {
     "vscode": {
       "extensions": [
