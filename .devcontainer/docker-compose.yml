@@ -3,8 +3,8 @@ services:
   node:
     container_name: 'node_dev'
     build:
-      context: '.'
-      dockerfile: 'Dockerfile'
+      context: '../'
+      dockerfile: '.devcontainer/Dockerfile'
     image: 'node_dev_image'
     tty: true
     volumes:
