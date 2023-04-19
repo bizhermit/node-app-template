@@ -1,0 +1,13 @@
+version: '3'
+services:
+  node:
+    container_name: 'node_prod'
+    build:
+      context: '../'
+      dockerfile: '.prodcontainer/Dockerfile'
+    image: 'node_prod_image'
+    tty: true
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '${PORT:-3000}:3000'
