@@ -110,3 +110,35 @@ netsh interface portproxy delete v4tov4 listenaddress=<ipv4 address> listenport=
 ```ps
 netsh interface portproxy show v4tov4
 ```
+
+---
+
+## Relase
+
+### Docker Container
+
+#### start
+
+##### 1. change working directory to `.production`
+
+```bash
+cd .production
+```
+
+##### 2. build container and start
+
+```bash
+docker-compose up -d
+```
+
+#### stop
+
+```bash
+docker-compose stop
+```
+
+#### stop and cleanup
+
+```bash
+docker-compose down --rmi all --volumes --remove-orphans
+```
