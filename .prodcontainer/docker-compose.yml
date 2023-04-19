@@ -3,13 +3,11 @@ services:
   node:
     container_name: 'node_prod'
     build:
-      context: '.'
-      dockerfile: 'Dockerfile'
+      context: '../'
+      dockerfile: '.prodcontainer/Dockerfile'
     image: 'node_prod_image'
     tty: true
-    volumes:
-      - '../:/workspace'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
-      - '3000:3000'
+      - '${PORT:-3000}:3000'

@@ -1,20 +1,21 @@
 FROM node:18-bullseye
 
-ARG HOST=0.0.0.0
-ARG PORT=3000
-ENV HOST ${HOST}
-ENV PORT ${PORT}
-
 WORKDIR /workspace
 
 COPY . /workspace
 
 RUN npm install \
-  npm run clean \
-  npm run build
-
-EXPOSE ${PORT}
-
-USER node
+  && npm run build \
+  && npx rimraf \
+    src \
+    nexpress \
+    scripts \
+    .babelrc \
+    .eslint* \
+    .git* \
+    tsconfig* \
+    .devcontainer \
+    node_modules \
+  && npm install --production
 
 CMD [ "npx", "next", "start" ]
