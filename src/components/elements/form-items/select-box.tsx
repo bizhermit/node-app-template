@@ -310,7 +310,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
             <div
               className={Style.button}
               onClick={clear}
-              data-disabled={!hasData}
+              data-disabled={!ctx.editable || loading || !hasData}
             >
               <CrossIcon />
             </div>
@@ -321,7 +321,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
               doScroll.current = true;
               picker();
             }}
-            data-disabled={showPicker}
+            data-disabled={!ctx.editable || loading || showPicker}
           >
             <DownIcon />
           </div>
