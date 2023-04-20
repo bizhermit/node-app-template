@@ -117,6 +117,7 @@ const Page: NextPage = () => {
               label: `item ${value}`,
             };
           })}
+          $tieInNames={["label", "value"]}
         />
       </Row>
       <SelectBox
@@ -166,6 +167,9 @@ const Page: NextPage = () => {
         $readOnly={readOnly}
         action="/api/form"
         method="post"
+        // $onSubmit={(data) => {
+        //   console.log(data);
+        // }}
       >
         <SelectBox
           $tag="form bind"
@@ -174,16 +178,19 @@ const Page: NextPage = () => {
           $source={async () => {
             return new Promise<Array<Struct>>(resolve => {
               setTimeout(() => {
+                let count = 0;
                 resolve(colors.map(color => {
                   return {
                     value: color,
                     label: color,
+                    count: count++,
                   };
                 }));
               }, 1000);
             });
           }}
           $disallowInput={disallowInput}
+          $tieInNames={["value", { dataName: "label", hiddenName: "selectBoxLabel"}, "count"]}
         />
         <Button type="submit">submit</Button>
       </Form>

@@ -182,19 +182,28 @@ const Page: NextPage = () => {
         $readOnly={readOnly}
         action="/api/form"
         method="post"
+        $onSubmit={(data) => {
+          console.log(data);
+        }}
       >
         <RadioButtons
           $tag="form bind"
           name="radio-buttons-form-bind"
           $appearance={appearance}
-          $source={colors.map(color => {
+          $source={colors.map((color, count) => {
             return {
               value: color,
               label: color,
               color,
+              count,
             };
           })}
           $outline
+          $tieInNames={[
+            "color",
+            { dataName: "label", hiddenName: "colorLabel" },
+            "count",
+          ]}
         />
         <Button type="submit">submit</Button>
       </Form>
