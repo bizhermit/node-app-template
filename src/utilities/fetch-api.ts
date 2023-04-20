@@ -81,7 +81,7 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
         Object.keys(params).forEach(key => {
           const v = params[key];
           if (v == null) return;
-          fd.append(key, JSON.stringify(v));
+          fd.append(key, typeof v === "object" ? JSON.stringify(v) : v);
         });
       })(),
     };
