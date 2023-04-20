@@ -7,7 +7,7 @@ import Resizer from "@/components/elements/resizer";
 import Popup from "@/components/elements/popup";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { equals } from "@/data-items/utilities";
+import { equals, getValue, setValue } from "@/data-items/utilities";
 import { CrossIcon, DownIcon } from "@/components/elements/icon";
 
 export type SelectBoxProps<
@@ -27,6 +27,7 @@ export type SelectBoxProps<
   $emptyItem?: boolean | string | { value: T | null | undefined; label: string; };
   $align?: "left" | "center" | "right";
   $disallowInput?: boolean;
+  $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
@@ -84,9 +85,19 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const [maxHeight, setMaxHeight] = useState(0);
   const lref = useRef<HTMLDivElement>(null!);
   const [label, setLabel] = useState("");
+  const [selectedData, setSelectedData] = useState<S>();
 
   const renderLabel = () => {
     const item = source.find(item => equals(item[vdn], ctx.valueRef.current));
+    setSelectedData(item);
+    if (props.$tieInNames != null) {
+      props.$tieInNames.forEach(tieItem => {
+        const { dataName, hiddenName } =
+        typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
+        setValue(props.$bind, hiddenName, item?.[dataName]);
+        setValue(ctx.bind, hiddenName, item?.[dataName]);
+      });
+    }
     if (item == null) {
       if (iref.current) iref.current.value = "";
       setLabel("");
@@ -317,6 +328,20 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
         </>
       }
       {props.$resize && <Resizer direction="x" />}
+      {props.$tieInNames != null &&
+        props.$tieInNames.map(item => {
+          const { dataName, hiddenName } =
+            typeof item === "string" ? { dataName: item, hiddenName: item } : item;
+          return (
+            <input
+              type="hidden"
+              key={hiddenName}
+              name={hiddenName}
+              value={getValue(selectedData, dataName) ?? ""}
+            />
+          );
+        })
+      }
       <Popup
         className={Style.popup}
         $show={showPicker && ctx.editable && !loading}
