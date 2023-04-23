@@ -1,8 +1,55 @@
 @use "$/var";
+$useDarkColor: true;
 
-@media (prefers-color-scheme: light) {
+@if $useDarkColor==true {
+  @media (prefers-color-scheme: light) {
+    :root {
+  
+      @each $key, $value in var.$colorMap {
+        $val: map-get($value, light);
+        $val_r: map-get($value, light_r);
+        --c-#{$key}: #{$val};
+        @if $val_r == null {
+          $invert: invert(darken($val, 30%));
+          @if lightness($invert)>50 {
+            --c-#{$key}_: #{lighten($invert, 100%)};
+          } @else {
+            --c-#{$key}_: #{darken($invert, 100%)};
+          }
+        } @else {
+          --c-#{$key}_: #{$val_r};
+        }
+      }
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+  
+      @each $key, $value in var.$colorMap {
+        $val: map-get($value, dark);
+        $val_r: map-get($value, dark_r);
+        --c-#{$key}: #{$val};
+        @if $val_r == null {
+          $invert: invert(darken($val, 30%));
+          @if lightness($invert)>50 {
+            --c-#{$key}_: #{lighten($invert, 100%)};
+          } @else {
+            --c-#{$key}_: #{darken($invert, 100%)};
+          }
+        } @else {
+          --c-#{$key}_: #{$val_r};
+        }
+      }
+    }
+  
+    html {
+      color-scheme: dark;
+    }
+  }
+} @else {
   :root {
-
+  
     @each $key, $value in var.$colorMap {
       $val: map-get($value, light);
       $val_r: map-get($value, light_r);
@@ -18,31 +65,6 @@
         --c-#{$key}_: #{$val_r};
       }
     }
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-
-    @each $key, $value in var.$colorMap {
-      $val: map-get($value, dark);
-      $val_r: map-get($value, dark_r);
-      --c-#{$key}: #{$val};
-      @if $val_r == null {
-        $invert: invert(darken($val, 30%));
-        @if lightness($invert)>50 {
-          --c-#{$key}_: #{lighten($invert, 100%)};
-        } @else {
-          --c-#{$key}_: #{darken($invert, 100%)};
-        }
-      } @else {
-        --c-#{$key}_: #{$val_r};
-      }
-    }
-  }
-
-  html {
-    color-scheme: dark;
   }
 }
 
