@@ -16,7 +16,6 @@ const Hidden: HiddenFC = forwardRef<HTMLDivElement, HiddenProps>(<
   const props = useDataItemMergedProps(form, p);
   const ctx = useFormItemContext(form, props);
 
-  if (props.name == null) return <></>;
   return (
     props.$show ?
       <FormItemWrap
@@ -30,11 +29,13 @@ const Hidden: HiddenFC = forwardRef<HTMLDivElement, HiddenProps>(<
           style: { display: "none" }
         }}
       /> :
-      <input
-        name={props.name}
-        type="hidden"
-        value={convertHiddenValue(ctx.value)}
-      />
+      (props.name == null ? <></> :
+        <input
+          name={props.name}
+          type="hidden"
+          value={convertHiddenValue(ctx.value)}
+        />
+      )
   );
 });
 

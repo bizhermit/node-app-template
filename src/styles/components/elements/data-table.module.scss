@@ -87,7 +87,7 @@ $borderStyle: 1px solid var(--c-border);
   }
 
   @include mixins.crossHover {
-    background: var(--c-hover);
+    background: var(--c-hover) !important;
   }
 
   &:has(>.radio:checked) {

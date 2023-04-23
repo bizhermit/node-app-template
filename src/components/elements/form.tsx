@@ -139,7 +139,8 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
   const method = props.method ?? "get";
 
   const bind = useMemo(() => {
-    if (!props.$bind || props.$bind === true) return {};
+    if (props.$bind === false) return undefined;
+    if (props.$bind == null || props.$bind === true) return {};
     return props.$bind;
   }, [props.$bind]);
 

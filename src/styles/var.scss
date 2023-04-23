@@ -4,6 +4,7 @@ $fontSize: 1.6rem;
 $iconSize: 1.6rem;
 $transitionTime: 0.2s;
 $placeholderOpacity: 0.6;
+$disabledOpacity: 0.6;
 
 $baseColor: (
   "light": rgb(240, 240, 247),
@@ -70,7 +71,7 @@ $colorMap: (
   ),
   "hover": (
     "light": rgb(240, 240, 243),
-    "dark": rgb(50, 50, 53),
+    "dark": rgb(60, 60, 63),
   ),
   "scroll": (
     "light": rgba(100, 100, 105, 0.3),
