@@ -15,7 +15,7 @@
     "route": "node scripts/generate-route-types",
     "lint": "npx next lint",
     "predev": "npm run route",
-    "dev": "npx next dev",
+    "dev": "npx next dev -p 3003",
     "prebuild": "npm run route",
     "build": "npx next build",
     "next": "npm run clean && npm run build && npx next start",

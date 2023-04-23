@@ -14,6 +14,7 @@ export type RadioButtonsProps<
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
+  $stateDataName?: string;
   $direction?: "horizontal" | "vertical";
   $appearance?: "point" | "check" | "check-outline" | "button";
   $outline?: boolean;
@@ -52,6 +53,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
   const vdn = props.$valueDataName ?? "value";
   const ldn = props.$labelDataName ?? "label";
   const cdn = props.$colorDataName ?? "color";
+  const sdn = props.$stateDataName ?? "state";
   const [source, loading] = useLoadableArray(props.$source, {
     preventMemorize: props.$preventSourceMemorize,
   });
@@ -114,18 +116,32 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       const v = item[vdn] as T;
       const l = item[ldn] as ReactNode;
       const c = (item[cdn] as string) || props.$color;
+      const s = (() => {
+        switch (item[sdn]) {
+          case "readonly":
+            return "readonly";
+          case "disabled":
+            return "disabled";
+          case "hidden":
+            return "hidden";
+          default:
+            return "active";
+        }
+      })();
       const selected = equals(v, ctx.value);
       if (selected) selectedItem = item;
+      if (s === "hidden") return null;
       return (
         <div
           key={typeof v === "boolean" ? String(v) : v ?? null}
           className={joinClassNames(Style.item, c ? `bdc-${c}` : undefined)}
           data-selected={selected}
-          tabIndex={0}
-          onClick={ctx.editable ? () => select(v) : undefined}
-          onKeyDown={ctx.editable ? e => pressPositiveKey(e, () => select(v)) : undefined}
+          tabIndex={s === "disabled" ? undefined : 0}
+          onClick={(ctx.editable && s === "active") ? () => select(v) : undefined}
+          onKeyDown={(ctx.editable && s === "active") ? e => pressPositiveKey(e, () => select(v)) : undefined}
           data-appearance={appearance}
           data-outline={outline}
+          data-state={s}
         >
           {(appearance === "point" || appearance === "check" || appearance === "check-outline") &&
             <div
