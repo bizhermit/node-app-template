@@ -3,13 +3,13 @@ import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
+import { CalendarIcon, ClockIcon, CloudIcon, SaveIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import { sample_number, sample_string } from "@/data-items/sample/item";
 import { colors } from "@/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import type { NextPage } from "next";
 import { useState } from "react";
-import { VscAccount, VscActivateBreakpoints, VscArchive } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -145,13 +145,20 @@ const Page: NextPage = () => {
         $messagePosition="bottom"
         $source={[{
           value: 0,
-          label: <VscAccount />
+          label: <CalendarIcon />,
+          state: "active",
         }, {
           value: 1,
-          label: <VscActivateBreakpoints />
+          label: <ClockIcon />,
+          state: "readonly",
         }, {
           value: 2,
-          label: <VscArchive />
+          label: <SaveIcon />,
+          state: "disabled",
+        }, {
+          value: 3,
+          label: <CloudIcon />,
+          state: "hidden",
         }]}
       />
       <RadioButtons
@@ -182,19 +189,28 @@ const Page: NextPage = () => {
         $readOnly={readOnly}
         action="/api/form"
         method="post"
+        $onSubmit={(data) => {
+          console.log(data);
+        }}
       >
         <RadioButtons
           $tag="form bind"
           name="radio-buttons-form-bind"
           $appearance={appearance}
-          $source={colors.map(color => {
+          $source={colors.map((color, count) => {
             return {
               value: color,
               label: color,
               color,
+              count,
             };
           })}
           $outline
+          $tieInNames={[
+            "color",
+            { dataName: "label", hiddenName: "colorLabel" },
+            "count",
+          ]}
         />
         <Button type="submit">submit</Button>
       </Form>
@@ -233,13 +249,13 @@ const Page: NextPage = () => {
           $direction="vertical"
           $source={[{
             value: 0,
-            label: <VscAccount />
+            label: <CalendarIcon />
           }, {
             value: 1,
-            label: <VscActivateBreakpoints />
+            label: <ClockIcon />
           }, {
             value: 2,
-            label: <VscArchive />
+            label: <SaveIcon />
           }]}
         />
       </Row>

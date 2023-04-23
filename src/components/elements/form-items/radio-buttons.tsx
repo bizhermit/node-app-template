@@ -1,10 +1,10 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useState } from "react";
 import Style from "$/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { type LoadableArray } from "@/hooks/loadable-array";
 import Text from "@/components/elements/text";
 import { joinClassNames, pressPositiveKey } from "@/components/utilities/attributes";
-import { equals } from "@/data-items/utilities";
+import { equals, getValue, setValue } from "@/data-items/utilities";
 
 export type RadioButtonsProps<
   T extends string | number | boolean = string | number | boolean,
@@ -14,6 +14,7 @@ export type RadioButtonsProps<
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
+  $stateDataName?: string;
   $direction?: "horizontal" | "vertical";
   $appearance?: "point" | "check" | "check-outline" | "button";
   $outline?: boolean;
@@ -21,6 +22,7 @@ export type RadioButtonsProps<
   $preventSourceMemorize?: boolean;
   $allowNull?: boolean;
   $unselectable?: boolean;
+  $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
@@ -51,9 +53,11 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
   const vdn = props.$valueDataName ?? "value";
   const ldn = props.$labelDataName ?? "label";
   const cdn = props.$colorDataName ?? "color";
+  const sdn = props.$stateDataName ?? "state";
   const [source, loading] = useLoadableArray(props.$source, {
     preventMemorize: props.$preventSourceMemorize,
   });
+  const [selectedData, setSelectedData] = useState<S>();
 
   const ctx = useFormItemContext(form, props, {
     generateChangeCallbackData: (a, b) => {
@@ -112,18 +116,32 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       const v = item[vdn] as T;
       const l = item[ldn] as ReactNode;
       const c = (item[cdn] as string) || props.$color;
+      const s = (() => {
+        switch (item[sdn]) {
+          case "readonly":
+            return "readonly";
+          case "disabled":
+            return "disabled";
+          case "hidden":
+            return "hidden";
+          default:
+            return "active";
+        }
+      })();
       const selected = equals(v, ctx.value);
       if (selected) selectedItem = item;
+      if (s === "hidden") return null;
       return (
         <div
           key={typeof v === "boolean" ? String(v) : v ?? null}
           className={joinClassNames(Style.item, c ? `bdc-${c}` : undefined)}
           data-selected={selected}
-          tabIndex={0}
-          onClick={ctx.editable ? () => select(v) : undefined}
-          onKeyDown={ctx.editable ? e => pressPositiveKey(e, () => select(v)) : undefined}
+          tabIndex={s === "disabled" ? undefined : 0}
+          onClick={(ctx.editable && s === "active") ? () => select(v) : undefined}
+          onKeyDown={(ctx.editable && s === "active") ? e => pressPositiveKey(e, () => select(v)) : undefined}
           data-appearance={appearance}
           data-outline={outline}
+          data-state={s}
         >
           {(appearance === "point" || appearance === "check" || appearance === "check-outline") &&
             <div
@@ -167,6 +185,19 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
     ctx.change(target[vdn]);
   }, [selectedItem, source, props.$allowNull, ctx.change]);
 
+  useEffect(() => {
+    if (props.$tieInNames != null) {
+      const item = source.find(item => equals(item[vdn], ctx.valueRef.current));
+      setSelectedData(item);
+      props.$tieInNames.forEach(tieItem => {
+        const { dataName, hiddenName } =
+        typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
+        setValue(props.$bind, hiddenName, item?.[dataName]);
+        setValue(ctx.bind, hiddenName, item?.[dataName]);
+      });
+    }
+  }, [ctx.value, source]);
+
   return (
     <FormItemWrap
       {...props}
@@ -182,6 +213,20 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       }}
     >
       {nodes}
+      {props.$tieInNames != null &&
+        props.$tieInNames.map(item => {
+          const { dataName, hiddenName } =
+            typeof item === "string" ? { dataName: item, hiddenName: item } : item;
+          return (
+            <input
+              type="hidden"
+              key={hiddenName}
+              name={hiddenName}
+              value={getValue(selectedData, dataName) ?? ""}
+            />
+          );
+        })
+      }
     </FormItemWrap>
   );
 });

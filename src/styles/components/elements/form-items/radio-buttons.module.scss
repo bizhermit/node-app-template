@@ -26,23 +26,25 @@
       &:not([data-outline="true"]) {
         outline-color: var(--c-main);
         
-        >.box {
-          &::before {
-            @include mixins.hoverTransition;
-          }
-        }
-
-        @include mixins.crossHover {
+        &[data-state="active"] {
           >.box {
             &::before {
-              @include mixins.hover;
+              @include mixins.hoverTransition;
             }
           }
-
-          &:active {
+  
+          @include mixins.crossHover {
             >.box {
               &::before {
-                @include mixins.hoverActive;
+                @include mixins.hover;
+              }
+            }
+  
+            &:active {
+              >.box {
+                &::before {
+                  @include mixins.hoverActive;
+                }
               }
             }
           }
@@ -51,29 +53,57 @@
 
       &[data-outline="true"] {
         outline-offset: -0.1rem;
-        @include mixins.hoverTransition;
 
-        @include mixins.crossHover {
-          @include mixins.hover;
-
-          &:active {
-            @include mixins.hoverActive;
+        &[data-state="active"] {
+          @include mixins.hoverTransition;
+  
+          @include mixins.crossHover {
+            @include mixins.hover;
+  
+            &:active {
+              @include mixins.hoverActive;
+            }
           }
         }
       }
 
       &[data-appearance="button"] {
-        @include mixins.crossHover {
-          @include mixins.hover;
-
-          &:active {
-            @include mixins.hoverActive;
+        &[data-state="active"] {
+          @include mixins.crossHover {
+            @include mixins.hover;
+  
+            &:active {
+              @include mixins.hoverActive;
+            }
           }
         }
 
         >.label {
           background: var(--c-input);
         }
+      }
+
+      &[data-state="readonly"],
+      &[data-state="disabled"] {
+        >.box {
+          &::before {
+            background: none !important;
+          }
+        }
+
+        &[data-appearance="button"] {
+          >.label {
+            background: none !important;
+          }
+        }
+      }
+
+      &[data-state="disabled"] {
+        opacity: #{var.$disabledOpacity};
+      }
+
+      &[data-state="hidden"] {
+        display: none;
       }
     }
 
@@ -170,10 +200,14 @@
   flex: 1 0 auto;
   border-radius: var(--radius);
 
+  &[data-selected="true"],
+  &:focus {
+    z-index: 1;
+  }
+
   &[data-appearance="button"] {
     >.label {
       padding-left: calc(var(--size) / 4);
-      ;
       border-width: 0.1rem;
       border-style: solid;
       border-color: inherit;
