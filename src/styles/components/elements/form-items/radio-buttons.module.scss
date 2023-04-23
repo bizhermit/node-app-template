@@ -99,7 +99,7 @@
       }
 
       &[data-state="disabled"] {
-        opacity: 0.6;
+        opacity: #{var.$disabledOpacity};
       }
 
       &[data-state="hidden"] {
