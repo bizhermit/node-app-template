@@ -1,46 +1,34 @@
 @use "$/var";
 $useDarkColor: true;
 
+@mixin colorIterator($color: light) {
+  @each $key, $value in var.$colorMap {
+    $val: map-get($value, #{$color});
+    $val_r: map-get($value, #{$color}_r);
+    --c-#{$key}: #{$val};
+    @if $val_r == null {
+      $invert: invert(darken($val, 30%));
+      @if lightness($invert)>50 {
+        --c-#{$key}_: #{lighten($invert, 100%)};
+      } @else {
+        --c-#{$key}_: #{darken($invert, 100%)};
+      }
+    } @else {
+      --c-#{$key}_: #{$val_r};
+    }
+  }
+}
+
 @if $useDarkColor==true {
   @media (prefers-color-scheme: light) {
     :root {
-  
-      @each $key, $value in var.$colorMap {
-        $val: map-get($value, light);
-        $val_r: map-get($value, light_r);
-        --c-#{$key}: #{$val};
-        @if $val_r == null {
-          $invert: invert(darken($val, 30%));
-          @if lightness($invert)>50 {
-            --c-#{$key}_: #{lighten($invert, 100%)};
-          } @else {
-            --c-#{$key}_: #{darken($invert, 100%)};
-          }
-        } @else {
-          --c-#{$key}_: #{$val_r};
-        }
-      }
+      @include colorIterator(light);
     }
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-  
-      @each $key, $value in var.$colorMap {
-        $val: map-get($value, dark);
-        $val_r: map-get($value, dark_r);
-        --c-#{$key}: #{$val};
-        @if $val_r == null {
-          $invert: invert(darken($val, 30%));
-          @if lightness($invert)>50 {
-            --c-#{$key}_: #{lighten($invert, 100%)};
-          } @else {
-            --c-#{$key}_: #{darken($invert, 100%)};
-          }
-        } @else {
-          --c-#{$key}_: #{$val_r};
-        }
-      }
+      @include colorIterator(dark);
     }
   
     html {
@@ -49,22 +37,7 @@ $useDarkColor: true;
   }
 } @else {
   :root {
-  
-    @each $key, $value in var.$colorMap {
-      $val: map-get($value, light);
-      $val_r: map-get($value, light_r);
-      --c-#{$key}: #{$val};
-      @if $val_r == null {
-        $invert: invert(darken($val, 30%));
-        @if lightness($invert)>50 {
-          --c-#{$key}_: #{lighten($invert, 100%)};
-        } @else {
-          --c-#{$key}_: #{darken($invert, 100%)};
-        }
-      } @else {
-        --c-#{$key}_: #{$val_r};
-      }
-    }
+    @include colorIterator(light);
   }
 }
 
