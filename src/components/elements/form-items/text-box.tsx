@@ -39,6 +39,8 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
       switch (dataItem.type) {
         case "number":
           return {
+            $minLength: isSearch ? undefined : dataItem.minLength,
+            $maxLength: dataItem.maxLength,
             $charType: "h-num" as StringCharType,
             $align: dataItem.align,
             $width: dataItem.width,
