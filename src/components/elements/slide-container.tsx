@@ -14,6 +14,7 @@ export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttri
   $defaultMount?: boolean;
   $preventUnmountDeselected?: boolean;
   $bodyColor?: Color;
+  $preventAnimation?: boolean;
   $overlap?: boolean;
   $breadcrumbs?: boolean
   $breadcrumbsPosition?: "top" | "left" | "bottom" | "right";
@@ -39,11 +40,13 @@ const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, r
     for (let i = 0, il = children.length; i < il; i++) {
       const state = calcState(i, current);
       const child = children[i]!;
+      const preventAnimation = props.$preventAnimation === true;
       if (props.$breadcrumbs) {
         breadcrumbs.push(
           <Breadcrumb
             key={i}
             state={state}
+            preventAnimation={preventAnimation}
           >
             {child?.props.label}
           </Breadcrumb>
@@ -56,6 +59,7 @@ const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, r
           color={bodyColor}
           overlap={child.props?.overlap ?? props.$overlap ?? false}
           defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
+          preventAnimation={preventAnimation}
           preventUnmountDeselected={child.props.preventUnmountDeselected ?? props.$preventUnmountDeselected ?? false}
           state={state}
         >
@@ -87,21 +91,26 @@ const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, r
 
 const Breadcrumb: FC<{
   state: SlideState;
+  preventAnimation: boolean;
   children?: ReactNode;
 }> = (props) => {
   const ref = useRef<HTMLDivElement>(null!);
   const [state, setState] = useState<SlideState>(props.state);
 
+  const animationEnd = (target: HTMLDivElement) => {
+    const state = target.getAttribute("data-state") as SlideState;
+    if (state === "next" || state === "after") {
+      target.style.visibility = "hidden";
+      target.style.opacity = "0";
+      target.style.width = "0";
+      target.style.height = "0";
+      target.style.padding = "0";
+    }
+  };
+
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return;
-    const state = e.currentTarget.getAttribute("data-state") as SlideState;
-    if (state === "next" || state === "after") {
-      e.currentTarget.style.visibility = "hidden";
-      e.currentTarget.style.opacity = "0";
-      e.currentTarget.style.width = "0";
-      e.currentTarget.style.height = "0";
-      e.currentTarget.style.padding = "0";
-    }
+    animationEnd(e.currentTarget);
   };
 
   useEffect(() => {
@@ -115,6 +124,12 @@ const Breadcrumb: FC<{
     setState(props.state);
   }, [props.state]);
 
+  useEffect(() => {
+    if (props.preventAnimation) {
+      animationEnd(ref.current);
+    }
+  }, [state]);
+
   return (
     <div
       ref={ref}
@@ -127,7 +142,8 @@ const Breadcrumb: FC<{
         padding: 0,
       }}
       data-state={state}
-      onTransitionEnd={transitionEnd}
+      data-animation={!props.preventAnimation}
+      onTransitionEnd={props.preventAnimation ? undefined : transitionEnd}
     >
       <Text>{props.children}</Text>
     </div>
@@ -139,6 +155,7 @@ const Content: FC<{
   state: SlideState;
   defaultMount: boolean;
   preventUnmountDeselected: boolean;
+  preventAnimation: boolean;
   color: Color;
   overlap: boolean;
   children: ReactNode;
@@ -147,14 +164,18 @@ const Content: FC<{
   const [state, setState] = useState<SlideState>(props.state);
   const [mounted, setMounted] = useState(state === "current" || props.defaultMount);
 
-  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    const state = e.currentTarget.getAttribute("data-state") as SlideState;
+  const animationEnd = (target: HTMLDivElement) => {
+    const state = target.getAttribute("data-state") as SlideState;
     if (state !== "current") {
-      e.currentTarget.style.visibility = "hidden";
+      target.style.visibility = "hidden";
       if (props.preventUnmountDeselected) return;
       setMounted(false);
     }
+  };
+
+  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    animationEnd(e.currentTarget);
   };
 
   useEffect(() => {
@@ -165,6 +186,12 @@ const Content: FC<{
     setState(props.state);
   }, [props.state, props.current]);
 
+  useEffect(() => {
+    if (props.preventAnimation) {
+      animationEnd(ref.current);
+    }
+  }, [state]);
+
   return (
     <div
       ref={ref}
@@ -174,7 +201,8 @@ const Content: FC<{
       }}
       data-state={state}
       data-overlap={props.overlap}
-      onTransitionEnd={transitionEnd}
+      data-animation={!props.preventAnimation}
+      onTransitionEnd={props.preventAnimation ? undefined : transitionEnd}
     >
       {mounted && props.children}
     </div>

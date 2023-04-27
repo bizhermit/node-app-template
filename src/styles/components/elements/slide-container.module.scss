@@ -88,7 +88,10 @@ $vTransitionTime: 0.5s;
     >.body {
       >.content {
         top: 0;
-        transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+
+        &[data-animation="true"] {
+          transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+        }
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -119,7 +122,10 @@ $vTransitionTime: 0.5s;
     >.body {
       >.content {
         top: 0;
-        transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+
+        &[data-animation="true"] {
+          transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+        }
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -150,7 +156,10 @@ $vTransitionTime: 0.5s;
     >.body {
       >.content {
         left: 0;
-        transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+
+        &[data-animation="true"] {
+          transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+        }
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -181,7 +190,10 @@ $vTransitionTime: 0.5s;
     >.body {
       >.content {
         left: 0;
-        transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+
+        &[data-animation="true"] {
+          transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+        }
 
         &[data-state="before"],
         &[data-state="previous"] {
@@ -233,7 +245,10 @@ $vTransitionTime: 0.5s;
   overflow: hidden;
   flex: none;
   opacity: 0;
-  transition: opacity #{$vTransitionTime};
+
+  &[data-animation="true"] {
+    transition: opacity #{$vTransitionTime};
+  }
 
   &[data-state="before"],
   &[data-state="previous"],
