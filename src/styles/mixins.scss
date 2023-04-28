@@ -155,6 +155,7 @@ $listHoverTransition: background-color 0.1s, color 0.1s;
   &[data-disabled="true"] {
     opacity: 0.2;
     cursor: inherit;
+    pointer-events: none;
   }
 
   &:not([data-disabled="true"]) {

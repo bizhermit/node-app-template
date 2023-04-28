@@ -135,6 +135,8 @@ const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<
           $outline={props.$outline}
           $round={props.$round}
           $size={props.$size}
+          $color={props.$color}
+          $fitContent={props.$fitContent}
         >
           {props.children ?? "ファイルを選択"}
         </Button>

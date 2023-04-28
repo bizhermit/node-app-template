@@ -124,7 +124,11 @@ const Page: NextPage = () => {
         $tag="useState"
         $tagPosition="placeholder"
         $value={value}
-        $onChange={v => setValue(v!)}
+        $onChange={v => {
+          console.log("change", v);
+          setValue(v!);
+        }}
+        $onEdit={v => console.log("edit", v)}
         $disabled={disabled}
         $readOnly={readOnly}
         $required
@@ -145,6 +149,8 @@ const Page: NextPage = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         $required
+        $onChange={v => console.log("change", v)}
+        $onEdit={v => console.log("edit", v)}
         // $hideClearButton
         $emptyItem={{
           value: "",
@@ -167,9 +173,9 @@ const Page: NextPage = () => {
         $readOnly={readOnly}
         action="/api/form"
         method="post"
-        // $onSubmit={(data) => {
-        //   console.log(data);
-        // }}
+      // $onSubmit={(data) => {
+      //   console.log(data);
+      // }}
       >
         <SelectBox
           $tag="form bind"
@@ -190,7 +196,7 @@ const Page: NextPage = () => {
             });
           }}
           $disallowInput={disallowInput}
-          $tieInNames={["value", { dataName: "label", hiddenName: "selectBoxLabel"}, "count"]}
+          $tieInNames={["value", { dataName: "label", hiddenName: "selectBoxLabel" }, "count"]}
         />
         <Button type="submit">submit</Button>
       </Form>

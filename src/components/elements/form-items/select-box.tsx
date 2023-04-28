@@ -259,7 +259,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
 
   useEffect(() => {
     setBindSource(source);
-    ctx.change(ctx.valueRef.current, true);
+    ctx.change(ctx.valueRef.current, false, true);
   }, [source]);
 
   useEffect(() => {

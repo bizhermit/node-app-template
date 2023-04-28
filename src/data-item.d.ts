@@ -176,6 +176,8 @@ type DataItem_Number = Readonly<DataItem_Base & {
   validations?: DataItemValidation<number, DataItem_Number>;
   min?: number;
   max?: number;
+  minLength?: number;
+  maxLength?: number;
   float?: number;
   source?: LoadableArray;
   // styles

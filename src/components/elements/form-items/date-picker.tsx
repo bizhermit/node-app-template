@@ -544,13 +544,15 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     return nodes;
   }, [props.$firstWeek, type]);
 
+  const prevYearDisabled = !ctx.editable || year == null || year - 1 < minDate.getFullYear();
   const prevYear = () => {
-    if (year == null) return;
+    if (prevYearDisabled) return;
     setYear(year - 1);
   };
 
+  const nextYearDisabled = !ctx.editable || year == null || year + 1 > maxDate.getFullYear();
   const nextYear = () => {
-    if (year == null) return;
+    if (nextYearDisabled) return;
     setYear(year + 1);
   };
 
@@ -560,15 +562,27 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
     setShowYear(true);
   };
 
+  const prevMonthDisabled = !ctx.editable || month == null || year == null || (() => {
+    let m = month - 1;
+    const y = m < 0 ? year - 1 : year;
+    m = (m + 12) % 12;
+    return y * 100 + m < minDate.getFullYear() * 100 + minDate.getMonth();
+  })();
   const prevMonth = () => {
-    if (month == null || year == null) return;
+    if (prevMonthDisabled) return;
     const m = month - 1;
     if (m < 0) setYear(year - 1);
     setMonth((m + 12) % 12);
   };
 
+  const nextMonthDisabled = !ctx.editable || month == null || year == null || (() => {
+    let m = month + 1;
+    const y = m >= 12 ? year + 1 : year;
+    m = m % 12;
+    return y * 100 + m > maxDate.getFullYear() * 100 + maxDate.getMonth();
+  })();
   const nextMonth = () => {
-    if (month == null || year == null) return;
+    if (nextMonthDisabled) return;
     const m = month + 1;
     if (m >= 12) setYear(year + 1);
     setMonth(m % 12);
@@ -746,6 +760,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
               <div className={Style.label}>
                 <div
                   className={Style.prev}
+                  data-disabled={prevYearDisabled}
                   onClick={prevYear}
                 >
                   <LeftIcon />
@@ -758,6 +773,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
                 </span>
                 <div
                   className={Style.next}
+                  data-disabled={nextYearDisabled}
                   onClick={nextYear}
                 >
                   <RightIcon />
@@ -775,6 +791,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
                 <div className={Style.label}>
                   <div
                     className={Style.prev}
+                    data-disabled={prevMonthDisabled}
                     onClick={prevMonth}
                   >
                     <LeftIcon />
@@ -787,6 +804,7 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
                   </span>
                   <div
                     className={Style.next}
+                    data-disabled={nextMonthDisabled}
                     onClick={nextMonth}
                   >
                     <RightIcon />

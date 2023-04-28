@@ -10,8 +10,10 @@ import { NumberData } from "@/data-items/_base/number";
 import { CrossIcon, DownIcon, UpIcon } from "@/components/elements/icon";
 
 export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
-  $max?: number;
   $min?: number;
+  $max?: number;
+  $minLength?: number;
+  $maxLength?: number;
   $sign?: "only-positive" | "only-negative";
   $float?: number;
   $preventThousandSeparate?: boolean;
@@ -38,11 +40,14 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
   const iref = useRef<HTMLInputElement>(null!);
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem }) => {
+    under: ({ dataItem, method }) => {
+      const isSearch = method === "get";
       switch (dataItem.type) {
         case "string":
           return {
             $min: 0,
+            $minLength: isSearch ? undefined : dataItem.minLength,
+            $maxLength: dataItem.maxLength ?? dataItem.length,
             $float: 0,
             $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v?.toString())),
             $align: dataItem.align || "left",
@@ -54,6 +59,8 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
           return {
             $min: dataItem.min,
             $max: dataItem.max,
+            $minLength: isSearch ? undefined : dataItem.minLength,
+            $maxLength: dataItem.maxLength,
             $float: dataItem.float,
             $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v)),
             $align: dataItem.align,
@@ -262,6 +269,8 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
         disabled={ctx.disabled}
         readOnly={props.$disallowInput || ctx.readOnly}
         tabIndex={props.tabIndex}
+        minLength={props.$minLength}
+        maxLength={props.$maxLength}
         defaultValue={toString(ctx.value)}
         onChange={e => changeImpl(e.target.value)}
         onFocus={focus}

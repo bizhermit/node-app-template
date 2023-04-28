@@ -175,14 +175,14 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
   }, [source, ctx.editable, ctx.value, props.$appearance, outline, ctx.change]);
 
   useEffect(() => {
-    ctx.change(ctx.valueRef.current, true);
+    ctx.change(ctx.valueRef.current, false, true);
   }, [source]);
 
   useEffect(() => {
     if (loading || props.$allowNull || selectedItem != null || source.length === 0) return;
     const v = ctx.valueRef.current ?? props.$defaultValue;
     const target = source.find(item => item[vdn] === v) ?? source[0];
-    ctx.change(target[vdn]);
+    ctx.change(target[vdn], false);
   }, [selectedItem, source, props.$allowNull, ctx.change]);
 
   useEffect(() => {
