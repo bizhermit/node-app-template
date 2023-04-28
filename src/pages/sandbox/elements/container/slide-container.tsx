@@ -15,6 +15,7 @@ const Page: NextPage = () => {
   const [scroll, setScroll] = useState(true);
   const [index, setIndex] = useState(0);
   const [overlap, setOverlap] = useState(false);
+  const [animation, setAnimation] = useState(true);
   const [breadcrumbs, setBreadcrumbs] = useState(false);
 
   return (
@@ -56,6 +57,11 @@ const Page: NextPage = () => {
           $tag="scroll"
           $value={scroll}
           $onChange={v => setScroll(v!)}
+        />
+        <ToggleBox
+          $tag="animation"
+          $value={animation}
+          $onChange={v => setAnimation(v!)}
         />
         {ArrayUtils.generateArray(10, idx => {
           return (
@@ -103,6 +109,7 @@ const Page: NextPage = () => {
         $overlap={overlap}
         $breadcrumbs={breadcrumbs}
         $breadcrumbsPosition={position}
+        $preventAnimation={!animation}
       // $bodyColor="pure"
       // $defaultMount
       // $unmountDeselected

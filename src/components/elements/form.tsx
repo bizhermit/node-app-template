@@ -48,6 +48,7 @@ export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V 
   $messagePosition?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
   $onChange?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data?: U) => void;
+  $onEdit?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data?: U) => void;
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
@@ -105,7 +106,7 @@ const FormContext = createContext<FormContextProps>({
 
 type FormItemMountProps = {
   validation: () => void;
-  change: (value: any | null | undefined, absolute?: boolean) => void;
+  change: (value: any | null | undefined, edit: boolean, absolute?: boolean) => void;
 };
 
 type PlainFormProps = {
@@ -237,8 +238,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     setTimeout(() => {
       Object.keys(items.current).forEach(id => {
         const item = items.current[id];
-        // item.options.effect?.(item.props.$defaultValue);
-        item.change(item.props.$defaultValue);
+        item.change(item.props.$defaultValue, false);
       });
     }, 0);
   };
@@ -439,7 +439,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       const result = validations[i](value, bind, i, getMessage);
       if (result == null || result === "" || result === false) continue;
       if (typeof result === "string") msgs.push(result);
-      msgs.push(getMessage("default"));
+      else msgs.push(getMessage("default"));
       break;
     }
     const msg = msgs[0] || "";
@@ -476,7 +476,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     });
   }, [props?.$error]);
 
-  const change = useCallback((value: ValueType<T, D, V> | null | undefined, absolute?: boolean) => {
+  const change = useCallback((value: ValueType<T, D, V> | null | undefined, edit = true, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
     const before = valueRef.current;
     setCurrentValue(value);
@@ -486,7 +486,13 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     } else {
       validation();
     }
-    props?.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
+    if (props.$onChange != null || (props.$onEdit != null && edit)) {
+      const data = options?.generateChangeCallbackData?.(valueRef.current, before);
+      props?.$onChange?.(valueRef.current, before, data);
+      if (edit) {
+        props?.$onEdit?.(valueRef.current, before, data);
+      }
+    }
   }, [setBind, props?.$onChange, validation, ...(options?.generateChangeCallbackDataDeps ?? [])]);
 
   useEffect(() => {
@@ -686,14 +692,25 @@ export const convertDataItemValidationToFormItemValidation = <T, U, P extends Fo
 
 export const useFormBindState = <T extends any>(name: string, init?: T | (() => T)) => {
   const form = useForm();
-  const state = useState<T>(() => {
+
+  const getBindValue = () => {
     const v = getValue(form.bind, name);
     if (v != null || init == null) return v;
-    return setValue(form.bind, name, init === "function" ? (init as (() => T))() : init);
-  });
+    return typeof init === "function" ? (init as (() => T))() : init;
+  };
+
+  const state = useReducer((s: T, v: (T | ((c: T) => T))) => {
+    return setValue(form.bind, name, typeof v === "function" ? (v as ((c: T) => T))(s) : v);
+  }, undefined, getBindValue);
+
+  useEffect(() => {
+    state[1](getBindValue);
+  }, [form.bind]);
+
   return {
     value: state[0],
-    set: (v: T) => state[1](setValue(form.bind, name, v)),
+    set: state[1],
     name,
+    bind: form.bind,
   } as const;
 };

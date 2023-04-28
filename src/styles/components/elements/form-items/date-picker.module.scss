@@ -20,6 +20,14 @@ $pulldownTransitionTime: 0.5s;
     >.content {
       user-select: none;
 
+      >.yearmonth {
+        >.label {
+          >.text {
+            cursor: pointer;
+          }
+        }
+      }
+
       >.year,
       >.month,
       >.date,
@@ -190,7 +198,6 @@ $pulldownTransitionTime: 0.5s;
   flex: 1;
   height: 100%;
   overflow: visible;
-  cursor: pointer;
 
   >.year,
   >.month {
@@ -226,16 +233,25 @@ $pulldownTransitionTime: 0.5s;
   align-items: center;
   height: 100%;
   width: calc(var(--size) * 0.8);
-  cursor: pointer;
   user-select: none;
   border-radius: var(--radius);
   @include mixins.hoverTransition;
 
-  @include mixins.crossHover {
-    @include mixins.hover;
+  &[data-disabled="true"] {
+    opacity: 0;
+    visibility: hidden;
+    user-select: none;
+  }
 
-    &:active {
-      @include mixins.hoverActive;
+  &[data-disabled="false"] {
+    cursor: pointer;
+
+    @include mixins.crossHover {
+      @include mixins.hover;
+  
+      &:active {
+        @include mixins.hoverActive;
+      }
     }
   }
 }

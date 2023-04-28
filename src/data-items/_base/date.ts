@@ -182,15 +182,15 @@ export namespace DateInput {
   };
 
   export const getMinDate = (props: FCPorps) => {
-    return convertDate(props.$min) ?? new Date(1900, 0, 1);
+    return DatetimeUtils.removeTime(convertDate(props.$min) ?? new Date(1900, 0, 1));
   };
 
   export const getMaxDate = (props: FCPorps) => {
-    return convertDate(props.$max) ?? new Date(2100, 0, 0);
+    return DatetimeUtils.removeTime(convertDate(props.$max) ?? new Date(2100, 0, 0));
   };
 
   export const getInitValue = (props: FCPorps) => {
-    return convertDate(props.$initValue) || DatetimeUtils.removeTime(new Date());
+    return DatetimeUtils.removeTime(convertDate(props.$initValue) || new Date());
   };
 
   export const selectableValidation = (props: FCPorps): ((date: Date) => boolean) => {
