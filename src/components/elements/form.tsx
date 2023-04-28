@@ -696,10 +696,12 @@ export const useFormBindState = <T extends any>(name: string, init?: T | (() => 
   const getBindValue = () => {
     const v = getValue(form.bind, name);
     if (v != null || init == null) return v;
-    return setValue(form.bind, name, init === "function" ? (init as (() => T))() : init);
+    return typeof init === "function" ? (init as (() => T))() : init;
   };
 
-  const state = useState<T>(getBindValue);
+  const state = useReducer((s: T, v: (T | ((c: T) => T))) => {
+    return setValue(form.bind, name, typeof v === "function" ? (v as ((c: T) => T))(s) : v);
+  }, undefined, getBindValue);
 
   useEffect(() => {
     state[1](getBindValue);
@@ -707,7 +709,7 @@ export const useFormBindState = <T extends any>(name: string, init?: T | (() => 
 
   return {
     value: state[0],
-    set: (v: T) => state[1](setValue(form.bind, name, v)),
+    set: state[1],
     name,
     bind: form.bind,
   } as const;
