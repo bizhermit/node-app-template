@@ -439,7 +439,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       const result = validations[i](value, bind, i, getMessage);
       if (result == null || result === "" || result === false) continue;
       if (typeof result === "string") msgs.push(result);
-      msgs.push(getMessage("default"));
+      else msgs.push(getMessage("default"));
       break;
     }
     const msg = msgs[0] || "";
