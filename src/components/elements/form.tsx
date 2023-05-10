@@ -189,7 +189,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
   }, [errors, exErrors]);
 
   const validation = (returnId?: string) => {
-    let errMsg: string | undefined = "";
+    let errMsg: string | undefined = undefined;
     Object.keys(items.current).forEach(id => {
       const ret = items.current[id]?.validation();
       if (returnId === id) errMsg = ret;
@@ -411,7 +411,7 @@ export const useDataItemMergedProps = <T, D extends DataItem | undefined, P exte
   } as P;
 };
 
-export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U extends Struct = {}, P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>>(
+export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U extends Struct = any, P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>>(
   form: ReturnType<typeof useForm>,
   props: P,
   options?: UseFormItemContextOptions<ValueType<T, D, V>, U>
@@ -553,9 +553,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const before = valueRef.current;
     setCurrentValue(getValue(form.bind, name));
     const errorMessage = validation();
-    if (!equals(valueRef.current, before)) {
-      props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
-    }
+    props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
     options?.effect?.(valueRef.current);
   }, [form.bind, props?.$preventFormBind]);
 
@@ -565,9 +563,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const before = valueRef.current;
     setCurrentValue(getValue(props.$bind, name));
     const errorMessage = validation();
-    if (!equals(valueRef.current, before)) {
-      props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
-    }
+    props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
     options?.effect?.(valueRef.current);
   }, [props?.$bind]);
 
@@ -721,7 +717,7 @@ export const multiValidationIterator = (v: any, func: (value: string | number | 
   return "";
 };
 
-export const convertDataItemValidationToFormItemValidation = <T, U, P extends FormItemProps, D extends DataItem, V = P["$value"]>(
+export const convertDataItemValidationToFormItemValidation = <T, U, P extends FormItemProps<T, any, any, any>, D extends DataItem, V = P["$value"]>(
   func: DataItemValidation<any, any>[number],
   props: P,
   $dataItem: D,
