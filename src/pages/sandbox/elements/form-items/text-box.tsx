@@ -100,7 +100,10 @@ const Page: NextPage = () => {
           <Row className="gap-1" $vAlign="bottom">
             <TextBox
               $tag="no item"
-              $onChange={v => console.log("no item: ", v)}
+              $onChange={(a, b, data) => {
+                console.log("no item: ", a);
+                data.errorMessage;
+              }}
             />
             <TextBox
               $tag="string"
