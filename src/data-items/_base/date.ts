@@ -7,7 +7,7 @@ const dateDefaultTypeof: DateValueType = "string";
 
 const dateItem = <
   C extends Omit<DataItem_Date, DataItemKey | "type">
->(ctx?: Readonly<C>) => {
+>(ctx?: C) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "date";
@@ -22,7 +22,7 @@ const dateItem = <
 
 export const monthItem = <
   C extends Omit<DataItem_Date, DataItemKey | "type">
->(ctx?: Readonly<C>) => {
+>(ctx?: C) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "month";
@@ -37,7 +37,7 @@ export const monthItem = <
 
 export const yearItem = <
   C extends Omit<DataItem_Date, DataItemKey | "type">
->(ctx?: Readonly<C>) => {
+>(ctx?: C) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "year";

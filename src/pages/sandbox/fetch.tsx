@@ -15,15 +15,6 @@ import { getDynamicUrlContext } from "@/utilities/url";
 import type { NextPage } from "next";
 import { useState } from "react";
 
-type Data = {
-  [sample_string.name]: DataItemValueType<typeof sample_string, true>;
-  [sample_boolean.name]: DataItemValueType<typeof sample_boolean, true>;
-};
-const _data: Data = {
-  sample_string: "",
-  sample_boolean: false,
-};
-
 const Page: NextPage = () => {
   const api = useFetch();
   const [response, setResponse] = useState({});
@@ -136,7 +127,8 @@ const Page: NextPage = () => {
                   try {
                     const res = await api.get("/fetch", {
                       // id: "id1",
-                      id: 1,
+                      id: null,
+                      // id: 1,
                     });
                     res.data.id;
                     setResponse(res);
@@ -244,7 +236,7 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                  const res = await fetchApi.get("/fetch/[id]", {
+                    const res = await fetchApi.get("/fetch/[id]", {
                       id: 1,
                       hoge: "text",
                       fuga: [1, 2, 3]
@@ -302,7 +294,7 @@ const Page: NextPage = () => {
             <FileDrop
               name="filedrop"
               $multiple
-              style={{ height: "5rem", width: "20rem"}}
+              style={{ height: "5rem", width: "20rem" }}
             />
             <Row className="gap-1">
               <Button type="submit" formMethod="get">get</Button>
