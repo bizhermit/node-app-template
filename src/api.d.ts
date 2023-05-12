@@ -69,5 +69,3 @@ type ImportApi<T extends TypeofApi> = {
 };
 
 type Api = ImportApi<TypeofApi> & _Api<{}>;
-
-type Hoge = Api["/fetch"]["post"]["res"]["data"]
