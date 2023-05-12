@@ -14,7 +14,7 @@ type FormItemMessageFunc = (key: keyof FormItemMessages) => string;
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number, getMessage: FormItemMessageFunc) => (boolean | string | null | undefined);
 
-export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide";
+export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide" | "none";
 
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
@@ -637,7 +637,7 @@ type FormItemWrapProps = FormItemProps<any, any, any, any> & {
 };
 
 export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props, ref) => {
-  const errorNode = props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
+  const errorNode = props.$context.messageDisplayMode !== "none" && props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
       data-mode={props.$context.messageDisplayMode}
@@ -656,7 +656,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
     "data-editable": props.$context.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$context.disabled,
-    "data-error": props.$context.messageDisplayMode === "hide" ? undefined : Boolean(props.$context.error),
+    "data-error": props.$context.messageDisplayMode === "none" ? undefined : Boolean(props.$context.error),
     "data-clickable": props.$clickable,
   };
 
