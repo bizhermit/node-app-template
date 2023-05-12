@@ -135,9 +135,12 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await api.get("/fetch", {
-                      id: "id1",
+                      // id: "id1",
                     });
+                    res.data
                     setResponse(res);
+                    // const res2 = await fetchApi.get("/fetch", { id: "id2" });
+                    // res2.data.
                   } catch {
                     // ignore
                   } finally {
@@ -151,7 +154,7 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await api.post("/fetch", {
-                      sample_string: "hoget",
+                      sample_string: "string",
                       string: "this is string",
                       sample_number: "300",
                       number: "0100",
@@ -195,6 +198,8 @@ const Page: NextPage = () => {
                     res.data.update
                     // console.log(res.messages);
                     // console.log(res.data);
+                    const res2 = await fetchApi.post("/fetch", {});
+                    res2.data.update
                   } catch {
                     // ignore
                   } finally {

@@ -1,6 +1,6 @@
 import useMessage from "@/components/providers/message";
 import { equals } from "@/data-items/utilities";
-import fetchApi, { type FetchOptions } from "@/utilities/fetch-api";
+import fetchApi, { FetchApiResponse, type FetchOptions } from "@/utilities/fetch-api";
 
 const optimizeMessages = (messages: Array<Message>) => {
   const msgs: Array<Message> = [];
@@ -24,12 +24,12 @@ const useFetch = () => {
 
   const handle = async <U extends ApiPath, M extends ApiMethods>(
     url: U,
-    method: ApiMethods,
+    method: M,
     params?: ApiRequest<U, M> | FormData,
     options?: FetchOptions
   ) => {
     try {
-      const res = await fetchApi[method](url, params, options);
+      const res: FetchApiResponse<ApiResponse<U, M>["data"]> = await fetchApi[method](url, params, options);
       const msgs = optimizeMessages(res.messages);
 
       if (res.ok) {

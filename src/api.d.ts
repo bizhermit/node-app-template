@@ -35,7 +35,7 @@ type _Api<A extends {
   };
 }> = A;
 
-type ImportApi<T> = {
+type ImportApi<T extends TypeofApi> = {
   [P in keyof T]: {
     get: {
       req: DataItemValueType<T[P]["default"]["$get"]["req"], false>;
