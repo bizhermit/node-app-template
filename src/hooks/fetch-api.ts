@@ -1,6 +1,6 @@
 import useMessage from "@/components/providers/message";
 import { equals } from "@/data-items/utilities";
-import fetchApi, { type FetchApiResponse, type FetchOptions } from "@/utilities/fetch-api";
+import fetchApi, { type FetchOptions } from "@/utilities/fetch-api";
 
 const optimizeMessages = (messages: Array<Message>) => {
   const msgs: Array<Message> = [];
@@ -22,37 +22,53 @@ const optimizeMessages = (messages: Array<Message>) => {
 const useFetch = () => {
   const msg = useMessage();
 
-  const handle = <T extends FetchApiResponse<any>>(res: T): T => {
-    const msgs = optimizeMessages(res.messages);
-    if (res.ok) {
-      msg.append(msgs);
-      return res;
-    }
-    if (msgs.filter(msg => msg.type === "error").length > 0) {
-      msg.append(msgs);
-    } else {
+  const handle = async <U extends ApiPath, M extends ApiMethods>(
+    url: U,
+    method: ApiMethods,
+    params?: ApiRequest<U, M> | FormData,
+    options?: FetchOptions
+  ) => {
+    try {
+      const res = await fetchApi[method](url, params, options);
+      const msgs = optimizeMessages(res.messages);
+
+      if (res.ok) {
+        msg.append(msgs);
+        return res;
+      }
+
+      if (msgs.filter(msg => msg.type === "error").length > 0) {
+        msg.append(msgs);
+      } else {
+        msg.append({
+          type: "error",
+          title: "システムエラー",
+          body: `[${res.status}] ${res.statusText}`,
+        });
+      }
+    } catch (e) {
       msg.append({
         type: "error",
         title: "システムエラー",
-        body: `[${res.status}] ${res.statusText}`,
+        body: "fetch error"
       });
+      throw e;
     }
-    // throw new Error("fetch api failed.");
-    return res;
+    throw new Error("fetch api error.");
   };
 
   return {
-    get: async <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, options?: FetchOptions) => {
-      return handle(await fetchApi.get<U>(url, params, options));
+    get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, options?: FetchOptions) => {
+      return handle(url, "get", params, options);
     },
-    put: async <U extends ApiPath>(url: U, params?: ApiRequest<U, "put"> | FormData, options?: FetchOptions) => {
-      return handle(await fetchApi.put<U>(url, params, options));
+    put: <U extends ApiPath>(url: U, params?: ApiRequest<U, "put"> | FormData, options?: FetchOptions) => {
+      return handle(url, "put", params, options);
     },
-    post: async <U extends ApiPath>(url: U, params?: ApiRequest<U, "post"> | FormData, options?: FetchOptions) => {
-      return handle(await fetchApi.post<U>(url, params, options));
+    post: <U extends ApiPath>(url: U, params?: ApiRequest<U, "post"> | FormData, options?: FetchOptions) => {
+      return handle(url, "post", params, options);
     },
-    delete: async <U extends ApiPath>(url: U, params?: ApiRequest<U, "delete"> | FormData, options?: FetchOptions) => {
-      return handle(await fetchApi.delete<U>(url, params, options));
+    delete: <U extends ApiPath>(url: U, params?: ApiRequest<U, "delete"> | FormData, options?: FetchOptions) => {
+      return handle(url, "delete", params, options);
     },
   };
 };

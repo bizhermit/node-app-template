@@ -138,6 +138,8 @@ const Page: NextPage = () => {
                       id: "id1",
                     });
                     setResponse(res);
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
@@ -190,8 +192,11 @@ const Page: NextPage = () => {
                       }
                     });
                     setResponse(res);
+                    res.data.update
                     // console.log(res.messages);
                     // console.log(res.data);
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
@@ -205,6 +210,8 @@ const Page: NextPage = () => {
                     const res = await api.put("/fetch", { hoge: 10 });
                     // (await (await fetchApi.get("/notfound")).data);
                     setResponse(res);
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
@@ -217,6 +224,8 @@ const Page: NextPage = () => {
                   try {
                     const res = await api.delete("/fetch", { hoge: 100 });
                     setResponse(res);
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
