@@ -136,8 +136,9 @@ const Page: NextPage = () => {
                   try {
                     const res = await api.get("/fetch", {
                       // id: "id1",
+                      id: 1,
                     });
-                    res.data
+                    res.data.id;
                     setResponse(res);
                     // const res2 = await fetchApi.get("/fetch", { id: "id2" });
                     // res2.data.
@@ -243,12 +244,13 @@ const Page: NextPage = () => {
               <Button
                 $onClick={async (unlock) => {
                   try {
-                    const res = await fetchApi.get("/fetch/[id]", {
+                  const res = await fetchApi.get("/fetch/[id]", {
                       id: 1,
                       hoge: "text",
                       fuga: [1, 2, 3]
                     });
                     setResponse(res);
+                    // res.data.requestData
                   } finally {
                     unlock();
                   }
