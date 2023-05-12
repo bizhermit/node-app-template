@@ -8,11 +8,11 @@ const dateDefaultTypeof: DateValueType = "string";
 const dateItem = <
   C extends Omit<DataItem_Date, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "date";
     typeof: C extends { typeof: infer TypeOf } ? TypeOf : typeof dateDefaultTypeof;
-  }>>({
+  }>({
     typeof: dateDefaultTypeof,
     ...(ctx as any),
     [dataItemKey]: undefined,
@@ -23,11 +23,11 @@ const dateItem = <
 export const monthItem = <
   C extends Omit<DataItem_Date, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "month";
     typeof: C extends { typeof: infer TypeOf } ? TypeOf : typeof dateDefaultTypeof;
-  }>>({
+  }>({
     typeof: dateDefaultTypeof,
     ...(ctx as any),
     [dataItemKey]: undefined,
@@ -38,11 +38,11 @@ export const monthItem = <
 export const yearItem = <
   C extends Omit<DataItem_Date, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "year";
     typeof: C extends { typeof: infer TypeOf } ? TypeOf : typeof dateDefaultTypeof;
-  }>>({
+  }>({
     typeof: dateDefaultTypeof,
     ...(ctx as any),
     [dataItemKey]: undefined,

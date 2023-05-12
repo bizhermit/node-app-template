@@ -5,10 +5,10 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 const stringItem = <
   C extends Omit<DataItem_String, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "string";
-  }>>({
+  }>({
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "string",

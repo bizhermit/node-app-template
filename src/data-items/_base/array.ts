@@ -3,10 +3,10 @@ import { dataItemKey } from "@/data-items/_base";
 const arrayItem = <
   C extends Omit<DataItem_Array, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "array";
-  }>>({
+  }>({
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "array",

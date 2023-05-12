@@ -59,7 +59,7 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
     ) :
     D["type"] extends DataItem_Boolean["type"] ? (
       Strict extends true ? (
-        D extends { required: true } ? (
+        D["required"] extends true ? (
           (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)
         ) : (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined
       ) : (

@@ -6,12 +6,12 @@ const booleanItem = <
   C extends Omit<DataItem_Boolean, DataItemKey | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
   = Omit<DataItem_Boolean, DataItemKey | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "boolean";
     trueValue: C extends { trueValue: infer TrueValue } ? TrueValue : true;
     falseValue: C extends { falseValue: infer FalseValue } ? FalseValue : false;
-  }>>({
+  }>({
     trueValue: true,
     falseValue: false,
     ...(ctx as any),
