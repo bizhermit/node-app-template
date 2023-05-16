@@ -14,7 +14,7 @@ type FormItemMessageFunc = (key: keyof FormItemMessages) => string;
 
 export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number, getMessage: FormItemMessageFunc) => (boolean | string | null | undefined);
 
-export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide";
+export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide" | "none";
 
 const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
   const ret = attributesWithoutChildren(props, ...classNames);
@@ -35,7 +35,7 @@ type InputOmitProps = "name"
   | "color"
   | "onChange"
   | "children";
-export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V = T, U = undefined> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
+export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V = T, U extends Struct = {}> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;
   $disabled?: boolean;
@@ -47,8 +47,8 @@ export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V 
   $value?: ValueType<T, D, V> | null | undefined;
   $messagePosition?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onChange?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data?: U) => void;
-  $onEdit?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data?: U) => void;
+  $onChange?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data: U & { errorMessage: string | undefined }) => void;
+  $onEdit?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data: U & { errorMessage: string | undefined }) => void;
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
@@ -58,7 +58,7 @@ export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V 
   $messages?: Partial<FormItemMessages>;
 };
 
-type UseFormItemContextOptions<T = any, U = undefined> = {
+type UseFormItemContextOptions<T = any, U extends Struct = {}> = {
   effect?: (value: T | null | undefined) => void;
   effectDeps?: Array<any>;
   multiple?: boolean;
@@ -84,9 +84,13 @@ type FormContextProps = {
   hasError: boolean;
   mount: (id: string, itemProps: FormItemProps<any, any, any, any>, mountItemProps: FormItemMountProps, options: UseFormItemContextOptions<any, any>) => string;
   unmount: (name: string) => void;
-  validation: () => void;
+  validation: (returnId: string) => string | undefined;
   messageDisplayMode: FormItemMessageDisplayMode;
   messageWrap?: boolean;
+  getValue: <T>(name: string) => T;
+  setValue: (name: string, value: any, absolute?: boolean) => void;
+  render: (name?: string) => void;
+  getErrorMessages: (name?: string) => Array<string>;
 };
 
 const FormContext = createContext<FormContextProps>({
@@ -100,12 +104,17 @@ const FormContext = createContext<FormContextProps>({
   hasError: false,
   mount: () => "",
   unmount: () => { },
-  validation: () => { },
+  validation: () => undefined,
   messageDisplayMode: "tooltip",
+  // eslint-disable-next-line comma-spacing
+  getValue: <T,>() => undefined as T,
+  setValue: () => { },
+  render: () => { },
+  getErrorMessages: () => [],
 });
 
 type FormItemMountProps = {
-  validation: () => void;
+  validation: () => string | undefined;
   change: (value: any | null | undefined, edit: boolean, absolute?: boolean) => void;
 };
 
@@ -179,10 +188,13 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
       || Object.keys(exErrors).find(key => Boolean(exErrors[key])) != null;
   }, [errors, exErrors]);
 
-  const validation = () => {
+  const validation = (returnId?: string) => {
+    let errMsg: string | undefined = undefined;
     Object.keys(items.current).forEach(id => {
-      items.current[id]?.validation();
+      const ret = items.current[id]?.validation();
+      if (returnId === id) errMsg = ret;
     });
+    return errMsg || undefined;
   };
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -276,6 +288,44 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }
   };
 
+  const get = (name: string) => {
+    if (bind == null) return undefined;
+    return getValue(bind, name);
+  };
+
+  const set = (name: string, value: any) => {
+    if (bind == null) return;
+    const id = Object.keys(items.current).find(id => items.current[id].props.name === name);
+    if (id == null) return;
+    items.current[id]?.change(value, false);
+  };
+
+  const render = (name?: string) => {
+    if (name) {
+      const id = Object.keys(items.current).find(id => items.current[id].props.name === name);
+      if (id == null) return;
+      const item = items.current[id];
+      if (item == null || item.props.name == null) return;
+      item.options?.effect?.(getValue(bind, item.props.name));
+      return;
+    }
+    Object.keys(items.current).forEach(id => {
+      const item = items.current[id];
+      if (item.props.name == null) return;
+      item.options?.effect?.(getValue(bind, item.props.name));
+    });
+  };
+
+  const getErrorMessages = (name?: string) => {
+    if (name) {
+      const id = Object.keys(items.current).find(id => items.current[id].props.name === name);
+      if (id == null) return [];
+      if (id in errors) return [errors[id]];
+      return [];
+    }
+    return Object.keys(items.current).map(id => errors[id]).filter(err => err);
+  };
+
   useEffect(() => {
     if (props.$onError) {
       const e = { ...errors };
@@ -308,6 +358,10 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
       validation,
       messageDisplayMode: props.$messageDisplayMode ?? "tooltip",
       messageWrap: props.$messageWrap,
+      getValue: get,
+      setValue: set,
+      render,
+      getErrorMessages,
     }}>
       <form
         {...attributes(props)}
@@ -357,7 +411,7 @@ export const useDataItemMergedProps = <T, D extends DataItem | undefined, P exte
   } as P;
 };
 
-export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U = undefined, P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>>(
+export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U extends Struct = any, P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>>(
   form: ReturnType<typeof useForm>,
   props: P,
   options?: UseFormItemContextOptions<ValueType<T, D, V>, U>
@@ -459,6 +513,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
         return ret;
       });
     }
+    return msg || undefined;
   }, [validations, form.bind, props?.name, props?.$bind, props?.$preventFormBind, getMessage]);
 
   useEffect(() => {
@@ -481,18 +536,15 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const before = valueRef.current;
     setCurrentValue(value);
     setBind(value);
-    if (props?.$interlockValidation || options?.interlockValidation) {
-      form.validation();
-    } else {
-      validation();
-    }
+    const errorMessage = (props?.$interlockValidation || options?.interlockValidation) ? form.validation(id.current) : validation();
     if (props.$onChange != null || (props.$onEdit != null && edit)) {
-      const data = options?.generateChangeCallbackData?.(valueRef.current, before);
-      props?.$onChange?.(valueRef.current, before, data);
+      const data = options?.generateChangeCallbackData?.(valueRef.current, before) as U;
+      props?.$onChange?.(valueRef.current, before, { ...data, errorMessage });
       if (edit) {
-        props?.$onEdit?.(valueRef.current, before, data);
+        props?.$onEdit?.(valueRef.current, before, { ...data, errorMessage });
       }
     }
+    if (!edit) options?.effect?.(valueRef.current);
   }, [setBind, props?.$onChange, validation, ...(options?.generateChangeCallbackDataDeps ?? [])]);
 
   useEffect(() => {
@@ -500,11 +552,9 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     if (props == null || name == null || form.bind == null || "$bind" in props || "$value" in props || props.$preventFormBind) return;
     const before = valueRef.current;
     setCurrentValue(getValue(form.bind, name));
-    if (!equals(valueRef.current, before)) {
-      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-    }
+    const errorMessage = validation();
+    props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
     options?.effect?.(valueRef.current);
-    validation();
   }, [form.bind, props?.$preventFormBind]);
 
   useEffect(() => {
@@ -512,11 +562,9 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     if (props == null || name == null || props.$bind == null || "$value" in props) return;
     const before = valueRef.current;
     setCurrentValue(getValue(props.$bind, name));
-    if (!equals(valueRef.current, before)) {
-      props.$onChange?.(valueRef.current, before, options?.generateChangeCallbackData?.(valueRef.current, before));
-    }
+    const errorMessage = validation();
+    props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
     options?.effect?.(valueRef.current);
-    validation();
   }, [props?.$bind]);
 
   useEffect(() => {
@@ -589,7 +637,7 @@ type FormItemWrapProps = FormItemProps<any, any, any, any> & {
 };
 
 export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props, ref) => {
-  const errorNode = props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
+  const errorNode = props.$context.messageDisplayMode !== "none" && props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
     <div
       className={Style.error}
       data-mode={props.$context.messageDisplayMode}
@@ -608,7 +656,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
     "data-editable": props.$context.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$context.disabled,
-    "data-error": props.$context.messageDisplayMode === "hide" ? undefined : Boolean(props.$context.error),
+    "data-error": props.$context.messageDisplayMode === "none" ? undefined : Boolean(props.$context.error),
     "data-clickable": props.$clickable,
   };
 
@@ -669,7 +717,7 @@ export const multiValidationIterator = (v: any, func: (value: string | number | 
   return "";
 };
 
-export const convertDataItemValidationToFormItemValidation = <T, U, P extends FormItemProps, D extends DataItem, V = P["$value"]>(
+export const convertDataItemValidationToFormItemValidation = <T, U, P extends FormItemProps<T, any, any, any>, D extends DataItem, V = P["$value"]>(
   func: DataItemValidation<any, any>[number],
   props: P,
   $dataItem: D,
@@ -694,13 +742,15 @@ export const useFormBindState = <T extends any>(name: string, init?: T | (() => 
   const form = useForm();
 
   const getBindValue = () => {
-    const v = getValue(form.bind, name);
+    const v = form.getValue<T>(name);
     if (v != null || init == null) return v;
     return typeof init === "function" ? (init as (() => T))() : init;
   };
 
-  const state = useReducer((s: T, v: (T | ((c: T) => T))) => {
-    return setValue(form.bind, name, typeof v === "function" ? (v as ((c: T) => T))(s) : v);
+  const state = useReducer((state: T, action: (T | ((c: T) => T))) => {
+    const v = setValue(form.bind, name, typeof action === "function" ? (action as ((c: T) => T))(state) : action);
+    form.render(name);
+    return v;
   }, undefined, getBindValue);
 
   useEffect(() => {
