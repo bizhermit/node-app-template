@@ -71,7 +71,7 @@ const useProcess = () => {
   };
   main.ing = state[0];
   main.get = () => ref.current;
-  main.clear = () => waiting.current.splice(0, waiting.current.length);
+  main.cancel = () => waiting.current.splice(0, waiting.current.length);
   main.kill = (all?: boolean) => {
     let count = 0;
     if (running.current) {
@@ -81,7 +81,7 @@ const useProcess = () => {
       count++;
     }
     if (all) {
-      main.clear().forEach(item => {
+      main.cancel().forEach(item => {
         item.reject(new Error("waiting process killed."));
         count++;
       });

@@ -11,7 +11,7 @@ const Page: NextPage = () => {
   const [last, setLast] = useState<number>();
   const [count, setCount] = useState(0);
 
-  const func = async (c: number) => {
+  const func = async (c: number, wait?: boolean) => {
     try {
       const ret = await process(async () => {
         console.log("process", c);
@@ -19,12 +19,12 @@ const Page: NextPage = () => {
           setTimeout(resolve, 1000);
         });
         // if (count % 3 === 2) throw new Error("world of nabeatsu");
-        setLast(c);
         return c;
       }, {
-        // wait: true,
-        wait: count % 3 !== 2,
+        wait,
+        // wait: count % 3 !== 2,
       });
+      setLast(ret);
       console.log("done", ret);
     } catch (e) {
       console.log("error", c, e);
@@ -43,18 +43,27 @@ const Page: NextPage = () => {
           $onClick={() => {
             setCount(count + 1);
             func(count + 1);
-            // setCount(count + 2);
-            // func(count + 2);
           }}
         >
-          add process: {count}
+          add sync process
         </Button>
         <Button
           $onClick={() => {
-            console.log("clear", process.clear());
+            setCount(count + 1);
+            func(count + 1, true);
           }}
         >
-          clear queue
+          add wait process
+        </Button>
+        <Text>{count}</Text>
+      </Row>
+      <Row className="gap-2">
+        <Button
+          $onClick={() => {
+            console.log("cancel", process.cancel());
+          }}
+        >
+          cancel waiting
         </Button>
         <Button
           $onClick={() => {
@@ -68,7 +77,7 @@ const Page: NextPage = () => {
             console.log("kill all: ", process.kill(true));
           }}
         >
-          kill all process
+          kill running process & cancel waiting
         </Button>
       </Row>
     </div>
