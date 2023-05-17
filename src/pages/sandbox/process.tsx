@@ -16,13 +16,17 @@ const Page: NextPage = () => {
       const ret = await process(async () => {
         console.log("process", c);
         await new Promise<void>(resolve => {
-          setTimeout(resolve, 1000);
+          setTimeout(resolve, 2000);
         });
         // if (count % 3 === 2) throw new Error("world of nabeatsu");
         return c;
       }, {
         wait,
         // wait: count % 3 !== 2,
+        // killRunning: !wait,
+        // killAll: !wait,
+        // cutIn: !wait,
+        // cutIn: true,
       });
       setLast(ret);
       console.log("done", ret);

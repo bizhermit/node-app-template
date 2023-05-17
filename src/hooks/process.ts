@@ -11,6 +11,10 @@ type ProcessItem = {
 
 type Options = {
   wait?: boolean;
+  killRunning?: boolean;
+  killAll?: boolean;
+  cancelWaiting?: boolean;
+  cutIn?: boolean;
 };
 
 const useProcess = () => {
@@ -51,17 +55,45 @@ const useProcess = () => {
     });
   };
 
+  const cancel = () => {
+    return waiting.current.splice(0, waiting.current.length);
+  };
+
+  const kill = (all?: boolean, preventListen?: boolean) => {
+    let count = 0;
+    if (running.current) {
+      running.current.reject(new Error("running process killed."));
+      running.current = undefined;
+      completed();
+      count++;
+    }
+    if (all) {
+      cancel().forEach(item => {
+        item.reject(new Error("waiting process killed."));
+        count++;
+      });
+    }
+    if (all !== true && preventListen !== true) listen();
+    return count;
+  };
+
+
   const main = <T>(func: ProcessFunc<T>, options?: Options) => {
     if (func == null) throw new Error("no process");
-    if (ref.current && options?.wait !== true) throw new Error("other process running.");
+    if (options?.killRunning || options?.killAll) kill(options?.killAll, true);
+    if (options?.cancelWaiting) cancel();
+    if (ref.current && options?.wait !== true) {
+      throw new Error("other process running.");
+    }
 
     const item: ProcessItem = {
       id: StringUtils.generateUuidV4(),
       func,
-      resolve: () => {},
-      reject: () => {},
+      resolve: () => { },
+      reject: () => { },
     };
-    waiting.current.push(item);
+    if (options?.cutIn) waiting.current.unshift(item);
+    else waiting.current.push(item);
 
     if (!ref.current) listen();
     return new Promise<T>((resolve, reject) => {
@@ -71,25 +103,9 @@ const useProcess = () => {
   };
   main.ing = state[0];
   main.get = () => ref.current;
-  main.cancel = () => waiting.current.splice(0, waiting.current.length);
-  main.kill = (all?: boolean) => {
-    let count = 0;
-    if (running.current) {
-      running.current.reject(new Error("running process killed."));
-      running.current = undefined;
-      completed();
-      count++;
-    }
-    if (all) {
-      main.cancel().forEach(item => {
-        item.reject(new Error("waiting process killed."));
-        count++;
-      });
-    }
-    listen();
-    return count;
-  };
+  main.cancel = cancel;
+  main.kill = kill;
+
   return main;
 };
-
 export default useProcess;
