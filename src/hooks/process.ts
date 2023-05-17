@@ -16,8 +16,10 @@ const useProcess = (listenInterval = defaultInterval) => {
   const waitQueue = useRef<Array<{ id: string; func: ProcessFunc<any> }>>([]);
   const returnQueue = useRef<{ [id: string]: { ret?: any; err?: any; } }>({});
   const listenId = useRef(0);
+  const lastFuncId = useRef<string>();
 
-  const begin = () => {
+  const begin = (funcId: string) => {
+    lastFuncId.current = funcId;
     ref.current = true;
     state[1](true);
   };
@@ -43,16 +45,19 @@ const useProcess = (listenInterval = defaultInterval) => {
       completed();
       return;
     }
-    begin();
+    begin(item.id);
     item.func().then((ret) => {
+      if (lastFuncId.current !== item.id) return;
       if (lid === listenId.current) {
         returnQueue.current[item.id] = { ret };
         return;
       }
       returnQueue.current[item.id] = { err: new Error("process killed.") };
     }).catch((err) => {
+      if (lastFuncId.current !== item.id) return;
       returnQueue.current[item.id] = { err };
     }).finally(() => {
+      if (lastFuncId.current !== item.id) return;
       completed();
       listen(lid);
     });
@@ -87,12 +92,21 @@ const useProcess = (listenInterval = defaultInterval) => {
   main.get = () => ref.current;
   main.clear = () => waitQueue.current.splice(0, waitQueue.current.length);
   main.kill = (all?: boolean) => {
+    let count = 0;
     if (all) {
       main.clear().forEach(item => {
         returnQueue.current[item.id] = { err: new Error("process killed.") };
+        count++;
       });
     }
+    if (lastFuncId.current) {
+      returnQueue.current[lastFuncId.current] = { err: new Error("process killed.") };
+      lastFuncId.current = undefined;
+      completed();
+      count++;
+    }
     listen(++listenId.current);
+    return count;
   };
   return main;
 };

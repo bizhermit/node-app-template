@@ -46,21 +46,21 @@ const Page: NextPage = () => {
         </Button>
         <Button
           $onClick={() => {
-            console.log(process.clear());
+            console.log("clear", process.clear());
           }}
         >
           clear queue
         </Button>
         <Button
           $onClick={() => {
-            console.log(process.kill());
+            console.log("kill: ", process.kill());
           }}
         >
           kill running process
         </Button>
         <Button
           $onClick={() => {
-            console.log(process.kill(true));
+            console.log("kill all: ", process.kill(true));
           }}
         >
           kill all process
