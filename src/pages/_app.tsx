@@ -288,6 +288,11 @@ const Navigation: FC = () => {
           label: "Storage",
           icon: "S",
           pathname: "/sandbox/storage"
+        }, {
+          key: "process",
+          label: "Process",
+          icon: "P",
+          pathname: "/sandbox/process"
         }]
       }]}
     />

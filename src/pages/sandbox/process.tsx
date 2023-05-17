@@ -1,0 +1,73 @@
+import Button from "@/components/elements/button";
+import Loading from "@/components/elements/loading";
+import Row from "@/components/elements/row";
+import Text from "@/components/elements/text";
+import useProcess from "@/hooks/process";
+import type { NextPage } from "next";
+import { useState } from "react";
+
+const Page: NextPage = () => {
+  const process = useProcess(100);
+  const [last, setLast] = useState<number>();
+  const [count, setCount] = useState(0);
+
+  const func = async (c: number) => {
+    try {
+      const ret = await process(async () => {
+        await new Promise<void>(resolve => {
+          setTimeout(resolve, 2000);
+        });
+        // if (count % 3 === 2) throw new Error("world of nabeatsu");
+        return c;
+      }, {
+        // wait: false,
+        // collectListenInterval: 50,
+      });
+      console.log("done", ret);
+      setLast(ret);
+    } catch (e) {
+      console.log("error", c, e);
+    }
+  };
+
+  return (
+    <div className="flex-start p-2 gap-2">
+      {process.ing && <Loading />}
+      <Text>processing: {String(process.ing)}</Text>
+      <Text>last: {last}</Text>
+      <Row className="gap-2">
+        <Button
+          $onClick={() => {
+            setCount(count + 1);
+            func(count + 1);
+          }}
+        >
+          add process: {count}
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(process.clear());
+          }}
+        >
+          clear queue
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(process.kill());
+          }}
+        >
+          kill running process
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(process.kill(true));
+          }}
+        >
+          kill all process
+        </Button>
+      </Row>
+    </div>
+  );
+};
+
+export default Page;
