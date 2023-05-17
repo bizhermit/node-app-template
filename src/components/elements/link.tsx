@@ -1,4 +1,4 @@
-import { attributes, isNotReactNode, isReactNode } from "@/components/utilities/attributes";
+import { attributes, isReactNode } from "@/components/utilities/attributes";
 import Link, { type LinkProps } from "next/link";
 import type { UrlObject } from "url";
 import type { AnchorHTMLAttributes, ElementType, FC, ReactNode } from "react";
@@ -15,25 +15,13 @@ export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<
 const NextLink: FC<NextLinkProps> = (props) => {
   const attrs = attributes(props, props.$noDecoration ? "no-decoration" : undefined);
   const href = attrs.href?.toString();
-  const disabled = (() => {
-    if (props.$disabled) return true;
-    if (props.children == null) return true;
-    if (isNotReactNode(props.children)) return false;
-    if ("props" in props.children) {
-      return props.children.props.disabled === true;
-    }
-    return false;
-  })();
 
-  if (StringUtils.isEmpty(href) || disabled) {
-    if (props.$tag == null && isReactNode(props.children)) {
-      return <>{props.children}</>;
-    }
-    const Tag = props.$tag ?? "span";
+  if (StringUtils.isEmpty(href) || props.$disabled) {
+    const Tag = props.$tag ?? (isReactNode(props.children) ? "div" : "span");
     return <Tag {...attrs} />;
   }
 
-  if (href.startsWith("http")) {
+  if (/^(http|tel:|mailto:)/.test(href)) {
     return (
       <a
         {...attrs}
