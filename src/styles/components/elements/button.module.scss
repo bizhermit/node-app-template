@@ -20,6 +20,11 @@ $buttonSize: (
   border-radius: var(--radius);
   outline: none;
 
+  &.link {
+    width: 100%;
+    height: 100%;
+  }
+
   &:not(:disabled) {
     cursor: pointer;
 
