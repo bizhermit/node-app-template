@@ -77,7 +77,6 @@ const useProcess = () => {
     return count;
   };
 
-
   const main = <T>(func: ProcessFunc<T>, options?: Options) => {
     if (func == null) throw new Error("no process");
     if (options?.killRunning || options?.killAll) kill(options?.killAll, true);
