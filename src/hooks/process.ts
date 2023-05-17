@@ -2,111 +2,91 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { useRef, useState } from "react";
 
 type ProcessFunc<T> = (() => Promise<T>);
+type ProcessItem = {
+  id: string;
+  func: ProcessFunc<any>;
+  resolve: (v: any) => void;
+  reject: (err: any) => void;
+};
 
 type Options = {
   wait?: boolean;
-  collectListenInterval?: number;
 };
 
-const defaultInterval = 200;
-
-const useProcess = (listenInterval = defaultInterval) => {
+const useProcess = () => {
   const ref = useRef(false);
   const state = useState(ref.current);
-  const waitQueue = useRef<Array<{ id: string; func: ProcessFunc<any> }>>([]);
-  const returnQueue = useRef<{ [id: string]: { ret?: any; err?: any; } }>({});
-  const listenId = useRef(0);
-  const runningFuncId = useRef<string>();
+  const waiting = useRef<Array<ProcessItem>>([]);
+  const running = useRef<ProcessItem>();
 
-  const begin = (funcId: string) => {
-    runningFuncId.current = funcId;
+  const begin = (item: ProcessItem) => {
+    running.current = item;
     ref.current = true;
     state[1](true);
   };
 
   const completed = () => {
-    runningFuncId.current = undefined;
+    running.current = undefined;
     ref.current = false;
     state[1](false);
   };
 
-  const listen = (lid: number) => {
-    if (lid !== listenId.current) {
-      completed();
-      return;
-    }
-    if (ref.current) {
-      setTimeout(() => {
-        listen(lid);
-      }, listenInterval);
-      return;
-    }
-    const item = waitQueue.current.shift();
+  const listen = () => {
+    const item = waiting.current.shift();
     if (item == null) {
       completed();
       return;
     }
-    begin(item.id);
-    item.func().then((ret) => {
-      if (runningFuncId.current !== item.id) return;
-      if (lid === listenId.current) {
-        returnQueue.current[item.id] = { ret };
-        return;
-      }
-      returnQueue.current[item.id] = { err: new Error("process killed.") };
-    }).catch((err) => {
-      if (runningFuncId.current !== item.id) return;
-      returnQueue.current[item.id] = { err };
+    begin(item);
+    item.func().then(ret => {
+      if (running.current?.id !== item.id) return;
+      item.resolve(ret);
+    }).catch(e => {
+      if (running.current?.id !== item.id) return;
+      item.reject(e);
     }).finally(() => {
-      if (runningFuncId.current !== item.id) return;
+      if (running.current?.id !== item.id) return;
       completed();
-      listen(lid);
+      listen();
     });
   };
 
   const main = <T>(func: ProcessFunc<T>, options?: Options) => {
     if (func == null) throw new Error("no process");
-    if (ref.current && options?.wait === false) throw new Error("other process running.");
+    if (ref.current && options?.wait !== true) throw new Error("other process running.");
 
-    const id = StringUtils.generateUuidV4();
-    waitQueue.current.push({ id, func });
+    const item: ProcessItem = {
+      id: StringUtils.generateUuidV4(),
+      func,
+      resolve: () => {},
+      reject: () => {},
+    };
+    waiting.current.push(item);
 
-    if (!ref.current) listen(++listenId.current);
-    const collectListenInterval = Math.max(10, options?.collectListenInterval ?? listenInterval);
+    if (!ref.current) listen();
     return new Promise<T>((resolve, reject) => {
-      const endListen = () => {
-        if (!(id in returnQueue.current)) {
-          setTimeout(endListen, collectListenInterval);
-          return;
-        }
-        const { ret, err } = returnQueue.current[id];
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(ret as T);
-      };
-      endListen();
+      item.resolve = resolve;
+      item.reject = reject;
     });
   };
   main.ing = state[0];
   main.get = () => ref.current;
-  main.clear = () => waitQueue.current.splice(0, waitQueue.current.length);
+  main.clear = () => waiting.current.splice(0, waiting.current.length);
   main.kill = (all?: boolean) => {
     let count = 0;
-    if (all) {
-      main.clear().forEach(item => {
-        returnQueue.current[item.id] = { err: new Error("process killed.") };
-        count++;
-      });
-    }
-    if (runningFuncId.current) {
-      returnQueue.current[runningFuncId.current] = { err: new Error("process killed.") };
-      runningFuncId.current = undefined;
+    if (running.current) {
+      running.current.reject(new Error("running process killed."));
+      running.current = undefined;
       completed();
       count++;
     }
-    listen(++listenId.current);
+    if (all) {
+      main.clear().forEach(item => {
+        item.reject(new Error("waiting process killed."));
+        count++;
+      });
+    }
+    listen();
     return count;
   };
   return main;

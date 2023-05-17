@@ -7,26 +7,29 @@ import type { NextPage } from "next";
 import { useState } from "react";
 
 const Page: NextPage = () => {
-  const process = useProcess(100);
+  const process = useProcess();
   const [last, setLast] = useState<number>();
   const [count, setCount] = useState(0);
 
   const func = async (c: number) => {
     try {
       const ret = await process(async () => {
+        console.log("process", c);
         await new Promise<void>(resolve => {
-          setTimeout(resolve, 2000);
+          setTimeout(resolve, 1000);
         });
         // if (count % 3 === 2) throw new Error("world of nabeatsu");
+        setLast(c);
         return c;
       }, {
-        // wait: false,
-        // collectListenInterval: 50,
+        // wait: true,
+        wait: count % 3 !== 2,
       });
       console.log("done", ret);
-      setLast(ret);
     } catch (e) {
       console.log("error", c, e);
+    } finally {
+      console.log("finally", c);
     }
   };
 
@@ -40,6 +43,8 @@ const Page: NextPage = () => {
           $onClick={() => {
             setCount(count + 1);
             func(count + 1);
+            // setCount(count + 2);
+            // func(count + 2);
           }}
         >
           add process: {count}
