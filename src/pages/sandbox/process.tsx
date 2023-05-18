@@ -11,7 +11,7 @@ const Page: NextPage = () => {
   const [last, setLast] = useState<number>();
   const [count, setCount] = useState(0);
 
-  const func = async (c: number, wait?: boolean) => {
+  const func = async (c: number, wait?: boolean, key?: string) => {
     try {
       const ret = await process(async () => {
         console.log("process", c);
@@ -21,8 +21,10 @@ const Page: NextPage = () => {
         // if (count % 3 === 2) throw new Error("world of nabeatsu");
         return c;
       }, {
-        wait,
-        key: "process1",
+        key: key ?? "process1",
+        // wait,
+        // wait: "keyUnique",
+        // wait: "keyMonopoly",
         // wait: count % 3 !== 2,
         // killRunning: !wait,
         // killAll: !wait,
@@ -80,6 +82,14 @@ const Page: NextPage = () => {
           }}
         >
           add wait process
+        </Button>
+        <Button
+          $onClick={() => {
+            setCount(count + 1);
+            func(count + 1, true, "process2");
+          }}
+        >
+          add wait process as other key
         </Button>
         <Text>{count}</Text>
       </Row>

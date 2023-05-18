@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 
 type Options<T> = {
   key?: string;
-  wait?: boolean;
+  wait?: boolean | "keyUnique" | "keyMonopoly";
   killRunning?: boolean;
   killAll?: boolean;
   cancelWaiting?: boolean;
@@ -115,12 +115,23 @@ const useProcess = () => {
     }
     if (options?.killRunning || options?.killAll) kill(options?.killAll, true);
     if (options?.cancelWaiting) cancel();
-    if (ref.current && options?.wait !== true) {
-      const err = new Error("other process running.");
-      options?.blocked?.({ hasSameKey: hasKey(options?.key), waitingLength: waiting.current.length });
-      options?.catch?.(err);
-      options?.finally?.(false);
-      throw err;
+    if (ref.current) {
+      const blocked = () => {
+        const err = new Error("other process running.");
+        options?.blocked?.({ hasSameKey: hasKey(options?.key), waitingLength: waiting.current.length });
+        options?.catch?.(err);
+        options?.finally?.(false);
+        return err;
+      };
+      if (options?.wait === "keyUnique") {
+        if (hasKey(options?.key)) throw blocked();
+      } else if (options?.wait === "keyMonopoly") {
+        if (running.current?.opts?.key !== options?.key || waiting.current.some(item => item.opts?.key !== options?.key)) {
+          throw blocked();
+        }
+      } else if (!options?.wait) {
+        throw blocked();
+      }
     }
 
     const item: ProcessItem = {
