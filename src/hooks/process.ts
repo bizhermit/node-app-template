@@ -2,13 +2,14 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { useRef, useState } from "react";
 
 type Options<T> = {
+  key?: string;
   wait?: boolean;
   killRunning?: boolean;
   killAll?: boolean;
   cancelWaiting?: boolean;
   cutIn?: boolean;
   then?: (ret: T) => void;
-  blocked?: (waitingLength: number) => void;
+  blocked?: (context: { hasSameKey: boolean; waitingLength: number }) => void;
   killed?: () => void;
   canceled?: () => void;
   catch?: (err: any) => void;
@@ -99,6 +100,12 @@ const useProcess = () => {
     return count;
   };
 
+  const hasKey = (key?: string) => {
+    if (!key) return false;
+    if (running.current?.opts?.key === key) return true;
+    return waiting.current.some(item => item.opts?.key === key);
+  };
+
   const main = <T>(func: ProcessFunc<T>, options?: Options<T>) => {
     if (func == null) {
       const err = new Error("no process");
@@ -110,7 +117,7 @@ const useProcess = () => {
     if (options?.cancelWaiting) cancel();
     if (ref.current && options?.wait !== true) {
       const err = new Error("other process running.");
-      options?.blocked?.(waiting.current.length);
+      options?.blocked?.({ hasSameKey: hasKey(options?.key), waitingLength: waiting.current.length });
       options?.catch?.(err);
       options?.finally?.(false);
       throw err;
@@ -136,6 +143,8 @@ const useProcess = () => {
   main.get = () => ref.current;
   main.cancel = cancel;
   main.kill = kill;
+  main.getWaitingLength = () => waiting.current.length;
+  main.hasKey = hasKey;
 
   return main;
 };

@@ -22,6 +22,7 @@ const Page: NextPage = () => {
         return c;
       }, {
         wait,
+        key: "process1",
         // wait: count % 3 !== 2,
         // killRunning: !wait,
         // killAll: !wait,
@@ -30,8 +31,8 @@ const Page: NextPage = () => {
         then: (ret) => {
           console.log("p:done", ret);
         },
-        blocked: (waitingLength) => {
-          console.log("p:blocked", c, waitingLength);
+        blocked: (context) => {
+          console.log("p:blocked", c, context);
         },
         killed: () => {
           console.log("p:killed", c);
@@ -40,7 +41,7 @@ const Page: NextPage = () => {
           console.log("p:canceled", c);
         },
         catch: (err) => {
-          console.log("p:catch", c, err);
+          console.log("p:catch", c);
         },
         finally: (succeeded) => {
           console.log("p:finally", c, succeeded);
@@ -52,7 +53,7 @@ const Page: NextPage = () => {
       setLast(ret);
       console.log("done", ret);
     } catch (e) {
-      console.log("error", c, e);
+      console.log("error", c);
     } finally {
       console.log("finally", c);
     }
