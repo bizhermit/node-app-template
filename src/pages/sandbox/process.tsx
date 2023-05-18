@@ -25,9 +25,12 @@ const Page: NextPage = () => {
         // wait,
         // wait: "keyUnique",
         // wait: "keyMonopoly",
-        // wait: count % 3 !== 2,
-        // killRunning: !wait,
-        // killAll: !wait,
+        wait,
+        kill: "sameKey",
+        cancel: "sameKey",
+        // wait,
+        // kill: "otherKey",
+        // cancel: "otherKey",
         // cutIn: !wait,
         // cutIn: true,
         then: (ret) => {
@@ -48,8 +51,8 @@ const Page: NextPage = () => {
         finally: (succeeded) => {
           console.log("p:finally", c, succeeded);
         },
-        done: (succeeded) => {
-          console.log("p:done", c, succeeded);
+        finished: (succeeded) => {
+          console.log("p:finished", c, succeeded);
         },
       });
       setLast(ret);
@@ -96,21 +99,21 @@ const Page: NextPage = () => {
       <Row className="gap-2">
         <Button
           $onClick={() => {
-            console.log("cancel", process.cancel());
+            console.log("- cancel", process.cancel());
           }}
         >
           cancel waiting
         </Button>
         <Button
           $onClick={() => {
-            console.log("kill: ", process.kill());
+            console.log("- kill: ", process.kill());
           }}
         >
           kill running process
         </Button>
         <Button
           $onClick={() => {
-            console.log("kill all: ", process.kill(true));
+            console.log("- kill all: ", process.destory());
           }}
         >
           kill running process & cancel waiting

@@ -1,12 +1,14 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { useRef, useState } from "react";
 
+type ProcessKillMode = "sameKey" | "otherKey";
+type ProcessCancelMode = "sameKey" | "otherKey";
+
 type Options<T> = {
   key?: string;
   wait?: boolean | "keyUnique" | "keyMonopoly";
-  killRunning?: boolean;
-  killAll?: boolean;
-  cancelWaiting?: boolean;
+  kill?: boolean | ProcessKillMode;
+  cancel?: boolean | ProcessCancelMode;
   cutIn?: boolean;
   then?: (ret: T) => void;
   blocked?: (context: { hasSameKey: boolean; waitingLength: number }) => void;
@@ -14,7 +16,7 @@ type Options<T> = {
   canceled?: () => void;
   catch?: (err: any) => void;
   finally?: (succeeded: boolean) => void;
-  done?: (succeeded: boolean) => void;
+  finished?: (succeeded: boolean) => void;
 };
 
 type ProcessFunc<T> = (() => Promise<T>);
@@ -53,16 +55,24 @@ const useProcess = () => {
     begin(item);
     item.func().then(ret => {
       if (running.current?.id !== item.id) return;
-      item.opts?.then?.(ret);
-      item.opts?.finally?.(true);
-      item.opts?.done?.(true);
-      item.resolve(ret);
-    }).catch(e => {
+      try {
+        item.opts?.then?.(ret);
+        item.opts?.finally?.(true);
+        item.opts?.finished?.(true);
+        item.resolve(ret);
+      } catch (e) {
+        item.reject(e);
+      }
+    }).catch(err => {
       if (running.current?.id !== item.id) return;
-      item.opts?.catch?.(e);
-      item.opts?.finally?.(false);
-      item.opts?.done?.(false);
-      item.reject(e);
+      try {
+        item.opts?.catch?.(err);
+        item.opts?.finally?.(false);
+        item.opts?.finished?.(false);
+        item.reject(err);
+      } catch (e) {
+        item.reject(e);
+      }
     }).finally(() => {
       if (running.current?.id !== item.id) return;
       completed();
@@ -70,34 +80,79 @@ const useProcess = () => {
     });
   };
 
-  const cancel = () => {
-    return waiting.current.splice(0, waiting.current.length);
+  const kill = (mode?: ProcessKillMode, key?: string, preventListen?: boolean) => {
+    if (running.current == null) return 0;
+
+    switch (mode) {
+      case "sameKey":
+        if (running.current.opts?.key !== key) return 0;
+        break;
+      case "otherKey":
+        if (running.current.opts?.key === key) return 0;
+        break;
+      default:
+        break;
+    }
+
+    try {
+      const err = new Error("running process killed.");
+      running.current!.opts?.killed?.();
+      running.current!.opts?.catch?.(err);
+      running.current!.opts?.finally?.(false);
+      running.current!.reject(err);
+    } catch (e) {
+      running.current!.reject(e);
+    }
+
+    completed();
+    if (!preventListen) listen();
+    return 1;
   };
 
-  const kill = (all?: boolean, preventListen?: boolean) => {
+  const cancel = (mode?: ProcessCancelMode, key?: string) => {
     let count = 0;
-    if (running.current) {
-      const err = new Error("running process killed.");
-      running.current.reject(err);
-      running.current?.opts?.killed?.();
-      running.current.opts?.catch?.(err);
-      running.current.opts?.finally?.(false);
-      running.current = undefined;
-      completed();
-      count++;
-    }
-    if (all) {
-      cancel().forEach(item => {
-        const err = new Error("waiting process killed.");
-        item.reject(err);
+    const canceled = (item: ProcessItem) => {
+      const err = new Error("waiting process cancel.");
+      try {
         item.opts?.canceled?.();
         item.opts?.catch?.(err);
         item.opts?.finally?.(false);
-        count++;
-      });
+        item.reject(err);
+      } catch (e) {
+        item.reject(e);
+      }
+      count++;
+    };
+    if (mode) {
+      for (let i = waiting.current.length - 1; i >= 0; i--) {
+        const item = waiting.current[i];
+        if (item == null) continue;
+        switch (mode) {
+          case "sameKey":
+            if (item.opts?.key !== key) continue;
+            break;
+          case "otherKey":
+            if (item.opts?.key === key) continue;
+            break;
+        }
+        canceled(item);
+        waiting.current.splice(i, 1);
+      }
+      return count;
     }
-    if (all !== true && preventListen !== true) listen();
+    waiting.current.forEach(item => canceled(item));
+    waiting.current.splice(0, waiting.current.length);
     return count;
+  };
+
+  const destory = (mode?: ProcessKillMode, key?: string) => {
+    const killCount = kill(mode, key, true);
+    const cancelCount = cancel(mode, key);
+    if (killCount > 0) listen();
+    return {
+      killed: killCount,
+      canceled: cancelCount,
+    };
   };
 
   const hasKey = (key?: string) => {
@@ -113,15 +168,25 @@ const useProcess = () => {
       options?.finally?.(false);
       throw err;
     }
-    if (options?.killRunning || options?.killAll) kill(options?.killAll, true);
-    if (options?.cancelWaiting) cancel();
-    if (ref.current) {
+
+    if (options?.kill) {
+      kill(options.kill === true ? undefined : options.kill, options.key, true);
+    }
+    if (options?.cancel) {
+      cancel(options.cancel === true ? undefined : options.cancel, options.key);
+    }
+
+    if (ref.current || waiting.current.length > 0) {
       const blocked = () => {
-        const err = new Error("other process running.");
-        options?.blocked?.({ hasSameKey: hasKey(options?.key), waitingLength: waiting.current.length });
-        options?.catch?.(err);
-        options?.finally?.(false);
-        return err;
+        try {
+          const err = new Error("other process running.");
+          options?.blocked?.({ hasSameKey: hasKey(options?.key), waitingLength: waiting.current.length });
+          options?.catch?.(err);
+          options?.finally?.(false);
+          return err;
+        } catch (e) {
+          return e;
+        }
       };
       if (options?.wait === "keyUnique") {
         if (hasKey(options?.key)) throw blocked();
@@ -152,8 +217,9 @@ const useProcess = () => {
   };
   main.ing = state[0];
   main.get = () => ref.current;
+  main.kill = (mode?: ProcessKillMode, key?: string) => kill(mode, key);
   main.cancel = cancel;
-  main.kill = kill;
+  main.destory = destory;
   main.getWaitingLength = () => waiting.current.length;
   main.hasKey = hasKey;
 
