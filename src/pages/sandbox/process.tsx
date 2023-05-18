@@ -27,6 +27,27 @@ const Page: NextPage = () => {
         // killAll: !wait,
         // cutIn: !wait,
         // cutIn: true,
+        then: (ret) => {
+          console.log("p:done", ret);
+        },
+        blocked: (waitingLength) => {
+          console.log("p:blocked", c, waitingLength);
+        },
+        killed: () => {
+          console.log("p:killed", c);
+        },
+        canceled: () => {
+          console.log("p:canceled", c);
+        },
+        catch: (err) => {
+          console.log("p:catch", c, err);
+        },
+        finally: (succeeded) => {
+          console.log("p:finally", c, succeeded);
+        },
+        done: (succeeded) => {
+          console.log("p:done", c, succeeded);
+        },
       });
       setLast(ret);
       console.log("done", ret);

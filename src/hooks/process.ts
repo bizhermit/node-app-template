@@ -1,20 +1,28 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { useRef, useState } from "react";
 
-type ProcessFunc<T> = (() => Promise<T>);
-type ProcessItem = {
-  id: string;
-  func: ProcessFunc<any>;
-  resolve: (v: any) => void;
-  reject: (err: any) => void;
-};
-
-type Options = {
+type Options<T> = {
   wait?: boolean;
   killRunning?: boolean;
   killAll?: boolean;
   cancelWaiting?: boolean;
   cutIn?: boolean;
+  then?: (ret: T) => void;
+  blocked?: (waitingLength: number) => void;
+  killed?: () => void;
+  canceled?: () => void;
+  catch?: (err: any) => void;
+  finally?: (succeeded: boolean) => void;
+  done?: (succeeded: boolean) => void;
+};
+
+type ProcessFunc<T> = (() => Promise<T>);
+type ProcessItem = {
+  id: string;
+  func: ProcessFunc<any>;
+  opts?: Options<any>;
+  resolve: (v: any) => void;
+  reject: (err: any) => void;
 };
 
 const useProcess = () => {
@@ -44,9 +52,15 @@ const useProcess = () => {
     begin(item);
     item.func().then(ret => {
       if (running.current?.id !== item.id) return;
+      item.opts?.then?.(ret);
+      item.opts?.finally?.(true);
+      item.opts?.done?.(true);
       item.resolve(ret);
     }).catch(e => {
       if (running.current?.id !== item.id) return;
+      item.opts?.catch?.(e);
+      item.opts?.finally?.(false);
+      item.opts?.done?.(false);
       item.reject(e);
     }).finally(() => {
       if (running.current?.id !== item.id) return;
@@ -62,14 +76,22 @@ const useProcess = () => {
   const kill = (all?: boolean, preventListen?: boolean) => {
     let count = 0;
     if (running.current) {
-      running.current.reject(new Error("running process killed."));
+      const err = new Error("running process killed.");
+      running.current.reject(err);
+      running.current?.opts?.killed?.();
+      running.current.opts?.catch?.(err);
+      running.current.opts?.finally?.(false);
       running.current = undefined;
       completed();
       count++;
     }
     if (all) {
       cancel().forEach(item => {
-        item.reject(new Error("waiting process killed."));
+        const err = new Error("waiting process killed.");
+        item.reject(err);
+        item.opts?.canceled?.();
+        item.opts?.catch?.(err);
+        item.opts?.finally?.(false);
         count++;
       });
     }
@@ -77,17 +99,27 @@ const useProcess = () => {
     return count;
   };
 
-  const main = <T>(func: ProcessFunc<T>, options?: Options) => {
-    if (func == null) throw new Error("no process");
+  const main = <T>(func: ProcessFunc<T>, options?: Options<T>) => {
+    if (func == null) {
+      const err = new Error("no process");
+      options?.catch?.(err);
+      options?.finally?.(false);
+      throw err;
+    }
     if (options?.killRunning || options?.killAll) kill(options?.killAll, true);
     if (options?.cancelWaiting) cancel();
     if (ref.current && options?.wait !== true) {
-      throw new Error("other process running.");
+      const err = new Error("other process running.");
+      options?.blocked?.(waiting.current.length);
+      options?.catch?.(err);
+      options?.finally?.(false);
+      throw err;
     }
 
     const item: ProcessItem = {
       id: StringUtils.generateUuidV4(),
       func,
+      opts: options,
       resolve: () => { },
       reject: () => { },
     };
