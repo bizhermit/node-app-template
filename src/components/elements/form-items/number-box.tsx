@@ -135,11 +135,11 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
     switch (props.$sign) {
       case "only-positive":
         if (float > 0) {
-          if (!new RegExp(`^[+-]?([0-9]*|0)(\.[0-9]{0,${float}})?$`).test(value)) return revert();
+          if (!new RegExp(`^[+]?([0-9]*|0)(\.[0-9]{0,${float}})?$`).test(value)) return revert();
           num = Number(value);
         } else {
-          if (!/^[+-]?[0-9]*$/.test(value)) return revert();
-          if (/^[+-]?[0-9]*|0$/.test(value)) num = Math.max(0, Number(value));
+          if (!/^[+]?[0-9]*$/.test(value)) return revert();
+          if (/^[+]?[0-9]*|0$/.test(value)) num = Math.max(0, Number(value));
         }
         break;
       case "only-negative":
