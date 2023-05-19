@@ -1,9 +1,8 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "@/components/elements/form";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import Style from "$/components/elements/form-items/number-box.module.scss";
-import { add, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
+import { add, minus, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import { minus } from "@bizhermit/basic-utils/dist/number-utils";
 import Resizer from "@/components/elements/resizer";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { NumberData } from "@/data-items/_base/number";
