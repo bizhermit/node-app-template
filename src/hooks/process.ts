@@ -10,12 +10,14 @@ type Options<T> = {
   kill?: boolean | ProcessKillMode;
   cancel?: boolean | ProcessCancelMode;
   cutIn?: boolean;
+  throughError?: boolean;
   then?: (ret: T) => void;
   blocked?: (context: { hasSameKey: boolean; waitingLength: number }) => void;
   killed?: () => void;
   canceled?: () => void;
   catch?: (err: any) => void;
   finally?: (succeeded: boolean) => void;
+  failed?: (err: any) => void;
   finished?: (succeeded: boolean) => void;
 };
 
@@ -27,6 +29,8 @@ type ProcessItem = {
   resolve: (v: any) => void;
   reject: (err: any) => void;
 };
+
+const returnReject = <T>(_err: any) => new Promise<T>(resolve => resolve);
 
 const useProcess = () => {
   const ref = useRef(false);
@@ -61,17 +65,21 @@ const useProcess = () => {
         item.opts?.finished?.(true);
         item.resolve(ret);
       } catch (e) {
-        item.reject(e);
+        if (item.opts?.throughError) item.reject(e);
+        else item.resolve(undefined);
       }
     }).catch(err => {
       if (running.current?.id !== item.id) return;
       try {
+        item.opts?.failed?.(err);
         item.opts?.catch?.(err);
         item.opts?.finally?.(false);
         item.opts?.finished?.(false);
-        item.reject(err);
+        if (item.opts?.throughError) item.reject(err);
+        else item.resolve(undefined);
       } catch (e) {
-        item.reject(e);
+        if (item.opts?.throughError) item.reject(e);
+        else item.resolve(undefined);
       }
     }).finally(() => {
       if (running.current?.id !== item.id) return;
@@ -99,9 +107,11 @@ const useProcess = () => {
       running.current!.opts?.killed?.();
       running.current!.opts?.catch?.(err);
       running.current!.opts?.finally?.(false);
-      running.current!.reject(err);
+      if (running.current!.opts?.throughError) running.current!.reject(err);
+      else running.current!.resolve(undefined);
     } catch (e) {
-      running.current!.reject(e);
+      if (running.current!.opts?.throughError) running.current!.reject(e);
+      else running.current!.resolve(undefined);
     }
 
     completed();
@@ -112,14 +122,16 @@ const useProcess = () => {
   const cancel = (mode?: ProcessCancelMode, key?: string) => {
     let count = 0;
     const canceled = (item: ProcessItem) => {
-      const err = new Error("waiting process cancel.");
       try {
+        const err = new Error("waiting process canceled.");
         item.opts?.canceled?.();
         item.opts?.catch?.(err);
         item.opts?.finally?.(false);
-        item.reject(err);
+        if (item.opts?.throughError) item.reject(err);
+        else item.resolve(err);
       } catch (e) {
-        item.reject(e);
+        if (item.opts?.throughError) item.reject(e);
+        else item.resolve(e);
       }
       count++;
     };
@@ -166,7 +178,8 @@ const useProcess = () => {
       const err = new Error("no process");
       options?.catch?.(err);
       options?.finally?.(false);
-      throw err;
+      if (options?.throughError) throw err;
+      else return returnReject<T>(err);
     }
 
     if (options?.kill) {
@@ -179,7 +192,7 @@ const useProcess = () => {
     if (ref.current || waiting.current.length > 0) {
       const blocked = () => {
         try {
-          const err = new Error("other process running.");
+          const err = new Error("other process is running.");
           options?.blocked?.({ hasSameKey: hasKey(options?.key), waitingLength: waiting.current.length });
           options?.catch?.(err);
           options?.finally?.(false);
@@ -189,13 +202,21 @@ const useProcess = () => {
         }
       };
       if (options?.wait === "keyUnique") {
-        if (hasKey(options?.key)) throw blocked();
+        if (hasKey(options?.key)) {
+          const err = blocked();
+          if (options?.throughError) throw err;
+          return returnReject<T>(err);
+        }
       } else if (options?.wait === "keyMonopoly") {
         if (running.current?.opts?.key !== options?.key || waiting.current.some(item => item.opts?.key !== options?.key)) {
-          throw blocked();
+          const err = blocked();
+          if (options?.throughError) throw err;
+          return returnReject<T>(err);
         }
       } else if (!options?.wait) {
-        throw blocked();
+        const err = blocked();
+        if (options?.throughError) throw err;
+        return returnReject<T>(err);
       }
     }
 
@@ -225,4 +246,5 @@ const useProcess = () => {
 
   return main;
 };
+
 export default useProcess;

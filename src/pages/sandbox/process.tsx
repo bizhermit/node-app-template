@@ -25,7 +25,7 @@ const Page: NextPage = () => {
         // wait,
         // wait: "keyUnique",
         // wait: "keyMonopoly",
-        wait,
+        wait: "keyUnique",
         kill: "sameKey",
         cancel: "sameKey",
         // wait,
