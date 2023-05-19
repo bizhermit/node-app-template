@@ -327,7 +327,12 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const blur = (e: React.FocusEvent) => {
-    if (e.relatedTarget === href.current || e.relatedTarget === mref.current || e.relatedTarget === sref.current || e.relatedTarget === pref.current) return;
+    if (
+      (href.current != null && e.relatedTarget === href.current) ||
+      (mref.current != null && e.relatedTarget === mref.current) ||
+      (sref.current != null && e.relatedTarget === sref.current) ||
+      (pref.current != null && e.relatedTarget === pref.current)
+    ) return;
     commitCache();
     setShowPicker(false);
   };

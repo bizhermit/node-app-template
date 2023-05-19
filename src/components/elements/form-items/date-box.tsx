@@ -324,7 +324,12 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
   };
 
   const blur = (e: React.FocusEvent) => {
-    if (e.relatedTarget === yref.current || e.relatedTarget === mref.current || e.relatedTarget === dref.current || e.relatedTarget === pref.current) return;
+    if (
+      (yref.current != null && e.relatedTarget === yref.current) ||
+      (mref.current != null && e.relatedTarget === mref.current) ||
+      (dref.current != null && e.relatedTarget === dref.current) ||
+      (pref.current != null && e.relatedTarget === pref.current)
+    ) return;
     commitCache();
     setShowPicker(false);
   };
