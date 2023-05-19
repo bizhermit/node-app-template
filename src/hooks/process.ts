@@ -30,7 +30,11 @@ type ProcessItem = {
   reject: (err: any) => void;
 };
 
-const returnReject = <T>(_err: any) => new Promise<T>(resolve => resolve);
+const returnReject = <T>(item: ProcessItem | null, err: any) => {
+  // eslint-disable-next-line no-console
+  console.warn(`process${item?.opts?.key ? `[${item.opts.key}]` : ""} reject as resolve.`, err?.message);
+  return new Promise<T>(resolve => resolve);
+};
 
 const useProcess = () => {
   const ref = useRef(false);
@@ -65,8 +69,12 @@ const useProcess = () => {
         item.opts?.finished?.(true);
         item.resolve(ret);
       } catch (e) {
-        if (item.opts?.throughError) item.reject(e);
-        else item.resolve(undefined);
+        if (item.opts?.throughError) {
+          item.reject(e);
+        } else {
+          returnReject(item, e);
+          item.resolve(undefined);
+        }
       }
     }).catch(err => {
       if (running.current?.id !== item.id) return;
@@ -75,11 +83,19 @@ const useProcess = () => {
         item.opts?.catch?.(err);
         item.opts?.finally?.(false);
         item.opts?.finished?.(false);
-        if (item.opts?.throughError) item.reject(err);
-        else item.resolve(undefined);
+        if (item.opts?.throughError) {
+          item.reject(err);
+        } else {
+          returnReject(item, err);
+          item.resolve(undefined);
+        }
       } catch (e) {
-        if (item.opts?.throughError) item.reject(e);
-        else item.resolve(undefined);
+        if (item.opts?.throughError) {
+          item.reject(e);
+        } else {
+          returnReject(item, e);
+          item.resolve(undefined);
+        }
       }
     }).finally(() => {
       if (running.current?.id !== item.id) return;
@@ -104,14 +120,22 @@ const useProcess = () => {
 
     try {
       const err = new Error("running process killed.");
-      running.current!.opts?.killed?.();
-      running.current!.opts?.catch?.(err);
-      running.current!.opts?.finally?.(false);
-      if (running.current!.opts?.throughError) running.current!.reject(err);
-      else running.current!.resolve(undefined);
+      running.current.opts?.killed?.();
+      running.current.opts?.catch?.(err);
+      running.current.opts?.finally?.(false);
+      if (running.current.opts?.throughError) {
+        running.current.reject(err);
+      } else {
+        returnReject(running.current!, err);
+        running.current.resolve(undefined);
+      }
     } catch (e) {
-      if (running.current!.opts?.throughError) running.current!.reject(e);
-      else running.current!.resolve(undefined);
+      if (running.current.opts?.throughError) {
+        running.current.reject(e);
+      } else {
+        returnReject(running.current, e);
+        running.current.resolve(undefined);
+      }
     }
 
     completed();
@@ -127,11 +151,19 @@ const useProcess = () => {
         item.opts?.canceled?.();
         item.opts?.catch?.(err);
         item.opts?.finally?.(false);
-        if (item.opts?.throughError) item.reject(err);
-        else item.resolve(err);
+        if (item.opts?.throughError) {
+          item.reject(err);
+        } else {
+          returnReject(item, err);
+          item.resolve(err);
+        }
       } catch (e) {
-        if (item.opts?.throughError) item.reject(e);
-        else item.resolve(e);
+        if (item.opts?.throughError) {
+          item.reject(e);
+        } else {
+          returnReject(item, e);
+          item.resolve(e);
+        }
       }
       count++;
     };
@@ -179,7 +211,7 @@ const useProcess = () => {
       options?.catch?.(err);
       options?.finally?.(false);
       if (options?.throughError) throw err;
-      else return returnReject<T>(err);
+      else return returnReject<T>(null, err);
     }
 
     if (options?.kill) {
@@ -188,6 +220,14 @@ const useProcess = () => {
     if (options?.cancel) {
       cancel(options.cancel === true ? undefined : options.cancel, options.key);
     }
+
+    const item: ProcessItem = {
+      id: StringUtils.generateUuidV4(),
+      func,
+      opts: options,
+      resolve: () => { },
+      reject: () => { },
+    };
 
     if (ref.current || waiting.current.length > 0) {
       const blocked = () => {
@@ -205,28 +245,21 @@ const useProcess = () => {
         if (hasKey(options?.key)) {
           const err = blocked();
           if (options?.throughError) throw err;
-          return returnReject<T>(err);
+          return returnReject<T>(item, err);
         }
       } else if (options?.wait === "keyMonopoly") {
         if (running.current?.opts?.key !== options?.key || waiting.current.some(item => item.opts?.key !== options?.key)) {
           const err = blocked();
           if (options?.throughError) throw err;
-          return returnReject<T>(err);
+          return returnReject<T>(item, err);
         }
       } else if (!options?.wait) {
         const err = blocked();
         if (options?.throughError) throw err;
-        return returnReject<T>(err);
+        return returnReject<T>(item, err);
       }
     }
 
-    const item: ProcessItem = {
-      id: StringUtils.generateUuidV4(),
-      func,
-      opts: options,
-      resolve: () => { },
-      reject: () => { },
-    };
     if (options?.cutIn) waiting.current.unshift(item);
     else waiting.current.push(item);
 
