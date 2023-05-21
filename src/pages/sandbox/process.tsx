@@ -22,12 +22,12 @@ const Page: NextPage = () => {
         return c;
       }, {
         key: key ?? "process1",
-        // wait,
+        wait,
         // wait: "keyUnique",
         // wait: "keyMonopoly",
-        wait: "keyUnique",
-        kill: "sameKey",
-        cancel: "sameKey",
+        // wait: "keyUnique",
+        // kill: "sameKey",
+        // cancel: "sameKey",
         // wait,
         // kill: "otherKey",
         // cancel: "otherKey",
