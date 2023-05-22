@@ -73,7 +73,7 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
           if (v == null || v === "" || v === nullValue.current) {
             return getMessage("required");
           }
-          return "";
+          return undefined;
         });
       }
       return validations;

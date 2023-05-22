@@ -141,8 +141,8 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
       if (props.$validDays) {
         const judge = (value: DateValue | null) => {
           const date = convertDate(value);
-          if (date == null) return "";
-          return judgeValid(date) ? "" : "選択可能な日付ではありません。";
+          if (date == null) return undefined;
+          return judgeValid(date) ? undefined : "選択可能な日付ではありません。";
         };
         validations.push(judge);
       }

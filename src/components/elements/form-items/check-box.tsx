@@ -68,7 +68,7 @@ const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
     validations: () => {
       if (!props.$required) return [];
       return [(v) => {
-        if (v === (checkedValue)) return "";
+        if (v === checkedValue) return undefined;
         return props.$messages?.required ?? "チェックを入れてください。";
       }];
     },
