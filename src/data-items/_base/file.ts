@@ -2,12 +2,12 @@ import { dataItemKey } from "@/data-items/_base";
 
 const fileItem = <
   C extends Omit<DataItem_File, DataItemKey | "type">
->(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+>(ctx?: C) => {
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "file";
     multiple: C extends { multiple: infer Multiple } ? Multiple : false;
-  }>>({
+  }>({
     multiple: false,
     ...(ctx as any),
     [dataItemKey]: undefined,
@@ -39,7 +39,7 @@ export namespace FileData {
     };
     return (files: File | Array<File>) => {
       const values = Array.isArray(files) ? files : [files];
-      let ret = "";
+      let ret: string | undefined;
       for (const file of values) {
         if (validAccept(file)) continue;
         ret = "許可されていないファイル拡張子です。";
@@ -52,7 +52,7 @@ export namespace FileData {
   export const fileSizeValidation = (fileSize: number) => {
     return (files: File | Array<File>) => {
       const values = Array.isArray(files) ? files : [files];
-      let ret = "";
+      let ret: string | undefined;
       for (const file of values) {
         if (file == null || file.size <= fileSize) continue;
         ret = `ファイルサイズは${getSizeText(fileSize)}以内でアップロードしてください`;
@@ -74,7 +74,7 @@ export namespace FileData {
     };
     return (files: FileValue | Array<FileValue>) => {
       const values = Array.isArray(files) ? files : [files];
-      let ret = "";
+      let ret: string | undefined;
       for (const file of values) {
         if (validAccept(file)) continue;
         ret = "許可されていないファイル拡張子です。";
@@ -88,7 +88,7 @@ export namespace FileData {
     return (files: File | Array<File>) => {
       const values = Array.isArray(files) ? files : [files];
       const sum = values.reduce((sum, file) => sum + (file?.size || 0), 0);
-      if (sum <= totalFileSize) return "";
+      if (sum <= totalFileSize) return undefined;
       return `ファイル合計サイズは${getSizeText(totalFileSize)}以内でアップロードしてください`;
     };
   };

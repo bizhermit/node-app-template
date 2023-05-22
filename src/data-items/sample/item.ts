@@ -17,7 +17,7 @@ export const sample_string = stringItem({
   validations: [
     (...args) => {
       console.log(args);
-      return "";
+      return undefined;
     },
     (v) => {
       console.log("string validation: ", typeof v, v);
@@ -63,6 +63,18 @@ export const sample_boolean = booleanItem({
       return "not typeof boolean";
     },
   ]
+});
+
+export const sample_boolean_num = booleanItem({
+  name: "sample_boolean_num",
+  trueValue: 1,
+  falseValue: 0,
+});
+
+export const sample_boolean_str = booleanItem({
+  name: "sample_boolean_str",
+  trueValue: "1",
+  falseValue: "9",
 });
 
 export const sample_date = dateItem({

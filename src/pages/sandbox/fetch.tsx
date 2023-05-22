@@ -15,15 +15,6 @@ import { getDynamicUrlContext } from "@/utilities/url";
 import type { NextPage } from "next";
 import { useState } from "react";
 
-type Data = {
-  [sample_string.name]: DataItemValueType<typeof sample_string, true>;
-  [sample_boolean.name]: DataItemValueType<typeof sample_boolean, true>;
-};
-const _data: Data = {
-  sample_string: "",
-  sample_boolean: false,
-};
-
 const Page: NextPage = () => {
   const api = useFetch();
   const [response, setResponse] = useState({});
@@ -135,9 +126,16 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await api.get("/fetch", {
-                      id: "id1",
+                      // id: "id1",
+                      id: null,
+                      // id: 1,
                     });
+                    res.data.id;
                     setResponse(res);
+                    // const res2 = await fetchApi.get("/fetch", { id: "id2" });
+                    // res2.data.
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
@@ -149,7 +147,7 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await api.post("/fetch", {
-                      sample_string: "hoget",
+                      sample_string: "string",
                       string: "this is string",
                       sample_number: "300",
                       number: "0100",
@@ -190,8 +188,13 @@ const Page: NextPage = () => {
                       }
                     });
                     setResponse(res);
+                    res.data.update
                     // console.log(res.messages);
                     // console.log(res.data);
+                    const res2 = await fetchApi.post("/fetch", {});
+                    res2.data.update
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
@@ -205,6 +208,8 @@ const Page: NextPage = () => {
                     const res = await api.put("/fetch", { hoge: 10 });
                     // (await (await fetchApi.get("/notfound")).data);
                     setResponse(res);
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
@@ -217,6 +222,8 @@ const Page: NextPage = () => {
                   try {
                     const res = await api.delete("/fetch", { hoge: 100 });
                     setResponse(res);
+                  } catch {
+                    // ignore
                   } finally {
                     unlock();
                   }
@@ -235,6 +242,7 @@ const Page: NextPage = () => {
                       fuga: [1, 2, 3]
                     });
                     setResponse(res);
+                    // res.data.requestData
                   } finally {
                     unlock();
                   }
@@ -286,7 +294,7 @@ const Page: NextPage = () => {
             <FileDrop
               name="filedrop"
               $multiple
-              style={{ height: "5rem", width: "20rem"}}
+              style={{ height: "5rem", width: "20rem" }}
             />
             <Row className="gap-1">
               <Button type="submit" formMethod="get">get</Button>

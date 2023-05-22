@@ -204,9 +204,9 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
         const { compare, getPairDate, validation } = DateInput.contextValidation(rangePair, type);
         if (multiple) {
           validations.push((v, d) => {
-            if (d == null) return "";
+            if (d == null) return undefined;
             const pairDate = getPairDate(d);
-            if (pairDate == null) return "";
+            if (pairDate == null) return undefined;
             return multiValidationIterator(v, (val) => compare(val, pairDate));
           });
         } else {
@@ -216,8 +216,8 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
       if (props.$validDays) {
         const judge = (value: string | number | Date | null) => {
           const date = convertDate(value);
-          if (date == null) return "";
-          return judgeValid(date) ? "" : "選択可能な日付ではありません。";
+          if (date == null) return undefined;
+          return judgeValid(date) ? undefined : "選択可能な日付ではありません。";
         };
         if (multiple) {
           validations.push(v => {
