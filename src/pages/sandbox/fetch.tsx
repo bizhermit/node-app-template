@@ -15,6 +15,10 @@ import { getDynamicUrlContext } from "@/utilities/url";
 import type { NextPage } from "next";
 import { useState } from "react";
 
+type _Hoge = {
+  [sample_string.name]: typeof sample_string
+};
+
 const Page: NextPage = () => {
   const api = useFetch();
   const [response, setResponse] = useState({});
@@ -126,8 +130,8 @@ const Page: NextPage = () => {
                 $onClick={async (unlock) => {
                   try {
                     const res = await api.get("/fetch", {
-                      // id: "id1",
-                      id: null,
+                      id: "id1",
+                      // id: null,
                       // id: 1,
                     });
                     res.data.id;

@@ -19,11 +19,20 @@ export const config: NextApiConfig = {
   },
 };
 
+const id = stringItem({
+  name: "id",
+  required: true,
+});
+
 export default apiHandler({
   $get: {
-    id: stringItem({
-      required: true,
-    }),
+    // id: id,
+    [id.name]: id,
+    // id: stringItem({
+    //   name: "id",
+    //   required: true,
+    // }),
+    // id: sample_string,
   },
   get: async (ctx) => {
     const data = ctx.getData();
