@@ -110,6 +110,10 @@ const Page: NextPage = () => {
               $dataItem={sample_string}
               // $required
               $onChange={v => console.log("string: ", v)}
+              $messages={{
+                required: "",
+              }}
+              $messagePosition="bottom-hide"
             />
             <TextBox
               $tag="number"

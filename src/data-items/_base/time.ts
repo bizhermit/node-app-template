@@ -277,9 +277,9 @@ export namespace TimeInput {
       return TimeData.convertTime(pairValue, pairTimeUnit);
     };
     const validation: FormItemValidation<any> = (v, t) => {
-      if (t == null) return "";
+      if (t == null) return undefined;
       const pairTime = getPairTime(t);
-      if (pairTime == null) return "";
+      if (pairTime == null) return undefined;
       return compare(v, pairTime);
     };
     return { compare, getPairTime, validation };

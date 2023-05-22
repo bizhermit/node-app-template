@@ -259,9 +259,9 @@ export namespace DateInput {
       return convertDate(pairValue);
     };
     const validation: FormItemValidation<any> = (v, d) => {
-      if (d == null) return "";
+      if (d == null) return undefined;
       const pairDate = getPairDate(d);
-      if (pairDate == null) return "";
+      if (pairDate == null) return undefined;
       return compare(v, pairDate);
     };
     return { compare, getPairDate, validation };

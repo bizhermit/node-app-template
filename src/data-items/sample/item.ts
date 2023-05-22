@@ -17,7 +17,7 @@ export const sample_string = stringItem({
   validations: [
     (...args) => {
       console.log(args);
-      return "";
+      return undefined;
     },
     (v) => {
       console.log("string validation: ", typeof v, v);
