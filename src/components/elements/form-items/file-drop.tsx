@@ -146,9 +146,13 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
   useEffect(() => {
     if (href.current) {
       const files = (Array.isArray(ctx.value) ? ctx.value : [ctx.value]).filter(file => file != null);
-      const dt = new DataTransfer();
-      files.forEach(file => dt.items.add(file));
-      href.current.files = dt.files;
+      if (files.length === 0) {
+        href.current.files = null;
+      } else {
+        const dt = new DataTransfer();
+        files.forEach(file => dt.items.add(file));
+        href.current.files = dt.files;
+      }
     }
     if (iref.current) iref.current.value = "";
   }, [ctx.value]);
