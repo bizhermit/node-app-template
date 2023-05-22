@@ -4,7 +4,7 @@ import Form from "@/components/elements/form";
 import CheckBox from "@/components/elements/form-items/check-box";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
 import Row from "@/components/elements/row";
-import { sample_boolean, sample_number, sample_string } from "@/data-items/sample/item";
+import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_number, sample_string } from "@/data-items/sample/item";
 import { colors } from "@/utilities/sandbox";
 import type { NextPage } from "next";
 import { useState } from "react";
@@ -105,6 +105,18 @@ const Page: NextPage = () => {
           $onChange={v => console.log("number: ", v)}
         >
           number
+        </CheckBox>
+        <CheckBox
+          $dataItem={sample_boolean_num}
+          $onChange={v => console.log("boolean num: ", v)}
+        >
+          boolean num
+        </CheckBox>
+        <CheckBox
+          $dataItem={sample_boolean_str}
+          $onChange={v => console.log("boolean str: ", v)}
+        >
+          boolean str
         </CheckBox>
         <CheckBox
           $dataItem={sample_string}
