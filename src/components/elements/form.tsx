@@ -12,7 +12,12 @@ type FormItemMessages = {
 };
 type FormItemMessageFunc = (key: keyof FormItemMessages) => string;
 
-export type FormItemValidation<T> = (value: T, bindData: Struct | undefined, index: number, getMessage: FormItemMessageFunc) => (boolean | string | null | undefined);
+export type FormItemValidation<T> = (
+  value: T,
+  bindData: Struct | undefined,
+  index: number,
+  getMessage: FormItemMessageFunc
+) => (boolean | string | null | undefined);
 
 export type FormItemMessageDisplayMode = "tooltip" | "bottom" | "bottom-hide" | "hide" | "none";
 
@@ -35,7 +40,12 @@ type InputOmitProps = "name"
   | "color"
   | "onChange"
   | "children";
-export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V = T, U extends Struct = {}> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
+export type FormItemProps<
+  T = any,
+  D extends DataItem | undefined = DataItem,
+  V = T,
+  U extends Struct = {}
+> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
   $bind?: Struct;
   $disabled?: boolean;
@@ -47,8 +57,18 @@ export type FormItemProps<T = any, D extends DataItem | undefined = DataItem, V 
   $value?: ValueType<T, D, V> | null | undefined;
   $messagePosition?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onChange?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data: U & { errorMessage: string | undefined }) => void;
-  $onEdit?: (after: ValueType<T, D, V> | null | undefined, before: ValueType<T, D, V> | null | undefined, data: U & { errorMessage: string | undefined }) => void;
+  $onChange?: (
+    after: ValueType<T, D, V> | null | undefined,
+    before: ValueType<T, D, V> | null | undefined,
+    data: U & { errorMessage: string | undefined }
+  ) => void;
+  $preventMemorizeOnChange?: boolean;
+  $onEdit?: (
+    after: ValueType<T, D, V> | null | undefined,
+    before: ValueType<T, D, V> | null | undefined,
+    data: U & { errorMessage: string | undefined }
+  ) => void;
+  $preventMemorizeOnEdit?: boolean;
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
@@ -82,7 +102,12 @@ type FormContextProps = {
   exErrors: Struct;
   setExErrors: Dispatch<SetStateAction<Struct>>;
   hasError: boolean;
-  mount: (id: string, itemProps: FormItemProps<any, any, any, any>, mountItemProps: FormItemMountProps, options: UseFormItemContextOptions<any, any>) => string;
+  mount: (
+    id: string,
+    itemProps: FormItemProps<any, any, any, any>,
+    mountItemProps: FormItemMountProps,
+    options: UseFormItemContextOptions<any, any>
+  ) => string;
   unmount: (name: string) => void;
   validation: (returnId: string) => string | undefined;
   messageDisplayMode: FormItemMessageDisplayMode;
@@ -143,7 +168,10 @@ interface FormFC extends FunctionComponent<FormProps> {
   <T extends Struct = Struct>(attrs: FormProps<T>, ref?: ForwardedRef<HTMLFormElement>): ReactElement<any> | null;
 }
 
-const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = Struct>(props: FormProps<T>, $ref: ForwardedRef<HTMLFormElement>) => {
+const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = Struct>(
+  props: FormProps<T>,
+  $ref: ForwardedRef<HTMLFormElement>
+) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const method = props.method ?? "get";
@@ -162,7 +190,12 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
   const [errors, setErrors] = useState<Struct>({});
   const [exErrors, setExErrors] = useState<Struct>({});
 
-  const mount = (id: string, itemProps: FormItemProps, mountItemProps: FormItemMountProps, options: UseFormItemContextOptions) => {
+  const mount = (
+    id: string,
+    itemProps: FormItemProps,
+    mountItemProps: FormItemMountProps,
+    options: UseFormItemContextOptions
+  ) => {
     items.current[id] = { ...mountItemProps, props: itemProps, options, };
     return id;
   };
@@ -385,7 +418,11 @@ export const useForm = () => {
   return useContext(FormContext);
 };
 
-export const useDataItemMergedProps = <T, D extends DataItem | undefined, P extends FormItemProps<T, D, any, any>>(form: ReturnType<typeof useForm>, props: P, merge?: {
+export const useDataItemMergedProps = <
+  T,
+  D extends DataItem | undefined,
+  P extends FormItemProps<T, D, any, any>
+>(form: ReturnType<typeof useForm>, props: P, merge?: {
   under?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
   over?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
 }) => {
@@ -411,11 +448,12 @@ export const useDataItemMergedProps = <T, D extends DataItem | undefined, P exte
   } as P;
 };
 
-export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U extends Struct = any, P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>>(
-  form: ReturnType<typeof useForm>,
-  props: P,
-  options?: UseFormItemContextOptions<ValueType<T, D, V>, U>
-) => {
+export const useFormItemContext = <
+  T, D extends DataItem | undefined,
+  V = undefined,
+  U extends Struct = any,
+  P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>
+>(form: ReturnType<typeof useForm>, props: P, options?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
   const id = useRef(StringUtils.generateUuidV4());
   const [error, setError] = useState("");
 
@@ -536,7 +574,8 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const before = valueRef.current;
     setCurrentValue(value);
     setBind(value);
-    const errorMessage = (props?.$interlockValidation || options?.interlockValidation) ? form.validation(id.current) : validation();
+    const errorMessage = (props?.$interlockValidation || options?.interlockValidation) ?
+      form.validation(id.current) : validation();
     if (props.$onChange != null || (props.$onEdit != null && edit)) {
       const data = options?.generateChangeCallbackData?.(valueRef.current, before) as U;
       props?.$onChange?.(valueRef.current, before, { ...data, errorMessage });
@@ -545,7 +584,13 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       }
     }
     if (!edit) options?.effect?.(valueRef.current);
-  }, [setBind, props?.$onChange, validation, ...(options?.generateChangeCallbackDataDeps ?? [])]);
+  }, [
+    setBind,
+    props?.$preventMemorizeOnChange ? props?.$onChange : undefined,
+    props?.$preventMemorizeOnEdit ? props.$onEdit : undefined,
+    validation,
+    ...(options?.generateChangeCallbackDataDeps ?? []),
+  ]);
 
   useEffect(() => {
     const name = props?.name;
@@ -553,7 +598,11 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const before = valueRef.current;
     setCurrentValue(getValue(form.bind, name));
     const errorMessage = validation();
-    props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
+    props.$onChange?.(
+      valueRef.current,
+      before,
+      { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage }
+    );
     options?.effect?.(valueRef.current);
   }, [form.bind, props?.$preventFormBind]);
 
@@ -563,7 +612,11 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const before = valueRef.current;
     setCurrentValue(getValue(props.$bind, name));
     const errorMessage = validation();
-    props.$onChange?.(valueRef.current, before, { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage });
+    props.$onChange?.(
+      valueRef.current,
+      before,
+      { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage }
+    );
     options?.effect?.(valueRef.current);
   }, [props?.$bind]);
 
@@ -637,19 +690,22 @@ type FormItemWrapProps = FormItemProps<any, any, any, any> & {
 };
 
 export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props, ref) => {
-  const errorNode = props.$context.messageDisplayMode !== "none" && props.$context.messageDisplayMode !== "hide" && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom") && (
-    <div
-      className={Style.error}
-      data-mode={props.$context.messageDisplayMode}
-    >
-      <span
-        className={Style.text}
-        data-nowrap={!props.$context.messageWrap}
+  const errorNode = props.$context.messageDisplayMode !== "none"
+    && props.$context.messageDisplayMode !== "hide"
+    && (StringUtils.isNotEmpty(props.$context.error) || props.$context.messageDisplayMode === "bottom")
+    && (
+      <div
+        className={Style.error}
+        data-mode={props.$context.messageDisplayMode}
       >
-        {props.$context.error}
-      </span>
-    </div>
-  );
+        <span
+          className={Style.text}
+          data-nowrap={!props.$context.messageWrap}
+        >
+          {props.$context.error}
+        </span>
+      </div>
+    );
 
   const attrs = {
     ...attributes(props.$mainProps ?? {}, Style.main, `bdc-${props.$color || "border"}`),
