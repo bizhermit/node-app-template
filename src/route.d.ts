@@ -43,6 +43,7 @@ type PagePath = "/"
   | "/sandbox/env"
   | "/sandbox/fetch"
   | "/sandbox/message-box"
+  | "/sandbox/process"
   | "/sandbox/storage";
 
 type ApiPath = "/fetch"
