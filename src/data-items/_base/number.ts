@@ -3,11 +3,11 @@ import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 
 const numberItem = <
   C extends Omit<DataItem_Number, DataItemKey | "type">
->(ctx?: Readonly<C>) => {
-  return Object.freeze<C & Readonly<{
+>(ctx?: C) => {
+  return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "number";
-  }>>({
+  }>({
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "number",

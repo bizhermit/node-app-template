@@ -106,9 +106,9 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
   };
 };
 
-const update = <T>(url: ApiPath, method: ApiMethods, params: any = undefined, options?: FetchOptions) => {
+const update = <U extends ApiPath, M extends ApiMethods>(url: U, method: M, params: any = undefined, options?: FetchOptions) => {
   const ctx = getDynamicUrlContext(url, params);
-  return crossFetch<T>(`/api${ctx.url}`, {
+  return crossFetch<ApiResponse<U, M>["data"]>(`/api${ctx.url}`, {
     method,
     ...convertToRequestInit(ctx.data, options),
   });
@@ -117,16 +117,16 @@ const update = <T>(url: ApiPath, method: ApiMethods, params: any = undefined, op
 const fetchApi = {
   get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, _options?: FetchOptions) => {
     const ctx = getDynamicUrlContext(url, params, { appendQuery: true });
-    return crossFetch<ApiResponse<U, "get">>(`/api${ctx.url}`, { method: "GET" });
+    return crossFetch<ApiResponse<U, "get">["data"]>(`/api${ctx.url}`, { method: "GET" });
   },
   put: <U extends ApiPath>(url: U, params?: ApiRequest<U, "put"> | FormData, options?: FetchOptions) => {
-    return update<ApiResponse<U, "put">>(url, "put", params, options);
+    return update(url, "put", params, options);
   },
   post: <U extends ApiPath>(url: U, params?: ApiRequest<U, "post"> | FormData, options?: FetchOptions) => {
-    return update<ApiResponse<U, "post">>(url, "post", params, options);
+    return update(url, "post", params, options);
   },
   delete: <U extends ApiPath>(url: U, params?: ApiRequest<U, "delete"> | FormData, options?: FetchOptions) => {
-    return update<ApiResponse<U, "delete">>(url, "delete", params, options);
+    return update(url, "delete", params, options);
   },
 };
 

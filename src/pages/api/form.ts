@@ -18,14 +18,12 @@ export default apiHandler({
     console.log(ctx.getData());
   },
   $post: {
-    req: {
-      filedrop: fileItem({
-        multiple: true,
-      }),
-      filebutton: fileItem({
-        multiple: false,
-      }),
-    }
+    filedrop: fileItem({
+      multiple: true,
+    }),
+    filebutton: fileItem({
+      multiple: false,
+    }),
   },
   post: async (ctx) => {
     console.log("--post--");

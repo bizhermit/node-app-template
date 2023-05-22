@@ -548,7 +548,7 @@ const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct =
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext, Res extends DataContext> =
+type MethodProcess<Req extends DataContext = DataContext, Res extends Struct = Struct> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
@@ -557,27 +557,27 @@ type MethodProcess<Req extends DataContext, Res extends DataContext> =
     setStatus: (code: number) => void;
     hasError: () => boolean;
     getData: () => DataItemValueType<Req, true, "server">;
-  }) => Promise<void | DataItemValueType<Res, true, "server">>;
+  }) => Promise<void | Res>;
 
 const apiHandler = <
   GetReq extends DataContext = DataContext,
-  GetRes extends DataContext = DataContext,
+  GetRes extends Struct = Struct,
   PostReq extends DataContext = DataContext,
-  PostRes extends DataContext = DataContext,
+  PostRes extends Struct = Struct,
   PutReq extends DataContext = DataContext,
-  PutRes extends DataContext = DataContext,
+  PutRes extends Struct = Struct,
   DeleteReq extends DataContext = DataContext,
-  DeleteRes extends DataContext = DataContext
->(methods: {
-  $get?: { req?: GetReq; res?: GetRes; };
+  DeleteRes extends Struct = Struct
+>(methods: Readonly<{
+  $get?: GetReq;
   get?: MethodProcess<GetReq, GetRes>;
-  $post?: { req?: PostReq; res?: PostRes; };
+  $post?: PostReq;
   post?: MethodProcess<PostReq, PostRes>;
-  $put?: { req?: PutReq; res?: PutRes; };
+  $put?: PutReq;
   put?: MethodProcess<PutReq, PutRes>;
-  $delete?: { req?: DeleteReq; res?: DeleteRes; };
+  $delete?: DeleteReq;
   delete?: MethodProcess<DeleteReq, DeleteRes>;
-}) => {
+}>) => {
   const f = async (req: NextApiRequest, res: NextApiResponse) => {
     let statusCode: number | undefined = undefined;
     const msgs: Array<Message> = [];
@@ -596,7 +596,7 @@ const apiHandler = <
         return;
       }
 
-      const dataContext = methods[`$${method}`]?.req;
+      const dataContext = methods[`$${method}`];
       const reqData = await (async () => {
         let retData: Struct = { ...req.query };
         const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
@@ -704,11 +704,18 @@ const apiHandler = <
       });
     }
   };
-  f.$get = methods.$get as { req: GetReq; res: GetRes; };
-  f.$post = methods.$post as { req: PostReq; res: PostRes; };
-  f.$put = methods.$put as { req: PutReq; res: PutRes; };
-  f.$delete = methods.$delete as { req: DeleteReq; res: DeleteRes; };
-  return f;
+
+  return f as {
+    (req: NextApiRequest, res: NextApiResponse): Promise<void>;
+    $get: Required<typeof methods>["$get"];
+    get: Exclude<Awaited<ReturnType<Required<typeof methods>["get"]>>, void>;
+    $post: Required<typeof methods>["$post"];
+    post: Exclude<Awaited<ReturnType<Required<typeof methods>["post"]>>, void>;
+    $put: Required<typeof methods>["$put"];
+    put: Exclude<Awaited<ReturnType<Required<typeof methods>["put"]>>, void>;
+    $delete: Required<typeof methods>["$delete"];
+    delete: Exclude<Awaited<ReturnType<Required<typeof methods>["delete"]>>, void>;
+  };
 };
 
 export default apiHandler;

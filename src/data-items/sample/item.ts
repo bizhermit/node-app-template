@@ -65,6 +65,18 @@ export const sample_boolean = booleanItem({
   ]
 });
 
+export const sample_boolean_num = booleanItem({
+  name: "sample_boolean_num",
+  trueValue: 1,
+  falseValue: 0,
+});
+
+export const sample_boolean_str = booleanItem({
+  name: "sample_boolean_str",
+  trueValue: "1",
+  falseValue: "9",
+});
+
 export const sample_date = dateItem({
   name: "sample_date",
   typeof: "string",
