@@ -133,6 +133,16 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
   )
   ;
 
+type DataProp<D extends DataItem> = D extends DataItem ? {
+  [P in D["name"]]: DataItemValueType<D, true, "client">;
+} : never;
+
+type CrossDataProps<U> = Pick<U, keyof U>;
+type UnionToIntersection<A> = (A extends any ? (_: A) => void : never) extends ((_: infer B) => void) ? B : never;
+type DataProps<A extends (Struct<DataItem> | Array<DataItem>)> = A extends Struct<DataItem> ?
+  { [P in keyof A]: DataItemValueType<A[P], true, "client"> } :
+  CrossDataProps<UnionToIntersection<DataProp<A[number]>>>;
+
 type LoadableArray<T = Struct> = Array<T> | (() => Array<T>) | (() => Promise<Array<T>>);
 
 /**

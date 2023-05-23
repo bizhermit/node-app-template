@@ -8,15 +8,46 @@ import TextBox from "@/components/elements/form-items/text-box";
 import GroupBox from "@/components/elements/group-box";
 import Row from "@/components/elements/row";
 import StructView from "@/components/elements/struct-view";
-import { sample_boolean, sample_string } from "@/data-items/sample/item";
+import { sample_boolean, sample_boolean_num, sample_string } from "@/data-items/sample/item";
 import useFetch from "@/hooks/fetch-api";
 import fetchApi from "@/utilities/fetch-api";
 import { getDynamicUrlContext } from "@/utilities/url";
 import type { NextPage } from "next";
 import { useState } from "react";
 
-type _Hoge = {
-  [sample_string.name]: typeof sample_string
+type _Hoge = CrossDataProps<
+  DataProp<typeof sample_string>
+  & DataProp<typeof sample_boolean>
+  & DataProp<typeof sample_boolean_num>
+>;
+
+const _hoge: _Hoge = {
+  s_boolean: true,
+  s_boolean_num: 1,
+  s_string: "hoge",
+};
+
+const _fugaBase = {
+  sample_string,
+  sample_boolean,
+  sample_boolean_num,
+};
+type _Fuga = DataProps<typeof _fugaBase>;
+const fuga: _Fuga = {
+  sample_boolean: true,
+  sample_boolean_num: 0,
+  sample_string: "gea",
+};
+
+type Piyo = DataProps<[
+  typeof sample_string,
+  typeof sample_boolean,
+  typeof sample_boolean_num,
+]>;
+const _piyo: Piyo = {
+  s_boolean_num: 1,
+  s_boolean: false,
+  s_string: "gs",
 };
 
 const Page: NextPage = () => {

@@ -7,7 +7,7 @@ import stringItem from "@/data-items/_base/string";
 import timeItem from "@/data-items/_base/time";
 
 export const sample_string = stringItem({
-  name: "sample_string",
+  name: "s_string",
   required: true,
   minLength: 5,
   // maxLength: 5,
@@ -37,7 +37,7 @@ export const sample_string = stringItem({
 });
 
 export const sample_number = numberItem({
-  name: "sample_number",
+  name: "s_number",
   width: "20rem",
   validations: [
     (v) => {
@@ -54,7 +54,7 @@ export const sample_number = numberItem({
 });
 
 export const sample_boolean = booleanItem({
-  name: "sample_boolean",
+  name: "s_boolean",
   validations: [
     (v) => {
       console.log("boolean validation: ", typeof v, v);
@@ -66,13 +66,14 @@ export const sample_boolean = booleanItem({
 });
 
 export const sample_boolean_num = booleanItem({
-  name: "sample_boolean_num",
+  name: "s_boolean_num",
   trueValue: 1,
   falseValue: 0,
+  required: true,
 });
 
 export const sample_boolean_str = booleanItem({
-  name: "sample_boolean_str",
+  name: "s_boolean_str",
   trueValue: "1",
   falseValue: "9",
 });
