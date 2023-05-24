@@ -4,7 +4,7 @@ import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactNode, use
 import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
 import Text from "@/components/elements/text";

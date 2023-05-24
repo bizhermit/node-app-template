@@ -3,7 +3,7 @@
 import Menu from "@/components/elements/menu";
 import NavigationContainer, { useNavigation } from "@/components/elements/navigation-container";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { FC } from "react";
+import type { FC } from "react";
 
 const SandBoxProvider: CFC = ({ children }) => {
   return (
@@ -48,6 +48,11 @@ const Navigation: FC = () => {
         icon: "S",
         label: "SandBox",
         items: [{
+          key: "index",
+          icon: "I",
+          label: "Index",
+          pathname: "/sandbox",
+        }, {
           key: "color",
           icon: "C",
           label: "Color",
