@@ -1,8 +1,11 @@
 const path = require("path");
 const fse = require("fs-extra");
+const nextConfig = require(path.join(__dirname, "../next.config.js"));
+
+const isAppDir = nextConfig.experimental?.appDir ?? false;
 
 const srcRootPath = path.join(__dirname, "../src");
-const pageRootPath = path.join(srcRootPath, "pages");
+const pageRootPath = path.join(srcRootPath, isAppDir ? "app" : "pages");
 const apiRootPath = path.join(pageRootPath, "api");
 
 const pages = [];
