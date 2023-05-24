@@ -3,11 +3,11 @@ import Divider from "@/components/elements/divider";
 import Form from "@/components/elements/form";
 import FileButton from "@/components/elements/form-items/file-button";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
+import { RightIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import { sample_file } from "@/data-items/sample/item";
 import type { NextPage } from "next";
 import { useState } from "react";
-import { VscFile } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);
@@ -85,7 +85,7 @@ const Page: NextPage = () => {
         $onChange={v => setValue(v!)}
         $required
         $hideFileName
-        $icon={<VscFile />}
+        $icon={<RightIcon />}
       >
         {value?.name ?? "ファイルを選択"}
       </FileButton>

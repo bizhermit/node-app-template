@@ -1,13 +1,13 @@
 import Divider from "@/components/elements/divider";
 import NumberBox from "@/components/elements/form-items/number-box";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
+import { CloudIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import Stepper from "@/components/elements/stepper";
 import { sizes } from "@/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import type { NextPage } from "next";
 import { type ReactNode, useMemo, useState } from "react";
-import { VscAccount } from "react-icons/vsc";
 
 const maxStep = 10;
 
@@ -83,7 +83,7 @@ const Page: NextPage = () => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
               <Row key={idx} className="gap-1">
-                <VscAccount />
+                <CloudIcon />
                 <span className="box pt-t">{idx}</span>
               </Row>
             );
@@ -100,7 +100,7 @@ const Page: NextPage = () => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
               <Row key={idx} className="gap-1">
-                <VscAccount />
+                <CloudIcon />
                 <span className="box pt-t">{idx}</span>
               </Row>
             );

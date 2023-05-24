@@ -1,12 +1,12 @@
 import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
+import { DoubleDownIcon, DoubleLeftIcon } from "@/components/elements/icon";
 import Menu from "@/components/elements/menu";
 import Popup from "@/components/elements/popup";
 import Row from "@/components/elements/row";
 import type { NextPage } from "next";
 import { useRef, useState } from "react";
-import { VscArrowDown, VscArrowLeft } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const buttonRef = useRef<HTMLButtonElement>(null!);
@@ -53,8 +53,8 @@ const Page: NextPage = () => {
             $itemDefaultAttributes={{
               className: "c-base"
             }}
-            $defaultClosedIcon={<VscArrowLeft />}
-            $defaultOpenedIcon={<VscArrowDown />}
+            $defaultClosedIcon={<DoubleLeftIcon />}
+            $defaultOpenedIcon={<DoubleDownIcon />}
             $items={[{
               key: 1,
               label: `item 1`,

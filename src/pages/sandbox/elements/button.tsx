@@ -6,7 +6,6 @@ import Row from "@/components/elements/row";
 import { colors } from "@/utilities/sandbox";
 import type { NextPage } from "next";
 import type { CSSProperties } from "react";
-import { VscCloudDownload } from "react-icons/vsc";
 
 const style: CSSProperties = {
   width: 200
@@ -64,18 +63,13 @@ const Page: NextPage = () => {
           <Button $size="xl">X Large</Button>
         </Row>
         <Row className="gap-1 mt-1">
-          <Button $icon={<VscCloudDownload />} $size="xs">X Small</Button>
-          <Button $icon={<VscCloudDownload />} $size="s">Small</Button>
-          <Button $icon={<VscCloudDownload />} $size="m">Medium</Button>
-          <Button $icon={<VscCloudDownload />} $size="l">Large</Button>
-          <Button $icon={<VscCloudDownload />} $size="xl">X Large</Button>
+          <Button $icon={<CloudDownloadIcon />} $size="xs">X Small</Button>
+          <Button $icon={<CloudDownloadIcon />} $size="s">Small</Button>
+          <Button $icon={<CloudDownloadIcon />} $size="m">Medium</Button>
+          <Button $icon={<CloudDownloadIcon />} $size="l">Large</Button>
+          <Button $icon={<CloudDownloadIcon />} $size="xl">X Large</Button>
         </Row>
         <Row className="gap-1 mt-1">
-          <Button $icon={<VscCloudDownload />} $size="xs" $round />
-          <Button $icon={<VscCloudDownload />} $size="s" $round />
-          <Button $icon={<VscCloudDownload />} $size="m" $round />
-          <Button $icon={<VscCloudDownload />} $size="l" $round />
-          <Button $icon={<VscCloudDownload />} $size="xl" $round />
           <Button $icon={<CloudDownloadIcon />} $size="xs" $round />
           <Button $icon={<CloudDownloadIcon />} $size="s" $round />
           <Button $icon={<CloudDownloadIcon />} $size="m" $round />

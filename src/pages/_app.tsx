@@ -1,15 +1,11 @@
 import type { AppProps } from "next/app";
 import type { FC } from "react";
-import { IconContext } from "react-icons";
 import "$/globals.scss";
 import "$/color.scss";
 import "$/utility.scss";
 import { LayoutProvider, WindowSize } from "@/components/providers/layout";
 import NavigationContainer, { useNavigation } from "@/components/elements/navigation-container";
 import Menu from "@/components/elements/menu";
-import { AiOutlineCodeSandbox } from "react-icons/ai";
-import { MdOutlinePowerSettingsNew } from "react-icons/md";
-import { TbComponents } from "react-icons/tb";
 import { LoadingProvider } from "@/components/elements/loading";
 import { convertSizeNumToStr } from "@/components/utilities/attributes";
 import { MessageProvider } from "@/components/providers/message";
@@ -22,18 +18,16 @@ const App = ({ Component, pageProps }: AppProps) => {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
       </Head>
       <MessageProvider>
-        <IconContext.Provider value={{ className: "react-icon icon", size: "0" }}>
-          <LoadingProvider $appearance="circle">
-            <NavigationContainer
-              className="w-100 h-100"
-            >
-              <Header />
-              <Navigation />
-              <Component {...pageProps} />
-              <Footer />
-            </NavigationContainer>
-          </LoadingProvider>
-        </IconContext.Provider>
+        <LoadingProvider $appearance="circle">
+          <NavigationContainer
+            className="w-100 h-100"
+          >
+            <Header />
+            <Navigation />
+            <Component {...pageProps} />
+            <Footer />
+          </NavigationContainer>
+        </LoadingProvider>
       </MessageProvider>
     </LayoutProvider>
   );
@@ -61,12 +55,12 @@ const Navigation: FC = () => {
       style={{ width: convertSizeNumToStr(280) }}
       $items={[{
         key: "index",
-        icon: <MdOutlinePowerSettingsNew />,
+        icon: "I",
         label: "Index",
         pathname: "/",
       }, {
         key: "sandbox",
-        icon: <AiOutlineCodeSandbox />,
+        icon: "S",
         label: "SandBox",
         items: [{
           key: "color",
@@ -80,7 +74,7 @@ const Navigation: FC = () => {
           pathname: "/sandbox/env",
         }, {
           key: "elements",
-          icon: <TbComponents />,
+          icon: "E",
           label: "Elements",
           items: [{
             key: "icon",

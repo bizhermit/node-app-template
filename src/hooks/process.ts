@@ -99,8 +99,10 @@ const useProcess = () => {
       }
     }).finally(() => {
       if (running.current?.id !== item.id) return;
-      completed();
-      setTimeout(listen);
+      setTimeout(() => {
+        completed();
+        listen();
+      });
     });
   };
 

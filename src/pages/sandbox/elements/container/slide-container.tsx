@@ -2,12 +2,12 @@ import Button from "@/components/elements/button";
 import Divider from "@/components/elements/divider";
 import RadioButtons from "@/components/elements/form-items/radio-buttons";
 import ToggleBox from "@/components/elements/form-items/toggle-box";
+import { CloudIcon } from "@/components/elements/icon";
 import Row from "@/components/elements/row";
 import SlideContainer, { SlideContent, type SlideDirection } from "@/components/elements/slide-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import type { NextPage } from "next";
 import { useState } from "react";
-import { VscBrowser } from "react-icons/vsc";
 
 const Page: NextPage = () => {
   const [direction, setDirection] = useState<SlideDirection>(null!);
@@ -134,7 +134,7 @@ const Page: NextPage = () => {
             ))}
           </div>
         </SlideContent>
-        <SlideContent label={<Row $nowrap><VscBrowser /><span>Slide2</span></Row>}>
+        <SlideContent label={<Row $nowrap><CloudIcon /><span>Slide2</span></Row>}>
           {/* <div className="box w-100 h-min100 c-tertiary p-1"> */}
           <h1>Slide 2</h1>
           {ArrayUtils.generateArray(20, (idx) => (
