@@ -1,5 +1,5 @@
 import { getDynamicUrlContext } from "@/utilities/url";
-import { useRouter as $useRouter } from "next/router";
+import { useRouter as $useRouter } from "next/navigation";
 
 const useRouter = () => {
   const router = $useRouter();

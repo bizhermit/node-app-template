@@ -1,8 +1,10 @@
+"use client";
+
 import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "$/components/elements/menu.module.scss";
 import { attributes, attributesWithoutChildren } from "@/components/utilities/attributes";
 import useToggleAnimation from "@/hooks/toggle-animation";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import { useNavigation } from "@/components/elements/navigation-container";
 import NextLink from "@/components/elements/link";
 import Text from "@/components/elements/text";
@@ -104,7 +106,7 @@ const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string) => {
 };
 
 const MenuItem: FC<MenuItemPropsImpl> = (props) => {
-  const router = useRouter();
+  const pathname = usePathname();
   const nav = useNavigation();
   const ref = useRef<HTMLDivElement>(null!);
   const attrs = {
@@ -113,14 +115,14 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   };
 
   const selected = useMemo(() => {
-    return judgeSelected(props, router.pathname);
-  }, [router.pathname, props.$judgeSelected]);
-  const selectable = Boolean(router.pathname) || (props.items?.length ?? 0) > 0 || props.onClick != null;
+    return judgeSelected(props, pathname);
+  }, [pathname, props.$judgeSelected]);
+  const selectable = Boolean(pathname) || (props.items?.length ?? 0) > 0 || props.onClick != null;
 
   const [showItems, setShowItems] = useState(() => {
     if (props.defaultOpen != null) return props.defaultOpen;
     const func = (p: AddonMenuItemProps) => {
-      if (p !== props && judgeSelected({ ...p, $judgeSelected: props.$judgeSelected }, router.pathname)) return true;
+      if (p !== props && judgeSelected({ ...p, $judgeSelected: props.$judgeSelected }, pathname)) return true;
       if (p.items == null || p.items.length === 0) return false;
       for (let i = 0, il = p.items.length; i < il; i++) {
         if (func({ ...p.items[i], nestLevel: p.nestLevel + 1 })) return true;

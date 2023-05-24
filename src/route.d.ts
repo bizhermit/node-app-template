@@ -1,7 +1,10 @@
 // generate by script
 // do not edit
 
-type PagePath = "/page";
+type PagePath = "/layout"
+  | "/page"
+  | "/provider"
+  | "/sandbox/page";
 
 type ApiPath = ;
 
