@@ -5,7 +5,7 @@ const booleanItem = <
   F extends boolean | number | string = boolean | number | string,
   C extends Omit<DataItem_Boolean, DataItemKey | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
   = Omit<DataItem_Boolean, DataItemKey | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
->(ctx?: C) => {
+>(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "boolean";

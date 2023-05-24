@@ -6,7 +6,7 @@ const timeDefaultTypeof: TimeValueType = "number";
 
 const timeItem = <
   C extends Omit<DataItem_Time, DataItemKey | "type" | "mode" | "unit"> & Partial<Pick<DataItem_Time, "mode" | "unit">>
->(ctx?: C) => {
+>(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "time";

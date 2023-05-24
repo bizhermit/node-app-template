@@ -2,7 +2,7 @@ import { dataItemKey } from "@/data-items/_base";
 
 const fileItem = <
   C extends Omit<DataItem_File, DataItemKey | "type">
->(ctx?: C) => {
+>(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
     type: "file";
