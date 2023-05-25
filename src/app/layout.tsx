@@ -12,7 +12,6 @@ const RootLayout: CFC = ({ children }) => {
   return (
     <html lang="ja">
       <head>
-        <meta charSet="utf-8" />
         <meta name="robots" content="none" />
         <meta name="format-detection" content="telephone=no, email=no, address=no" />
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/favicons/favicon.ico" />

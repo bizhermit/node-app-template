@@ -83,6 +83,7 @@ nextApp.prepare().then(async () => {
   }));
   app.use(cookieParser(cookieParserSecret));
 
+  // TODO: csp
   app.use(helmet({
     contentSecurityPolicy: !isDev,
     hidePoweredBy: true,
@@ -113,7 +114,7 @@ nextApp.prepare().then(async () => {
 
   // API
   app.all(`${basePath}/api/*`, (req, res) => {
-    log.debug("api call:", req.url);
+    log.debug(`api call: ${req.method}:`, req.url);
     return handler(req, res);
   });
 
