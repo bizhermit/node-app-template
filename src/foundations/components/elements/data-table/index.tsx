@@ -494,7 +494,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
             })}
             target={column.hrefOptions?.target}
             rel={column.hrefOptions?.rel}
-            className={column.hrefOptions?.decoration === false ? "no-decoration" : undefined}
+            className={joinClassNames(Style.link, column.hrefOptions?.decoration === false ? "no-decoration" : undefined)}
           >
             {column.body ?
               <column.body

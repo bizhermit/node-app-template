@@ -1,15 +1,14 @@
 import type { NextPage } from "next";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import NextLink from "#/components/elements/link";
 
 const Page: NextPage = () => {
   return (
-    <div className="flex-start">
-      <div className="p-1">index</div>
-      <NextLink href="/sandbox">sandbox</NextLink>
-      {ArrayUtils.generateArray(100, idx => {
-        return <Row key={idx}>{idx}</Row>;
-      })}
-    </div>
+    <section>
+      <h1>Node App Template</h1>
+      <NextLink href="/sandbox">
+        SandBox
+      </NextLink>
+    </section>
   );
 };
 

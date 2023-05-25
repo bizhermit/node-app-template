@@ -285,3 +285,9 @@ $borderStyle: 1px solid var(--c-border);
 .radio {
   display: none !important;
 }
+
+.link {
+  box-sizing: border-box;
+  max-height: 100%;
+  max-width: 100%;
+}

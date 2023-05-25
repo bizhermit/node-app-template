@@ -86,6 +86,7 @@ const StructView = forwardRef<HTMLTableElement, StructViewProps>((props, ref) =>
   const color = props.$color || "main";
   const baseColor = props.$baseColor || "base";
 
+  if (props.$value == null || Object.keys(props.$value).length === 0) return <></>;
   return (
     <table
       {...attributesWithoutChildren(props, Style.table, `c-${baseColor}`, `bdc-${color}`)}
