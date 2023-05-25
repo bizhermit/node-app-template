@@ -2,26 +2,28 @@ import fileItem from "@/data-items/_base/file";
 import stringItem from "@/data-items/_base/string";
 import apiMethodHandler from "@/utilities/api-handler/app-api";
 
+const text = stringItem({ required: true });
+const blobFile = fileItem({ required: true });
+
 export const GET = apiMethodHandler({
+  text,
 }, async (ctx) => {
-  console.log("get");
+  // console.log("get");
   const data = ctx.getData();
-  console.log(data);
+  // console.log(data);
   return {
-    hoge: 1,
-    fuga: 2,
+    ...data,
   };
 });
 
-const blobFile = fileItem({ required: true });
 export const POST = apiMethodHandler({
-  fetch: stringItem(),
+  text,
   file: blobFile,
 }, async (ctx) => {
-  console.log("post");
+  // console.log("post");
   const data = ctx.getData();
-  console.log(data);
+  // console.log(data);
   return {
-    hoge: 1,
+    ...data,
   };
 });

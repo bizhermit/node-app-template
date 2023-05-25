@@ -15,7 +15,7 @@ const getSession = (req: NextApiRequest): SessionStruct => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends Struct = Struct> =
+type MethodProcess<Req extends DataContext = DataContext, Res extends Struct | void = void> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
@@ -24,17 +24,17 @@ type MethodProcess<Req extends DataContext = DataContext, Res extends Struct = S
     setStatus: (code: number) => void;
     hasError: () => boolean;
     getData: () => DataItemValueType<Req, true, "page-api">;
-  }) => Promise<void | Res>;
+  }) => Promise<Res>;
 
 const apiHandler = <
   GetReq extends DataContext = DataContext,
-  GetRes extends Struct = Struct,
+  GetRes extends Struct | void = void,
   PostReq extends DataContext = DataContext,
-  PostRes extends Struct = Struct,
+  PostRes extends Struct | void = void,
   PutReq extends DataContext = DataContext,
-  PutRes extends Struct = Struct,
+  PutRes extends Struct | void = void,
   DeleteReq extends DataContext = DataContext,
-  DeleteRes extends Struct = Struct
+  DeleteRes extends Struct | void = void
 >(methods: Readonly<{
   $get?: GetReq;
   get?: MethodProcess<GetReq, GetRes>;
@@ -166,14 +166,14 @@ const apiHandler = <
     }
   }) as {
     (req: NextApiRequest, res: NextApiResponse): Promise<void>;
-    $get: Required<typeof methods>["$get"];
-    get: Exclude<Awaited<ReturnType<Required<typeof methods>["get"]>>, void>;
-    $post: Required<typeof methods>["$post"];
-    post: Exclude<Awaited<ReturnType<Required<typeof methods>["post"]>>, void>;
-    $put: Required<typeof methods>["$put"];
-    put: Exclude<Awaited<ReturnType<Required<typeof methods>["put"]>>, void>;
-    $delete: Required<typeof methods>["$delete"];
-    delete: Exclude<Awaited<ReturnType<Required<typeof methods>["delete"]>>, void>;
+    $get: GetReq;
+    get: GetRes;
+    $post: PostReq;
+    post: PostRes;
+    $put: PutReq;
+    put: PutRes;
+    $delete: DeleteReq;
+    delete: DeleteRes;
   };
 };
 

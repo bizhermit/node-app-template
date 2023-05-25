@@ -29,7 +29,7 @@ const useFetch = () => {
     options?: FetchOptions
   ) => {
     try {
-      const res: FetchApiResponse<ApiResponse<U, M>["data"]> = await fetchApi[method](url, params, options);
+      const res = await fetchApi[method](url, params, options) as FetchApiResponse<ApiResponse<U, M>>;
       const msgs = optimizeMessages(res.messages);
 
       if (res.ok) {

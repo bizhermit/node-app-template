@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 
 import Button from "@/components/elements/button";
@@ -29,7 +30,7 @@ const FetchContent = () => {
             $onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.get("/fetch", {
-                  hoge: 1,
+                  text: "",
                 }, {
                   contentType: "json",
                 });
@@ -46,7 +47,8 @@ const FetchContent = () => {
             $onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/fetch", {
-                  hoge: 10,
+                  text: "a",
+                  // file: new File(),
                 }, {
                   contentType: "json",
                 });
@@ -63,7 +65,7 @@ const FetchContent = () => {
             $onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/fetch", {
-                  hoge: 100,
+                  // text: "hoge",
                 }, {
                   contentType: "formData",
                 });

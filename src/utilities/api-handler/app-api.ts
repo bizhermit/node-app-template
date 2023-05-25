@@ -6,7 +6,7 @@ const getSession = (req: NextRequest): SessionStruct => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends Struct = Struct> =
+type MethodProcess<Req extends DataContext = DataContext, Res extends Struct | void = void> =
   (context: {
     req: NextRequest;
     getCookies: () => RequestCookies;
@@ -14,13 +14,13 @@ type MethodProcess<Req extends DataContext = DataContext, Res extends Struct = S
     setStatus: (code: number) => void;
     hasError: () => boolean;
     getData: () => DataItemValueType<Req, true, "app-api">;
-  }) => Promise<void | Res>;
+  }) => Promise<Res>;
 
 const apiMethodHandler = <
   Req extends DataContext = DataContext,
-  Res extends Struct = Struct
+  Res extends Struct | void = void
 >(dataContext?: Req | null, process?: MethodProcess<Req, Res> | null) => {
-  return async (req: NextRequest, { params }: { params: QueryStruct }) => {
+  return (async (req: NextRequest, { params }: { params: QueryStruct }) => {
     if (process == null) {
       return NextResponse.json({}, { status: 404 });
     }
@@ -95,6 +95,10 @@ const apiMethodHandler = <
         status: statusCode ?? 500,
       });
     }
+  }) as {
+    (req: NextRequest, ctx: { params: QueryStruct }): Promise<NextResponse>;
+    req: Req;
+    res: Res;
   };
 };
 

@@ -39,6 +39,8 @@
     "dist",
     "nexpress",
     "nextron",
+    "src/@pages",
+    "src/@app",
     ".*"
   ],
   "include": [
