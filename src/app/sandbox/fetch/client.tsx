@@ -13,7 +13,7 @@ import useFetch from "#/hooks/fetch-api";
 import useProcess from "#/hooks/process";
 import { useState } from "react";
 
-const FetchContent = () => {
+const FetchClient = () => {
   const api = useFetch();
   const process = useProcess();
   const [response, setResponse] = useState<any>({});
@@ -160,4 +160,4 @@ const FetchContent = () => {
   );
 };
 
-export default FetchContent;
+export default FetchClient;

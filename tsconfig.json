@@ -17,18 +17,18 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "src/*"
+      "$/*": [
+        "src/foundations/styles/*"
       ],
       "#/*": [
         "src/foundations/*"
       ],
-      "$/*": [
-        "src/foundations/styles/*"
-      ],
       "@/*": [
         "src/features/*"
-      ]
+      ],
+      "~/*": [
+        "src/app/*"
+      ],
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,

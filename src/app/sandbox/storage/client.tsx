@@ -1,13 +1,14 @@
+"use client";
+
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import ToggleBox from "#/components/elements/form-items/toggle-box";
-import Text from "#/components/elements/text";
 import Row from "#/components/elements/row";
+import Text from "#/components/elements/text";
 import { useLocalState, useSessionState } from "#/hooks/storage";
-import type { NextPage } from "next";
 import { useState } from "react";
 
-const Page: NextPage = () => {
+const PageClient = () => {
   const [autoSave, setAutoSave] = useState(true);
   const session = useSessionState("session", () => 3, { autoSave });
   const local = useLocalState("local", () => 3);
@@ -69,4 +70,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default PageClient;

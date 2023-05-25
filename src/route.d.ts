@@ -6,7 +6,9 @@ type AppDir = true;
 type PagePath = "/"
   | "/sandbox/color"
   | "/sandbox/fetch"
-  | "/sandbox";
+  | "/sandbox"
+  | "/sandbox/process"
+  | "/sandbox/storage";
 
 type ApiPath = "/fetch"
   | "/";

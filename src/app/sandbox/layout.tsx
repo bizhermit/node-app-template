@@ -1,4 +1,4 @@
-import SandBoxProvider from "~/app/sandbox/provider";
+import SandBoxProvider from "~/sandbox/provider";
 
 const SandBoxLayout: CFC = ({ children }) => {
   return (

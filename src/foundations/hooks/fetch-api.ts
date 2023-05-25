@@ -1,6 +1,6 @@
 import useMessage from "#/components/providers/message";
+import { equals } from "#/data-items/utilities";
 import fetchApi, { FetchApiResponse, type FetchOptions } from "#/utilities/fetch-api";
-import { equals } from "~/foundations/data-items/utilities";
 
 const optimizeMessages = (messages: Array<Message>) => {
   const msgs: Array<Message> = [];

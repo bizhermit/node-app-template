@@ -8,10 +8,10 @@ const nextConfig = {
     appDir: true,
   },
   webpack(config) {
-    config.resolve.alias['~'] = path.join(__dirname, 'src');
-    config.resolve.alias['#'] = path.join(__dirname, "src/foundations")
     config.resolve.alias['$'] = path.join(__dirname, 'src/foundations/styles');
+    config.resolve.alias['#'] = path.join(__dirname, "src/foundations")
     config.resolve.alias['@'] = path.join(__dirname, 'src/features');
+    config.resolve.alias['~'] = path.join(__dirname, 'src/app');
     return config;
   },
 }

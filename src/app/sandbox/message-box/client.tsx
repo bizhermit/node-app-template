@@ -1,9 +1,10 @@
+"use client";
+
 import Button from "#/components/elements/button";
 import useMessageBox from "#/hooks/message-box";
 import useRouter from "#/hooks/route";
-import type { NextPage } from "next";
 
-const Page: NextPage = () => {
+const MessageBoxClient = () => {
   const msg = useMessageBox({ preventUnmountClose: true });
   const router = useRouter();
 
@@ -73,4 +74,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default MessageBoxClient;
