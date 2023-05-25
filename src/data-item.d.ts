@@ -43,7 +43,7 @@ type NumberValue = number | string;
 type BooleanValue = boolean | string | number;
 type DateValue = string | number | Date;
 
-type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "client" | "server" = "client"> =
+type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "client" | "page-api" | "app-api" = "client"> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
       Strict extends true ? (
@@ -100,20 +100,20 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
       Strict extends true ? (
         D["required"] extends true ? (
           D["multiple"] extends true ? (
-            Array<D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)>
+            Array<D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>)>
           ) : (
-            D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)
+            D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>)
           )
         ) : (
           D["multiple"] extends true ? (
-            Array<(D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File))> | null | undefined
+            Array<(D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>))> | null | undefined
           ) : (
-            (D["typeof"] extends "base64" ? string : (Side extends "server" ? FileValue : File)) | null | undefined
+            (D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>)) | null | undefined
           )
         )
       ) : D["multiple"] extends true ? (
-        Array<(Side extends "server" ? FileValue : File) | string | null | undefined> | null | undefined
-      ) : (Side extends "server" ? FileValue : File) | string | null | undefined
+        Array<(Side extends "client" ? File : FileValue<Side>) | string | null | undefined> | null | undefined
+      ) : (Side extends "client" ? File : FileValue<Side>) | string | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       Strict extends true ? (
@@ -284,7 +284,7 @@ type DataItem_File = Readonly<DataItem_Base & {
   validations?: DataItemValidation<Array<File | FileValue> | (File | FileValue), DataItem_File>;
 }>;
 
-type FileValue = {
+type FileValue<Side extends "page-api" | "app-api" = "page-api" | "app-api"> = Side extends "page-api" ? {
   lastModifiedDate?: string;
   filepath?: string;
   newFilename?: string;
@@ -293,7 +293,7 @@ type FileValue = {
   mimetype: string;
   size: number;
   content?: string;
-};
+} : Blob;
 
 /**
  * Array

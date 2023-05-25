@@ -1,27 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { dataItemKey } from "@/data-items/_base";
 import { StringData } from "@/data-items/_base/string";
 import { NumberData } from "@/data-items/_base/number";
 import { DateData } from "@/data-items/_base/date";
 import { TimeData } from "@/data-items/_base/time";
 import { FileData } from "@/data-items/_base/file";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import Time, { TimeUtils } from "@bizhermit/time";
-import formidable from "formidable";
-
-export type NextApiConfig = {
-  api?: {
-    bodyParser?: false | {
-      sizeLimit?: string; // "10mb"
-    };
-    externalResolver?: boolean;
-  };
-};
-
-type QueryStruct = Partial<{ [key: string]: string | Array<string> }>;
-type SessionStruct = { [key: string]: any };
-type ValidationResult = Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>
 
 const getPushValidationMsgFunc = (msgs: Array<Message>, key: string | number, ctx: DataItem, data?: Struct, index?: number, _pctx?: DataContext) => {
   const name = ctx.label || ctx.name || String(key);
@@ -36,7 +20,7 @@ const getPushValidationMsgFunc = (msgs: Array<Message>, key: string | number, ct
   };
 };
 
-const getItem = (
+export const getItem = (
   msgs: Array<Message>,
   key: string | number | null | undefined = undefined,
   ctx: DataItem | DataContext | null | undefined = undefined,
@@ -393,7 +377,7 @@ const getFileItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_F
       }
       data[key] = (data[key] as Array<FileValue>)?.filter(item => {
         if (item == null) return false;
-        return !StringUtils.isEmpty(item.originalFilename);
+        return item.size > 0;
       });
     } else {
       if (v != null && Array.isArray(v)) {
@@ -405,7 +389,7 @@ const getFileItem = (msgs: Array<Message>, key: string | number, ctx: DataItem_F
         }
       }
       const vc = data[key] as FileValue;
-      if (vc != null && StringUtils.isEmpty(vc.originalFilename)) {
+      if (vc != null && vc.size === 0) {
         data[key] = undefined;
       }
     }
@@ -544,178 +528,10 @@ const getStructItem = (msgs: Array<Message>, key: string | number, ctx: DataItem
   getItem(msgs, null, ctx.item, v!, undefined, pctx);
 };
 
-const getSession = (req: NextApiRequest, _res: NextApiResponse): SessionStruct => {
-  return (req as any).session ?? (global as any)._session ?? {};
+export const hasError = (msgs: Array<Message>) => {
+  return msgs.some(msg => msg?.type === "error");
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends Struct = Struct> =
-  (context: {
-    req: NextApiRequest;
-    res: NextApiResponse;
-    getCookies: <T extends QueryStruct = QueryStruct>() => T;
-    getSession: () => SessionStruct;
-    setStatus: (code: number) => void;
-    hasError: () => boolean;
-    getData: () => DataItemValueType<Req, true, "server">;
-  }) => Promise<void | Res>;
-
-const apiHandler = <
-  GetReq extends DataContext = DataContext,
-  GetRes extends Struct = Struct,
-  PostReq extends DataContext = DataContext,
-  PostRes extends Struct = Struct,
-  PutReq extends DataContext = DataContext,
-  PutRes extends Struct = Struct,
-  DeleteReq extends DataContext = DataContext,
-  DeleteRes extends Struct = Struct
->(methods: Readonly<{
-  $get?: GetReq;
-  get?: MethodProcess<GetReq, GetRes>;
-  $post?: PostReq;
-  post?: MethodProcess<PostReq, PostRes>;
-  $put?: PutReq;
-  put?: MethodProcess<PutReq, PutRes>;
-  $delete?: DeleteReq;
-  delete?: MethodProcess<DeleteReq, DeleteRes>;
-}>) => {
-  const f = async (req: NextApiRequest, res: NextApiResponse) => {
-    let statusCode: number | undefined = undefined;
-    const msgs: Array<Message> = [];
-    const hasError = () => {
-      return msgs.some(msg => msg?.type === "error");
-    };
-    const getReturnMessages = () => {
-      return msgs.filter(msg => msg?.type === "error");
-    };
-
-    try {
-      const method = (req.method?.toLocaleLowerCase() ?? "get") as ApiMethods;
-      const handler = methods[method];
-      if (handler == null) {
-        res.status(404).json({});
-        return;
-      }
-
-      const dataContext = methods[`$${method}`];
-      const reqData = await (async () => {
-        let retData: Struct = { ...req.query };
-        const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
-        if (req.body == null) {
-          if (method !== "get") {
-            await new Promise<void>((resolve, reject) => {
-              const form = new formidable.IncomingForm({
-                multiples: true,
-              });
-              form.parse(req, (err, fields, files) => {
-                if (err) {
-                  reject(err);
-                  return;
-                }
-                retData = {
-                  ...retData,
-                  ...fields,
-                  ...files,
-                };
-                resolve();
-              });
-            });
-          }
-        } else {
-          if (contentType === "multipart/form-data") {
-            const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
-            if (key) {
-              const body: { [key: string]: any } = {};
-              const items = (req.body as string).split(key);
-              for (const item of items) {
-                if (item.startsWith("--")) continue;
-                const lines = item.split(/\r?\n/);
-                lines.splice(lines.length - 1, 1);
-                lines.splice(0, 1);
-                const name = lines[0]?.match(/\sname="([^\"]*)"/)?.[1];
-                if (!name) continue;
-                let value: any = undefined;
-                const headerEndLineIndex = lines.findIndex(line => line === "");
-                const fileName = lines[0]?.match(/\sfilename="([^\"]*)"/)?.[1] ?? undefined;
-                if (fileName == null) {
-                  value = item
-                    .replace(lines[0], "")
-                    .replace(/^\r?\n\r?\n\r?\n/, "")
-                    .replace(/\r?\n$/, "");
-                } else {
-                  if (headerEndLineIndex > 1) {
-                    value = item
-                      .replace(lines[0], "")
-                      .replace(lines[1], "")
-                      .replace(/^\r?\n\r?\n\r?\n\r?\n/, "")
-                      .replace(/\r?\n$/, "");
-                    if (fileName && value) {
-                      value = {
-                        mimetype: lines[1].match(/Content-Type:\s([^\s|\r?\n|;]*)/)?.[1],
-                        originalFilename: fileName,
-                        size: Buffer.from(value, "ascii").byteLength,
-                        content: value,
-                      } as FileValue;
-                    } else {
-                      value = undefined;
-                    }
-                  }
-                }
-                if (name in body) {
-                  if (!Array.isArray(body[name])) body[name] = [body[name]];
-                  body[name].push(value);
-                  continue;
-                }
-                body[name] = value;
-              }
-              retData = { ...retData, ...body };
-            }
-          } else {
-            retData = { ...retData, ...req.body };
-          }
-        }
-        if (dataContext == null) return retData;
-        getItem(msgs, null, dataContext, retData);
-        if (hasError()) {
-          statusCode = 400;
-          throw new Error("validation error");
-        }
-        return retData;
-      })();
-
-      const resData = await handler({
-        req,
-        res,
-        getCookies: () => req.cookies as any,
-        getSession: () => getSession(req, res),
-        setStatus: (code: number) => statusCode = code,
-        hasError,
-        getData: () => reqData as any,
-      });
-
-      res.status(statusCode ?? (resData == null ? 204 : 200)).json({
-        messages: getReturnMessages(),
-        data: resData
-      });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
-      res.status(statusCode ?? 500).json({
-        messages: getReturnMessages(),
-      });
-    }
-  };
-
-  return f as {
-    (req: NextApiRequest, res: NextApiResponse): Promise<void>;
-    $get: Required<typeof methods>["$get"];
-    get: Exclude<Awaited<ReturnType<Required<typeof methods>["get"]>>, void>;
-    $post: Required<typeof methods>["$post"];
-    post: Exclude<Awaited<ReturnType<Required<typeof methods>["post"]>>, void>;
-    $put: Required<typeof methods>["$put"];
-    put: Exclude<Awaited<ReturnType<Required<typeof methods>["put"]>>, void>;
-    $delete: Required<typeof methods>["$delete"];
-    delete: Exclude<Awaited<ReturnType<Required<typeof methods>["delete"]>>, void>;
-  };
+export const getReturnMessages = (msgs: Array<Message>) => {
+  return msgs.filter(msg => msg?.type === "error");
 };
-
-export default apiHandler;

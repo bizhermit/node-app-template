@@ -8,7 +8,7 @@ import { sample_boolean, sample_date, sample_month, sample_number, sample_string
 import stringItem from "@/data-items/_base/string";
 import structItem from "@/data-items/_base/struct";
 import timeItem from "@/data-items/_base/time";
-import apiHandler, { type NextApiConfig } from "@/utilities/api-handler";
+import apiHandler, { type NextApiConfig } from "@/utilities/api-handler/types";
 
 export const config: NextApiConfig = {
   api: {

@@ -2,5 +2,6 @@
 /next.config.js
 /scripts
 /src/pages/sandbox/*
+/src/@pages/**/*
 /nextron
 /nexpress

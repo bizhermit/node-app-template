@@ -145,12 +145,12 @@ type FormItemMountProps = {
 
 type PlainFormProps = {
   $submitDataType: "formData";
-  $onSubmit?: (((data: FormData, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+  $onSubmit?: (((data: FormData, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
 };
 
 type BindFormProps<T extends Struct = Struct> = {
   $submitDataType?: "struct";
-  $onSubmit?: (((data: T, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+  $onSubmit?: (((data: T, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
 };
 
 export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
@@ -265,7 +265,11 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
       setDisabled(false);
       return;
     }
-    const ret = props.$onSubmit((props.$submitDataType === "formData" ? new FormData(e.currentTarget) : bind) as any, e);
+    const ret = props.$onSubmit(
+      (props.$submitDataType === "formData" ? new FormData(e.currentTarget) : bind) as any,
+      ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
+      e
+    );
     if (ret == null || typeof ret === "boolean") {
       if (ret !== true) {
         e.preventDefault();
