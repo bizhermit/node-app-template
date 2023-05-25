@@ -1,8 +1,8 @@
-import Button from "@/components/elements/button";
-import Loading from "@/components/elements/loading";
-import Row from "@/components/elements/row";
-import Text from "@/components/elements/text";
-import useProcess from "@/hooks/process";
+import Button from "#/components/elements/button";
+import Loading from "#/components/elements/loading";
+import Row from "#/components/elements/row";
+import Text from "#/components/elements/text";
+import useProcess from "#/hooks/process";
 import type { NextPage } from "next";
 import { useState } from "react";
 

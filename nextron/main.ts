@@ -7,6 +7,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { existsSync, mkdir, readFile, writeFile } from "fs-extra";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
+import NextConfig from "../next.config";
 
 const $global = global as { [key: string]: any };
 const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
@@ -26,6 +27,8 @@ const log = {
 log.info(`::: dev :::${isDev ? " [dev]" : ""}`);
 
 const appRoot = path.join(__dirname, "../../");
+const isAppDir = NextConfig.experimental?.appDir ?? false;
+const pageRoot = isAppDir ? ".main/src/app" : ".main/src/pages";
 
 app.on("ready", async () => {
   const mainWindow = new BrowserWindow({
@@ -268,7 +271,7 @@ app.on("ready", async () => {
             returnJudge();
           },
         };
-        import(path.join(appRoot, ".main/src/pages", uri)).then((handler) => {
+        import(path.join(appRoot, pageRoot, uri, isAppDir ? "route" : "")).then((handler) => {
           try {
             handler.default(req, res);
           } catch (err) {

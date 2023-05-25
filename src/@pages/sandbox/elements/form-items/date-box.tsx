@@ -1,13 +1,13 @@
-import Button from "@/components/elements/button";
-import DateBox from "@/components/elements/form-items/date-box";
-import Divider from "@/components/elements/divider";
-import Form from "@/components/elements/form";
-import ToggleBox from "@/components/elements/form-items/toggle-box";
-import Row from "@/components/elements/row";
+import Button from "#/components/elements/button";
+import DateBox from "#/components/elements/form-items/date-box";
+import Divider from "#/components/elements/divider";
+import Form from "#/components/elements/form";
+import ToggleBox from "#/components/elements/form-items/toggle-box";
+import Row from "#/components/elements/row";
 import type { NextPage } from "next";
 import { useState } from "react";
-import RadioButtons from "@/components/elements/form-items/radio-buttons";
-import { sample_date, sample_month, sample_number, sample_string, sample_year } from "@/data-items/sample/item";
+import RadioButtons from "#/components/elements/form-items/radio-buttons";
+import { sample_date, sample_month, sample_number, sample_string, sample_year } from "#/data-items/sample/item";
 
 const Page: NextPage = () => {
   const [disabled, setDisabled] = useState(false);

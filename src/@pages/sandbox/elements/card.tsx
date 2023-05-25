@@ -1,7 +1,7 @@
-import Card from "@/components/elements/card";
-import Divider from "@/components/elements/divider";
-import ToggleBox from "@/components/elements/form-items/toggle-box";
-import Row from "@/components/elements/row";
+import Card from "#/components/elements/card";
+import Divider from "#/components/elements/divider";
+import ToggleBox from "#/components/elements/form-items/toggle-box";
+import Row from "#/components/elements/row";
 import type { NextPage } from "next";
 import { type FC, useEffect, useState } from "react";
 

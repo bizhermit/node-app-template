@@ -1,8 +1,8 @@
 "use client";
 
-import { LoadingProvider } from "@/components/elements/loading";
-import { LayoutProvider } from "@/components/providers/layout";
-import { MessageProvider } from "@/components/providers/message";
+import { LoadingProvider } from "#/components/elements/loading";
+import { LayoutProvider } from "#/components/providers/layout";
+import { MessageProvider } from "#/components/providers/message";
 
 const RootProvider: CFC = ({ children }) => {
   return (

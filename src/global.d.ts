@@ -4,7 +4,3 @@ type Nullable<T> = T | null | undefined;
 type DeepReadonly<T> =
   T extends (Function | Date | Error | RegExp) ? T :
   { readonly [key in keyof T]: DeepReadonly<T[key]> };
-
-type CFC = (props: {
-  children: React.ReactNode;
-}) => React.ReactElement;

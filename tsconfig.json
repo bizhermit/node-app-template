@@ -17,11 +17,17 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
+      "~/*": [
         "src/*"
       ],
+      "#/*": [
+        "src/foundations/*"
+      ],
       "$/*": [
-        "src/styles/*"
+        "src/foundations/styles/*"
+      ],
+      "@/*": [
+        "src/features/*"
       ]
     },
     "esModuleInterop": true,

@@ -3,12 +3,12 @@ import type { FC } from "react";
 import "$/globals.scss";
 import "$/color.scss";
 import "$/utility.scss";
-import { LayoutProvider, WindowSize } from "@/components/providers/layout";
-import NavigationContainer, { useNavigation } from "@/components/elements/navigation-container";
-import Menu from "@/components/elements/menu";
-import { LoadingProvider } from "@/components/elements/loading";
-import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { MessageProvider } from "@/components/providers/message";
+import { LayoutProvider, WindowSize } from "#/components/providers/layout";
+import NavigationContainer, { useNavigation } from "#/components/elements/navigation-container";
+import Menu from "#/components/elements/menu";
+import { LoadingProvider } from "#/components/elements/loading";
+import { convertSizeNumToStr } from "#/components/utilities/attributes";
+import { MessageProvider } from "#/components/providers/message";
 import Head from "next/head";
 
 const App = ({ Component, pageProps }: AppProps) => {

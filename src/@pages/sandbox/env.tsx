@@ -1,4 +1,4 @@
-import StructView from "@/components/elements/struct-view";
+import StructView from "#/components/elements/struct-view";
 import type { NextPage } from "next";
 
 const Page: NextPage = (props) => {

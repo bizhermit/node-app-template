@@ -1,4 +1,4 @@
-import NextLink from "@/components/elements/link";
+import NextLink from "#/components/elements/link";
 
 const Page = () => {
   return (

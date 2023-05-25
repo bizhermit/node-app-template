@@ -1,9 +1,9 @@
-import Button from "@/components/elements/button";
-import Form from "@/components/elements/form";
-import TextBox from "@/components/elements/form-items/text-box";
-import { CloudDownloadIcon } from "@/components/elements/icon";
-import Row from "@/components/elements/row";
-import { colors } from "@/utilities/sandbox";
+import Button from "#/components/elements/button";
+import Form from "#/components/elements/form";
+import TextBox from "#/components/elements/form-items/text-box";
+import { CloudDownloadIcon } from "#/components/elements/icon";
+import Row from "#/components/elements/row";
+import { colors } from "#/utilities/sandbox";
 import type { NextPage } from "next";
 import type { CSSProperties } from "react";
 

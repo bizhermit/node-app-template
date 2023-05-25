@@ -12,6 +12,6 @@ type ApiPath = "/fetch"
   | "/";
 
 type TypeofApi = {
-  "/fetch": typeof import("@/app/api/fetch/route");
-  "/": typeof import("@/app/api//route");
+  "/fetch": typeof import("~/app/api/fetch/route");
+  "/": typeof import("~/app/api//route");
 };

@@ -1,4 +1,4 @@
-import apiHandler from "@/utilities/api-handler/types";
+import apiHandler from "#/utilities/api-handler/types";
 
 export default apiHandler({
 });

@@ -1,10 +1,10 @@
-import Button from "@/components/elements/button";
-import Divider from "@/components/elements/divider";
-import Form from "@/components/elements/form";
-import TimeBox from "@/components/elements/form-items/time-box";
-import ToggleBox from "@/components/elements/form-items/toggle-box";
-import Row from "@/components/elements/row";
-import { sample_number, sample_string, sample_time } from "@/data-items/sample/item";
+import Button from "#/components/elements/button";
+import Divider from "#/components/elements/divider";
+import Form from "#/components/elements/form";
+import TimeBox from "#/components/elements/form-items/time-box";
+import ToggleBox from "#/components/elements/form-items/toggle-box";
+import Row from "#/components/elements/row";
+import { sample_number, sample_string, sample_time } from "#/data-items/sample/item";
 import type { NextPage } from "next";
 import { useState } from "react";
 

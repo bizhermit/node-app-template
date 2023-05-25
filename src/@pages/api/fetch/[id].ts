@@ -1,7 +1,7 @@
-import arrayItem from "@/data-items/_base/array";
-import numberItem from "@/data-items/_base/number";
-import stringItem from "@/data-items/_base/string";
-import apiHandler from "@/utilities/api-handler/types";
+import arrayItem from "#/data-items/_base/array";
+import numberItem from "#/data-items/_base/number";
+import stringItem from "#/data-items/_base/string";
+import apiHandler from "#/utilities/api-handler/types";
 
 export default apiHandler({
   $get: {

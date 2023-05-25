@@ -1,9 +1,9 @@
-import Button from "@/components/elements/button";
-import Divider from "@/components/elements/divider";
-import ToggleBox from "@/components/elements/form-items/toggle-box";
-import Text from "@/components/elements/text";
-import Row from "@/components/elements/row";
-import { useLocalState, useSessionState } from "@/hooks/storage";
+import Button from "#/components/elements/button";
+import Divider from "#/components/elements/divider";
+import ToggleBox from "#/components/elements/form-items/toggle-box";
+import Text from "#/components/elements/text";
+import Row from "#/components/elements/row";
+import { useLocalState, useSessionState } from "#/hooks/storage";
 import type { NextPage } from "next";
 import { useState } from "react";
 

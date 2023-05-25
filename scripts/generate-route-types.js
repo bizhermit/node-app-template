@@ -70,8 +70,8 @@ fse.writeFileSync(path.join(srcRootPath, "route.d.ts"), `// generate by script\n
   }).join("\n  | ");
 })()};\n\ntype TypeofApi = {\n${(() => {
   return apis.map(pathname => {
-    if (isAppDir) return `  "${pathname}": typeof import("@/app/api${pathname}/route");`;
-    return `  "${pathname}": typeof import("@/pages/api${pathname}");`;
+    if (isAppDir) return `  "${pathname}": typeof import("~/app/api${pathname}/route");`;
+    return `  "${pathname}": typeof import("~/pages/api${pathname}");`;
   }).join("\n");
 })()}\n};`);
 process.stdout.write("\n");

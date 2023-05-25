@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
 "use client";
 
-import Button from "@/components/elements/button";
-import Form from "@/components/elements/form";
-import FileDrop from "@/components/elements/form-items/file-drop";
-import TextBox from "@/components/elements/form-items/text-box";
-import GroupBox from "@/components/elements/group-box";
-import Loading from "@/components/elements/loading";
-import Row from "@/components/elements/row";
-import StructView from "@/components/elements/struct-view";
-import useFetch from "@/hooks/fetch-api";
-import useProcess from "@/hooks/process";
+import Button from "#/components/elements/button";
+import Form from "#/components/elements/form";
+import FileDrop from "#/components/elements/form-items/file-drop";
+import TextBox from "#/components/elements/form-items/text-box";
+import GroupBox from "#/components/elements/group-box";
+import Loading from "#/components/elements/loading";
+import Row from "#/components/elements/row";
+import StructView from "#/components/elements/struct-view";
+import useFetch from "#/hooks/fetch-api";
+import useProcess from "#/hooks/process";
 import { useState } from "react";
 
 const FetchContent = () => {

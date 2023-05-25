@@ -1,8 +1,8 @@
 "use client";
 
-import Menu from "@/components/elements/menu";
-import NavigationContainer, { useNavigation } from "@/components/elements/navigation-container";
-import { convertSizeNumToStr } from "@/components/utilities/attributes";
+import Menu from "#/components/elements/menu";
+import NavigationContainer, { useNavigation } from "#/components/elements/navigation-container";
+import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import type { FC } from "react";
 
 const SandBoxProvider: CFC = ({ children }) => {

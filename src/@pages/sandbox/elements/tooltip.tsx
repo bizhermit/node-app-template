@@ -1,5 +1,5 @@
-import TextBox from "@/components/elements/form-items/text-box";
-import Tooltip from "@/components/elements/tooltip";
+import TextBox from "#/components/elements/form-items/text-box";
+import Tooltip from "#/components/elements/tooltip";
 import type { NextPage } from "next";
 
 const Page: NextPage = () => {

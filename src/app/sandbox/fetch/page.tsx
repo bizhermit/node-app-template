@@ -1,4 +1,4 @@
-import FetchContent from "@/app/sandbox/fetch/client";
+import FetchContent from "~/app/sandbox/fetch/client";
 
 const Page = () => {
   return (

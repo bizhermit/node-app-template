@@ -1,10 +1,10 @@
-import Button from "@/components/elements/button";
-import Divider from "@/components/elements/divider";
-import Form from "@/components/elements/form";
-import CheckBox from "@/components/elements/form-items/check-box";
-import NextLink from "@/components/elements/link";
-import LinkButton from "@/components/elements/link-button";
-import Row from "@/components/elements/row";
+import Button from "#/components/elements/button";
+import Divider from "#/components/elements/divider";
+import Form from "#/components/elements/form";
+import CheckBox from "#/components/elements/form-items/check-box";
+import NextLink from "#/components/elements/link";
+import LinkButton from "#/components/elements/link-button";
+import Row from "#/components/elements/row";
 import type { NextPage } from "next";
 
 const Page: NextPage = () => {

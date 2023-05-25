@@ -1,6 +1,6 @@
-import Button from "@/components/elements/button";
-import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon, UndoIcon, RedoIcon, CloudIcon, CloudDownloadIcon, CloudUploadIcon } from "@/components/elements/icon";
-import Row from "@/components/elements/row";
+import Button from "#/components/elements/button";
+import { PlusIcon, CrossIcon, MinusIcon, MenuIcon, RightIcon, LeftIcon, UpIcon, DownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DoubleDownIcon, ClockIcon, ListIcon, CalendarIcon, TodayIcon, SaveIcon, ClearAllIcon, UndoIcon, RedoIcon, CloudIcon, CloudDownloadIcon, CloudUploadIcon } from "#/components/elements/icon";
+import Row from "#/components/elements/row";
 import { NextPage } from "next";
 
 const Page: NextPage = () => {

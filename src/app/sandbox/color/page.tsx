@@ -1,5 +1,5 @@
-import Row from "@/components/elements/row";
-import { colors } from "@/utilities/sandbox";
+import Row from "#/components/elements/row";
+import { colors } from "#/utilities/sandbox";
 
 const Page = () => {
   return (
