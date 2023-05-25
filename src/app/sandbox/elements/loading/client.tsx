@@ -2,8 +2,9 @@
 
 import Button from "#/components/elements/button";
 import RadioButtons from "#/components/elements/form-items/radio-buttons";
-import Loading, { useLoading } from "#/components/elements/loading";
+import Loading from "#/components/elements/loading";
 import Row from "#/components/elements/row";
+import { useLoading } from "#/components/providers/loading";
 import { useState } from "react";
 
 const LoadingClient = () => {

@@ -19,19 +19,20 @@
     "prebuild": "npm run route",
     "build": "npx next build",
     "next": "npm run clean && npm run build && npx next start",
-    "export": "npm run clean && npm run build && npx rimraf dist/out && npx next export -o dist/out",
+    "export": "npm run clean && npx rimraf dist/out && npx cross-env NEXT_OUTPUT=\"dist\" npm run build",
     "prenexpress": "npm run clean && npx rimraf .nexpress && npx tsc -p nexpress/tsconfig.json",
     "dev:nexpress": "npm run prenexpress && npm run route && npx cross-env NODE_ENV=\"development\" node .nexpress/main.js",
     "nexpress": "npm run build && node .nexpress/main.js",
     "clean:nextron": "npx rimraf .main .renderer",
     "nextron": "npm run clean && npm run predist && npm run route && npx electron .main/nextron/main.js",
     "predist": "npm run clean:nextron -- dist/pack && npx tsc -p nextron/tsconfig.json && npx tsc-alias -p nextron/tsconfig.json",
-    "dist": "npm run build && npx next export -o .renderer && npx electron-builder",
+    "dist": "npx cross-env NEXT_OUTPUT=\"renderer\" npm run build && npx electron-builder",
     "dist:linux": "npm run dist -- --linux & npm run clean:nextron",
     "dist:win": "npm run dist -- --win & npm run clean:nextron",
     "dist:mac": "npm run dist -- --mac & npm run clean:nextron",
     "pack": "npm run dist -- --dir --win & npm run clean:nextron",
-    "export:react-addon": "npx rimraf dist/libs/react-addon && npx tsc -p tsconfig.react-addon.json && npx tsc-alias -p tsconfig.react-addon.json && node scripts/export-react-addon && npx minifier dist/libs/react-addon"
+    "export:react-addon": "npx rimraf dist/libs/react-addon && npx tsc -p tsconfig.react-addon.json && npx tsc-alias -p tsconfig.react-addon.json && node scripts/export-react-addon && npx minifier dist/libs/react-addon",
+    "reset": "npx rimraf .next .main .nexpress dist out"
   },
   "dependencies": {
     "@bizhermit/basic-utils": "^2.0.0",

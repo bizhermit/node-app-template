@@ -9,9 +9,15 @@
   "exclude": [
     "../node_modules",
     "../nxpress",
-    "../src/components",
-    "../src/hooks",
-    "../src/styles"
+    "../src/foundations/components",
+    "../src/foundations/hooks",
+    "../src/foundations/styles",
+    "../src/features/components",
+    "../src/features/hooks",
+    "../src/features/styles",
+    "../src/@pages",
+    "../src/@app",
+    "**/*.tsx"
   ],
   "include": [
     "**/*.ts",

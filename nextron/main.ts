@@ -28,7 +28,6 @@ log.info(`::: dev :::${isDev ? " [dev]" : ""}`);
 
 const appRoot = path.join(__dirname, "../../");
 const isAppDir = NextConfig.experimental?.appDir ?? false;
-const pageRoot = isAppDir ? ".main/src/app" : ".main/src/pages";
 
 app.on("ready", async () => {
   const mainWindow = new BrowserWindow({
@@ -227,6 +226,9 @@ app.on("ready", async () => {
           return;
         }
         const uri = uriCtx[1];
+        const headers: { [key: string]: any } = {
+          "content-type": "application/json;"
+        };
         const req = {
           method: init?.method || "GET",
           query: (() => {
@@ -247,6 +249,13 @@ app.on("ready", async () => {
             return query;
           })(),
           body: JSON.parse((init as any)?.body ?? "{}"),
+          url: uri,
+          headers: {
+            get: (key: string) => headers[key],
+          },
+          json: async () => {
+            return JSON.parse((init as any)?.body ?? "{}");
+          },
           session: $global._session,
           cookies: {},
         };
@@ -271,15 +280,34 @@ app.on("ready", async () => {
             returnJudge();
           },
         };
-        import(path.join(appRoot, pageRoot, uri, isAppDir ? "route" : "")).then((handler) => {
-          try {
-            handler.default(req, res);
-          } catch (err) {
+        if (isAppDir) {
+          // TODO: fetch
+          import(path.join(appRoot, ".main/src/app", uri, "route")).then((handler) => {
+            try {
+              // TODO: dynamic url param
+              // TODO: response
+              (handler[req.method.toUpperCase()](req, { params: {} }) as Promise<any>).then(res => {
+                console.log(res);
+              }).catch(err => {
+                reject(err);
+              });
+            } catch (err) {
+              reject(err);
+            }
+          }).catch((err) => {
             reject(err);
-          }
-        }).catch((err) => {
-          reject(err);
-        });
+          });
+        } else {
+          import(path.join(appRoot, ".main/src/pages", uri)).then((handler) => {
+            try {
+              handler.default(req, res);
+            } catch (err) {
+              reject(err);
+            }
+          }).catch((err) => {
+            reject(err);
+          });
+        }
       });
     });
   }

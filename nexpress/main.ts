@@ -43,9 +43,11 @@ const loadNextEnv = (name: string) => {
 };
 if (isDev) {
   loadNextEnv(".env.development");
+  loadNextEnv(".env.local");
   loadNextEnv(".env.development.local");
 } else {
   loadNextEnv(".env.production");
+  loadNextEnv(".env.local");
   loadNextEnv(".env.production.local");
 }
 log.debug(JSON.stringify(process.env, null, 2));
