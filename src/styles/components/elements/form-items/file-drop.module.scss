@@ -53,26 +53,9 @@
 }
 
 .clear {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  width: var(--size);
-  height: var(--size);
+  @include mixins.inputButton;
   position: absolute;
   top: 0;
   right: 0;
   z-index: 2;
-  cursor: pointer;
-  border-radius: var(--radius);
-  @include mixins.hoverTransition;
-
-  @include mixins.crossHover {
-    @include mixins.hover;
-
-    &:active {
-      @include mixins.hoverActive;
-    }
-  }
 }
