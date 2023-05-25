@@ -36,6 +36,7 @@ const ProcessClient = () => {
         // cutIn: true,
         then: (ret) => {
           console.log("p:done", ret);
+          setLast(ret);
         },
         blocked: (context) => {
           console.log("p:blocked", c, context);
@@ -56,7 +57,6 @@ const ProcessClient = () => {
           console.log("p:finished", c, succeeded);
         },
       });
-      setLast(ret);
       console.log("done", ret);
     } catch (e) {
       console.log("error", c);

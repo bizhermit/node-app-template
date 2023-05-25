@@ -170,18 +170,26 @@ const useProcess = () => {
       count++;
     };
     if (mode) {
-      for (let i = waiting.current.length - 1; i >= 0; i--) {
-        const item = waiting.current[i];
-        if (item == null) continue;
+      const isTarget = (item: ProcessItem) => {
+        if (item == null) return false;
         switch (mode) {
           case "sameKey":
-            if (item.opts?.key !== key) continue;
+            if (item.opts?.key !== key) return false;
             break;
           case "otherKey":
-            if (item.opts?.key === key) continue;
+            if (item.opts?.key === key) return false;
             break;
         }
+        return true;
+      };
+      for (let i = 0, il = waiting.current.length; i < il; i++) {
+        const item = waiting.current[i];
+        if (!isTarget(item)) continue;
         canceled(item);
+      }
+      for (let i = waiting.current.length - 1; i >= 0; i--) {
+        const item = waiting.current[i];
+        if (!isTarget(item)) continue;
         waiting.current.splice(i, 1);
       }
       return count;
