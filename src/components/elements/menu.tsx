@@ -203,6 +203,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       {props.pathname == null ? node :
         <NextLink
           $noDecoration
+          prefetch={false}
           href={props.pathname}
         >
           {node}

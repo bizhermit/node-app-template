@@ -179,7 +179,7 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
         accept={props.$accept}
         onChange={change}
       />
-      {props.name &&
+      {props.name && ctx.value != null &&
         <input
           className={Style.file}
           ref={href}
