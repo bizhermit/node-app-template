@@ -6,3 +6,8 @@ type CommonStyleProps = {
 type CFC = (props: {
   children: React.ReactNode;
 }) => React.ReactElement;
+
+type ErrorFC = (props: {
+  error: Error;
+  reset: () => void;
+}) => React.ReactElement;
