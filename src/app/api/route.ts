@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
+import { NextResponse } from "next/server";
 
-export const GET = async (_req: NextRequest, { params }: { params: { id: string } }) => {
-  console.log(params);
-  return new NextResponse("Node App Template Api");
+export const GET = async () => {
+  return new NextResponse(DatetimeUtils.format(new Date(), "yyyy/MM/dd hh:mm:ss.SSS"));
 };
