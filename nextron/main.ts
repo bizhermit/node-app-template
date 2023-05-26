@@ -280,8 +280,13 @@ app.on("ready", async () => {
             returnJudge();
           },
         };
-        if (isAppDir) {
-          // TODO: fetch
+        import(path.join(appRoot, ".main/src/pages", uri)).then((handler) => {
+          try {
+            handler.default(req, res);
+          } catch (err) {
+            reject(err);
+          }
+        }).catch((_err) => {
           import(path.join(appRoot, ".main/src/app", uri, "route")).then((handler) => {
             try {
               // TODO: dynamic url param
@@ -297,17 +302,8 @@ app.on("ready", async () => {
           }).catch((err) => {
             reject(err);
           });
-        } else {
-          import(path.join(appRoot, ".main/src/pages", uri)).then((handler) => {
-            try {
-              handler.default(req, res);
-            } catch (err) {
-              reject(err);
-            }
-          }).catch((err) => {
-            reject(err);
-          });
-        }
+        });
+        
       });
     });
   }
