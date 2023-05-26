@@ -2,7 +2,7 @@ import { convertDataItemValidationToFormItemValidation, type FormItemProps, type
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useEffect, useMemo, useRef, useState } from "react";
-import Style from "$/components/elements/form-items/date-box.module.scss";
+import Style from "#/styles/components/elements/form-items/date-box.module.scss";
 import Popup from "#/components/elements/popup";
 import DatePicker from "#/components/elements/form-items/date-picker";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";

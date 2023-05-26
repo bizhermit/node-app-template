@@ -1,4 +1,4 @@
-import StepperClient from "~/sandbox/elements/stepper/client";
+import StepperClient from "@/sandbox/elements/stepper/client";
 
 const Page = () => {
   return (

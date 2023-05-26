@@ -1,5 +1,5 @@
-@use "$/var";
-@use "$/mixins";
+@use "#/styles/var" as var;
+@use "#/styles/mixins" as mixins;
 $size: 0.8rem;
 
 @mixin pseudoBase {

@@ -1,6 +1,6 @@
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes } from "react";
-import Style from "$/components/elements/badge.module.scss";
+import Style from "#/styles/components/elements/badge.module.scss";
 import Text from "#/components/elements/text";
 
 type OmitAttributes = "color";

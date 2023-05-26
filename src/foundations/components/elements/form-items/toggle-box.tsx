@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import Style from "$/components/elements/form-items/toggle-box.module.scss";
+import Style from "#/styles/components/elements/form-items/toggle-box.module.scss";
 import Text from "#/components/elements/text";
 import { pressPositiveKey } from "#/components/utilities/attributes";
 

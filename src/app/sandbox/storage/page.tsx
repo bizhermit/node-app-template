@@ -1,4 +1,4 @@
-import PageClient from "~/sandbox/storage/client";
+import PageClient from "@/sandbox/storage/client";
 
 const Page = () => {
   return (

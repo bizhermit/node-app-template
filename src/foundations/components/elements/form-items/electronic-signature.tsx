@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
-import Style from "$/components/elements/form-items/electronic-signature.module.scss";
+import Style from "#/styles/components/elements/form-items/electronic-signature.module.scss";
 import { releaseCursor, setCursor } from "#/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "#/components/elements/icon";

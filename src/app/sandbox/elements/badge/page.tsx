@@ -1,4 +1,4 @@
-import BadgeClient from "~/sandbox/elements/badge/client";
+import BadgeClient from "@/sandbox/elements/badge/client";
 
 const Page = () => {
   return (

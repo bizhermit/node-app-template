@@ -1,5 +1,5 @@
-@use "$/mixins";
-@use "$/var";
+@use "#/styles/mixins" as mixins;
+@use "#/styles/var" as var;
 
 .inputs {
   box-sizing: border-box;

@@ -1,4 +1,4 @@
-import Style from "$/components/elements/row.module.scss";
+import Style from "#/styles/components/elements/row.module.scss";
 import { attributes } from "#/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes } from "react";
 

@@ -6,7 +6,7 @@ import Form from "#/components/elements/form";
 import SelectBox from "#/components/elements/form-items/select-box";
 import ToggleBox from "#/components/elements/form-items/toggle-box";
 import Row from "#/components/elements/row";
-import { sample_number, sample_string } from "@/data-items/sample/item";
+import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";

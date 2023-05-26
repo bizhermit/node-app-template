@@ -1,5 +1,5 @@
-@use "$/var";
-@use "$/mixins";
+@use "#/styles/var" as var;
+@use "#/styles/mixins" as mixins;
 $tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
 $tagMoveTransitionTime: 0.5s;
 

@@ -1,4 +1,4 @@
-import FileDropClient from "~/sandbox/elements/form-items/file-drop/client";
+import FileDropClient from "@/sandbox/elements/form-items/file-drop/client";
 
 const Page = () => {
   return (

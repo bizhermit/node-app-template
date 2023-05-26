@@ -1,5 +1,5 @@
-@use "$/var";
-@use "$/mixins";
+@use "#/styles/var" as var;
+@use "#/styles/mixins" as mixins;
 
 .wrap {
   box-sizing: border-box;

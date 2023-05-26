@@ -1,4 +1,4 @@
-import DatePickerClient from "~/sandbox/elements/form-items/date-picker/client";
+import DatePickerClient from "@/sandbox/elements/form-items/date-picker/client";
 
 const Page = () => {
   return (

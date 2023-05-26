@@ -1,4 +1,4 @@
-import FormClient from "~/sandbox/elements/form/client";
+import FormClient from "@/sandbox/elements/form/client";
 
 const Page = () => {
   return (

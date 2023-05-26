@@ -8,7 +8,7 @@ import ToggleBox from "#/components/elements/form-items/toggle-box";
 import Row from "#/components/elements/row";
 import { useState } from "react";
 import RadioButtons from "#/components/elements/form-items/radio-buttons";
-import { sample_date, sample_month, sample_number, sample_string, sample_year } from "@/data-items/sample/item";
+import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
 
 const DateBoxClient = () => {
   const [disabled, setDisabled] = useState(false);

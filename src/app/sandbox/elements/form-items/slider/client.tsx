@@ -6,7 +6,7 @@ import Form from "#/components/elements/form";
 import Slider from "#/components/elements/form-items/slider";
 import ToggleBox from "#/components/elements/form-items/toggle-box";
 import Row from "#/components/elements/row";
-import { sample_number, sample_string } from "@/data-items/sample/item";
+import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
 

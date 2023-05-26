@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useState } from "react";
-import Style from "$/components/elements/form-items/radio-buttons.module.scss";
+import Style from "#/styles/components/elements/form-items/radio-buttons.module.scss";
 import useLoadableArray, { type LoadableArray } from "#/hooks/loadable-array";
 import Text from "#/components/elements/text";
 import { joinClassNames, pressPositiveKey } from "#/components/utilities/attributes";

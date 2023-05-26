@@ -1,5 +1,5 @@
 import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
-import Style from "$/components/elements/slide-container.module.scss";
+import Style from "#/styles/components/elements/slide-container.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import Text from "#/components/elements/text";
 

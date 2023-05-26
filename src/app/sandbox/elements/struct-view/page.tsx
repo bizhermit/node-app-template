@@ -1,4 +1,4 @@
-import StructViewClient from "~/sandbox/elements/struct-view/client";
+import StructViewClient from "@/sandbox/elements/struct-view/client";
 
 const Page = () => {
   return (

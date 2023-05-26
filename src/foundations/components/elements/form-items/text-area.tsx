@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
-import Style from "$/components/elements/form-items/text-area.module.scss";
+import Style from "#/styles/components/elements/form-items/text-area.module.scss";
 import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";

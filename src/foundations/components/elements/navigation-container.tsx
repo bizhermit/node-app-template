@@ -1,6 +1,6 @@
 import useLayout, { WindowSize } from "#/components/providers/layout";
 import { createContext, type ElementType, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
-import Style from "$/components/elements/navigation-container.module.scss";
+import Style from "#/styles/components/elements/navigation-container.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import { CrossIcon, MenuIcon } from "#/components/elements/icon";

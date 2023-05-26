@@ -1,4 +1,4 @@
-import IconsClient from "~/sandbox/elements/icons/client";
+import IconsClient from "@/sandbox/elements/icons/client";
 
 const Page = () => {
   return (

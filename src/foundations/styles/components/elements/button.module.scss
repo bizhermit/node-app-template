@@ -1,5 +1,5 @@
-@use "$/var";
-@use "$/mixins";
+@use "#/styles/var" as var;
+@use "#/styles/mixins" as mixins;
 $buttonSize: (
   xs: 0.7,
   s: 0.85,

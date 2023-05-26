@@ -1,4 +1,4 @@
-import ToggleBoxClient from "~/sandbox/elements/form-items/toggle-box/client";
+import ToggleBoxClient from "@/sandbox/elements/form-items/toggle-box/client";
 
 const Page = () => {
   return (

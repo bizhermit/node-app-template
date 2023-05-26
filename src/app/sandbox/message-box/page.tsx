@@ -1,4 +1,4 @@
-import MessageBoxClient from "~/sandbox/message-box/client";
+import MessageBoxClient from "@/sandbox/message-box/client";
 
 const Page = () => {
   return (

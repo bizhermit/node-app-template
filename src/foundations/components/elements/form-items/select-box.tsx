@@ -1,7 +1,7 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
 import useLoadableArray, { type LoadableArray } from "#/hooks/loadable-array";
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import Style from "$/components/elements/form-items/select-box.module.scss";
+import Style from "#/styles/components/elements/form-items/select-box.module.scss";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import Resizer from "#/components/elements/resizer";
 import Popup from "#/components/elements/popup";

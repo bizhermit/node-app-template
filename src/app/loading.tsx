@@ -1,4 +1,4 @@
-import Style from "$/components/elements/loading.module.scss";
+import Style from "#/styles/components/elements/loading.module.scss";
 
 const SuspenseLoading = () => {
   return (

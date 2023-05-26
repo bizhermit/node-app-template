@@ -1,7 +1,7 @@
 import Button, { type ButtonProps } from "#/components/elements/button";
 import { type FC, type ReactElement, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import Style from "$/hooks/message-box.module.scss";
+import Style from "#/styles/hooks/message-box.module.scss";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "#/components/utilities/attributes";
 

@@ -1,4 +1,4 @@
-@use "$/var";
+@use "#/styles/var" as var;
 $useDarkColor: true;
 
 @mixin colorIterator($color: light) {

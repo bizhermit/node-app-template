@@ -1,4 +1,4 @@
-import LoadingClient from "~/sandbox/elements/loading/client";
+import LoadingClient from "@/sandbox/elements/loading/client";
 
 const Page = () => {
   return (

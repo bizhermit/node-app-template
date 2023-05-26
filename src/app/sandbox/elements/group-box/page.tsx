@@ -1,4 +1,4 @@
-import GroupBoxClient from "~/sandbox/elements/group-box/client";
+import GroupBoxClient from "@/sandbox/elements/group-box/client";
 
 const Page = () => {
   return (

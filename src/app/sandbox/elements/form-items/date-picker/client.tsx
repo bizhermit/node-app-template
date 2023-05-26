@@ -9,7 +9,7 @@ import Row from "#/components/elements/row";
 import { useState } from "react";
 import TextBox from "#/components/elements/form-items/text-box";
 import RadioButtons from "#/components/elements/form-items/radio-buttons";
-import { sample_date, sample_month, sample_number, sample_string, sample_year } from "@/data-items/sample/item";
+import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
 
 const DatePickerClient = () => {
   const [disabled, setDisabled] = useState(false);

@@ -15,8 +15,6 @@
     "../src/features/components",
     "../src/features/hooks",
     "../src/features/styles",
-    "../src/.pages",
-    "../src/.app",
     "**/*.tsx"
   ],
   "include": [

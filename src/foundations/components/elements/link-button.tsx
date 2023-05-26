@@ -1,4 +1,4 @@
-import Style from "$/components/elements/button.module.scss";
+import Style from "#/styles/components/elements/button.module.scss";
 import { forwardRef, useMemo, type HTMLAttributes } from "react";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { useForm } from "#/components/elements/form";

@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode, useEffect, useRef, useState, useReducer } from "react";
-import Style from "$/components/elements/card.module.scss";
+import Style from "#/styles/components/elements/card.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import Text from "#/components/elements/text";

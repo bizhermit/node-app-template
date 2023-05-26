@@ -1,4 +1,4 @@
-import MenuClient from "~/sandbox/elements/menu/client";
+import MenuClient from "@/sandbox/elements/menu/client";
 
 const Page = () => {
   return (

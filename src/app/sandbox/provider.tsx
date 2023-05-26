@@ -44,6 +44,26 @@ const Navigation: FC = () => {
         label: "Index",
         pathname: "/",
       }, {
+        key: "pages",
+        icon: "P",
+        label: "Pages Directory",
+        items: [{
+          key: "pages",
+          icon: "P",
+          label: "Pages",
+          pathname: "/pages",
+        }, {
+          key: "root",
+          icon: "R",
+          label: "Root",
+          pathname: "/root",
+        }, {
+          key: "sandbox/pages",
+          icon: "SP",
+          label: "SandBox/Pages",
+          pathname: "/sandbox/pages",
+        }],
+      }, {
         key: "sandbox",
         icon: "S",
         label: "SandBox",

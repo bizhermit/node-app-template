@@ -1,4 +1,4 @@
-import TimeBoxClient from "~/sandbox/elements/form-items/time-box/client";
+import TimeBoxClient from "@/sandbox/elements/form-items/time-box/client";
 
 const Page = () => {
   return (

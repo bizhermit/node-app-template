@@ -1,4 +1,4 @@
-import Style from "$/components/elements/stepper.module.scss";
+import Style from "#/styles/components/elements/stepper.module.scss";
 import Text from "#/components/elements/text";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes, type ReactNode, useImperativeHandle, useRef } from "react";

@@ -1,4 +1,4 @@
-import HiddenClient from "~/sandbox/elements/form-items/hidden/client";
+import HiddenClient from "@/sandbox/elements/form-items/hidden/client";
 
 const Page = () => {
   return (

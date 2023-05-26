@@ -1,6 +1,6 @@
 import { attributesWithoutChildren, convertSizeNumToStr } from "#/components/utilities/attributes";
 import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useImperativeHandle, useRef } from "react";
-import Style from "$/components/elements/split-container.module.scss";
+import Style from "#/styles/components/elements/split-container.module.scss";
 import Resizer from "./resizer";
 
 export type SplitDirection = "horizontal" | "vertical";

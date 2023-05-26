@@ -1,4 +1,4 @@
-import DataTableClient from "~/sandbox/elements/data-table/client";
+import DataTableClient from "@/sandbox/elements/data-table/client";
 
 const Page = () => {
   return (

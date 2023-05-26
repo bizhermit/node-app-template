@@ -1,6 +1,6 @@
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
-import Style from "$/components/elements/tab-container.module.scss";
+import Style from "#/styles/components/elements/tab-container.module.scss";
 
 type OmitAttributes = "color" | "children";
 export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {

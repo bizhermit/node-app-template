@@ -1,6 +1,6 @@
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useMemo, useRef } from "react";
-import Style from "$/components/elements/form-items/slider.module.scss";
+import Style from "#/styles/components/elements/form-items/slider.module.scss";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 
 export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {

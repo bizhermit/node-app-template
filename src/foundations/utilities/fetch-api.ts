@@ -109,7 +109,7 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
 
 const update = <U extends ApiPath, M extends ApiMethods>(url: U, method: M, params: any = undefined, options?: FetchOptions) => {
   const ctx = getDynamicUrlContext(url, params);
-  return crossFetch<ApiResponse<U, M>>(`/api${ctx.url}`, {
+  return crossFetch<ApiResponse<U, M>>(ctx.url, {
     method,
     ...convertToRequestInit(ctx.data, options),
   });
@@ -118,7 +118,7 @@ const update = <U extends ApiPath, M extends ApiMethods>(url: U, method: M, para
 const fetchApi = {
   get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, _options?: FetchOptions) => {
     const ctx = getDynamicUrlContext(url, params, { appendQuery: true });
-    return crossFetch<ApiResponse<U, "get">>(`/api${ctx.url}`, { method: "GET" });
+    return crossFetch<ApiResponse<U, "get">>(ctx.url, { method: "GET" });
   },
   put: <U extends ApiPath>(url: U, params?: ApiRequest<U, "put"> | FormData, options?: FetchOptions) => {
     return update(url, "put", params, options);

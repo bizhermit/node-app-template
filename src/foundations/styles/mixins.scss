@@ -1,4 +1,4 @@
-@use "$/var";
+@use "#/styles/var" as var;
 // $hoverStyle: "outline";
 $hoverStyle: "float";
 $hoverTransition: box-shadow 0.1s;

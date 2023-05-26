@@ -35,44 +35,27 @@ type _Api<A extends {
   };
 }> = A;
 
-type ImportApi<T extends TypeofApi> = AppDir extends true ? {
+type ImportApi<T extends TypeofApi> = {
   [P in keyof T]: {
     get: {
-      req: DataItemValueType<T[P]["GET"]["req"], false>;
-      res: DataItemValueType<T[P]["GET"]["res"], true>;
+      req: DataItemValueType<P extends AppApiPath ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false>;
+      res: DataItemValueType<P extends AppApiPath ? T[P]["GET"]["res"] : T[P]["default"]["get"], true>;
     };
     put: {
-      req: DataItemValueType<T[P]["PUT"]["req"], false>;
-      res: DataItemValueType<T[P]["PUT"]["res"], true>;
+      req: DataItemValueType<P extends AppApiPath ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false>;
+      res: DataItemValueType<P extends AppApiPath ? T[P]["PUT"]["res"] : T[P]["default"]["put"], true>;
     };
     post: {
-      req: DataItemValueType<T[P]["POST"]["req"], false>;
-      res: DataItemValueType<T[P]["POST"]["res"], true>;
+      req: DataItemValueType<P extends AppApiPath ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false>;
+      res: DataItemValueType<P extends AppApiPath ? T[P]["POST"]["res"] : T[P]["default"]["post"], true>;
     };
     delete: {
-      req: DataItemValueType<T[P]["DELETE"]["req"], false>;
-      res: DataItemValueType<T[P]["DELETE"]["res"], true>;
-    };
-  };
-} : {
-  [P in keyof T]: {
-    get: {
-      req: DataItemValueType<T[P]["default"]["$get"], false>;
-      res: DataItemValueType<T[P]["default"]["get"], true>;
-    };
-    put: {
-      req: DataItemValueType<T[P]["default"]["$put"], false>;
-      res: DataItemValueType<T[P]["default"]["put"], true>;
-    };
-    post: {
-      req: DataItemValueType<T[P]["default"]["$post"], false>;
-      res: DataItemValueType<T[P]["default"]["post"], true>;
-    };
-    delete: {
-      req: DataItemValueType<T[P]["default"]["$delete"], false>;
-      res: DataItemValueType<T[P]["default"]["delete"], true>;
+      req: DataItemValueType<P extends AppApiPath ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false>;
+      res: DataItemValueType<P extends AppApiPath ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"], true>;
     };
   };
 };
 
-type Api = ImportApi<TypeofApi> & _Api<{}>;
+type Api = ImportApi<TypeofApi> & _Api<{
+  // custom api endpoints
+}>;

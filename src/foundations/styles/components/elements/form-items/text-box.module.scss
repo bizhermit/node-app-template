@@ -1,4 +1,4 @@
-@use "$/mixins";
+@use "#/styles/mixins" as mixins;
 
 .input {
   @include mixins.inputProps;

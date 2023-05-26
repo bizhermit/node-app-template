@@ -1,4 +1,4 @@
-import SlideContainerClient from "~/sandbox/elements/container/slide-container/client";
+import SlideContainerClient from "@/sandbox/elements/container/slide-container/client";
 
 const Page = () => {
   return (

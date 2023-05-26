@@ -1,4 +1,4 @@
-import LinkClient from "~/sandbox/elements/link/client";
+import LinkClient from "@/sandbox/elements/link/client";
 
 const Page = () => {
   return (

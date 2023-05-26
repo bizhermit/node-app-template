@@ -1,4 +1,4 @@
-import LabelClient from "~/sandbox/elements/label/client";
+import LabelClient from "@/sandbox/elements/label/client";
 
 const Page = () => {
   return (

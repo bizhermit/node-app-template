@@ -1,4 +1,4 @@
-import SandBoxProvider from "~/sandbox/provider";
+import SandBoxProvider from "@/sandbox/provider";
 
 const SandBoxLayout: RouteFC = ({ children }) => {
   return (

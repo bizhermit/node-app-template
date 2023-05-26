@@ -1,4 +1,4 @@
-import TabContainerClient from "~/sandbox/elements/container/tab-container/client";
+import TabContainerClient from "@/sandbox/elements/container/tab-container/client";
 
 const Page = () => {
   return (

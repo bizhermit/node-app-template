@@ -1,4 +1,4 @@
-import NavigationClient from "~/sandbox/elements/container/navigation-container/client";
+import NavigationClient from "@/sandbox/elements/container/navigation-container/client";
 
 const Page = () => {
   return (

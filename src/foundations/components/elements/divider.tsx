@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
 import { attributesWithoutChildren, convertSizeNumToStr } from "#/components/utilities/attributes";
-import Style from "$/components/elements/divider.module.scss";
+import Style from "#/styles/components/elements/divider.module.scss";
 import Text from "#/components/elements/text";
 
 type OmitAttributes = "color";

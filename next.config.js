@@ -19,10 +19,10 @@ const nextConfig = {
     appDir: true,
   },
   webpack(config) {
-    config.resolve.alias['$'] = path.join(__dirname, 'src/foundations/styles');
-    config.resolve.alias['#'] = path.join(__dirname, "src/foundations")
-    config.resolve.alias['@'] = path.join(__dirname, 'src/features');
-    config.resolve.alias['~'] = path.join(__dirname, 'src/app');
+    config.resolve.alias['#'] = path.join(__dirname, 'src/foundations');
+    config.resolve.alias['$'] = path.join(__dirname, 'src/features');
+    config.resolve.alias['~'] = path.join(__dirname, 'src/pages');
+    config.resolve.alias['@'] = path.join(__dirname, 'src/app');
     return config;
   },
 }

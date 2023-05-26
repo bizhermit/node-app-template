@@ -29,7 +29,7 @@ const FetchClient = () => {
           <Button
             $onClick={async (unlock) => {
               await process(async () => {
-                const res = await api.get("/fetch", {
+                const res = await api.get("/api/fetch", {
                   text: "",
                 }, {
                   contentType: "json",
@@ -46,7 +46,7 @@ const FetchClient = () => {
           <Button
             $onClick={async (unlock) => {
               await process(async () => {
-                const res = await api.post("/fetch", {
+                const res = await api.post("/api/fetch", {
                   text: "a",
                   // file: new File(),
                 }, {
@@ -64,7 +64,7 @@ const FetchClient = () => {
           <Button
             $onClick={async (unlock) => {
               await process(async () => {
-                const res = await api.post("/fetch", {
+                const res = await api.post("/api/fetch", {
                   // text: "hoge",
                 }, {
                   contentType: "formData",
@@ -81,7 +81,8 @@ const FetchClient = () => {
           <Button
             $onClick={async (unlock) => {
               await process(async () => {
-                const res = await api.put("/fetch");
+                const res = await api.put("/api/fetch", {
+                });
                 console.log(res);
                 setResponse(res);
               }, {
@@ -94,7 +95,8 @@ const FetchClient = () => {
           <Button
             $onClick={async (unlock) => {
               await process(async () => {
-                const res = await api.delete("/fetch");
+                const res = await api.delete("/api/fetch", {
+                });
                 console.log(res);
                 setResponse(res);
               }, {
@@ -117,13 +119,13 @@ const FetchClient = () => {
             process(async () => {
               switch (method) {
                 case "get":
-                  return await api.get("/fetch", formData, { contentType: "formData" });
+                  return await api.get("/api/fetch", formData, { contentType: "formData" });
                 case "post":
-                  return await api.post("/fetch", formData, { contentType: "formData" });
+                  return await api.post("/api/fetch", formData, { contentType: "formData" });
                 case "put":
-                  return await api.put("/fetch", formData, { contentType: "formData" });
+                  return await api.put("/api/fetch", formData, { contentType: "formData" });
                 case "delete":
-                  return await api.delete("/fetch", formData, { contentType: "formData" });
+                  return await api.delete("/api/fetch", formData, { contentType: "formData" });
                 default:
                   throw new Error("no method");
               }
@@ -152,6 +154,28 @@ const FetchClient = () => {
             <Button type="submit" formMethod="delete">delete</Button>
           </Row>
         </Form>
+      </GroupBox>
+      <GroupBox
+        $caption="/pages/api"
+        $bodyClassName="p-1"
+      >
+        <Row className="gap-1">
+          <Button $onClick={async (unlock) => {
+            await process(async () => {
+              const res = await api.get("/api/hello", {
+                hello: "hoge",
+              }, {
+                contentType: "json",
+              });
+              console.log(res);
+              setResponse(res);
+            }, {
+              finished: unlock,
+            });
+          }}>
+            hello
+          </Button>
+        </Row>
       </GroupBox>
       <StructView
         $value={response}

@@ -1,4 +1,4 @@
-import TooltipClient from "~/sandbox/elements/tooltip/client";
+import TooltipClient from "@/sandbox/elements/tooltip/client";
 
 const Page = () => {
   return (

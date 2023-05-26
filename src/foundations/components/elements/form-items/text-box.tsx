@@ -1,4 +1,4 @@
-import Style from "$/components/elements/form-items/text-box.module.scss";
+import Style from "#/styles/components/elements/form-items/text-box.module.scss";
 import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
 import { CrossIcon } from "#/components/elements/icon";
 import Resizer from "#/components/elements/resizer";

@@ -1,4 +1,4 @@
-import CheckBoxClient from "~/sandbox/elements/form-items/check-box/client";
+import CheckBoxClient from "@/sandbox/elements/form-items/check-box/client";
 
 const Page = () => {
   return (

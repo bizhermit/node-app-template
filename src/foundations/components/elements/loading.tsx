@@ -1,6 +1,6 @@
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { type FC, forwardRef, type HTMLAttributes, useEffect, useImperativeHandle, useRef } from "react";
-import Style from "$/components/elements/loading.module.scss";
+import Style from "#/styles/components/elements/loading.module.scss";
 import usePortalElement from "#/hooks/portal-element";
 import { createPortal } from "react-dom";
 

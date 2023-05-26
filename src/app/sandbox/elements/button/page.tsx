@@ -1,4 +1,4 @@
-import ButtonClient from "~/sandbox/elements/button/client";
+import ButtonClient from "@/sandbox/elements/button/client";
 
 const Page = () => {
   return (

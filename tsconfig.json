@@ -17,16 +17,16 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "$/*": [
-        "src/foundations/styles/*"
-      ],
       "#/*": [
         "src/foundations/*"
       ],
-      "@/*": [
+      "$/*": [
         "src/features/*"
       ],
       "~/*": [
+        "src/pages/*"
+      ],
+      "@/*": [
         "src/app/*"
       ],
     },
@@ -45,8 +45,6 @@
     "dist",
     "nexpress",
     "nextron",
-    "src/.pages",
-    "src/.app",
     ".*"
   ],
   "include": [

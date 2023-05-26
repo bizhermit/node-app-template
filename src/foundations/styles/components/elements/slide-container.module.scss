@@ -1,4 +1,4 @@
-@use "$/mixins";
+@use "#/styles/mixins" as mixins;
 $hTransitionTime: 0.8s;
 $vTransitionTime: 0.5s;
 
