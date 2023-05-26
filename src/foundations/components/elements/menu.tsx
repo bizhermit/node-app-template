@@ -98,7 +98,7 @@ type MenuItemPropsImpl = MenuItemProps & {
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 };
 
-const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string) => {
+const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) => {
   if (props.$judgeSelected == null) {
     return routerPathname === props.pathname;
   }
