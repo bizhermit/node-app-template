@@ -59,6 +59,8 @@ const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4()
 const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
 const corsOrigin = process.env.CORS_ORIGIN || undefined;
 
+const localhostUrl = `http://localhost:${port}${basePath}`;
+
 const nextApp = next({
   dev: isDev,
   dir: appRoot,
@@ -83,9 +85,17 @@ nextApp.prepare().then(async () => {
   }));
   app.use(cookieParser(cookieParserSecret));
 
-  // TODO: csp
+  const unsafeInline = `'unsafe-inline' ${localhostUrl}`;
   app.use(helmet({
-    contentSecurityPolicy: !isDev,
+    contentSecurityPolicy: isDev ? false : {
+      directives: {
+        // ./node_modules/helmet/index.cjs
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "script-src": ["'self'", unsafeInline],
+        "style-src": ["'self'", unsafeInline],
+        "img-src": ["'self'", "data:", unsafeInline],
+      },
+    },
     hidePoweredBy: true,
     hsts: true,
     frameguard: true,
@@ -128,7 +138,7 @@ nextApp.prepare().then(async () => {
   });
 
   app.listen(port, () => {
-    log.info(`http://localhost:${port}${basePath}`);
+    log.info(localhostUrl);
   });
 }).catch((err: any) => {
   log.error(String(err));
