@@ -41,7 +41,7 @@ const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
     }
   });
 };
-if (enableAppDir) mainForApp(appRootPath);
+if (enableAppDir && fse.existsSync(appRootPath)) mainForApp(appRootPath);
 
 const mainForPages = (dirName, nestLevel = 0, isApi = false) => {
   const items = fse.readdirSync(dirName);
@@ -73,7 +73,7 @@ const mainForPages = (dirName, nestLevel = 0, isApi = false) => {
     return;
   });
 }
-mainForPages(pageRootPath);
+if (fse.existsSync(pageRootPath)) mainForPages(pageRootPath);
 
 const contents = `// generate by script
 // do not edit
