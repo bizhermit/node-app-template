@@ -4,7 +4,7 @@ import { LayoutProvider } from "#/components/providers/layout";
 import LoadingProvider from "#/components/providers/loading";
 import { MessageProvider } from "#/components/providers/message";
 
-const RootProvider: CFC = ({ children }) => {
+const RootProvider: RouteFC = ({ children }) => {
   return (
     <LayoutProvider>
       <MessageProvider>

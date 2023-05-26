@@ -5,7 +5,7 @@ import NavigationContainer, { useNavigation } from "#/components/elements/naviga
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import type { FC } from "react";
 
-const SandBoxProvider: CFC = ({ children }) => {
+const SandBoxProvider: RouteFC = ({ children }) => {
   return (
     <NavigationContainer
       className="w-100 h-100"
@@ -277,6 +277,11 @@ const Navigation: FC = () => {
           label: "Process",
           icon: "P",
           pathname: "/sandbox/process"
+        }, {
+          key: "dynamic",
+          label: "Dynamic",
+          icon: "D",
+          pathname: "/sandbox/dynamic",
         }]
       }]}
     />

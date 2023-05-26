@@ -5,6 +5,8 @@ type AppDir = true;
 
 type PagePath = "/"
   | "/sandbox/color"
+  | "/sandbox/dynamic"
+  | "/sandbox/dynamic/[id]"
   | "/sandbox/elements/badge"
   | "/sandbox/elements/button"
   | "/sandbox/elements/card"

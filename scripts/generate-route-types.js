@@ -29,29 +29,26 @@ const main = (dirName, nestLevel = 0, isApi = false) => {
       return;
     }
 
-    if (!isAppDir) {
-      const pathName = path.join(dirName, /index.ts[x]?$/.test(name) ? "" : path.basename(name, path.extname(name)));
-
-      if (api) {
-        const relativePathName = `/${path.relative(apiRootPath, pathName).replace(/\\/g, "/")}`;
-        apis.push(relativePathName);
-        return;
-      }
-
-      pages.push(`/${path.relative(pageRootPath, pathName).replace(/\\/g, "/")}`);
-      return;
-    }
-
-    if (api) {
+    if (isAppDir) {
       if (/route.ts$/.test(name)) {
         apis.push(`/${path.relative(apiRootPath, dirName).replace(/\\/g, "/")}`);
       }
+      if (/page.ts[x]?$/.test(name)) {
+        pages.push(`/${path.relative(pageRootPath, dirName).replace(/\\/g, "/")}`);
+      }
       return;
     }
 
-    if (/page.ts[x]?$/.test(name)) {
-      pages.push(`/${path.relative(pageRootPath, dirName).replace(/\\/g, "/")}`);
+    const pathName = path.join(dirName, /index.ts[x]?$/.test(name) ? "" : path.basename(name, path.extname(name)));
+
+    if (api) {
+      const relativePathName = `/${path.relative(apiRootPath, pathName).replace(/\\/g, "/")}`;
+      apis.push(relativePathName);
+      return;
     }
+
+    pages.push(`/${path.relative(pageRootPath, pathName).replace(/\\/g, "/")}`);
+    return;
   });
 }
 main(pageRootPath);

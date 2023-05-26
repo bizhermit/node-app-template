@@ -1,6 +1,6 @@
 import SandBoxProvider from "~/sandbox/provider";
 
-const SandBoxLayout: CFC = ({ children }) => {
+const SandBoxLayout: RouteFC = ({ children }) => {
   return (
     <SandBoxProvider>
       {children}

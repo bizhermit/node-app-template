@@ -8,7 +8,7 @@ export const metadata = {
   description: "@bizhermit/node-app-template",
 };
 
-const RootLayout: CFC = ({ children }) => {
+const RootLayout: RouteFC = ({ children }) => {
   return (
     <html lang="ja">
       <head>
