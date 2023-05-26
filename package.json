@@ -12,6 +12,7 @@
   "scripts": {
     "clean": "npx rimraf .next",
     "clean:libs": "npx rimraf dist/libs",
+    "cleanup": "npx rimraf .next .main .renderer .nexpress dist out",
     "route": "node scripts/generate-route-types",
     "lint": "npx next lint",
     "predev": "npm run route",
@@ -28,12 +29,12 @@
     "predist": "npm run clean:nextron -- dist/pack && npx tsc -p nextron/tsconfig.json && npx tsc-alias -p nextron/tsconfig.json",
     "dist": "npx cross-env NEXT_OUTPUT=\"renderer\" npm run build && npx electron-builder",
     "dist:linux": "npm run dist -- --linux & npm run clean:nextron",
-    "dist:win": "npm run dist -- --win",
+    "dist:win": "npm run dist -- --win & npm run clean:nextron",
     "dist:mac": "npm run dist -- --mac & npm run clean:nextron",
     "pack": "npm run dist -- --dir --win & npm run clean:nextron",
     "exec": "npm run dist:win && .\\dist\\pack\\win-unpacked\\node-app-template.exe",
-    "export:react-addon": "npx rimraf dist/libs/react-addon && npx tsc -p tsconfig.react-addon.json && npx tsc-alias -p tsconfig.react-addon.json && node scripts/export-react-addon && npx minifier dist/libs/react-addon",
-    "reset": "npx rimraf .next .main .renderer .nexpress dist out"
+    "export:react-addon": "npx rimraf dist/libs/react-addon && npx tsc -p tsconfig.react-addon.json && npx tsc-alias -p tsconfig.react-addon.json && node scripts/export-react-addon && npx minifier dist/libs/react-addon"
+
   },
   "dependencies": {
     "@bizhermit/basic-utils": "^2.0.0",
