@@ -4,7 +4,7 @@ import apiHandler from "#/utilities/api-handler/page-api";
 const hello = stringItem({
   name: "hello",
   required: true,
-}) ;
+});
 
 export default apiHandler({
   $get: {
