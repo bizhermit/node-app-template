@@ -30,7 +30,7 @@ const FetchClient = () => {
             $onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.get("/api/fetch", {
-                  text: "",
+                  text: "tetetetette",
                 }, {
                   contentType: "json",
                 });

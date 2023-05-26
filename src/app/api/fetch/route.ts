@@ -27,3 +27,14 @@ export const POST = apiMethodHandler({
     ...data,
   };
 });
+
+export const PUT = apiMethodHandler({
+  text,
+}, async (ctx) => {
+  // console.log("post");
+  const data = ctx.getData();
+  // console.log(data);
+  return {
+    ...data,
+  };
+});

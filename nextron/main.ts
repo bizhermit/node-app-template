@@ -1,13 +1,12 @@
 import path from "path";
 import url from "url";
 import { BrowserWindow, app, protocol, ipcMain, screen, nativeTheme, IpcMainEvent, IpcMainInvokeEvent } from "electron";
-import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { existsSync, mkdir, readFile, writeFile } from "fs-extra";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
-import NextConfig from "../next.config";
+import type { NextResponse } from "next/server";
 
 const $global = global as { [key: string]: any };
 const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
@@ -24,10 +23,10 @@ const log = {
   },
 };
 
-log.info(`::: dev :::${isDev ? " [dev]" : ""}`);
+const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
+log.info(`::: nexton :::${isDev ? " [dev]" : ""}`);
 
 const appRoot = path.join(__dirname, "../../");
-const isAppDir = NextConfig.experimental?.appDir ?? false;
 
 app.on("ready", async () => {
   const mainWindow = new BrowserWindow({
@@ -230,6 +229,7 @@ app.on("ready", async () => {
           "content-type": "application/json;"
         };
         const req = {
+          url: `http://localhost${process.env.BASE_PATH || ""}${url}`,
           method: init?.method || "GET",
           query: (() => {
             const str = uriCtx[2];
@@ -249,7 +249,6 @@ app.on("ready", async () => {
             return query;
           })(),
           body: JSON.parse((init as any)?.body ?? "{}"),
-          url: uri,
           headers: {
             get: (key: string) => headers[key],
           },
@@ -289,10 +288,20 @@ app.on("ready", async () => {
         }).catch((_err) => {
           import(path.join(appRoot, ".main/src/app", uri, "route")).then((handler) => {
             try {
-              // TODO: dynamic url param
-              // TODO: response
-              (handler[req.method.toUpperCase()](req, { params: {} }) as Promise<any>).then(res => {
-                console.log(res);
+              const methodHandler = handler[req.method.toUpperCase()];
+              if (methodHandler == null) {
+                reject(new Error(getStatusText(404)));
+                return;
+              }
+              (methodHandler(req, { params: {
+                // NOTE: no support.
+              } }) as Promise<any>).then(async (nextRes: NextResponse) => {
+                try {
+                  res.json({ ...(await nextRes.json()) });
+                  res.status(nextRes.status ?? 204);
+                } catch (e) {
+                  reject(e);
+                }
               }).catch(err => {
                 reject(err);
               });
@@ -303,7 +312,6 @@ app.on("ready", async () => {
             reject(err);
           });
         });
-        
       });
     });
   }

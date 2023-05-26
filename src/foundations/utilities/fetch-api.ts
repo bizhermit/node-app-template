@@ -71,7 +71,7 @@ const isValidBodyParams = (params?: any) => {
 };
 
 const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit => {
-  const contentType = options?.contentType ?? "json";
+  const contentType = electron ? "json" : options?.contentType ?? "json";
   if (contentType === "formData") {
     return {
       body: (() => {
