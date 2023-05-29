@@ -1,11 +1,16 @@
 import NextLink from "#/components/elements/link";
 import Text from "#/components/elements/text";
-import SandboxPageProvider from "$/components/provider/sandbox";
-import type { NextPageWithLayout } from "~/_app";
+import { getInitialQueryProps, useQueryParam } from "#/hooks/query-param";
+import { NextPageWithLayout } from "~/_app";
 
-const Page: NextPageWithLayout = () => {
+const Page: NextPageWithLayout = (props) => {
+  const [id] = useQueryParam(props, "id");
   return (
-    <div className="flex-start p-2">
+    <div className="p-2">
+      <Text>
+        {id}
+      </Text>
+      <div className="flex-start p-2">
       <Text>
         pages directory.
       </Text>
@@ -15,9 +20,6 @@ const Page: NextPageWithLayout = () => {
       <NextLink href="/sandbox/route">
         sandbox/route
       </NextLink>
-      <NextLink href="/sandbox/nest/10">
-        sandbox/nest/[id]
-      </NextLink>
       <NextLink href="/pages">
         pages
       </NextLink>
@@ -25,15 +27,10 @@ const Page: NextPageWithLayout = () => {
         root
       </NextLink>
     </div>
+    </div>
   );
 };
 
-Page.layout = (page) => {
-  return (
-    <SandboxPageProvider>
-      {page}
-    </SandboxPageProvider>
-  );
-};
+Page.getInitialProps = getInitialQueryProps("id");
 
 export default Page;

@@ -25,7 +25,7 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-Page.getLayout = (page) => {
+Page.layout = (page) => {
   return (
     <SandboxPageProvider>
       {page}
