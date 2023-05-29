@@ -1,9 +1,9 @@
-import DataListClass, { type DataListColumn } from "@/components/elements/data-list/class";
-import { attributes } from "@/components/utilities/attributes";
-import useLoadableArray from "@/hooks/loadable-array";
+import DataListClass, { type DataListColumn } from "#/components/elements/data-list/class";
+import { attributes } from "#/components/utilities/attributes";
+import useLoadableArray from "#/hooks/loadable-array";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type HTMLAttributes, type ReactElement, useEffect, useMemo, useRef } from "react";
-import Style from "$/components/elements/data-list.module.scss";
-import Resizer, { type ResizeDirection } from "@/components/elements/resizer";
+import Style from "#/styles/components/elements/data-list.module.scss";
+import Resizer, { type ResizeDirection } from "#/components/elements/resizer";
 
 type OmitAttributes = "children";
 type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {

@@ -272,6 +272,11 @@ const Navigation: FC = () => {
             icon: "DT",
             pathname: "/sandbox/elements/data-table",
           }, {
+            key: "data-list",
+            label: "DataList",
+            icon: "DL",
+            pathname: "/sandbox/elements/data-list",
+          }, {
             key: "struct-view",
             label: "StructView",
             icon: "SV",

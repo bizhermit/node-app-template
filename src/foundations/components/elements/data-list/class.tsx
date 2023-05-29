@@ -1,7 +1,7 @@
-import DomClassComponent, { cloneDomElement } from "@/components/utilities/dom-class-component";
-import Style from "$/components/elements/data-list.module.scss";
-import { convertSizeNumToStr } from "@/components/utilities/attributes";
-import { getValue } from "@/data-items/utilities";
+import DomClassComponent, { cloneDomElement } from "#/components/utilities/dom-class-component";
+import Style from "#/styles/components/elements/data-list.module.scss";
+import { convertSizeNumToStr } from "#/components/utilities/attributes";
+import { getValue } from "#/data-items/utilities";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 
