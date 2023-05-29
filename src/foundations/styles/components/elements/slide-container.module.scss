@@ -90,7 +90,8 @@ $vTransitionTime: 0.5s;
         top: 0;
 
         &[data-animation="true"] {
-          transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+          transition: left #{$hTransitionTime},
+          opacity #{$hTransitionTime};
         }
 
         &[data-state="before"],
@@ -124,7 +125,8 @@ $vTransitionTime: 0.5s;
         top: 0;
 
         &[data-animation="true"] {
-          transition: left #{$hTransitionTime}, opacity #{$hTransitionTime};
+          transition: left #{$hTransitionTime},
+          opacity #{$hTransitionTime};
         }
 
         &[data-state="before"],
@@ -158,7 +160,8 @@ $vTransitionTime: 0.5s;
         left: 0;
 
         &[data-animation="true"] {
-          transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+          transition: top #{$vTransitionTime},
+          opacity #{$vTransitionTime};
         }
 
         &[data-state="before"],
@@ -192,7 +195,8 @@ $vTransitionTime: 0.5s;
         left: 0;
 
         &[data-animation="true"] {
-          transition: top #{$vTransitionTime}, opacity #{$vTransitionTime};
+          transition: top #{$vTransitionTime},
+          opacity #{$vTransitionTime};
         }
 
         &[data-state="before"],

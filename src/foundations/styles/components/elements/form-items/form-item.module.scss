@@ -31,6 +31,8 @@ $tagMoveTransitionTime: 0.5s;
   }
 
   &[data-round="true"] {
+    border-radius: 9999px !important;
+    
     >.main {
       border-radius: 9999px !important;
 
