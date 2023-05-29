@@ -19,6 +19,7 @@
     "nextron",
     ".*",
     "src/pages",
+    "src/app",
     "src/hooks/fetch*",
     "src/utilities"
   ],
