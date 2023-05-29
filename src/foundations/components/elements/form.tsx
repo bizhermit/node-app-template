@@ -455,7 +455,8 @@ export const useDataItemMergedProps = <
 };
 
 export const useFormItemContext = <
-  T, D extends DataItem | undefined,
+  T,
+  D extends DataItem | undefined,
   V = undefined,
   U extends Struct = any,
   P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>

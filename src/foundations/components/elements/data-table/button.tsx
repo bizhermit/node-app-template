@@ -1,5 +1,5 @@
 import Button, { type ButtonProps } from "#/components/elements/button";
-import { type DataTableBaseColumn, type DataTableCellContext, type DataTableColumn } from "#/components/elements/data-table";
+import type { DataTableBaseColumn, DataTableCellContext, DataTableColumn } from "#/components/elements/data-table";
 import type { ReactNode } from "react";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {

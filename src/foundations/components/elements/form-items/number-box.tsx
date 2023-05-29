@@ -163,6 +163,9 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
         break;
     }
     if (num != null && !isNaN(num!) && preventCommit !== true) ctx.change(num);
+    if (iref.current) {
+      if (iref.current.value !== value) iref.current.value = value;
+    }
     return num;
   };
 

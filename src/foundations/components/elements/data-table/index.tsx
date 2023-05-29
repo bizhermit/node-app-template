@@ -2,7 +2,7 @@ import { type CSSProperties, type Dispatch, type FC, type ForwardedRef, forwardR
 import Style from "#/styles/components/elements/data-table.module.scss";
 import { attributes, convertSizeNumToStr, joinClassNames } from "#/components/utilities/attributes";
 import NextLink from "#/components/elements/link";
-import useLoadableArray, { LoadableArray } from "#/hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "#/hooks/loadable-array";
 import Text from "#/components/elements/text";
 import Resizer from "#/components/elements/resizer";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";

@@ -3,7 +3,7 @@ import Text from "#/components/elements/text";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes, type ReactNode, useImperativeHandle, useRef } from "react";
 
-export type StepState = "done" | "current" | "future";
+export type StepState = "done" | "current" | "future" | "prev" | "next";
 
 type OmitAttributes = "color" | "children";
 export type StepperProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
@@ -26,7 +26,9 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
 
   const getStateText = (index: number) => {
     if (index === props.$step) return "current";
+    if (index === props.$step - 1) return "prev";
     if (index < props.$step) return "done";
+    if (index === props.$step + 1) return "next";
     return "future";
   };
 
@@ -35,6 +37,7 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
       case "current":
         return props.$color?.current || "main";
       case "done":
+      case "prev":
         if (appearance === "line") return props.$color?.done || "input";
         return props.$color?.done || "input";
       default:
@@ -61,17 +64,17 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
             data-state={state}
             data-appearance={appearance}
           >
-            <div
-              className={`${Style.label}${appearance === "arrow" ? ` fgc-${color}_r` : ""}`}
-            >
-              <Text>{step}</Text>
-            </div>
             {appearance === "arrow" ?
               <div className={`${Style.arrow} c-${color}`} /> :
               <div className={Style.line}>
                 <div className={`${Style.point} bgc-${color}`} />
               </div>
             }
+            <div
+              className={`${Style.label}${appearance === "arrow" ? ` fgc-${color}_r` : ""}`}
+            >
+              <Text>{step}</Text>
+            </div>
           </div>
         );
       })}

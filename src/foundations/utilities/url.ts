@@ -1,18 +1,21 @@
 import queryString from "querystring";
 
+export type DynamicUrlContextOptions = {
+  appendQuery?: boolean;
+  leaveDynamicKey?: boolean;
+  useOriginParams?: boolean;
+};
+
 export const getDynamicUrlContext = <T extends Struct | FormData | undefined | null>(
   pathName: PagePath | ApiPath,
   params?: T,
-  options?: {
-    appendQuery?: boolean;
-    leaveDynamicKey?: boolean;
-    useOriginParams?: boolean;
-  }
+  options?: DynamicUrlContextOptions
 ): {
   url: string;
   data: T;
 } => {
   const data: Struct | FormData = (options?.useOriginParams ? params : (() => {
+    if (params == null) return {};
     if (params instanceof FormData) {
       const fd = new FormData();
       params.forEach((v, k) => fd.append(k, v));
@@ -54,6 +57,7 @@ export const getDynamicUrlContext = <T extends Struct | FormData | undefined | n
 
   if (options?.appendQuery) {
     const q = queryString.stringify((() => {
+      if (data == null) return {};
       if (data instanceof FormData) {
         const d: Struct = {};
         data.forEach((v, k) => {
@@ -68,7 +72,13 @@ export const getDynamicUrlContext = <T extends Struct | FormData | undefined | n
         });
         return d;
       }
-      return data;
+      const d: { [key: string]: any } = {};
+      Object.keys(data).forEach(key => {
+        const v = data[key];
+        if (v == null || v === "") return;
+        d[key] = v;
+      });
+      return d;
     })());
     if (q) url += `?${q}`;
   }
