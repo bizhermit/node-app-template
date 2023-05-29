@@ -61,6 +61,7 @@ type TypeofAppApi = {
 type PagesRoutePath = "/404"
  | "/pages"
  | "/root"
+ | "/sandbox/nest/[id]"
  | "/sandbox/pages"
  | "/sandbox/route";
 
