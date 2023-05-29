@@ -9,7 +9,7 @@ import { MessageProvider } from "#/components/providers/message";
 import LoadingProvider from "#/components/providers/loading";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  layout?: (page: ReactElement) => ReactNode;
+  layout?: (page: ReactElement, props: P) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
@@ -23,7 +23,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
     <LayoutProvider>
       <MessageProvider>
         <LoadingProvider>
-          {pageLayout(<Component {...pageProps} />)}
+          {pageLayout(<Component {...pageProps} />, pageProps)}
         </LoadingProvider>
       </MessageProvider>
     </LayoutProvider>
