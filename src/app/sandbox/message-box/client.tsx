@@ -2,7 +2,7 @@
 
 import Button from "#/components/elements/button";
 import useMessageBox from "#/hooks/message-box";
-import useRouter from "#/hooks/route";
+import useRouter from "#/hooks/router/app";
 
 const MessageBoxClient = () => {
   const msg = useMessageBox({ preventUnmountClose: true });
