@@ -1,0 +1,95 @@
+@use "#/styles/mixins" as mixins;
+@use "#/styles/var" as var;
+
+.inputs {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1 0 auto;
+  z-index: 0;
+  outline: none;
+
+  &[data-input="false"] {
+    cursor: pointer;
+
+    >.h,
+    >.m,
+    >.s {
+      cursor: inherit;
+    }
+  }
+
+  &[data-editable="true"] {
+    &:focus-within {
+      >.sep {
+        color: inherit !important;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.h,
+.m,
+.s {
+  @include mixins.inputProps(true);
+  height: var(--size);
+  width: 2.8rem;
+  padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
+  text-align: center;
+  flex: none;
+
+  &:first-of-type {
+    margin-left: calc(var(--size) / 5);
+  }
+
+  &:last-of-type {
+    margin-right: calc(var(--size) / 5);
+  }
+}
+
+.sep {
+  box-sizing: border-box;
+  flex: none;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  padding-top: var(--padding-top-text);
+  cursor: inherit;
+
+  &[data-show="false"] {
+    color: transparent;
+  }
+
+  &[data-show="true"] {
+    transition: color #{var.$transitionTime},
+    opacity #{var.$transitionTime};
+
+    &[data-has="false"] {
+      color: var(--c-placeholder_);
+      opacity: #{var.$placeholderOpacity};
+    }
+  }
+
+  &:first-child,
+  &:last-child {
+    display: none;
+  }
+}
+
+.picker,
+.clear {
+  @include mixins.inputButton;
+}
+
+.popup {
+  @include mixins.pickerShadow;
+  overflow: visible !important;
+}
+
+@include mixins.hoverAnimation;

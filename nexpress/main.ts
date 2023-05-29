@@ -43,9 +43,11 @@ const loadNextEnv = (name: string) => {
 };
 if (isDev) {
   loadNextEnv(".env.development");
+  loadNextEnv(".env.local");
   loadNextEnv(".env.development.local");
 } else {
   loadNextEnv(".env.production");
+  loadNextEnv(".env.local");
   loadNextEnv(".env.production.local");
 }
 log.debug(JSON.stringify(process.env, null, 2));
@@ -56,6 +58,8 @@ const sessionName = process.env.SESSION_NAME || undefined;
 const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4();
 const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
 const corsOrigin = process.env.CORS_ORIGIN || undefined;
+
+const localhostUrl = `http://localhost:${port}${basePath}`;
 
 const nextApp = next({
   dev: isDev,
@@ -81,8 +85,17 @@ nextApp.prepare().then(async () => {
   }));
   app.use(cookieParser(cookieParserSecret));
 
+  const unsafeInline = `'unsafe-inline' ${localhostUrl}`;
   app.use(helmet({
-    contentSecurityPolicy: !isDev,
+    contentSecurityPolicy: isDev ? false : {
+      directives: {
+        // ./node_modules/helmet/index.cjs
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "script-src": ["'self'", unsafeInline],
+        "style-src": ["'self'", unsafeInline],
+        "img-src": ["'self'", "data:", unsafeInline],
+      },
+    },
     hidePoweredBy: true,
     hsts: true,
     frameguard: true,
@@ -111,7 +124,7 @@ nextApp.prepare().then(async () => {
 
   // API
   app.all(`${basePath}/api/*`, (req, res) => {
-    log.debug("api call:", req.url);
+    log.debug(`api call: ${req.method}:`, req.url);
     return handler(req, res);
   });
 
@@ -125,7 +138,7 @@ nextApp.prepare().then(async () => {
   });
 
   app.listen(port, () => {
-    log.info(`http://localhost:${port}${basePath}`);
+    log.info(localhostUrl);
   });
 }).catch((err: any) => {
   log.error(String(err));

@@ -1,0 +1,8 @@
+@use "#/styles/mixins" as mixins;
+
+.input {
+  @include mixins.inputProps;
+  min-height: var(--size);
+  min-width: var(--size);
+  align-self: stretch;
+}
