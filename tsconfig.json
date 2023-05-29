@@ -17,16 +17,27 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
+      "#/*": [
+        "src/foundations/*"
       ],
       "$/*": [
-        "src/styles/*"
+        "src/features/*"
+      ],
+      "~/*": [
+        "src/pages/*"
+      ],
+      "@/*": [
+        "src/app/*"
       ],
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "exclude": [
     "node_modules",
@@ -39,6 +50,7 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ]
 }
