@@ -12,8 +12,8 @@ const Page: NextPageWithLayout = () => {
       <NextLink href="/sandbox">
         sandbox
       </NextLink>
-      <NextLink href="/sandbox/route">
-        sandbox/route
+      <NextLink href="/sandbox/pages">
+        sandbox/pages
       </NextLink>
       <NextLink href="/pages">
         pages

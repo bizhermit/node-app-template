@@ -61,7 +61,8 @@ type TypeofAppApi = {
 type PagesRoutePath = "/404"
  | "/pages"
  | "/root"
- | "/sandbox/pages";
+ | "/sandbox/pages"
+ | "/sandbox/route";
 
 type PagesApiPath = "/api/form"
  | "/api/hello";
