@@ -99,6 +99,8 @@ const useProcess = () => {
       }
     }).finally(() => {
       if (running.current?.id !== item.id) return;
+      running.current = undefined;
+      ref.current = false;
       setTimeout(() => {
         completed();
         listen();
