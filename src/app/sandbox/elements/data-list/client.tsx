@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "#/components/elements/button";
 import DataList from "#/components/elements/data-list";
 import { DataListColumn } from "#/components/elements/data-list/class";
@@ -6,7 +8,6 @@ import ToggleBox from "#/components/elements/form-items/toggle-box";
 import Row from "#/components/elements/row";
 import { joinClassNames } from "#/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import type { NextPage } from "next";
 import { useMemo, useState } from "react";
 
 type Data = {
@@ -33,7 +34,7 @@ const generateArray = (length = 0) => {
   });
 };
 
-const Page: NextPage = () => {
+const DataListClient = () => {
   const columns = useMemo(() => {
     const cols: Array<DataListColumn<Data>> = [];
     cols.push(
@@ -190,4 +191,4 @@ const Page: NextPage = () => {
   );
 };
 
-export default Page;
+export default DataListClient;
