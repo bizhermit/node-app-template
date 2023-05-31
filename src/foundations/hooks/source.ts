@@ -16,11 +16,11 @@ const useSource = <T extends Struct, K extends ApiPath>(
   return useCallback(async () => {
     try {
       const key = apiPath + JSON.stringify(params ?? {});
-      if (!options?.noCache && key in cache) return cache[key];
+      if (!options?.noCache && key in cache) return [...cache[key]];
       const res = await api.get(apiPath, params);
       const ret = (res.data as unknown as T)[options?.name || "value"];
       if (!options?.noCache) cache[key] = ret;
-      return ret;
+      return [...ret];
     } catch {
       // ignore
     }
