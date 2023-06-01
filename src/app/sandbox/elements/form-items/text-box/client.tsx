@@ -90,6 +90,12 @@ const TextBoxClient = () => {
       </Row>
       <Divider />
       <section>
+        <h2>inputmode</h2>
+        <TextBox
+          $type="tel"
+        />
+      </section>
+      <section>
         <h2>DataItem</h2>
         <Form
           method="post"

@@ -160,7 +160,10 @@ type StringCharType = "int"
   | "h-alpha-num-syn"
   | "h-katakana"
   | "f-katakana"
-  | "katakana";
+  | "katakana"
+  | "email"
+  | "tel"
+  | "url";
 
 type DataItem_String = Readonly<DataItem_Base & {
   type: "string";

@@ -99,6 +99,21 @@ export namespace StringData {
     return `${itemName || defaultItemName}はカタカナで入力してください。`;
   };
 
+  export const mailAddressValidation = (v: Nullable<string>, itemName?: string) => {
+    if (isEmpty(v) || StringUtils.isMailAddress(v)) return undefined;
+    return `${itemName || defaultItemName}はメールアドレスで入力してください。`;
+  };
+
+  export const telValidation = (v: Nullable<string>, itemName?: string) => {
+    if (isEmpty(v) || StringUtils.isPhoneNumber(v)) return undefined;
+    return `${itemName || defaultItemName}は電話番号で入力してください。`;
+  };
+
+  export const urlValidation = (v: Nullable<string>, itemName?: string) => {
+    if (isEmpty(v) || StringUtils.isHalfWidthAlphanumericAndSymbols(v)) return undefined;
+    return `${itemName || defaultItemName}はURLで入力してください。`;
+  };
+
 }
 
 export default stringItem;

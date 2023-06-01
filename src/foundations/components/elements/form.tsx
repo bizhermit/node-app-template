@@ -36,6 +36,7 @@ type ValueType<T, D extends DataItem | undefined = undefined, V = undefined> =
 
 type InputOmitProps = "name"
   | "defaultValue"
+  | "inputMode"
   | "defaultChecked"
   | "color"
   | "onChange"
