@@ -149,7 +149,8 @@ type LoadableArray<T = Struct> = Array<T> | (() => Array<T>) | (() => Promise<Ar
  * String
  */
 
-type StringCharType = "int"
+type StringCharType =
+  | "int"
   | "h-num"
   | "f-num"
   | "num"
