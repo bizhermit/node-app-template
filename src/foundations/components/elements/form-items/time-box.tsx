@@ -401,6 +401,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onKeyDown={keydownH}
             onChange={changeH}
             autoComplete="off"
+            inputMode="numeric"
             placeholder={props.$hourPlaceholder}
           />
         }
@@ -425,6 +426,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onKeyDown={keydownM}
             onChange={changeM}
             autoComplete="off"
+            inputMode="numeric"
             placeholder={props.$minutePlaceholder}
           />
         }
@@ -450,6 +452,7 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
               onKeyDown={keydownS}
               onChange={changeS}
               autoComplete="off"
+              inputMode="numeric"
               placeholder={props.$secondPlaceholder}
             />
           </>

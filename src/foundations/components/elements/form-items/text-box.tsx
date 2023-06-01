@@ -5,10 +5,14 @@ import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import { StringData } from "#/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
+
+type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
+type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
 export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
-  $type?: "email" | "password" | "search" | "tel" | "text" | "url";
+  $type?: InputType;
+  $inputMode?: InputMode;
   $length?: number;
   $preventInputWithinLength?: boolean;
   $minLength?: number;
@@ -34,7 +38,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem, method }) => {
+    under: ({ props, dataItem, method }) => {
       const isSearch = method === "get";
       switch (dataItem.type) {
         case "number":
@@ -46,6 +50,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
+            $inputMode: ((dataItem.float ?? 0) > 0 ? "decimal" : "numeric") as InputMode,
           };
         default:
           return {
@@ -57,6 +62,33 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
             $width: dataItem.width,
             $minWidth: dataItem.minWidth,
             $maxWidth: dataItem.maxWidth,
+            $type: (() => {
+              switch (props.$charType ?? dataItem.charType) {
+                case "email":
+                  return "email";
+                case "tel":
+                  return "tel";
+                case "url":
+                  return "url";
+                default:
+                  return undefined;
+              }
+            })() as InputType,
+            $inputMode: (() => {
+              switch (props.$charType ?? dataItem.charType) {
+                case "h-num":
+                case "int":
+                  return "numeric";
+                case "email":
+                  return "email";
+                case "tel":
+                  return "tel";
+                case "url":
+                  return "url";
+                default:
+                  return undefined;
+              }
+            })() as InputMode,
           };
       }
     },
@@ -127,6 +159,15 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
         case "katakana":
           validations.push(v => StringData.katakanaValidation(v));
           break;
+        case "email":
+          validations.push(v => StringData.mailAddressValidation(v));
+          break;
+        case "tel":
+          validations.push(v => StringData.telValidation(v));
+          break;
+        case "url":
+          validations.push(v => StringData.urlValidation(v));
+          break;
         default:
           break;
       }
@@ -179,6 +220,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
         data-clear={ctx.editable && props.$hideClearButton !== true}
         data-align={props.$align}
         autoComplete={props.$autoComplete ?? "off"}
+        inputMode={props.$inputMode}
       />
       {ctx.editable && props.$hideClearButton !== true &&
         <div
