@@ -5,13 +5,14 @@ import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import { StringData } from "#/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, HTMLAttributes } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
 
 type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
 export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
   $type?: InputType;
+  $inputMode?: InputMode;
   $length?: number;
   $preventInputWithinLength?: boolean;
   $minLength?: number;
@@ -25,7 +26,6 @@ export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined
   $hideClearButton?: boolean;
   $autoComplete?: string;
   $align?: "left" | "center" | "right";
-  $inputMode?: InputMode;
 };
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
