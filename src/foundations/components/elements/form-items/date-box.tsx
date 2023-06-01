@@ -397,6 +397,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
           onFocus={focusInput}
           onKeyDown={keydownY}
           autoComplete="off"
+          inputMode="numeric"
           placeholder={props.$yearPlaceholder}
         />
         {type !== "year" &&
@@ -421,6 +422,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               onFocus={focusInput}
               onKeyDown={keydownM}
               autoComplete="off"
+              inputMode="numeric"
               placeholder={props.$monthPlaceholder}
             />
           </>
@@ -447,6 +449,7 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
               onFocus={focusInput}
               onKeyDown={keydownD}
               autoComplete="off"
+              inputMode="numeric"
               placeholder={props.$dayPlaceholder}
             />
           </>
