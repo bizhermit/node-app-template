@@ -3,10 +3,11 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 
 const stringItem = <
-  C extends Omit<DataItem_String, DataItemKey | "type">
+  V extends string,
+  C extends Omit<DataItem_String<V>, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
-    [dataItemKey]: undefined;
+    [dataItemKey]: V;
     type: "string";
   }>({
     ...(ctx as any),

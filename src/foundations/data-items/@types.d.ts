@@ -17,8 +17,11 @@ type DataItemValidation<T, D extends (DataItem | DataContext)> =
   readonly ((v: T | null | undefined, key: string | number, ctx: D, data: Struct | Array<any> | null | undefined, index: number | null | undefined, pctx: DataContext | null | undefined)
     => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
 
-type DataItem_Base = {
-  $$: any;
+type LoadableArray<T = Struct> = Array<T> | Readonly<Array<T>> | (() => Array<T>) | (() => Promise<Array<T>>);
+type DataItemSource<V> = Array<{ name: V } & { [key: string]: any }> | LoadableArray
+
+type DataItem_Base<V = any> = {
+  $$: V;
   name?: string;
   label?: string;
   required?: boolean;
@@ -43,58 +46,62 @@ type NumberValue = number | string;
 type BooleanValue = boolean | string | number;
 type DateValue = string | number | Date;
 
-type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "client" | "page-api" | "app-api" = "client"> =
+type DataItemSourceKeyValue<D extends DataItem, T> =
+  D extends { source: infer S } ? (
+    S extends Array<infer V> ? (V["name"]) : T
+  ) : T;
+
+type DataItemValueTypeRequired<D extends DataItem, Strict extends boolean, V1, V2 = V1> =
+  Strict extends true ? (
+    D["required"] extends true ? DataItemSourceKeyValue<D, V1> : DataItemSourceKeyValue<D, V1> | null | undefined
+  ) : (
+    D["strict"] extends true ? (
+      D["required"] extends true ? DataItemSourceKeyValue<D, V1> : DataItemSourceKeyValue<D, V1> | null | undefined
+    ) : (
+      D["required"] extends true ? DataItemSourceKeyValue<D, V2> | V2 : DataItemSourceKeyValue<D, V2> | V2 | null | undefined
+    )
+  );
+
+type DataItemValueType<
+  D extends (DataItem | DataContext),
+  Strict extends boolean = false,
+  Side extends "client" | "page-api" | "app-api" = "client"
+> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? string : string | null | undefined
-      ) : StringValue | null | undefined
+      DataItemValueTypeRequired<D, Strict, string, StringValue>
     ) :
     D["type"] extends DataItem_Number["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? number : number | null | undefined
-      ) : (
-        D["strict"] extends true ? number | null | undefined : NumberValue | null | undefined
-      )
+      DataItemValueTypeRequired<D, Strict, number, NumberValue>
     ) :
     D["type"] extends DataItem_Boolean["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? (
-          (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)
-        ) : (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined
-      ) : (
-        D["strict"] extends true ?
-        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined :
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false),
         (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | BooleanValue | null | undefined
-      )
+      >
     ) :
     D["type"] extends DataItem_Date["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? (
-          D["typeof"] extends "date" ? Date :
-          D["typeof"] extends "number" ? number :
-          D["typeof"] extends "string" ? string :
-          string
-        ) : (
-          D["typeof"] extends "date" ? Date :
-          D["typeof"] extends "number" ? number :
-          D["typeof"] extends "string" ? string :
-          string
-        ) | null | undefined
-      ) : DateValue | null | undefined
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        D["typeof"] extends "date" ? Date :
+        D["typeof"] extends "number" ? number :
+        D["typeof"] extends "string" ? string :
+        string,
+        DateValue
+      >
     ) :
     D["type"] extends DataItem_Time["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? (
-          D["typeof"] extends "string" ? string :
-          D["typeof"] extends "number" ? number :
-          number
-        ) : (
-          D["typeof"] extends "string" ? string :
-          D["typeof"] extends "number" ? number :
-          number
-        ) | null | undefined
-      ) : TimeValue | null | undefined
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        D["typeof"] extends "string" ? string :
+        D["typeof"] extends "number" ? number :
+        number,
+        TimeValue
+      >
     ) :
     D["type"] extends DataItem_File["type"] ? (
       Strict extends true ? (
@@ -116,14 +123,19 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
       ) : (Side extends "client" ? File : FileValue<Side>) | string | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? Array<DataItemValueType<D["item"], Strict, Side>> : Array<DataItemValueType<D["item"], Strict, Side>> | null | undefined
-      ) : Array<DataItemValueType<D["item"], Strict, Side>> | undefined
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        Array<DataItemValueType<D["item"], Strict, Side>>
+      >
     ) :
     D["type"] extends DataItem_Struct["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : { [P in keyof D["item"]]: D["item"][P] } | null | undefined
-      ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict, Side> }
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        { [P in keyof D["item"]]: D["item"][P] },
+        { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict, Side> }
+      >
     ) :
     any
   ) : (
@@ -142,8 +154,6 @@ type UnionToIntersection<A> = (A extends any ? (_: A) => void : never) extends (
 type DataProps<A extends (Struct<DataItem> | Array<DataItem>)> = A extends Struct<DataItem> ?
   { [P in keyof A]: DataItemValueType<A[P], true, "client"> } :
   CrossDataProps<UnionToIntersection<DataProp<A[number]>>>;
-
-type LoadableArray<T = Struct> = Array<T> | (() => Array<T>) | (() => Promise<Array<T>>);
 
 /**
  * String
@@ -166,14 +176,14 @@ type StringCharType =
   | "tel"
   | "url";
 
-type DataItem_String = Readonly<DataItem_Base & {
+type DataItem_String<V extends string = string> = Readonly<DataItem_Base<V> & {
   type: "string";
   validations?: DataItemValidation<string, DataItem_String>;
   length?: number;
   minLength?: number;
   maxLength?: number;
   charType?: StringCharType;
-  source?: LoadableArray;
+  source?: DataItemSource<V>;
   // styles
   align?: "left" | "center" | "right";
   width?: number | string;
@@ -185,7 +195,7 @@ type DataItem_String = Readonly<DataItem_Base & {
  * Number
  */
 
-type DataItem_Number = Readonly<DataItem_Base & {
+type DataItem_Number<V extends number = number> = Readonly<DataItem_Base<V> & {
   type: "number";
   validations?: DataItemValidation<number, DataItem_Number>;
   min?: number;
@@ -193,7 +203,7 @@ type DataItem_Number = Readonly<DataItem_Base & {
   minLength?: number;
   maxLength?: number;
   float?: number;
-  source?: LoadableArray;
+  source?: DataItemSource<V>;
   // styles
   align?: "left" | "center" | "right";
   width?: number | string;
@@ -208,12 +218,12 @@ type DataItem_Number = Readonly<DataItem_Base & {
 type DataItem_Boolean<
   T extends boolean | number | string = boolean | number | string,
   F extends boolean | number | string = boolean | number | string
-> = Readonly<DataItem_Base & {
+> = Readonly<DataItem_Base<T | F> & {
   type: "boolean";
   validations?: DataItemValidation<T | F, DataItem_Boolean<T, F>>;
   trueValue: T;
   falseValue: F;
-  source?: LoadableArray;
+  source?: DataItemSource<T | F>;
 }>;
 
 /**
