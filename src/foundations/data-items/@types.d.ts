@@ -43,58 +43,57 @@ type NumberValue = number | string;
 type BooleanValue = boolean | string | number;
 type DateValue = string | number | Date;
 
-type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolean = false, Side extends "client" | "page-api" | "app-api" = "client"> =
+type DataItemValueTypeRequired<D extends DataItem, Strict extends boolean, V1, V2 = V1> =
+  Strict extends true ? (
+    D["required"] extends true ? V1 : V1 | null | undefined
+  ) : (
+    D["strict"] extends true ? (
+      D["required"] extends true ? V1 : V1 | null | undefined
+    ) : (
+      D["required"] extends true ? V2 : V2 | null | undefined
+    )
+  );
+
+type DataItemValueType<
+  D extends (DataItem | DataContext),
+  Strict extends boolean = false,
+  Side extends "client" | "page-api" | "app-api" = "client"
+> =
   D extends { $$: any } ? (
     D["type"] extends DataItem_String["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? string : string | null | undefined
-      ) : StringValue | null | undefined
+      DataItemValueTypeRequired<D, Strict, string, StringValue>
     ) :
     D["type"] extends DataItem_Number["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? number : number | null | undefined
-      ) : (
-        D["strict"] extends true ? number | null | undefined : NumberValue | null | undefined
-      )
+      DataItemValueTypeRequired<D, Strict, number, NumberValue>
     ) :
     D["type"] extends DataItem_Boolean["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? (
-          (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false)
-        ) : (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined
-      ) : (
-        D["strict"] extends true ?
-        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | null | undefined :
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false),
         (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false) | BooleanValue | null | undefined
-      )
+      >
     ) :
     D["type"] extends DataItem_Date["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? (
-          D["typeof"] extends "date" ? Date :
-          D["typeof"] extends "number" ? number :
-          D["typeof"] extends "string" ? string :
-          string
-        ) : (
-          D["typeof"] extends "date" ? Date :
-          D["typeof"] extends "number" ? number :
-          D["typeof"] extends "string" ? string :
-          string
-        ) | null | undefined
-      ) : DateValue | null | undefined
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        D["typeof"] extends "date" ? Date :
+        D["typeof"] extends "number" ? number :
+        D["typeof"] extends "string" ? string :
+        string,
+        DateValue
+      >
     ) :
     D["type"] extends DataItem_Time["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? (
-          D["typeof"] extends "string" ? string :
-          D["typeof"] extends "number" ? number :
-          number
-        ) : (
-          D["typeof"] extends "string" ? string :
-          D["typeof"] extends "number" ? number :
-          number
-        ) | null | undefined
-      ) : TimeValue | null | undefined
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        D["typeof"] extends "string" ? string :
+        D["typeof"] extends "number" ? number :
+        number,
+        TimeValue
+      >
     ) :
     D["type"] extends DataItem_File["type"] ? (
       Strict extends true ? (
@@ -116,14 +115,19 @@ type DataItemValueType<D extends (DataItem | DataContext), Strict extends boolea
       ) : (Side extends "client" ? File : FileValue<Side>) | string | null | undefined
     ) :
     D["type"] extends DataItem_Array["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? Array<DataItemValueType<D["item"], Strict, Side>> : Array<DataItemValueType<D["item"], Strict, Side>> | null | undefined
-      ) : Array<DataItemValueType<D["item"], Strict, Side>> | undefined
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        Array<DataItemValueType<D["item"], Strict, Side>>
+      >
     ) :
     D["type"] extends DataItem_Struct["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? { [P in keyof D["item"]]: D["item"][P] } : { [P in keyof D["item"]]: D["item"][P] } | null | undefined
-      ) : { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict, Side> }
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        { [P in keyof D["item"]]: D["item"][P] },
+        { [P in keyof D["item"]]?: DataItemValueType<D["item"][P], Strict, Side> }
+      >
     ) :
     any
   ) : (

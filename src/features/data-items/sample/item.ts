@@ -55,6 +55,8 @@ export const sample_number = numberItem({
 
 export const sample_boolean = booleanItem({
   name: "s_boolean",
+  required: true,
+  // strict: true,
   validations: [
     (v) => {
       console.log("boolean validation: ", typeof v, v);
@@ -76,11 +78,15 @@ export const sample_boolean_str = booleanItem({
   name: "s_boolean_str",
   trueValue: "1",
   falseValue: "9",
+  required: true,
 });
 
 export const sample_date = dateItem({
   name: "sample_date",
-  typeof: "string",
+  // typeof: "string",
+  // typeof: "date",
+  // typeof: "number",
+  required: true,
   validations: [
     (v) => {
       console.log("date validation: ", typeof v, v);

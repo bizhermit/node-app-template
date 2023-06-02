@@ -11,7 +11,16 @@ import Row from "#/components/elements/row";
 import StructView from "#/components/elements/struct-view";
 import useFetch from "#/hooks/fetch-api";
 import useProcess from "#/hooks/process";
+import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_date, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
+
+type Hoge = DataProps<[
+  typeof sample_string,
+  typeof sample_boolean,
+  typeof sample_boolean_num,
+  typeof sample_boolean_str,
+  typeof sample_date
+]>;
 
 const FetchClient = () => {
   const api = useFetch();
