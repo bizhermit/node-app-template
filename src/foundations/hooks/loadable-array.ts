@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
-export type LoadableArray<T = Struct> = Array<T> | (() => Array<T>) | (() => Promise<Array<T>>);
-
 type Options = {
   preventMemorize?: boolean;
+};
+
+const isArray = <T>(loadableArray?: LoadableArray<T>): loadableArray is (Array<T> | Readonly<Array<T>>) => {
+  return Array.isArray(loadableArray);
 };
 
 const useLoadableArray = <T = Struct>(loadableArray?: LoadableArray<T>, options?: Options) => {
   const initialized = useRef(false);
   const initPromise = useRef<Promise<Array<T>>>(null!);
   const [array, setArray] = useState<Array<T>>(() => {
-    if (loadableArray == null || Array.isArray(loadableArray)) return loadableArray ?? [];
+    if (loadableArray == null || isArray(loadableArray)) {
+      return loadableArray as Array<T> ?? [];
+    }
     const arr = loadableArray();
     if (arr == null || Array.isArray(arr)) return arr ?? [];
     initPromise.current = arr;
@@ -33,8 +37,8 @@ const useLoadableArray = <T = Struct>(loadableArray?: LoadableArray<T>, options?
     }
 
     if (options?.preventMemorize !== true) return;
-    if (loadableArray == null || Array.isArray(loadableArray)) {
-      setArray(loadableArray ?? []);
+    if (loadableArray == null || isArray(loadableArray)) {
+      setArray(loadableArray as Array<T> ?? []);
       return;
     }
     const arr = loadableArray();

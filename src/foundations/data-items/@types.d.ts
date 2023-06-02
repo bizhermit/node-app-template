@@ -143,7 +143,7 @@ type DataProps<A extends (Struct<DataItem> | Array<DataItem>)> = A extends Struc
   { [P in keyof A]: DataItemValueType<A[P], true, "client"> } :
   CrossDataProps<UnionToIntersection<DataProp<A[number]>>>;
 
-type LoadableArray<T = Struct> = Array<T> | (() => Array<T>) | (() => Promise<Array<T>>);
+type LoadableArray<T = Struct> = Array<T> | Readonly<Array<T>> | (() => Array<T>) | (() => Promise<Array<T>>);
 
 /**
  * String
