@@ -3,7 +3,7 @@
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import Hidden from "#/components/elements/form/items/hidden";
-import RadioButtons from "#/components/elements/form-items/radio-buttons";
+import RadioButtons from "#/components/elements/form/items/radio-buttons";
 import Row from "#/components/elements/row";
 import { useState } from "react";
 import type { FormItemMessageDisplayMode } from "#/components/elements/form/$types";

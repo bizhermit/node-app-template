@@ -2,7 +2,7 @@
 
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
-import RadioButtons from "#/components/elements/form-items/radio-buttons";
+import RadioButtons from "#/components/elements/form/items/radio-buttons";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import { CloudIcon } from "#/components/elements/icon";
 import Row from "#/components/elements/row";
