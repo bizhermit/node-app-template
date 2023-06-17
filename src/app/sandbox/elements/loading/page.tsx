@@ -1,10 +1,10 @@
 import Loading from "#/components/elements/loading";
-import LoadingClient from "@/sandbox/elements/loading/client";
+import LoadingClient from "@/sandbox/elements/loading/_components/client";
 
 const Page = () => {
   return (
     <>
-      {/* <Loading /> */}
+      <Loading />
       <LoadingClient />
     </>
   );

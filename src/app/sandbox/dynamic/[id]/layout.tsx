@@ -1,8 +1,7 @@
 import Divider from "#/components/elements/divider";
 import Row from "#/components/elements/row";
-import { DynamicParams } from "@/sandbox/dynamic/[id]/types";
 
-const Layout: LayoutFC<DynamicParams> = (props) => {
+const Layout: LayoutFC = (props) => {
   return (
     <div className="flex-stretch">
       <div className="flex-stretch">

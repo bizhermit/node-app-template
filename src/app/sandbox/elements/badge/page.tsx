@@ -1,5 +1,5 @@
 import Badge from "#/components/elements/badge";
-import BadgeClient from "@/sandbox/elements/badge/client";
+import BadgeClient from "@/sandbox/elements/badge/_components/client";
 
 const Page = () => {
   return (

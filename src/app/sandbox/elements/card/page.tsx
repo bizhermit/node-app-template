@@ -1,5 +1,5 @@
 import Card from "#/components/elements/card";
-import CardClient from "@/sandbox/elements/card/client";
+import CardClient from "@/sandbox/elements/card/_components/client";
 
 const Page = () => {
   return (

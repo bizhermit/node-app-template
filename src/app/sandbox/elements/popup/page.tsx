@@ -1,4 +1,4 @@
-import PopupClient from "@/sandbox/elements/popup/client";
+import PopupClient from "@/sandbox/elements/popup/_components/client";
 
 const Page = () => {
   return (
