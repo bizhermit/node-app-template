@@ -1,12 +1,18 @@
-import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
+"use client";
+
 import Style from "#/styles/components/elements/form-items/number-box.module.scss";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import { add, minus, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import { NumberData } from "#/data-items/number";
 import { CrossIcon, DownIcon, UpIcon } from "#/components/elements/icon";
+import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
+import { useForm } from "#/components/elements/form/context";
+import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
+import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
+import { FormItemWrap } from "#/components/elements/form/item-wrap";
 
 export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
   $min?: number;

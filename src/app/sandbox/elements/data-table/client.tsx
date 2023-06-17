@@ -4,7 +4,7 @@ import Button from "#/components/elements/button";
 import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "#/components/elements/data-table";
 import dataTableButtonColumn from "#/components/elements/data-table/button";
 import dataTableCheckBoxColumn from "#/components/elements/data-table/check-box";
-import NumberBox from "#/components/elements/form-items/number-box";
+import NumberBox from "#/components/elements/form/items/number-box";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { joinClassNames } from "#/components/utilities/attributes";

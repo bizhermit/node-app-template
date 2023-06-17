@@ -1,6 +1,6 @@
 "use client";
 
-import NumberBox from "#/components/elements/form-items/number-box";
+import NumberBox from "#/components/elements/form/items/number-box";
 import TextBox from "#/components/elements/form/items/text-box";
 import Label from "#/components/elements/label";
 import Row from "#/components/elements/row";

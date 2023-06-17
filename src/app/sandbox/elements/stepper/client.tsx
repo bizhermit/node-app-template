@@ -1,7 +1,7 @@
 "use client";
 
 import Divider from "#/components/elements/divider";
-import NumberBox from "#/components/elements/form-items/number-box";
+import NumberBox from "#/components/elements/form/items/number-box";
 import RadioButtons from "#/components/elements/form-items/radio-buttons";
 import { CloudIcon } from "#/components/elements/icon";
 import Row from "#/components/elements/row";
