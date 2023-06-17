@@ -4,7 +4,7 @@ import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
 import CheckBox from "#/components/elements/form/items/check-box";
-import FileDrop from "#/components/elements/form-items/file-drop";
+import FileDrop from "#/components/elements/form/items/file-drop";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { sample_file } from "$/data-items/sample/item";
