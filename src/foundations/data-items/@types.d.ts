@@ -189,6 +189,7 @@ type DataItem_String<V extends string = string> = Readonly<DataItem_Base<V> & {
   width?: number | string;
   minWidth?: number | string;
   maxWidth?: number | string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
 }>;
 
 /**

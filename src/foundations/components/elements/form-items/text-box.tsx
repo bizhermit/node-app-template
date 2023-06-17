@@ -75,6 +75,7 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
               }
             })() as InputType,
             $inputMode: (() => {
+              if (dataItem.inputMode) return dataItem.inputMode;
               switch (props.$charType ?? dataItem.charType) {
                 case "h-num":
                 case "int":
