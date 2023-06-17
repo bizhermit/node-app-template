@@ -1,4 +1,4 @@
-import DataListClient from "@/sandbox/elements/data-list/client";
+import DataListClient from "@/sandbox/elements/data-list/_components/client";
 
 const Page = () => {
   return (

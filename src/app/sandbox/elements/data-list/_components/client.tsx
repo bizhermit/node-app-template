@@ -3,8 +3,8 @@
 import Button from "#/components/elements/button";
 import DataList from "#/components/elements/data-list";
 import { DataListColumn } from "#/components/elements/data-list/class";
-import NumberBox from "#/components/elements/form-items/number-box";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import NumberBox from "#/components/elements/form/items/number-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { joinClassNames } from "#/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";

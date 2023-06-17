@@ -1,3 +1,5 @@
+"use client";
+
 import DataListClass, { type DataListColumn } from "#/components/elements/data-list/class";
 import { attributes } from "#/components/utilities/attributes";
 import useLoadableArray from "#/hooks/loadable-array";
