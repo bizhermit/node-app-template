@@ -4,7 +4,7 @@ type Params = {
   id: string;
 };
 
-const Page: DynamicPageFC<Params> = (props) => {
+const Page: PageFC<Params> = (props) => {
   console.log("dyanmic", props);
   console.log("- ", props.params.id);
   return (

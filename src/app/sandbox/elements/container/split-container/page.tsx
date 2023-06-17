@@ -1,4 +1,4 @@
-import SplitContainerClient from "@/sandbox/elements/container/split-container/client";
+import SplitContainerClient from "@/sandbox/elements/container/split-container/_components/client";
 
 const Page = () => {
   return (

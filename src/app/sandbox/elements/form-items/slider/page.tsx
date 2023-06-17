@@ -1,4 +1,4 @@
-import SliderClient from "@/sandbox/elements/form-items/slider/client";
+import SliderClient from "@/sandbox/elements/form-items/slider/_components/client";
 
 const Page = () => {
   return (

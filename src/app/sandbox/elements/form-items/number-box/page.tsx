@@ -1,4 +1,4 @@
-import NumberBoxClient from "@/sandbox/elements/form-items/number-box/client";
+import NumberBoxClient from "@/sandbox/elements/form-items/number-box/_components/client";
 
 const Page = () => {
   return (
