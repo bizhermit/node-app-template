@@ -4,9 +4,9 @@ import type { ReactElement, ReactNode } from "react";
 import "#/styles/globals.scss";
 import "#/styles/color.scss";
 import "#/styles/utility.scss";
-import { MessageProvider } from "#/components/providers/message";
 import LoadingProvider from "#/components/elements/loading/provider";
 import LayoutProvider from "#/components/providers/layout/provider";
+import MessageProvider from "#/components/providers/message/provider";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   layout?: (page: ReactElement, props: P) => ReactNode;

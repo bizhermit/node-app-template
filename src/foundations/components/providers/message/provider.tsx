@@ -1,33 +1,8 @@
+"use client";
+
+import { MessageContext, type ArgMessages, type ProviderMessage } from "#/components/providers/message/context";
 import useMessageBox from "#/hooks/message-box";
-import { createContext, type FC, type ReactNode, useContext, useEffect, useReducer } from "react";
-
-type ArgMessages = Message | Array<Message | null | undefined> | null | undefined;
-
-type ProviderMessage = Message & {
-  verified: boolean;
-  displayed: boolean;
-  timestamp: number;
-};
-
-type MessageContextProps = {
-  set: (messages: ArgMessages) => void;
-  append: (messages: ArgMessages) => void;
-  error: (e: any) => void;
-  clear: () => void;
-  messages: Array<ProviderMessage>;
-};
-
-const MessageContext = createContext<MessageContextProps>({
-  set: () => { },
-  append: () => { },
-  error: () => { },
-  clear: () => { },
-  messages: [],
-});
-
-export const useMessage = () => {
-  return useContext(MessageContext);
-};
+import { type FC, type ReactNode, useEffect, useReducer } from "react";
 
 const arrangeMessages = (messages: ArgMessages): Array<ProviderMessage> => {
   if (messages == null) return [];
@@ -120,4 +95,4 @@ export const MessageProvider: FC<{
   );
 };
 
-export default useMessage;
+export default MessageProvider;

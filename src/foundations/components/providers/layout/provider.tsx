@@ -1,5 +1,7 @@
-import { LayoutContext, WindowSize, WindowSizeValue } from "#/components/providers/layout/context";
-import { FC, ReactNode, useCallback, useEffect, useState } from "react";
+"use client";
+
+import { LayoutContext, WindowSize, type WindowSizeValue } from "#/components/providers/layout/context";
+import { type FC, type ReactNode, useCallback, useEffect, useState } from "react";
 
 const LayoutProvider: FC<{
   initWindowSize?: WindowSizeValue;
