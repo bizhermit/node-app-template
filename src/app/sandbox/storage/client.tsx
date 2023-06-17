@@ -2,7 +2,7 @@
 
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import Text from "#/components/elements/text";
 import { useLocalState, useSessionState } from "#/hooks/storage";

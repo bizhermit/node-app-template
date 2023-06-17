@@ -5,7 +5,7 @@ import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
 import ElectronicSignature from "#/components/elements/form-items/electronic-signature";
 import RadioButtons from "#/components/elements/form-items/radio-buttons";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { sample_file, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";

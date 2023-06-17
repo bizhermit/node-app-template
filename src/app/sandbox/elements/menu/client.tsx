@@ -2,7 +2,7 @@
 
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import { DoubleDownIcon, DoubleLeftIcon } from "#/components/elements/icon";
 import Menu from "#/components/elements/menu";
 import Popup from "#/components/elements/popup";

@@ -3,7 +3,7 @@
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import RadioButtons from "#/components/elements/form-items/radio-buttons";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import SplitContainer, { SplitContent, type SplitDirection } from "#/components/elements/split-container";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";

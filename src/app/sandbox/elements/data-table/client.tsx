@@ -5,7 +5,7 @@ import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColum
 import dataTableButtonColumn from "#/components/elements/data-table/button";
 import dataTableCheckBoxColumn from "#/components/elements/data-table/check-box";
 import NumberBox from "#/components/elements/form-items/number-box";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { joinClassNames } from "#/components/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";

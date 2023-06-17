@@ -4,7 +4,7 @@ import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
 import TimePicker from "#/components/elements/form-items/time-picker";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { sample_number, sample_string, sample_time } from "$/data-items/sample/item";
 import { useState } from "react";

@@ -4,7 +4,7 @@ import Button from "#/components/elements/button";
 import DateBox from "#/components/elements/form-items/date-box";
 import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
-import ToggleBox from "#/components/elements/form-items/toggle-box";
+import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { useState } from "react";
 import RadioButtons from "#/components/elements/form-items/radio-buttons";
