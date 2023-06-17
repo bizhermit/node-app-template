@@ -1,10 +1,10 @@
-import SandBoxProvider from "@/sandbox/provider";
+import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
 
 const SandBoxLayout: LayoutFC = ({ children }) => {
   return (
-    <SandBoxProvider>
+    <SandboxLayoutProvider>
       {children}
-    </SandBoxProvider>
+    </SandboxLayoutProvider>
   );
 };
 

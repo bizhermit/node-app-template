@@ -1,10 +1,12 @@
+"use client";
+
 import Menu from "#/components/elements/menu";
 import NavigationContainer from "#/components/elements/navigation-container";
 import { useNavigation } from "#/components/elements/navigation-container/context";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import type { FC, ReactNode } from "react";
 
-const SandboxPageProvider: FC<{
+const SandboxLayoutProvider: FC<{
   children?: ReactNode;
 }> = ({ children }) => {
   return (
@@ -309,4 +311,4 @@ const Navigation: FC = () => {
   );
 };
 
-export default SandboxPageProvider;
+export default SandboxLayoutProvider;

@@ -1,18 +1,19 @@
 import "#/styles/globals.scss";
 import "#/styles/color.scss";
 import "#/styles/utility.scss";
-import RootProvider from "@/provider";
+import RootProvider from "@/_components/root-provider";
 
 export const metadata = {
   title: "NodeAppTemplate",
   description: "@bizhermit/node-app-template",
+  viewport: "width=device-width,initial-scale=1",
+  robots: "none",
 };
 
 const RootLayout: LayoutFC = ({ children }) => {
   return (
     <html lang="ja">
       <head>
-        <meta name="robots" content="none" />
         <meta name="format-detection" content="telephone=no, email=no, address=no" />
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/favicons/favicon.ico" />
       </head>

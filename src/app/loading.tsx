@@ -1,16 +1,7 @@
-import Style from "#/styles/components/elements/loading.module.scss";
+import Loading from "#/components/elements/loading";
 
 const SuspenseLoading = () => {
-  return (
-    <div
-      className={Style.wrap}
-      tabIndex={0}
-      data-fixed={true}
-      data-appearance="bar"
-    >
-      <div className={`${Style.bar} bgc-main`} />
-    </div>
-  );
+  return <Loading />;
 };
 
 export default SuspenseLoading;
