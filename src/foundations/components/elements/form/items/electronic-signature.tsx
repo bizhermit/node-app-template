@@ -1,9 +1,15 @@
-import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
-import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
+"use client";
+
 import Style from "#/styles/components/elements/form-items/electronic-signature.module.scss";
+import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import { releaseCursor, setCursor } from "#/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "#/components/elements/icon";
+import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
+import { useForm } from "#/components/elements/form/context";
+import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
+import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
+import { FormItemWrap } from "#/components/elements/form/item-wrap";
 
 export type ElectronicSignatureProps<
   D extends DataItem_String | DataItem_File | undefined = undefined

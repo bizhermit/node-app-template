@@ -51,14 +51,14 @@ type DataItemSourceKeyValue<D extends DataItem, T> =
     S extends Array<infer V> ? (V["name"]) : T
   ) : T;
 
-type DataItemValueTypeRequired<D extends DataItem, Strict extends boolean, V1, V2 = V1> =
+type DataItemValueTypeRequired<D extends DataItem, Strict extends boolean, StrictValue, Value = StrictValue> =
   Strict extends true ? (
-    D["required"] extends true ? DataItemSourceKeyValue<D, V1> : DataItemSourceKeyValue<D, V1> | null | undefined
+    D["required"] extends true ? DataItemSourceKeyValue<D, StrictValue> : DataItemSourceKeyValue<D, StrictValue> | null | undefined
   ) : (
     D["strict"] extends true ? (
-      D["required"] extends true ? DataItemSourceKeyValue<D, V1> : DataItemSourceKeyValue<D, V1> | null | undefined
+      D["required"] extends true ? DataItemSourceKeyValue<D, StrictValue> : DataItemSourceKeyValue<D, StrictValue> | null | undefined
     ) : (
-      D["required"] extends true ? DataItemSourceKeyValue<D, V2> | V2 : DataItemSourceKeyValue<D, V2> | V2 | null | undefined
+      D["required"] extends true ? DataItemSourceKeyValue<D, Value> | Value : DataItemSourceKeyValue<D, Value> | Value | null | undefined
     )
   );
 
@@ -104,23 +104,20 @@ type DataItemValueType<
       >
     ) :
     D["type"] extends DataItem_File["type"] ? (
-      Strict extends true ? (
-        D["required"] extends true ? (
-          D["multiple"] extends true ? (
-            Array<D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>)>
-          ) : (
-            D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>)
-          )
+      DataItemValueTypeRequired<
+        D,
+        Strict,
+        D["multiple"] extends true ? (
+          D["typeof"] extends "base64" ? Array<string> :
+          D["typeof"] extends "file" ? Array<(Side extends "client" ? File : FileValue<Side>)> :
+          Array<any>
         ) : (
-          D["multiple"] extends true ? (
-            Array<(D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>))> | null | undefined
-          ) : (
-            (D["typeof"] extends "base64" ? string : (Side extends "client" ? File : FileValue<Side>)) | null | undefined
-          )
-        )
-      ) : D["multiple"] extends true ? (
-        Array<(Side extends "client" ? File : FileValue<Side>) | string | null | undefined> | null | undefined
-      ) : (Side extends "client" ? File : FileValue<Side>) | string | null | undefined
+          D["typeof"] extends "base64" ? string :
+          D["typeof"] extends "file" ? (Side extends "client" ? File : FileValue<Side>) :
+          any
+        ),
+        D["multiple"] extends true ? Array<FileValue<Side>> : Array<FileValue<Side>>
+      >
     ) :
     D["type"] extends DataItem_Array["type"] ? (
       DataItemValueTypeRequired<
