@@ -41,7 +41,7 @@ const TextArea: TextAreaFC = forwardRef<HTMLDivElement, TextAreaProps>(<
   const iref = useRef<HTMLTextAreaElement>(null!);
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem, method }) => {
+    under: ({ dataItem, method, props }) => {
       const isSearch = method === "get";
       return {
         $length: isSearch ? undefined : dataItem.length,
