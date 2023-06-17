@@ -1,3 +1,5 @@
+"use client";
+
 import Style from "#/styles/components/elements/stepper.module.scss";
 import Text from "#/components/elements/text";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
