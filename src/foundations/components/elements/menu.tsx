@@ -1,7 +1,7 @@
 "use client";
 
-import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Style from "#/styles/components/elements/menu.module.scss";
+import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { attributes, attributesWithoutChildren } from "#/components/utilities/attributes";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import { usePathname } from "next/navigation";
