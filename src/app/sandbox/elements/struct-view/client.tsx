@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import Card from "#/components/elements/card";
 import Row from "#/components/elements/row";
@@ -7,7 +7,7 @@ import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useMemo, useState } from "react";
 
 const StructViewClient = () => {
-  const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
+  // const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
 
   const struct = useMemo(() => {
     const ret: Struct = {};
