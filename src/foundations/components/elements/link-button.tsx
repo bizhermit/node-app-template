@@ -1,12 +1,14 @@
+"use client";
+
 import Style from "#/styles/components/elements/button.module.scss";
 import { forwardRef, useMemo, type HTMLAttributes } from "react";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
-import { useForm } from "#/components/elements/form";
 import Text from "#/components/elements/text";
 import type { ButtonOptions } from "#/components/elements/button";
 import type { UrlObject } from "url";
 import NextLink from "#/components/elements/link";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { useForm } from "#/components/elements/form/context";
 
 export type LinkButtonOptions = ButtonOptions & {
   href?: string | UrlObject;

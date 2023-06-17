@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
