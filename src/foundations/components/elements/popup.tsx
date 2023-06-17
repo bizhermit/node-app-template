@@ -16,7 +16,7 @@ type PopupContextProps = {
 const PopupContext = createContext<PopupContextProps>({
   isPopup: false,
   showed: true,
-  resetPosition: () => {},
+  resetPosition: () => { },
 });
 
 export const usePopup = () => {
