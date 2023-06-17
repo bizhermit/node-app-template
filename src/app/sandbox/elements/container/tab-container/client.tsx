@@ -6,7 +6,8 @@ import RadioButtons from "#/components/elements/form/items/radio-buttons";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import { CloudIcon } from "#/components/elements/icon";
 import Row from "#/components/elements/row";
-import TabContainer, { TabContent } from "#/components/elements/tab-container";
+import TabContainer from "#/components/elements/tab-container";
+import TabContent from "#/components/elements/tab-container/content";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { type Key, useState } from "react";
 
