@@ -1,6 +1,8 @@
+"use client";
+
+import Style from "#/styles/components/elements/loading.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { type FC, forwardRef, type HTMLAttributes, useEffect, useImperativeHandle, useRef } from "react";
-import Style from "#/styles/components/elements/loading.module.scss";
 import usePortalElement from "#/hooks/portal-element";
 import { createPortal } from "react-dom";
 
@@ -89,8 +91,6 @@ const Mask2: FC<LoadingProps> = (props) => {
   );
 };
 
-export default Loading;
-
 export const ScreenLoading = forwardRef<HTMLDivElement, LoadingProps>((props, ref) => {
   const portal = usePortalElement({
     mount: (elem) => {
@@ -101,3 +101,5 @@ export const ScreenLoading = forwardRef<HTMLDivElement, LoadingProps>((props, re
   if (portal == null) return <></>;
   return createPortal(<Loading {...props} ref={ref} $fixed />, portal);
 });
+
+export default Loading;

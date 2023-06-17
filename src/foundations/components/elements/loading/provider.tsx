@@ -1,20 +1,8 @@
-import Loading, { LoadingProps } from "#/components/elements/loading";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { type FC, type ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+"use client";
 
-type LoadingContextProps = {
-  show: (id: string) => void;
-  hide: (id: string) => void;
-  hideAbsolute: () => void;
-  showed: boolean;
-};
-
-const LoadingContext = createContext<LoadingContextProps>({
-  show: () => { },
-  hide: () => { },
-  hideAbsolute: () => { },
-  showed: false,
-});
+import Loading, { type LoadingProps } from "#/components/elements/loading";
+import { LoadingContext } from "#/components/elements/loading/context";
+import { type FC, type ReactNode, useCallback, useState } from "react";
 
 const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = (props) => {
   const [ids, setIds] = useState<Array<string>>([]);
@@ -61,31 +49,6 @@ const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = (props) =>
       {props.children}
     </LoadingContext.Provider>
   );
-};
-
-export const useLoading = () => {
-  const ctx = useContext(LoadingContext);
-  const id = useRef(StringUtils.generateUuidV4());
-
-  const show = () => {
-    ctx.show(id.current);
-  };
-
-  const hide = (absolute?: boolean) => {
-    if (absolute) {
-      ctx.hideAbsolute();
-      return;
-    }
-    ctx.hide(id.current);
-  };
-
-  useEffect(() => {
-    return () => {
-      hide();
-    };
-  }, []);
-
-  return { show, hide, loading: ctx.showed };
 };
 
 export default LoadingProvider;
