@@ -1,4 +1,10 @@
-import { FormItemProps, FormItemWrap, convertHiddenValue, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
+"use client";
+
+import type { FormItemProps } from "#/components/elements/form/$types";
+import { useForm } from "#/components/elements/form/context";
+import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
+import { FormItemWrap } from "#/components/elements/form/item-wrap";
+import { convertHiddenValue } from "#/components/elements/form/utilities";
 import { type ForwardedRef, type ReactElement, type FunctionComponent, forwardRef } from "react";
 
 export type HiddenProps<D extends DataItem | undefined = undefined> = FormItemProps<any, D, any> & {
