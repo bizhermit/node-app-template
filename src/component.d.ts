@@ -3,6 +3,8 @@ type CommonStyleProps = {
   style?: React.CSSProperties;
 };
 
+type CFC<P extends { [key: string]: any } = { [key: string]: any }> = React.FC<P & { children?: React.ReactNode; }>;
+
 type LayoutFC<
   P extends { [key: string]: undefined | string | string[] } | undefined = { [key: string]: undefined | string | string[] } | undefined,
   S extends { [key: string]: undefined | string | string[] } | undefined = { [key: string]: undefined | string | string[] } | undefined
@@ -19,8 +21,6 @@ type PageFC<
   params: P;
   searchParams: S;
 }) => (React.ReactElement | Promise<React.ReactElement>);
-
-type CFC<P extends { [key: string]: any } = { [key: string]: any }> = React.FC<P & { children?: React.ReactNode; }>;
 
 type ErrorFC = (props: {
   error: Error;
