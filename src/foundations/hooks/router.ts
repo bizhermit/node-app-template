@@ -1,9 +1,10 @@
-import { DynamicUrlContextOptions, getDynamicUrlContext } from "#/utilities/url";
+import { type DynamicUrlContextOptions, getDynamicUrlContext } from "#/utilities/url";
 import { useRouter as $useRouter, usePathname } from "next/navigation";
 
 const useRouter = () => {
   const router = $useRouter();
   const pathname = usePathname();
+
   return {
     ...router,
     pathname: pathname as PagePath,
