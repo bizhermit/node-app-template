@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import Divider from "#/components/elements/divider";
 import TextBox from "#/components/elements/form/items/text-box";
