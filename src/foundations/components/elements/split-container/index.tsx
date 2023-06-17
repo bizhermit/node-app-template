@@ -1,7 +1,9 @@
-import { attributesWithoutChildren, convertSizeNumToStr } from "#/components/utilities/attributes";
-import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useImperativeHandle, useRef } from "react";
+"use client";
+
 import Style from "#/styles/components/elements/split-container.module.scss";
-import Resizer from "./resizer";
+import { attributesWithoutChildren, convertSizeNumToStr } from "#/components/utilities/attributes";
+import { forwardRef, type HTMLAttributes, type ReactElement, useEffect, useImperativeHandle, useRef } from "react";
+import Resizer from "../resizer";
 
 export type SplitDirection = "horizontal" | "vertical";
 
@@ -89,14 +91,5 @@ const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>((props, $
     </div>
   );
 });
-
-export const SplitContent: FC<{
-  defaultSize?: number | string;
-  minSize?: number | string;
-  maxSize?: number | string;
-  children?: ReactNode;
-}> = ({ children }) => {
-  return <>{children}</>;
-};
 
 export default SplitContainer;

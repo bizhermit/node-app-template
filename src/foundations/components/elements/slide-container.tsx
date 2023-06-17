@@ -1,5 +1,7 @@
-import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
+"use client";
+
 import Style from "#/styles/components/elements/slide-container.module.scss";
+import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import Text from "#/components/elements/text";
 
