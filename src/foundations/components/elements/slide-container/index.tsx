@@ -211,14 +211,4 @@ const Content: FC<{
   );
 };
 
-export const SlideContent: FC<{
-  label?: ReactNode;
-  overlap?: boolean;
-  defaultMount?: boolean;
-  preventUnmountDeselected?: boolean;
-  children?: ReactNode;
-}> = ({ children }) => {
-  return <>{children}</>;
-};
-
 export default SlideContainer;
