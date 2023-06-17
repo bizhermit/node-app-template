@@ -1,7 +1,13 @@
-import { convertDataItemValidationToFormItemValidation, type FormItemProps, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useMemo, useRef } from "react";
+"use client";
+
 import Style from "#/styles/components/elements/form-items/slider.module.scss";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useMemo, useRef } from "react";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
+import type { FormItemProps } from "#/components/elements/form/$types";
+import { useForm } from "#/components/elements/form/context";
+import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
+import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
+import { FormItemWrap } from "#/components/elements/form/item-wrap";
 
 export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
   $max?: number;
