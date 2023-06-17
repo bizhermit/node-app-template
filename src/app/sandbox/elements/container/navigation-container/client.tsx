@@ -3,7 +3,7 @@
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import { type NavigationFooterVisible, type NavigationHeaderVisible, type NavigationMode, type NavigationPosition, useNavigation } from "#/components/elements/navigation-container";
+import { type NavigationPosition, useNavigation, NavigationMode, NavigationHeaderVisible, NavigationFooterVisible } from "#/components/elements/navigation-container/context";
 import Row from "#/components/elements/row";
 import StructView from "#/components/elements/struct-view";
 

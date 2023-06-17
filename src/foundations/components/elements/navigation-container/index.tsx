@@ -1,50 +1,12 @@
 import useLayout, { WindowSize } from "#/components/providers/layout";
-import { createContext, type ElementType, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { type ElementType, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import Style from "#/styles/components/elements/navigation-container.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import { CrossIcon, MenuIcon } from "#/components/elements/icon";
-
-export type NavigationPosition = "left" | "right" | "top" | "bottom";
-
-export type NavigationMode = "auto" | "visible" | "minimize" | "manual" | "none";
-
-export type NavigationHeaderVisible = "always" | "none";
-export type NavigationFooterVisible = "always" | "end" | "none";
+import { NavigationContext, type NavigationFooterVisible, type NavigationHeaderVisible, type NavigationMode, type NavigationPosition } from "#/components/elements/navigation-container/context";
 
 const defaultKey = "default";
-
-type NavigationContextProps = {
-  toggle: (open?: boolean) => void;
-  showed: boolean;
-  position: NavigationPosition;
-  setPosition: (position: NavigationPosition | typeof defaultKey) => void;
-  mode: NavigationMode;
-  setMode: (mode: NavigationMode | typeof defaultKey) => void;
-  state: Omit<NavigationMode, "auto">;
-  headerVisible: NavigationHeaderVisible;
-  setHeaderVisible: (mode: NavigationHeaderVisible | typeof defaultKey) => void;
-  footerVisible: NavigationFooterVisible;
-  setFooterVisible: (mode: NavigationFooterVisible | typeof defaultKey) => void;
-}
-
-const NavigationContext = createContext<NavigationContextProps>({
-  toggle: () => { },
-  showed: false,
-  position: "left",
-  setPosition: () => { },
-  mode: "none",
-  setMode: () => { },
-  state: "none",
-  headerVisible: "none",
-  setHeaderVisible: () => { },
-  footerVisible: "none",
-  setFooterVisible: () => { },
-});
-
-export const useNavigation = () => {
-  return useContext(NavigationContext);
-};
 
 type OmitAttributes = "color" | "children";
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {

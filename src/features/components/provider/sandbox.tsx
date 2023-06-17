@@ -1,5 +1,6 @@
 import Menu from "#/components/elements/menu";
-import NavigationContainer, { useNavigation } from "#/components/elements/navigation-container";
+import NavigationContainer from "#/components/elements/navigation-container";
+import { useNavigation } from "#/components/elements/navigation-container/context";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import type { FC, ReactNode } from "react";
 
