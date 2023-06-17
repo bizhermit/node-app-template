@@ -6,7 +6,8 @@ import RadioButtons from "#/components/elements/form/items/radio-buttons";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import { CloudIcon } from "#/components/elements/icon";
 import Row from "#/components/elements/row";
-import SlideContainer, { SlideContent, type SlideDirection } from "#/components/elements/slide-container";
+import SlideContainer, { type SlideDirection } from "#/components/elements/slide-container";
+import SlideContent from "#/components/elements/slide-container/content";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";
 
