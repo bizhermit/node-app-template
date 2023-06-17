@@ -10,7 +10,7 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { equals, getValue, setValue } from "#/data-items/utilities";
 import { CrossIcon, DownIcon } from "#/components/elements/icon";
-import { FormItemProps } from "#/components/elements/form/$types";
+import type { FormItemProps } from "#/components/elements/form/$types";
 import { useForm } from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
