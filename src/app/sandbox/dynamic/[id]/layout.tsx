@@ -2,7 +2,7 @@ import Divider from "#/components/elements/divider";
 import Row from "#/components/elements/row";
 import { DynamicParams } from "@/sandbox/dynamic/[id]/types";
 
-const Layout: DynamicRouteFC<DynamicParams> = (props) => {
+const Layout: LayoutFC<DynamicParams> = (props) => {
   return (
     <div className="flex-stretch">
       <div className="flex-stretch">

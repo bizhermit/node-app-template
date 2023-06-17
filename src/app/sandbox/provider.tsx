@@ -2,7 +2,7 @@
 
 import SandboxPageProvider from "$/components/provider/sandbox";
 
-const SandBoxProvider: RouteFC = ({ children }) => {
+const SandBoxProvider: CFC = ({ children }) => {
   return (
     <SandboxPageProvider>
       {children}
