@@ -1,5 +1,5 @@
 import type { DataTableBaseColumn, DataTableColumn } from "#/components/elements/data-table";
-import CheckBox, { type CheckBoxProps } from "#/components/elements/form-items/check-box";
+import CheckBox, { type CheckBoxProps } from "#/components/elements/form/items/check-box";
 import { getValue, setValue } from "#/data-items/utilities";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 
