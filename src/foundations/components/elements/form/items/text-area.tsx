@@ -1,16 +1,26 @@
-import { convertDataItemValidationToFormItemValidation, type FormItemProps, type FormItemValidation, FormItemWrap, useDataItemMergedProps, useForm, useFormItemContext } from "#/components/elements/form";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
+"use client";
+
 import Style from "#/styles/components/elements/form-items/text-area.module.scss";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
 import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { StringData } from "#/data-items/string";
+import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
+import { useForm } from "#/components/elements/form/context";
+import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
+import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
+import { FormItemWrap } from "#/components/elements/form/item-wrap";
+
+type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
 export type TextAreaProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & {
+  $inputMode?: InputMode;
   $length?: number;
   $preventInputWithinLength?: boolean;
   $minLength?: number;
   $maxLength?: number;
+  $charType?: StringCharType;
   $resize?: boolean | "x" | "y" | "xy";
   $width?: number | string;
   $maxWidth?: number | string;
@@ -40,6 +50,22 @@ const TextArea: TextAreaFC = forwardRef<HTMLDivElement, TextAreaProps>(<
         $width: dataItem.width,
         $minWidth: dataItem.minWidth,
         $maxWidth: dataItem.maxWidth,
+        $inputMode: (() => {
+          if (dataItem.inputMode) return dataItem.inputMode;
+          switch (props.$charType ?? dataItem.charType) {
+            case "h-num":
+            case "int":
+              return "numeric";
+            case "email":
+              return "email";
+            case "tel":
+              return "tel";
+            case "url":
+              return "url";
+            default:
+              return undefined;
+          }
+        })() as InputMode,
       };
     },
     over: ({ dataItem, props }) => {
@@ -65,12 +91,62 @@ const TextArea: TextAreaFC = forwardRef<HTMLDivElement, TextAreaProps>(<
           validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!));
         }
       }
+      switch (props.$charType) {
+        case "h-num":
+          validations.push(v => StringData.halfWidthNumericValidation(v));
+          break;
+        case "f-num":
+          validations.push(v => StringData.fullWidthNumericValidation(v));
+          break;
+        case "num":
+          validations.push(v => StringData.numericValidation(v));
+          break;
+        case "h-alpha":
+          validations.push(v => StringData.halfWidthAlphabetValidation(v));
+          break;
+        case "f-alpha":
+          validations.push(v => StringData.fullWidthAlphabetValidation(v));
+          break;
+        case "alpha":
+          validations.push(v => StringData.alphabetValidation(v));
+          break;
+        case "h-alpha-num":
+          validations.push(v => StringData.halfWidthAlphaNumericValidation(v));
+          break;
+        case "h-alpha-num-syn":
+          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v));
+          break;
+        case "int":
+          validations.push(v => StringData.integerValidation(v));
+          break;
+        case "h-katakana":
+          validations.push(v => StringData.halfWidthKatakanaValidation(v));
+          break;
+        case "f-katakana":
+          validations.push(v => StringData.fullWidthKatakanaValidation(v));
+          break;
+        case "katakana":
+          validations.push(v => StringData.katakanaValidation(v));
+          break;
+        case "email":
+          validations.push(v => StringData.mailAddressValidation(v));
+          break;
+        case "tel":
+          validations.push(v => StringData.telValidation(v));
+          break;
+        case "url":
+          validations.push(v => StringData.urlValidation(v));
+          break;
+        default:
+          break;
+      }
       return validations;
     },
     validationsDeps: [
       props.$length,
       props.$minLength,
       props.$maxLength,
+      props.$charType,
     ],
   });
 
@@ -103,6 +179,7 @@ const TextArea: TextAreaFC = forwardRef<HTMLDivElement, TextAreaProps>(<
         defaultValue={ctx.value ?? ""}
         onChange={e => ctx.change(e.target.value)}
         autoComplete={props.$autoComplete ?? "off"}
+        inputMode={props.$inputMode}
       />
       {props.$resize &&
         <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />

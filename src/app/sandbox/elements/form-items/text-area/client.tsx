@@ -3,7 +3,7 @@
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
-import TextArea from "#/components/elements/form-items/text-area";
+import TextArea from "#/components/elements/form/items/text-area";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { sample_string } from "$/data-items/sample/item";

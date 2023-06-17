@@ -16,12 +16,12 @@ export const useDataItemMergedProps = <
   D extends DataItem | undefined,
   P extends FormItemProps<T, D, any, any>
 >(form: ReturnType<typeof useForm>, props: P, merge?: {
-  under?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
-  over?: (ctx: { props: P; dataItem: NonNullable<P["$dataItem"]>; method?: string; }) => Partial<P>;
+  under?: (ctx: { props: P; dataItem: Exclude<P["$dataItem"], undefined>; method?: string; }) => Partial<P>;
+  over?: (ctx: { props: P; dataItem: Exclude<P["$dataItem"], undefined>; method?: string; }) => Partial<P>;
 }) => {
   const p = {
     ...useMemo(() => {
-      const dataItem = props.$dataItem;
+      const dataItem = props.$dataItem as Exclude<D, undefined>;
       if (dataItem == null) return {};
       return {
         name: dataItem.name,
@@ -34,7 +34,7 @@ export const useDataItemMergedProps = <
   return {
     ...p,
     ...useMemo(() => {
-      const dataItem = props.$dataItem;
+      const dataItem = props.$dataItem as Exclude<D, undefined>;
       if (dataItem == null || merge?.over == null) return {};
       return merge.over({ props: p, dataItem, method: form.method });
     }, [props.$dataItem]),
