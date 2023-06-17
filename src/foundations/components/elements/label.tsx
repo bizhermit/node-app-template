@@ -1,7 +1,7 @@
+import Style from "#/styles/components/elements/label.module.scss";
 import { attributesWithoutChildren, joinClassNames } from "#/components/utilities/attributes";
 import Text from "#/components/elements/text";
 import { forwardRef, type HTMLAttributes } from "react";
-import Style from "#/styles/components/elements/label.module.scss";
 
 type LabelProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
   $color?: Color;

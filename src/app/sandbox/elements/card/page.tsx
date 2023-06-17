@@ -1,8 +1,15 @@
-import CardClient from "@/sandbox/elements/card/client";
+import Card from "#/components/elements/card";
+import CardClient from "@/sandbox/elements/card/_components/client";
 
 const Page = () => {
   return (
-    <CardClient />
+    <>
+      <Card $accordion>
+        <>head</>
+        <>body</>
+      </Card>
+      <CardClient />
+    </>
   );
 };
 

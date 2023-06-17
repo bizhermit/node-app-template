@@ -1,9 +1,9 @@
 import useFetch from "#/hooks/fetch-api";
 import { type DependencyList, useCallback } from "react";
 
-const cache: Struct = {};
+const cache: { [key: string]: Array<any> } = {};
 
-const useSource = <T extends Struct, K extends ApiPath>(
+const useSource = <T extends { [key: string]: any }, K extends ApiPath>(
   apiPath: K,
   params: ApiRequest<K, "get">, options?: {
     name?: string;
@@ -16,13 +16,13 @@ const useSource = <T extends Struct, K extends ApiPath>(
   return useCallback(async () => {
     try {
       const key = apiPath + JSON.stringify(params ?? {});
-      if (!options?.noCache && key in cache) return cache[key];
+      if (!options?.noCache && key in cache) return [...cache[key]] as Array<T>;
       const res = await api.get(apiPath, params);
-      const ret = (res.data as unknown as T)[options?.name || "value"];
+      const ret = (res.data as { [key: string]: any })[options?.name || "value"] as Array<T>;
       if (!options?.noCache) cache[key] = ret;
-      return ret;
+      return [...ret];
     } catch {
-      // ignore
+      return [] as Array<T>;
     }
   }, deps ?? []);
 };

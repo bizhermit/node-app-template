@@ -130,6 +130,15 @@ const getStringItem = (msgs: Array<Message>, key: string | number, ctx: DataItem
     case "katakana":
       pushMsg(StringData.katakanaValidation(v, name));
       break;
+    case "email":
+      pushMsg(StringData.mailAddressValidation(v, name));
+      break;
+    case "tel":
+      pushMsg(StringData.telValidation(v, name));
+      break;
+    case "url":
+      pushMsg(StringData.urlValidation(v, name));
+      break;
     default:
       break;
   }

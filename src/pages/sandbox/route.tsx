@@ -1,6 +1,6 @@
 import NextLink from "#/components/elements/link";
 import Text from "#/components/elements/text";
-import SandboxPageProvider from "$/components/provider/sandbox";
+import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
 import type { NextPageWithLayout } from "~/_app";
 
 const Page: NextPageWithLayout = () => {
@@ -27,9 +27,9 @@ const Page: NextPageWithLayout = () => {
 
 Page.layout = (page) => {
   return (
-    <SandboxPageProvider>
+    <SandboxLayoutProvider>
       {page}
-    </SandboxPageProvider>
+    </SandboxLayoutProvider>
   );
 };
 

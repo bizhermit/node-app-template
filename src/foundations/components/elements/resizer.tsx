@@ -1,5 +1,7 @@
-import type { CSSProperties, FC, MutableRefObject } from "react";
+"use client";
+
 import Style from "#/styles/components/elements/resizer.module.scss";
+import type { CSSProperties, FC, MutableRefObject } from "react";
 import { convertSizeNumToStr, releaseCursor, setCursor } from "#/components/utilities/attributes";
 
 export type ResizeDirection = "x" | "y" | "xy";

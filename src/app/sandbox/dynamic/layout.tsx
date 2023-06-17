@@ -1,7 +1,7 @@
 import NextLink from "#/components/elements/link";
 import Row from "#/components/elements/row";
 
-const DynamicRootLayout: RouteFC = (props) => {
+const DynamicRootLayout: LayoutFC = (props) => {
   return (
     <div className="flex-stretch p-2">
       <Row className="gap-2">

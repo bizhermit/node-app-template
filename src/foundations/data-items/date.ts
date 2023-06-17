@@ -1,4 +1,4 @@
-import type { FormItemValidation } from "#/components/elements/form";
+import type { FormItemValidation } from "#/components/elements/form/$types";
 import { dataItemKey } from "#/data-items";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import DatetimeUtils, { dateFormat, convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";

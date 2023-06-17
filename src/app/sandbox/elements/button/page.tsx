@@ -1,8 +1,12 @@
-import ButtonClient from "@/sandbox/elements/button/client";
+import Button from "#/components/elements/button";
+import ButtonClient from "@/sandbox/elements/button/_components/client";
 
 const Page = () => {
   return (
-    <ButtonClient />
+    <>
+      <Button>client</Button>
+      <ButtonClient />
+    </>
   );
 };
 

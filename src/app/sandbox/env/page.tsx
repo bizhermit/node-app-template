@@ -1,6 +1,6 @@
 import Divider from "#/components/elements/divider";
-import EnvClient from "@/sandbox/env/client";
-import EnvServer from "@/sandbox/env/server";
+import EnvClient from "@/sandbox/env/_components/client";
+import EnvServer from "@/sandbox/env/_components/server";
 
 const Page = () => {
   return (

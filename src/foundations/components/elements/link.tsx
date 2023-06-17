@@ -32,7 +32,13 @@ const NextLink = forwardRef<HTMLElement, NextLinkProps>((props, ref) => {
       />
     );
   }
-  return <Link {...attrs} href={attrs.href!} ref={ref as Ref<HTMLAnchorElement> | undefined} />;
+  return (
+    <Link
+      {...attrs}
+      href={attrs.href!}
+      ref={ref as Ref<HTMLAnchorElement> | undefined}
+    />
+  );
 });
 
 export default NextLink;

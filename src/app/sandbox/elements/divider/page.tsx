@@ -1,4 +1,4 @@
-import DividerClient from "@/sandbox/elements/divider/client";
+import DividerClient from "@/sandbox/elements/divider/_components/client";
 
 const Page = () => {
   return (

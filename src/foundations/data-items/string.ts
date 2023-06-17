@@ -3,10 +3,11 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 
 const stringItem = <
-  C extends Omit<DataItem_String, DataItemKey | "type">
+  V extends string,
+  C extends Omit<DataItem_String<V>, DataItemKey | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
-    [dataItemKey]: undefined;
+    [dataItemKey]: V;
     type: "string";
   }>({
     ...(ctx as any),
@@ -97,6 +98,21 @@ export namespace StringData {
   export const katakanaValidation = (v: Nullable<string>, itemName?: string) => {
     if (isEmpty(v) || StringUtils.isFullOrHalfWidthKatakana(v)) return undefined;
     return `${itemName || defaultItemName}はカタカナで入力してください。`;
+  };
+
+  export const mailAddressValidation = (v: Nullable<string>, itemName?: string) => {
+    if (isEmpty(v) || StringUtils.isMailAddress(v)) return undefined;
+    return `${itemName || defaultItemName}はメールアドレスで入力してください。`;
+  };
+
+  export const telValidation = (v: Nullable<string>, itemName?: string) => {
+    if (isEmpty(v) || StringUtils.isPhoneNumber(v)) return undefined;
+    return `${itemName || defaultItemName}は電話番号で入力してください。`;
+  };
+
+  export const urlValidation = (v: Nullable<string>, itemName?: string) => {
+    if (isEmpty(v) || StringUtils.isHalfWidthAlphanumericAndSymbols(v)) return undefined;
+    return `${itemName || defaultItemName}はURLで入力してください。`;
   };
 
 }

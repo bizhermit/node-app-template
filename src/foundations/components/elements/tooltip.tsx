@@ -1,3 +1,5 @@
+"use client";
+
 import Popup from "#/components/elements/popup";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
