@@ -62,7 +62,7 @@ export const FormContext = createContext<FormContextProps>({
   getErrorMessages: () => [],
 });
 
-export const useForm = () => {
+const useForm = () => {
   return useContext(FormContext);
 };
 
@@ -92,3 +92,5 @@ export const useFormBindState = <T extends any>(name: string, init?: T | (() => 
     bind: form.bind,
   } as const;
 };
+
+export default useForm;

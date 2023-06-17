@@ -4,7 +4,7 @@ import Style from "#/styles/components/elements/form-items/slider.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useMemo, useRef } from "react";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import type { FormItemProps } from "#/components/elements/form/$types";
-import { useForm } from "#/components/elements/form/context";
+import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
 import { FormItemWrap } from "#/components/elements/form/item-wrap";

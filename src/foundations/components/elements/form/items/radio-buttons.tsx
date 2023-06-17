@@ -7,7 +7,7 @@ import Text from "#/components/elements/text";
 import { joinClassNames, pressPositiveKey } from "#/components/utilities/attributes";
 import { equals, getValue, setValue } from "#/data-items/utilities";
 import type { FormItemProps } from "#/components/elements/form/$types";
-import { useForm } from "#/components/elements/form/context";
+import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
 import { FormItemWrap } from "#/components/elements/form/item-wrap";

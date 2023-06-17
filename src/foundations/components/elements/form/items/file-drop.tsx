@@ -7,7 +7,7 @@ import { FileData } from "#/data-items/file";
 import { CrossIcon } from "#/components/elements/icon";
 import { pressPositiveKey } from "#/components/utilities/attributes";
 import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
-import { useForm } from "#/components/elements/form/context";
+import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
 import { FormItemWrap } from "#/components/elements/form/item-wrap";

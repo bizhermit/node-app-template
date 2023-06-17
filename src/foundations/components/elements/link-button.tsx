@@ -8,7 +8,7 @@ import type { ButtonOptions } from "#/components/elements/button";
 import type { UrlObject } from "url";
 import NextLink from "#/components/elements/link";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { useForm } from "#/components/elements/form/context";
+import useForm from "#/components/elements/form/context";
 
 export type LinkButtonOptions = ButtonOptions & {
   href?: string | UrlObject;

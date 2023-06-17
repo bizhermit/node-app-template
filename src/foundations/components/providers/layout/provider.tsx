@@ -1,29 +1,7 @@
-import { createContext, type FC, type ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { LayoutContext, WindowSize, WindowSizeValue } from "#/components/providers/layout/context";
+import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 
-export const WindowSize = {
-  xs: 1,
-  s: 2,
-  m: 3,
-  l: 4,
-  xl: 5,
-};
-type WindowSizeValue = typeof WindowSize[keyof typeof WindowSize];
-
-type LayoutContextProps = {
-  windowSize: WindowSizeValue;
-  mobile: boolean;
-};
-
-const LayoutContext = createContext<LayoutContextProps>({
-  windowSize: WindowSize.m,
-  mobile: false,
-});
-
-const useLayout = () => {
-  return useContext(LayoutContext);
-};
-
-export const LayoutProvider: FC<{
+const LayoutProvider: FC<{
   initWindowSize?: WindowSizeValue;
   children?: ReactNode;
 }> = ({ initWindowSize, children }) => {
@@ -70,4 +48,4 @@ export const LayoutProvider: FC<{
   );
 };
 
-export default useLayout;
+export default LayoutProvider;

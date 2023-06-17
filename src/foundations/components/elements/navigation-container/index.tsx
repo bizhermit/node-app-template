@@ -1,10 +1,10 @@
-import useLayout, { WindowSize } from "#/components/providers/layout";
 import { type ElementType, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import Style from "#/styles/components/elements/navigation-container.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import { CrossIcon, MenuIcon } from "#/components/elements/icon";
 import { NavigationContext, type NavigationFooterVisible, type NavigationHeaderVisible, type NavigationMode, type NavigationPosition } from "#/components/elements/navigation-container/context";
+import useLayout, { WindowSize } from "#/components/providers/layout/context";
 
 const defaultKey = "default";
 

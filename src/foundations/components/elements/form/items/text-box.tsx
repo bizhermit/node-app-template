@@ -8,7 +8,7 @@ import { StringData } from "#/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
 import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
-import { useForm } from "#/components/elements/form/context";
+import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
 import { FormItemWrap } from "#/components/elements/form/item-wrap";

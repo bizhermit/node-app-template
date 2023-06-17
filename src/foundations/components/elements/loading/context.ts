@@ -15,7 +15,7 @@ export const LoadingContext = createContext<LoadingContextProps>({
   showed: false,
 });
 
-export const useLoading = () => {
+const useLoading = () => {
   const ctx = useContext(LoadingContext);
   const id = useRef(StringUtils.generateUuidV4());
 
@@ -39,3 +39,5 @@ export const useLoading = () => {
 
   return { show, hide, loading: ctx.showed };
 };
+
+export default useLoading;

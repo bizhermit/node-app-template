@@ -3,7 +3,7 @@
 import Button from "#/components/elements/button";
 import RadioButtons from "#/components/elements/form/items/radio-buttons";
 import Loading from "#/components/elements/loading";
-import { useLoading } from "#/components/elements/loading/context";
+import useLoading from "#/components/elements/loading/context";
 import Row from "#/components/elements/row";
 import { useState } from "react";
 
