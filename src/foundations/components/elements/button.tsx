@@ -1,3 +1,5 @@
+"use client";
+
 import Style from "#/styles/components/elements/button.module.scss";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
