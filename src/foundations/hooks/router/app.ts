@@ -15,6 +15,10 @@ const useRouter = () => {
       router.replace(getDynamicUrlContext(url, params, options).url);
     },
     _replace: router.replace,
+    replaceUrl: (url: PagePath, params?: Struct, options?: DynamicUrlContextOptions) => {
+      if (typeof window === "undefined") return;
+      window.history.replaceState(undefined, "", getDynamicUrlContext(url, params, options).url);
+    },
   } as const;
 };
 
