@@ -1,6 +1,6 @@
 "use client";
 
-import TextBox from "#/components/elements/form-items/text-box";
+import TextBox from "#/components/elements/form/items/text-box";
 import Tooltip from "#/components/elements/tooltip";
 
 const TooltipClient = () => {
