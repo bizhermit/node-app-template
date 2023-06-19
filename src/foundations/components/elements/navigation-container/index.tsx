@@ -4,7 +4,8 @@ import { attributesWithoutChildren } from "#/components/utilities/attributes";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import { CrossIcon, MenuIcon } from "#/components/elements/icon";
 import { NavigationContext, type NavigationFooterVisible, type NavigationHeaderVisible, type NavigationMode, type NavigationPosition } from "#/components/elements/navigation-container/context";
-import useLayout, { WindowSize } from "#/components/providers/layout/context";
+import useLayout from "#/components/providers/layout/context";
+import { WindowSize } from "#/components/providers/layout/consts";
 
 const defaultKey = "default";
 
