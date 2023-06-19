@@ -6,6 +6,7 @@ const TabContent: FC<{
   overlap?: boolean;
   defaultMount?: boolean;
   unmountDeselected?: boolean;
+  preventAnimation?: boolean;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;

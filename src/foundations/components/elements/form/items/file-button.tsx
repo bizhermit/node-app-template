@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/file-button.module.scss";
+import Style from "#/styles/components/elements/form/items/file-button.module.scss";
 import Button, { type ButtonOptions } from "#/components/elements/button";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef } from "react";
 import { FileData } from "#/data-items/file";

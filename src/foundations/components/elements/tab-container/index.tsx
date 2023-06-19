@@ -14,6 +14,7 @@ export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttribu
   $unmountDeselected?: boolean;
   $color?: Color;
   $bodyColor?: Color;
+  $preventAnimation?: boolean;
   $overlap?: boolean;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
@@ -36,6 +37,7 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>((props, ref) 
     for (let i = 0, il = children.length; i < il; i++) {
       const child = children[i]!;
       const selected = child.key === key;
+      const preventAnimation = (child.props.preventAnimation ?? props.$preventAnimation) === true;
       tabs.push(
         <div
           key={child.key}
@@ -51,6 +53,7 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>((props, ref) 
           key={child.key}
           color={bodyColor}
           selected={selected}
+          preventAnimation={preventAnimation}
           overlap={child.props?.overlap ?? props.$overlap ?? false}
           defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
           unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? false}
@@ -93,6 +96,7 @@ const Content: FC<{
   selected: boolean;
   defaultMount: boolean;
   unmountDeselected: boolean;
+  preventAnimation: boolean;
   color: Color;
   overlap: boolean;
   children: ReactNode;
@@ -101,16 +105,20 @@ const Content: FC<{
   const [selected, setSelected] = useState(props.selected);
   const [mounted, setMounted] = useState(props.selected || props.defaultMount);
 
-  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    if (e.currentTarget.getAttribute("data-selected") !== "true") {
-      e.currentTarget.style.visibility = "hidden";
-      e.currentTarget.style.removeProperty("top");
-      e.currentTarget.style.removeProperty("left");
+  const animationEnd = (target: HTMLDivElement) => {
+    if (target.getAttribute("data-selected") !== "true") {
+      target.style.visibility = "hidden";
+      target.style.removeProperty("top");
+      target.style.removeProperty("left");
       if (props.unmountDeselected) {
         setMounted(false);
       }
     }
+  };
+
+  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    animationEnd(e.currentTarget);
   };
 
   useEffect(() => {
@@ -125,6 +133,12 @@ const Content: FC<{
     }
     setSelected(props.selected);
   }, [props.selected]);
+
+  useEffect(() => {
+    if (props.preventAnimation) {
+      animationEnd(ref.current);
+    }
+  }, [selected]);
 
   return (
     <div
