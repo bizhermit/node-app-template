@@ -9,7 +9,7 @@ import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import { StringData } from "#/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { ForwardedRef, FunctionComponent, HTMLAttributes, ReactElement, forwardRef, useRef, useState } from "react";
-import { CrossIcon } from "#/components/elements/icon";
+import { CircleFillIcon, CircleIcon, CrossIcon } from "#/components/elements/icon";
 import Resizer from "#/components/elements/resizer";
 
 type InputMode = Extract<HTMLAttributes<HTMLInputElement>["inputMode"],
@@ -196,7 +196,7 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
           onClick={toggle}
           data-round={props.$round}
         >
-          {type === "text" ? <CrossIcon /> : <CrossIcon />}
+          {type === "text" ? <CircleIcon /> : <CircleFillIcon />}
         </div>
       }
       {props.$resize && <Resizer direction="x" />}

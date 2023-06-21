@@ -90,7 +90,7 @@ const PasswordBoxClient = () => {
       <Divider />
       <Row className="gap-1">
         <PasswordBox
-          $round
+          // $round
         />
         {/* <TextBox
           $tag="useState"
