@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "#/components/elements/button";
-import { CalendarIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, LeftIcon, ListIcon, MenuIcon, MinusIcon, PlusIcon, RedoIcon, RightIcon, SaveIcon, TodayIcon, UndoIcon, UpIcon } from "#/components/elements/icon";
+import { CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, LeftIcon, ListIcon, MenuIcon, MinusIcon, PlusIcon, RedoIcon, RightIcon, SaveIcon, TodayIcon, UndoIcon, UpIcon } from "#/components/elements/icon";
 import Row from "#/components/elements/row";
 
 const Page = () => {
@@ -15,10 +15,7 @@ const Page = () => {
         <Button $icon={<CrossIcon />} $outline $size="xl">XL Button</Button>
       </Row>
       <div
-        className="flex-start p-2 w-100 flex-1_0_0 fgc-danger bgc-pure gap-1"
-        style={{
-          "flexWrap": "wrap",
-        }}
+        className="flex-start p-2 w-100 fgc-danger bgc-pure gap-1"
       >
         {[
           PlusIcon,
@@ -44,6 +41,8 @@ const Page = () => {
           CloudIcon,
           CloudDownloadIcon,
           CloudUploadIcon,
+          CircleIcon,
+          CircleFillIcon,
         ].map(Component => {
           const name = Component.name;
           return (
