@@ -5,6 +5,7 @@ const SlideContent: FC<{
   overlap?: boolean;
   defaultMount?: boolean;
   preventUnmountDeselected?: boolean;
+  preventAnimation?: boolean;
   children?: ReactNode;
 }> = ({ children }) => {
   return <>{children}</>;

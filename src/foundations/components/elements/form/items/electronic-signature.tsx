@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/electronic-signature.module.scss";
+import Style from "#/styles/components/elements/form/items/electronic-signature.module.scss";
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import { releaseCursor, setCursor } from "#/components/utilities/attributes";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";

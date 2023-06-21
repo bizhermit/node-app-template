@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/text-area.module.scss";
+import Style from "#/styles/components/elements/form/items/text-area.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
 import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";

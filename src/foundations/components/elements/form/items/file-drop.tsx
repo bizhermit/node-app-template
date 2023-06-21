@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/file-drop.module.scss";
+import Style from "#/styles/components/elements/form/items/file-drop.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef } from "react";
 import Text from "#/components/elements/text";
 import { FileData } from "#/data-items/file";

@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/form-item.module.scss";
+import Style from "#/styles/components/elements/form/form-item-wrap.module.scss";
 import type { FormItemProps } from "#/components/elements/form/$types";
 import type { useFormItemContext } from "#/components/elements/form/item-hook";
 import { convertHiddenValue, isErrorObject } from "#/components/elements/form/utilities";

@@ -42,7 +42,7 @@ const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, r
     for (let i = 0, il = children.length; i < il; i++) {
       const state = calcState(i, current);
       const child = children[i]!;
-      const preventAnimation = props.$preventAnimation === true;
+      const preventAnimation = (child.props.preventAnimation ?? props.$preventAnimation) === true;
       if (props.$breadcrumbs) {
         breadcrumbs.push(
           <Breadcrumb

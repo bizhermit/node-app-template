@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/check-box.module.scss";
+import Style from "#/styles/components/elements/form/items/check-box.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import Text from "#/components/elements/text";
 import { pressPositiveKey } from "#/components/utilities/attributes";

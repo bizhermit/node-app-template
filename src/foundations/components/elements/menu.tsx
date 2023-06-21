@@ -188,13 +188,15 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       <div className={Style.node}>
         <Text className={Style.label}>{props.label}</Text>
       </div>
-      <div className={Style.toggle}>
-        {props.items == null || props.items.length === 0 ? <></> :
-          showItems ?
-            props.openedIcon ?? props.$defaultOpenedIcon ?? <MinusIcon /> :
-            props.closedIcon ?? props.$defaultClosedIcon ?? <PlusIcon />
-        }
-      </div>
+      {props.items != null && props.items.length > 0 &&
+        <div className={Style.toggle}>
+          {props.items == null || props.items.length === 0 ? <></> :
+            showItems ?
+              props.openedIcon ?? props.$defaultOpenedIcon ?? <MinusIcon /> :
+              props.closedIcon ?? props.$defaultClosedIcon ?? <PlusIcon />
+          }
+        </div>
+      }
     </div>
   );
 
