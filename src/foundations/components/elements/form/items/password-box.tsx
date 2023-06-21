@@ -1,14 +1,16 @@
+"use client";
+
 import Style from "#/styles/components/elements/form/items/text-box.module.scss";
 import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
 import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { FormItemWrap } from "#/components/elements/form/item-wrap";
-import { TextBoxProps } from "#/components/elements/form/items/text-box";
+import type { TextBoxProps } from "#/components/elements/form/items/text-box";
 import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import { StringData } from "#/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { ForwardedRef, FunctionComponent, HTMLAttributes, ReactElement, forwardRef, useRef, useState } from "react";
+import { type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, forwardRef, useRef, useState } from "react";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "#/components/elements/icon";
 import Resizer from "#/components/elements/resizer";
 
