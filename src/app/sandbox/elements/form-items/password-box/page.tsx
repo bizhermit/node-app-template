@@ -91,6 +91,8 @@ const PasswordBoxClient = () => {
       <Row className="gap-1">
         <PasswordBox
           // $round
+          // $hideToggleButton
+          // $hideClearButton
         />
         {/* <TextBox
           $tag="useState"

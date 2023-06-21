@@ -186,6 +186,7 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
           className={Style.button}
           onClick={clear}
           data-disabled={!hasData}
+          data-round={props.$hideToggleButton ? props.$round : undefined}
         >
           <CrossIcon />
         </div>
