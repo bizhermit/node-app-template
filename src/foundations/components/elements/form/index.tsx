@@ -7,6 +7,23 @@ import { getValue } from "#/data-items/utilities";
 import { FormContext, type UseFormItemContextOptions } from "#/components/elements/form/context";
 import { isErrorObject } from "#/components/elements/form/utilities";
 
+type FormRef = {
+  getValue: <T>(name: string) => T;
+  setValue: (name: string, value: any, absolute?: boolean) => void;
+  render: (name?: string) => void;
+  validation: () => string | null | undefined;
+};
+
+export const useFormRef = () => {
+  const ref = useRef<FormRef>({
+    getValue: () => undefined as any,
+    setValue: () => {},
+    render: () => {},
+    validation: () => undefined,
+  });
+  return ref.current;
+};
+
 type PlainFormProps = {
   $submitDataType: "formData";
   $onSubmit?: (((data: FormData, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
@@ -26,6 +43,7 @@ export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLF
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
+  formRef?: ReturnType<typeof useFormRef>;
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
@@ -242,6 +260,13 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
       props.$onError({ ...exE, ...e });
     }
   }, [errors, exErrors]);
+
+  if (props.formRef) {
+    props.formRef.getValue = get;
+    props.formRef.setValue = set;
+    props.formRef.render = render;
+    props.formRef.validation = validation;
+  }
 
   return (
     <FormContext.Provider value={{
