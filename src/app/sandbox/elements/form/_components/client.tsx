@@ -39,7 +39,7 @@ const FormClient = () => {
           // $disabled
           // $readOnly
           // $messageDisplayMode="bottom"
-          formRef={formRef}
+          $formRef={formRef}
           $onSubmit={(fd) => {
             console.log("----submit----");
             console.log(fd);

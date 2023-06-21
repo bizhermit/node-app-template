@@ -43,7 +43,7 @@ export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLF
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
-  formRef?: ReturnType<typeof useFormRef>;
+  $formRef?: ReturnType<typeof useFormRef>;
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
@@ -261,11 +261,11 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }
   }, [errors, exErrors]);
 
-  if (props.formRef) {
-    props.formRef.getValue = get;
-    props.formRef.setValue = set;
-    props.formRef.render = render;
-    props.formRef.validation = validation;
+  if (props.$formRef) {
+    props.$formRef.getValue = get;
+    props.$formRef.setValue = set;
+    props.$formRef.render = render;
+    props.$formRef.validation = validation;
   }
 
   return (
