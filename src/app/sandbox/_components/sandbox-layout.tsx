@@ -119,6 +119,11 @@ const Navigation: FC = () => {
               icon: "T",
               pathname: "/sandbox/elements/form-items/text-box",
             }, {
+              key: "password-box",
+              label: "PasswordBox",
+              icon: "P",
+              pathname: "/sandbox/elements/form-items/password-box",
+            }, {
               key: "radio-buttons",
               label: "RadioButtons",
               icon: "R",
