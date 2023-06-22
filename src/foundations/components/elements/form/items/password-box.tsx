@@ -13,6 +13,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, forwardRef, useRef, useState } from "react";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "#/components/elements/icon";
 import Resizer from "#/components/elements/resizer";
+import { includeElement } from "#/components/utilities/parent-child";
 
 type InputMode = Extract<HTMLAttributes<HTMLInputElement>["inputMode"],
   | "email"
@@ -43,6 +44,7 @@ export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> 
   $inputMode?: InputMode;
   $hideToggleButton?: boolean;
   $preventInputWithinLength?: boolean;
+  $preventBlurToggle?: boolean;
 };
 
 interface PasswordBoxFC extends FunctionComponent<PasswordBoxProps> {
@@ -148,6 +150,12 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
     setType(c => c === "text" ? "password" : "text");
   };
 
+  const blur = (e: React.FocusEvent<HTMLDivElement>) => {
+    if (props.$preventBlurToggle) return;
+    if (includeElement(e.currentTarget, e.relatedTarget)) return;
+    setType("password");
+  };
+
   const hasData = StringUtils.isNotEmpty(ctx.value);
 
   return (
@@ -163,6 +171,7 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
           maxWidth: convertSizeNumToStr(props.$maxWidth),
           minWidth: convertSizeNumToStr(props.$minWidth),
         },
+        onBlur: blur,
       }}
     >
       <input
@@ -178,7 +187,7 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
         defaultValue={ctx.value ?? ""}
         onChange={e => ctx.change(e.target.value)}
         data-round={props.$round}
-        data-clear={ctx.editable && props.$hideClearButton !== true}
+        data-clear={ctx.editable && (props.$hideClearButton !== true || props.$hideToggleButton !== true)}
         data-align={props.$align}
         autoComplete={props.$autoComplete ?? "off"}
         inputMode={props.$inputMode}
@@ -189,6 +198,7 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
           onClick={clear}
           data-disabled={!hasData}
           data-round={props.$hideToggleButton ? props.$round : undefined}
+          tabIndex={-1}
         >
           <CrossIcon />
         </div>
@@ -198,6 +208,7 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
           className={Style.button}
           onClick={toggle}
           data-round={props.$round}
+          tabIndex={-1}
         >
           {type === "text" ? <CircleIcon /> : <CircleFillIcon />}
         </div>
