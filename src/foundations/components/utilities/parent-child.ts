@@ -3,7 +3,7 @@ export const includeElement = (parent: Element | null | undefined, child: Elemen
   let elem = child;
   while (elem != null) {
     if (elem === parent) return true;
-    elem = child.parentElement!;
+    elem = elem.parentElement!;
   }
   return false;
 };
