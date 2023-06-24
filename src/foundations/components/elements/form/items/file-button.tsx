@@ -118,7 +118,19 @@ const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<
     if (href.current) {
       const files = (Array.isArray(ctx.value) ? ctx.value : [ctx.value]).filter(file => file != null);
       const dt = new DataTransfer();
-      files.forEach(file => dt.items.add(file));
+      files.forEach((file, index) => {
+        if (file == null) return;
+        if (file instanceof File) {
+          dt.items.add(file);
+          return;
+        }
+        if (file instanceof Blob) {
+          dt.items.add(new File([file], `${props.name || "img"}-${index}`, { type: file.type }));
+          return;
+        }
+        // eslint-disable-next-line no-console
+        console.warn(`file-drop [${props.name}]: failed to convert for DataTransfer. no file/blob`);
+      });
       href.current.files = dt.files;
     }
   }, [ctx.value]);
