@@ -113,6 +113,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
   };
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.stopPropagation();
     if (props.$disabled || disabledRef.current || hasError) {
       e.preventDefault();
       return;
