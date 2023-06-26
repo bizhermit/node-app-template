@@ -179,8 +179,11 @@ export const useFormItemContext = <
         props?.$onEdit?.(valueRef.current, before, { ...data, errorMessage });
       }
     }
-    if (!edit) options?.effect?.(valueRef.current);
-    form.effectSameNameItem(id.current, value);
+    if (edit) {
+      form.effectSameNameItem(id.current, value);
+    } else {
+      options?.effect?.(valueRef.current);
+    }
   }, [
     setBind,
     props?.$preventMemorizeOnChange ? props?.$onChange : undefined,
