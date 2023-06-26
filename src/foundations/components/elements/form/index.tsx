@@ -17,8 +17,8 @@ type FormRef = {
 export const useFormRef = () => {
   const ref = useRef<FormRef>({
     getValue: () => undefined as any,
-    setValue: () => {},
-    render: () => {},
+    setValue: () => { },
+    render: () => { },
     validation: () => undefined,
   });
   return ref.current;
@@ -215,24 +215,37 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
 
   const set = (name: string, value: any) => {
     if (bind == null) return;
-    const id = Object.keys(items.current).find(id => items.current[id].props.name === name);
-    if (id == null) return;
-    items.current[id]?.change(value, false);
+    Object.keys(items.current).forEach(id => {
+      if (items.current[id].props.name !== name) return;
+      items.current[id]?.change(value, false);
+    });
   };
 
   const render = (name?: string) => {
     if (name) {
-      const id = Object.keys(items.current).find(id => items.current[id].props.name === name);
-      if (id == null) return;
-      const item = items.current[id];
-      if (item == null || item.props.name == null) return;
-      item.options?.effect?.(getValue(bind, item.props.name));
+      Object.keys(items.current).forEach(id => {
+        if (items.current[id].props.name !== name) return;
+        const item = items.current[id];
+        if (item == null || item.props.name == null) return;
+        item.options?.effect?.(getValue(bind, item.props.name));
+      });
       return;
     }
     Object.keys(items.current).forEach(id => {
       const item = items.current[id];
       if (item.props.name == null) return;
       item.options?.effect?.(getValue(bind, item.props.name));
+    });
+  };
+
+  const effectSameNameItem = (id: string, value: any) => {
+    const name = items.current[id].props.name;
+    if (!name) return;
+    Object.keys(items.current).forEach(key => {
+      if (key === id) return;
+      const item = items.current[key];
+      if (item.props.name !== name) return;
+      item.options.effect?.(value);
     });
   };
 
@@ -288,6 +301,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
       getValue: get,
       setValue: set,
       render,
+      effectSameNameItem,
       getErrorMessages,
     }}>
       <form
