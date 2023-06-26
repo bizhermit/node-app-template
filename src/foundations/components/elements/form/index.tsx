@@ -17,8 +17,8 @@ type FormRef = {
 export const useFormRef = () => {
   const ref = useRef<FormRef>({
     getValue: () => undefined as any,
-    setValue: () => {},
-    render: () => {},
+    setValue: () => { },
+    render: () => { },
     validation: () => undefined,
   });
   return ref.current;

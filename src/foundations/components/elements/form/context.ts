@@ -61,7 +61,7 @@ export const FormContext = createContext<FormContextProps>({
   getValue: <T,>() => undefined as T,
   setValue: () => { },
   render: () => { },
-  effectSameNameItem: () => {},
+  effectSameNameItem: () => { },
   getErrorMessages: () => [],
 });
 
