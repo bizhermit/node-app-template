@@ -90,7 +90,7 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
               return;
             }
             if (Array.isArray(value)) {
-              value.forEach(v => setFormValue(key, v));
+              value.forEach((v, i) => setFormValue(`${key}[${i}]`, v));
               return;
             }
             // eslint-disable-next-line no-console
