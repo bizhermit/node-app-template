@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/time-picker.module.scss";
+import Style from "#/styles/components/elements/form/items/time-picker.module.scss";
 import Time from "@bizhermit/time";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import Text from "#/components/elements/text";

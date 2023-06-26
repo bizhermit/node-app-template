@@ -2,7 +2,7 @@
 
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
+import Form, { useFormRef } from "#/components/elements/form";
 import CheckBox from "#/components/elements/form/items/check-box";
 import TextBox from "#/components/elements/form/items/text-box";
 import Row from "#/components/elements/row";
@@ -11,6 +11,7 @@ import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";
 
 const FormClient = () => {
+  const [count, setCount] = useState(0);
   const [bind, setBind] = useState<Struct>({});
   const [viewBind, setViewBind] = useState(bind);
   const [formBind, setFormBind] = useState<Struct>({
@@ -22,6 +23,7 @@ const FormClient = () => {
     })
   });
   const [viewFormBind, setViewFormBind] = useState(formBind);
+  const formRef = useFormRef();
 
   return (
     <div className="flex-stretch w-100 p-1">
@@ -37,27 +39,30 @@ const FormClient = () => {
           // $disabled
           // $readOnly
           // $messageDisplayMode="bottom"
+          $formRef={formRef}
           $onSubmit={(fd) => {
             console.log("----submit----");
             console.log(fd);
-            setViewFormBind({ ...(() => {
-              if (fd instanceof FormData) {
-                const d: Struct = {};
-                fd.forEach((v, k) => {
-                  if (!(k in d)) {
-                    d[k] = v;
-                    return;
-                  }
-                  if (!Array.isArray(d[k])) {
-                    d[k] = [d[k]];
-                  }
-                  d[k].push(v);
-                });
-                console.log("formData: ", d);
-                return d;
-              }
-              return fd;
-            })() });
+            setViewFormBind({
+              ...(() => {
+                if (fd instanceof FormData) {
+                  const d: Struct = {};
+                  fd.forEach((v, k) => {
+                    if (!(k in d)) {
+                      d[k] = v;
+                      return;
+                    }
+                    if (!Array.isArray(d[k])) {
+                      d[k] = [d[k]];
+                    }
+                    d[k].push(v);
+                  });
+                  console.log("formData: ", d);
+                  return d;
+                }
+                return fd;
+              })()
+            });
             // return false;
           }}
           $onReset={() => {
@@ -78,7 +83,7 @@ const FormClient = () => {
               />
               <CheckBox
                 name="check-box"
-              $required
+                $required
               />
             </Row>
             {/* <div className="flex-start">
@@ -120,6 +125,16 @@ const FormClient = () => {
               <Button $onClick={() => {
                 console.log(formBind);
               }}>show form bind</Button>
+            </Row>
+            <Row className="gap-1">
+              <Button
+                $onClick={() => {
+                  setCount(c => c + 1);
+                  formRef.setValue("text-box", `abcd-${count}`);
+                }}
+              >
+                set from outer
+              </Button>
             </Row>
           </section>
           <Divider />

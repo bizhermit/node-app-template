@@ -225,3 +225,17 @@ export const CloudUploadIcon = forwardRef<SVGSVGElement, IconProps>((props, ref)
   </svg>
 ));
 (CloudUploadIcon as any).name = "CloudUploadIcon";
+
+export const CircleIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <circle cx="10" cy="10" r="8" fill="none" />
+  </svg>
+));
+(CircleIcon as any).name = "CircleIcon";
+
+export const CircleFillIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <circle cx="10" cy="10" r="8" fill="fill" />
+  </svg>
+));
+(CircleFillIcon as any).name = "CircleFillIcon";

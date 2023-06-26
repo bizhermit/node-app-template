@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/time-box.module.scss";
+import Style from "#/styles/components/elements/form/items/time-box.module.scss";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import Time from "@bizhermit/time";

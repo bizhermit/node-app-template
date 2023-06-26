@@ -1,6 +1,7 @@
 "use client";
 
-import { LayoutContext, WindowSize, type WindowSizeValue } from "#/components/providers/layout/context";
+import { WindowSize, type WindowSizeValue } from "#/components/providers/layout/consts";
+import { LayoutContext } from "#/components/providers/layout/context";
 import { type FC, type ReactNode, useCallback, useEffect, useState } from "react";
 
 const LayoutProvider: FC<{

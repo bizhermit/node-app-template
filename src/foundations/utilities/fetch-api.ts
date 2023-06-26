@@ -78,10 +78,30 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
         if (params instanceof FormData) return params;
         const fd = new FormData();
         if (params == null || !isValidBodyParams(params)) return fd;
+        const setFormValue = (key: string, value: any) => {
+          if (value == null) return;
+          if (typeof value === "object") {
+            if (value instanceof Blob) {
+              fd.append(key, value);
+              return;
+            }
+            if (value instanceof File) {
+              fd.append(key, new Blob([value], { type: value.type }));
+              return;
+            }
+            if (Array.isArray(value)) {
+              value.forEach((v, i) => setFormValue(`${key}[${i}]`, v));
+              return;
+            }
+            // eslint-disable-next-line no-console
+            console.warn(`fetch-api: ${key} is not support object. try converting to json stringify`);
+            fd.append(key, JSON.stringify(value));
+            return;
+          }
+          fd.append(key, value);
+        };
         Object.keys(params).forEach(key => {
-          const v = params[key];
-          if (v == null) return;
-          fd.append(key, typeof v === "object" ? JSON.stringify(v) : v);
+          setFormValue(key, params[key]);
         });
         return fd;
       })(),

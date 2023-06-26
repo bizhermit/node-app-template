@@ -16,6 +16,7 @@ export type LinkButtonOptions = ButtonOptions & {
   target?: string;
   $disabled?: boolean;
   $form?: boolean;
+  $onClick?: (event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);
 };
 
 type OmitAttributes = "onClick" | "color";
@@ -31,6 +32,9 @@ const LinkButton = forwardRef<HTMLElement, LinkButtonProps>((props, ref) => {
 
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled) {
+      e.preventDefault();
+    }
+    if (props.$onClick?.(e) === false) {
       e.preventDefault();
     }
   };

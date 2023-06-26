@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/select-box.module.scss";
+import Style from "#/styles/components/elements/form/items/select-box.module.scss";
 import useLoadableArray from "#/hooks/loadable-array";
 import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";

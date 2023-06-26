@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/slider.module.scss";
+import Style from "#/styles/components/elements/form/items/slider.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useMemo, useRef } from "react";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import type { FormItemProps } from "#/components/elements/form/$types";

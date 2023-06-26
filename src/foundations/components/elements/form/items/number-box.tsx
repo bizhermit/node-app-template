@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/number-box.module.scss";
+import Style from "#/styles/components/elements/form/items/number-box.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import { add, minus, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";

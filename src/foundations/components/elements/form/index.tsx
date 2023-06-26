@@ -7,6 +7,23 @@ import { getValue } from "#/data-items/utilities";
 import { FormContext, type UseFormItemContextOptions } from "#/components/elements/form/context";
 import { isErrorObject } from "#/components/elements/form/utilities";
 
+type FormRef = {
+  getValue: <T>(name: string) => T;
+  setValue: (name: string, value: any, absolute?: boolean) => void;
+  render: (name?: string) => void;
+  validation: () => string | null | undefined;
+};
+
+export const useFormRef = () => {
+  const ref = useRef<FormRef>({
+    getValue: () => undefined as any,
+    setValue: () => { },
+    render: () => { },
+    validation: () => undefined,
+  });
+  return ref.current;
+};
+
 type PlainFormProps = {
   $submitDataType: "formData";
   $onSubmit?: (((data: FormData, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
@@ -26,6 +43,7 @@ export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLF
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
+  $formRef?: ReturnType<typeof useFormRef>;
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
@@ -95,6 +113,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
   };
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.stopPropagation();
     if (props.$disabled || disabledRef.current || hasError) {
       e.preventDefault();
       return;
@@ -196,24 +215,37 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
 
   const set = (name: string, value: any) => {
     if (bind == null) return;
-    const id = Object.keys(items.current).find(id => items.current[id].props.name === name);
-    if (id == null) return;
-    items.current[id]?.change(value, false);
+    Object.keys(items.current).forEach(id => {
+      if (items.current[id].props.name !== name) return;
+      items.current[id]?.change(value, false);
+    });
   };
 
   const render = (name?: string) => {
     if (name) {
-      const id = Object.keys(items.current).find(id => items.current[id].props.name === name);
-      if (id == null) return;
-      const item = items.current[id];
-      if (item == null || item.props.name == null) return;
-      item.options?.effect?.(getValue(bind, item.props.name));
+      Object.keys(items.current).forEach(id => {
+        if (items.current[id].props.name !== name) return;
+        const item = items.current[id];
+        if (item == null || item.props.name == null) return;
+        item.options?.effect?.(getValue(bind, item.props.name));
+      });
       return;
     }
     Object.keys(items.current).forEach(id => {
       const item = items.current[id];
       if (item.props.name == null) return;
       item.options?.effect?.(getValue(bind, item.props.name));
+    });
+  };
+
+  const effectSameNameItem = (id: string, value: any) => {
+    const name = items.current[id].props.name;
+    if (!name) return;
+    Object.keys(items.current).forEach(key => {
+      if (key === id) return;
+      const item = items.current[key];
+      if (item.props.name !== name) return;
+      item.options.effect?.(value);
     });
   };
 
@@ -243,6 +275,13 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }
   }, [errors, exErrors]);
 
+  if (props.$formRef) {
+    props.$formRef.getValue = get;
+    props.$formRef.setValue = set;
+    props.$formRef.render = render;
+    props.$formRef.validation = validation;
+  }
+
   return (
     <FormContext.Provider value={{
       bind,
@@ -262,6 +301,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
       getValue: get,
       setValue: set,
       render,
+      effectSameNameItem,
       getErrorMessages,
     }}>
       <form

@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/file-drop.module.scss";
+import Style from "#/styles/components/elements/form/items/file-drop.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef } from "react";
 import Text from "#/components/elements/text";
 import { FileData } from "#/data-items/file";
@@ -159,7 +159,19 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
           href.current.files = null;
         } else {
           const dt = new DataTransfer();
-          files.forEach(file => dt.items.add(file));
+          files.forEach((file, index) => {
+            if (file == null) return;
+            if (file instanceof File) {
+              dt.items.add(file);
+              return;
+            }
+            if (file instanceof Blob) {
+              dt.items.add(new File([file], `${props.name || "img"}-${index}`, { type: file.type }));
+              return;
+            }
+            // eslint-disable-next-line no-console
+            console.warn(`file-drop [${props.name}]: failed to convert for DataTransfer. no file/blob`);
+          });
           href.current.files = dt.files;
         }
       }

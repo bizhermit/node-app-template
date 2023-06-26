@@ -1,6 +1,6 @@
 "use client";
 
-import Style from "#/styles/components/elements/form-items/radio-buttons.module.scss";
+import Style from "#/styles/components/elements/form/items/radio-buttons.module.scss";
 import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useState } from "react";
 import useLoadableArray from "#/hooks/loadable-array";
 import Text from "#/components/elements/text";
