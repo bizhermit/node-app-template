@@ -180,6 +180,7 @@ export const useFormItemContext = <
       }
     }
     if (!edit) options?.effect?.(valueRef.current);
+    form.effectSameNameItem(id.current, value);
   }, [
     setBind,
     props?.$preventMemorizeOnChange ? props?.$onChange : undefined,

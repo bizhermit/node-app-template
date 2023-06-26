@@ -1,6 +1,7 @@
 import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
-import { setValue } from "#/data-items/utilities";
-import { type Dispatch, type SetStateAction, createContext, useContext, useReducer, useEffect } from "react";
+import { equals } from "#/data-items/utilities";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { type Dispatch, type SetStateAction, createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 
 export type UseFormItemContextOptions<T = any, U extends Struct = {}> = {
   effect?: (value: T | null | undefined) => void;
@@ -39,6 +40,7 @@ type FormContextProps = {
   getValue: <T>(name: string) => T;
   setValue: (name: string, value: any, absolute?: boolean) => void;
   render: (name?: string) => void;
+  effectSameNameItem: (id: string, value: any) => void;
   getErrorMessages: (name?: string) => Array<string>;
 };
 
@@ -59,6 +61,7 @@ export const FormContext = createContext<FormContextProps>({
   getValue: <T,>() => undefined as T,
   setValue: () => { },
   render: () => { },
+  effectSameNameItem: () => {},
   getErrorMessages: () => [],
 });
 
@@ -66,28 +69,43 @@ const useForm = () => {
   return useContext(FormContext);
 };
 
-export const useFormBindState = <T extends any>(name: string, init?: T | (() => T)) => {
+type FormBindStateValue<D extends DataItem | any> = D extends DataItem ? (DataItemValueType<D, true, "client"> | undefined) : (D | undefined);
+
+export const useFormBindState = <
+  D extends DataItem | any
+>(dataItemOrName: D | string, init?: FormBindStateValue<D> | (() => FormBindStateValue<D>)) => {
+  const id = useRef(StringUtils.generateUuidV4());
+  const name = typeof dataItemOrName === "string" ?
+    dataItemOrName :
+    (dataItemOrName as D extends DataItem ? D : { name: string; }).name!;
   const form = useForm();
-
-  const getBindValue = () => {
-    const v = form.getValue<T>(name);
-    if (v != null || init == null) return v;
-    return typeof init === "function" ? (init as (() => T))() : init;
-  };
-
-  const state = useReducer((state: T, action: (T | ((c: T) => T))) => {
-    const v = setValue(form.bind, name, typeof action === "function" ? (action as ((c: T) => T))(state) : action);
-    form.render(name);
-    return v;
-  }, undefined, getBindValue);
+  const [_, rerender] = useState(0);
 
   useEffect(() => {
-    state[1](getBindValue);
-  }, [form.bind]);
+    form.mount(id.current, { name }, {
+      change: () => rerender(c => c + 1),
+      validation: () => undefined,
+    }, { effect: () => rerender(c => c + 1) });
+    return () => {
+      form.unmount(id.current);
+    };
+  }, []);
+
+  const set = useCallback((value: FormBindStateValue<D> | ((c: FormBindStateValue<D>) => FormBindStateValue<D>)) => {
+    form.setValue(name, typeof value === "function" ? (value as ((c: FormBindStateValue<D>) => FormBindStateValue<D>))(form.getValue(name)) : value);
+  }, []);
+
+  useEffect(() => {
+    if (init == null) return;
+    const v = form.getValue(name);
+    const iv = typeof init === "function" ? (init as (() => FormBindStateValue<D>))() : init;
+    if (equals(v, iv)) return;
+    form.setValue(name, iv);
+  }, []);
 
   return {
-    value: state[0],
-    set: state[1],
+    value: form.getValue(name) as FormBindStateValue<D>,
+    set,
     name,
     bind: form.bind,
   } as const;
