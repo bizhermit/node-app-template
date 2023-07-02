@@ -1,4 +1,5 @@
 import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
+import { equals, setValue } from "#/data-items/utilities";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { type Dispatch, type SetStateAction, createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 
@@ -68,22 +69,22 @@ const useForm = () => {
   return useContext(FormContext);
 };
 
-type FormBindStateValue<D extends DataItem | any> =
+type Value<D extends DataItem | any> =
   D extends DataItem ? (DataItemValueType<D, true, "client"> | undefined) : (D | undefined);
 
-export const useFormValue = <D>(dataItemOrName: D | string, init?: FormBindStateValue<D> | (() => FormBindStateValue<D>)) => {
+export const useFormValue = <D>(dataItemOrName: D | string, init?: Value<D> | (() => Value<D>)) => {
   const id = useRef(StringUtils.generateUuidV4());
   const name = typeof dataItemOrName === "string" ?
     dataItemOrName : (dataItemOrName as D extends DataItem ? D : { name?: string; }).name;
   const form = useForm();
   const [_, rerender] = useState(0);
 
-  const set = useCallback((value: FormBindStateValue<D> | ((c: FormBindStateValue<D>) => FormBindStateValue<D>)) => {
+  const set = useCallback((value: Value<D> | ((c: Value<D>) => Value<D>)) => {
     if (!name) return;
     form.setValue(
       name,
       typeof value === "function" ?
-        (value as ((c: FormBindStateValue<D>) => FormBindStateValue<D>))(form.getValue(name)) :
+        (value as ((c: Value<D>) => Value<D>))(form.getValue(name)) :
         value
     );
   }, []);
@@ -91,28 +92,33 @@ export const useFormValue = <D>(dataItemOrName: D | string, init?: FormBindState
   useEffect(() => {
     if (!name) return;
 
-    if (init != null) {
-      if (form.getValue(name) == null) {
-        const iv = typeof init === "function" ? (init as (() => FormBindStateValue<D>))() : init;
-        if (iv != null) form.setValue(name, iv);
-      }
-    }
-
     form.mount(id.current, {
       name,
     }, {
-      change: () => rerender(c => c + 1),
+      change: v => {
+        if (equals(form.getValue(name), v)) return;
+        rerender(c => c + 1);
+        setValue(form.bind, name, v);
+      },
       validation: () => undefined,
     }, {
       effect: () => rerender(c => c + 1),
     });
+
+    if (init != null) {
+      if (form.getValue(name) == null) {
+        const iv = typeof init === "function" ? (init as (() => Value<D>))() : init;
+        if (iv != null) form.setValue(name, iv);
+      }
+    }
+
     return () => {
       form.unmount(id.current);
     };
-  }, []);
+  }, [form.bind]);
 
   return {
-    value: name ? form.getValue(name) as FormBindStateValue<D> : undefined,
+    value: name ? form.getValue(name) as Value<D> : undefined,
     set,
     name,
   } as const;
