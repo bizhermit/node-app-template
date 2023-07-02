@@ -57,7 +57,7 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem, method }) => {
+    under: ({ dataItem, method, props }) => {
       const isSearch = method === "get";
       return {
         $length: isSearch ? undefined : dataItem.length,
