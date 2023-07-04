@@ -226,12 +226,18 @@ export const CircleFillIcon = svg("CircleFillIcon", (props, ref) => (
 
 export const ReloadIcon = svg("ReloadIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M17,2l0,5 -5,0M16,14a7.5 7.5 30 1 1 0,-8" fill="none" />
+    <path d="M17.5,2l0,5 -5,0M16.5,14a7.5 7.5 30 1 1 0,-8" fill="none" />
   </svg>
 ));
 
 export const ReloadLeftIcon = svg("ReloadLeftIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M3,2l0,5 5,0M4,6a7.5 7.5 -150 1 1 0,8" fill="none" />
+    <path d="M2.5,2l0,5 5,0M3.5,6a7.5 7.5 -150 1 1 0,8" fill="none" />
+  </svg>
+));
+
+export const SyncIcon = svg("SyncIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M17,1.5l0,5 -5,0M2.5,9a7.5 7.5 -180 0 1 14,-3M3,18l0,-5 5,0M17.5,9.5a7.5 7.5 0 0 1 -14,4" fill="none" />
   </svg>
 ));
