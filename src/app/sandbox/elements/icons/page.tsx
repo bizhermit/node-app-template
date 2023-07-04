@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "#/components/elements/button";
-import { CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, LeftIcon, ListIcon, MenuIcon, MinusIcon, PlusIcon, RedoIcon, RightIcon, SaveIcon, TodayIcon, UndoIcon, UpIcon } from "#/components/elements/icon";
+import { CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, LeftIcon, ListIcon, MenuIcon, MinusIcon, PlusIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, TodayIcon, UndoIcon, UpIcon } from "#/components/elements/icon";
 import Row from "#/components/elements/row";
 
 const Page = () => {
@@ -38,6 +38,7 @@ const Page = () => {
           ClearAllIcon,
           UndoIcon,
           RedoIcon,
+          ReloadIcon,
           CloudIcon,
           CloudDownloadIcon,
           CloudUploadIcon,

@@ -223,3 +223,9 @@ export const CircleFillIcon = svg("CircleFillIcon", (props, ref) => (
     <circle cx="10" cy="10" r="8" fill="fill" />
   </svg>
 ));
+
+export const ReloadIcon = svg("ReloadIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M17,2l0,5 -5,0M 16,14 a 7.5 7.5 30 1 1 0,-8" fill="none" />
+  </svg>
+));
