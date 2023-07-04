@@ -76,11 +76,10 @@ const FormClient = () => {
               <TextBox
                 name="text-box"
                 $required
-                // $defaultValue="fuga"
+                $defaultValue="fuga"
                 $onChange={(a, b) => {
                   console.log(b, "->", a);
                 }}
-                $defaultValue={"hoge"}
               />
               <CheckBox
                 name="check-box"

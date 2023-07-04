@@ -37,15 +37,16 @@ type BindFormProps<T extends Struct = Struct> = {
 };
 
 export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
+  $formRef?: ReturnType<typeof useFormRef>;
   $bind?: boolean | Struct | null | undefined;
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
   $onReset?: (((e: React.FormEvent<HTMLFormElement> | undefined) => (boolean | void | Promise<void>)) | boolean);
+  $preventResetWhenRebind?: boolean;
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
-  $formRef?: ReturnType<typeof useFormRef>;
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
@@ -278,7 +279,9 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
   }, [errors, exErrors]);
 
   useEffect(() => {
-    reset();
+    if (props.$preventResetWhenRebind !== true) {
+      reset();
+    }
   }, [bind]);
 
   if (props.$formRef) {
