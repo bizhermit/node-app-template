@@ -32,8 +32,8 @@ const FormClient = () => {
         <h2>submit/reset/button</h2>
         <Form
           className="flex-start gap-1"
-          // $bind={formBind}
-          $bind
+          $bind={formBind}
+          // $bind
           action="/api/form"
           method="post"
           // $disabled
@@ -80,6 +80,7 @@ const FormClient = () => {
                 $onChange={(a, b) => {
                   console.log(b, "->", a);
                 }}
+                $defaultValue={"hoge"}
               />
               <CheckBox
                 name="check-box"
@@ -131,9 +132,24 @@ const FormClient = () => {
                 $onClick={() => {
                   setCount(c => c + 1);
                   formRef.setValue("text-box", `abcd-${count}`);
+                  
                 }}
               >
                 set from outer
+              </Button>
+              <Button
+                $onClick={() => {
+                  formRef.reset();
+                }}
+              >
+                reset
+              </Button>
+              <Button
+                $onClick={() => {
+                  setFormBind({});
+                }}
+              >
+                set form bind
               </Button>
             </Row>
           </section>
