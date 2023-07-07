@@ -12,6 +12,7 @@ type FormRef = {
   setValue: (name: string, value: any, absolute?: boolean) => void;
   render: (name?: string) => void;
   validation: () => string | null | undefined;
+  submit: () => void;
   reset: () => void;
 };
 
@@ -21,6 +22,7 @@ export const useFormRef = () => {
     setValue: () => { },
     render: () => { },
     validation: () => undefined,
+    submit: () => undefined,
     reset: () => { },
   });
   return ref.current;
@@ -43,7 +45,7 @@ export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLF
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onReset?: (((e: React.FormEvent<HTMLFormElement> | undefined) => (boolean | void | Promise<void>)) | boolean);
+  $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
   $preventResetWhenRebind?: boolean;
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
@@ -178,7 +180,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }, 0);
   };
 
-  const reset = (e?: React.FormEvent<HTMLFormElement>) => {
+  const reset = (e: React.FormEvent<HTMLFormElement>) => {
     if (props.$disabled || disabledRef.current) {
       e?.preventDefault();
       return;
@@ -280,7 +282,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
 
   useEffect(() => {
     if (props.$preventResetWhenRebind !== true) {
-      reset();
+      ref.current?.reset?.();
     }
   }, [bind]);
 
@@ -289,7 +291,8 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     props.$formRef.setValue = set;
     props.$formRef.render = render;
     props.$formRef.validation = validation;
-    props.$formRef.reset = reset;
+    props.$formRef.reset = () => ref.current?.reset?.();
+    props.$formRef.submit = () => ref.current?.submit?.();
   }
 
   return (
