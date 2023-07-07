@@ -52,7 +52,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
     lock();
     const res = props.$onClick?.(unlock, e);
     if (res == null || typeof res === "boolean") {
-      unlock();
+      if (res !== true) unlock();
       return res ?? false;
     }
     return false;
