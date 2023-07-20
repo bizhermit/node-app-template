@@ -319,6 +319,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }}>
       <form
         {...attributes(props)}
+        ref={ref}
         method={method}
         onSubmit={submit}
         onReset={reset}
