@@ -110,14 +110,17 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $outline?: boolean;
   $rowBorder?: boolean;
   $cellBorder?: boolean;
-  $onClick?: (ctx: DataTableCellContext<T>, element: { cell: HTMLDivElement; row: HTMLDivElement; }) => (void | boolean | Promise<void>);
+  $onClick?: (ctx: DataTableCellContext<T>, element: { cell: HTMLDivElement; row: HTMLDivElement; })
+    => (void | boolean | Promise<void>);
   $rowPointer?: boolean;
   $radio?: boolean;
   $stripes?: boolean;
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
-  <T extends Struct = Struct>(attrs: DataTableProps<T>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends Struct = Struct>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, DataTableProps<T>>
+  ): ReactElement<any> | null;
 }
 
 const DefaultEmptyText: FC = () => {
@@ -198,7 +201,9 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   body: props => <Text>{(props.index + props.pageFirstIndex) + 1}</Text>,
 } as const;
 
-const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T extends Struct = Struct>(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
+const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
+  T extends Struct = Struct
+>(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
   const uniqueKey = useRef(StringUtils.generateUuidV4());
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
@@ -710,7 +715,7 @@ const DataTable: DataTableFC = forwardRef<HTMLDivElement, DataTableProps>(<T ext
       }
     </div>
   );
-});
+}) as DataTableFC;
 
 export const DataTableCellLabel: FC<{
   wrap?: boolean;

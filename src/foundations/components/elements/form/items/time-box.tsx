@@ -46,10 +46,12 @@ const isNumericOrEmpty = (value?: string): value is string => {
 };
 
 interface TimeBoxFC extends FunctionComponent<TimeBoxProps> {
-  <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(attrs: TimeBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, TimeBoxProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
+const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
   D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
 >(p: TimeBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -522,6 +524,6 @@ const TimeBox: TimeBoxFC = forwardRef<HTMLDivElement, TimeBoxProps>(<
       </Popup>
     </FormItemWrap>
   );
-});
+}) as TimeBoxFC;
 
 export default TimeBox;

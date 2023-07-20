@@ -9,7 +9,7 @@ import Row from "#/components/elements/row";
 import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const SelectBoxClient = () => {
   const [disabled, setDisabled] = useState(false);
@@ -18,6 +18,7 @@ const SelectBoxClient = () => {
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
   const [disallowInput, setDisallowInput] = useState(false);
+  const ref = useRef<HTMLDivElement>();
 
   return (
     <div className="flex-start p-1 w-100 gap-1">
@@ -94,10 +95,18 @@ const SelectBoxClient = () => {
         >
           set form bind
         </Button>
+        <Button
+          $onClick={() => {
+            console.log(ref.current);
+          }}
+        >
+          ref
+        </Button>
       </Row>
       <Divider />
       <Row className="gap-2">
         <SelectBox
+          ref={ref}
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
@@ -111,6 +120,27 @@ const SelectBoxClient = () => {
         <SelectBox
           $tag="string"
           $dataItem={sample_string}
+          $onChange={v => console.log("string: ", v)}
+          $source={ArrayUtils.generateArray(30, value => {
+            return {
+              value: String(value),
+              label: `item ${value}`,
+            };
+          })}
+          $tieInNames={["label", "value"]}
+        />
+        <SelectBox<number>
+          $tag="number"
+          $onChange={v => console.log("number: ", v)}
+          $source={ArrayUtils.generateArray(30, value => {
+            return {
+              value,
+              label: `item ${value}`,
+            };
+          })}
+        />
+        <SelectBox<"item1" | "item2" | 3>
+          $tag="string"
           $onChange={v => console.log("string: ", v)}
           $source={ArrayUtils.generateArray(30, value => {
             return {
@@ -154,7 +184,7 @@ const SelectBoxClient = () => {
         $onEdit={v => console.log("edit", v)}
         // $hideClearButton
         $emptyItem={{
-          value: "",
+          value: null,
           label: "(empty)",
         }}
         $source={() => {

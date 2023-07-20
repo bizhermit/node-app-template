@@ -23,10 +23,12 @@ export type CheckBoxProps<
 };
 
 interface CheckBoxFC extends FunctionComponent<CheckBoxProps> {
-  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: CheckBoxProps<T, D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, CheckBoxProps<T, D>>
+  ): ReactElement<any> | null;
 }
 
-const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
+const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 >(p: CheckBoxProps<T, D>, ref: ForwardedRef<HTMLDivElement>) => {
@@ -133,6 +135,6 @@ const CheckBox: CheckBoxFC = forwardRef<HTMLDivElement, CheckBoxProps>(<
       }
     </FormItemWrap>
   );
-});
+}) as CheckBoxFC;
 
 export default CheckBox;

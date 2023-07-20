@@ -2,24 +2,33 @@
 
 import Style from "#/styles/components/elements/tab-container.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
-import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
+import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactElement, type ReactNode, useEffect, useRef, useState, ForwardedRef, type FunctionComponent } from "react";
 
 type OmitAttributes = "color" | "children";
-export type TabContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $tabPosition?: "top" | "left" | "right" | "bottom";
-  $defaultKey?: Key;
-  $key?: Key;
-  $onChange?: (key: Key) => void;
-  $defaultMount?: boolean;
-  $unmountDeselected?: boolean;
-  $color?: Color;
-  $bodyColor?: Color;
-  $preventAnimation?: boolean;
-  $overlap?: boolean;
-  children?: ReactElement | [ReactElement, ...Array<ReactElement>];
-};
+export type TabContainerProps<K extends Key = Key> =
+  Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+    $tabPosition?: "top" | "left" | "right" | "bottom";
+    $defaultKey?: K;
+    $key?: K;
+    $onChange?: (key: K) => void;
+    $defaultMount?: boolean;
+    $unmountDeselected?: boolean;
+    $color?: Color;
+    $bodyColor?: Color;
+    $preventAnimation?: boolean;
+    $overlap?: boolean;
+    children?: ReactElement | [ReactElement, ...Array<ReactElement>];
+  };
 
-const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>((props, ref) => {
+interface TabContainerFC extends FunctionComponent<TabContainerProps> {
+  <K extends Key = Key>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, TabContainerProps<K>>
+  ): ReactElement<any> | null;
+}
+
+const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<
+  K extends Key = Key
+>(props: TabContainerProps<K>, ref: ForwardedRef<HTMLDivElement>) => {
   const color = props.$color || "main";
   const bodyColor = props.$bodyColor || "base";
 
@@ -72,7 +81,7 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>((props, ref) 
   }, [props.$key]);
 
   useEffect(() => {
-    props.$onChange?.(key!);
+    props.$onChange?.(key! as K);
   }, [key]);
 
   return (
@@ -90,7 +99,7 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>((props, ref) 
       </div>
     </div>
   );
-});
+}) as TabContainerFC;
 
 const Content: FC<{
   selected: boolean;

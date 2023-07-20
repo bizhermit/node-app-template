@@ -12,10 +12,12 @@ export type HiddenProps<D extends DataItem | undefined = undefined> = FormItemPr
 };
 
 interface HiddenFC extends FunctionComponent<HiddenProps> {
-  <D extends DataItem | undefined = undefined>(attrs: HiddenProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, HiddenProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const Hidden: HiddenFC = forwardRef<HTMLDivElement, HiddenProps>(<
+const Hidden = forwardRef<HTMLDivElement, HiddenProps>(<
   D extends DataItem | undefined = undefined
 >(p: HiddenProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -43,6 +45,6 @@ const Hidden: HiddenFC = forwardRef<HTMLDivElement, HiddenProps>(<
         />
       )
   );
-});
+}) as HiddenFC;
 
 export default Hidden;

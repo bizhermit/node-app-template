@@ -38,10 +38,12 @@ export type TimePickerProps<D extends DataItem_Time | DataItem_Number | DataItem
   )
 
 interface TimePickerFC extends FunctionComponent<TimePickerProps> {
-  <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(attrs: TimePickerProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, TimePickerProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
+const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
   D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
 >(p: TimePickerProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -415,6 +417,6 @@ const TimePicker: TimePickerFC = forwardRef<HTMLDivElement, TimePickerProps>(<
       </div>
     </FormItemWrap>
   );
-});
+}) as TimePickerFC;
 
 export default TimePicker;

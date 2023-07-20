@@ -18,7 +18,7 @@ type DataItemValidation<T, D extends (DataItem | DataContext)> =
     => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
 
 type LoadableArray<T = Struct> = Array<T> | Readonly<Array<T>> | (() => Array<T>) | (() => Promise<Array<T>>);
-type DataItemSource<V> = Array<{ name: V } & { [key: string]: any }> | LoadableArray
+type DataItemSource<V> = Array<{ value: V } & { [key: string]: any }> | LoadableArray
 
 type DataItem_Base<V = any> = {
   $$: V;
@@ -48,7 +48,7 @@ type DateValue = string | number | Date;
 
 type DataItemSourceKeyValue<D extends DataItem, T> =
   D extends { source: infer S } ? (
-    S extends Array<infer V> ? (V["name"]) : T
+    S extends Array<infer V> ? (V["value"]) : T
   ) : T;
 
 type DataItemValueTypeRequired<D extends DataItem, Strict extends boolean, StrictValue, Value = StrictValue> =

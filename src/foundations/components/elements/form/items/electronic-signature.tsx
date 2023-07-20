@@ -26,10 +26,12 @@ export type ElectronicSignatureProps<
 };
 
 interface ElectronicSignatureFC extends FunctionComponent {
-  <D extends DataItem_String | DataItem_File | undefined = undefined>(attrs: ElectronicSignatureProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_String | DataItem_File | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, ElectronicSignatureProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, ElectronicSignatureProps>(<
+const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>(<
   D extends DataItem_String | DataItem_File | undefined = undefined
 >(p: ElectronicSignatureProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -346,7 +348,7 @@ const ElectronicSignature: ElectronicSignatureFC = forwardRef<HTMLDivElement, El
       }
     </FormItemWrap>
   );
-});
+}) as ElectronicSignatureFC;
 
 const Button: FC<{
   disabled?: boolean;

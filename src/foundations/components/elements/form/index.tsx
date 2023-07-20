@@ -12,6 +12,8 @@ type FormRef = {
   setValue: (name: string, value: any, absolute?: boolean) => void;
   render: (name?: string) => void;
   validation: () => string | null | undefined;
+  submit: () => void;
+  reset: () => void;
 };
 
 export const useFormRef = () => {
@@ -20,6 +22,8 @@ export const useFormRef = () => {
     setValue: () => { },
     render: () => { },
     validation: () => undefined,
+    submit: () => undefined,
+    reset: () => { },
   });
   return ref.current;
 };
@@ -35,25 +39,27 @@ type BindFormProps<T extends Struct = Struct> = {
 };
 
 export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
+  $formRef?: ReturnType<typeof useFormRef>;
   $bind?: boolean | Struct | null | undefined;
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+  $preventResetWhenRebind?: boolean;
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
-  $formRef?: ReturnType<typeof useFormRef>;
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
-  <T extends Struct = Struct>(attrs: FormProps<T>, ref?: ForwardedRef<HTMLFormElement>): ReactElement<any> | null;
+  <T extends Struct = Struct>(
+    attrs: ComponentAttrsWithRef<HTMLFormElement, FormProps<T>>
+  ): ReactElement<any> | null;
 }
 
-const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = Struct>(
-  props: FormProps<T>,
-  $ref: ForwardedRef<HTMLFormElement>
-) => {
+const Form = forwardRef<HTMLFormElement, FormProps>(<
+  T extends Struct = Struct
+>(props: FormProps<T>, $ref: ForwardedRef<HTMLFormElement>) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const method = props.method ?? "get";
@@ -275,11 +281,19 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }
   }, [errors, exErrors]);
 
+  useEffect(() => {
+    if (props.$preventResetWhenRebind !== true) {
+      ref.current?.reset?.();
+    }
+  }, [bind]);
+
   if (props.$formRef) {
     props.$formRef.getValue = get;
     props.$formRef.setValue = set;
     props.$formRef.render = render;
     props.$formRef.validation = validation;
+    props.$formRef.reset = () => ref.current?.reset?.();
+    props.$formRef.submit = () => ref.current?.submit?.();
   }
 
   return (
@@ -306,12 +320,13 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }}>
       <form
         {...attributes(props)}
+        ref={ref}
         method={method}
         onSubmit={submit}
         onReset={reset}
       />
     </FormContext.Provider>
   );
-});
+}) as FormFC;
 
 export default Form;

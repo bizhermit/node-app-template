@@ -15,9 +15,9 @@ export const sample_string = stringItem({
   // charType: "alpha",
   width: "20rem",
   source: [
-    { name: "hoge", label: "hoge" },
-    { name: "fuga", label: "fuga" },
-    { name: "piyo", label: "piyo" },
+    { value: "hoge", label: "hoge" },
+    { value: "fuga", label: "fuga" },
+    { value: "piyo", label: "piyo" },
   ],
   validations: [
     (...args) => {
@@ -45,9 +45,9 @@ export const sample_number = numberItem({
   name: "s_number",
   width: "20rem",
   source: [
-    { name: 1, label: "item 1" },
-    { name: 2, label: "item 2" },
-    { name: 3, label: "item 3" },
+    { value: 1, label: "item 1" },
+    { value: 2, label: "item 2" },
+    { value: 3, label: "item 3" },
   ],
   validations: [
     (v) => {
@@ -89,8 +89,8 @@ export const sample_boolean_str = booleanItem({
   trueValue: "1",
   falseValue: "9",
   source: [
-    { name: "1", label: "selected" },
-    { name: "9", label: "unselected" },
+    { value: "1", label: "selected" },
+    { value: "9", label: "unselected" },
   ],
   required: true,
 });
