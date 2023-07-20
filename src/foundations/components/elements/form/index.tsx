@@ -182,13 +182,13 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
 
   const reset = (e: React.FormEvent<HTMLFormElement>) => {
     if (props.$disabled || disabledRef.current) {
-      e?.preventDefault();
+      e.preventDefault();
       return;
     }
     setDisabled(true);
     if (props.$onReset == null || typeof props.$onReset === "boolean") {
       if (props.$onReset === false) {
-        e?.preventDefault();
+        e.preventDefault();
       } else {
         resetItems();
       }
@@ -198,14 +198,14 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     const ret = props.$onReset(e);
     if (ret == null || typeof ret === "boolean") {
       if (ret === false) {
-        e?.preventDefault();
+        e.preventDefault();
       } else {
         resetItems();
       }
       setDisabled(false);
       return;
     }
-    e?.preventDefault();
+    e.preventDefault();
     if ("then" in ret) {
       ret.then(() => {
         setDisabled(false);
@@ -319,6 +319,7 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
     }}>
       <form
         {...attributes(props)}
+        ref={ref}
         method={method}
         onSubmit={submit}
         onReset={reset}
