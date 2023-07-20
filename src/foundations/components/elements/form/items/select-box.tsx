@@ -2,7 +2,7 @@
 
 import Style from "#/styles/components/elements/form/items/select-box.module.scss";
 import useLoadableArray from "#/hooks/loadable-array";
-import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import Resizer from "#/components/elements/resizer";
 import Popup from "#/components/elements/popup";
@@ -37,11 +37,16 @@ export type SelectBoxProps<
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
-  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>
-    (attrs: SelectBoxProps<T, D, S>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <
+    T extends string | number = string | number,
+    D extends DataItem_String | DataItem_Number | undefined = undefined,
+    S extends Struct = Struct
+  >
+    (attrs: SelectBoxProps<T, D, S> & { ref?: MutableRefObject<HTMLDivElement | undefined>; })
+    : ReactElement<any> | null;
 }
 
-const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
+const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   T extends string | number = string | number,
   D extends DataItem_String | DataItem_Number | undefined = undefined,
   S extends Struct = Struct
@@ -99,7 +104,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
     if (props.$tieInNames != null) {
       props.$tieInNames.forEach(tieItem => {
         const { dataName, hiddenName } =
-        typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
+          typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
         setValue(props.$bind, hiddenName, item?.[dataName]);
         setValue(ctx.bind, hiddenName, item?.[dataName]);
       });
@@ -428,7 +433,7 @@ const SelectBox: SelectBoxFC = forwardRef<HTMLDivElement, SelectBoxProps>(<
       </Popup>
     </FormItemWrap>
   );
-});
+}) as SelectBoxFC;
 
 const ListItem: FC<{
   index: number;

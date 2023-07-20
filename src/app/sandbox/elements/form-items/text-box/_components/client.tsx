@@ -8,7 +8,7 @@ import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const TextBoxClient = () => {
   const [disabled, setDisabled] = useState(false);
@@ -16,6 +16,7 @@ const TextBoxClient = () => {
   const [value, setValue] = useState<Nullable<string>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const ref = useRef<HTMLDivElement>();
 
   return (
     <div className="flex-start p-1 gap-1">
@@ -93,6 +94,7 @@ const TextBoxClient = () => {
         <h2>inputmode</h2>
         <TextBox
           $type="tel"
+          ref={ref}
         />
       </section>
       <section>
