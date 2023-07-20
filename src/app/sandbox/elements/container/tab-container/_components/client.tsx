@@ -9,13 +9,16 @@ import Row from "#/components/elements/row";
 import TabContainer from "#/components/elements/tab-container";
 import TabContent from "#/components/elements/tab-container/content";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { type Key, useState } from "react";
+import { type Key, useState, useRef } from "react";
+
+type TabKey = "tab1" | "tab2" | "tab3" | 4;
 
 const TabContainerClient = () => {
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
   const [tabScroll, setTabScroll] = useState(true);
-  const [key, setKey] = useState<Key>();
+  const [key, setKey] = useState<TabKey>();
   const [overlap, setOverlap] = useState(false);
+  const ref = useRef<HTMLDivElement>();
 
   return (
     <div className="flex-start w-100 h-100 p-1 gap-1">
@@ -46,7 +49,8 @@ const TabContainerClient = () => {
         <Button $onClick={() => setKey("tab3")}>Tab 3</Button>
       </Row>
       <Divider />
-      <TabContainer
+      <TabContainer<TabKey>
+        ref={ref}
         className={`w-100${tabScroll ? " flex-1_1_0" : ""}`}
         $tabPosition={position}
         $overlap={overlap}
@@ -55,6 +59,7 @@ const TabContainerClient = () => {
         // $unmountDeselected
         $key={key}
         $onChange={(key) => {
+          console.log(key, ref.current);
           setKey(key);
         }}
       >
