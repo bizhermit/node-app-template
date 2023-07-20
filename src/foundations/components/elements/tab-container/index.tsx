@@ -2,7 +2,7 @@
 
 import Style from "#/styles/components/elements/tab-container.module.scss";
 import { attributesWithoutChildren } from "#/components/utilities/attributes";
-import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactElement, type ReactNode, useEffect, useRef, useState, ForwardedRef, type FunctionComponent, type MutableRefObject } from "react";
+import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactElement, type ReactNode, useEffect, useRef, useState, ForwardedRef, type FunctionComponent } from "react";
 
 type OmitAttributes = "color" | "children";
 export type TabContainerProps<K extends Key = Key> =
@@ -21,9 +21,9 @@ export type TabContainerProps<K extends Key = Key> =
   };
 
 interface TabContainerFC extends FunctionComponent<TabContainerProps> {
-  <K extends Key = Key>
-    (attrs: TabContainerProps<K> & { ref?: MutableRefObject<HTMLDivElement | undefined> })
-    : ReactElement<any> | null;
+  <K extends Key = Key>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, TabContainerProps<K>>
+  ): ReactElement<any> | null;
 }
 
 const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<

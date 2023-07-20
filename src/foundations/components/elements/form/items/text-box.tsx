@@ -6,7 +6,7 @@ import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import { StringData } from "#/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes, type MutableRefObject } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
 import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
 import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
@@ -38,9 +38,9 @@ export type TextBoxProps<
   };
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
-  <D extends DataItem_String | DataItem_Number | undefined = undefined>
-    (attrs: TextBoxProps<D> & { ref?: MutableRefObject<HTMLDivElement | null | undefined> })
-    : ReactElement<any> | null;
+  <D extends DataItem_String | DataItem_Number | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, TextBoxProps<D>>
+  ): ReactElement<any> | null;
 }
 
 const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
