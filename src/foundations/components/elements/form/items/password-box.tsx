@@ -48,10 +48,12 @@ export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> 
 };
 
 interface PasswordBoxFC extends FunctionComponent<PasswordBoxProps> {
-  <D extends DataItem_String | undefined = undefined>(attrs: PasswordBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_String | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, PasswordBoxProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(<
+const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
   D extends DataItem_String | undefined = undefined
 >(p: PasswordBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -216,6 +218,6 @@ const PasswordBox: PasswordBoxFC = forwardRef<HTMLDivElement, PasswordBoxProps>(
       {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
-});
+}) as PasswordBoxFC;
 
 export default PasswordBox;

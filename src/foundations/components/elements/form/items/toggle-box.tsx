@@ -20,10 +20,12 @@ export type ToggleBoxProps<
 };
 
 interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
-  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(attrs: ToggleBoxProps<T, D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, ToggleBoxProps<T, D>>
+  ): ReactElement<any> | null;
 }
 
-const ToggleBox: ToggleBoxFC = forwardRef<HTMLDivElement, ToggleBoxProps>(<
+const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 >(p: ToggleBoxProps<T, D>, ref: ForwardedRef<HTMLDivElement>) => {
@@ -125,6 +127,6 @@ const ToggleBox: ToggleBoxFC = forwardRef<HTMLDivElement, ToggleBoxProps>(<
       {props.children && <Text className={Style.label}>{props.children}</Text>}
     </FormItemWrap>
   );
-});
+}) as ToggleBoxFC;
 
 export default ToggleBox;

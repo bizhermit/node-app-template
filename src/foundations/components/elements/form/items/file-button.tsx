@@ -29,13 +29,16 @@ export type FileButtonProps_Multiple<D extends DataItem_File | undefined = undef
   $append?: boolean;
 };
 
-export type FileButtonProps<D extends DataItem_File | undefined = undefined> = (FileButtonProps_Single<D> & { $multiple?: false; }) | (FileButtonProps_Multiple<D> & { $multiple: true });
+export type FileButtonProps<D extends DataItem_File | undefined = undefined> =
+  (FileButtonProps_Single<D> & { $multiple?: false; }) | (FileButtonProps_Multiple<D> & { $multiple: true });
 
 interface FileButtonFC extends FunctionComponent {
-  <D extends DataItem_File | undefined = undefined>(attrs: FileButtonProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_File | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, FileButtonProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<
+const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
   D extends DataItem_File | undefined = undefined
 >(p: FileButtonProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -190,6 +193,6 @@ const FileButton: FileButtonFC = forwardRef<HTMLDivElement, FileButtonProps>(<
       }
     </FormItemWrap>
   );
-});
+}) as FileButtonFC;
 
 export default FileButton;

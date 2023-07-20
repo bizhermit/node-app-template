@@ -52,13 +52,14 @@ export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLF
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
-  <T extends Struct = Struct>(attrs: FormProps<T>, ref?: ForwardedRef<HTMLFormElement>): ReactElement<any> | null;
+  <T extends Struct = Struct>(
+    attrs: ComponentAttrsWithRef<HTMLFormElement, FormProps<T>>
+  ): ReactElement<any> | null;
 }
 
-const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = Struct>(
-  props: FormProps<T>,
-  $ref: ForwardedRef<HTMLFormElement>
-) => {
+const Form = forwardRef<HTMLFormElement, FormProps>(<
+  T extends Struct = Struct
+>(props: FormProps<T>, $ref: ForwardedRef<HTMLFormElement>) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const method = props.method ?? "get";
@@ -326,6 +327,6 @@ const Form: FormFC = forwardRef<HTMLFormElement, FormProps>(<T extends Struct = 
       />
     </FormContext.Provider>
   );
-});
+}) as FormFC;
 
 export default Form;

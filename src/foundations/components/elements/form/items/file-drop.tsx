@@ -30,13 +30,16 @@ export type FileDropProps_Multiple<D extends DataItem_File | undefined = undefin
   $append?: boolean;
 };
 
-export type FileDropProps<D extends DataItem_File | undefined = undefined> = (FileDropProps_Single<D> & { $multiple?: false; }) | (FileDropProps_Multiple<D> & { $multiple: true });
+export type FileDropProps<D extends DataItem_File | undefined = undefined> =
+  (FileDropProps_Single<D> & { $multiple?: false; }) | (FileDropProps_Multiple<D> & { $multiple: true });
 
 interface FileDropFC extends FunctionComponent {
-  <D extends DataItem_File | undefined = undefined>(attrs: FileDropProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_File | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, FileDropProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
+const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
   D extends DataItem_File | undefined = undefined
 >(p: FileDropProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -229,6 +232,6 @@ const FileDrop: FileDropFC = forwardRef<HTMLDivElement, FileDropProps>(<
       }
     </FormItemWrap >
   );
-});
+}) as FileDropFC;
 
 export default FileDrop;

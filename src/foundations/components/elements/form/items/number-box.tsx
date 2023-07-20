@@ -36,10 +36,12 @@ export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefin
 };
 
 interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
-  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: NumberBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Number | DataItem_String | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, NumberBoxProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
+const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
   D extends DataItem_Number | DataItem_String | undefined = undefined
 >(p: NumberBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
@@ -318,6 +320,6 @@ const NumberBox: NumberBoxFC = forwardRef<HTMLDivElement, NumberBoxProps>(<
       {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
-});
+}) as NumberBoxFC;
 
 export default NumberBox;
