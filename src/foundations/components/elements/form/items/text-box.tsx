@@ -6,7 +6,7 @@ import Resizer from "#/components/elements/resizer";
 import { convertSizeNumToStr } from "#/components/utilities/attributes";
 import { StringData } from "#/data-items/string";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
+import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes, type MutableRefObject } from "react";
 import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
 import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
@@ -16,29 +16,34 @@ import { FormItemWrap } from "#/components/elements/form/item-wrap";
 type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
-export type TextBoxProps<D extends DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<string | number, D, string> & {
-  $type?: InputType;
-  $inputMode?: InputMode;
-  $length?: number;
-  $preventInputWithinLength?: boolean;
-  $minLength?: number;
-  $maxLength?: number;
-  $charType?: StringCharType;
-  $round?: boolean;
-  $resize?: boolean;
-  $width?: number | string;
-  $maxWidth?: number | string;
-  $minWidth?: number | string;
-  $hideClearButton?: boolean;
-  $autoComplete?: string;
-  $align?: "left" | "center" | "right";
-};
+export type TextBoxProps<
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+> =
+  FormItemProps<string | number, D, string> & {
+    $type?: InputType;
+    $inputMode?: InputMode;
+    $length?: number;
+    $preventInputWithinLength?: boolean;
+    $minLength?: number;
+    $maxLength?: number;
+    $charType?: StringCharType;
+    $round?: boolean;
+    $resize?: boolean;
+    $width?: number | string;
+    $maxWidth?: number | string;
+    $minWidth?: number | string;
+    $hideClearButton?: boolean;
+    $autoComplete?: string;
+    $align?: "left" | "center" | "right";
+  };
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
-  <D extends DataItem_String | DataItem_Number | undefined = undefined>(attrs: TextBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_String | DataItem_Number | undefined = undefined>
+    (attrs: TextBoxProps<D> & { ref?: MutableRefObject<HTMLDivElement | null | undefined> })
+    : ReactElement<any> | null;
 }
 
-const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
+const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
   D extends DataItem_String | DataItem_Number | undefined = undefined
 >(p: TextBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -242,6 +247,6 @@ const TextBox: TextBoxFC = forwardRef<HTMLDivElement, TextBoxProps>(<
       {props.$resize && <Resizer direction="x" />}
     </FormItemWrap>
   );
-});
+}) as TextBoxFC;
 
 export default TextBox;
