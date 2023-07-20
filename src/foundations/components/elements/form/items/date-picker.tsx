@@ -63,10 +63,12 @@ const today = new Date();
 const threshold = 2;
 
 interface DatePickerFC extends FunctionComponent<DatePickerProps> {
-  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(attrs: DatePickerProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, DatePickerProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
+const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
   D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
 >(p: DatePickerProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -897,6 +899,6 @@ const DatePicker: DatePickerFC = forwardRef<HTMLDivElement, DatePickerProps>(<
       }
     </FormItemWrap>
   );
-});
+}) as DatePickerFC;
 
 export default DatePicker;

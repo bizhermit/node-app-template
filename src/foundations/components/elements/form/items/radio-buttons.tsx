@@ -32,11 +32,12 @@ export type RadioButtonsProps<
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
-  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Struct = Struct>
-    (attrs: RadioButtonsProps<T, D, S>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Struct = Struct>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, RadioButtonsProps<T, D, S>>
+  ): ReactElement<any> | null;
 }
 
-const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProps>(<
+const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Struct = Struct
@@ -197,7 +198,7 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       setSelectedData(item);
       props.$tieInNames.forEach(tieItem => {
         const { dataName, hiddenName } =
-        typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
+          typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
         setValue(props.$bind, hiddenName, item?.[dataName]);
         setValue(ctx.bind, hiddenName, item?.[dataName]);
       });
@@ -235,6 +236,6 @@ const RadioButtons: RadioButtonsFC = forwardRef<HTMLDivElement, RadioButtonsProp
       }
     </FormItemWrap>
   );
-});
+}) as RadioButtonsFC;
 
 export default RadioButtons;

@@ -49,10 +49,12 @@ const isNumericOrEmpty = (value?: string): value is string => {
 };
 
 interface DateBoxFC extends FunctionComponent<DateBoxProps> {
-  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(attrs: DateBoxProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, DateBoxProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
+const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
 >(p: DateBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
@@ -519,6 +521,6 @@ const DateBox: DateBoxFC = forwardRef<HTMLDivElement, DateBoxProps>(<
       </Popup>
     </FormItemWrap>
   );
-});
+}) as DateBoxFC;
 
 export default DateBox;

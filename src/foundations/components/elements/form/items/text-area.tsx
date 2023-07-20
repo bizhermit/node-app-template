@@ -32,10 +32,12 @@ export type TextAreaProps<D extends DataItem_String | undefined = undefined> = F
 };
 
 interface TextAreaFC extends FunctionComponent<TextAreaProps> {
-  <D extends DataItem_String | undefined = undefined>(attrs: TextAreaProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_String | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, TextAreaProps<D>>
+  ): ReactElement<any> | null;
 }
 
-const TextArea: TextAreaFC = forwardRef<HTMLDivElement, TextAreaProps>(<
+const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
   D extends DataItem_String | undefined = undefined
 >(p: TextAreaProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLTextAreaElement>(null!);
@@ -186,6 +188,6 @@ const TextArea: TextAreaFC = forwardRef<HTMLDivElement, TextAreaProps>(<
       }
     </FormItemWrap>
   );
-});
+}) as TextAreaFC;
 
 export default TextArea;

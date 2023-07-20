@@ -19,14 +19,16 @@ export type SliderProps<D extends DataItem_Number | DataItem_String | undefined 
 };
 
 interface SliderFC extends FunctionComponent<SliderProps> {
-  <D extends DataItem_Number | DataItem_String | undefined = undefined>(attrs: SliderProps<D>, ref?: ForwardedRef<HTMLDivElement>): ReactElement<any> | null;
+  <D extends DataItem_Number | DataItem_String | undefined = undefined>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, SliderProps<D>>
+  ): ReactElement<any> | null;
 }
 
 const defaultWidth = 160;
 const defaultMax = 100;
 const defaultMin = 0;
 
-const Slider: SliderFC = forwardRef<HTMLDivElement, SliderProps>(<
+const Slider = forwardRef<HTMLDivElement, SliderProps>(<
   D extends DataItem_Number | DataItem_String | undefined = undefined
 >(p: SliderProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const railRef = useRef<HTMLDivElement>(null!);
@@ -164,6 +166,6 @@ const Slider: SliderFC = forwardRef<HTMLDivElement, SliderProps>(<
       </div>
     </FormItemWrap>
   );
-});
+}) as SliderFC;
 
 export default Slider;
