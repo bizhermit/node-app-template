@@ -154,6 +154,7 @@ const SelectBoxClient = () => {
       <SelectBox
         $tag="useState"
         $tagPosition="placeholder"
+        $initValue={18}
         $value={value}
         $onChange={v => {
           console.log("change", v);
