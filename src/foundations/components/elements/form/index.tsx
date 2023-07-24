@@ -3,7 +3,7 @@
 import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "#/components/elements/form/$types";
 import { attributes } from "#/components/utilities/attributes";
 import { type FormHTMLAttributes, forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FunctionComponent, type ForwardedRef, type ReactElement } from "react";
-import { getValue } from "#/data-items/utilities";
+import { getValue, setValue } from "#/data-items/utilities";
 import { FormContext, type UseFormItemContextOptions } from "#/components/elements/form/context";
 import { isErrorObject } from "#/components/elements/form/utilities";
 
@@ -36,6 +36,7 @@ type PlainFormProps = {
 type BindFormProps<T extends Struct = Struct> = {
   $submitDataType?: "struct";
   $onSubmit?: (((data: T, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+  $onlyMountedData?: boolean;
 };
 
 export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
@@ -153,7 +154,18 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
       return;
     }
     const ret = props.$onSubmit(
-      (props.$submitDataType === "formData" ? new FormData(e.currentTarget) : bind) as any,
+      (props.$submitDataType === "formData" ? new FormData(e.currentTarget) : (() => {
+        if (!props.$onlyMountedData) {
+          return { ...bind };
+        }
+        const ret: Struct = {};
+        Object.keys(items.current).forEach(key => {
+          const name = items.current[key].props.name;
+          if (!name) return;
+          setValue(ret, name, getValue(bind, name));
+        });
+        return ret;
+      })()) as any,
       ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
       e
     );
