@@ -177,7 +177,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     }
     if (elem == null) elem = lref.current.querySelector("div[data-index]") as HTMLElement;
     if (elem) {
-      elem.scrollIntoView({ block: "center", inline: "center" });
+      elem.scrollIntoView({ block: "center" });
       elem.focus();
     } else {
       lref.current.focus();
@@ -250,9 +250,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       case "ArrowUp":
         const prevElem = document.activeElement?.previousElementSibling as HTMLElement;
         if (prevElem) {
-          const st = prevElem.offsetTop;
-          const curSt = lref.current.scrollTop;
-          if (st < curSt) lref.current.scrollTop = st;
+          prevElem.scrollIntoView({ block: "nearest" });
           prevElem.focus();
         }
         e.preventDefault();
@@ -261,9 +259,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       case "ArrowDown":
         const nextElem = document.activeElement?.nextElementSibling as HTMLElement;
         if (nextElem) {
-          const st = nextElem.offsetTop - lref.current.clientHeight + nextElem.offsetHeight;
-          const curSt = lref.current.scrollTop;
-          if (st > curSt) lref.current.scrollTop = st;
+          nextElem.scrollIntoView({ block: "nearest" });
           nextElem.focus();
         }
         e.preventDefault();
