@@ -27,7 +27,7 @@ export const convertFormDataToStruct = <
   return ret as T;
 };
 
-export const joinStructData = (
+export const appendStructData = (
   formData: FormData,
   struct: { [key: string]: any } | null | undefined,
   options?: Options
@@ -82,5 +82,5 @@ export const convertStructToFormData = (
   struct: { [key: string]: any } | null | undefined,
   options?: Options
 ) => {
-  return joinStructData(new FormData(), struct, options);
+  return appendStructData(new FormData(), struct, options);
 };
