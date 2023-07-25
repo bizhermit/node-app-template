@@ -55,6 +55,10 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
   };
 
   const tagPlaceholder = props.$context.editable && props.$tag != null && props.$tagPosition === "placeholder";
+  const showError = (props.$context.hasValidator || ("$error" in props))
+    && props.$context.editable
+    && props.$context.messageDisplayMode !== "hide"
+    && props.$context.messageDisplayMode !== "none";
 
   return (
     <div
@@ -77,7 +81,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
           value={convertHiddenValue(props.$context.value)}
         />
       }
-      {(props.$context.hasValidator || ("$error" in props)) && props.$context.editable ?
+      {showError ?
         (props.$context.messageDisplayMode.startsWith("bottom") ?
           <>
             <div {...attrs}>
