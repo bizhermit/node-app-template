@@ -106,7 +106,7 @@ const update = <U extends ApiPath, M extends ApiMethods>(url: U, method: M, para
 
 const fetchApi = {
   get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, _options?: FetchOptions) => {
-    const ctx = getDynamicUrlContext(url, params, { appendQuery: true });
+    const ctx = getDynamicUrlContext(url, params, { appendQuery: true, queryArrayIndex: true });
     return crossFetch<ApiResponse<U, "get">>(ctx.url, { method: "GET" });
   },
   put: <U extends ApiPath>(url: U, params?: ApiRequest<U, "put"> | FormData, options?: FetchOptions) => {
