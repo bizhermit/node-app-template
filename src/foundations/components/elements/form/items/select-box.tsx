@@ -397,6 +397,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
             scrollToSelectedItem();
           }
         }}
+        $mask="transparent"
       >
         <div
           className={Style.list}
