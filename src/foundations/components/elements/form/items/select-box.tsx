@@ -280,6 +280,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       (lref.current != null && (e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current))
     ) return;
     setShowPicker(false);
+    if (!iref.current) return;
     const label = iref.current.value;
     const item = source.find(item => equals(item[ldn], label));
     if (item) {
