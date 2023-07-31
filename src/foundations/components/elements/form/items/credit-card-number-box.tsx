@@ -1,7 +1,7 @@
 "use client";
 
 import Style from "#/styles/components/elements/form/items/text-box.module.scss";
-import type { FormItemProps } from "#/components/elements/form/$types";
+import type { FormItemProps, FormItemValidation } from "#/components/elements/form/$types";
 import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { FormItemWrap } from "#/components/elements/form/item-wrap";
@@ -9,6 +9,7 @@ import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { type ReactElement, forwardRef, type ForwardedRef, useRef, type FunctionComponent } from "react";
 import { CrossIcon } from "#/components/elements/icon";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
+import { StringData } from "#/data-items/string";
 
 export type CreditCardNumberBoxProps<
   D extends DataItem_String | undefined = undefined
@@ -45,6 +46,12 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
 
   const ctx = useFormItemContext(form, props, {
     effect: renderFormattedValue,
+    validations: () => {
+      const validations: Array<FormItemValidation<Nullable<string>>> = [];
+      validations.push(v => StringData.minLengthValidation(v, 14));
+      validations.push(v => StringData.maxLengthValidation(v, 16));
+      return validations;
+    },
   });
 
   const changeImpl = (value?: string, preventCommit?: boolean): Nullable<string> => {
