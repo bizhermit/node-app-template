@@ -22,6 +22,7 @@ const SelectBoxClient = () => {
 
   return (
     <div className="flex-start p-1 w-100 gap-1">
+      <div style={{ height: "100vh"}}></div>
       <Row className="gap-1" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -154,6 +155,7 @@ const SelectBoxClient = () => {
       <SelectBox
         $tag="useState"
         $tagPosition="placeholder"
+        $initValue={18}
         $value={value}
         $onChange={v => {
           console.log("change", v);

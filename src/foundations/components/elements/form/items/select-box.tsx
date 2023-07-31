@@ -10,7 +10,7 @@ import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { equals, getValue, setValue } from "#/data-items/utilities";
 import { CrossIcon, DownIcon } from "#/components/elements/icon";
-import type { FormItemProps } from "#/components/elements/form/$types";
+import type { FormItemProps, ValueType } from "#/components/elements/form/$types";
 import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps, useFormItemContext } from "#/components/elements/form/item-hook";
 import { convertDataItemValidationToFormItemValidation } from "#/components/elements/form/utilities";
@@ -31,6 +31,7 @@ export type SelectBoxProps<
   $maxWidth?: number | string;
   $minWidth?: number | string;
   $emptyItem?: boolean | string | { value: T | null | undefined; label: string; };
+  $initValue?: ValueType<T, D, undefined> | null | undefined;
   $align?: "left" | "center" | "right";
   $disallowInput?: boolean;
   $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
@@ -71,6 +72,26 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     preventMemorize: props.$preventSourceMemorize,
   });
   const [bindSource, setBindSource] = useState(source);
+  const emptyItem = (() => {
+    if (!props.$emptyItem) return undefined;
+    switch (typeof props.$emptyItem) {
+      case "boolean":
+        return {
+          [vdn]: undefined,
+          [ldn]: "",
+        };
+      case "string":
+        return {
+          [vdn]: undefined,
+          [ldn]: props.$emptyItem || "",
+        };
+      default:
+        return {
+          [vdn]: props.$emptyItem.value,
+          [ldn]: props.$emptyItem.label,
+        };
+    }
+  })();
 
   const ctx = useFormItemContext(form, props, {
     generateChangeCallbackData: (a, b) => {
@@ -99,8 +120,8 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     setSelectedData(item);
     if (props.$tieInNames != null) {
       props.$tieInNames.forEach(tieItem => {
-        const { dataName, hiddenName } =
-          typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
+        const { dataName, hiddenName } = typeof tieItem === "string" ?
+          { dataName: tieItem, hiddenName: tieItem } : tieItem;
         setValue(props.$bind, hiddenName, item?.[dataName]);
         setValue(ctx.bind, hiddenName, item?.[dataName]);
       });
@@ -151,9 +172,12 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const scrollToSelectedItem = () => {
     if (lref.current == null) return;
     let elem = lref.current.querySelector(`div[data-selected="true"]`) as HTMLElement;
+    if (elem == null || elem.getAttribute("data-empty") === "true") {
+      elem = lref.current.querySelector(`div[data-init="true"]`) as HTMLElement;
+    }
     if (elem == null) elem = lref.current.querySelector("div[data-index]") as HTMLElement;
     if (elem) {
-      lref.current.scrollTop = elem.offsetTop + elem.offsetHeight;
+      lref.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - lref.current.clientHeight / 2;
       elem.focus();
     } else {
       lref.current.focus();
@@ -256,6 +280,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       (lref.current != null && (e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current))
     ) return;
     setShowPicker(false);
+    if (!iref.current) return;
     const label = iref.current.value;
     const item = source.find(item => equals(item[ldn], label));
     if (item) {
@@ -372,6 +397,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
             scrollToSelectedItem();
           }
         }}
+        $mask="transparent"
       >
         <div
           className={Style.list}
@@ -382,41 +408,21 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
           onKeyDown={keydownItem}
         >
           {useMemo(() => {
-            if (props.$emptyItem != null) {
+            if (emptyItem) {
               const emptyValue = bindSource[0]?.[vdn];
-              if (emptyValue != null && emptyValue !== "") {
-                switch (typeof props.$emptyItem) {
-                  case "boolean":
-                    if (props.$emptyItem) {
-                      bindSource.unshift({
-                        [vdn]: undefined,
-                        [ldn]: "",
-                      } as S);
-                    }
-                    break;
-                  case "string":
-                    bindSource.unshift({
-                      [vdn]: undefined,
-                      [ldn]: props.$emptyItem || "",
-                    } as S);
-                    break;
-                  default:
-                    if (props.$emptyItem && emptyValue !== props.$emptyItem.value) {
-                      bindSource.unshift({
-                        [vdn]: props.$emptyItem.value,
-                        [ldn]: props.$emptyItem.label,
-                      } as S);
-                    }
-                    break;
-                }
+              if (!equals(emptyValue, emptyItem[vdn])) {
+                bindSource.unshift(emptyItem as S);
               }
             }
+            const emptyValue = emptyItem?.[vdn];
             return bindSource.map((item, index) => {
               const v = item[vdn];
+              const isEmpty = emptyItem != null && equals(v, emptyValue);
               return (
                 <ListItem
                   key={v ?? "_empty"}
-                  empty={v == null || v === ""}
+                  empty={isEmpty}
+                  init={v === props.$initValue}
                   index={index}
                   selected={v === ctx.valueRef.current}
                 >
@@ -434,6 +440,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
 const ListItem: FC<{
   index: number;
   empty: boolean;
+  init: boolean;
   selected: boolean;
   children?: ReactNode;
 }> = (props) => {
@@ -441,6 +448,7 @@ const ListItem: FC<{
     <div
       className={Style.item}
       data-index={props.index}
+      data-init={props.init}
       data-selected={props.selected}
       data-empty={props.empty}
       tabIndex={0}

@@ -20,6 +20,12 @@
   z-index: inherit;
 }
 
+.mask1 {
+  &[data-mode="transparent"] {
+    background: transparent !important;
+  }
+}
+
 .mask2 {
   background: transparent !important;
   z-index: 0 !important;

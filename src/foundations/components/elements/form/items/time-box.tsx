@@ -498,6 +498,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
         $animationDuration={50}
         $closeWhenClick
         $preventClickEvent
+        $mask="transparent"
       >
         <TimePicker
           ref={pref}

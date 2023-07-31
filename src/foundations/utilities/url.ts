@@ -1,9 +1,11 @@
+import { convertFormDataToStruct } from "#/utilities/form-data";
 import queryString from "querystring";
 
 export type DynamicUrlContextOptions = {
   appendQuery?: boolean;
   leaveDynamicKey?: boolean;
   useOriginParams?: boolean;
+  queryArrayIndex?: boolean;
 };
 
 export const getDynamicUrlContext = <T extends Struct | FormData | undefined | null>(
@@ -70,24 +72,17 @@ export const getDynamicUrlContext = <T extends Struct | FormData | undefined | n
   if (options?.appendQuery) {
     const q = queryString.stringify((() => {
       if (data == null) return {};
-      if (data instanceof FormData) {
-        const d: Struct = {};
-        data.forEach((v, k) => {
-          if (k in d) {
-            if (!Array.isArray(d[k])) {
-              d[k] = [d[k]];
-            }
-            d[k].push(v);
-            return;
-          }
-          d[k] = v;
-        });
-        return d;
-      }
+      const sd = data instanceof FormData ? convertFormDataToStruct(data) : data;
       const d: { [key: string]: any } = {};
-      Object.keys(data).forEach(key => {
-        const v = data[key];
-        if (v == null || v === "") return;
+      Object.keys(sd).forEach(key => {
+        const v = sd[key];
+        if (v == null) return;
+        if (options.queryArrayIndex && Array.isArray(v)) {
+          v.forEach((val, i) => {
+            d[`${key}[${i}]`] = val;
+          });
+          return;
+        }
         d[key] = v;
       });
       return d;

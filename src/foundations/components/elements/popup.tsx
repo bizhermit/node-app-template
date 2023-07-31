@@ -36,7 +36,7 @@ export type PopupPosition = {
 
 export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $show?: boolean;
-  $mask?: boolean;
+  $mask?: boolean | "transparent";
   $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number } | "parent";
   $position?: PopupPosition;
   $animationDirection?: "vertical" | "horizontal" | "none";
@@ -360,6 +360,7 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
               className={Style.mask1}
               tabIndex={0}
               onKeyDown={keydownMask1}
+              data-mode={props.$mask}
             />
           }
           <div

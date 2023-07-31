@@ -495,6 +495,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
         $animationDuration={50}
         $closeWhenClick
         $preventClickEvent
+        $mask="transparent"
       >
         <DatePicker
           ref={pref}

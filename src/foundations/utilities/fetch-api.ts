@@ -1,3 +1,4 @@
+import { convertFormDataToStruct, convertStructToFormData } from "#/utilities/form-data";
 import { getDynamicUrlContext } from "#/utilities/url";
 import type { RequestInit } from "next/dist/server/web/spec-extension/request";
 
@@ -76,47 +77,15 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
     return {
       body: (() => {
         if (params instanceof FormData) return params;
-        const fd = new FormData();
-        if (params == null || !isValidBodyParams(params)) return fd;
-        const setFormValue = (key: string, value: any) => {
-          if (value == null) return;
-          if (typeof value === "object") {
-            if (value instanceof Blob) {
-              fd.append(key, value);
-              return;
-            }
-            if (value instanceof File) {
-              fd.append(key, new Blob([value], { type: value.type }));
-              return;
-            }
-            if (Array.isArray(value)) {
-              value.forEach((v, i) => setFormValue(`${key}[${i}]`, v));
-              return;
-            }
-            // eslint-disable-next-line no-console
-            console.warn(`fetch-api: ${key} is not support object. try converting to json stringify`);
-            fd.append(key, JSON.stringify(value));
-            return;
-          }
-          fd.append(key, value);
-        };
-        Object.keys(params).forEach(key => {
-          setFormValue(key, params[key]);
-        });
-        return fd;
+        if (params == null || !isValidBodyParams(params)) return new FormData();
+        return convertStructToFormData(params, { removeItem: "null" });
       })(),
     };
   }
   return {
     body: (() => {
       if (params instanceof FormData) {
-        const struct: { [key: string]: any } = {};
-        Array.from(params.keys()).forEach(key => {
-          const v = params.get(key);
-          if (v == null) return;
-          struct[key] = v;
-        });
-        return JSON.stringify(struct);
+        return JSON.stringify(convertFormDataToStruct(params, { removeItem: "null" }));
       }
       if (!isValidBodyParams(params)) return "{}";
       return JSON.stringify(params);
@@ -137,7 +106,7 @@ const update = <U extends ApiPath, M extends ApiMethods>(url: U, method: M, para
 
 const fetchApi = {
   get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, _options?: FetchOptions) => {
-    const ctx = getDynamicUrlContext(url, params, { appendQuery: true });
+    const ctx = getDynamicUrlContext(url, params, { appendQuery: true, queryArrayIndex: true });
     return crossFetch<ApiResponse<U, "get">>(ctx.url, { method: "GET" });
   },
   put: <U extends ApiPath>(url: U, params?: ApiRequest<U, "put"> | FormData, options?: FetchOptions) => {
