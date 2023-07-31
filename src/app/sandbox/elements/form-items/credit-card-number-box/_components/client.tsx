@@ -98,7 +98,7 @@ const CreditCardCreditCardNumberBoxClient = () => {
         <CreditCardNumberBox
           $tag="string"
           $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
+          // $onChange={v => console.log("string: ", v)}
         />
       </Row>
       <CreditCardNumberBox

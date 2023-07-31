@@ -31,8 +31,11 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
   const props = useDataItemMergedProps(form, p, {});
 
   const toCreditCardNumber = (v?: Nullable<string>) => {
-    // TODO: format
-    return v || "";
+    return (v?.replace(/\s/g, "") ?? "")
+      .split("")
+      .reduce((ccnumStr, numStr, index) => {
+        return ccnumStr + numStr + (0 < index && index < 15 && (index + 1) % 4 === 0 ? " " : "");
+      }, "");
   };
 
   const renderFormattedValue = () => {
@@ -41,9 +44,7 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
   };
 
   const ctx = useFormItemContext(form, props, {
-    effect: () => {
-      renderFormattedValue();
-    },
+    effect: renderFormattedValue,
   });
 
   const changeImpl = (value?: string, preventCommit?: boolean): Nullable<string> => {
@@ -52,15 +53,19 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
       return undefined;
     }
     const revert = () => {
-      if (iref.current) iref.current.value = ctx.valueRef.current || "";
+      if (iref.current) iref.current.value = toCreditCardNumber(ctx.valueRef.current);
       return ctx.valueRef.current;
     };
     const v = value.replace(/\s/g, "");
     if (!/^[0-9]*$/.test(v)) return revert();
+    const buf = String(ctx.valueRef.current || "");
     if (preventCommit !== true) ctx.change(v);
     if (iref.current) {
-      const fv = toCreditCardNumber(v);
-      if (iref.current.value !== fv) iref.current.value = fv;
+      let fv = toCreditCardNumber(v);
+      if (v.length <= buf.length) fv = fv.trim();
+      if (iref.current.value !== fv) {
+        iref.current.value = fv;
+      }
     }
     return v;
   };
