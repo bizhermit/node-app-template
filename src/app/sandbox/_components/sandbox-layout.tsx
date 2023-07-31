@@ -188,6 +188,11 @@ const Navigation: FC = () => {
               label: "Hidden",
               icon: "H",
               pathname: "/sandbox/elements/form-items/hidden",
+            }, {
+              key: "credit-card-number-box",
+              label: "CreditCardNumberBox",
+              icon: "CC",
+              pathname: "/sandbox/elements/form-items/credit-card-number-box"
             }]
           }, {
             key: "container",
