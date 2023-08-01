@@ -7,7 +7,6 @@ import { convertHiddenValue, isErrorObject } from "#/components/elements/form/ut
 import { attributes, attributesWithoutChildren } from "#/components/utilities/attributes";
 import { type HTMLAttributes, type ReactNode, forwardRef } from "react";
 import Tooltip from "#/components/elements/tooltip";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 
 type FormItemWrapProps = FormItemProps<any, any, any, any> & {
   $context: ReturnType<typeof useFormItemContext<any, any, any, any>>;
@@ -30,6 +29,7 @@ const inputAttributes = (props: Struct, ...classNames: Array<string | null | und
 export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props, ref) => {
   const errorNode = props.$context.messageDisplayMode !== "none"
     && props.$context.messageDisplayMode !== "hide"
+    && props.$context.editable
     && ((props.$context.error !== "" && isErrorObject(props.$context.error)) || props.$context.messageDisplayMode === "bottom")
     && (
       <div
@@ -55,10 +55,6 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
   };
 
   const tagPlaceholder = props.$context.editable && props.$tag != null && props.$tagPosition === "placeholder";
-  const showError = (props.$context.hasValidator || ("$error" in props))
-    && props.$context.editable
-    && props.$context.messageDisplayMode !== "hide"
-    && props.$context.messageDisplayMode !== "none";
 
   return (
     <div
@@ -81,26 +77,21 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
           value={convertHiddenValue(props.$context.value)}
         />
       }
-      {showError ?
-        (props.$context.messageDisplayMode.startsWith("bottom") ?
-          <>
-            <div {...attrs}>
-              {props.children}
-            </div>
-            {errorNode}
-          </>
-          : <Tooltip
-            {...attrs}
-            $disabled={StringUtils.isEmpty(props.$context.error)}
-            $popupClassName={Style.tooltip}
-          >
-            {props.children}
-            {errorNode}
-          </Tooltip>
-        ) :
-        <div {...attrs}>
+      {props.$context.messageDisplayMode === "tooltip" ?
+        <Tooltip
+          {...attrs}
+          $disabled={!errorNode}
+          $popupClassName={Style.tooltip}
+        >
           {props.children}
-        </div>
+          {errorNode}
+        </Tooltip> :
+        <>
+          <div {...attrs}>
+            {props.children}
+          </div>
+          {errorNode}
+        </>
       }
     </div>
   );
