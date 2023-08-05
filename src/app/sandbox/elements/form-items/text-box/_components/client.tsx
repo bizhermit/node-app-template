@@ -225,7 +225,7 @@ const TextBoxClient = () => {
       </section>
       <section>
         <h2>message position</h2>
-        <Row $vAlign="top" className="gap-1">
+        <div className="flex-start gap-2">
           <TextBox
             $disabled={disabled}
             $readOnly={readOnly}
@@ -254,7 +254,14 @@ const TextBoxClient = () => {
             $tag="hide"
             $messagePosition="hide"
           />
-        </Row>
+          <TextBox
+            $disabled={disabled}
+            $readOnly={readOnly}
+            $required
+            $tag="none"
+            $messagePosition="none"
+          />
+        </div>
       </section>
       <section>
         <h2>color</h2>
