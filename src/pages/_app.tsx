@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import type { NextPage } from "next";
 import type { ReactElement, ReactNode } from "react";
+import "#/styles/root.scss";
 import "#/styles/globals.scss";
 import "#/styles/color.scss";
 import "#/styles/utility.scss";

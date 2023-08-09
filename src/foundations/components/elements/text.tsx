@@ -1,10 +1,10 @@
 import { attributes, isReactNode } from "#/components/utilities/attributes";
-import type { FC, HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 
-const Text: FC<HTMLAttributes<HTMLSpanElement>> = (props) => {
+const Text = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>((props, ref) => {
   if (props.children == null) return <></>;
   if (isReactNode(props.children)) return <>{props.children}</>;
-  return <span {...attributes(props, "pt-t")} />;
-};
+  return <span {...attributes(props, "pt-t")} ref={ref} />;
+});
 
 export default Text;
