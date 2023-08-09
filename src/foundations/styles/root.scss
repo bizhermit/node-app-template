@@ -1,17 +1,23 @@
 @use "#/styles/var" as var;
 
+$base: .4rem;
+$size: 3.6rem;
+$fontSize: 1.6rem;
+$iconSize: 1.6rem;
+
 :root {
-  --base: #{var.$base};
-  --b-xs: #{var.$base * 1};
-  --b-s: #{var.$base * 2};
-  --b-m: #{var.$base * 4};
-  --b-l: #{var.$base * 6};
-  --b-xl: #{var.$base * 8};
-  --size: #{var.$size};
-  --font-size: #{var.$fontSize};
-  --icon-size: #{var.$iconSize};
+  --base: #{$base};
+  --b-xs: #{$base * 1};
+  --b-s: #{$base * 2};
+  --b-m: #{$base * 4};
+  --b-l: #{$base * 6};
+  --b-xl: #{$base * 8};
+  --radius: #{$base * 0.5};
+  --size: #{$size};
+  --font-size: #{$fontSize};
+  --icon-size: #{$iconSize};
   --padding-top-text: 0.1rem;
-  --nav-size: #{var.$size};
+  --nav-size: #{$size};
   outline: var(--c-base_) !important;
 }
 

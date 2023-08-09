@@ -1,24 +1,22 @@
 import { attributes } from "#/components/utilities/attributes";
 import Link, { type LinkProps } from "next/link";
 import type { UrlObject } from "url";
-import { type AnchorHTMLAttributes, type ElementType, type LegacyRef, type ReactNode, forwardRef, type Ref } from "react";
+import { type AnchorHTMLAttributes, type LegacyRef, type ReactNode, forwardRef, type Ref } from "react";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import Text from "#/components/elements/text";
 
 export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   href?: string | UrlObject;
-  $altTag?: ElementType;
   $noDecoration?: boolean;
   $disabled?: boolean;
   children?: ReactNode;
 };
 
-const NextLink = forwardRef<HTMLElement, NextLinkProps>((props, ref) => {
+const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>((props, ref) => {
   const attrs = attributes(props, props.$noDecoration ? "plain-text" : undefined);
   const href = attrs.href?.toString();
 
   if (StringUtils.isEmpty(href) || props.$disabled) {
-    return <Text {...attrs} ref={ref} />;
+    return <a {...attrs} ref={ref} href={undefined} />;
   }
 
   if (/^(http|tel:|mailto:)/.test(href)) {

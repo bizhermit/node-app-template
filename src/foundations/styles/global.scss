@@ -248,7 +248,7 @@ $radiusSizeMap: (
 );
 
 .r {
-  border-radius: calc(var(--base) * map-get($radiusSizeMap, m));
+  border-radius: var(--radius);
 }
 
 @each $size,
@@ -304,6 +304,7 @@ $value in $radiusSizeMap {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
 
   &.row {
     flex-direction: row;

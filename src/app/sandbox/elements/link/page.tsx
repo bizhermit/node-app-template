@@ -3,7 +3,6 @@ import Form from "#/components/elements/form";
 import CheckBox from "#/components/elements/form/items/check-box";
 import NextLink from "#/components/elements/link";
 import LinkButton from "#/components/elements/link-button";
-import Row from "#/components/elements/row";
 
 const Page = () => {
   return (
@@ -27,7 +26,7 @@ const Page = () => {
         link button (no href)
       </LinkButton>
       <Form className="flex column center middle w-100">
-        <Row className="g-m w-100">
+        <div className="flex row g-m w-100">
           <CheckBox $required />
           <LinkButton href="https://bizhermit.com" $form className="flex-1">
             link button (form)
@@ -35,7 +34,7 @@ const Page = () => {
           <LinkButton href="https://bizhermit.com" className="flex-1">
             link button (no form)
           </LinkButton>
-        </Row>
+        </div>
       </Form>
     </div>
   );

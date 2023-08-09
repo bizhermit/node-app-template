@@ -22,7 +22,7 @@ export type LinkButtonOptions = ButtonOptions & {
 type OmitAttributes = "onClick" | "color";
 export type LinkButtonProps = Omit<HTMLAttributes<HTMLElement>, OmitAttributes> & LinkButtonOptions;
 
-const LinkButton = forwardRef<HTMLElement, LinkButtonProps>((props, ref) => {
+const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) => {
   const form = useForm();
 
   const hrefDisabled = StringUtils.isEmpty(props.href?.toString());
