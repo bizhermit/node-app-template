@@ -14,11 +14,11 @@ const style: CSSProperties = {
 
 const ButtonClient = () => {
   return (
-    <div className="flex-start p-1">
+    <div className="flex-start p-xs">
       <h1>Button</h1>
       <section>
         <h2>click event</h2>
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             $onClick={(_, e) => {
               console.log("click sync", e);
@@ -46,7 +46,7 @@ const ButtonClient = () => {
           }}
         // $bind={{}}
         >
-          <Row className="gap-1">
+          <Row className="g-s">
             <TextBox $required name="text-box" />
             <Button type="submit">submit</Button>
             <Button type="button">button</Button>
@@ -56,21 +56,21 @@ const ButtonClient = () => {
       </section>
       <section>
         <h2>size</h2>
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button $size="xs">X Small</Button>
           <Button $size="s">Small</Button>
           <Button $size="m">Medium</Button>
           <Button $size="l">Large</Button>
           <Button $size="xl">X Large</Button>
         </Row>
-        <Row className="gap-1 mt-1">
+        <Row className="g-s mt-xs">
           <Button $icon={<CloudDownloadIcon />} $size="xs">X Small</Button>
           <Button $icon={<CloudDownloadIcon />} $size="s">Small</Button>
           <Button $icon={<CloudDownloadIcon />} $size="m">Medium</Button>
           <Button $icon={<CloudDownloadIcon />} $size="l">Large</Button>
           <Button $icon={<CloudDownloadIcon />} $size="xl">X Large</Button>
         </Row>
-        <Row className="gap-1 mt-1">
+        <Row className="g-s mt-xs">
           <Button $icon={<CloudDownloadIcon />} $size="xs" $round />
           <Button $icon={<CloudDownloadIcon />} $size="s" $round />
           <Button $icon={<CloudDownloadIcon />} $size="m" $round />
@@ -80,7 +80,7 @@ const ButtonClient = () => {
       </section>
       <section>
         <h2>color</h2>
-        <Row className="pt-1 gap-1">
+        <Row className="pt-s g-s">
           <Button style={style}>button</Button>
           <Button $outline style={style}>outline</Button>
           <span className={`pt-t fgc-base`}>color</span>
@@ -88,7 +88,7 @@ const ButtonClient = () => {
         </Row>
         {colors.map(color => {
           return (
-            <Row key={color} className="pt-1 gap-1">
+            <Row key={color} className="pt-s g-s">
               <Button $color={color} style={style}>{color}</Button>
               <Button $color={color} $outline style={style}>{color}</Button>
               <span className={`pt-t fgc-${color}`}>{color}</span>

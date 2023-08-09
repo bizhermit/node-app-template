@@ -18,8 +18,8 @@ const SliderClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex-start p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -31,7 +31,7 @@ const SliderClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -89,7 +89,7 @@ const SliderClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-2">
+      <Row className="g-m">
         <Slider
           $tag="number"
           $dataItem={sample_number}
@@ -124,7 +124,7 @@ const SliderClient = () => {
         action="/api/form"
         method="post"
       >
-        <Row $vAlign="bottom" className="gap-1">
+        <Row $vAlign="bottom" className="g-s">
           <Slider
             $tag="form bind"
             name="slider-form-bind"

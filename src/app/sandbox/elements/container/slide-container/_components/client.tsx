@@ -21,8 +21,8 @@ const SlideContainerClient = () => {
   const [breadcrumbs, setBreadcrumbs] = useState(false);
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
-      <Row $vAlign="bottom" className="gap-1">
+    <div className="flex-start w-100 h-100 p-xs g-s">
+      <Row $vAlign="bottom" className="g-s">
         <RadioButtons
           $tag="slide destination"
           $source={[
@@ -137,7 +137,7 @@ const SlideContainerClient = () => {
           </div>
         </SlideContent>
         <SlideContent label={<Row $nowrap><CloudIcon /><span>Slide2</span></Row>}>
-          {/* <div className="box w-100 h-min100 c-tertiary p-1"> */}
+          {/* <div className="box w-100 h-min100 c-tertiary p-xs"> */}
           <h1>Slide 2</h1>
           {ArrayUtils.generateArray(20, (idx) => (
             <Row key={idx}>

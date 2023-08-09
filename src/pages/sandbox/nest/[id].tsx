@@ -6,11 +6,11 @@ import { NextPageWithLayout } from "~/_app";
 const Page: NextPageWithLayout = (props) => {
   const [id] = useQueryParam(props, "id");
   return (
-    <div className="p-2">
+    <div className="p-s">
       <Text>
         {id}
       </Text>
-      <div className="flex-start p-2">
+      <div className="flex-start p-s">
       <Text>
         pages directory.
       </Text>

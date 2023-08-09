@@ -19,8 +19,8 @@ const SplitContainerClient = () => {
   const [hide2, setHide2] = useState(false);
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
-      <Row $vAlign="bottom" className="gap-1">
+    <div className="flex-start w-100 h-100 p-xs g-s">
+      <Row $vAlign="bottom" className="g-s">
         <ToggleBox
           $tag="disabled"
           $value={disabled}

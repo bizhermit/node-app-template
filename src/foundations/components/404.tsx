@@ -15,7 +15,7 @@ const Page404: FC<Omit<HTMLAttributes<HTMLDivElement>, "children">> = (props) =>
   }, []);
 
   return (
-    <div {...attributes(props, "flex-center gap-1")}>
+    <div {...attributes(props, "flex-center g-s")}>
       <span className="bold">404&nbsp;|&nbsp;Not&nbsp;Found</span>
       <NextLink href="/">{url}</NextLink>
     </div>

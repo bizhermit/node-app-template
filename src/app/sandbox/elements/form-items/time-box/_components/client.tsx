@@ -18,8 +18,8 @@ const TimeBoxClient = () => {
   const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-    <div className="flex-start gap-1 p-1 w-100">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex-start g-s p-xs w-100">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -36,7 +36,7 @@ const TimeBoxClient = () => {
           $onChange={v => setDisallowInput(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -103,7 +103,7 @@ const TimeBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <TimeBox
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
@@ -126,7 +126,7 @@ const TimeBoxClient = () => {
           $onChange={v => console.log("string: ", v)}
         />
       </Row>
-      <Row $vAlign="top" className="gap-3">
+      <Row $vAlign="top" className="g-l">
         <TimeBox
           $tag="useState"
           $tagPosition="placeholder"
@@ -151,7 +151,7 @@ const TimeBoxClient = () => {
           $disallowInput={disallowInput}
         />
         <Form
-          className="flex-start gap-1"
+          className="flex-start g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

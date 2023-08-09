@@ -4,7 +4,7 @@ import EnvServer from "@/sandbox/env/_components/server";
 
 const Page = () => {
   return (
-    <div className="flex-stretch p-2 gap-2">
+    <div className="flex-stretch p-s g-m">
       <EnvServer />
       <Divider />
       <EnvClient />

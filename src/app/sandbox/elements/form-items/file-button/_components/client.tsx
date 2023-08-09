@@ -18,8 +18,8 @@ const FileButtonClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex-start p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -31,7 +31,7 @@ const FileButtonClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -99,7 +99,7 @@ const FileButtonClient = () => {
         $required
       />
       <Form
-        className="flex-start gap-1"
+        className="flex-start g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

@@ -6,16 +6,16 @@ import { colors, sizes } from "#/utilities/sandbox";
 
 const Page = () => {
   return (
-    <div className="flex-start gap-1 p-2">
-      <Row className="gap-1">
+    <div className="flex-start g-s p-s">
+      <Row className="g-s">
         <Label $size="xs" $color="danger">必須</Label>
         <TextBox />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <NumberBox />
         <Label $color="cool" $size="s">任意</Label>
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         {sizes.map(size => {
           return <Label key={size} $size={size}>{`Size: ${size}`}</Label>
         })}

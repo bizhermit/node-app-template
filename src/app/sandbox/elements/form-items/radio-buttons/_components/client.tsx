@@ -21,8 +21,8 @@ const RadioButtonsClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex-start p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -45,7 +45,7 @@ const RadioButtonsClient = () => {
           $onChange={v => setAppearance(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -184,7 +184,7 @@ const RadioButtonsClient = () => {
         }}
       />
       <Form
-        className="flex-start gap-1"
+        className="flex-start g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
@@ -215,7 +215,7 @@ const RadioButtonsClient = () => {
         />
         <Button type="submit">submit</Button>
       </Form>
-      <Row $vAlign="top" className="gap-1">
+      <Row $vAlign="top" className="g-s">
         <RadioButtons
           style={{ width: 200 }}
           $appearance={appearance}

@@ -12,8 +12,8 @@ const CardClient = () => {
   const [accordion, setAccordion] = useState(true);
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1">
+    <div className="flex-start p-xs w-100 h-100 g-s">
+      <Row className="g-s">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -32,7 +32,7 @@ const CardClient = () => {
       </Row>
       <Divider />
       <Card
-        className="w-100 r-2 e-4"
+        className="w-100 r-s e-4"
         // $opened={opened}
         $defaultOpened={false}
         // $defaultMount
@@ -51,9 +51,9 @@ const CardClient = () => {
         <Content />
         Footer
       </Card>
-      <Row className="flex-1 gap-2" $vAlign="stretch">
+      <Row className="flex-1 g-m" $vAlign="stretch">
         <Card
-          className="e-1 r-1"
+          className="e-1 r-xs"
           $color="main"
           // $opened={opened}
           $defaultOpened={false}
@@ -94,7 +94,7 @@ const Content: FC = () =>{
   }, []);
 
   return (
-    <div className="flex-center p-3 h-100 w-100 c-pure">
+    <div className="flex-center p-m h-100 w-100 c-pure">
       Content
     </div>
   )

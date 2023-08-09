@@ -21,8 +21,8 @@ const DatePickerClient = () => {
   const [buttonless, setButtonless] = useState(false);
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex-start p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -49,7 +49,7 @@ const DatePickerClient = () => {
           ]}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -116,7 +116,7 @@ const DatePickerClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <DatePicker
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
@@ -165,7 +165,7 @@ const DatePickerClient = () => {
           $buttonless={buttonless}
         />
       </Row>
-      <Row className="gap-1" $vAlign="top">
+      <Row className="g-s" $vAlign="top">
         <DatePicker
           $tag="useState"
           $disabled={disabled}
@@ -211,7 +211,7 @@ const DatePickerClient = () => {
         // $max="2022-12-10"
         />
         <Form
-          className="flex-start gap-1"
+          className="flex-start g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

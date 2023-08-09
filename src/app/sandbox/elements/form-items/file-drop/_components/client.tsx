@@ -18,8 +18,8 @@ const FileDropClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex-start p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -31,7 +31,7 @@ const FileDropClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -68,7 +68,7 @@ const FileDropClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <FileDrop
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
@@ -81,7 +81,7 @@ const FileDropClient = () => {
           style={{ height: 100, width: 100, }}
         />
       </Row>
-      <Row className="w-100 gap-1">
+      <Row className="w-100 g-s">
         <FileDrop
           $tag="useState"
           $disabled={disabled}

@@ -13,8 +13,8 @@ const BadgeClient = () => {
   const [size, setSize] = useState<Size>("m");
 
   return (
-    <div className="flex-start p-2 w-100 h-100 gap-1">
-      <Row className="gap-1">
+    <div className="flex-start p-s w-100 h-100 g-s">
+      <Row className="g-s">
         <Button $onClick={() => setCount(c => c+1)}>count up</Button>
         <Button $onClick={() => setCount(0)} $outline>reset</Button>
         <RadioButtons
@@ -26,7 +26,7 @@ const BadgeClient = () => {
         />
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <div className="anchor c-primary">
           <Badge
             className="c-base e-4 round"
@@ -46,7 +46,7 @@ const BadgeClient = () => {
           </Badge>
         </div>
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <div className="anchor c-primary">
           <Badge
             className="c-base e-4 round"

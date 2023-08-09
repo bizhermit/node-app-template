@@ -21,8 +21,8 @@ const TabContainerClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
-      <Row $vAlign="bottom" className="gap-1">
+    <div className="flex-start w-100 h-100 p-xs g-s">
+      <Row $vAlign="bottom" className="g-s">
         <RadioButtons
           $tag="tab position"
           $source={[

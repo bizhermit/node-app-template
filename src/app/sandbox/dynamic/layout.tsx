@@ -3,8 +3,8 @@ import Row from "#/components/elements/row";
 
 const DynamicRootLayout: LayoutFC = (props) => {
   return (
-    <div className="flex-stretch p-2">
-      <Row className="gap-2">
+    <div className="flex-stretch p-s">
+      <Row className="g-m">
         <NextLink href="/sandbox/dynamic/1">1</NextLink>
         <NextLink href="/sandbox/dynamic/2">2</NextLink>
         <NextLink href="/sandbox/dynamic/3">3</NextLink>

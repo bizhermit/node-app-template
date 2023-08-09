@@ -17,8 +17,8 @@ const ToggleBoxClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex-start p-xs w-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -30,7 +30,7 @@ const ToggleBoxClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -88,7 +88,7 @@ const ToggleBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-2">
+      <Row className="g-m">
         <ToggleBox
           $onChange={v => console.log("no item: ", v)}
         >
@@ -119,7 +119,7 @@ const ToggleBoxClient = () => {
           string
         </ToggleBox>
       </Row>
-      <Row $vAlign="top" className="gap-1">
+      <Row $vAlign="top" className="g-s">
         <ToggleBox
           $tag="useState"
           $value={value}
@@ -135,7 +135,7 @@ const ToggleBoxClient = () => {
           ToggleBox
         </ToggleBox>
         <Form
-          className="flex-start gap-1"
+          className="flex-start g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

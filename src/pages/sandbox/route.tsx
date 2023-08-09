@@ -5,7 +5,7 @@ import type { NextPageWithLayout } from "~/_app";
 
 const Page: NextPageWithLayout = () => {
   return (
-    <div className="flex-start p-2">
+    <div className="flex-start p-s">
       <Text>
         pages directory.
       </Text>

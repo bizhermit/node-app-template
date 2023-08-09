@@ -9,7 +9,7 @@ const Page = () => {
   const router = useRouter();
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex-start p-xs w-100 h-100 g-s">
       <Button
         $onClick={async (unlock) => {
           const res = await msg.alert("alert", { preventEscape: true });

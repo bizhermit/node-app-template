@@ -28,13 +28,13 @@ const Page = () => {
   const [response, setResponse] = useState<any>({});
 
   return (
-    <div className="flex-start p-1 gap-1 w-100">
+    <div className="flex-start p-xs g-s w-100">
       {process.ing && <Loading />}
       <GroupBox
         $caption="/fetch"
-        $bodyClassName="p-1"
+        $bodyClassName="p-xs"
       >
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             $onClick={async (unlock) => {
               await process(async () => {
@@ -119,10 +119,10 @@ const Page = () => {
       </GroupBox>
       <GroupBox
         $caption="/fetch formdata"
-        $bodyClassName="p-1"
+        $bodyClassName="p-xs"
       >
         <Form
-          className="flex-start gap-1"
+          className="flex-start g-s"
           $submitDataType="formData"
           $onSubmit={(formData, method) => {
             process(async () => {
@@ -156,7 +156,7 @@ const Page = () => {
               height: "10rem",
             }}
           />
-          <Row className="gap-1">
+          <Row className="g-s">
             <Button type="submit" formMethod="get">get</Button>
             <Button type="submit" formMethod="post">post</Button>
             <Button type="submit" formMethod="put">put</Button>
@@ -166,9 +166,9 @@ const Page = () => {
       </GroupBox>
       <GroupBox
         $caption="/pages/api"
-        $bodyClassName="p-1"
+        $bodyClassName="p-xs"
       >
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button $onClick={async (unlock) => {
             await process(async () => {
               const res = await api.get("/api/hello", {

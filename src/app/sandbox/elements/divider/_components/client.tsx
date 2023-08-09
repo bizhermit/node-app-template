@@ -6,19 +6,19 @@ import { colors } from "#/utilities/sandbox";
 
 const DividerClient = () => {
   return (
-    <div className="flex-stretch w-100 p-1">
+    <div className="flex-stretch w-100 p-xs">
       <h1>Divider</h1>
       <section>
         <h2>divider</h2>
-        <Divider className="p-1" />
-        <Divider className="p-1" $height={3} />
-        <Divider className="p-1" $align="right" />
+        <Divider className="p-xs" />
+        <Divider className="p-xs" $height={3} />
+        <Divider className="p-xs" $align="right" />
       </section>
       <section>
         <h2>text</h2>
-        <Divider className="p-1" $align="left">left</Divider>
-        <Divider className="p-1" $align="center">center</Divider>
-        <Divider className="p-1" $align="right">right</Divider>
+        <Divider className="p-xs" $align="left">left</Divider>
+        <Divider className="p-xs" $align="center">center</Divider>
+        <Divider className="p-xs" $align="right">right</Divider>
         <Divider>
           <TextBox placeholder="react node" />
         </Divider>

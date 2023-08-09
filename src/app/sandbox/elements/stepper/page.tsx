@@ -8,13 +8,13 @@ import { ReactNode } from "react";
 const Page = () => {
   return (
     <>
-      <div className="flex-stretch w-100 p-4">
+      <div className="flex-stretch w-100 p-l">
         <Stepper
           className="w-100"
           $step={3}
           children={ArrayUtils.generateArray(10, idx => {
             return (
-              <Row key={idx} className="gap-1">
+              <Row key={idx} className="g-s">
                 <CloudIcon />
                 <span className="box pt-t">C-{idx}</span>
               </Row>

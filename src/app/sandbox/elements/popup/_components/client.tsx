@@ -30,7 +30,7 @@ const Component: FC = () => {
         show
       </Button>
       <Popup
-        className="e-4 overflow"
+        className="es-4 ov-auto"
         $show={show}
         $onToggle={(v) => {
           setShow(v);
@@ -47,9 +47,9 @@ const Component: FC = () => {
         // $animationDirection="horizontal"
         // $animationDirection="vertical"
       >
-        <div className="flex-start c-pure r-2 p-2">
+        <div className="flex-start c-pure r-m p-s">
           <Form
-            className="flex-start p-1 gap-1 border"
+            className="flex-start p-xs g-s border"
             action="/api/form"
             method="get"
           >
@@ -66,7 +66,7 @@ const Component: FC = () => {
             <DateBox
               name="date"
             />
-            <Row $hAlign="center" className="gap-1 w-100">
+            <Row $hAlign="center" className="g-s w-100">
               <Button type="submit">submit</Button>
               <Button
                 $onClick={() => {

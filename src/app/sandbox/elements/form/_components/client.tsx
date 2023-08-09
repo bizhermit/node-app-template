@@ -26,12 +26,12 @@ const FormClient = () => {
   const formRef = useFormRef();
 
   return (
-    <div className="flex-stretch w-100 p-1">
+    <div className="flex-stretch w-100 p-xs">
       <h1>Form</h1>
-      <section className="flex-stretch gap-1">
+      <section className="flex-stretch g-s">
         <h2>submit/reset/button</h2>
         <Form
-          className="flex-start gap-1"
+          className="flex-start g-s"
           $bind={formBind}
           // $bind
           action="/api/form"
@@ -70,7 +70,7 @@ const FormClient = () => {
             // return false;
           }}
         >
-          <section className="flex-start gap-1">
+          <section className="flex-start g-s">
             <h3>form item</h3>
             <Row>
               <TextBox
@@ -119,14 +119,14 @@ const FormClient = () => {
                 );
               }))}
             </div> */}
-            <Row className="gap-1">
+            <Row className="g-s">
               <Button type="submit">submit / show form bind</Button>
               <Button type="reset">reset</Button>
               <Button $onClick={() => {
                 console.log(formBind);
               }}>show form bind</Button>
             </Row>
-            <Row className="gap-1">
+            <Row className="g-s">
               <Button
                 $onClick={() => {
                   setCount(c => c + 1);
@@ -153,7 +153,7 @@ const FormClient = () => {
             </Row>
           </section>
           <Divider />
-          <section className="flex-start gap-1">
+          <section className="flex-start g-s">
             <h3>no form item</h3>
             <Row>
               <TextBox
@@ -173,7 +173,7 @@ const FormClient = () => {
                 $required
               />
             </Row>
-            <Row className="gap-1">
+            <Row className="g-s">
               <Button
                 $onClick={() => {
                   console.log(bind);
@@ -186,15 +186,15 @@ const FormClient = () => {
           </section>
         </Form>
         <Divider />
-        <Row $vAlign="top" className="gap-3">
+        <Row $vAlign="top" className="g-l">
           <div className="flex-start">
-            <h3 className="mt-1">bind data</h3>
+            <h3 className="mt-xs">bind data</h3>
             <StructView
               $value={viewBind}
             />
           </div>
           <div className="flex-start">
-            <h3 className="mt-1">form bind data</h3>
+            <h3 className="mt-xs">form bind data</h3>
             <StructView
               $value={viewFormBind}
             />

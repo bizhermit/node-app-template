@@ -11,7 +11,7 @@ const NavigationClient = () => {
   const navigation = useNavigation();
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
+    <div className="flex-start w-100 h-100 p-xs g-s">
       <StructView
         $keys={[
           { key: "position" },
@@ -23,7 +23,7 @@ const NavigationClient = () => {
         $value={navigation}
       />
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button $onClick={() => navigation.setPosition("default")}>default</Button>
         <RadioButtons<NavigationPosition>
           $source={[
@@ -41,7 +41,7 @@ const NavigationClient = () => {
           $tag="navigation position"
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button $onClick={() => navigation.setMode("default")}>default</Button>
         <RadioButtons<NavigationMode>
           $source={[
@@ -60,7 +60,7 @@ const NavigationClient = () => {
           $tag="navigation mode"
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button $onClick={() => navigation.setHeaderVisible("default")}>default</Button>
         <RadioButtons<NavigationHeaderVisible>
           $source={[
@@ -76,7 +76,7 @@ const NavigationClient = () => {
           $tag="header"
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button $onClick={() => navigation.setFooterVisible("default")}>default</Button>
         <RadioButtons<NavigationFooterVisible>
           $source={[
@@ -94,7 +94,7 @@ const NavigationClient = () => {
         />
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             navigation.toggle(true);
