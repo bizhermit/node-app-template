@@ -1,7 +1,6 @@
 import "#/styles/root.scss";
-import "#/styles/globals.scss";
+import "#/styles/global.scss";
 import "#/styles/color.scss";
-import "#/styles/utility.scss";
 import RootProvider from "@/_components/root-provider";
 
 export const metadata = {

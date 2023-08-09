@@ -2,11 +2,11 @@
 
 :root {
   --base: #{var.$base};
-  --b-xs: #{var.$base * 1};
+  --b-sx: #{var.$base * 1};
   --b-s: #{var.$base * 2};
   --b-m: #{var.$base * 4};
   --b-l: #{var.$base * 6};
-  --b-xl: #{var.$base * 8};
+  --b-lx: #{var.$base * 8};
   --size: #{var.$size};
   --font-size: #{var.$fontSize};
   --icon-size: #{var.$iconSize};
