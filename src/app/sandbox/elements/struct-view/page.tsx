@@ -83,7 +83,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex-start w-100 p-xs g-s">
+    <div className="flex w-100 p-xs g-s">
       <Row className="g-s" $vAlign="top">
         <StructView
           style={{ width: 350 }}

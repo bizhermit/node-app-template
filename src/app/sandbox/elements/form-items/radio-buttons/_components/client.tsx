@@ -21,7 +21,7 @@ const RadioButtonsClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-xs w-100 h-100 g-s">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -184,7 +184,7 @@ const RadioButtonsClient = () => {
         }}
       />
       <Form
-        className="flex-start g-s"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

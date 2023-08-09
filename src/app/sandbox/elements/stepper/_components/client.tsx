@@ -17,7 +17,7 @@ const StepperClient = () => {
   const [size, setSize] = useState<Size>("m");
 
   return (
-    <div className="flex-start w-100 h-100 p-xs g-s">
+    <div className="flex w-100 h-100 p-xs g-s">
       <Row>
         <NumberBox
           $required

@@ -303,12 +303,13 @@ $value in $radiusSizeMap {
 .flex {
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
 
   &.row {
     flex-direction: row;
 
     // &.top {
-    //   align-items: flex-start;
+    //   align-items: flex;
     // }
 
     &.middle {
@@ -320,7 +321,7 @@ $value in $radiusSizeMap {
     }
 
     // &.left {
-    //   justify-content: flex-start;
+    //   justify-content: flex;
     // }
 
     &.center {
@@ -333,12 +334,11 @@ $value in $radiusSizeMap {
   }
 
   &.column {
-    flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
 
     &.top {
-      justify-content: flex-start;
+      justify-content: flex;
     }
 
     &.middle {
@@ -350,7 +350,7 @@ $value in $radiusSizeMap {
     // }
 
     &.left {
-      align-items: flex-start;
+      align-items: flex;
     }
 
     &.center {
@@ -377,11 +377,11 @@ $value in $radiusSizeMap {
   min-height: 0;
 }
 
-// .flex-11 {
-//   flex: 1 1 0rem;
-//   min-width: 0;
-//   min-height: 0;
-// }
+.flex-11 {
+  flex: 1 1 0rem;
+  min-width: 0;
+  min-height: 0;
+}
 
 // .flex-10 {
 //   flex: 1 0 0rem;

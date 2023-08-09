@@ -19,7 +19,7 @@ const SplitContainerClient = () => {
   const [hide2, setHide2] = useState(false);
 
   return (
-    <div className="flex-start w-100 h-100 p-xs g-s">
+    <div className="flex w-100 h-100 p-xs g-s">
       <Row $vAlign="bottom" className="g-s">
         <ToggleBox
           $tag="disabled"
@@ -58,7 +58,7 @@ const SplitContainerClient = () => {
       </Row>
       <Divider />
       <SplitContainer
-        className={`w-100${scroll ? " flex-1_1_0" : ""}`}
+        className={`w-100${scroll ? " flex-11" : ""}`}
         $disabled={disabled}
         $direction={direction}
         $reverse={reverse}

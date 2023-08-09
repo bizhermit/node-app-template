@@ -63,7 +63,7 @@ $space: 0.3rem;
   position: relative;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: flex-start;
+  justify-content: flex;
   align-items: center;
 
   &::before {

@@ -18,7 +18,7 @@ const FileDropClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-xs w-100 h-100 g-s">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -101,7 +101,7 @@ const FileDropClient = () => {
             return (
               <span
                 key={file.name}
-                style={{ alignSelf: "flex-start" }}
+                style={{ alignSelf: "flex" }}
               >
                 {file.name}
               </span>

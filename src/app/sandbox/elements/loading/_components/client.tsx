@@ -56,7 +56,7 @@ const LoadingClient = () => {
             $color="main"
             $mask
           >
-            <div className="flex-center h-100">
+            <div className="flex column center middle h-100">
               <Button $onClick={() => setShow(false)}>hide</Button>
             </div>
           </Loading>

@@ -5,8 +5,8 @@ $borderWidth: 0.1rem;
   position: relative;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: flex;
+  align-items: flex;
   border-radius: var(--radius);
 }
 

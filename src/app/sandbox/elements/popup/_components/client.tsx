@@ -19,7 +19,7 @@ const Component: FC = () => {
   const anchorRef = useRef<HTMLButtonElement>(null!);
 
   return (
-    <div className="flex-center w-100 h-100">
+    <div className="flex column center middle w-100 h-100">
       <Button
         // className="mr-auto mb-auto"
         ref={anchorRef}
@@ -47,9 +47,9 @@ const Component: FC = () => {
         // $animationDirection="horizontal"
         // $animationDirection="vertical"
       >
-        <div className="flex-start c-pure r-m p-s">
+        <div className="flex c-pure r-m p-s">
           <Form
-            className="flex-start p-xs g-s border"
+            className="flex p-xs g-s border"
             action="/api/form"
             method="get"
           >

@@ -21,7 +21,7 @@ const DatePickerClient = () => {
   const [buttonless, setButtonless] = useState(false);
 
   return (
-    <div className="flex-start p-xs w-100 h-100 g-s">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -211,7 +211,7 @@ const DatePickerClient = () => {
         // $max="2022-12-10"
         />
         <Form
-          className="flex-start g-s"
+          className="flex g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

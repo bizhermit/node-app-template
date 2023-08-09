@@ -19,7 +19,7 @@ const TextBoxClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start p-xs g-s">
+    <div className="flex p-xs g-s">
       <Row className="g-s">
         <ToggleBox
           $tag="disabled"
@@ -225,7 +225,7 @@ const TextBoxClient = () => {
       </section>
       <section>
         <h2>message position</h2>
-        <div className="flex-start g-m">
+        <div className="flex g-m">
           <TextBox
             $disabled={disabled}
             $readOnly={readOnly}

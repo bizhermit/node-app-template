@@ -6,7 +6,7 @@ import Row from "#/components/elements/row";
 
 const Page = () => {
   return (
-    <div className="flex-start p-s w-100 h-100 fgc-danger bdc-pure g-m">
+    <div className="flex p-s w-100 h-100 fgc-danger bdc-pure g-m">
       <Row className="g-m">
         <Button $icon={<CrossIcon />} $outline $size="xs">XS Button</Button>
         <Button $icon={<CrossIcon />} $outline $size="s">S Button</Button>
@@ -15,7 +15,7 @@ const Page = () => {
         <Button $icon={<CrossIcon />} $outline $size="xl">XL Button</Button>
       </Row>
       <div
-        className="flex-start p-s w-100 fgc-danger bgc-pure g-s"
+        className="flex p-s w-100 fgc-danger bgc-pure g-s"
       >
         {[
           PlusIcon,

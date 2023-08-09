@@ -11,7 +11,7 @@ const NavigationClient = () => {
   const navigation = useNavigation();
 
   return (
-    <div className="flex-start w-100 h-100 p-xs g-s">
+    <div className="flex w-100 h-100 p-xs g-s">
       <StructView
         $keys={[
           { key: "position" },

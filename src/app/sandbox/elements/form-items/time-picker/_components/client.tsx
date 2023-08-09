@@ -17,7 +17,7 @@ const TimePickerClient = () => {
   const [formBind, setFormBind] = useState<Struct>({ "pair-time": "12:00" });
 
   return (
-    <div className="flex-start g-s p-xs w-100">
+    <div className="flex g-s p-xs w-100">
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -148,7 +148,7 @@ const TimePickerClient = () => {
           }}
         />
         <Form
-          className="flex-start g-s"
+          className="flex g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

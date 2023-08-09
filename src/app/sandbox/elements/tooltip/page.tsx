@@ -3,7 +3,7 @@ import Tooltip from "#/components/elements/tooltip";
 
 const Page = () => {
   return (
-    <div className="flex-stretch p-xs w-100 h-100">
+    <div className="flex column p-xs w-100 h-100">
       <TextBox
         className="ml-auto"
         $required

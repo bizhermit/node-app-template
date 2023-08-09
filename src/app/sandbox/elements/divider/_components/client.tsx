@@ -6,7 +6,7 @@ import { colors } from "#/utilities/sandbox";
 
 const DividerClient = () => {
   return (
-    <div className="flex-stretch w-100 p-xs">
+    <div className="flex column w-100 p-xs">
       <h1>Divider</h1>
       <section>
         <h2>divider</h2>

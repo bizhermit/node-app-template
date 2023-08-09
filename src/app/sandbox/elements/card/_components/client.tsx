@@ -12,7 +12,7 @@ const CardClient = () => {
   const [accordion, setAccordion] = useState(true);
 
   return (
-    <div className="flex-start p-xs w-100 h-100 g-s">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s">
         <ToggleBox
           $tag="disabled"
@@ -94,7 +94,7 @@ const Content: FC = () =>{
   }, []);
 
   return (
-    <div className="flex-center p-m h-100 w-100 c-pure">
+    <div className="flex column center middle p-m h-100 w-100 c-pure">
       Content
     </div>
   )

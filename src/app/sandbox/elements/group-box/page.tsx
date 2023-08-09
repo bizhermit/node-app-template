@@ -3,7 +3,7 @@ import Row from "#/components/elements/row";
 
 const Page = () => {
   return (
-    <div className="flex-start w-100 h-100 p-xs g-s">
+    <div className="flex w-100 h-100 p-xs g-s">
       <Row className="g-s">
         <GroupBox
           $caption="GroupBox"

@@ -8,7 +8,7 @@ import { ReactNode } from "react";
 const Page = () => {
   return (
     <>
-      <div className="flex-stretch w-100 p-l">
+      <div className="flex column w-100 p-l">
         <Stepper
           className="w-100"
           $step={3}

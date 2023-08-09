@@ -5,7 +5,7 @@
   box-sizing: border-box;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: flex-start;
+  justify-content: flex;
   align-items: stretch;
 }
 
@@ -26,7 +26,7 @@
     &.root {
       flex-direction: row;
       flex-wrap: wrap;
-      align-items: flex-start;
+      align-items: flex;
     }
 
     .node {
@@ -39,7 +39,7 @@
   box-sizing: border-box;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: flex-start;
+  justify-content: flex;
   align-items: stretch;
   overflow: visible;
   flex: 1 0 auto;

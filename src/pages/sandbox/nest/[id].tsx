@@ -10,7 +10,7 @@ const Page: NextPageWithLayout = (props) => {
       <Text>
         {id}
       </Text>
-      <div className="flex-start p-s">
+      <div className="flex p-s">
       <Text>
         pages directory.
       </Text>

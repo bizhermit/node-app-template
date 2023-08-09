@@ -28,7 +28,7 @@ const Page = () => {
   const [response, setResponse] = useState<any>({});
 
   return (
-    <div className="flex-start p-xs g-s w-100">
+    <div className="flex p-xs g-s w-100">
       {process.ing && <Loading />}
       <GroupBox
         $caption="/fetch"
@@ -122,7 +122,7 @@ const Page = () => {
         $bodyClassName="p-xs"
       >
         <Form
-          className="flex-start g-s"
+          className="flex g-s"
           $submitDataType="formData"
           $onSubmit={(formData, method) => {
             process(async () => {

@@ -21,7 +21,7 @@ const SlideContainerClient = () => {
   const [breadcrumbs, setBreadcrumbs] = useState(false);
 
   return (
-    <div className="flex-start w-100 h-100 p-xs g-s">
+    <div className="flex w-100 h-100 p-xs g-s">
       <Row $vAlign="bottom" className="g-s">
         <RadioButtons
           $tag="slide destination"
@@ -73,7 +73,7 @@ const SlideContainerClient = () => {
       </Row>
       <Divider />
       <SlideContainer
-        className={`w-100${scroll ? " flex-1_1_0" : ""}`}
+        className={`w-100${scroll ? " flex-11" : ""}`}
         onWheel={(e) => {
           switch (direction) {
             case "vertical":

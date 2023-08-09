@@ -66,7 +66,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex-start p-s g-m">
+    <div className="flex p-s g-m">
       {process.ing && <Loading />}
       <Text>processing: {String(process.ing)}</Text>
       <Text>last: {last}</Text>

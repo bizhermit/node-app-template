@@ -17,7 +17,7 @@ const PasswordBoxClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-xs g-s">
+    <div className="flex p-xs g-s">
       <Row className="g-s">
         <ToggleBox
           $tag="disabled"

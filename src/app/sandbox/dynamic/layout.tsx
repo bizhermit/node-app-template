@@ -3,7 +3,7 @@ import Row from "#/components/elements/row";
 
 const DynamicRootLayout: LayoutFC = (props) => {
   return (
-    <div className="flex-stretch p-s">
+    <div className="flex column p-s">
       <Row className="g-m">
         <NextLink href="/sandbox/dynamic/1">1</NextLink>
         <NextLink href="/sandbox/dynamic/2">2</NextLink>
@@ -16,7 +16,7 @@ const DynamicRootLayout: LayoutFC = (props) => {
         <NextLink href="/sandbox/dynamic/xxx?hoge=2">xxx</NextLink>
         <NextLink href="/sandbox/dynamic">index</NextLink>
       </Row>
-      <div className="flex-stretch">
+      <div className="flex column">
         {props.children}
       </div>
     </div>

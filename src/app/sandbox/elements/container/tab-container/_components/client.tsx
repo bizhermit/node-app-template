@@ -21,7 +21,7 @@ const TabContainerClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start w-100 h-100 p-xs g-s">
+    <div className="flex w-100 h-100 p-xs g-s">
       <Row $vAlign="bottom" className="g-s">
         <RadioButtons
           $tag="tab position"
@@ -51,7 +51,7 @@ const TabContainerClient = () => {
       <Divider />
       <TabContainer<TabKey>
         ref={ref}
-        className={`w-100${tabScroll ? " flex-1_1_0" : ""}`}
+        className={`w-100${tabScroll ? " flex-11" : ""}`}
         $tabPosition={position}
         $overlap={overlap}
         // $bodyColor="pure"

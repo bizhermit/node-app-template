@@ -20,7 +20,7 @@ const DateBoxClient = () => {
   const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-    <div className="flex-start p-xs w-100 h-100 g-s">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -167,7 +167,7 @@ const DateBoxClient = () => {
         $disallowInput={disallowInput}
       />
       <Form
-        className="flex-start g-s"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
@@ -187,7 +187,7 @@ const DateBoxClient = () => {
               disallowSame: true,
             }}
           />
-          <span className="h-size pt-t flex-center">～</span>
+          <span className="h-size pt-t flex column center middle">～</span>
           <DateBox
             $type={type}
             $tag="pair"

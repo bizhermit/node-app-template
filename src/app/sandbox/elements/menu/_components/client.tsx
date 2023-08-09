@@ -15,7 +15,7 @@ const MenuClient = () => {
   const [horizontal, setHorizontal] = useState(false);
 
   return (
-    <div className="flex-start p-xs h-100 w-100 g-s">
+    <div className="flex p-xs h-100 w-100 g-s">
       <Row>
         <ToggleBox
           $tag="horizontal"
@@ -46,7 +46,7 @@ const MenuClient = () => {
         $animationDirection={horizontal ? "horizontal" : "vertical"}
       >
         <div
-          className="flex-stretch"
+          className="flex column"
           style={{ width: 500 }}
         >
           <Menu

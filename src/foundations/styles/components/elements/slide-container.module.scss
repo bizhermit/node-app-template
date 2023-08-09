@@ -232,7 +232,7 @@ $vTransitionTime: 0.5s;
   min-height: var(--size);
   display: flex;
   justify-content: stretch;
-  align-items: flex-start;
+  align-items: flex;
   flex-wrap: nowrap;
 
   @include mixins.scrollOverlay;

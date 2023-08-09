@@ -6,7 +6,7 @@ import { colors, sizes } from "#/utilities/sandbox";
 
 const Page = () => {
   return (
-    <div className="flex-start g-s p-s">
+    <div className="flex g-s p-s">
       <Row className="g-s">
         <Label $size="xs" $color="danger">必須</Label>
         <TextBox />

@@ -6,7 +6,7 @@
   flex-wrap: wrap;
 
   &[data-h="left"] {
-    justify-content: flex-start;
+    justify-content: flex;
   }
 
   &[data-h="center"] {
@@ -34,7 +34,7 @@
   }
 
   &[data-v="top"] {
-    align-items: flex-start;
+    align-items: flex;
   }
 
   &[data-v="middle"] {

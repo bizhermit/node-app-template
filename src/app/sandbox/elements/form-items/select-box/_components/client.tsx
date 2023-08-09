@@ -21,7 +21,7 @@ const SelectBoxClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start p-xs w-100 g-s">
+    <div className="flex p-xs w-100 g-s">
       <div style={{ height: "100vh"}}></div>
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
@@ -200,7 +200,7 @@ const SelectBoxClient = () => {
         $disallowInput={disallowInput}
       />
       <Form
-        className="flex-start g-s"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

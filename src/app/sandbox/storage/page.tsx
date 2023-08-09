@@ -14,7 +14,7 @@ const Page = () => {
   const local = useLocalState("local", () => 3);
 
   return (
-    <div className="flex-stretch p-xs">
+    <div className="flex column p-xs">
       <Row>
         <ToggleBox
           $value={autoSave}

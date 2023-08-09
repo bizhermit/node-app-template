@@ -14,7 +14,7 @@ const style: CSSProperties = {
 
 const ButtonClient = () => {
   return (
-    <div className="flex-start p-xs">
+    <div className="flex p-xs">
       <h1>Button</h1>
       <section>
         <h2>click event</h2>

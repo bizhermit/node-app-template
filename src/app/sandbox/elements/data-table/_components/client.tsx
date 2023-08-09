@@ -145,7 +145,7 @@ const DataTableClient = () => {
   const [perPage, setPerPage] = useState(10);
 
   return (
-    <div className="flex-start w-100 h-100 g-s p-xs">
+    <div className="flex w-100 h-100 g-s p-xs">
       <Row className="g-s">
         <Row className="g-s">
           <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>

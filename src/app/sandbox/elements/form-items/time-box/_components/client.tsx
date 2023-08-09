@@ -18,7 +18,7 @@ const TimeBoxClient = () => {
   const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-    <div className="flex-start g-s p-xs w-100">
+    <div className="flex g-s p-xs w-100">
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -151,7 +151,7 @@ const TimeBoxClient = () => {
           $disallowInput={disallowInput}
         />
         <Form
-          className="flex-start g-s"
+          className="flex g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

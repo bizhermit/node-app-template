@@ -7,7 +7,7 @@ import Row from "#/components/elements/row";
 
 const Page = () => {
   return (
-    <div className="flex-start p-xs g-m w-100">
+    <div className="flex p-xs g-m w-100">
       <NextLink href="/sandbox/elements/link">next link</NextLink>
       <NextLink href="https://bizhermit.com">normal link</NextLink>
       <NextLink>no link</NextLink>
@@ -26,7 +26,7 @@ const Page = () => {
       <LinkButton>
         link button (no href)
       </LinkButton>
-      <Form className="flex-center w-100">
+      <Form className="flex column center middle w-100">
         <Row className="g-m w-100">
           <CheckBox $required />
           <LinkButton href="https://bizhermit.com" $form className="flex-1">

@@ -20,7 +20,7 @@ const ElectronicSignatureClient = () => {
   const [buttonsPosition, setButtonsPosition] = useState<"hide" | "top" | "left" | "bottom" | "right">();
 
   return (
-    <div className="flex-start h-100 w-100 p-xs g-s">
+    <div className="flex h-100 w-100 p-xs g-s">
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -123,7 +123,7 @@ const ElectronicSignatureClient = () => {
           $required
         />
         <Form
-          className="flex-start g-s"
+          className="flex g-s"
           $disabled={disabled}
           $readOnly={readOnly}
           $bind={formBind}
