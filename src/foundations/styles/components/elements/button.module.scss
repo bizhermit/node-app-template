@@ -57,6 +57,7 @@
 
   @each $size in var.$sizes {
     &[data-size="#{$size}"] {
+      --is: var(--is-#{$size});
       font-size: var(--fs-#{$size});
       min-width: var(--cs-#{$size});
       height: var(--cs-#{$size});
@@ -74,13 +75,6 @@
         >.icon {
           &:not(:only-child) {
             min-width: calc(var(--cs-#{$size}));
-          }
-
-          &>:global(.icon) {
-            &[height="0"] {
-              width: var(--fs-#{$size});
-              height: var(--fs-#{$size});
-            }
           }
         }
       }

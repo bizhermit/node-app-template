@@ -11,6 +11,7 @@
 @each $size in var.$sizes {
   .f-#{$size} {
     font-size: var(--fs-#{$size}) !important;
+    --is: var(--is-#{$size});
   }
 }
 
