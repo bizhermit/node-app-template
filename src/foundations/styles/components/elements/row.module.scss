@@ -1,4 +1,4 @@
-.wrap {
+.main {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -6,7 +6,7 @@
   flex-wrap: wrap;
 
   &[data-h="left"] {
-    justify-content: flex;
+    justify-content: flex-start;
   }
 
   &[data-h="center"] {
@@ -34,7 +34,7 @@
   }
 
   &[data-v="top"] {
-    align-items: flex;
+    align-items: flex-start;
   }
 
   &[data-v="middle"] {
