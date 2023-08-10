@@ -24,7 +24,7 @@
     border: none;
     background: var(--c-pure);
     color: var(--c-pure_);
-    padding: 1rem;
+    padding: var(--b-m);
     border-radius: var(--radius);
     min-width: calc(var(--cs-m) * 9);
     max-height: 100vh;
@@ -43,7 +43,9 @@
     align-items: center;
     border-radius: var(--radius);
     font-weight: bold;
-    padding: 1rem 2rem;
+    min-height: var(--cs-m);
+    padding-left: var(--b-m);
+    padding-right: var(--b-m);
   }
 
   .body {
@@ -61,7 +63,7 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 2rem;
+    padding: var(--b-m);
     flex: 1 1 0rem;
   }
 
@@ -71,8 +73,8 @@
     flex-flow: row nowrap;
     justify-content: flex-end;
     align-items: center;
-    gap: 1rem;
-    padding: 0 1rem;
+    gap: var(--b-m);
+    padding-left: var(--b-m);
   }
 
   .mask1,

@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import Style from "#/styles/hooks/message-box.module.scss";
 import useToggleAnimation from "#/hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "#/components/utilities/attributes";
+import Text from "#/components/elements/text";
 
 type ShowOptions = {
   preventEscape?: boolean;
@@ -165,7 +166,9 @@ const MessageBoxContent: FC<MessageBoxProps & {
     <>
       {props.header != null &&
         <div className={joinClassNames(Style.header, props.color ? `c-${props.color}` : "")}>
-          {props.header}
+          <Text>
+            {props.header}
+          </Text>
         </div>
       }
       <div className={Style.body}>
