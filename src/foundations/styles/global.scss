@@ -4,12 +4,8 @@
 /** font-size                                        **/
 /**==================================================**/
 
-// .f {
-//   font-size: var(--fs-m);
-// }
-
 @each $size in var.$sizes {
-  .f-#{$size} {
+  .fs-#{$size} {
     font-size: var(--fs-#{$size}) !important;
     --is: var(--is-#{$size});
   }
@@ -23,15 +19,15 @@
   font-weight: bold;
 }
 
-.left {
+.align-left {
   text-align: left;
 }
 
-.center {
+.align-center {
   text-align: center;
 }
 
-.right {
+.align-right {
   text-align: right;
 }
 
@@ -39,36 +35,36 @@
 /** width / height                                   **/
 /**==================================================**/
 
-.w {
-  width: var(--cs-m);
+.w-m {
+  width: var(--cs-m) !important;
 }
 
 .w-100 {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-max100 {
-  max-width: 100%;
+  max-width: 100% !important;
 }
 
 .w-min100 {
-  min-width: 100%;
+  min-width: 100% !important;
 }
 
-.h {
-  height: var(--cs-m);
+.h-m {
+  height: var(--cs-m) !important;
 }
 
 .h-100 {
-  height: 100%;
+  height: 100% !important;
 }
 
 // .h-max100 {
-//   max-height: 100%;
+//   max-height: 100% !important;
 // }
 
 // .h-min100 {
-//   min-height: 100%;
+//   min-height: 100% !important;
 // }
 
 /**==================================================**/
@@ -76,94 +72,94 @@
 /**==================================================**/
 
 // .mt-auto {
-//   margin-top: auto;
+//   margin-top: auto !important;
 // }
 
 // .mb-auto {
-//   margin-bottom: auto;
+//   margin-bottom: auto !important;
 // }
 
 .ml-auto {
-  margin-left: auto;
+  margin-left: auto !important;
 }
 
 .mr-auto {
-  margin-right: auto;
+  margin-right: auto !important;
 }
 
 // .mx-auto {
-//   margin-left: auto;
-//   margin-right: auto;
+//   margin-left: auto !important;
+//   margin-right: auto !important;
 // }
 
 // .my-auto {
-//   margin-top: auto;
-//   margin-bottom: auto;
+//   margin-top: auto !important;
+//   margin-bottom: auto !important;
 // }
 
 // .m {
-//   margin: var(--b-m);
+//   margin: var(--b-m) !important;
 // }
 
 @each $size in var.$sizes {
   // .m-#{$size} {
-  //   margin: var(--b-#{$size});
+  //   margin: var(--b-#{$size}) !important;
   // }
 
   // .mt-#{$size} {
-  //   margin-top: var(--b-#{$size});
+  //   margin-top: var(--b-#{$size}) !important;
   // }
 
   // .mb-#{$size} {
-  //   margin-bottom: var(--b-#{$size});
+  //   margin-bottom: var(--b-#{$size}) !important;
   // }
 
   // .ml-#{$size} {
-  //   margin-left: var(--b-#{$size});
+  //   margin-left: var(--b-#{$size}) !important;
   // }
 
   // .mr-#{$size} {
-  //   margin-right: var(--b-#{$size});
+  //   margin-right: var(--b-#{$size}) !important;
   // }
 
   // .mx-#{$size} {
-  //   margin-left: var(--b-#{$size});
-  //   margin-right: var(--b-#{$size});
+  //   margin-left: var(--b-#{$size}) !important;
+  //   margin-right: var(--b-#{$size}) !important;
   // }
 
   // .my-#{$size} {
-  //   margin-top: var(--b-#{$size});
-  //   margin-bottom: var(--b-#{$size});
+  //   margin-top: var(--b-#{$size}) !important;
+  //   margin-bottom: var(--b-#{$size}) !important;
   // }
 
   // .m-#{$size}-m {
-  //   margin: calc(var(--b-#{$size}) * -1);
+  //   margin: calc(var(--b-#{$size}) * -1) !important;
   // }
 
   // .mt-#{$size}-m {
-  //   margin-top: calc(var(--b-#{$size}) * -1);
+  //   margin-top: calc(var(--b-#{$size}) * -1) !important;
   // }
 
   // .mb-#{$size}-m {
-  //   margin-bottom: calc(var(--b-#{$size}) * -1);
+  //   margin-bottom: calc(var(--b-#{$size}) * -1) !important;
   // }
 
   // .ml-#{$size}-m {
-  //   margin-left: calc(var(--b-#{$size}) * -1);
+  //   margin-left: calc(var(--b-#{$size}) * -1) !important;
   // }
 
   // .mr-#{$size}-m {
-  //   margin-right: calc(var(--b-#{$size}) * -1);
+  //   margin-right: calc(var(--b-#{$size}) * -1) !important;
   // }
 
   // .mx-#{$size}-m {
-  //   margin-left: calc(var(--b-#{$size}) * -1);
-  //   margin-right: calc(var(--b-#{$size}) * -1);
+  //   margin-left: calc(var(--b-#{$size}) * -1) !important;
+  //   margin-right: calc(var(--b-#{$size}) * -1) !important;
   // }
 
   // .my-#{$size}-m {
-  //   margin-top: calc(var(--b-#{$size}) * -1);
-  //   margin-bottom: calc(var(--b-#{$size}) * -1);
+  //   margin-top: calc(var(--b-#{$size}) * -1) !important;
+  //   margin-bottom: calc(var(--b-#{$size}) * -1) !important;
   // }
 }
 
@@ -175,39 +171,35 @@
   padding-top: var(--pt-t);
 }
 
-.p {
-  padding: var(--b-m);
-}
-
 @each $size in var.$sizes {
   .p-#{$size} {
-    padding: var(--b-#{$size});
+    padding: var(--b-#{$size}) !important;
   }
 
   .pt-#{$size} {
-    padding-top: var(--b-#{$size});
+    padding-top: var(--b-#{$size}) !important;
   }
 
   .pb-#{$size} {
-    padding-bottom: var(--b-#{$size});
+    padding-bottom: var(--b-#{$size}) !important;
   }
 
   // .pl-#{$size} {
-  //   padding-left: var(--b-#{$size});
+  //   padding-left: var(--b-#{$size}) !important;
   // }
 
   // .pr-#{$size} {
-  //   padding-right: var(--b-#{$size});
+  //   padding-right: var(--b-#{$size}) !important;
   // }
 
   .px-#{$size} {
-    padding-left: var(--b-#{$size});
-    padding-right: var(--b-#{$size});
+    padding-left: var(--b-#{$size}) !important;
+    padding-right: var(--b-#{$size}) !important;
   }
 
   .py-#{$size} {
-    padding-top: var(--b-#{$size});
-    padding-bottom: var(--b-#{$size});
+    padding-top: var(--b-#{$size}) !important;
+    padding-bottom: var(--b-#{$size}) !important;
   }
 }
 
@@ -216,7 +208,7 @@
 /**==================================================**/
 
 .r-max {
-  border-radius: 9999px;
+  border-radius: 9999px !important;
 }
 
 $radiusSizeMap: (
@@ -227,16 +219,16 @@ $radiusSizeMap: (
   // xl: 4,
 );
 
-.r {
-  border-radius: var(--radius);
+.radius {
+  border-radius: var(--radius) !important;
 }
 
 @each $size,
 $value in $radiusSizeMap {
-  $val: calc(var(--base) * $value);
+  $val: calc(var(--base) * $value) !important;
 
   .r-#{$size} {
-    border-radius: calc(var(--base) * $value);
+    border-radius: $val;
   }
 
   // .rtl-#{$size} {
@@ -351,7 +343,7 @@ $value in $radiusSizeMap {
 }
 
 .flex-none {
-  flex: none;
+  flex: none !important;
 }
 
 .flex-1 {
@@ -375,7 +367,7 @@ $value in $radiusSizeMap {
 /**==================================================**/
 
 // .grid {
-//   box-sizing: border-box
+//   box-sizing: border-box;
 //   display: grid;
 // }
 
@@ -409,15 +401,15 @@ $value in $radiusSizeMap {
 
 @each $size in var.$sizes {
   .g-#{$size} {
-    gap: var(--b-#{$size});
+    gap: var(--b-#{$size}) !important;
   }
 
   // .gr-#{$size} {
-  //   row-gap: var(--b-#{$size});
+  //   row-gap: var(--b-#{$size}) !important;
   // }
 
   // .gc-#{$size} {
-  //   column-gap: var(--b-#{$size});
+  //   column-gap: var(--b-#{$size}) !important;
   // }
 }
 
@@ -453,7 +445,7 @@ $value in $radiusSizeMap {
 
 // @for $i from 0 through 9 {
 //   .z-#{$i} {
-//     z-index: $i;
+//     z-index: $i !important;
 //   }
 // }
 
@@ -461,23 +453,23 @@ $value in $radiusSizeMap {
 /** border                                           **/
 /**==================================================**/
 
-.b {
+.b-all {
   border: 0.1rem solid var(--c-border);
 }
 
-// .bt {
+// .b-top {
 //   border-top: 0.1rem solid var(--c-border);
 // }
 
-// .bb {
+// .b-bttom {
 //   border-bottom: 0.1rem solid var(--c-border);
 // }
 
-// .bl {
+// .b-left {
 //   border-left: 0.1rem solid var(--c-border);
 // }
 
-// .br {
+// .b-right {
 //   border-right: 0.1rem solid var(--c-border);
 // }
 
