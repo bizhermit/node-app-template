@@ -28,7 +28,7 @@
   .list {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex;
+    justify-content: flex-start;
     align-items: stretch;
     overflow: auto;
     outline: none;
@@ -39,7 +39,7 @@
     box-sizing: border-box;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: flex;
+    justify-content: flex-start;
     align-items: center;
     padding: var(--pt-t) 1rem 0 1rem;
     height: var(--cs-m);

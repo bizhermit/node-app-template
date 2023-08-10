@@ -81,7 +81,7 @@ $pulldownTransitionTime: 0.5s;
       >.date {
         height: 100%;
         flex-flow: column nowrap;
-        justify-content: flex;
+        justify-content: flex-start;
         overflow-y: auto;
         overflow-x: visible;
         flex: 1;

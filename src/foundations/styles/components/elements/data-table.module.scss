@@ -9,7 +9,7 @@ $borderStyle: 1px solid var(--c-border);
     position: relative;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex;
+    justify-content: flex-start;
     align-items: stretch;
     overflow: visible;
     row-gap: 0.2rem;
@@ -20,7 +20,7 @@ $borderStyle: 1px solid var(--c-border);
     position: relative;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex;
+    justify-content: flex-start;
     align-items: stretch;
     min-height: 0;
     overflow: auto;
@@ -62,7 +62,7 @@ $borderStyle: 1px solid var(--c-border);
     position: relative;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: flex;
+    justify-content: flex-start;
     align-items: stretch;
     background: inherit;
     color: inherit;
@@ -115,7 +115,7 @@ $borderStyle: 1px solid var(--c-border);
     z-index: 0;
 
     &[data-align="left"] {
-      justify-content: flex;
+      justify-content: flex-start;
     }
 
     &[data-align="center"] {

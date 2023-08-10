@@ -5,8 +5,7 @@ $size: 3.6rem;
 $fontSize: 1.6rem;
 $iconSize: 1.6rem;
 
-@layer base,
-utils;
+@layer base, utils;
 
 @layer base {
 
@@ -73,8 +72,8 @@ utils;
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex;
-    align-items: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
     overflow: auto;
   }
 
