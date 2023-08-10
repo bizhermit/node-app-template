@@ -18,24 +18,10 @@ $arrowMargin: 0.15rem;
     padding: 0 calc(var(--point-size) / 4);
   }
 
-  &[data-size="xs"] {
-    --point-size: calc(var(--size) * 0.7);
-  }
-
-  &[data-size="s"] {
-    --point-size: calc(var(--size) * 0.85);
-  }
-
-  &[data-size="m"] {
-    --point-size: var(--size);
-  }
-
-  &[data-size="l"] {
-    --point-size: calc(var(--size) * 1.2);
-  }
-
-  &[data-size="xl"] {
-    --point-size: calc(var(--size) * 1.4);
+  @each $size in var.$sizes {
+    &[data-size="#{$size}"] {
+      --point-size: var(--cs-#{$size});
+    }
   }
 }
 

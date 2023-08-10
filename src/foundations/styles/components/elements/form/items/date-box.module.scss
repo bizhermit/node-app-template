@@ -35,28 +35,28 @@
 .m,
 .d {
   @include mixins.inputProps(true);
-  height: var(--size);
+  height: var(--cs-m);
   min-width: 0;
-  padding: calc(var(--padding-top-text) + 0.1rem) 0 0 0;
+  padding: calc(var(--pt-t) + 0.1rem) 0 0 0;
   text-align: center;
   flex: none;
 
   &:first-child {
-    margin-left: calc(var(--size) / 5);
+    margin-left: calc(var(--cs-m) / 5);
   }
 
   &:last-child {
-    margin-right: calc(var(--size) / 5);
+    margin-right: calc(var(--cs-m) / 5);
   }
 }
 
 .y {
-  width: calc(var(--size) * 1.4);
+  width: calc(var(--cs-m) * 1.4);
 }
 
 .m,
 .d {
-  width: calc(var(--size) * 0.8);
+  width: calc(var(--cs-m) * 0.8);
 }
 
 .sep {
@@ -68,7 +68,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1;
-  padding-top: var(--padding-top-text);
+  padding-top: var(--pt-t);
   cursor: inherit;
 
   &[data-show="false"] {

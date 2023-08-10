@@ -62,8 +62,8 @@ $tagMoveTransitionTime: 0.5s;
   &[data-pos="placeholder"] {
     position: absolute;
     top: calc($tagHeight);
-    padding-top: calc(var(--padding-top-text) + 0.1rem);
-    height: var(--size);
+    padding-top: calc(var(--pt-t) + 0.1rem);
+    height: var(--cs-m);
     left: 1rem;
     color: var(--c-placeholder_);
     z-index: 1;

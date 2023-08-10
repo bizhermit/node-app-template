@@ -93,7 +93,7 @@ $vTransitionTime: 0.5s;
   &[data-pos="top"] {
     >.header {
       >.tab {
-        padding: var(--padding-top-text) 3rem 0 3rem;
+        padding: var(--pt-t) 3rem 0 3rem;
       }
     }
   }
@@ -101,7 +101,7 @@ $vTransitionTime: 0.5s;
   &[data-pos="bottom"] {
     >.header {
       >.tab {
-        padding: calc(var(--padding-top-text) + #{$borderWidth}) 3rem 0 3rem;
+        padding: calc(var(--pt-t) + #{$borderWidth}) 3rem 0 3rem;
       }
     }
   }
@@ -194,8 +194,8 @@ $vTransitionTime: 0.5s;
 .header {
   box-sizing: border-box;
   flex: none;
-  min-width: var(--size);
-  min-height: var(--size);
+  min-width: var(--cs-m);
+  min-height: var(--cs-m);
   display: flex;
   justify-content: stretch;
   align-items: stretch;

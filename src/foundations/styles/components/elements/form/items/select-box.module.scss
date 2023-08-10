@@ -3,7 +3,7 @@
 
 .input {
   @include mixins.inputProps;
-  height: var(--size);
+  height: var(--cs-m);
   min-width: 0;
 
   &[data-has="false"] {
@@ -39,8 +39,8 @@
   flex-flow: row nowrap;
   justify-content: flex;
   align-items: center;
-  padding: var(--padding-top-text) 1rem 0 1rem;
-  height: var(--size);
+  padding: var(--pt-t) 1rem 0 1rem;
+  height: var(--cs-m);
   flex: none;
   cursor: pointer;
   background: var(--c-input);

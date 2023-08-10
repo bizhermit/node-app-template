@@ -2,7 +2,7 @@
 
 .input {
   @include mixins.inputProps;
-  min-height: var(--size);
-  min-width: var(--size);
+  min-height: var(--cs-m);
+  min-width: var(--cs-m);
   align-self: stretch;
 }

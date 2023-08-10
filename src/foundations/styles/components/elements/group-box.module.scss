@@ -23,7 +23,7 @@ $borderWidth: 0.1rem;
 .prev,
 .next {
   box-sizing: border-box;
-  min-width: calc(var(--size) / 2);
+  min-width: calc(var(--cs-m) / 2);
   border-top-width: #{$borderWidth};
   border-top-style: solid;
   height: 50%;

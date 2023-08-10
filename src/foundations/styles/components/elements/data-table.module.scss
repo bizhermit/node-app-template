@@ -185,7 +185,7 @@ $borderStyle: 1px solid var(--c-border);
 .label {
   box-sizing: border-box;
   display: block;
-  padding: var(--padding-top-text) 1rem 0 1rem;
+  padding: var(--pt-t) 1rem 0 1rem;
   max-width: 100%;
   overflow: hidden;
 
@@ -199,7 +199,7 @@ $borderStyle: 1px solid var(--c-border);
   box-sizing: border-box;
   position: relative;
   height: 100%;
-  width: calc(var(--size) * 0.4);
+  width: calc(var(--cs-m) * 0.4);
   overflow: visible;
   margin-right: 0.5rem;
   flex: none;
@@ -215,14 +215,14 @@ $borderStyle: 1px solid var(--c-border);
   &[data-direction=""] {
     &::before {
       bottom: calc(50% + 0.2rem);
-      height: calc(var(--size) * 0.2);
+      height: calc(var(--cs-m) * 0.2);
       background: var(--c-border);
       clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
     }
 
     &::after {
       top: calc(50% + 0.2rem);
-      height: calc(var(--size) * 0.2);
+      height: calc(var(--cs-m) * 0.2);
       background: var(--c-border);
       clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
     }
@@ -230,8 +230,8 @@ $borderStyle: 1px solid var(--c-border);
 
   &[data-direction="asc"] {
     &::before {
-      top: calc(50% - (var(--size) * 0.125));
-      height: calc(var(--size) * 0.25);
+      top: calc(50% - (var(--cs-m) * 0.125));
+      height: calc(var(--cs-m) * 0.25);
       background: var(--c-border);
       clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
     }
@@ -239,8 +239,8 @@ $borderStyle: 1px solid var(--c-border);
 
   &[data-direction="desc"] {
     &::before {
-      top: calc(50% - (var(--size) * 0.125));
-      height: calc(var(--size) * 0.25);
+      top: calc(50% - (var(--cs-m) * 0.125));
+      height: calc(var(--cs-m) * 0.25);
       background: var(--c-border);
       clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
     }
@@ -277,7 +277,7 @@ $borderStyle: 1px solid var(--c-border);
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    padding-top: var(--padding-top-text);
+    padding-top: var(--pt-t);
     column-gap: 0.2rem;
   }
 }

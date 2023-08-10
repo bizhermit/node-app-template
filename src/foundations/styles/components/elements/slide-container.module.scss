@@ -30,7 +30,7 @@ $vTransitionTime: 0.5s;
             width: 1rem;
             left: 1rem;
             top: 0;
-            padding-top: var(--padding-top-text);
+            padding-top: var(--pt-t);
             color: var(--c-dull_);
           }
         }
@@ -228,8 +228,8 @@ $vTransitionTime: 0.5s;
 .breadcrumbs {
   box-sizing: border-box;
   flex: none;
-  min-width: var(--size);
-  min-height: var(--size);
+  min-width: var(--cs-m);
+  min-height: var(--cs-m);
   display: flex;
   justify-content: stretch;
   align-items: flex;

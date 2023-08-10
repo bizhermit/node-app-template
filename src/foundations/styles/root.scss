@@ -1,32 +1,33 @@
 @use "#/styles/var" as var;
 
-$base: .4rem;
+$base: 0.4rem;
 $size: 3.6rem;
 $fontSize: 1.6rem;
 
 :root {
-  --size: #{$size};
-
+  outline: var(--c-base_) !important;
+  --pt-t: 0.1rem; // padding top text
+  --nav-size: #{$size};
+  --radius: #{$base * 0.5};
+  // base size
   --base: #{$base};
   --b-xs: #{$base * 1};
   --b-s: #{$base * 2};
   --b-m: #{$base * 4};
   --b-l: #{$base * 6};
   --b-xl: #{$base * 8};
-  --radius: #{$base * 0.5};
+  // component size
   --cs-xs: #{$size * 0.7};
   --cs-s: #{$size * 0.85};
   --cs-m: #{$size};
   --cs-l: #{$size * 1.15};
   --cs-xl: #{$size * 1.3};
+  // font size
   --fs-xs: #{$fontSize * 0.6};
   --fs-s: #{$fontSize * 0.8};
   --fs-m: #{$fontSize};
   --fs-l: #{$fontSize * 1.2};
   --fs-xl: #{$fontSize * 1.4};
-  --padding-top-text: 0.1rem;
-  --nav-size: #{$size};
-  outline: var(--c-base_) !important;
 }
 
 html {

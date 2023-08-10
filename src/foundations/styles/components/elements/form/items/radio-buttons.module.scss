@@ -122,7 +122,7 @@
     flex-wrap: wrap;
 
     >.item {
-      height: var(--size);
+      height: var(--cs-m);
 
       &[data-appearance="button"] {
         &:first-child {
@@ -140,13 +140,13 @@
         }
 
         >.label {
-          padding-left: calc(var(--size) / 2);
-          padding-right: calc(var(--size) / 2);
+          padding-left: calc(var(--cs-m) / 2);
+          padding-right: calc(var(--cs-m) / 2);
         }
       }
 
       >.label {
-        padding-right: calc(var(--size) / 4);
+        padding-right: calc(var(--cs-m) / 4);
       }
     }
   }
@@ -175,7 +175,7 @@
       }
 
       >.label {
-        padding-right: calc(var(--size) / 4);
+        padding-right: calc(var(--cs-m) / 4);
       }
     }
   }
@@ -194,8 +194,8 @@
   flex-flow: row nowrap;
   justify-content: flex;
   align-items: center;
-  min-width: var(--size);
-  min-height: var(--size);
+  min-width: var(--cs-m);
+  min-height: var(--cs-m);
   z-index: 0;
   flex: 1 0 auto;
   border-radius: var(--radius);
@@ -207,7 +207,7 @@
 
   &[data-appearance="button"] {
     >.label {
-      padding-left: calc(var(--size) / 4);
+      padding-left: calc(var(--cs-m) / 4);
       border-width: 0.1rem;
       border-style: solid;
       border-color: inherit;
@@ -232,8 +232,8 @@
       }
 
       >.check {
-        height: calc(var(--size) * 0.3);
-        width: calc(var(--size) * 0.3);
+        height: calc(var(--cs-m) * 0.3);
+        width: calc(var(--cs-m) * 0.3);
         top: 35%;
         left: 35%;
       }
@@ -258,8 +258,8 @@
       }
 
       >.check {
-        height: calc(var(--size) * 0.7);
-        width: calc(var(--size) * 0.7);
+        height: calc(var(--cs-m) * 0.7);
+        width: calc(var(--cs-m) * 0.7);
         top: 15%;
         left: 15%;
 
@@ -283,7 +283,7 @@
     }
 
     >.label {
-      padding-left: calc(var(--size) / 8);
+      padding-left: calc(var(--cs-m) / 8);
     }
   }
 
@@ -296,8 +296,8 @@
 .box {
   box-sizing: border-box;
   position: relative;
-  height: var(--size);
-  width: var(--size);
+  height: var(--cs-m);
+  width: var(--cs-m);
   flex: none;
 }
 

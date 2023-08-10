@@ -171,7 +171,7 @@
 /**==================================================**/
 
 .pt-t {
-  padding-top: var(--padding-top-text);
+  padding-top: var(--pt-t);
 }
 
 .p {
@@ -284,15 +284,17 @@ $value in $radiusSizeMap {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
   
   &.stretch {
     justify-content: stretch;
     align-items: stretch;
   }
 
-  &.top {
-    justify-content: flex-start;
-  }
+  // &.top {
+  //   justify-content: flex-start;
+  // }
 
   &.middle {
     justify-content: center;
@@ -302,9 +304,9 @@ $value in $radiusSizeMap {
   //   justify-content: flex-end;
   // }
 
-  &.left {
-    align-items: flex-start;
-  }
+  // &.left {
+  //   align-items: flex-start;
+  // }
 
   &.center {
     align-items: center;
@@ -316,8 +318,6 @@ $value in $radiusSizeMap {
 
   &.row {
     flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
 
     // &.top {
     //   align-items: flex-start;

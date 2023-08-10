@@ -59,7 +59,7 @@ $checkTransitionTime: 0.1s;
     >.body {
       &:not([data-circle="true"]) {
         &:not(:only-child) {
-          margin-left: calc(var(--size) / 4);
+          margin-left: calc(var(--cs-m) / 4);
         }
       }
     }
@@ -72,8 +72,8 @@ $checkTransitionTime: 0.1s;
   box-sizing: border-box;
   position: relative;
   display: block;
-  height: var(--size);
-  width: var(--size);
+  height: var(--cs-m);
+  width: var(--cs-m);
 
   &[data-circle="true"] {
 
@@ -152,6 +152,6 @@ $checkTransitionTime: 0.1s;
 
 .label {
   display: inline-block;
-  padding-left: calc(var(--size) / 8);
-  padding-right: calc(var(--size) / 3);
+  padding-left: calc(var(--cs-m) / 8);
+  padding-right: calc(var(--cs-m) / 3);
 }

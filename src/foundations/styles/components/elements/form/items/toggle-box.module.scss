@@ -44,8 +44,8 @@ $animationTime: 0.4s;
   box-sizing: border-box;
   position: relative;
   display: block;
-  height: var(--size);
-  width: calc(var(--size) * 1.75);
+  height: var(--cs-m);
+  width: calc(var(--cs-m) * 1.75);
 }
 
 .box {
@@ -91,10 +91,10 @@ $animationTime: 0.4s;
     box-sizing: border-box;
     position: absolute;
     content: "";
-    top: calc(var(--size) * 0.1);
-    left: calc(var(--size) * 0.1);
-    height: calc(var(--size) * 0.8);
-    width: calc(var(--size) * 0.8);
+    top: calc(var(--cs-m) * 0.1);
+    left: calc(var(--cs-m) * 0.1);
+    height: calc(var(--cs-m) * 0.8);
+    width: calc(var(--cs-m) * 0.8);
     border-radius: 9999px;
     border-width: 0.1rem;
     border-style: solid;
@@ -104,11 +104,11 @@ $animationTime: 0.4s;
   }
 
   &[data-checked="true"] {
-    left: calc(100% - var(--size));
+    left: calc(100% - var(--cs-m));
   }
 }
 
 .label {
   display: inline-block;
-  padding-right: calc(var(--size) / 3);
+  padding-right: calc(var(--cs-m) / 3);
 }

@@ -2,7 +2,7 @@
 
 .input {
   @include mixins.inputProps;
-  height: var(--size);
+  height: var(--cs-m);
   min-width: 0;
 
   &[data-clear="true"] {
@@ -10,10 +10,10 @@
   }
 
   &[data-round="true"] {
-    padding-left: calc(var(--size) / 2);
+    padding-left: calc(var(--cs-m) / 2);
 
     &[data-clear="false"] {
-      padding-right: calc(var(--size) / 2);
+      padding-right: calc(var(--cs-m) / 2);
     }
   }
 }

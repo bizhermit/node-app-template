@@ -12,12 +12,12 @@
     >.header,
     >.footer {
       flex-flow: row nowrap;
-      min-height: var(--size);
+      min-height: var(--cs-m);
 
       &[data-icon="start"] {
         >.content {
           &[data-align="center"] {
-            padding-right: var(--size);
+            padding-right: var(--cs-m);
           }
 
           >.text {
@@ -29,7 +29,7 @@
       &[data-icon="end"] {
         >.content {
           &[data-align="center"] {
-            padding-left: var(--size);
+            padding-left: var(--cs-m);
           }
 
           >.text {
@@ -56,7 +56,7 @@
       }
 
       .text {
-        padding: var(--padding-top-text) 1rem 0 1rem;
+        padding: var(--pt-t) 1rem 0 1rem;
       }
     }
   }
@@ -67,14 +67,14 @@
     >.header,
     >.footer {
       flex-flow: row nowrap;
-      min-width: var(--size);
+      min-width: var(--cs-m);
       writing-mode: vertical-rl;
       // text-orientation: upright;
 
       &[data-icon="start"] {
         >.content {
           &[data-align="center"] {
-            padding-bottom: var(--size);
+            padding-bottom: var(--cs-m);
           }
 
           >.text {
@@ -86,7 +86,7 @@
       &[data-icon="end"] {
         >.content {
           &[data-align="center"] {
-            padding-top: var(--size);
+            padding-top: var(--cs-m);
           }
 
           >.text {
@@ -151,8 +151,8 @@
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  height: var(--size);
-  width: var(--size);
+  height: var(--cs-m);
+  width: var(--cs-m);
   flex: none;
 }
 

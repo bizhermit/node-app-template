@@ -37,7 +37,7 @@ $space: 0.3rem;
 
 .hcell {
   text-align: left;
-  padding: var(--padding-top-text) 1rem 0 1rem;
+  padding: var(--pt-t) 1rem 0 1rem;
   white-space: nowrap;
   width: 0;
 }
@@ -97,7 +97,7 @@ $space: 0.3rem;
 
 .label {
   max-width: 100%;
-  padding: var(--padding-top-text) 1rem 0 1rem;
+  padding: var(--pt-t) 1rem 0 1rem;
   word-break: break-all;
 
   &[data-align="center"] {

@@ -14,7 +14,7 @@ const Row = forwardRef<HTMLDivElement, RowProps>((props, ref) => {
       {...attributes(props, Style.main)}
       ref={ref}
       data-h={props.$hAlign || "left"}
-      data-v={props.$vAlign || "middle"}
+      data-v={props.$vAlign || "top"}
       data-nowrap={props.$nowrap}
     />
   );

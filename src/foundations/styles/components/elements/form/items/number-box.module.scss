@@ -3,7 +3,7 @@
 
 .input {
   @include mixins.inputProps;
-  height: var(--size);
+  height: var(--cs-m);
   min-width: 0;
 }
 
@@ -19,8 +19,8 @@
   justify-content: stretch;
   align-items: stretch;
   min-height: 100%;
-  height: var(--size);
-  width: var(--size);
+  height: var(--cs-m);
+  width: var(--cs-m);
   min-width: 0;
   flex: 0 1 auto;
   z-index: 2;

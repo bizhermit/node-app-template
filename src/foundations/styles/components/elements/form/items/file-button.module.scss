@@ -11,7 +11,7 @@
 
 .label {
   box-sizing: border-box;
-  padding: var(--padding-top-text) 1rem 0 1rem;
+  padding: var(--pt-t) 1rem 0 1rem;
 }
 
 .clear {
@@ -20,8 +20,8 @@
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  width: var(--size);
-  height: var(--size);
+  width: var(--cs-m);
+  height: var(--cs-m);
   z-index: 1;
   cursor: pointer;
   border-radius: var(--radius);
