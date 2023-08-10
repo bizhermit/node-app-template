@@ -26,7 +26,7 @@
     color: var(--c-pure_);
     padding: 1rem;
     border-radius: var(--radius);
-    min-width: 30rem;
+    min-width: calc(var(--cs-m) * 9);
     max-height: 100vh;
     max-width: 100vw;
     z-index: 2;

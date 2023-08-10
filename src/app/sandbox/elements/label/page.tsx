@@ -7,11 +7,11 @@ import { colors, sizes } from "#/utilities/sandbox";
 const Page = () => {
   return (
     <div className="flex g-s p-s">
-      <Row className="g-s">
+      <Row className="g-s" $vAlign="middle">
         <Label $size="xs" $color="danger">必須</Label>
         <TextBox />
       </Row>
-      <Row className="g-s">
+      <Row className="g-s" $vAlign="middle">
         <NumberBox />
         <Label $color="cool" $size="s">任意</Label>
       </Row>
