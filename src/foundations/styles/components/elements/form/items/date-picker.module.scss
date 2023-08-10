@@ -274,7 +274,7 @@ $pulldownTransitionTime: 0.5s;
   justify-content: stretch;
   align-items: stretch;
   flex: none;
-  font-size: calc(var(--font-size) * 0.8);
+  font-size: var(--fs-xs);
 
   >.cell {
     width: #{$width7};
@@ -374,7 +374,7 @@ $pulldownTransitionTime: 0.5s;
 .positive,
 .negative {
   flex: 1;
-  font-size: calc(var(--font-size) * 0.9);
+  font-size: var(--fs-s);
 }
 
 .clear,

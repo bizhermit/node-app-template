@@ -140,7 +140,7 @@
 .positive,
 .negative {
   flex: 1;
-  font-size: calc(var(--font-size) * 0.9);
+  font-size: var(--fs-s);
 }
 
 .clear {

@@ -54,7 +54,7 @@ const ButtonClient = () => {
           </Row>
         </Form>
       </section>
-      <section>
+      <section className="flex g-s">
         <h2>size</h2>
         <Row className="g-s">
           <Button $size="xs">X Small</Button>

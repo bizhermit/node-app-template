@@ -1,12 +1,5 @@
 @use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
-$buttonSize: (
-  xs: 0.7,
-  s: 0.85,
-  m: 1,
-  l: 1.2,
-  xl: 1.4,
-);
 
 .wrap {
   box-sizing: border-box;
@@ -62,31 +55,31 @@ $buttonSize: (
     }
   }
 
-  @each $key, $value in $buttonSize {
-    &[data-size="#{$key}"] {
-      height: calc(var(--size) * #{$value});
-      min-width: calc(var(--size) * #{$value});
-      font-size: calc(var(--font-size) * #{$value});
+  @each $size in var.$sizes {
+    &[data-size="#{$size}"] {
+      font-size: var(--fs-#{$size});
+      min-width: var(--cs-#{$size});
+      height: var(--cs-#{$size});
 
       &[data-wide="true"] {
-        min-width: calc(var(--size) * 3.2 * #{$value});
+        min-width: calc(var(--cs-#{$size}) * 4);
       }
 
       >.main {
         >.label {
-          padding-left: calc(var(--size) / 2 * #{$value});
-          padding-right: calc(var(--size) / 2 * #{$value});
+          padding-left: calc(var(--cs-#{$size}) / 2);
+          padding-right: calc(var(--cs-#{$size}) / 2);
         }
-      
+
         >.icon {
           &:not(:only-child) {
-            min-width: calc(var(--size) * #{$value});
+            min-width: calc(var(--cs-#{$size}));
           }
 
-          >:global(.icon) {
+          &>:global(.icon) {
             &[height="0"] {
-              height: calc(var(--icon-size) * #{$value}) !important;
-              width: calc(var(--icon-size) * #{$value}) !important;
+              width: var(--fs-#{$size});
+              height: var(--fs-#{$size});
             }
           }
         }
@@ -125,7 +118,6 @@ $buttonSize: (
 
 .label {
   box-sizing: border-box;
-  padding-top: var(--padding-top-text);
   text-overflow: ellipsis;
 
   &[data-fill="true"] {

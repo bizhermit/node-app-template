@@ -1,11 +1,5 @@
-$buttonSize: (
-  xs: 0.5,
-  s: 0.65,
-  m: 0.8,
-  l: 0.9,
-  xl: 1.1,
-);
-$pushout: calc(var(--size) * -0.25);
+@use "#/styles/var" as var;
+$pushout: calc(var(--cs-m) * -0.25);
 
 .main {
   box-sizing: border-box;
@@ -40,11 +34,11 @@ $pushout: calc(var(--size) * -0.25);
     right: #{$pushout};
   }
 
-  @each $key, $value in $buttonSize {
-    &[data-size="#{$key}"] {
-      min-width: calc(var(--size) * #{$value});
-      min-height: calc(var(--size) * #{$value});
-      font-size: calc(var(--font-size) * #{$value + 0.15});
+  @each $size in var.$sizes {
+    &[data-size="#{$size}"] {
+      min-width: var(--cs-#{$size});
+      min-height: var(--cs-#{$size});
+      font-size: var(--fs-#{$size});
     }
   }
 }

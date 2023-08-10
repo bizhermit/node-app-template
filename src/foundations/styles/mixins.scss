@@ -144,8 +144,8 @@ $listHoverTransition: background-color 0.1s, color 0.1s;
   transition: opacity #{var.$transitionTime};
 
   @if $customSize ==false {
-    height: var(--size);
-    width: calc(var(--size) * 0.9);
+    height: var(--cs-m);
+    width: var(--cs-s);
   }
 
   &[data-round="true"] {
