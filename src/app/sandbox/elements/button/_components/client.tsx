@@ -77,6 +77,11 @@ const ButtonClient = () => {
           <Button $icon={<CloudDownloadIcon />} $size="l" $round />
           <Button $icon={<CloudDownloadIcon />} $size="xl" $round />
         </Row>
+        <div className="flex row">
+          <Button className="fs-xl">
+            padding text
+          </Button>
+        </div>
       </section>
       <section>
         <h2>color</h2>

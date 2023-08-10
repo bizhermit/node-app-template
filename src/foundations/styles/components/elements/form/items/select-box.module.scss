@@ -1,79 +1,83 @@
 @use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
-.input {
-  @include mixins.inputProps;
-  height: var(--cs-m);
-  min-width: 0;
+@layer base {
 
-  &[data-has="false"] {
-    color: var(--c-dull_);
-  }
+  .input {
+    @include mixins.inputProps;
+    height: var(--cs-m);
+    min-width: 0;
 
-  &[data-editable="true"] {
-    &[data-input="false"] {
-      cursor: pointer;
+    &[data-has="false"] {
+      color: var(--c-dull_);
     }
-  }
-}
 
-.button {
-  @include mixins.inputButton;
-}
-
-@include mixins.hoverAnimation;
-
-.list {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex;
-  align-items: stretch;
-  overflow: auto;
-  outline: none;
-  border-radius: var(--radius);
-}
-
-.item {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex;
-  align-items: center;
-  padding: var(--pt-t) 1rem 0 1rem;
-  height: var(--cs-m);
-  flex: none;
-  cursor: pointer;
-  background: var(--c-input);
-  color: var(--c-input_);
-  z-index: 0;
-  outline: none;
-  @include mixins.listHoverTransition;
-
-  @include mixins.crossHover {
-    @include mixins.listHover;
-
-    &:active {
-      @include mixins.listHoverActive;
+    &[data-editable="true"] {
+      &[data-input="false"] {
+        cursor: pointer;
+      }
     }
   }
 
-  &:focus {
-    background: var(--c-hover);
-    color: var(--c-hover_);
+  .button {
+    @include mixins.inputButton;
   }
 
-  &[data-selected="true"] {
-    background: var(--c-selected);
-    color: var(--c-selected_);
+  @include mixins.hoverAnimation;
+
+  .list {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex;
+    align-items: stretch;
+    overflow: auto;
+    outline: none;
+    border-radius: var(--radius);
   }
 
-  &[data-empty="true"] {
-    color: var(--c-dull_);
-  }
-}
+  .item {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex;
+    align-items: center;
+    padding: var(--pt-t) 1rem 0 1rem;
+    height: var(--cs-m);
+    flex: none;
+    cursor: pointer;
+    background: var(--c-input);
+    color: var(--c-input_);
+    z-index: 0;
+    outline: none;
+    @include mixins.listHoverTransition;
 
-.popup {
-  @include mixins.pickerShadow;
-  border-radius: var(--radius);
-  background: var(--c-input);
+    @include mixins.crossHover {
+      @include mixins.listHover;
+
+      &:active {
+        @include mixins.listHoverActive;
+      }
+    }
+
+    &:focus {
+      background: var(--c-hover);
+      color: var(--c-hover_);
+    }
+
+    &[data-selected="true"] {
+      background: var(--c-selected);
+      color: var(--c-selected_);
+    }
+
+    &[data-empty="true"] {
+      color: var(--c-dull_);
+    }
+  }
+
+  .popup {
+    @include mixins.pickerShadow;
+    border-radius: var(--radius);
+    background: var(--c-input);
+  }
+
 }

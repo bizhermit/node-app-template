@@ -1,149 +1,154 @@
 @use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
-.main {
-  flex-direction: column !important;
-  width: 26rem;
-  height: 26rem;
-  border-radius: var(--radius);
-  overflow: visible;
-  background: var(--c-input);
-  color: var(--c-input_);
+@layer base {
 
-  &[data-error="true"] {
-    background: var(--c-error);
-    color: var(--c-error_);
-  }
+  .main {
+    flex-direction: column !important;
+    width: 26rem;
+    height: 26rem;
+    border-radius: var(--radius);
+    overflow: visible;
+    background: var(--c-input);
+    color: var(--c-input_);
 
-  &[data-editable="true"] {
-    >.content {
-      user-select: none;
+    &[data-error="true"] {
+      background: var(--c-error);
+      color: var(--c-error_);
+    }
 
-      >.list {
-        @include mixins.crossHover {}
+    &[data-editable="true"] {
+      >.content {
+        user-select: none;
 
-        >.cell {
-          &[data-selectable="true"] {
-            cursor: pointer;
-            @include mixins.hoverTransition;
+        >.list {
+          @include mixins.crossHover {}
 
-            @include mixins.crossHover {
-              @include mixins.hover;
+          >.cell {
+            &[data-selectable="true"] {
+              cursor: pointer;
+              @include mixins.hoverTransition;
 
-              &:active {
-                @include mixins.hoverActive;
+              @include mixins.crossHover {
+                @include mixins.hover;
+
+                &:active {
+                  @include mixins.hoverActive;
+                }
               }
             }
-          }
 
-          &[data-selectable="false"] {
-            cursor: not-allowed;
-            opacity: 0.2;
+            &[data-selectable="false"] {
+              cursor: not-allowed;
+              opacity: 0.2;
+            }
           }
         }
       }
     }
   }
-}
 
-.content {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: stretch;
-  align-items: stretch;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  overflow: visible;
-}
+  .content {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow: visible;
+  }
 
-.list {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: stretch;
-  align-items: stretch;
-  flex: 1;
-  overflow: auto;
-  padding: calc(var(--cs-m) * 2.85) 0.6rem;
-  gap: 0.6rem;
-}
+  .list {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+    flex: 1;
+    overflow: auto;
+    padding: calc(var(--cs-m) * 2.85) 0.6rem;
+    gap: 0.6rem;
+  }
 
-.cell {
-  box-sizing: border-box;
-  position: relative;
-  flex: none;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  padding-top: var(--pt-t);
-  line-height: 1.2rem;
-  border-width: 0.1rem;
-  border-style: solid;
-  border-color: transparent;
-  border-radius: var(--radius);
-  height: calc(var(--cs-m) * 0.75);
-  transition: background-color #{var.$transitionTime}, color #{var.$transitionTime};
+  .cell {
+    box-sizing: border-box;
+    position: relative;
+    flex: none;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: var(--pt-t);
+    line-height: 1.2rem;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: var(--radius);
+    height: calc(var(--cs-m) * 0.75);
+    transition: background-color #{var.$transitionTime},
+    color #{var.$transitionTime};
 
-  &[data-selected="true"] {
-    color: var(--c-selected_);
-    z-index: 0;
+    &[data-selected="true"] {
+      color: var(--c-selected_);
+      z-index: 0;
 
-    &::before {
-      $pad: 0.1rem;
-      box-sizing: border-box;
-      position: absolute;
-      content: "";
-      z-index: -1;
-      top: #{$pad};
-      left: #{$pad};
-      height: calc(100% - $pad * 2);
-      width: calc(100% - $pad * 2);
-      background: var(--c-selected);
-      border-radius: var(--radius);
+      &::before {
+        $pad: 0.1rem;
+        box-sizing: border-box;
+        position: absolute;
+        content: "";
+        z-index: -1;
+        top: #{$pad};
+        left: #{$pad};
+        height: calc(100% - $pad * 2);
+        width: calc(100% - $pad * 2);
+        background: var(--c-selected);
+        border-radius: var(--radius);
+      }
+    }
+
+    &[data-current="true"] {
+      border-color: var(--c-border);
     }
   }
 
-  &[data-current="true"] {
-    border-color: var(--c-border);
+  .buttons {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+    height: calc(var(--cs-m) * 0.8);
+    flex: none;
+    width: 100%;
+    user-select: none;
+
+    @include mixins.crossHover {}
+
+    &:empty {
+      display: none;
+    }
   }
-}
 
-.buttons {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: stretch;
-  align-items: stretch;
-  height: calc(var(--cs-m) * 0.8);
-  flex: none;
-  width: 100%;
-  user-select: none;
-
-  @include mixins.crossHover {}
-
-  &:empty {
-    display: none;
+  .clear,
+  .positive,
+  .negative {
+    @include mixins.inputButton(true);
   }
-}
 
-.clear,
-.positive,
-.negative {
-  @include mixins.inputButton(true);
-}
+  @include mixins.hoverAnimation;
 
-@include mixins.hoverAnimation;
+  .positive,
+  .negative {
+    flex: 1;
+    font-size: var(--fs-s);
+  }
 
-.positive,
-.negative {
-  flex: 1;
-  font-size: var(--fs-s);
-}
+  .clear {
+    width: var(--cs-m);
+    flex: none;
+  }
 
-.clear {
-  width: var(--cs-m);
-  flex: none;
 }

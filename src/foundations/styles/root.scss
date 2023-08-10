@@ -5,108 +5,115 @@ $size: 3.6rem;
 $fontSize: 1.6rem;
 $iconSize: 1.6rem;
 
-:root {
-  outline: var(--c-base_) !important;
-  --pt-t: 0.1rem; // padding top text
-  --nav-size: #{$size};
-  --radius: #{$base * 0.5};
-  // base size
-  --base: #{$base};
-  --b-xs: #{$base * 1};
-  --b-s: #{$base * 2};
-  --b-m: #{$base * 4};
-  --b-l: #{$base * 6};
-  --b-xl: #{$base * 8};
-  // component size
-  --cs-xs: #{$size * 0.7};
-  --cs-s: #{$size * 0.85};
-  --cs-m: #{$size};
-  --cs-l: #{$size * 1.15};
-  --cs-xl: #{$size * 1.3};
-  // font size
-  --fs-xs: #{$fontSize * 0.6};
-  --fs-s: #{$fontSize * 0.8};
-  --fs-m: #{$fontSize};
-  --fs-l: #{$fontSize * 1.2};
-  --fs-xl: #{$fontSize * 1.4};
-  // icon size
-  --is-xs: #{$iconSize * 0.6};
-  --is-s: #{$iconSize * 0.8};
-  --is-m: #{$iconSize};
-  --is-l: #{$iconSize * 1.2};
-  --is-xl: #{$iconSize * 1.4};
-}
+@layer base,
+utils;
 
-html {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  font-size: 62.5%;
-  background: var(--c-base);
-  color: var(--c-base_);
-}
+@layer base {
 
-body {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  font-size: var(--fs-m);
-  --is: var(--is-m);
-
-  &:has(dialog[open]) {
-    overflow: hidden;
+  :root {
+    outline: var(--c-base_) !important;
+    --pt-t: 0.1rem; // padding top text
+    --nav-size: #{$size};
+    --radius: #{$base * 0.5};
+    // base size
+    --base: #{$base};
+    --b-xs: #{$base * 1};
+    --b-s: #{$base * 2};
+    --b-m: #{$base * 4};
+    --b-l: #{$base * 6};
+    --b-xl: #{$base * 8};
+    // component size
+    --cs-xs: #{$size * 0.7};
+    --cs-s: #{$size * 0.85};
+    --cs-m: #{$size};
+    --cs-l: #{$size * 1.15};
+    --cs-xl: #{$size * 1.3};
+    // font size
+    --fs-xs: #{$fontSize * 0.6};
+    --fs-s: #{$fontSize * 0.8};
+    --fs-m: #{$fontSize};
+    --fs-l: #{$fontSize * 1.2};
+    --fs-xl: #{$fontSize * 1.4};
+    // icon size
+    --is-xs: #{$iconSize * 0.6};
+    --is-s: #{$iconSize * 0.8};
+    --is-m: #{$iconSize};
+    --is-l: #{$iconSize * 1.2};
+    --is-xl: #{$iconSize * 1.4};
   }
-}
 
-#__next {
-  box-sizing: border-box;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex;
-  align-items: flex;
-  overflow: auto;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-block: unset;
-}
-
-::placeholder {
-  color: var(--c-placeholder_);
-  opacity: #{var.$placeholderOpacity};
-}
-
-.icon {
-  &[height="0"] {
-    height: var(--is);
-    width: var(--is);
+  html {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    font-size: 62.5%;
+    background: var(--c-base);
+    color: var(--c-base_);
   }
-}
 
-svg {
-  &.icon {
-    &:not(.react-icon) {
-      fill: currentColor;
-      stroke: currentColor;
-      stroke-width: 0.15rem;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+  body {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    font-size: var(--fs-m);
+    --is: var(--is-m);
+
+    &:has(dialog[open]) {
+      overflow: hidden;
     }
   }
-}
 
-.plain-text {
-  text-decoration: none;
-  color: inherit;
+  #__next {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex;
+    align-items: flex;
+    overflow: auto;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-block: unset;
+  }
+
+  ::placeholder {
+    color: var(--c-placeholder_);
+    opacity: #{var.$placeholderOpacity};
+  }
+
+  .icon {
+    &[height="0"] {
+      height: var(--is);
+      width: var(--is);
+    }
+  }
+
+  svg {
+    &.icon {
+      &:not(.react-icon) {
+        fill: currentColor;
+        stroke: currentColor;
+        stroke-width: 0.15rem;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    }
+  }
+
+  .plain-text {
+    text-decoration: none;
+    color: inherit;
+  }
+
 }

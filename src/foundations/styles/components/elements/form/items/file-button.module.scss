@@ -1,38 +1,42 @@
 @use "#/styles/mixins" as mixins;
 
-.file {
-  display: none !important;
-  visibility: hidden;
-  max-height: 0;
-  max-width: 0;
-  opacity: 0;
-  z-index: -2;
-}
+@layer base {
 
-.label {
-  box-sizing: border-box;
-  padding: var(--pt-t) 1rem 0 1rem;
-}
+  .file {
+    display: none !important;
+    visibility: hidden;
+    max-height: 0;
+    max-width: 0;
+    opacity: 0;
+    z-index: -2;
+  }
 
-.clear {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  width: var(--cs-m);
-  height: var(--cs-m);
-  z-index: 1;
-  cursor: pointer;
-  border-radius: var(--radius);
+  .label {
+    box-sizing: border-box;
+    padding: var(--pt-t) 1rem 0 1rem;
+  }
 
-  @include mixins.crossHover {
-    @include mixins.hover;
+  .clear {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    width: var(--cs-m);
+    height: var(--cs-m);
+    z-index: 1;
+    cursor: pointer;
+    border-radius: var(--radius);
 
-    &:active {
-      @include mixins.hoverActive;
+    @include mixins.crossHover {
+      @include mixins.hover;
+
+      &:active {
+        @include mixins.hoverActive;
+      }
     }
   }
-}
 
-@include mixins.hoverAnimation;
+  @include mixins.hoverAnimation;
+
+}

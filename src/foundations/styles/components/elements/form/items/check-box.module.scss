@@ -1,157 +1,161 @@
-@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
+
 $checkTransitionTime: 0.1s;
 
-.main {
-  &[data-disabled="false"] {
-    &:focus {
-      @include mixins.outline;
-    }
-  }
+@layer base {
 
-  &[data-editable="true"] {
-    &[data-outline="true"] {
-      outline-offset: -0.1rem;
-      @include mixins.hoverTransition;
-
-      @include mixins.crossHover {
-        @include mixins.hover;
-
-        &:active {
-          @include mixins.hoverActive;
-        }
+  .main {
+    &[data-disabled="false"] {
+      &:focus {
+        @include mixins.outline;
       }
     }
 
-    &:not([data-outline="true"]) {
-      @include mixins.crossHover {
-        .box {
-          &::before {
-            @include mixins.hover;
+    &[data-editable="true"] {
+      &[data-outline="true"] {
+        outline-offset: -0.1rem;
+        @include mixins.hoverTransition;
+
+        @include mixins.crossHover {
+          @include mixins.hover;
+
+          &:active {
+            @include mixins.hoverActive;
           }
         }
+      }
 
-        &:active {
+      &:not([data-outline="true"]) {
+        @include mixins.crossHover {
           .box {
             &::before {
-              @include mixins.hoverActive;
+              @include mixins.hover;
+            }
+          }
+
+          &:active {
+            .box {
+              &::before {
+                @include mixins.hoverActive;
+              }
+            }
+          }
+        }
+      }
+
+      &[data-error="true"] {
+        >.body {
+          >.box {
+            &::before {
+              background: var(--c-error);
             }
           }
         }
       }
     }
 
-    &[data-error="true"] {
+    &[data-outline="true"] {
+      border: .1rem solid var(--c-border);
+      border-radius: 9999px;
+
       >.body {
-        >.box {
-          &::before {
-            background: var(--c-error);
+        &:not([data-circle="true"]) {
+          &:not(:only-child) {
+            margin-left: calc(var(--cs-m) / 4);
           }
         }
       }
     }
   }
 
-  &[data-outline="true"] {
-    border: .1rem solid var(--c-border);
-    border-radius: 9999px;
+  @include mixins.hoverAnimation;
 
-    >.body {
-      &:not([data-circle="true"]) {
-        &:not(:only-child) {
-          margin-left: calc(var(--cs-m) / 4);
+  .body {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    height: var(--cs-m);
+    width: var(--cs-m);
+
+    &[data-circle="true"] {
+
+      >.box,
+      >.check {
+        &::before {
+          border-radius: 9999px;
         }
       }
     }
   }
-}
 
-@include mixins.hoverAnimation;
-
-.body {
-  box-sizing: border-box;
-  position: relative;
-  display: block;
-  height: var(--cs-m);
-  width: var(--cs-m);
-
-  &[data-circle="true"] {
-
-    >.box,
-    >.check {
-      &::before {
-        border-radius: 9999px;
-      }
-    }
-  }
-}
-
-@mixin box {
-  box-sizing: border-box;
-  position: absolute;
-  content: "";
-  top: 15%;
-  left: 15%;
-  width: 70%;
-  height: 70%;
-  border-radius: var(--radius);
-}
-
-.box {
-  box-sizing: border-box;
-  z-index: 0;
-
-  &::before {
-    @include box;
-    border-width: 0.1rem;
-    border-style: solid;
-    border-color: inherit;
-    @include mixins.hoverTransition;
-  }
-
-  &[data-editable="true"] {
-    &::before {
-      background: var(--c-input);
-    }
-  }
-}
-
-.check {
-  box-sizing: border-box;
-  background: transparent;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity #{$checkTransitionTime};
-
-  &[data-checked="true"] {
-    opacity: 1;
-  }
-
-  &::before {
-    @include box;
-    background: inherit;
-  }
-
-  &::after {
+  @mixin box {
     box-sizing: border-box;
     position: absolute;
     content: "";
-    top: 22%;
-    left: 37%;
-    width: 28%;
-    height: 45%;
-    border-bottom-width: 0.25rem;
-    border-bottom-style: solid;
-    border-bottom-color: inherit;
-    border-right-width: 0.25rem;
-    border-right-style: solid;
-    border-right-color: inherit;
-    transform: rotate(45deg);
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
+    border-radius: var(--radius);
   }
-}
 
-.label {
-  display: inline-block;
-  padding-left: calc(var(--cs-m) / 8);
-  padding-right: calc(var(--cs-m) / 3);
+  .box {
+    box-sizing: border-box;
+    z-index: 0;
+
+    &::before {
+      @include box;
+      border-width: 0.1rem;
+      border-style: solid;
+      border-color: inherit;
+      @include mixins.hoverTransition;
+    }
+
+    &[data-editable="true"] {
+      &::before {
+        background: var(--c-input);
+      }
+    }
+  }
+
+  .check {
+    box-sizing: border-box;
+    background: transparent;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity #{$checkTransitionTime};
+
+    &[data-checked="true"] {
+      opacity: 1;
+    }
+
+    &::before {
+      @include box;
+      background: inherit;
+    }
+
+    &::after {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      top: 22%;
+      left: 37%;
+      width: 28%;
+      height: 45%;
+      border-bottom-width: 0.25rem;
+      border-bottom-style: solid;
+      border-bottom-color: inherit;
+      border-right-width: 0.25rem;
+      border-right-style: solid;
+      border-right-color: inherit;
+      transform: rotate(45deg);
+    }
+  }
+
+  .label {
+    display: inline-block;
+    padding-left: calc(var(--cs-m) / 8);
+    padding-right: calc(var(--cs-m) / 3);
+  }
+
 }

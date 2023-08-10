@@ -1,36 +1,40 @@
-.main {
-  box-sizing: border-box;
-  position: fixed;
-  visibility: hidden;
-  z-index: inherit;
-  max-height: 100vh;
-  max-width: 100vw;
-  overflow: auto;
-}
+@layer base {
 
-.mask1,
-.mask2 {
-  box-sizing: border-box;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: var(--c-mask);
-  width: 100% !important;
-  height: 100% !important;
-  z-index: inherit;
-}
-
-.mask1 {
-  &[data-mode="transparent"] {
-    background: transparent !important;
+  .main {
+    box-sizing: border-box;
+    position: fixed;
+    visibility: hidden;
+    z-index: inherit;
+    max-height: 100vh;
+    max-width: 100vw;
+    overflow: auto;
   }
-}
 
-.mask2 {
-  background: transparent !important;
-  z-index: 0 !important;
-}
+  .mask1,
+  .mask2 {
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: var(--c-mask);
+    width: 100% !important;
+    height: 100% !important;
+    z-index: inherit;
+  }
 
-.anchor {
-  display: none !important;
+  .mask1 {
+    &[data-mode="transparent"] {
+      background: transparent !important;
+    }
+  }
+
+  .mask2 {
+    background: transparent !important;
+    z-index: 0 !important;
+  }
+
+  .anchor {
+    display: none !important;
+  }
+
 }

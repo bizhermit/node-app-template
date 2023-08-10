@@ -1,293 +1,298 @@
 @use "#/styles/mixins" as mixins;
+
 $borderStyle: 1px solid var(--c-border);
 
-.wrap {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex;
-  align-items: stretch;
-  overflow: visible;
-  row-gap: 0.2rem;
-}
+@layer base {
 
-.table {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex;
-  align-items: stretch;
-  min-height: 0;
-  overflow: auto;
-  border-radius: var(--radius);
-  flex: 1;
-  z-index: 0;
-
-  &[data-border="true"] {
-    border: #{$borderStyle};
-  }
-}
-
-.header,
-.body {
-  box-sizing: border-box;
-  width: fit-content;
-  min-width: 100%;
-  overflow: visible;
-}
-
-.header {
-  z-index: 1;
-  position: sticky;
-  top: 0;
-}
-
-.body {
-  z-index: 0;
-
-  &[data-scroll="true"] {
-    height: 0;
-  }
-}
-
-.hrow,
-.brow,
-.grow {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex;
-  align-items: stretch;
-  background: inherit;
-  color: inherit;
-  overflow: hidden;
-  z-index: 0;
-
-  &:not(:first-child) {
-    &[data-border="true"] {
-      border-top: #{$borderStyle};
-    }
-  }
-
-  @include mixins.crossHover {
-    overflow: visible;
-  }
-}
-
-.brow {
-  background: var(--c-pure);
-
-  &[data-stripes="true"] {
-    &:nth-child(2n) {
-      background: var(--c-dull);
-    }
-  }
-
-  @include mixins.crossHover {
-    background: var(--c-hover) !important;
-  }
-
-  &:has(>.radio:checked) {
-    background: var(--c-selected) !important;
-  }
-
-  &[data-pointer="true"] {
-    cursor: pointer;
-  }
-}
-
-.hcell,
-.bcell {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background: inherit;
-  color: inherit;
-  overflow: hidden;
-  z-index: 0;
-
-  &[data-align="left"] {
+  .wrap {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
     justify-content: flex;
+    align-items: stretch;
+    overflow: visible;
+    row-gap: 0.2rem;
   }
 
-  &[data-align="center"] {
-    justify-content: center;
+  .table {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex;
+    align-items: stretch;
+    min-height: 0;
+    overflow: auto;
+    border-radius: var(--radius);
+    flex: 1;
+    z-index: 0;
+
+    &[data-border="true"] {
+      border: #{$borderStyle};
+    }
   }
 
-  &[data-align="right"] {
-    justify-content: right;
-  }
-
-  @include mixins.crossHover {
+  .header,
+  .body {
+    box-sizing: border-box;
+    width: fit-content;
+    min-width: 100%;
     overflow: visible;
   }
-}
 
-.hcell {
-  user-select: none;
-  font-weight: bold;
-}
+  .header {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+  }
 
-.rcell {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: stretch;
-  align-items: stretch;
+  .body {
+    z-index: 0;
 
-  >.grow,
-  >.hrow,
-  >.brow {
+    &[data-scroll="true"] {
+      height: 0;
+    }
+  }
+
+  .hrow,
+  .brow,
+  .grow {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex;
+    align-items: stretch;
+    background: inherit;
+    color: inherit;
+    overflow: hidden;
+    z-index: 0;
+
+    &:not(:first-child) {
+      &[data-border="true"] {
+        border-top: #{$borderStyle};
+      }
+    }
+
+    @include mixins.crossHover {
+      overflow: visible;
+    }
+  }
+
+  .brow {
+    background: var(--c-pure);
+
+    &[data-stripes="true"] {
+      &:nth-child(2n) {
+        background: var(--c-dull);
+      }
+    }
+
+    @include mixins.crossHover {
+      background: var(--c-hover) !important;
+    }
+
+    &:has(>.radio:checked) {
+      background: var(--c-selected) !important;
+    }
+
+    &[data-pointer="true"] {
+      cursor: pointer;
+    }
+  }
+
+  .hcell,
+  .bcell {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: inherit;
+    color: inherit;
+    overflow: hidden;
+    z-index: 0;
+
+    &[data-align="left"] {
+      justify-content: flex;
+    }
+
+    &[data-align="center"] {
+      justify-content: center;
+    }
+
+    &[data-align="right"] {
+      justify-content: right;
+    }
+
+    @include mixins.crossHover {
+      overflow: visible;
+    }
+  }
+
+  .hcell {
+    user-select: none;
+    font-weight: bold;
+  }
+
+  .rcell {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+
+    >.grow,
+    >.hrow,
+    >.brow {
+      flex: 1;
+      max-height: 100%;
+    }
+  }
+
+  .hcell,
+  .bcell,
+  .rcell {
+    &:not(:first-child) {
+      &[data-border="true"] {
+        border-left: #{$borderStyle};
+      }
+    }
+  }
+
+  .bcell {
+    >a {
+      max-width: 100%;
+    }
+
+    @include mixins.crossHover {
+      background: var(--c-selected);
+    }
+
+    &[data-pointer="true"] {
+      cursor: pointer;
+    }
+  }
+
+  .content {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: stretch;
     flex: 1;
-    max-height: 100%;
   }
-}
 
-.hcell,
-.bcell,
-.rcell {
-  &:not(:first-child) {
-    &[data-border="true"] {
-      border-left: #{$borderStyle};
-    }
-  }
-}
-
-.bcell {
-  > a {
+  .label {
+    box-sizing: border-box;
+    display: block;
+    padding: var(--pt-t) 1rem 0 1rem;
     max-width: 100%;
-  }
+    overflow: hidden;
 
-  @include mixins.crossHover {
-    background: var(--c-selected);
-  }
-
-  &[data-pointer="true"] {
-    cursor: pointer;
-  }
-}
-
-.content {
-  box-sizing: border-box;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: stretch;
-  align-items: stretch;
-  flex: 1;
-}
-
-.label {
-  box-sizing: border-box;
-  display: block;
-  padding: var(--pt-t) 1rem 0 1rem;
-  max-width: 100%;
-  overflow: hidden;
-
-  &[data-wrap="false"] {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-}
-
-.sort {
-  box-sizing: border-box;
-  position: relative;
-  height: 100%;
-  width: calc(var(--cs-m) * 0.4);
-  overflow: visible;
-  margin-right: 0.5rem;
-  flex: none;
-
-  &::before,
-  &::after {
-    box-sizing: border-box;
-    position: absolute;
-    content: "";
-    width: 100%;
-  }
-
-  &[data-direction=""] {
-    &::before {
-      bottom: calc(50% + 0.2rem);
-      height: calc(var(--cs-m) * 0.2);
-      background: var(--c-border);
-      clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+    &[data-wrap="false"] {
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
+  }
 
+  .sort {
+    box-sizing: border-box;
+    position: relative;
+    height: 100%;
+    width: calc(var(--cs-m) * 0.4);
+    overflow: visible;
+    margin-right: 0.5rem;
+    flex: none;
+
+    &::before,
     &::after {
-      top: calc(50% + 0.2rem);
-      height: calc(var(--cs-m) * 0.2);
-      background: var(--c-border);
-      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      width: 100%;
+    }
+
+    &[data-direction=""] {
+      &::before {
+        bottom: calc(50% + 0.2rem);
+        height: calc(var(--cs-m) * 0.2);
+        background: var(--c-border);
+        clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+      }
+
+      &::after {
+        top: calc(50% + 0.2rem);
+        height: calc(var(--cs-m) * 0.2);
+        background: var(--c-border);
+        clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+      }
+    }
+
+    &[data-direction="asc"] {
+      &::before {
+        top: calc(50% - (var(--cs-m) * 0.125));
+        height: calc(var(--cs-m) * 0.25);
+        background: var(--c-border);
+        clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+      }
+    }
+
+    &[data-direction="desc"] {
+      &::before {
+        top: calc(50% - (var(--cs-m) * 0.125));
+        height: calc(var(--cs-m) * 0.25);
+        background: var(--c-border);
+        clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+      }
     }
   }
 
-  &[data-direction="asc"] {
-    &::before {
-      top: calc(50% - (var(--cs-m) * 0.125));
-      height: calc(var(--cs-m) * 0.25);
-      background: var(--c-border);
-      clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
-    }
-  }
-
-  &[data-direction="desc"] {
-    &::before {
-      top: calc(50% - (var(--cs-m) * 0.125));
-      height: calc(var(--cs-m) * 0.25);
-      background: var(--c-border);
-      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-    }
-  }
-}
-
-.empty {
-  box-sizing: border-box;
-  position: sticky;
-  left: 0;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  min-height: 0;
-  opacity: 0.5;
-}
-
-.pagination {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  column-gap: 1rem;
-  overflow: visible;
-  z-index: 1;
-  
-  .number {
+  .empty {
     box-sizing: border-box;
+    position: sticky;
+    left: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    min-height: 0;
+    opacity: 0.5;
+  }
+
+  .pagination {
+    box-sizing: border-box;
+    position: relative;
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    padding-top: var(--pt-t);
-    column-gap: 0.2rem;
+    column-gap: 1rem;
+    overflow: visible;
+    z-index: 1;
+
+    .number {
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      padding-top: var(--pt-t);
+      column-gap: 0.2rem;
+    }
   }
-}
 
-.radio {
-  display: none !important;
-}
+  .radio {
+    display: none !important;
+  }
 
-.link {
-  box-sizing: border-box;
-  max-height: 100%;
-  max-width: 100%;
+  .link {
+    box-sizing: border-box;
+    max-height: 100%;
+    max-width: 100%;
+  }
+
 }

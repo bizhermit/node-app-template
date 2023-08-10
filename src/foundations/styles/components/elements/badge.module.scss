@@ -1,44 +1,49 @@
 @use "#/styles/var" as var;
+
 $pushout: calc(var(--cs-m) * -0.25);
 
-.main {
-  box-sizing: border-box;
-  position: absolute;
-  z-index: 999;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  cursor: inherit;
-  overflow: hidden;
-  width: fit-content;
-  user-select: none;
+@layer base {
 
-  &[data-pos="left-top"] {
-    top: #{$pushout};
-    left: #{$pushout};
-  }
+  .main {
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 999;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    cursor: inherit;
+    overflow: hidden;
+    width: fit-content;
+    user-select: none;
 
-  &[data-pos="right-top"] {
-    top: #{$pushout};
-    right: #{$pushout};
-  }
+    &[data-pos="left-top"] {
+      top: #{$pushout};
+      left: #{$pushout};
+    }
 
-  &[data-pos="left-bottom"] {
-    bottom: #{$pushout};
-    left: #{$pushout};
-  }
+    &[data-pos="right-top"] {
+      top: #{$pushout};
+      right: #{$pushout};
+    }
 
-  &[data-pos="right-bottom"] {
-    bottom: #{$pushout};
-    right: #{$pushout};
-  }
+    &[data-pos="left-bottom"] {
+      bottom: #{$pushout};
+      left: #{$pushout};
+    }
 
-  @each $size in var.$sizes {
-    &[data-size="#{$size}"] {
-      min-width: var(--cs-#{$size});
-      min-height: var(--cs-#{$size});
-      font-size: var(--fs-#{$size});
+    &[data-pos="right-bottom"] {
+      bottom: #{$pushout};
+      right: #{$pushout};
+    }
+
+    @each $size in var.$sizes {
+      &[data-size="#{$size}"] {
+        min-width: var(--cs-#{$size});
+        min-height: var(--cs-#{$size});
+        font-size: var(--fs-#{$size});
+      }
     }
   }
+
 }

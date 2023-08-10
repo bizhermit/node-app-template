@@ -1,298 +1,303 @@
 @use "#/styles/mixins" as mixins;
+
 $hTransitionTime: 0.8s;
 $vTransitionTime: 0.5s;
 
-.wrap {
-  box-sizing: border-box;
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  flex-wrap: nowrap;
+@layer base {
 
-  &[data-pos="top"],
-  &[data-pos="bottom"] {
-    >.breadcrumbs {
-      >.breadcrumb {
-        height: 100%;
+  .wrap {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-wrap: nowrap;
 
-        &:not(:first-child) {
-          padding-left: 3rem;
+    &[data-pos="top"],
+    &[data-pos="bottom"] {
+      >.breadcrumbs {
+        >.breadcrumb {
+          height: 100%;
 
-          &::before {
-            box-sizing: border-box;
-            position: absolute;
-            content: ">";
-            display: flex;
-            flex-flow: row nowrap;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 1rem;
-            left: 1rem;
-            top: 0;
-            padding-top: var(--pt-t);
-            color: var(--c-dull_);
+          &:not(:first-child) {
+            padding-left: 3rem;
+
+            &::before {
+              box-sizing: border-box;
+              position: absolute;
+              content: ">";
+              display: flex;
+              flex-flow: row nowrap;
+              justify-content: center;
+              align-items: center;
+              height: 100%;
+              width: 1rem;
+              left: 1rem;
+              top: 0;
+              padding-top: var(--pt-t);
+              color: var(--c-dull_);
+            }
           }
         }
       }
     }
-  }
 
-  &[data-pos="top"] {
-    flex-direction: column;
-  }
+    &[data-pos="top"] {
+      flex-direction: column;
+    }
 
-  &[data-pos="bottom"] {
-    flex-direction: column-reverse;
-  }
+    &[data-pos="bottom"] {
+      flex-direction: column-reverse;
+    }
 
-  &[data-pos="left"],
-  &[data-pos="right"] {
-    >.breadcrumbs {
-      writing-mode: vertical-rl;
+    &[data-pos="left"],
+    &[data-pos="right"] {
+      >.breadcrumbs {
+        writing-mode: vertical-rl;
 
-      >.breadcrumb {
-        width: 100%;
+        >.breadcrumb {
+          width: 100%;
 
-        &:not(:first-child) {
-          padding-top: 3rem;
+          &:not(:first-child) {
+            padding-top: 3rem;
 
-          &::before {
-            box-sizing: border-box;
-            position: absolute;
-            content: ">";
-            display: flex;
-            flex-flow: row nowrap;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 1rem;
-            left: 0;
-            top: 1rem;
-            color: var(--c-dull_);
+            &::before {
+              box-sizing: border-box;
+              position: absolute;
+              content: ">";
+              display: flex;
+              flex-flow: row nowrap;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+              height: 1rem;
+              left: 0;
+              top: 1rem;
+              color: var(--c-dull_);
+            }
           }
         }
       }
     }
-  }
 
-  &[data-pos="left"] {
-    flex-direction: row;
-  }
+    &[data-pos="left"] {
+      flex-direction: row;
+    }
 
-  &[data-pos="right"] {
-    flex-direction: row-reverse;
-  }
+    &[data-pos="right"] {
+      flex-direction: row-reverse;
+    }
 
-  &[data-direction="horizontal"] {
-    >.body {
-      >.content {
-        top: 0;
+    &[data-direction="horizontal"] {
+      >.body {
+        >.content {
+          top: 0;
 
-        &[data-animation="true"] {
-          transition: left #{$hTransitionTime},
-          opacity #{$hTransitionTime};
-        }
-
-        &[data-state="before"],
-        &[data-state="previous"] {
-          left: -100%;
-        }
-
-        &[data-state="current"] {
-          left: 0%;
-        }
-
-        &[data-state="next"],
-        &[data-state="after"] {
-          left: 100%;
-        }
-
-        &[data-overlap="true"] {
+          &[data-animation="true"] {
+            transition: left #{$hTransitionTime},
+            opacity #{$hTransitionTime};
+          }
 
           &[data-state="before"],
           &[data-state="previous"] {
+            left: -100%;
+          }
+
+          &[data-state="current"] {
             left: 0%;
           }
+
+          &[data-state="next"],
+          &[data-state="after"] {
+            left: 100%;
+          }
+
+          &[data-overlap="true"] {
+
+            &[data-state="before"],
+            &[data-state="previous"] {
+              left: 0%;
+            }
+          }
         }
       }
     }
-  }
 
-  &[data-direction="horizontal-reverse"] {
-    >.body {
-      >.content {
-        top: 0;
+    &[data-direction="horizontal-reverse"] {
+      >.body {
+        >.content {
+          top: 0;
 
-        &[data-animation="true"] {
-          transition: left #{$hTransitionTime},
-          opacity #{$hTransitionTime};
-        }
-
-        &[data-state="before"],
-        &[data-state="previous"] {
-          left: 100%;
-        }
-
-        &[data-state="current"] {
-          left: 0%;
-        }
-
-        &[data-state="next"],
-        &[data-state="after"] {
-          left: -100%;
-        }
-
-        &[data-overlap="true"] {
+          &[data-animation="true"] {
+            transition: left #{$hTransitionTime},
+            opacity #{$hTransitionTime};
+          }
 
           &[data-state="before"],
           &[data-state="previous"] {
+            left: 100%;
+          }
+
+          &[data-state="current"] {
             left: 0%;
           }
+
+          &[data-state="next"],
+          &[data-state="after"] {
+            left: -100%;
+          }
+
+          &[data-overlap="true"] {
+
+            &[data-state="before"],
+            &[data-state="previous"] {
+              left: 0%;
+            }
+          }
         }
       }
     }
-  }
 
-  &[data-direction="vertical"] {
-    >.body {
-      >.content {
-        left: 0;
+    &[data-direction="vertical"] {
+      >.body {
+        >.content {
+          left: 0;
 
-        &[data-animation="true"] {
-          transition: top #{$vTransitionTime},
-          opacity #{$vTransitionTime};
-        }
-
-        &[data-state="before"],
-        &[data-state="previous"] {
-          top: -100%;
-        }
-
-        &[data-state="current"] {
-          top: 0%;
-        }
-
-        &[data-state="next"],
-        &[data-state="after"] {
-          top: 100%;
-        }
-
-        &[data-overlap="true"] {
+          &[data-animation="true"] {
+            transition: top #{$vTransitionTime},
+            opacity #{$vTransitionTime};
+          }
 
           &[data-state="before"],
           &[data-state="previous"] {
+            top: -100%;
+          }
+
+          &[data-state="current"] {
             top: 0%;
+          }
+
+          &[data-state="next"],
+          &[data-state="after"] {
+            top: 100%;
+          }
+
+          &[data-overlap="true"] {
+
+            &[data-state="before"],
+            &[data-state="previous"] {
+              top: 0%;
+            }
+          }
+        }
+      }
+    }
+
+    &[data-direction="vertical-reverse"] {
+      >.body {
+        >.content {
+          left: 0;
+
+          &[data-animation="true"] {
+            transition: top #{$vTransitionTime},
+            opacity #{$vTransitionTime};
+          }
+
+          &[data-state="before"],
+          &[data-state="previous"] {
+            top: 100%;
+          }
+
+          &[data-state="current"] {
+            top: 0%;
+          }
+
+          &[data-state="next"],
+          &[data-state="after"] {
+            top: -100%;
+          }
+
+          &[data-overlap="true"] {
+
+            &[data-state="before"],
+            &[data-state="previous"] {
+              top: 0%;
+            }
           }
         }
       }
     }
   }
 
-  &[data-direction="vertical-reverse"] {
-    >.body {
-      >.content {
-        left: 0;
+  .breadcrumbs {
+    box-sizing: border-box;
+    flex: none;
+    min-width: var(--cs-m);
+    min-height: var(--cs-m);
+    display: flex;
+    justify-content: stretch;
+    align-items: flex;
+    flex-wrap: nowrap;
 
-        &[data-animation="true"] {
-          transition: top #{$vTransitionTime},
-          opacity #{$vTransitionTime};
-        }
-
-        &[data-state="before"],
-        &[data-state="previous"] {
-          top: 100%;
-        }
-
-        &[data-state="current"] {
-          top: 0%;
-        }
-
-        &[data-state="next"],
-        &[data-state="after"] {
-          top: -100%;
-        }
-
-        &[data-overlap="true"] {
-
-          &[data-state="before"],
-          &[data-state="previous"] {
-            top: 0%;
-          }
-        }
-      }
-    }
-  }
-}
-
-.breadcrumbs {
-  box-sizing: border-box;
-  flex: none;
-  min-width: var(--cs-m);
-  min-height: var(--cs-m);
-  display: flex;
-  justify-content: stretch;
-  align-items: flex;
-  flex-wrap: nowrap;
-
-  @include mixins.scrollOverlay;
-}
-
-.breadcrumb {
-  box-sizing: border-box;
-  position: relative;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  flex: none;
-  opacity: 0;
-
-  &[data-animation="true"] {
-    transition: opacity #{$vTransitionTime};
+    @include mixins.scrollOverlay;
   }
 
-  &[data-state="before"],
-  &[data-state="previous"],
-  &[data-state="current"] {
-    opacity: 1;
-  }
-}
-
-.body {
-  box-sizing: border-box;
-  position: relative;
-  flex: 1;
-  overflow: hidden;
-}
-
-.content {
-  box-sizing: border-box;
-  position: absolute;
-  width: 100%;
-  min-height: 100%;
-  height: 100%;
-  flex: none;
-  z-index: 0;
-  opacity: 0.99;
-  overflow: auto;
-
-  &[data-state="current"] {
+  .breadcrumb {
+    box-sizing: border-box;
     position: relative;
-    z-index: 1;
-    opacity: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: none;
+    opacity: 0;
+
+    &[data-animation="true"] {
+      transition: opacity #{$vTransitionTime};
+    }
+
+    &[data-state="before"],
+    &[data-state="previous"],
+    &[data-state="current"] {
+      opacity: 1;
+    }
   }
 
-  &[data-state="next"],
-  &[data-state="after"] {
-    z-index: 2;
+  .body {
+    box-sizing: border-box;
+    position: relative;
+    flex: 1;
+    overflow: hidden;
   }
 
-  &:not([data-state="current"]) {
-    max-height: 100% !important;
-    pointer-events: none !important;
-    overflow: hidden !important;
+  .content {
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+    flex: none;
+    z-index: 0;
+    opacity: 0.99;
+    overflow: auto;
+
+    &[data-state="current"] {
+      position: relative;
+      z-index: 1;
+      opacity: 1;
+    }
+
+    &[data-state="next"],
+    &[data-state="after"] {
+      z-index: 2;
+    }
+
+    &:not([data-state="current"]) {
+      max-height: 100% !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+    }
   }
+
 }
