@@ -4,6 +4,18 @@ $hoverStyle: "float";
 $hoverTransition: box-shadow 0.1s;
 $listHoverTransition: background-color 0.1s, color 0.1s;
 
+@mixin sp() {
+  @media screen and (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin notSp() {
+  @media screen and (min-width: 480px) {
+    @content;
+  }
+}
+
 @mixin outline($variableColor: true) {
   @if $variableColor== true {
     outline-width: 0.2rem;
