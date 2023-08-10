@@ -47,7 +47,9 @@ const CardClient = () => {
         $footerAlign="end"
         $toggleTriger="h&f"
       >
-        <span className="px-1 py-2">Header</span>
+        Header
+        {/* <span className="px-1 py-2">
+        </span> */}
         <Content />
         Footer
       </Card>
@@ -67,14 +69,15 @@ const CardClient = () => {
             footer: "end"
           }}
         >
-          <span className="px-2">あいうえお</span>
+          {/* <span className="px-2">あいうえお</span> */}
+          あいうえお
           <Content />
-          ん
+          わをん
         </Card>
         <Card
           $color="main"
           $resize
-          // $resize="xy"
+        // $resize="xy"
         >
           Resize
           <Content />
@@ -84,8 +87,8 @@ const CardClient = () => {
   );
 };
 
-const Content: FC = () =>{
-  
+const Content: FC = () => {
+
   useEffect(() => {
     console.log("mount");
     return () => {

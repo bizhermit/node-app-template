@@ -165,10 +165,6 @@
   /** padding                                          **/
   /**==================================================**/
 
-  .pt-t {
-    padding-top: var(--pt-t);
-  }
-
   @each $size in var.$sizes {
     .p-#{$size} {
       padding: var(--b-#{$size});

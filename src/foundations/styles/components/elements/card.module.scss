@@ -115,7 +115,7 @@
         }
 
         .text {
-          padding: 1rem 0;
+          padding: calc(var(--cs-m) / 4) 0;
         }
       }
     }

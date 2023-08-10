@@ -38,7 +38,7 @@
   }
 
   .text {
-    padding: var(--pt-t) 1rem 0 1rem;
+    padding: var(--pt-t) calc(var(--fs-m) / 2) 0 calc(var(--fs-m) / 2);
   }
 
 }

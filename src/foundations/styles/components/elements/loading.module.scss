@@ -1,7 +1,7 @@
 $bar1Width: 25%;
 $bar2Width: 15%;
-$circleSize: 12rem;
-$circleWidth: 1.2rem;
+$circleSize: calc(var(--cs-m) * 4);
+$circleWidth: calc(var(--cs-m) / 3);
 
 @layer base {
 
@@ -15,7 +15,7 @@ $circleWidth: 1.2rem;
     &[data-appearance="bar"] {
       top: 0;
       left: 0;
-      height: 0.5rem;
+      height: calc(var(--base) * 1.5);
       width: 100%;
     }
 

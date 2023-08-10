@@ -12,7 +12,7 @@ $borderStyle: 1px solid var(--c-border);
     justify-content: flex-start;
     align-items: stretch;
     overflow: visible;
-    row-gap: 0.2rem;
+    row-gap: var(--b-s);
   }
 
   .table {
@@ -188,7 +188,7 @@ $borderStyle: 1px solid var(--c-border);
   .label {
     box-sizing: border-box;
     display: block;
-    padding: var(--pt-t) 1rem 0 1rem;
+    padding: var(--pt-t) calc(var(--cs-m) / 4) 0 calc(var(--cs-m) / 4);
     max-width: 100%;
     overflow: hidden;
 
@@ -204,7 +204,7 @@ $borderStyle: 1px solid var(--c-border);
     height: 100%;
     width: calc(var(--cs-m) * 0.4);
     overflow: visible;
-    margin-right: 0.5rem;
+    margin-right: calc(var(--cs-m) / 8);
     flex: none;
 
     &::before,
@@ -270,7 +270,7 @@ $borderStyle: 1px solid var(--c-border);
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    column-gap: 1rem;
+    column-gap: var(--b-m);
     overflow: visible;
     z-index: 1;
 
@@ -281,7 +281,7 @@ $borderStyle: 1px solid var(--c-border);
       justify-content: center;
       align-items: center;
       padding-top: var(--pt-t);
-      column-gap: 0.2rem;
+      column-gap: var(--b-xs);
     }
   }
 

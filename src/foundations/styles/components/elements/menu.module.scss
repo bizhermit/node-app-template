@@ -100,7 +100,7 @@
   }
 
   .label {
-    padding: var(--pt-t) .5rem 0 .5rem;
+    padding: var(--pt-t) calc(var(--cs-m) / 4) 0 calc(var(--cs-m) / 4);
   }
 
   .children {

@@ -9,7 +9,7 @@ $borderWidth: 0.1rem;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    border-radius: var(--radius);
+    border-radius: inherit;
   }
 
   .caption {
@@ -29,14 +29,14 @@ $borderWidth: 0.1rem;
     border-top-width: #{$borderWidth};
     border-top-style: solid;
     height: 50%;
-    min-height: 1.2rem;
+    min-height: calc(var(--cs-m) / 3);
   }
 
   .prev {
     border-top-left-radius: var(--radius);
     border-left-width: #{$borderWidth};
     border-left-style: solid;
-    margin-right: 0.5rem;
+    margin-right: calc(var(--fs-m) / 2);
     flex: none;
   }
 
@@ -44,7 +44,7 @@ $borderWidth: 0.1rem;
     border-top-right-radius: var(--radius);
     border-right-width: #{$borderWidth};
     border-right-style: solid;
-    margin-left: 0.5rem;
+    margin-left: calc(var(--fs-m) / 2);
     flex: 1;
   }
 
@@ -60,6 +60,8 @@ $borderWidth: 0.1rem;
     border-bottom-right-radius: var(--radius);
     flex: 1;
     width: 100%;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
 
     &:only-child {
       border-top-width: #{$borderWidth};

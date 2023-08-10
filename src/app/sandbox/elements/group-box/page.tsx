@@ -7,7 +7,7 @@ const Page = () => {
       <Row className="g-s">
         <GroupBox
           $caption="GroupBox"
-          $bodyClassName="pb-xs px-2"
+          $bodyClassName="pb-xs px-2 r-m"
         >
           <h1>Header 1</h1>
           <h2>Header 2</h2>
