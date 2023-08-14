@@ -46,7 +46,7 @@ $useDarkColor: true;
 
 }
 
-@layer utils {
+@layer util {
 
   @each $key, $value in var.$colorMap {
     $hasR: map-get($value, "light_r") != null;
