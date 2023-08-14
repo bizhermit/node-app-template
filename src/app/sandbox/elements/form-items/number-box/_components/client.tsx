@@ -18,8 +18,8 @@ const NumberBoxClient = () => {
   const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -36,7 +36,7 @@ const NumberBoxClient = () => {
           $onChange={v => setDisallowInput(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -94,7 +94,7 @@ const NumberBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <NumberBox
           $tag="number"
           $dataItem={sample_number}
@@ -135,7 +135,7 @@ const NumberBoxClient = () => {
         $disallowInput={disallowInput}
       />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

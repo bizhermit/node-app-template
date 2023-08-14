@@ -19,8 +19,8 @@ const TextBoxClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start p-1 gap-1">
-      <Row className="gap-1">
+    <div className="flex p-xs g-s">
+      <Row className="g-s">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -32,7 +32,7 @@ const TextBoxClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -106,7 +106,7 @@ const TextBoxClient = () => {
             console.log(bindData);
           }}
         >
-          <Row className="gap-1" $vAlign="bottom">
+          <Row className="g-s" $vAlign="bottom">
             <TextBox
               $tag="no item"
               $onChange={(a, b, data) => {
@@ -134,7 +134,7 @@ const TextBoxClient = () => {
           </Row>
         </Form>
       </section>
-      <Row className="gap-1">
+      <Row className="g-s">
         <TextBox
           $tag="useState"
           $disabled={disabled}
@@ -160,7 +160,7 @@ const TextBoxClient = () => {
           action="/api/form"
           method="post"
         >
-          <Row $vAlign="bottom" className="gap-1">
+          <Row $vAlign="bottom" className="g-s">
             <TextBox
               $tag="form bind"
               name="text-box-form-bind"
@@ -171,7 +171,7 @@ const TextBoxClient = () => {
       </Row>
       <section>
         <h2>tag</h2>
-        <Row className="gap-1" $vAlign="bottom">
+        <Row className="g-s" $vAlign="bottom">
           <TextBox
             placeholder="no tag / placeholder"
             $disabled={disabled}
@@ -201,7 +201,7 @@ const TextBoxClient = () => {
       </section>
       <section>
         <h2>validation</h2>
-        <Row className="gap-1">
+        <Row className="g-s">
           <TextBox
             $disabled={disabled}
             $readOnly={readOnly}
@@ -225,7 +225,7 @@ const TextBoxClient = () => {
       </section>
       <section>
         <h2>message position</h2>
-        <div className="flex-start gap-2">
+        <div className="flex g-m">
           <TextBox
             $disabled={disabled}
             $readOnly={readOnly}
@@ -267,7 +267,7 @@ const TextBoxClient = () => {
         <h2>color</h2>
         {colors.map(color => {
           return (
-            <Row key={color} className="gap-1">
+            <Row key={color} className="g-s">
               <TextBox
                 $tag={color}
                 $color={color}

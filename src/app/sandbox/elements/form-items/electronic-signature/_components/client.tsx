@@ -20,8 +20,8 @@ const ElectronicSignatureClient = () => {
   const [buttonsPosition, setButtonsPosition] = useState<"hide" | "top" | "left" | "bottom" | "right">();
 
   return (
-    <div className="flex-start h-100 w-100 p-1 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex h-100 w-100 p-xs g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -50,7 +50,7 @@ const ElectronicSignatureClient = () => {
           ]}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -101,7 +101,7 @@ const ElectronicSignatureClient = () => {
         $dataItem={sample_file}
         $onChange={v => console.log("file: ", v)}
       />
-      <Row className="gap-1">
+      <Row className="g-s">
         <ElectronicSignature
           $tag="useState"
           $disabled={disabled}
@@ -123,7 +123,7 @@ const ElectronicSignatureClient = () => {
           $required
         />
         <Form
-          className="flex-start gap-1"
+          className="flex g-s"
           $disabled={disabled}
           $readOnly={readOnly}
           $bind={formBind}

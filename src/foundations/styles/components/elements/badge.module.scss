@@ -1,50 +1,49 @@
-$buttonSize: (
-  xs: 0.5,
-  s: 0.65,
-  m: 0.8,
-  l: 0.9,
-  xl: 1.1,
-);
-$pushout: calc(var(--size) * -0.25);
+@use "#/styles/var" as var;
 
-.main {
-  box-sizing: border-box;
-  position: absolute;
-  z-index: 999;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  cursor: inherit;
-  overflow: hidden;
-  width: fit-content;
-  user-select: none;
+$pushout: calc(var(--cs-m) * -0.25);
 
-  &[data-pos="left-top"] {
-    top: #{$pushout};
-    left: #{$pushout};
-  }
+@layer base {
 
-  &[data-pos="right-top"] {
-    top: #{$pushout};
-    right: #{$pushout};
-  }
+  .main {
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 999;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    cursor: inherit;
+    overflow: hidden;
+    width: fit-content;
+    user-select: none;
 
-  &[data-pos="left-bottom"] {
-    bottom: #{$pushout};
-    left: #{$pushout};
-  }
+    &[data-pos="left-top"] {
+      top: #{$pushout};
+      left: #{$pushout};
+    }
 
-  &[data-pos="right-bottom"] {
-    bottom: #{$pushout};
-    right: #{$pushout};
-  }
+    &[data-pos="right-top"] {
+      top: #{$pushout};
+      right: #{$pushout};
+    }
 
-  @each $key, $value in $buttonSize {
-    &[data-size="#{$key}"] {
-      min-width: calc(var(--size) * #{$value});
-      min-height: calc(var(--size) * #{$value});
-      font-size: calc(var(--font-size) * #{$value + 0.15});
+    &[data-pos="left-bottom"] {
+      bottom: #{$pushout};
+      left: #{$pushout};
+    }
+
+    &[data-pos="right-bottom"] {
+      bottom: #{$pushout};
+      right: #{$pushout};
+    }
+
+    @each $size in var.$sizes {
+      &[data-size="#{$size}"] {
+        min-width: var(--cs-#{$size});
+        min-height: var(--cs-#{$size});
+        font-size: var(--fs-#{$size});
+      }
     }
   }
+
 }

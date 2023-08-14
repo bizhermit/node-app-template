@@ -17,7 +17,7 @@ const StepperClient = () => {
   const [size, setSize] = useState<Size>("m");
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
+    <div className="flex w-100 h-100 p-xs g-s">
       <Row>
         <NumberBox
           $required
@@ -83,7 +83,7 @@ const StepperClient = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row key={idx} className="gap-1">
+              <Row key={idx} className="g-s">
                 <CloudIcon />
                 <span className="box pt-t">{idx}</span>
               </Row>
@@ -100,7 +100,7 @@ const StepperClient = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row key={idx} className="gap-1">
+              <Row key={idx} className="g-s">
                 <CloudIcon />
                 <span className="box pt-t">{idx}</span>
               </Row>

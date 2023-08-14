@@ -1,114 +1,119 @@
 @use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
+
 $animationTime: 0.4s;
 
-.main {
-  &[data-disabled="false"] {
-    &:focus {
-      @include mixins.outline;
-    }
-  }
+@layer base {
 
-  &[data-editable="true"] {
-    @include mixins.crossHover {
-      .handle {
-        &::before {
-          @include mixins.hover;
-        }
+  .main {
+    &[data-disabled="false"] {
+      &:focus {
+        @include mixins.outline;
       }
+    }
 
-      &:active {
+    &[data-editable="true"] {
+      @include mixins.crossHover {
         .handle {
           &::before {
-            @include mixins.hoverActive;
+            @include mixins.hover;
+          }
+        }
+
+        &:active {
+          .handle {
+            &::before {
+              @include mixins.hoverActive;
+            }
+          }
+        }
+      }
+
+      &[data-error="true"] {
+        >.body {
+          >.handle {
+            &::before {
+              background: var(--c-error);
+            }
           }
         }
       }
     }
+  }
 
-    &[data-error="true"] {
-      >.body {
-        >.handle {
-          &::before {
-            background: var(--c-error);
-          }
-        }
+  @include mixins.hoverAnimation;
+
+  .body {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    height: var(--cs-m);
+    width: calc(var(--cs-m) * 1.75);
+  }
+
+  .box {
+    box-sizing: border-box;
+
+    &::before {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      top: 20%;
+      left: 20%;
+      width: 60%;
+      height: 60%;
+      border-radius: 9999px;
+      border-width: #{var.$inputBorderWidth};
+      border-style: solid;
+      border-color: inherit;
+      background: inherit;
+      transition: background-color #{$animationTime};
+    }
+
+    &[data-editable="true"] {
+      &[data-checked="false"] {
+        background: var(--c-input) !important;
+      }
+    }
+
+    &[data-editable="false"] {
+      &[data-checked="false"] {
+        background: transparent !important;
       }
     }
   }
-}
 
-@include mixins.hoverAnimation;
-
-.body {
-  box-sizing: border-box;
-  position: relative;
-  display: block;
-  height: var(--size);
-  width: calc(var(--size) * 1.75);
-}
-
-.box {
-  box-sizing: border-box;
-
-  &::before {
+  .handle {
     box-sizing: border-box;
+    z-index: 1;
     position: absolute;
-    content: "";
-    top: 20%;
-    left: 20%;
-    width: 60%;
-    height: 60%;
-    border-radius: 9999px;
-    border-width: 0.1rem;
-    border-style: solid;
-    border-color: inherit;
-    background: inherit;
-    transition: background-color #{$animationTime};
-  }
+    left: 0%;
+    transition: left #{$animationTime};
 
-  &[data-editable="true"] {
-    &[data-checked="false"] {
-      background: var(--c-input) !important;
+    &::before {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      top: calc(var(--cs-m) * 0.1);
+      left: calc(var(--cs-m) * 0.1);
+      height: calc(var(--cs-m) * 0.8);
+      width: calc(var(--cs-m) * 0.8);
+      border-radius: 9999px;
+      border-width: #{var.$inputBorderWidth};
+      border-style: solid;
+      border-color: inherit;
+      background: var(--c-input);
+      @include mixins.hoverTransition;
+    }
+
+    &[data-checked="true"] {
+      left: calc(100% - var(--cs-m));
     }
   }
 
-  &[data-editable="false"] {
-    &[data-checked="false"] {
-      background: transparent !important;
-    }
-  }
-}
-
-.handle {
-  box-sizing: border-box;
-  z-index: 1;
-  position: absolute;
-  left: 0%;
-  transition: left #{$animationTime};
-
-  &::before {
-    box-sizing: border-box;
-    position: absolute;
-    content: "";
-    top: calc(var(--size) * 0.1);
-    left: calc(var(--size) * 0.1);
-    height: calc(var(--size) * 0.8);
-    width: calc(var(--size) * 0.8);
-    border-radius: 9999px;
-    border-width: 0.1rem;
-    border-style: solid;
-    border-color: inherit;
-    background: var(--c-input);
-    @include mixins.hoverTransition;
+  .label {
+    display: inline-block;
+    padding-right: calc(var(--cs-m) / 3);
   }
 
-  &[data-checked="true"] {
-    left: calc(100% - var(--size));
-  }
-}
-
-.label {
-  display: inline-block;
-  padding-right: calc(var(--size) / 3);
 }

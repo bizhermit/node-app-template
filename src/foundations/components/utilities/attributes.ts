@@ -23,16 +23,19 @@ export const attributesWithoutChildren = (props: Struct, ...classNames: Array<st
   return ret;
 };
 
-export const isNotReactNode = (node: ReactNode): node is string | number | boolean => {
+export const isNotReactNode = (node: ReactNode, opts?: { ignoreBr: boolean; }): node is string | number | boolean => {
   if (Array.isArray(node)) {
     return !node.some(item => isReactNode(item));
   }
   const t = typeof node;
+  if (opts?.ignoreBr && String((node as any)?.$$typeof) === "Symbol(react.element)" && (node as any)?.type === "br") {
+    return true;
+  }
   return t === "string" || t === "number" || t === "boolean";
 };
 
-export const isReactNode = (node: ReactNode): node is ReactElement | ReactFragment | ReactPortal | null | undefined => {
-  return !isNotReactNode(node);
+export const isReactNode = (node: ReactNode, opts?: { ignoreBr: boolean; }): node is ReactElement | ReactFragment | ReactPortal | null | undefined => {
+  return !isNotReactNode(node, opts);
 };
 
 export const convertSizeNumToStr = (value?: string | number | null, nullValue?: string) => {

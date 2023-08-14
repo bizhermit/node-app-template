@@ -145,9 +145,9 @@ const DataTableClient = () => {
   const [perPage, setPerPage] = useState(10);
 
   return (
-    <div className="flex-start w-100 h-100 gap-1 p-1">
-      <Row className="gap-1">
-        <Row className="gap-1">
+    <div className="flex w-100 h-100 g-s p-xs">
+      <Row className="g-s">
+        <Row className="g-s">
           <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(0)}>0</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(1)}>1</Button>
@@ -159,7 +159,7 @@ const DataTableClient = () => {
           <Button $size="s" $fitContent $onClick={() => generateItems(1000)}>1000</Button>
           <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
         </Row>
-        <Row className="gap-1">
+        <Row className="g-s">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>
           <ToggleBox $value={rowBorder} $onChange={v => setRowBorder(v!)}>row border</ToggleBox>
           <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>

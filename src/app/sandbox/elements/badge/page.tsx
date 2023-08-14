@@ -7,7 +7,7 @@ const Page = () => {
       <Badge
         $size="s"
       >
-        <div className="w-100 h-100 c-main round flex-center">
+        <div className="w-100 h-100 c-main round flex column center middle">
           0
         </div>
       </Badge>

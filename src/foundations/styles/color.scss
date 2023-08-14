@@ -1,79 +1,88 @@
 @use "#/styles/var" as var;
+
 $useDarkColor: true;
 
-@mixin colorIterator($color: light) {
-  @each $key, $value in var.$colorMap {
-    $val: map-get($value, #{$color});
-    $val_r: map-get($value, #{$color}_r);
-    --c-#{$key}: #{$val};
-    @if $val_r == null {
-      $invert: invert(darken($val, 30%));
-      @if lightness($invert)>50 {
-        --c-#{$key}_: #{lighten($invert, 100%)};
+@layer base {
+
+  @mixin colorIterator($color: light) {
+    @each $key, $value in var.$colorMap {
+      $val: map-get($value, #{$color});
+      $val_r: map-get($value, #{$color}_r);
+      --c-#{$key}: #{$val};
+      @if $val_r == null {
+        $invert: invert(darken($val, 30%));
+        @if lightness($invert)>50 {
+          --c-#{$key}_: #{lighten($invert, 100%)};
+        } @else {
+          --c-#{$key}_: #{darken($invert, 100%)};
+        }
       } @else {
-        --c-#{$key}_: #{darken($invert, 100%)};
+        --c-#{$key}_: #{$val_r};
       }
-    } @else {
-      --c-#{$key}_: #{$val_r};
     }
   }
-}
 
-@if $useDarkColor==true {
-  @media (prefers-color-scheme: light) {
+  @if $useDarkColor==true {
+    @media (prefers-color-scheme: light) {
+      :root {
+        @include colorIterator(light);
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        @include colorIterator(dark);
+      }
+    
+      html {
+        color-scheme: dark;
+      }
+    }
+  } @else {
     :root {
       @include colorIterator(light);
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      @include colorIterator(dark);
-    }
-  
-    html {
-      color-scheme: dark;
-    }
-  }
-} @else {
-  :root {
-    @include colorIterator(light);
-  }
 }
 
-@each $key, $value in var.$colorMap {
-  $hasR: map-get($value, "light_r") != null;
-  .c-#{$key} {
-    background: var(--c-#{$key}) !important;
-    color: var(--c-#{$key}_) !important;
-  }
-  .bgc-#{$key} {
-    background: var(--c-#{$key}) !important;
-  }
-  .bgc-#{$key}_r {
-    background: var(--c-#{$key}_) !important;
-  }
-  .fgc-#{$key} {
-    @if $hasR {
+@layer utils {
+
+  @each $key, $value in var.$colorMap {
+    $hasR: map-get($value, "light_r") != null;
+    .c-#{$key} {
+      background: var(--c-#{$key}) !important;
       color: var(--c-#{$key}_) !important;
-    } @else {
-      color: var(--c-#{$key}) !important;
     }
-  }
-  .fgc-#{$key}_r {
-    color: var(--c-#{$key}_) !important;
-  }
-  .bdc-#{$key} {
-    @if $hasR {
+    .bgc-#{$key} {
+      background: var(--c-#{$key}) !important;
+    }
+    .bgc-#{$key}_r {
+      background: var(--c-#{$key}_) !important;
+    }
+    .fgc-#{$key} {
+      @if $hasR {
+        color: var(--c-#{$key}_) !important;
+      } @else {
+        color: var(--c-#{$key}) !important;
+      }
+    }
+    .fgc-#{$key}_r {
+      color: var(--c-#{$key}_) !important;
+    }
+    .bdc-#{$key} {
+      @if $hasR {
+        border-color: var(--c-#{$key}_) !important;
+        outline-color: var(--c-#{$key}_);
+      } @else {
+        border-color: var(--c-#{$key}) !important;
+        outline-color: var(--c-#{$key});
+      }
+    }
+    .bdc-#{$key}_r {
       border-color: var(--c-#{$key}_) !important;
       outline-color: var(--c-#{$key}_);
-    } @else {
-      border-color: var(--c-#{$key}) !important;
-      outline-color: var(--c-#{$key});
     }
   }
-  .bdc-#{$key}_r {
-    border-color: var(--c-#{$key}_) !important;
-    outline-color: var(--c-#{$key}_);
-  }
+
 }

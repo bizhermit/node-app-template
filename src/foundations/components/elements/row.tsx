@@ -11,10 +11,10 @@ export type RowProps = HTMLAttributes<HTMLDivElement> & {
 const Row = forwardRef<HTMLDivElement, RowProps>((props, ref) => {
   return (
     <div
-      {...attributes(props, Style.wrap)}
+      {...attributes(props, Style.main)}
       ref={ref}
       data-h={props.$hAlign || "left"}
-      data-v={props.$vAlign || "middle"}
+      data-v={props.$vAlign || "top"}
       data-nowrap={props.$nowrap}
     />
   );

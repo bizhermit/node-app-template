@@ -3,8 +3,8 @@ import Row from "#/components/elements/row";
 
 const Layout: LayoutFC = (props) => {
   return (
-    <div className="flex-stretch">
-      <div className="flex-stretch">
+    <div className="flex column">
+      <div className="flex column">
         {props.children}
       </div>
       <Divider />

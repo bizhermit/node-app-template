@@ -167,13 +167,13 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
           }
           <div
             className={
-              `${Style.label} ${appearance === "button" ?
+              `${Style.content} ${appearance === "button" ?
                 `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
                 `fgc-${c}`
               }`
             }
           >
-            <Text>{l}</Text>
+            <Text className={Style.label}>{l}</Text>
           </div>
         </div>
       );

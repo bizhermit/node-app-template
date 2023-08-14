@@ -17,8 +17,8 @@ const PasswordBoxClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 gap-1">
-      <Row className="gap-1">
+    <div className="flex p-xs g-s">
+      <Row className="g-s">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -30,7 +30,7 @@ const PasswordBoxClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -88,7 +88,7 @@ const PasswordBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <PasswordBox
           // $round
           // $hideToggleButton
@@ -119,7 +119,7 @@ const PasswordBoxClient = () => {
           action="/api/form"
           method="post"
         >
-          <Row $vAlign="bottom" className="gap-1">
+          <Row $vAlign="bottom" className="g-s">
             <TextBox
               $tag="form bind"
               name="text-box-form-bind"

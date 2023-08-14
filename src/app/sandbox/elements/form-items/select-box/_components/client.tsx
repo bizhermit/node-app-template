@@ -21,9 +21,9 @@ const SelectBoxClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start p-1 w-100 gap-1">
+    <div className="flex p-xs w-100 g-s">
       <div style={{ height: "100vh"}}></div>
-      <Row className="gap-1" $vAlign="bottom">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -40,7 +40,7 @@ const SelectBoxClient = () => {
           $onChange={v => setDisallowInput(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -105,7 +105,7 @@ const SelectBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-2">
+      <Row className="g-m">
         <SelectBox
           ref={ref}
           $tag="number"
@@ -200,7 +200,7 @@ const SelectBoxClient = () => {
         $disallowInput={disallowInput}
       />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

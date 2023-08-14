@@ -1,81 +1,86 @@
-.wrap {
-  box-sizing: border-box;
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  flex-wrap: nowrap;
+@layer base {
 
-  &[data-direction="horizontal"] {
-    flex-direction: row;
+  .wrap {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-wrap: nowrap;
 
-    &[data-reverse="true"] {
-      flex-direction: row-reverse;
+    &[data-direction="horizontal"] {
+      flex-direction: row;
+
+      &[data-reverse="true"] {
+        flex-direction: row-reverse;
+      }
+
+      >.handle {
+        cursor: col-resize;
+      }
+
+      >.content0,
+      >.content1 {
+        height: 100% !important;
+        max-width: 100%;
+      }
     }
 
-    >.handle {
-      cursor: col-resize;
-    }
+    &[data-direction="vertical"] {
+      flex-direction: column;
 
-    >.content0,
-    >.content1 {
-      height: 100% !important;
-      max-width: 100%;
+      &[data-reverse="true"] {
+        flex-direction: column-reverse;
+      }
+
+      >.handle {
+        cursor: row-resize;
+      }
+
+      >.content0,
+      >.content1 {
+        width: 100% !important;
+        max-height: 100%;
+      }
     }
   }
 
-  &[data-direction="vertical"] {
-    flex-direction: column;
+  $handleSize: var(--b-s);
 
-    &[data-reverse="true"] {
-      flex-direction: column-reverse;
-    }
+  .handle {
+    box-sizing: border-box;
+    position: relative !important;
+    width: auto !important;
+    min-width: #{$handleSize};
+    min-height: #{$handleSize};
+    background: var(--c-border) !important;
 
-    >.handle {
-      cursor: row-resize;
-    }
-
-    >.content0,
-    >.content1 {
-      width: 100% !important;
-      max-height: 100%;
+    &::before,
+    &::after {
+      display: none !important;
     }
   }
-}
 
-$handleSize: 0.5rem;
-
-.handle {
-  box-sizing: border-box;
-  position: relative !important;
-  min-width: #{$handleSize};
-  min-height: #{$handleSize};
-  background: var(--c-border) !important;
-
-  &::before,
-  &::after {
-    display: none !important;
+  .content0,
+  .content1 {
+    box-sizing: border-box;
+    position: relative;
+    overflow: auto;
   }
-}
 
-.content0,
-.content1 {
-  box-sizing: border-box;
-  position: relative;
-  overflow: auto;
-}
-
-.content0 {
-  flex: 1;
-}
-
-.content1 {
-  &:only-child {
+  .content0 {
     flex: 1;
-    height: 100% !important;
-    max-height: 100% !important;
-    min-height: 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
   }
+
+  .content1 {
+    &:only-child {
+      flex: 1;
+      height: 100% !important;
+      max-height: 100% !important;
+      min-height: 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+    }
+  }
+
 }

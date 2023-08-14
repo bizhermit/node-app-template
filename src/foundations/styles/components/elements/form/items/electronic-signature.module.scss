@@ -1,105 +1,110 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
-.main {
-  &[data-position="right"] {
-    flex-flow: row;
+@layer base {
 
-    >.buttons {
-      flex-flow: column;
-    }
-  }
-
-  &[data-position="bottom"] {
-    flex-flow: column;
-
-    >.buttons {
+  .main {
+    &[data-position="right"] {
       flex-flow: row;
+
+      >.buttons {
+        flex-flow: column;
+      }
     }
-  }
 
-  &[data-position="top"] {
-    flex-flow: column-reverse;
-
-    >.buttons {
-      flex-flow: row;
-    }
-  }
-
-  &[data-position="left"] {
-    flex-flow: row-reverse;
-
-    >.buttons {
+    &[data-position="bottom"] {
       flex-flow: column;
-    }
-  }
 
-  &[data-editable="true"] {
-    &[data-error="true"] {
-      .canvas {
-        background-color: var(--c-error);
+      >.buttons {
+        flex-flow: row;
+      }
+    }
+
+    &[data-position="top"] {
+      flex-flow: column-reverse;
+
+      >.buttons {
+        flex-flow: row;
+      }
+    }
+
+    &[data-position="left"] {
+      flex-flow: row-reverse;
+
+      >.buttons {
+        flex-flow: column;
+      }
+    }
+
+    &[data-editable="true"] {
+      &[data-error="true"] {
+        .canvas {
+          background-color: var(--c-error);
+        }
       }
     }
   }
-}
 
-.canvas {
-  box-sizing: border-box;
-  position: relative;
-  flex: none;
-  touch-action: none;
-  border-radius: var(--radius);
-  border: 0.1rem solid var(--c-border);
-  background-color: #fff;
-  z-index: 0;
-}
+  .canvas {
+    box-sizing: border-box;
+    position: relative;
+    flex: none;
+    touch-action: none;
+    border-radius: var(--radius);
+    border: #{var.$inputBorderWidth} solid var(--c-border);
+    background-color: #fff;
+    z-index: 0;
+  }
 
-.buttons {
-  box-sizing: border-box;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-}
+  .buttons {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
 
-.button {
-  box-sizing: border-box;
-  border: none;
-  margin: 0;
-  padding: 0;
-  height: var(--size);
-  width: var(--size);
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  background: transparent;
-  z-index: 0;
-  border-radius: var(--radius);
-  
-  &:not(:disabled) {
-    cursor: pointer;
-    user-select: none;
-    @include mixins.hoverTransition;
+  .button {
+    box-sizing: border-box;
+    border: none;
+    margin: 0;
+    padding: 0;
+    height: var(--cs-m);
+    width: var(--cs-m);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: transparent;
+    z-index: 0;
+    border-radius: var(--radius);
 
-    @include mixins.crossHover {
-      @include mixins.hover;
-  
-      &:active {
-        @include mixins.hoverActive;
+    &:not(:disabled) {
+      cursor: pointer;
+      user-select: none;
+      @include mixins.hoverTransition;
+
+      @include mixins.crossHover {
+        @include mixins.hover;
+
+        &:active {
+          @include mixins.hoverActive;
+        }
       }
     }
   }
-}
 
-@include mixins.hoverAnimation;
+  @include mixins.hoverAnimation;
 
-.file {
-  display: none !important;
-  visibility: hidden;
-  max-height: 0;
-  max-width: 0;
-  opacity: 0;
-  z-index: -2;
+  .file {
+    display: none !important;
+    visibility: hidden;
+    max-height: 0;
+    max-width: 0;
+    opacity: 0;
+    z-index: -2;
+  }
+
 }

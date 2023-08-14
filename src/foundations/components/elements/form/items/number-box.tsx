@@ -289,6 +289,7 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
         inputMode={props.$inputMode || (props.$float ? "decimal" : "numeric")}
         autoComplete="off"
         data-align={props.$align || "right"}
+        data-button={ctx.editable && (props.$hideClearButton !== true || !props.$hideButtons)}
       />
       {ctx.editable && props.$hideClearButton !== true &&
         <div
@@ -307,13 +308,13 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
             className={Style.button}
             onMouseDown={e => mousedown(true, e.ctrlKey)}
           >
-            <UpIcon $size="xs" />
+            <UpIcon />
           </div>
           <div
             className={Style.button}
             onMouseDown={e => mousedown(false, e.ctrlKey)}
           >
-            <DownIcon $size="xs" />
+            <DownIcon />
           </div>
         </div>
       }

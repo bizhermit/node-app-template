@@ -1,25 +1,30 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
-.input {
-  @include mixins.inputProps;
-  height: var(--size);
-  min-width: 0;
+@layer base {
 
-  &[data-clear="true"] {
-    padding-right: 0.5rem;
-  }
+  .input {
+    @include mixins.inputProps;
+    height: var(--cs-m);
+    min-width: 0;
 
-  &[data-round="true"] {
-    padding-left: calc(var(--size) / 2);
+    &[data-clear="true"] {
+      padding-right: #{var.$textPaddingThin};
+    }
 
-    &[data-clear="false"] {
-      padding-right: calc(var(--size) / 2);
+    &[data-round="true"] {
+      padding-left: #{var.$textPaddingBold};
+
+      &[data-clear="false"] {
+        padding-right: #{var.$textPaddingBold};
+      }
     }
   }
-}
 
-.button {
-  @include mixins.inputButton;
-}
+  .button {
+    @include mixins.inputButton;
+  }
 
-@include mixins.hoverAnimation;
+  @include mixins.hoverAnimation;
+
+}

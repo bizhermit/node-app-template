@@ -14,7 +14,7 @@ const HiddenClient = () => {
   const [messagePos, setMessagePos] = useState<Nullable<FormItemMessageDisplayMode>>("bottom");
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Row>
         <RadioButtons<FormItemMessageDisplayMode>
           $source={[
@@ -30,7 +30,7 @@ const HiddenClient = () => {
       </Row>
       <Divider />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind
         $onSubmit={(data) => {
           console.log(JSON.stringify(data, null, 2));
@@ -49,7 +49,7 @@ const HiddenClient = () => {
           $value={value}
           $show
         />
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             type="submit"
             $ignoreFormValidation
@@ -60,7 +60,7 @@ const HiddenClient = () => {
             reset
           </Button>
         </Row>
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             $onClick={() => setValue(undefined)}
           >

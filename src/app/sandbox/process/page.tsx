@@ -66,11 +66,11 @@ const Page = () => {
   };
 
   return (
-    <div className="flex-start p-2 gap-2">
+    <div className="flex p-s g-m">
       {process.ing && <Loading />}
       <Text>processing: {String(process.ing)}</Text>
       <Text>last: {last}</Text>
-      <Row className="gap-2">
+      <Row className="g-m">
         <Button
           $onClick={() => {
             setCount(count + 1);
@@ -97,7 +97,7 @@ const Page = () => {
         </Button>
         <Text>{count}</Text>
       </Row>
-      <Row className="gap-2">
+      <Row className="g-m">
         <Button
           $onClick={() => {
             console.log("- cancel", process.cancel());

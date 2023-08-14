@@ -1,8 +1,21 @@
 @use "#/styles/var" as var;
+
 // $hoverStyle: "outline";
 $hoverStyle: "float";
 $hoverTransition: box-shadow 0.1s;
 $listHoverTransition: background-color 0.1s, color 0.1s;
+
+@mixin sp() {
+  @media screen and (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin notSp() {
+  @media screen and (min-width: 480px) {
+    @content;
+  }
+}
 
 @mixin outline($variableColor: true) {
   @if $variableColor== true {
@@ -115,7 +128,7 @@ $listHoverTransition: background-color 0.1s, color 0.1s;
 
   @if $customWidth ==false {
     flex: 1;
-    padding: calc(var(--padding-top-text) + 0.1rem) 1rem 0 1rem;
+    padding: calc(var(--pt-t) + 0.1rem) #{var.$textPadding} 0 #{var.$textPadding};
   }
 
   &[data-align="left"] {
@@ -144,8 +157,8 @@ $listHoverTransition: background-color 0.1s, color 0.1s;
   transition: opacity #{var.$transitionTime};
 
   @if $customSize ==false {
-    height: var(--size);
-    width: calc(var(--size) * 0.9);
+    height: var(--cs-m);
+    width: var(--cs-m);
   }
 
   &[data-round="true"] {

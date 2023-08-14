@@ -1,33 +1,34 @@
+import Style from "#/styles/components/elements/icon.module.scss";
 import { joinClassNames } from "#/components/utilities/attributes";
 import { type CSSProperties, forwardRef, type HTMLAttributes, type ForwardedRef } from "react";
 
 type IconProps = Omit<HTMLAttributes<SVGSVGElement>, "children"> & {
   className?: string;
   style?: CSSProperties;
-  $size?: Size | number;
+  $size?: Size | number | `${number}`;
 };
 
 const svgAttrs = (props: IconProps) => {
-  const size = (() => {
-    if (props.$size == null) return 0;
-    if (typeof props.$size === "number") return props.$size;
-    switch (props.$size) {
-      case "xs":
-        return 10;
-      case "s":
-        return 12.5;
-      case "l":
-        return 20;
-      case "xl":
-        return 24;
-      default:
-        return 16;
-    }
-  })();
   return {
-    height: size,
-    width: size,
-    className: joinClassNames("icon", props.className),
+    ...(() => {
+      if (props.$size == null) return {};
+      if (typeof props.$size === "number") {
+        return {
+          width: props.$size,
+          height: props.$size,
+        };
+      }
+      if (["xs", "s", "m", "l", "xl"].includes(props.$size)) {
+        return {
+          "data-size": props.$size,
+        };
+      }
+      return {
+        width: props.$size,
+        height: props.$size,
+      };
+    })(),
+    className: joinClassNames("icon", Style.main, props.className),
     style: props.style,
     viewBox: "0 0 20 20",
     xmlns: "http://www.w2.5.org/2000/svg",

@@ -501,7 +501,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
             })}
             target={column.hrefOptions?.target}
             rel={column.hrefOptions?.rel}
-            className={joinClassNames(Style.link, column.hrefOptions?.decoration === false ? "no-decoration" : undefined)}
+            $noDecoration={column.hrefOptions?.decoration === false}
+            className={Style.link}
           >
             {column.body ?
               <column.body

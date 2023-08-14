@@ -17,8 +17,8 @@ const TextAreaClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -30,7 +30,7 @@ const TextAreaClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -88,7 +88,7 @@ const TextAreaClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row $vAlign="top" className="gap-1">
+      <Row $vAlign="top" className="g-s">
         <TextArea
           $tag="useState"
           $disabled={disabled}
@@ -112,7 +112,7 @@ const TextAreaClient = () => {
           $resize="x"
         />
         <Form
-          className="flex-start gap-1"
+          className="flex g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}
