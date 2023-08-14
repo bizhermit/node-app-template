@@ -7,7 +7,6 @@ const enableAppDir = nextConfig.experimental?.appDir ?? false;
 const srcRootPath = path.join(__dirname, "../src");
 const appRootPath = path.join(srcRootPath, "app");
 const pageRootPath = path.join(srcRootPath, "pages");
-const apiRootPath = path.join(pageRootPath, "api");
 
 const pagesRoutes = [];
 const pagesApiRoutes = [];
@@ -37,7 +36,7 @@ const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
     }
 
     if (/page.ts[x]?$/.test(name)) {
-      appRoutes.push(`/${path.relative(appRootPath, dirName).replace(/\\/g, "/")}`);
+      appRoutes.push(`/${path.relative(appRootPath, dirName).replace(/\\/g, "/").replace(/\/\([^)]*\)/g, "")}`);
     }
   });
 };
