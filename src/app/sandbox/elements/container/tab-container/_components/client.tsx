@@ -103,7 +103,7 @@ const TabContainerClient = () => {
         </TabContent>
         <TabContent
           key="tab3"
-          label={<Row><CloudIcon /><span>Tab3</span></Row>}
+          label={<><CloudIcon /><span>Tab3</span></>}
         >
           <h1>Tab 3</h1>
           <Button
