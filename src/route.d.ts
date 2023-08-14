@@ -4,6 +4,8 @@
 type AppDir = true;
 
 type AppRoutePath = "/"
+ | "/sandbox/group-a"
+ | "/sandbox/group-b"
  | "/sandbox/color"
  | "/sandbox/dynamic"
  | "/sandbox/dynamic/[id]"
