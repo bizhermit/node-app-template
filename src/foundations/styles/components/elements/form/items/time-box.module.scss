@@ -38,7 +38,7 @@
   .s {
     @include mixins.inputProps(true);
     height: var(--cs-m);
-    width: 2.8rem;
+    width: calc(var(--cs-m) * 0.8);
     padding: calc(var(--pt-t) + 0.1rem) 0 0 0;
     text-align: center;
     flex: none;

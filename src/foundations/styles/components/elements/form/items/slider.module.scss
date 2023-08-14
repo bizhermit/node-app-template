@@ -1,3 +1,4 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
 @layer base {
@@ -53,7 +54,7 @@
     height: var(--cs-m);
     width: var(--cs-m);
     border-radius: 9999px;
-    border: 0.1rem solid var(--c-border);
+    border: #{var.$inputBorderWidth} solid var(--c-border);
     background: var(--c-input);
     user-select: none;
   }
@@ -61,10 +62,10 @@
   .bar {
     box-sizing: border-box;
     position: absolute;
-    height: 1rem;
+    height: calc(var(--cs-m) / 4);
     width: calc(100% - var(--cs-m));
-    border: 0.1rem solid var(--c-border);
-    top: calc(50% - 0.5rem);
+    border: #{var.$inputBorderWidth} solid var(--c-border);
+    top: calc(50% - var(--cs-m) / 8);
     left: calc(var(--cs-m) / 2);
     border-radius: 9999px;
     overflow: hidden;

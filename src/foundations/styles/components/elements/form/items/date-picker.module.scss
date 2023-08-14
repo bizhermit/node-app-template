@@ -1,3 +1,4 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
 $width7: 14.285%;
@@ -7,8 +8,8 @@ $pulldownTransitionTime: 0.5s;
 
   .main {
     flex-direction: column !important;
-    width: 32rem;
-    height: 26rem;
+    width: calc(var(--cs-m) * 9);
+    height: calc(var(--cs-m) * 7);
     border-radius: var(--radius);
     overflow: visible;
     background: var(--c-input);
@@ -86,8 +87,8 @@ $pulldownTransitionTime: 0.5s;
         overflow-x: visible;
         flex: 1;
         z-index: 0;
-        padding: calc(var(--cs-m) * 2.85) 0.6rem;
-        gap: 0.6rem;
+        padding: calc(var(--cs-m) * 2.85) var(--b-xs);
+        gap: var(--b-xs);
 
         >.cell {
           height: calc(var(--cs-m) * 0.75);
@@ -316,8 +317,8 @@ $pulldownTransitionTime: 0.5s;
     justify-content: center;
     align-items: center;
     padding-top: var(--pt-t);
-    line-height: 1.2rem;
-    border-width: 0.1rem;
+    line-height: calc(var(--cs-m) / 3);
+    border-width: #{var.$inputBorderWidth};
     border-style: solid;
     border-color: transparent;
     border-radius: var(--radius);

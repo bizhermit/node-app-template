@@ -2,6 +2,10 @@ $sizes: xs, s, m, l, xl;
 $transitionTime: 0.2s;
 $placeholderOpacity: 0.6;
 $disabledOpacity: 0.6;
+$inputBorderWidth: 0.1rem;
+$textPaddingBold: calc(var(--cs-m) / 2);
+$textPadding: calc(var(--cs-m) / 4);
+$textPaddingThin: calc(var(--cs-m) / 8);
 
 $baseColor: (
   "light": rgb(240, 240, 247),

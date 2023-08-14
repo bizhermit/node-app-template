@@ -44,11 +44,12 @@
     }
   }
 
-  $handleSize: 0.5rem;
+  $handleSize: var(--b-s);
 
   .handle {
     box-sizing: border-box;
     position: relative !important;
+    width: auto !important;
     min-width: #{$handleSize};
     min-height: #{$handleSize};
     background: var(--c-border) !important;

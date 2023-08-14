@@ -1,3 +1,4 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
 $space: 0.3rem;
@@ -40,7 +41,7 @@ $space: 0.3rem;
 
   .hcell {
     text-align: left;
-    padding: var(--pt-t) 1rem 0 1rem;
+    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     white-space: nowrap;
     width: 0;
   }
@@ -100,7 +101,7 @@ $space: 0.3rem;
 
   .label {
     max-width: 100%;
-    padding: var(--pt-t) 1rem 0 1rem;
+    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     word-break: break-all;
 
     &[data-align="center"] {

@@ -1,7 +1,7 @@
 @use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
-$tagHeight: var(--tag-height, calc(var(--font-size) * 1.5));
+$tagHeight: calc(var(--fs-m) * 1.5);
 $tagMoveTransitionTime: 0.5s;
 
 @layer base {
@@ -64,10 +64,10 @@ $tagMoveTransitionTime: 0.5s;
 
     &[data-pos="placeholder"] {
       position: absolute;
-      top: calc($tagHeight);
+      top: $tagHeight;
       padding-top: calc(var(--pt-t) + 0.1rem);
       height: var(--cs-m);
-      left: 1rem;
+      left: #{var.$textPadding};
       color: var(--c-placeholder_);
       z-index: 1;
       transition: left #{$tagMoveTransitionTime},
@@ -101,7 +101,7 @@ $tagMoveTransitionTime: 0.5s;
         content: "";
         height: 100%;
         width: 100%;
-        border-width: 0.1rem;
+        border-width: #{var.$inputBorderWidth};
         border-style: solid;
         border-color: inherit;
         border-radius: var(--radius);
@@ -154,8 +154,8 @@ $tagMoveTransitionTime: 0.5s;
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
-    min-height: calc(var(--font-size) * 1.5);
-    font-size: calc(var(--font-size) * 0.85);
+    min-height: calc(var(--fs-s) * 1.5);
+    font-size: var(--fs-s);
 
     &[data-mode="tooltip"] {
       padding: .5rem 1.5rem .5rem 1.5rem;

@@ -55,7 +55,9 @@ const Page = () => {
               <Component className="bgc-cool" $size="m" />
               <Component className="bgc-cool" $size="l" />
               <Component className="bgc-cool" $size="xl" />
-              <Component className="bgc-cool" />
+              <div className="fs-xl">
+                <Component className="bgc-cool fs-xl" />
+              </div>
               <Button $icon={<Component />} />
               <Button $icon={<Component />} $outline />
               <Button $icon={<Component />}>{name}</Button>

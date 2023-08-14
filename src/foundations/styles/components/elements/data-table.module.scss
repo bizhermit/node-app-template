@@ -188,7 +188,7 @@ $borderStyle: 1px solid var(--c-border);
   .label {
     box-sizing: border-box;
     display: block;
-    padding: var(--pt-t) calc(var(--cs-m) / 4) 0 calc(var(--cs-m) / 4);
+    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     max-width: 100%;
     overflow: hidden;
 

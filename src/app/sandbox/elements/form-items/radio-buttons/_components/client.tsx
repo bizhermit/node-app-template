@@ -16,6 +16,7 @@ const RadioButtonsClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [appearance, setAppearance] = useState<"point" | "check" | "check-outline" | "button">("point");
+  const [outline, setOutline] = useState(false);
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
@@ -43,6 +44,11 @@ const RadioButtonsClient = () => {
           ]}
           $value={appearance}
           $onChange={v => setAppearance(v!)}
+        />
+        <ToggleBox
+          $tag="outline"
+          $value={outline}
+          $onChange={v => setOutline(v!)}
         />
       </Row>
       <Row className="g-s">
@@ -111,7 +117,8 @@ const RadioButtonsClient = () => {
           $source={ArrayUtils.generateArray(3, (value) => {
             return { value, label: `item ${value}` };
           })}
-          $outline
+          $appearance={appearance}
+          $outline={outline}
         />
         <RadioButtons
           $tag="string"
@@ -120,6 +127,8 @@ const RadioButtonsClient = () => {
           $source={ArrayUtils.generateArray(3, (value) => {
             return { value: String(value), label: `item ${value}` };
           })}
+          $appearance={appearance}
+          $outline={outline}
         />
         <RadioButtons
           $allowNull
@@ -129,12 +138,15 @@ const RadioButtonsClient = () => {
             label: "selected",
           }]}
           $onChange={console.log}
+          $appearance={appearance}
+          $outline={outline}
         />
       </Row>
       <RadioButtons
-        style={{ width: 500 }}
+        // style={{ width: 500 }}
         $tag="useState"
         $appearance={appearance}
+        $outline={outline}
         $disabled={disabled}
         $readOnly={readOnly}
         $color="danger"
@@ -166,6 +178,7 @@ const RadioButtonsClient = () => {
         name="radio-buttons-bind"
         $tag="bind"
         $appearance={appearance}
+        $outline={outline}
         $bind={bind}
         $disabled={disabled}
         $readOnly={readOnly}
@@ -198,6 +211,7 @@ const RadioButtonsClient = () => {
           $tag="form bind"
           name="radio-buttons-form-bind"
           $appearance={appearance}
+          $outline={outline}
           $source={colors.map((color, count) => {
             return {
               value: color,
@@ -206,7 +220,6 @@ const RadioButtonsClient = () => {
               count,
             };
           })}
-          $outline
           $tieInNames={[
             "color",
             { dataName: "label", hiddenName: "colorLabel" },
@@ -219,6 +232,7 @@ const RadioButtonsClient = () => {
         <RadioButtons
           style={{ width: 200 }}
           $appearance={appearance}
+          $outline={outline}
           $readOnly={readOnly}
           $disabled={disabled}
           $direction="vertical"
@@ -231,6 +245,7 @@ const RadioButtonsClient = () => {
         />
         <RadioButtons
           $appearance={appearance}
+          $outline={outline}
           $readOnly={readOnly}
           $disabled={disabled}
           $direction="vertical"
@@ -244,6 +259,7 @@ const RadioButtonsClient = () => {
         />
         <RadioButtons
           $appearance={appearance}
+          $outline={outline}
           $disabled={disabled}
           $readOnly={readOnly}
           $color="danger"

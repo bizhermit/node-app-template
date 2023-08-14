@@ -128,7 +128,7 @@ $listHoverTransition: background-color 0.1s, color 0.1s;
 
   @if $customWidth ==false {
     flex: 1;
-    padding: calc(var(--pt-t) + 0.1rem) calc(var(--cs-m) / 4) 0 calc(var(--cs-m) / 4);
+    padding: calc(var(--pt-t) + 0.1rem) #{var.$textPadding} 0 #{var.$textPadding};
   }
 
   &[data-align="left"] {
@@ -158,7 +158,7 @@ $listHoverTransition: background-color 0.1s, color 0.1s;
 
   @if $customSize ==false {
     height: var(--cs-m);
-    width: var(--cs-s);
+    width: var(--cs-m);
   }
 
   &[data-round="true"] {

@@ -1,3 +1,4 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
 @layer base {
@@ -50,7 +51,7 @@
     flex: none;
     touch-action: none;
     border-radius: var(--radius);
-    border: 0.1rem solid var(--c-border);
+    border: #{var.$inputBorderWidth} solid var(--c-border);
     background-color: #fff;
     z-index: 0;
   }

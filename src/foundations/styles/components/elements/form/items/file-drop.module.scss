@@ -33,7 +33,7 @@
   .body {
     box-sizing: border-box;
     z-index: 1;
-    padding: 1rem;
+    padding: #{var.$textPadding};
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;

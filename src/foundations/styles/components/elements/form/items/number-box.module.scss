@@ -7,6 +7,10 @@
     @include mixins.inputProps;
     height: var(--cs-m);
     min-width: 0;
+
+    &[data-button="true"] {
+      padding-right: #{var.$textPaddingThin};
+    }
   }
 
   .clear {
@@ -39,11 +43,7 @@
     cursor: pointer;
     user-select: none;
     @include mixins.hoverTransition("background-color #{var.$transitionTime}, color #{var.$transitionTime}");
-
-    > :global(.icon) {
-      height: 1.2rem;
-      width: 1.2rem;
-    }
+    --is: var(--is-s);
 
     @include mixins.crossHover {
       @include mixins.hover;

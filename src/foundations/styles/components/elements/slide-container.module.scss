@@ -19,7 +19,7 @@ $vTransitionTime: 0.5s;
           height: 100%;
 
           &:not(:first-child) {
-            padding-left: 3rem;
+            padding-left: calc(var(--fs-m) * 2);
 
             &::before {
               box-sizing: border-box;
@@ -30,8 +30,8 @@ $vTransitionTime: 0.5s;
               justify-content: center;
               align-items: center;
               height: 100%;
-              width: 1rem;
-              left: 1rem;
+              width: var(--fs-m);
+              left: calc(var(--fs-m) / 2);
               top: 0;
               padding-top: var(--pt-t);
               color: var(--c-dull_);
@@ -58,7 +58,7 @@ $vTransitionTime: 0.5s;
           width: 100%;
 
           &:not(:first-child) {
-            padding-top: 3rem;
+            padding-top: calc(var(--fs-m) * 2);
 
             &::before {
               box-sizing: border-box;
@@ -69,9 +69,9 @@ $vTransitionTime: 0.5s;
               justify-content: center;
               align-items: center;
               width: 100%;
-              height: 1rem;
+              height: var(--fs-m);
               left: 0;
-              top: 1rem;
+              top: calc(var(--fs-m) / 2);
               color: var(--c-dull_);
             }
           }

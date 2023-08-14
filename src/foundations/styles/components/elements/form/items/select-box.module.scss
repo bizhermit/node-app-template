@@ -13,6 +13,8 @@
     }
 
     &[data-editable="true"] {
+      padding-right: #{var.$textPaddingThin};
+
       &[data-input="false"] {
         cursor: pointer;
       }
@@ -41,7 +43,7 @@
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
-    padding: var(--pt-t) 1rem 0 1rem;
+    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     height: var(--cs-m);
     flex: none;
     cursor: pointer;

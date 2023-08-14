@@ -136,7 +136,7 @@ const SlideContainerClient = () => {
             ))}
           </div>
         </SlideContent>
-        <SlideContent label={<Row $nowrap><CloudIcon /><span>Slide2</span></Row>}>
+        <SlideContent label={<><CloudIcon /><span>Slide2</span></>}>
           {/* <div className="box w-100 h-min100 c-tertiary p-xs"> */}
           <h1>Slide 2</h1>
           {ArrayUtils.generateArray(20, (idx) => (

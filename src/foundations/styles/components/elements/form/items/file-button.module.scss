@@ -1,3 +1,4 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
 @layer base {
@@ -13,7 +14,7 @@
 
   .label {
     box-sizing: border-box;
-    padding: var(--pt-t) 1rem 0 1rem;
+    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
   }
 
   .clear {

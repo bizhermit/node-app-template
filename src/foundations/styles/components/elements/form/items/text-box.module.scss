@@ -1,3 +1,4 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
 @layer base {
@@ -8,14 +9,14 @@
     min-width: 0;
 
     &[data-clear="true"] {
-      padding-right: 0.5rem;
+      padding-right: #{var.$textPaddingThin};
     }
 
     &[data-round="true"] {
-      padding-left: calc(var(--cs-m) / 2);
+      padding-left: #{var.$textPaddingBold};
 
       &[data-clear="false"] {
-        padding-right: calc(var(--cs-m) / 2);
+        padding-right: #{var.$textPaddingBold};
       }
     }
   }
