@@ -67,7 +67,7 @@ const TabContainerClient = () => {
           key="tab1"
           label="Tab 1"
         >
-          <div className="box h-100 px-1">
+          <div className="box h-100 px-s">
             <h1>Tab 1</h1>
             <Button
               $outline
@@ -86,7 +86,7 @@ const TabContainerClient = () => {
           key="tab2"
           label="Tab 2"
         >
-          <div className="box w-100 h-100 px-1">
+          <div className="box w-100 h-100 px-s">
             <h1>Tab 2</h1>
             <Button
               $outline

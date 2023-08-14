@@ -154,7 +154,7 @@ const ToggleBoxClient = () => {
         return (
           <Row key={color}>
             <ToggleBox $color={color} $defaultValue />
-            <span className={`pt-t px-1 c-${color}`}>{color}</span>
+            <span className={`pt-t px-s c-${color}`}>{color}</span>
           </Row>
         );
       })}

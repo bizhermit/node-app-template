@@ -117,7 +117,7 @@ const SlideContainerClient = () => {
       // $unmountDeselected
       >
         <SlideContent label="Slide 0">
-          <div className="box h-min100 px-1 c-primary">
+          <div className="box h-min100 px-s c-primary">
             <h1>Slide 0</h1>
             {ArrayUtils.generateArray(10, (idx) => (
               <Row key={idx}>
@@ -127,7 +127,7 @@ const SlideContainerClient = () => {
           </div>
         </SlideContent>
         <SlideContent label="Slide 1">
-          <div className="box w-100 h-min100 px-1 c-secondary">
+          <div className="box w-100 h-min100 px-s c-secondary">
             <h1>Slide 1</h1>
             {ArrayUtils.generateArray(15, (idx) => (
               <Row key={idx}>

@@ -68,7 +68,7 @@ const SplitContainerClient = () => {
       // $defaultMount
       // $unmountDeselected
       >
-        <div className="box w-100 h-100 px-1 c-primary">
+        <div className="box w-100 h-100 px-s c-primary">
           <h1>Cotent 1</h1>
           <Button
             $outline
@@ -87,7 +87,7 @@ const SplitContainerClient = () => {
           minSize="10%"
           maxSize="80%"
         >
-          <div className="box w-100 h-100 px-1 c-secondary">
+          <div className="box w-100 h-100 px-s c-secondary">
             <h1>Content2 2</h1>
             <Button
               $outline

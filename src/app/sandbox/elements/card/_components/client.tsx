@@ -48,7 +48,7 @@ const CardClient = () => {
         $toggleTriger="h&f"
       >
         Header
-        {/* <span className="px-1 py-2">
+        {/* <span className="px-s py-m">
         </span> */}
         <Content />
         Footer
@@ -69,7 +69,7 @@ const CardClient = () => {
             footer: "end"
           }}
         >
-          {/* <span className="px-2">あいうえお</span> */}
+          {/* <span className="px-m">あいうえお</span> */}
           あいうえお
           <Content />
           わをん

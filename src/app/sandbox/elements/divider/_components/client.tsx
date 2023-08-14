@@ -30,14 +30,14 @@ const DividerClient = () => {
             <div key={color}>
               <Divider
                 $color={color}
-                className="py-1 px-1"
+                className="py-s px-s"
               >
                 {color}
               </Divider>
               <Divider
                 $color={color}
                 $reverseColor
-                className={`py-1 px-1 c-${color}`}
+                className={`py-s px-s c-${color}`}
               >
                 {`${color} reverse`}
               </Divider>

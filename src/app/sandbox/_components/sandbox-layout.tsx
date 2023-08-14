@@ -23,13 +23,13 @@ const SandboxLayoutProvider: FC<{
 
 const Header: FC = () => {
   return (
-    <div className="px-1">Header</div>
+    <header className="flex row middle px-m h-m">Header</header>
   );
 };
 
 const Footer: FC = () => {
   return (
-    <div className="px-1">foot</div>
+    <div className="flex row middle px-s">foot</div>
   );
 };
 
