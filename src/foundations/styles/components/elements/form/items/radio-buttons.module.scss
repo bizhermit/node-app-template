@@ -143,8 +143,8 @@
 
           >.content {
             >.label {
-              padding-left: calc(var(--cs-m) / 2);
-              padding-right: calc(var(--cs-m) / 2);
+              padding-left: #{var.$textPaddingBold};
+              padding-right: #{var.$textPaddingBold};
             }
           }
         }
@@ -181,15 +181,15 @@
 
           >.content {
             >.label {
-              padding-left: calc(var(--cs-m) / 2);
-              padding-right: calc(var(--cs-m) / 2);
+              padding-left: #{var.$textPaddingBold};
+              padding-right: #{var.$textPaddingBold};
             }
           }
         }
 
         >.content {
           >.label {
-            padding-right: #{var.$textPaddingThin};
+            padding-right: #{var.$textPadding};
           }
         }
       }
@@ -301,8 +301,10 @@
       }
 
       >.content {
+        padding-right: #{var.$textPadding};
+        
         >.label {
-          padding-left: calc(var(--cs-m) / 8);
+          padding-left: #{var.$textPaddingThin};
         }
       }
     }

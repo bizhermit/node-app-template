@@ -89,6 +89,7 @@ const ButtonClient = () => {
           >
             round
           </Button>
+          <Button $fitContent>fit</Button>
         </div>
       </section>
       <section>

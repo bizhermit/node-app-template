@@ -52,7 +52,7 @@ $shadowPadding: .2rem;
   }
 
   .header {
-    min-height: var(---cs-m);
+    min-height: var(--cs-m);
     background: var(--c-nav);
     color: var(--c-nav_);
     box-shadow: 0 .1rem #{$shadowWidth} 0 var(--c-shadow);
