@@ -338,6 +338,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
         data-align={props.$align}
         data-editable={ctx.editable}
         data-input={!props.$disallowInput}
+        data-button={ctx.editable && !loading && (props.$hideClearButton !== true || true)}
       />
       {ctx.editable && !loading &&
         <>
