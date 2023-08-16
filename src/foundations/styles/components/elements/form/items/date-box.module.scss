@@ -52,11 +52,11 @@
     flex: none;
 
     &:first-child {
-      margin-left: calc(var(--fs-m) / 2);
+      margin-left: #{var.$textPadding};
     }
 
     &:last-child {
-      margin-right: calc(var(--fs-m) / 2);
+      margin-right: #{var.$textPadding};
     }
   }
 

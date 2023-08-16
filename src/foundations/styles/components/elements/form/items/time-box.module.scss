@@ -44,11 +44,11 @@
     flex: none;
 
     &:first-of-type {
-      margin-left: calc(var(--fs-m) / 2);
+      margin-left: #{var.$textPadding};
     }
 
     &:last-of-type {
-      margin-right: calc(var(--fs-m) / 2);
+      margin-right: #{var.$textPadding};
     }
   }
 
