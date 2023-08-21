@@ -488,3 +488,19 @@
   //   user-select: none;
   // }
 }
+
+@layer base {
+  .flex {
+    &:not(.row) {
+      >* {
+        max-width: 100%;
+      }
+    }
+
+    &.row {
+      >* {
+        min-width: 0;
+      }
+    }
+  }
+}
