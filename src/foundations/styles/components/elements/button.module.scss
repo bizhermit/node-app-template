@@ -14,6 +14,8 @@
     border: none;
     border-radius: var(--radius);
     outline: none;
+    max-width: 100%;
+    max-height: 100%;
 
     &.link {
       width: 100%;
@@ -65,7 +67,7 @@
         height: var(--cs-#{$size});
 
         &[data-wide="true"] {
-          min-width: calc(var(--cs-#{$size}) * 4);
+          width: calc(var(--cs-#{$size}) * 4);
         }
 
         >.main {
@@ -76,7 +78,7 @@
 
           >.icon {
             &:not(:only-child) {
-              min-width: calc(var(--cs-#{$size}));
+              min-width: var(--cs-#{$size});
             }
           }
         }
