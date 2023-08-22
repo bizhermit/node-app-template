@@ -15,6 +15,7 @@ type FormItemWrapProps = FormItemProps<any, any, any, any> & {
   $clickable?: boolean;
   $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
   $useHidden?: boolean;
+  $hideWhenNoError?: boolean;
   children?: ReactNode;
 };
 
@@ -61,6 +62,10 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
       {...inputAttributes(props, Style.wrap, props.$className)}
       ref={ref}
       data-tagpad={tagPlaceholder}
+      data-hidden={
+        props.$messagePosition === "none" ? true :
+          props.$hideWhenNoError ? !isErrorObject(props.$context.error) : undefined
+      }
     >
       {props.$tag &&
         <div
