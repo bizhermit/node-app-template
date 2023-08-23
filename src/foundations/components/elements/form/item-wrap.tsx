@@ -62,10 +62,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
       {...inputAttributes(props, Style.wrap, props.$className)}
       ref={ref}
       data-tagpad={tagPlaceholder}
-      data-hidden={
-        props.$messagePosition === "none" ? true :
-          props.$hideWhenNoError ? !isErrorObject(props.$context.error) : undefined
-      }
+      data-hidden={props.$hideWhenNoError ? !isErrorObject(props.$context.error) || props.$messagePosition === "none" : undefined}
     >
       {props.$tag &&
         <div
