@@ -277,21 +277,6 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     style: props.style,
     direction: props.$animationDirection,
     onToggle: (open) => {
-      if (open) {
-        showedRef.current = true;
-        updateZIndex.current();
-        if (mref.current) {
-          mref.current.style.removeProperty("display");
-          mref.current.style.opacity = "0";
-        }
-        resetPosition();
-      } else {
-        if (mref.current) {
-          mref.current.style.removeProperty("display");
-          mref.current.style.opacity = "1";
-        }
-      }
-      props.$onToggle?.(open);
       const closeListener = (e: MouseEvent) => {
         let elem = e.target as HTMLElement;
         while (elem != null) {
@@ -306,13 +291,38 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
           setShowed(false);
         }
       };
-      if (props.$closeWhenClick) {
-        if (open) {
+      let resizeTimeout: NodeJS.Timeout | null = null;
+      const resizeListener = () => {
+        if (resizeTimeout) return;
+        resizeTimeout = setTimeout(() => {
+          resetPosition();
+          resizeTimeout = null;
+        }, 40);
+      };
+
+      if (open) {
+        showedRef.current = true;
+        updateZIndex.current();
+        if (mref.current) {
+          mref.current.style.removeProperty("display");
+          mref.current.style.opacity = "0";
+        }
+        resetPosition();
+        if (props.$closeWhenClick) {
           window.addEventListener("click", closeListener, true);
         }
+        window.addEventListener("resize", resizeListener, true);
+      } else {
+        if (mref.current) {
+          mref.current.style.removeProperty("display");
+          mref.current.style.opacity = "1";
+        }
       }
+      props.$onToggle?.(open);
+
       return {
         closeListener,
+        resizeListener,
       };
     },
     onToggling: (ctx) => {
@@ -336,6 +346,9 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
     destructor: (open, params) => {
       if (params.closeListener != null) {
         window.removeEventListener("click", params.closeListener, true);
+      }
+      if (params.resizeListener != null) {
+        window.removeEventListener("resize", params.resizeListener, true);
       }
       props.$destructor?.(open);
     },
