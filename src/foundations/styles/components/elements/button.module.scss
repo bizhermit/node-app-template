@@ -64,16 +64,19 @@
         --is: var(--is-#{$size});
         font-size: var(--fs-#{$size});
         min-width: var(--cs-#{$size});
-        height: var(--cs-#{$size});
 
         &[data-wide="true"] {
           min-width: calc(var(--cs-#{$size}) * 4);
         }
 
         >.main {
+          min-height: var(--cs-#{$size});
+
           >.label {
-            padding-left: calc(var(--cs-#{$size}) / 2);
-            padding-right: calc(var(--cs-#{$size}) / 2);
+            &[data-pad="true"] {
+              padding-left: calc(var(--cs-#{$size}) / 2);
+              padding-right: calc(var(--cs-#{$size}) / 2);
+            }
           }
 
           >.icon {
@@ -122,9 +125,12 @@
       flex: 1 0 0rem;
     }
 
-    &[data-pt="true"] {
-      padding-top: var(--pt-t);
+    &[data-pad="true"] {
+      &[data-pt="true"] {
+        padding-top: var(--pt-t);
+      }
     }
+
 
     &:empty {
       display: none;

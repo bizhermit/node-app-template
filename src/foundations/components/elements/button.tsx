@@ -14,6 +14,7 @@ export type ButtonOptions = {
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
   $fitContent?: boolean;
+  $noPadding?: boolean;
 };
 
 type OmitAttributes = "onClick" | "color";
@@ -88,6 +89,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
           className={Style.label}
           data-fill={props.$fillLabel}
           data-pt={isNotReactNode(props.children)}
+          data-pad={!props.$noPadding}
         >
           {props.children}
         </div>

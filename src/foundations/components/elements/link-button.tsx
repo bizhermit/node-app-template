@@ -73,6 +73,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) =
             className={Style.label}
             data-fill={props.$fillLabel}
             data-pt={isNotReactNode(props.children)}
+            data-pad={!props.$noPadding}
           >
             {props.children}
           </div>
