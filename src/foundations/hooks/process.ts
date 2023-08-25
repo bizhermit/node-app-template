@@ -61,6 +61,15 @@ const useProcess = () => {
       return;
     }
     begin(item);
+    const fin = () => {
+      if (running.current?.id !== item.id) return;
+      running.current = undefined;
+      ref.current = false;
+      setTimeout(() => {
+        completed();
+        listen();
+      });
+    };
     item.func().then(ret => {
       if (running.current?.id !== item.id) return;
       try {
@@ -76,6 +85,7 @@ const useProcess = () => {
           item.resolve(undefined);
         }
       }
+      fin();
     }).catch(err => {
       if (running.current?.id !== item.id) return;
       try {
@@ -97,14 +107,7 @@ const useProcess = () => {
           item.resolve(undefined);
         }
       }
-    }).finally(() => {
-      if (running.current?.id !== item.id) return;
-      running.current = undefined;
-      ref.current = false;
-      setTimeout(() => {
-        completed();
-        listen();
-      });
+      fin();
     });
   };
 
