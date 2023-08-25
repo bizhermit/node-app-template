@@ -2,8 +2,7 @@
 
 import Style from "#/styles/components/elements/button.module.scss";
 import { forwardRef, useMemo, type HTMLAttributes } from "react";
-import { attributesWithoutChildren } from "#/components/utilities/attributes";
-import Text from "#/components/elements/text";
+import { attributesWithoutChildren, isNotReactNode } from "#/components/utilities/attributes";
 import type { ButtonOptions } from "#/components/elements/button";
 import type { UrlObject } from "url";
 import NextLink from "#/components/elements/link";
@@ -70,7 +69,13 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) =
           {props.$icon != null && props.$iconPosition !== "right" &&
             <div className={Style.icon}>{props.$icon}</div>
           }
-          <Text className={Style.label} data-fill={props.$fillLabel}>{props.children}</Text>
+          <div
+            className={Style.label}
+            data-fill={props.$fillLabel}
+            data-pt={isNotReactNode(props.children)}
+          >
+            {props.children}
+          </div>
           {props.$icon != null && props.$iconPosition === "right" &&
             <div className={Style.icon}>{props.$icon}</div>
           }

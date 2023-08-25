@@ -121,6 +121,14 @@
     &[data-fill="true"] {
       flex: 1 0 0rem;
     }
+
+    &[data-pt="true"] {
+      padding-top: var(--pt-t);
+    }
+
+    &:empty {
+      display: none;
+    }
   }
 
   .icon {
