@@ -1,3 +1,5 @@
+"use client";
+
 import type { FormItemProps, ValueType } from "#/components/elements/form/$types";
 import useForm from "#/components/elements/form/context";
 import { useDataItemMergedProps } from "#/components/elements/form/item-hook";
@@ -21,9 +23,11 @@ const ValueText = <
   const value = props.name ? form.getValue(props.name) : undefined;
 
   return (
-    <Text {...attributes(props)}>
-      {props.$format ? props.$format(value as any) : String(value ?? "")}
-    </Text>
+    <div {...attributes(props)}>
+      <Text>
+        {props.$format ? props.$format(value as any) : String(value ?? "")}
+      </Text>
+    </div>
   );
 };
 
