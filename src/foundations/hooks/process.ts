@@ -19,6 +19,7 @@ type Options<T> = {
   finally?: (succeeded: boolean) => void;
   failed?: (err: any) => void;
   finished?: (succeeded: boolean) => void;
+  chain?: (succeeded: boolean, ret: T) => void;
 };
 
 type ProcessFunc<T> = (() => Promise<T>);
@@ -84,6 +85,7 @@ const useProcess = () => {
         }
       }
       close();
+      item.opts?.chain?.(true, ret);
     }).catch(err => {
       if (running.current?.id !== item.id) return;
       try {
@@ -106,6 +108,7 @@ const useProcess = () => {
         }
       }
       close();
+      item.opts?.chain?.(false, err);
     });
   };
 
