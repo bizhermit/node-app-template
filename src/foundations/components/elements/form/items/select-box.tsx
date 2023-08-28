@@ -73,23 +73,23 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   });
   const [bindSource, setBindSource] = useState(source);
   const emptyItem = (() => {
-    if (!props.$emptyItem) return undefined;
+    if (props.$emptyItem == null) return undefined;
     switch (typeof props.$emptyItem) {
       case "boolean":
         return {
           [vdn]: undefined,
           [ldn]: "",
-        };
+        } as S;
       case "string":
         return {
           [vdn]: undefined,
           [ldn]: props.$emptyItem || "",
-        };
+        } as S;
       default:
         return {
           [vdn]: props.$emptyItem.value,
           [ldn]: props.$emptyItem.label,
-        };
+        } as S;
     }
   })();
 
@@ -116,7 +116,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const [selectedData, setSelectedData] = useState<S>();
 
   const renderLabel = () => {
-    const item = source.find(item => equals(item[vdn], ctx.valueRef.current));
+    const item = source.find(item => equals(item[vdn], ctx.valueRef.current)) ?? emptyItem;
     setSelectedData(item);
     if (props.$tieInNames != null) {
       props.$tieInNames.forEach(tieItem => {
