@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Form from "#/components/elements/form";
-import DateBox from "#/components/elements/form/items/date-box";
-import SelectBox from "#/components/elements/form/items/select-box";
-import TextBox from "#/components/elements/form/items/text-box";
-import Popup from "#/components/elements/popup";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Form from "#/client/elements/form";
+import DateBox from "#/client/elements/form/items/date-box";
+import SelectBox from "#/client/elements/form/items/select-box";
+import TextBox from "#/client/elements/form/items/text-box";
+import Popup from "#/client/elements/popup";
+import Row from "#/client/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { type FC, useRef, useState } from "react";
 

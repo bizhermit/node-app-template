@@ -1,4 +1,4 @@
-import Card from "#/components/elements/card";
+import Card from "#/client/elements/card";
 import CardClient from "@/sandbox/elements/card/_components/client";
 
 const Page = () => {

@@ -1,7 +1,7 @@
-import NumberBox from "#/components/elements/form/items/number-box";
-import TextBox from "#/components/elements/form/items/text-box";
-import Label from "#/components/elements/label";
-import Row from "#/components/elements/row";
+import NumberBox from "#/client/elements/form/items/number-box";
+import TextBox from "#/client/elements/form/items/text-box";
+import Label from "#/client/elements/label";
+import Row from "#/client/elements/row";
 import { colors, sizes } from "#/utilities/sandbox";
 
 const Page = () => {

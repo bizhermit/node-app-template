@@ -1,14 +1,14 @@
 "use client"
 
-import Button from "#/components/elements/button";
-import DatePicker from "#/components/elements/form/items/date-picker";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import DatePicker from "#/client/elements/form/items/date-picker";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { useState } from "react";
-import TextBox from "#/components/elements/form/items/text-box";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
+import TextBox from "#/client/elements/form/items/text-box";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
 
 const DatePickerClient = () => {

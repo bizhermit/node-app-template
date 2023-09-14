@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import { RedoIcon } from "#/components/elements/icon";
+import Button from "#/client/elements/button";
+import { RedoIcon } from "#/client/elements/icon";
 import { useEffect } from "react";
 
 const ErrorPage: ErrorFC = ({

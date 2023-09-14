@@ -1,10 +1,10 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Loading from "#/components/elements/loading";
-import Row from "#/components/elements/row";
-import Text from "#/components/elements/text";
-import useProcess from "#/components/hooks/process";
+import Button from "#/client/elements/button";
+import Loading from "#/client/elements/loading";
+import Row from "#/client/elements/row";
+import Text from "#/client/elements/text";
+import useProcess from "#/client/hooks/process";
 import { useState } from "react";
 
 const Page = () => {

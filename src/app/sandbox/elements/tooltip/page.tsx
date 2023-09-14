@@ -1,5 +1,5 @@
-import TextBox from "#/components/elements/form/items/text-box";
-import Tooltip from "#/components/elements/tooltip";
+import TextBox from "#/client/elements/form/items/text-box";
+import Tooltip from "#/client/elements/tooltip";
 
 const Page = () => {
   return (

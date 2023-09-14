@@ -1,4 +1,4 @@
-import Loading from "#/components/elements/loading";
+import Loading from "#/client/elements/loading";
 
 const SuspenseLoading = () => {
   return <Loading />;

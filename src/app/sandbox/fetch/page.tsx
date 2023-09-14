@@ -1,15 +1,15 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Form from "#/components/elements/form";
-import FileDrop from "#/components/elements/form/items/file-drop";
-import TextBox from "#/components/elements/form/items/text-box";
-import GroupBox from "#/components/elements/group-box";
-import Loading from "#/components/elements/loading";
-import Row from "#/components/elements/row";
-import StructView from "#/components/elements/struct-view";
-import useFetch from "#/components/hooks/fetch-api";
-import useProcess from "#/components/hooks/process";
+import Button from "#/client/elements/button";
+import Form from "#/client/elements/form";
+import FileDrop from "#/client/elements/form/items/file-drop";
+import TextBox from "#/client/elements/form/items/text-box";
+import GroupBox from "#/client/elements/group-box";
+import Loading from "#/client/elements/loading";
+import Row from "#/client/elements/row";
+import StructView from "#/client/elements/struct-view";
+import useFetch from "#/client/hooks/fetch-api";
+import useProcess from "#/client/hooks/process";
 import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_date, sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 

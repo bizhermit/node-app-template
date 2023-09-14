@@ -1,5 +1,5 @@
-import NextLink from "#/components/elements/link";
-import Row from "#/components/elements/row";
+import NextLink from "#/client/elements/link";
+import Row from "#/client/elements/row";
 
 const DynamicRootLayout: LayoutFC = (props) => {
   return (

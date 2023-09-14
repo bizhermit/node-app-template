@@ -1,8 +1,8 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import useMessageBox from "#/components/elements/message-box";
-import useRouter from "#/components/hooks/router";
+import Button from "#/client/elements/button";
+import useMessageBox from "#/client/elements/message-box";
+import useRouter from "#/client/hooks/router";
 
 const Page = () => {
   const msg = useMessageBox({ preventUnmountClose: true });

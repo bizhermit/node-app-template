@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
-import Text from "#/components/elements/text";
-import { useLocalState, useSessionState } from "#/components/hooks/storage";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
+import Text from "#/client/elements/text";
+import { useLocalState, useSessionState } from "#/client/hooks/storage";
 import { useState } from "react";
 
 const Page = () => {

@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import ElectronicSignature from "#/components/elements/form/items/electronic-signature";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import ElectronicSignature from "#/client/elements/form/items/electronic-signature";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_file, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
