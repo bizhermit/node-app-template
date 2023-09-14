@@ -33,13 +33,12 @@ const useWindow = (defaultOptions?: Options) => {
         }
       },
     });
-    const ctx: WindowContext = {
+    wins.current.push({
       id,
       window: win,
       options: opts,
-    };
-    wins.current.push(ctx);
-    return ctx;
+    });
+    return win;
   };
 
   const close = (mode?: "all" | "unmount" | "tab" | "unmount/tab") => {
