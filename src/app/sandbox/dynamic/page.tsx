@@ -1,4 +1,4 @@
-import Text from "#/components/elements/text";
+import Text from "#/client/elements/text";
 
 const Page: PageFC = (props) => {
   console.log("dynamic index", props);

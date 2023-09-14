@@ -1,6 +1,6 @@
-import { CloudIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
-import Stepper from "#/components/elements/stepper";
+import { CloudIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
+import Stepper from "#/client/elements/stepper";
 import StepperClient from "@/sandbox/elements/stepper/_components/client";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { ReactNode } from "react";

@@ -1,10 +1,10 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import Loading from "#/components/elements/loading";
-import useLoading from "#/components/elements/loading/context";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import Loading from "#/client/elements/loading";
+import useLoading from "#/client/elements/loading/context";
+import Row from "#/client/elements/row";
 import { useState } from "react";
 
 const LoadingClient = () => {

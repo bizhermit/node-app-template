@@ -1,0 +1,34 @@
+@use "../../styles/var" as var;
+
+@layer base {
+
+  .wrap {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .main {
+    box-sizing: border-box;
+    border-radius: 9999px;
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+
+    &:empty {
+      visibility: hidden;
+    }
+
+    @each $size in var.$sizes {
+      &[data-size="#{$size}"] {
+        font-size: var(--fs-#{$size});
+        padding: 0 calc(var(--fs-#{$size}) * 0.8);
+      }
+    }
+  }
+
+}

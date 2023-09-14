@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import PasswordBox from "#/components/elements/form/items/password-box";
-import TextBox from "#/components/elements/form/items/text-box";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import PasswordBox from "#/client/elements/form/items/text-box/password";
+import TextBox from "#/client/elements/form/items/text-box";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { useState } from "react";
 
 const PasswordBoxClient = () => {

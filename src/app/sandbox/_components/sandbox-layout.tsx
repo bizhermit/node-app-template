@@ -1,10 +1,10 @@
 "use client";
 
-import Menu from "#/components/elements/menu";
-import NavigationContainer from "#/components/elements/navigation-container";
-import { useNavigation } from "#/components/elements/navigation-container/context";
-import { convertSizeNumToStr } from "#/components/utilities/attributes";
-import type { FC, ReactNode } from "react";
+import Menu from "#/client/elements/menu";
+import NavigationContainer from "#/client/elements/navigation-container";
+import { useNavigation } from "#/client/elements/navigation-container/context";
+import { convertSizeNumToStr } from "#/client/utilities/attributes";
+import { FC, ReactNode } from "react";
 
 const SandboxLayoutProvider: FC<{
   children?: ReactNode;

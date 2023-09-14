@@ -1,5 +1,5 @@
-import NextLink from "#/components/elements/link";
-import Text from "#/components/elements/text";
+import NextLink from "#/client/elements/link";
+import Text from "#/client/elements/text";
 import type { NextPage } from "next";
 
 const Page: NextPage = () => {

@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Form from "#/components/elements/form";
-import TextBox from "#/components/elements/form/items/text-box";
-import { CloudDownloadIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
-import Text from "#/components/elements/text";
+import Button from "#/client/elements/button";
+import Form from "#/client/elements/form";
+import TextBox from "#/client/elements/form/items/text-box";
+import { CloudDownloadIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
+import Text from "#/client/elements/text";
 import { colors } from "#/utilities/sandbox";
 import type { CSSProperties } from "react";
 

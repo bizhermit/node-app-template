@@ -1,6 +1,6 @@
-import Card from "#/components/elements/card";
-import Row from "#/components/elements/row";
-import StructView, { type StructKey } from "#/components/elements/struct-view";
+import Card from "#/client/elements/card";
+import Row from "#/client/elements/row";
+import StructView, { type StructKey } from "#/client/elements/struct-view";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useMemo } from "react";
 

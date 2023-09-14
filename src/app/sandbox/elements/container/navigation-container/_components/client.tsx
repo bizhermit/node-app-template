@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import { type NavigationPosition, useNavigation, NavigationMode, NavigationHeaderVisible, NavigationFooterVisible } from "#/components/elements/navigation-container/context";
-import Row from "#/components/elements/row";
-import StructView from "#/components/elements/struct-view";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import { type NavigationPosition, useNavigation, NavigationMode, NavigationHeaderVisible, NavigationFooterVisible } from "#/client/elements/navigation-container/context";
+import Row from "#/client/elements/row";
+import StructView from "#/client/elements/struct-view";
 
 const NavigationClient = () => {
   const navigation = useNavigation();

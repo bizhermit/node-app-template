@@ -1,13 +1,13 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import { CloudIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
-import TabContainer from "#/components/elements/tab-container";
-import TabContent from "#/components/elements/tab-container/content";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import { CloudIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
+import TabContainer from "#/client/elements/tab-container";
+import TabContent from "#/client/elements/tab-container/content";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { type Key, useState, useRef } from "react";
 

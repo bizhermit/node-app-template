@@ -1,13 +1,13 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Hidden from "#/components/elements/form/items/hidden";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Hidden from "#/client/elements/form/items/hidden";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import Row from "#/client/elements/row";
 import { useState } from "react";
-import type { FormItemMessageDisplayMode } from "#/components/elements/form/$types";
-import Form from "#/components/elements/form";
+import type { FormItemMessageDisplayMode } from "#/client/elements/form/$types";
+import Form from "#/client/elements/form";
 
 const HiddenClient = () => {
   const [value, setValue] = useState<any>();

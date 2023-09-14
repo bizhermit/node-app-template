@@ -1,0 +1,66 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/var" as var;
+
+@layer base {
+
+  .main {
+    min-height: var(--cs-m);
+
+    &[data-editable="true"] {
+      >.body {
+        &[data-dialog="true"] {
+          cursor: pointer;
+          user-select: none;
+          @include mixins.hoverTransition;
+
+          @include mixins.crossHover(false) {
+            @include mixins.hover;
+
+            &:active {
+              @include mixins.hoverActive;
+            }
+          }
+        }
+
+        &[data-active] {
+          @include mixins.hover;
+        }
+      }
+    }
+  }
+
+  @include mixins.hoverAnimation;
+
+  .body {
+    box-sizing: border-box;
+    z-index: 1;
+    padding: #{var.$textPadding};
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    outline: none;
+  }
+
+  .file {
+    display: none !important;
+    visibility: hidden;
+    max-height: 0;
+    max-width: 0;
+    opacity: 0;
+    z-index: -2;
+  }
+
+  .clear {
+    @include mixins.inputButton;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+}

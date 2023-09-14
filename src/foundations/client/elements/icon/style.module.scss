@@ -1,0 +1,24 @@
+@use "../../styles/var" as var;
+
+@layer base {
+
+  .main {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 0.15rem;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    &:not([height]) {
+      height: var(--is);
+      width: var(--is);
+    }
+
+    @each $size in var.$sizes {
+      &[data-size="#{$size}"] {
+        --is: var(--is-#{$size});
+      }
+    }
+  }
+
+}

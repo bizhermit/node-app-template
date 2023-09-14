@@ -1,8 +1,8 @@
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import CheckBox from "#/components/elements/form/items/check-box";
-import NextLink from "#/components/elements/link";
-import LinkButton from "#/components/elements/link-button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import CheckBox from "#/client/elements/form/items/check-box";
+import NextLink from "#/client/elements/link";
+import LinkButton from "#/client/elements/button/link";
 
 const Page = () => {
   return (

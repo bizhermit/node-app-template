@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import FileButton from "#/components/elements/form/items/file-button";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import { RightIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import FileButton from "#/client/elements/form/items/file-button";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import { RightIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
 import { sample_file } from "$/data-items/sample/item";
 import { useState } from "react";
 

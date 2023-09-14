@@ -1,0 +1,160 @@
+@use "../../styles/var" as var;
+@use "../../styles/mixins" as mixins;
+
+@layer base {
+
+  .wrap {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .list {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+    z-index: 0;
+
+    @include mixins.crossHover {}
+
+    &[data-direction="horizontal"] {
+      &.root {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .node {
+        justify-content: center;
+      }
+    }
+  }
+
+  .item {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    overflow: visible;
+    flex: 1 0 auto;
+    z-index: 0;
+
+    @include mixins.crossHover {}
+  }
+
+  .content {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: center;
+    white-space: nowrap;
+    height: var(--nav-size);
+    z-index: 0;
+    overflow: visible;
+    transition: padding-left #{var.$transitionTime};
+
+    &[data-selectable="true"] {
+      cursor: pointer;
+
+      @include mixins.crossHover {
+        @include mixins.hover;
+
+        &:active {
+          @include mixins.hoverActive;
+        }
+      }
+    }
+  }
+
+  @include mixins.hoverAnimation;
+
+  .icon,
+  .toggle {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+    width: var(--nav-size);
+    flex: none;
+  }
+
+  .node {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: center;
+    flex: 1;
+  }
+
+  .label {
+    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
+  }
+
+  .children {
+    box-sizing: border-box;
+  }
+
+  nav {
+    .content {
+      &[data-selected="true"] {
+        background: var(--c-base);
+        color: var(--c-base_);
+      }
+    }
+
+    &[data-pos="left"],
+    &[data-pos="right"] {
+      &[data-mode="minimize"][data-show="false"] {
+        .content {
+          padding-left: 0 !important;
+        }
+      }
+    }
+
+    &[data-pos="top"],
+    &[data-pos="bottom"] {
+      .content {
+        padding-left: 0 !important;
+        background: var(--c-nav);
+        color: var(--c-nav_);
+      }
+
+      >.wrap {
+        height: var(--nav-size);
+        overflow: visible;
+      }
+    }
+
+    &[data-pos="bottom"] {
+      .wrap {
+        justify-content: flex-end;
+      }
+
+      .root {
+        &[data-direction="horizontal"] {
+          bottom: 0;
+          align-items: flex-end;
+        }
+
+        >.item {
+          bottom: 0;
+          flex-direction: column-reverse;
+        }
+      }
+    }
+  }
+
+}

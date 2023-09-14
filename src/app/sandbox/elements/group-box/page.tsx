@@ -1,4 +1,4 @@
-import GroupBox from "#/components/elements/group-box";
+import GroupBox from "#/client/elements/group-box";
 
 const Page = () => {
   return (

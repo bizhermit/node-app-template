@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form, { useFormRef } from "#/components/elements/form";
-import CheckBox from "#/components/elements/form/items/check-box";
-import TextBox from "#/components/elements/form/items/text-box";
-import Row from "#/components/elements/row";
-import StructView from "#/components/elements/struct-view";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form, { useFormRef } from "#/client/elements/form";
+import CheckBox from "#/client/elements/form/items/check-box";
+import TextBox from "#/client/elements/form/items/text-box";
+import Row from "#/client/elements/row";
+import StructView from "#/client/elements/struct-view";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";
 

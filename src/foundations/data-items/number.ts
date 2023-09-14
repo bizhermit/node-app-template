@@ -1,5 +1,5 @@
-import { dataItemKey } from "#/data-items";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
+import { dataItemKey } from ".";
 
 const numberItem = <
   V extends number,

@@ -1,4 +1,4 @@
-import Text from "#/components/elements/text";
+import Text from "#/client/elements/text";
 
 type Params = {
   id: string;

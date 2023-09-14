@@ -1,4 +1,4 @@
-import Divider from "#/components/elements/divider";
+import Divider from "#/client/elements/divider";
 import EnvClient from "@/sandbox/env/_components/client";
 import EnvServer from "@/sandbox/env/_components/server";
 

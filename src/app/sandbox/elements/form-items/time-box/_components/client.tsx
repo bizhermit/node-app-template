@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import TimeBox from "#/components/elements/form/items/time-box";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import TimeBox from "#/client/elements/form/items/time-box";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_number, sample_string, sample_time } from "$/data-items/sample/item";
 import { useState } from "react";
 

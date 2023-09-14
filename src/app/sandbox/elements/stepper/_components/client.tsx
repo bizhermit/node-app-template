@@ -1,11 +1,11 @@
 "use client";
 
-import Divider from "#/components/elements/divider";
-import NumberBox from "#/components/elements/form/items/number-box";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import { CloudIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
-import Stepper from "#/components/elements/stepper";
+import Divider from "#/client/elements/divider";
+import NumberBox from "#/client/elements/form/items/number-box";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import { CloudIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
+import Stepper from "#/client/elements/stepper";
 import { sizes } from "#/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { type ReactNode, useMemo, useState } from "react";
