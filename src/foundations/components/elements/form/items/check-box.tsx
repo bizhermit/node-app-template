@@ -131,7 +131,11 @@ const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
         />
       </div>
       {props.children &&
-        <Text className={Style.label}>{props.children}</Text>
+        <div className={Style.content}>
+          <Text className={Style.label}>
+            {props.children}
+          </Text>
+        </div>
       }
     </FormItemWrap>
   );

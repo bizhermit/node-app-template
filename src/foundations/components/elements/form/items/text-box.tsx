@@ -229,7 +229,7 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
         defaultValue={ctx.value ?? ""}
         onChange={e => ctx.change(e.target.value)}
         data-round={props.$round}
-        data-clear={ctx.editable && props.$hideClearButton !== true}
+        data-button={ctx.editable && props.$hideClearButton !== true}
         data-align={props.$align}
         autoComplete={props.$autoComplete ?? "off"}
         inputMode={props.$inputMode}

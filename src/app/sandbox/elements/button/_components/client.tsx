@@ -5,6 +5,7 @@ import Form from "#/components/elements/form";
 import TextBox from "#/components/elements/form/items/text-box";
 import { CloudDownloadIcon } from "#/components/elements/icon";
 import Row from "#/components/elements/row";
+import Text from "#/components/elements/text";
 import { colors } from "#/utilities/sandbox";
 import type { CSSProperties } from "react";
 
@@ -79,6 +80,7 @@ const ButtonClient = () => {
         </Row>
         <div className="flex row g-s">
           <Button
+            $size="s"
             className="fs-xl"
             $icon={<CloudDownloadIcon />}
           >
@@ -89,9 +91,17 @@ const ButtonClient = () => {
           >
             round
           </Button>
+          <Button $fitContent>fit</Button>
+          <Button $noPadding $fitContent>
+            <div className="flex p-s">
+              <Text>hoge</Text>
+              <Text>fuga</Text>
+              <Text>piyo</Text>
+            </div>
+          </Button>
         </div>
       </section>
-      <section>
+      <section className="flex g-s">
         <h2>color</h2>
         <Row className="pt-s g-s">
           <Button style={style}>button</Button>

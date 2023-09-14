@@ -8,14 +8,14 @@
     height: var(--cs-m);
     min-width: 0;
 
-    &[data-clear="true"] {
+    &[data-button="true"] {
       padding-right: #{var.$textPaddingThin};
     }
 
     &[data-round="true"] {
       padding-left: #{var.$textPaddingBold};
 
-      &[data-clear="false"] {
+      &[data-button="false"] {
         padding-right: #{var.$textPaddingBold};
       }
     }

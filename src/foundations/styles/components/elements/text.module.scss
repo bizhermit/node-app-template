@@ -1,0 +1,11 @@
+@layer base {
+
+  .main {
+    padding-top: var(--pt-t);
+
+    &[data-ib="true"] {
+      display: inline-block;
+    }
+  }
+
+}

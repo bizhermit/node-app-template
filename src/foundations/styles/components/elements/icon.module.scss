@@ -8,8 +8,11 @@
     stroke-width: 0.15rem;
     stroke-linecap: round;
     stroke-linejoin: round;
-    height: var(--is);
-    width: var(--is);
+
+    &:not([height]) {
+      height: var(--is);
+      width: var(--is);
+    }
 
     @each $size in var.$sizes {
       &[data-size="#{$size}"] {

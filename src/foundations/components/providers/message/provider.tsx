@@ -1,16 +1,17 @@
 "use client";
 
-import { MessageContext, type ArgMessages, type ProviderMessage } from "#/components/providers/message/context";
+import { MessageContext, type ArgMessages, type ProviderMessage, type MessageHookOptions } from "#/components/providers/message/context";
 import useMessageBox from "#/hooks/message-box";
 import { type FC, type ReactNode, useEffect, useReducer } from "react";
 
-const arrangeMessages = (messages: ArgMessages): Array<ProviderMessage> => {
+const arrangeMessages = (messages: ArgMessages, options?: MessageHookOptions): Array<ProviderMessage> => {
   if (messages == null) return [];
   const timestamp = Date.now();
   return (Array.isArray(messages) ? messages : [messages])
     .filter(msg => msg != null)
     .map(msg => {
       return {
+        ...options,
         ...msg!,
         timestamp,
         displayed: false,
@@ -26,8 +27,9 @@ export const MessageProvider: FC<{
   const [messages, setMessages] = useReducer((state: Array<ProviderMessage>, action: {
     mode: "set" | "append" | "clear";
     messages?: ArgMessages;
+    options?: MessageHookOptions;
   }) => {
-    const msgs = arrangeMessages(action.messages);
+    const msgs = arrangeMessages(action.messages, action.options);
     switch (action.mode) {
       case "clear":
         if (state.length === 0) return state;
@@ -40,22 +42,22 @@ export const MessageProvider: FC<{
     }
   }, []);
 
-  const set = (messages: ArgMessages) => {
-    setMessages({ mode: "set", messages });
+  const set = (messages: ArgMessages, options?: MessageHookOptions) => {
+    setMessages({ mode: "set", messages, options });
   };
 
-  const append = (messages: ArgMessages) => {
-    setMessages({ mode: "append", messages });
+  const append = (messages: ArgMessages, options?: MessageHookOptions) => {
+    setMessages({ mode: "append", messages, options });
   };
 
-  const error = (e: any) => {
+  const error = (e: any, options?: MessageHookOptions) => {
     append({
       type: "error",
       title: "システムエラー",
       name: "system",
       key: "system",
       body: String(e),
-    });
+    }, options);
   };
 
   const clear = () => {
@@ -76,6 +78,8 @@ export const MessageProvider: FC<{
             default: return "main";
           }
         })(),
+      }).then((ret) => {
+        msg.checked?.(ret, msg);
       });
     }
   }, [messages]);

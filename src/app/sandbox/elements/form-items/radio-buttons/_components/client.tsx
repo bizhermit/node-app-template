@@ -230,7 +230,7 @@ const RadioButtonsClient = () => {
       </Form>
       <Row $vAlign="top" className="g-s">
         <RadioButtons
-          style={{ width: 200 }}
+          // style={{ width: 200 }}
           $appearance={appearance}
           $outline={outline}
           $readOnly={readOnly}

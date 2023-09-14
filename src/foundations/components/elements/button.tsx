@@ -2,8 +2,7 @@
 
 import Style from "#/styles/components/elements/button.module.scss";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { attributesWithoutChildren } from "#/components/utilities/attributes";
-import Text from "#/components/elements/text";
+import { attributesWithoutChildren, isNotReactNode } from "#/components/utilities/attributes";
 import useForm from "#/components/elements/form/context";
 
 export type ButtonOptions = {
@@ -15,6 +14,7 @@ export type ButtonOptions = {
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
   $fitContent?: boolean;
+  $noPadding?: boolean;
 };
 
 type OmitAttributes = "onClick" | "color";
@@ -85,7 +85,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
         {props.$icon != null && props.$iconPosition !== "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }
-        <Text className={Style.label} data-fill={props.$fillLabel}>{props.children}</Text>
+        <div
+          className={Style.label}
+          data-fill={props.$fillLabel}
+          data-pt={isNotReactNode(props.children)}
+          data-pad={!props.$noPadding}
+        >
+          {props.children}
+        </div>
         {props.$icon != null && props.$iconPosition === "right" &&
           <div className={Style.icon}>{props.$icon}</div>
         }

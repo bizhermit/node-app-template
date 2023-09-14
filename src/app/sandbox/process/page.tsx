@@ -65,6 +65,8 @@ const Page = () => {
     }
   };
 
+  console.log("--render--", process.ing, count);
+
   return (
     <div className="flex p-s g-m">
       {process.ing && <Loading />}
@@ -94,6 +96,17 @@ const Page = () => {
           }}
         >
           add wait process as other key
+        </Button>
+        <Button
+          $onClick={async (unlock) => {
+            setCount(count + 1);
+            await func(count + 1);
+            setCount(count + 2);
+            await func(count + 2);
+            unlock?.();
+          }}
+        >
+          chain
         </Button>
         <Text>{count}</Text>
       </Row>
