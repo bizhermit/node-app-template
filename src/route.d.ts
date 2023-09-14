@@ -52,7 +52,8 @@ type AppRoutePath = "/"
  | "/sandbox/message-box"
  | "/sandbox"
  | "/sandbox/process"
- | "/sandbox/storage";
+ | "/sandbox/storage"
+ | "/sandbox/window";
 
 type AppApiPath = "/api/fetch"
  | "/api";

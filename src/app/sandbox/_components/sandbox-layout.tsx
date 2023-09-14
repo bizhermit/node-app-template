@@ -316,6 +316,11 @@ const Navigation: FC = () => {
             label: "Dynamic",
             icon: "D",
             pathname: "/sandbox/dynamic",
+          }, {
+            key: "window",
+            label: "Window",
+            icon: "W",
+            pathname: "/sandbox/window",
           }]
         }]}
       />

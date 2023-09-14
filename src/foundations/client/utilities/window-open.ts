@@ -1,16 +1,22 @@
-import { type DynamicUrlContextOptions, getDynamicUrlContext } from "../../utilities/url";
+import { getDynamicUrlContext, type DynamicUrlContextOptions } from "../../utilities/url";
 
-export const windowOpen = (href?: string | null | undefined) => {
+type Options = {
+  closed?: () => void;
+  replaced?: () => void;
+};
+
+export const windowOpen = (href?: string | null | undefined, options?: Options) => {
   const win = typeof window === "undefined" ?
     undefined : window.open(href || "/loading");
   return {
+    window: win,
     replace: (href: string) => {
-      if (!win) return;
-      win.location.href = href;
+      if (win) win.location.href = href;
+      options?.replaced?.();
     },
     close: () => {
-      if (!win) return;
-      win.close();
+      if (win) win.close();
+      options?.closed?.();
     },
   } as const;
 };
