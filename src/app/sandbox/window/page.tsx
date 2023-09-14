@@ -44,9 +44,9 @@ const Component = () => {
       <div className="flex row g-m">
         <Button
           $onClick={() => {
-            const w = win.open("/sandbox?mode=hook");
+            const ctx = win.open("/sandbox?mode=hook");
             setTimeout(() => {
-              w.window.replace("/sandbox/window?mode=hook");
+              ctx.window.replace("/sandbox/window?mode=hook");
             }, 3000);
           }}
         >
