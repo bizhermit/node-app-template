@@ -153,10 +153,23 @@ $checkTransitionTime: 0.1s;
     }
   }
 
+  .content {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    transition: background-color #{var.$transitionTime},
+    color #{var.$transitionTime};
+    padding-right: #{var.$textPadding};
+  }
+
   .label {
     display: inline-block;
-    padding-left: calc(var(--cs-m) / 8);
-    padding-right: calc(var(--cs-m) / 3);
+    padding-left: #{var.$textPaddingThin};
+    padding-right: #{var.$textPaddingThin};
   }
 
 }

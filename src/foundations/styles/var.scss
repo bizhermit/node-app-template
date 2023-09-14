@@ -22,6 +22,12 @@ $darkenRate: 10%;
 
 $colorMap: (
   "base": $baseColor,
+  "none": (
+    "light": transparent,
+    "light_r": transparent,
+    "dark": transparent,
+    "dark_r": transparent,
+  ),
   "pure": (
     "light": rgb(255, 255, 255),
     "light_r": #000,

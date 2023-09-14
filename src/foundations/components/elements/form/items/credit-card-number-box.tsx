@@ -104,7 +104,7 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
         tabIndex={props.tabIndex}
         defaultValue={ctx.value ?? ""}
         onChange={e => changeImpl(e.target.value)}
-        data-clear={ctx.editable && props.$hideClearButton !== true}
+        data-button={ctx.editable && props.$hideClearButton !== true}
         autoComplete={props.$autoComplete ?? "off"}
         inputMode="tel"
       />

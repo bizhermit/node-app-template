@@ -65,10 +65,15 @@ export const appendStructData = (
         v.forEach((val, i) => setFormValue(`${key}[${i}]`, val));
         return;
       }
-      // eslint-disable-next-line no-console
-      console.warn(`convert to form-data warning: ${key} is not supportted object type. try converting to json-stringify.`);
-      formData.append(key, JSON.stringify(v));
-      return;
+      try {
+        Object.keys(v).forEach(k => {
+          setFormValue(`${key}[${k}]`, v[k]);
+        });
+      } catch {
+        // eslint-disable-next-line no-console
+        console.warn(`convert to form-data warning: ${key} is not supportted object type. try converting to json-stringify.`);
+        formData.append(key, JSON.stringify(v));
+      }
     }
     formData.append(key, v);
   };

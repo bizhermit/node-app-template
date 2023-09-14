@@ -93,7 +93,7 @@ $vTransitionTime: 0.5s;
 
         >.tab {
           min-width: calc(var(--cs-m) * 4);
-          padding: calc(var(--pt-t) + #{$borderWidth}) calc(var(--cs-m) / 2) 0 calc(var(--cs-m) / 2);
+          padding: calc(var(--pt-t) + #{$borderWidth}) #{var.$textPaddingBold} 0 #{var.$textPaddingBold};
         }
       }
     }
@@ -178,7 +178,7 @@ $vTransitionTime: 0.5s;
 
         .tab {
           min-height: calc(var(--cs-m) * 4);
-          padding: calc(var(--cs-m) / 2) 0.4rem calc(var(--cs-m) / 2) 0;
+          padding: #{var.$textPaddingBold} 0.4rem #{var.$textPaddingBold} 0;
         }
       }
     }

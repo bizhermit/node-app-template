@@ -189,7 +189,7 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
         defaultValue={ctx.value ?? ""}
         onChange={e => ctx.change(e.target.value)}
         data-round={props.$round}
-        data-clear={ctx.editable && (props.$hideClearButton !== true || props.$hideToggleButton !== true)}
+        data-button={ctx.editable && (props.$hideClearButton !== true || props.$hideToggleButton !== true)}
         data-align={props.$align}
         autoComplete={props.$autoComplete ?? "off"}
         inputMode={props.$inputMode}

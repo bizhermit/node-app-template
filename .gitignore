@@ -39,7 +39,12 @@ next-env.d.ts
 /.*container/.env
 
 #
-.vscode
+.vscode/*
+# !.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 /.nexpress
 /.main
 /.renderer

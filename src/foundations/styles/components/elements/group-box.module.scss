@@ -1,3 +1,5 @@
+@use "#/styles/var" as var;
+
 $borderWidth: 0.1rem;
 
 @layer base {
@@ -26,17 +28,17 @@ $borderWidth: 0.1rem;
   .next {
     box-sizing: border-box;
     min-width: calc(var(--cs-m) / 2);
+    min-height: calc(var(--cs-m) / 3);
+    height: 50%;
     border-top-width: #{$borderWidth};
     border-top-style: solid;
-    height: 50%;
-    min-height: calc(var(--cs-m) / 3);
   }
 
   .prev {
     border-top-left-radius: var(--radius);
     border-left-width: #{$borderWidth};
     border-left-style: solid;
-    margin-right: calc(var(--fs-m) / 2);
+    margin-right: #{var.$textPadding};
     flex: none;
   }
 
@@ -44,7 +46,7 @@ $borderWidth: 0.1rem;
     border-top-right-radius: var(--radius);
     border-right-width: #{$borderWidth};
     border-right-style: solid;
-    margin-left: calc(var(--fs-m) / 2);
+    margin-left: #{var.$textPadding};
     flex: 1;
   }
 

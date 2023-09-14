@@ -13,11 +13,13 @@
     }
 
     &[data-editable="true"] {
-      padding-right: #{var.$textPaddingThin};
-
       &[data-input="false"] {
         cursor: pointer;
       }
+    }
+
+    &[data-button="true"] {
+      padding-right: #{var.$textPaddingThin};
     }
   }
 

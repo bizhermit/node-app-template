@@ -50,6 +50,7 @@ export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLF
   $preventResetWhenRebind?: boolean;
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
+  $preventEnterSubmit?: boolean;
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
@@ -336,6 +337,13 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
         method={method}
         onSubmit={submit}
         onReset={reset}
+        onKeyDown={props.$preventEnterSubmit ? (e) => {
+          if (e.code === "Enter") {
+            if ((e.target as HTMLElement).tagName !== "BUTTON") {
+              e.preventDefault();
+            }
+          }
+        } : undefined}
       />
     </FormContext.Provider>
   );

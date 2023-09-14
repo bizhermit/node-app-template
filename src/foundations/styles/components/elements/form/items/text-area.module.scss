@@ -1,3 +1,4 @@
+@use "#/styles/var" as var;
 @use "#/styles/mixins" as mixins;
 
 @layer base {
@@ -7,6 +8,8 @@
     min-height: var(--cs-m);
     min-width: var(--cs-m);
     align-self: stretch;
+    padding-top: #{var.$textPadding};
+    padding-bottom: #{var.$textPadding};
   }
 
 }

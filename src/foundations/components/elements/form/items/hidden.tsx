@@ -33,6 +33,7 @@ const Hidden = forwardRef<HTMLDivElement, HiddenProps>(<
         $useHidden
         $preventFieldLayout
         $tag={undefined}
+        $hideWhenNoError
         $mainProps={{
           style: { display: "none" }
         }}

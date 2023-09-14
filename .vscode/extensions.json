@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "MS-CEINTL.vscode-language-pack-ja",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "dbaeumer.vscode-eslint",
+    "dsznajder.es7-react-js-snippets",
+    "foxundermoon.next-js",
+    "PulkitGangwar.nextjs-snippets",
+    "Divlo.vscode-styled-jsx-languageserver",
+    "Divlo.vscode-styled-jsx-syntax",
+    "Pivotal.vscode-manifest-yaml",
+    "jock.svg",
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced"
+  ]
+}

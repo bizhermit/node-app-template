@@ -73,23 +73,23 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   });
   const [bindSource, setBindSource] = useState(source);
   const emptyItem = (() => {
-    if (!props.$emptyItem) return undefined;
+    if (props.$emptyItem == null) return undefined;
     switch (typeof props.$emptyItem) {
       case "boolean":
         return {
           [vdn]: undefined,
           [ldn]: "",
-        };
+        } as S;
       case "string":
         return {
           [vdn]: undefined,
           [ldn]: props.$emptyItem || "",
-        };
+        } as S;
       default:
         return {
           [vdn]: props.$emptyItem.value,
           [ldn]: props.$emptyItem.label,
-        };
+        } as S;
     }
   })();
 
@@ -116,7 +116,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const [selectedData, setSelectedData] = useState<S>();
 
   const renderLabel = () => {
-    const item = source.find(item => equals(item[vdn], ctx.valueRef.current));
+    const item = source.find(item => equals(item[vdn], ctx.valueRef.current)) ?? emptyItem;
     setSelectedData(item);
     if (props.$tieInNames != null) {
       props.$tieInNames.forEach(tieItem => {
@@ -146,8 +146,10 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     setBindSource(source.filter(item => {
       return StringUtils.contains(item[ldn], text);
     }));
-    doScroll.current = false;
-    setShowPicker(true);
+    openPicker({
+      scroll: false,
+      preventBindSource: true,
+    });
   };
 
   const clear = () => {
@@ -159,10 +161,18 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     ctx.change(undefined);
   };
 
-  const picker = () => {
-    if (!ctx.editable) return;
+  const closePicker = () => {
+    setShowPicker(false);
+  };
+
+  const openPicker = (opts?: {
+    scroll?: boolean;
+    preventBindSource?: boolean;
+  }) => {
+    if (!ctx.editable) return closePicker();
     if (showPicker) return;
-    setBindSource(source);
+    if (opts?.scroll != null) doScroll.current = opts.scroll;
+    if (!opts?.preventBindSource) setBindSource(source);
     setWidth((iref.current.parentElement as HTMLElement).offsetWidth);
     const rect = iref.current.getBoundingClientRect();
     setMaxHeight((Math.max(document.body.clientHeight - rect.bottom, rect.top) - 10));
@@ -187,20 +197,20 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
       case "Escape":
-        setShowPicker(false);
+        closePicker();
         break;
       case "F2":
-        doScroll.current = true;
-        setBindSource(source);
-        setShowPicker(true);
+        openPicker({ scroll: true });
         break;
       case "ArrowUp":
       case "ArrowDown":
         if (showPicker && lref.current) {
           scrollToSelectedItem();
         } else {
-          doScroll.current = true;
-          setShowPicker(true);
+          openPicker({
+            scroll: true,
+            preventBindSource: true,
+          });
         }
         e.stopPropagation();
         e.preventDefault();
@@ -225,7 +235,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       const index = Number(elem.getAttribute("data-index"));
       const data = bindSource[index];
       ctx.change(data[vdn]);
-      setShowPicker(false);
+      closePicker();
       iref.current?.focus();
     } catch {
       return;
@@ -241,7 +251,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     switch (e.key) {
       case "Escape":
         iref.current.focus();
-        setShowPicker(false);
+        closePicker();
         break;
       case "Enter":
         selectItem(isListItem(e.target as HTMLElement));
@@ -279,7 +289,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       (iref.current != null && e.relatedTarget === iref.current) ||
       (lref.current != null && (e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current))
     ) return;
-    setShowPicker(false);
+    closePicker();
     if (!iref.current) return;
     const label = iref.current.value;
     const item = source.find(item => equals(item[ldn], label));
@@ -330,7 +340,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
         readOnly={props.$disallowInput || !ctx.editable}
         placeholder={ctx.editable ? props.placeholder : ""}
         tabIndex={props.tabIndex}
-        onClick={picker}
+        onClick={() => openPicker()}
         onChange={changeText}
         onKeyDown={keydown}
         autoComplete="off"
@@ -338,6 +348,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
         data-align={props.$align}
         data-editable={ctx.editable}
         data-input={!props.$disallowInput}
+        data-button={ctx.editable && !loading && (props.$hideClearButton !== true || true)}
       />
       {ctx.editable && !loading &&
         <>
@@ -353,8 +364,10 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
           <div
             className={Style.button}
             onClick={() => {
-              doScroll.current = true;
-              picker();
+              openPicker({
+                scroll: true,
+                preventBindSource: true,
+              });
             }}
             data-disabled={!ctx.editable || loading || showPicker}
           >

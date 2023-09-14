@@ -14,6 +14,8 @@
     border: none;
     border-radius: var(--radius);
     outline: none;
+    max-width: 100%;
+    max-height: 100%;
 
     &.link {
       width: 100%;
@@ -62,21 +64,24 @@
         --is: var(--is-#{$size});
         font-size: var(--fs-#{$size});
         min-width: var(--cs-#{$size});
-        height: var(--cs-#{$size});
 
         &[data-wide="true"] {
           min-width: calc(var(--cs-#{$size}) * 4);
         }
 
         >.main {
+          min-height: var(--cs-#{$size});
+
           >.label {
-            padding-left: calc(var(--cs-#{$size}) / 2);
-            padding-right: calc(var(--cs-#{$size}) / 2);
+            &[data-pad="true"] {
+              padding-left: calc(var(--cs-#{$size}) / 2);
+              padding-right: calc(var(--cs-#{$size}) / 2);
+            }
           }
 
           >.icon {
             &:not(:only-child) {
-              min-width: calc(var(--cs-#{$size}));
+              min-width: var(--cs-#{$size});
             }
           }
         }
@@ -118,6 +123,17 @@
 
     &[data-fill="true"] {
       flex: 1 0 0rem;
+    }
+
+    &[data-pad="true"] {
+      &[data-pt="true"] {
+        padding-top: var(--pt-t);
+      }
+    }
+
+
+    &:empty {
+      display: none;
     }
   }
 

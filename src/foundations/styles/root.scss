@@ -5,7 +5,7 @@ $size: 3.6rem;
 $fontSize: 1.6rem;
 $iconSize: 1.6rem;
 
-@layer base, utils;
+@layer base, feat, util;
 
 @layer base {
 
@@ -96,7 +96,4 @@ $iconSize: 1.6rem;
     color: inherit;
   }
 
-  .pt-t {
-    padding-top: var(--pt-t);
-  }
 }
