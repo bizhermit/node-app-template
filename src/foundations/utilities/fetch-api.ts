@@ -1,6 +1,6 @@
-import { convertFormDataToStruct, convertStructToFormData } from "#/utilities/form-data";
-import { getDynamicUrlContext } from "#/utilities/url";
 import type { RequestInit } from "next/dist/server/web/spec-extension/request";
+import { convertFormDataToStruct, convertStructToFormData } from "./form-data";
+import { getDynamicUrlContext } from "./url";
 
 export type FetchOptions = {
   contentType?: "json" | "formData";

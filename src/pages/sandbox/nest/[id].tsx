@@ -1,6 +1,6 @@
 import NextLink from "#/components/elements/link";
 import Text from "#/components/elements/text";
-import { getInitialQueryProps, useQueryParam } from "#/hooks/query-param";
+import { getInitialQueryProps, useQueryParam } from "#/components/hooks/query-param";
 import { NextPageWithLayout } from "~/_app";
 
 const Page: NextPageWithLayout = (props) => {

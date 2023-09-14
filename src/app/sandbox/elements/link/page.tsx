@@ -2,7 +2,7 @@ import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
 import CheckBox from "#/components/elements/form/items/check-box";
 import NextLink from "#/components/elements/link";
-import LinkButton from "#/components/elements/link-button";
+import LinkButton from "#/components/elements/button/link";
 
 const Page = () => {
   return (

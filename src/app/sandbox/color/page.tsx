@@ -1,4 +1,4 @@
-import Row from "#/components/elements/row";
+import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
 
 const Page = () => {

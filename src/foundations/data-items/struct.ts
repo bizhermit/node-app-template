@@ -1,4 +1,4 @@
-import { dataItemKey } from "#/data-items";
+import { dataItemKey } from ".";
 
 const structItem = <
   C extends Omit<DataItem_Struct, DataItemKey | "type">

@@ -5,7 +5,7 @@ import Divider from "#/components/elements/divider";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import Text from "#/components/elements/text";
-import { useLocalState, useSessionState } from "#/hooks/storage";
+import { useLocalState, useSessionState } from "#/components/hooks/storage";
 import { useState } from "react";
 
 const Page = () => {

@@ -1,0 +1,15 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/var" as var;
+
+@layer base {
+
+  .input {
+    @include mixins.inputProps;
+    min-height: var(--cs-m);
+    min-width: var(--cs-m);
+    align-self: stretch;
+    padding-top: #{var.$textPadding};
+    padding-bottom: #{var.$textPadding};
+  }
+
+}

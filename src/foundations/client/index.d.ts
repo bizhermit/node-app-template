@@ -1,0 +1,46 @@
+type MRef<T> = React.MutableRefObject<T | null | undefined>;
+type ComponentAttrsWithRef<T, P = {}> = P & { ref?: MRef<T> };
+
+type SystemColor =
+  | "base"
+  | "pure"
+  | "dull"
+  | "border"
+  | "shadow"
+  | "mask"
+  | "input"
+  | "placeholder"
+  | "error"
+  | "selected"
+  | "hover"
+  | "scroll"
+  | "nav"
+  | "sunday"
+  | "saturday"
+  | "main"
+  | "main-light"
+  | "main-dark"
+  | "sub"
+  | "sub-light"
+  | "sub-dark"
+  ;
+
+type CustomColor =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "warning"
+  | "danger"
+  | "cool"
+  | "pretty"
+  ;
+
+type Color = SystemColor | CustomColor;
+
+type Size =
+  | "xs"
+  | "s"
+  | "m"
+  | "l"
+  | "xl"
+  ;

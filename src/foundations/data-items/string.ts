@@ -1,6 +1,6 @@
-import { dataItemKey } from "#/data-items";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
+import { dataItemKey } from ".";
 
 const stringItem = <
   V extends string,

@@ -1,0 +1,42 @@
+import type { UrlObject } from "url";
+import { type AnchorHTMLAttributes, type LegacyRef, type ReactNode, forwardRef, type Ref } from "react";
+import Link, { type LinkProps } from "next/link";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { attributes } from "../../utilities/attributes";
+
+export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+  href?: string | UrlObject;
+  $noDecoration?: boolean;
+  $disabled?: boolean;
+  children?: ReactNode;
+};
+
+const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>((props, ref) => {
+  const attrs = attributes(props, props.$noDecoration ? "plain-text" : undefined);
+  const href = attrs.href?.toString();
+
+  if (StringUtils.isEmpty(href) || props.$disabled) {
+    return <a {...attrs} ref={ref} href={undefined} />;
+  }
+
+  if (/^(http|tel:|mailto:)/.test(href)) {
+    return (
+      <a
+        {...attrs}
+        ref={ref as LegacyRef<HTMLAnchorElement> | undefined}
+        href={href}
+        target={props.target ?? "_blank"}
+        rel={props.rel ?? "noopener noreferrer"}
+      />
+    );
+  }
+  return (
+    <Link
+      {...attrs}
+      href={attrs.href!}
+      ref={ref as Ref<HTMLAnchorElement> | undefined}
+    />
+  );
+});
+
+export default NextLink;

@@ -8,8 +8,8 @@ import GroupBox from "#/components/elements/group-box";
 import Loading from "#/components/elements/loading";
 import Row from "#/components/elements/row";
 import StructView from "#/components/elements/struct-view";
-import useFetch from "#/hooks/fetch-api";
-import useProcess from "#/hooks/process";
+import useFetch from "#/components/hooks/fetch-api";
+import useProcess from "#/components/hooks/process";
 import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_date, sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 

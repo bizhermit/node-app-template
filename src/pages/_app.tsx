@@ -1,12 +1,12 @@
 import type { AppProps } from "next/app";
 import type { NextPage } from "next";
 import type { ReactElement, ReactNode } from "react";
-import "#/styles/root.scss";
-import "#/styles/global.scss";
-import "#/styles/color.scss";
-import LoadingProvider from "#/components/elements/loading/provider";
-import LayoutProvider from "#/components/providers/layout/provider";
-import MessageProvider from "#/components/providers/message/provider";
+import "#/client/styles/root.scss";
+import "#/client/styles/global.scss";
+import "#/client/styles/color.scss";
+import LoadingProvider from "#/client/elements/loading/provider";
+import LayoutProvider from "#/client/providers/layout/provider";
+import MessageProvider from "#/client/providers/message/provider";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   layout?: (page: ReactElement, props: P) => ReactNode;

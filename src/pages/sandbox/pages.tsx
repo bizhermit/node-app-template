@@ -1,7 +1,7 @@
 import Button from "#/components/elements/button";
 import NextLink from "#/components/elements/link";
 import Text from "#/components/elements/text";
-import useRouter from "#/hooks/router";
+import useRouter from "#/components/hooks/router";
 import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
 import type { NextPageWithLayout } from "~/_app";
 

@@ -3,7 +3,7 @@
 import Button from "#/components/elements/button";
 import Divider from "#/components/elements/divider";
 import Form from "#/components/elements/form";
-import CreditCardNumberBox from "#/components/elements/form/items/credit-card-number-box";
+import CreditCardNumberBox from "#/components/elements/form/items/text-box/credit-card";
 import ToggleBox from "#/components/elements/form/items/toggle-box";
 import Row from "#/components/elements/row";
 import { sample_string } from "$/data-items/sample/item";
