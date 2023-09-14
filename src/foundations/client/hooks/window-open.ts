@@ -16,7 +16,7 @@ type WindowContext = {
 const useWindow = (defaultOptions?: Options) => {
   const wins = useRef<Array<WindowContext>>([]);
 
-  const open = (href: string | null | undefined, options?: Options) => {
+  const open = (href?: string | null | undefined, options?: Options) => {
     const id = StringUtils.generateUuidV4();
     const opts = { ...options, ...defaultOptions };
     const beforeunloadEvent = () => {
