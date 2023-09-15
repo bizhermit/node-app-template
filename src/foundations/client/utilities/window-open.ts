@@ -13,7 +13,7 @@ export const windowOpen = (href?: string | null | undefined, options?: WindowOpe
     undefined : window.open(href || "/loading", options?.target, (() => {
       return StringUtils.join(
         ",",
-        "noreferrer",
+        // "noreferrer",
         options?.popup ? "popup" : undefined,
       );
     })());
