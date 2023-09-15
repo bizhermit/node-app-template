@@ -2,7 +2,7 @@
 
 import Button from "#/client/elements/button";
 import Text from "#/client/elements/text";
-import useWindow from "#/client/hooks/window-open";
+import useWindow from "#/client/providers/window/context";
 import { windowOpen } from "#/client/utilities/window-open";
 import { useState } from "react";
 
@@ -33,9 +33,9 @@ const Component = () => {
     <div className="flex g-m p-m">
       <Button
         $onClick={() => {
-          const w = windowOpen("/sandbox");
+          const w = windowOpen("https://bizhermit.com");
           setTimeout(() => {
-            w.replace("/sandbox/window");
+            // w.replace("https://bizhermit.com");
           }, 3000);
         }}
       >
@@ -44,9 +44,9 @@ const Component = () => {
       <div className="flex row g-m">
         <Button
           $onClick={() => {
-            const ctx = win.open("/sandbox?mode=hook");
+            const w = win.open("/sandbox?mode=hook");
             setTimeout(() => {
-              ctx.window.replace("/sandbox/window?mode=hook");
+              w.replace("/sandbox/window?mode=hook");
             }, 3000);
           }}
         >
@@ -58,6 +58,13 @@ const Component = () => {
           }}
         >
           open (hook-unmount)
+        </Button>
+        <Button
+          $onClick={() => {
+            win.open("/sandbox?mode=page", { closeWhenPageMove: true });
+          }}
+        >
+          open (hook-page)
         </Button>
         <Button
           $onClick={() => {
@@ -77,21 +84,28 @@ const Component = () => {
         </Button>
         <Button
           $onClick={() => {
-            win.close("unmount");
+            win.close({ unmout: true });
           }}
         >
           close (hook-unmount)
         </Button>
         <Button
           $onClick={() => {
-            win.close("tab");
+            win.close({ page: true });
+          }}
+        >
+          close (hook-page)
+        </Button>
+        <Button
+          $onClick={() => {
+            win.close({ tab: true });
           }}
         >
           close (hook-tab)
         </Button>
         <Button
           $onClick={() => {
-            win.close("all");
+            win.close();
           }}
         >
           close all
