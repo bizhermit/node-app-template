@@ -54,7 +54,7 @@ const useWindow = (defaultOptions: WindowOptions = { closeWhenTabClose: true }) 
     return win;
   };
 
-  const close = (params?: {
+  const closeChildren = (params?: {
     unmout?: boolean;
     page?: boolean;
     tab?: boolean;
@@ -73,12 +73,18 @@ const useWindow = (defaultOptions: WindowOptions = { closeWhenTabClose: true }) 
     filter();
   };
 
+  const close = () => {
+    if (typeof window === "undefined") return;
+    if (window.opener) window.close();
+  };
+
   useEffect(() => {
-    return () => close({ unmout: true });
+    return () => closeChildren({ unmout: true });
   }, []);
 
   return {
     open,
+    closeChildren,
     close,
   } as const;
 };
