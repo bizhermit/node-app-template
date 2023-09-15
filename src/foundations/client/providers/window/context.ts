@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef } from "react";
-import { windowOpen } from "../../utilities/window-open";
+import { windowOpen, type WindowOpenOptions } from "../../utilities/window-open";
 
 export type WindowOptions = {
   closeWhenUnmount?: boolean;
@@ -28,7 +28,7 @@ const useWindow = (defaultOptions: WindowOptions = { closeWhenTabClose: true }) 
     wins.current = wins.current.filter(item => item.window.showed());
   };
 
-  const open = (href?: string | null | undefined, options?: WindowOptions) => {
+  const open = (href?: string | null | undefined, options?: WindowOpenOptions & WindowOptions) => {
     const opts = { ...options, ...defaultOptions };
     const beforeunloadEvent = () => {
       win.close();
@@ -38,10 +38,12 @@ const useWindow = (defaultOptions: WindowOptions = { closeWhenTabClose: true }) 
       window.addEventListener("beforeunload", beforeunloadEvent);
     }
     const win = windowOpen(href || "/loading", {
+      ...options,
       closed: () => {
         if (useBeforeunload) {
           window.removeEventListener("beforeunload", beforeunloadEvent);
         }
+        options?.closed?.();
       },
     });
     if (opts.closeWhenPageMove) ctx.append(win);

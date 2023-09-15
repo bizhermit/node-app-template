@@ -1,14 +1,14 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { getDynamicUrlContext, type DynamicUrlContextOptions } from "../../utilities/url";
 
-type Options = {
+export type WindowOpenOptions = {
   closed?: () => void;
   replaced?: () => void;
   target?: string;
   popup?: boolean;
 };
 
-export const windowOpen = (href?: string | null | undefined, options?: Options) => {
+export const windowOpen = (href?: string | null | undefined, options?: WindowOpenOptions) => {
   const win = typeof window === "undefined" ?
     undefined : window.open(href || "/loading", options?.target, (() => {
       return StringUtils.join(
