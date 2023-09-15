@@ -15,6 +15,9 @@ const DynamicRootLayout: LayoutFC = (props) => {
         <NextLink href="/sandbox/dynamic/x?hoge=1">x</NextLink>
         <NextLink href="/sandbox/dynamic/xxx?hoge=2">xxx</NextLink>
         <NextLink href="/sandbox/dynamic">index</NextLink>
+        <NextLink href="/sandbox/dynamic?hoge=1">index?1</NextLink>
+        <NextLink href="/sandbox/dynamic?hoge=2">index?2</NextLink>
+        <NextLink href="/sandbox/dynamic?hoge=3">index?3</NextLink>
       </Row>
       <div className="flex column">
         {props.children}

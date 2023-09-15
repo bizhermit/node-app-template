@@ -1,17 +1,37 @@
-import { type DynamicUrlContextOptions, getDynamicUrlContext } from "../../utilities/url";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { getDynamicUrlContext, type DynamicUrlContextOptions } from "../../utilities/url";
 
-export const windowOpen = (href?: string | null | undefined) => {
+export type WindowOpenOptions = {
+  closed?: () => void;
+  replaced?: () => void;
+  target?: string;
+  popup?: boolean;
+};
+
+export const windowOpen = (href?: string | null | undefined, options?: WindowOpenOptions) => {
   const win = typeof window === "undefined" ?
-    undefined : window.open(href || "/loading");
+    undefined : window.open(href || "/loading", options?.target, (() => {
+      return StringUtils.join(
+        ",",
+        // "noreferrer",
+        options?.popup ? "popup" : undefined,
+      );
+    })());
+  let showed = win != null;
   return {
+    window: win,
     replace: (href: string) => {
-      if (!win) return;
-      win.location.href = href;
+      if (!showed) return;
+      if (win) win.location.href = href;
+      options?.replaced?.();
     },
     close: () => {
-      if (!win) return;
-      win.close();
+      if (!showed) return;
+      if (win) win.close();
+      showed = false;
+      options?.closed?.();
     },
+    showed: () => showed,
   } as const;
 };
 
