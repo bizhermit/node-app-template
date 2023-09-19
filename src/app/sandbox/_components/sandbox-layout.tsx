@@ -321,6 +321,11 @@ const Navigation: FC = () => {
             label: "Window",
             icon: "W",
             pathname: "/sandbox/window",
+          }, {
+            key: "post",
+            label: "Post",
+            icon: "P",
+            pathname: "/sandbox/post/sender",
           }]
         }]}
       />
