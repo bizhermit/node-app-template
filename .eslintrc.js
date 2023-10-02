@@ -74,7 +74,13 @@ module.exports = {
       }
     ],
     "brace-style": "warn",
-    "padded-blocks": ["warn", "never"],
+    "padded-blocks": [
+      "warn",
+      {
+        "blocks": "never",
+        "classes": "always"
+      }
+    ],
     "keyword-spacing": "warn",
     "space-infix-ops": "warn",
     "comma-spacing": [
@@ -109,7 +115,11 @@ module.exports = {
     ],
     "space-before-function-paren": [
       "warn",
-      "always",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
     ],
     "arrow-spacing": "warn",
     "no-multiple-empty-lines": [

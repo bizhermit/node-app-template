@@ -4,11 +4,12 @@ import type { CSSProperties, FC, MutableRefObject } from "react";
 import { convertSizeNumToStr, releaseCursor, setCursor } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
+export type ResizeDirection = "x" | "y" | "xy";
 export type ResizerProps = {
   className?: string;
   style?: CSSProperties;
   disabled?: boolean;
-  direction?: "x" | "y" | "xy";
+  direction?: ResizeDirection;
   reverse?: boolean;
   targetRef?: MutableRefObject<HTMLElement>;
   resizing?: (ctx: { width?: number; height?: number; }) => void;

@@ -1,9 +1,9 @@
 "use client";
 
-import WindowProviderEventListener from "#/client/providers/window/listener";
 import { Suspense, useMemo, useRef, type FC, type ReactNode } from "react";
 import { windowOpen } from "../../utilities/window-open";
 import { WindowContext } from "./context";
+import WindowProviderEventListener from "./listener";
 
 export const WindowProvider: FC<{
   children?: ReactNode;

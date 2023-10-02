@@ -1,8 +1,8 @@
 "use client";
 
-import type { windowOpen } from "#/client/utilities/window-open";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, type FC, type MutableRefObject } from "react";
+import type { windowOpen } from "../../utilities/window-open";
 
 const WindowProviderEventListener: FC<{
   wins: MutableRefObject<Array<ReturnType<typeof windowOpen>>>;

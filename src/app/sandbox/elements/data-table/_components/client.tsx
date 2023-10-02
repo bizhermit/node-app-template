@@ -157,6 +157,8 @@ const DataTableClient = () => {
           <Button $size="s" $fitContent $onClick={() => generateItems(100)}>100</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(101)}>101</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(1000)}>1000</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(10000)}>10000</Button>
+          <Button $size="s" $fitContent $onClick={() => generateItems(100000)}>100000</Button>
           <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
         </Row>
         <Row className="g-s">
