@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "#/client/elements/button";
+import Button, { ButtonProps } from "#/client/elements/button";
 import DataList from "#/client/elements/data-list";
 import { DataListColumn } from "#/client/elements/data-list/class";
 import NumberBox from "#/client/elements/form/items/number-box";
@@ -8,7 +8,7 @@ import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { joinClassNames } from "#/client/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
 type Data = {
   id: number;
@@ -32,6 +32,20 @@ const generateArray = (length = 0) => {
       button: `button${index}`,
     } as Data;
   });
+};
+
+const ArraySetterButton: FC<Pick<ButtonProps, "$onClick"> & {
+  length: number | null;
+}> = (props) => {
+  return (
+    <Button
+      $size="s"
+      $fitContent
+      $onClick={props.$onClick}
+    >
+      {String(props.length)}
+    </Button>
+  )
 };
 
 const DataListClient = () => {
@@ -128,24 +142,24 @@ const DataListClient = () => {
   const [perPage, setPerPage] = useState(10);
 
   return (
-    <div className="flex-start w-100 h-100 gap-1 p-1">
-      <Row className="gap-1">
-        <Row className="gap-1">
-          <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(0)}>0</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(1)}>1</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(10)}>10</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(50)}>50</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(99)}>99</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(100)}>100</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(101)}>101</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(1000)}>1000</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(10000)}>10000</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(100000)}>100000</Button>
-          <Button $size="s" $fitContent $onClick={() => setAndGenerateItems(1000000)}>1000000</Button>
-          <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
+    <div className="flex w-100 h-100 g-m p-s">
+      <Row className="g-s">
+        <Row className="g-s">
+          <ArraySetterButton length={null} $onClick={() => setItems(null!)} />
+          <ArraySetterButton length={0} $onClick={() => setAndGenerateItems(0)} />
+          <ArraySetterButton length={1} $onClick={() => setAndGenerateItems(1)} />
+          <ArraySetterButton length={10} $onClick={() => setAndGenerateItems(10)} />
+          <ArraySetterButton length={50} $onClick={() => setAndGenerateItems(50)} />
+          <ArraySetterButton length={99} $onClick={() => setAndGenerateItems(99)} />
+          <ArraySetterButton length={100} $onClick={() => setAndGenerateItems(100)} />
+          <ArraySetterButton length={101} $onClick={() => setAndGenerateItems(101)} />
+          <ArraySetterButton length={1000} $onClick={() => setAndGenerateItems(1000)} />
+          <ArraySetterButton length={10000} $onClick={() => setAndGenerateItems(10000)} />
+          <ArraySetterButton length={100000} $onClick={() => setAndGenerateItems(100000)} />
+          <ArraySetterButton length={1000000} $onClick={() => setAndGenerateItems(1000000)} />
+          <Button $size="s" $fitContent $onClick={() => console.log(items)}>disp</Button>
         </Row>
-        <Row className="gap-1">
+        <Row className="g-s">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>
           <ToggleBox $value={rowBorder} $onChange={v => setRowBorder(v!)}>row border</ToggleBox>
           <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>
