@@ -1,4 +1,4 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import type { DataTableBaseColumn, DataTableColumn } from ".";
 import { getValue, setValue } from "../../../data-items/utilities";
 import CheckBox, { type CheckBoxProps } from "../form/items/check-box";
@@ -24,21 +24,24 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
     header: props.bulk ? ({ items, setBodyRev }) => {
       const [checked, setChecked] = useState(isAllChecked(items));
       setBulkChecked = setChecked;
+      const itemsRef = useRef(items);
+
       useEffect(() => {
-        setChecked(isAllChecked(items));
+        setChecked(isAllChecked(itemsRef.current = items));
       }, [items]);
+
       return (
         <CheckBox
           style={{ marginLeft: "auto", marginRight: "auto" }}
           $borderCheck
           $disabled={items.length === 0}
           $value={checked}
-          $onChange={v => {
+          $onEdit={v => {
             setChecked(v!);
             if (v) {
-              items.forEach(item => setValue(item, dataName, checkedValue));
+              itemsRef.current.forEach(item => setValue(item, dataName, checkedValue));
             } else {
-              items.forEach(item => setValue(item, dataName, uncheckedValue));
+              itemsRef.current.forEach(item => setValue(item, dataName, uncheckedValue));
             }
             setBodyRev(s => s + 1);
           }}
@@ -51,12 +54,12 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
           {...props.checkBoxProps}
           name={dataName}
           $bind={{ ...data }}
-          $onChange={(a, b, d) => {
+          $onEdit={(a, b, d) => {
             setValue(data, dataName, a);
             if (props.bulk) {
               setBulkChecked(isAllChecked(items));
             }
-            props.checkBoxProps?.$onChange?.(a, b, d);
+            props.checkBoxProps?.$onEdit?.(a, b, d);
           }}
         />
       );
