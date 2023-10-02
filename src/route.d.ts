@@ -51,6 +51,7 @@ type AppRoutePath = "/"
  | "/sandbox/fetch"
  | "/sandbox/message-box"
  | "/sandbox"
+ | "/sandbox/post/sender"
  | "/sandbox/process"
  | "/sandbox/storage"
  | "/sandbox/window";
@@ -68,6 +69,7 @@ type PagesRoutePath = "/404"
  | "/root"
  | "/sandbox/nest/[id]"
  | "/sandbox/pages"
+ | "/sandbox/post/recipient"
  | "/sandbox/route";
 
 type PagesApiPath = "/api/form"
