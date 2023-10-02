@@ -1,8 +1,8 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
-import Style from "./style.module.scss";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
+import Style from "./index.module.scss";
 
 export type StructKey = {
   key: string;

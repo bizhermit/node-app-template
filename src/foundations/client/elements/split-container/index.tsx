@@ -1,9 +1,9 @@
 "use client";
 
-import { forwardRef, type HTMLAttributes, type ReactElement, useEffect, useImperativeHandle, useRef } from "react";
-import Style from "./style.module.scss";
+import { forwardRef, useEffect, useImperativeHandle, useRef, type HTMLAttributes, type ReactElement } from "react";
 import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
 import Resizer from "../resizer";
+import Style from "./index.module.scss";
 
 export type SplitDirection = "horizontal" | "vertical";
 

@@ -1,20 +1,19 @@
 "use client";
 
-import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import Style from "./style.module.scss";
+import StringUtils, { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
+import { forwardRef, useEffect, useMemo, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
+import type { FormItemProps, ValueType } from "../../$types";
+import { equals, getValue, setValue } from "../../../../../data-items/utilities";
 import useLoadableArray from "../../../../hooks/loadable-array";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
-import Resizer from "../../../resizer";
-import Popup from "../../../popup";
-import { equals, getValue, setValue } from "../../../../../data-items/utilities";
 import { CrossIcon, DownIcon } from "../../../icon";
-import type { FormItemProps, ValueType } from "../../$types";
+import Popup from "../../../popup";
+import Resizer from "../../../resizer";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 export type SelectBoxProps<
   T extends string | number = string | number,

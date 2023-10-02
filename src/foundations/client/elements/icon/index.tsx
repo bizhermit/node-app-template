@@ -1,6 +1,6 @@
-import { type CSSProperties, forwardRef, type HTMLAttributes, type ForwardedRef } from "react";
-import Style from "./style.module.scss";
+import { forwardRef, type CSSProperties, type ForwardedRef, type HTMLAttributes } from "react";
 import { joinClassNames } from "../../utilities/attributes";
+import Style from "./index.module.scss";
 
 type IconProps = Omit<HTMLAttributes<SVGSVGElement>, "children"> & {
   className?: string;

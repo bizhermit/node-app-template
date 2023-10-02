@@ -1,15 +1,14 @@
 "use client";
 
-import { type ReactElement, forwardRef, type ForwardedRef, useRef, type FunctionComponent } from "react";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import Style from "./style.module.scss";
+import StringUtils, { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
+import { forwardRef, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
-import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
-import { FormItemWrap } from "../common";
-import { CrossIcon } from "../../../icon";
-import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { StringData } from "../../../../../data-items/string";
+import { CrossIcon } from "../../../icon";
+import useForm from "../../context";
+import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 export type CreditCardNumberBoxProps<
   D extends DataItem_String | undefined = undefined

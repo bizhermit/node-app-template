@@ -1,7 +1,7 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import Style from "./style.module.scss";
 import { attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
 import Text from "../text";
+import Style from "./index.module.scss";
 
 type OmitAttributes = "color";
 export type GroupBoxProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {

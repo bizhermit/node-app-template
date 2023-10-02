@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import Style from "./style.module.scss";
 import { attributes, isReactNode } from "../../utilities/attributes";
+import Style from "./index.module.scss";
 
 type TextProps = HTMLAttributes<HTMLElement> & {
   $ib?: boolean; // inline-block

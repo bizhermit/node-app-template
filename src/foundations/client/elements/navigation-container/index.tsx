@@ -1,11 +1,11 @@
-import { type ElementType, forwardRef, type HTMLAttributes, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import Style from "./style.module.scss";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import { forwardRef, useCallback, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
 import useToggleAnimation from "../../hooks/toggle-animation";
+import { WindowSize } from "../../providers/layout/consts";
+import useLayout from "../../providers/layout/context";
+import { attributesWithoutChildren } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon } from "../icon";
 import { NavigationContext, type NavigationFooterVisible, type NavigationHeaderVisible, type NavigationMode, type NavigationPosition } from "../navigation-container/context";
-import useLayout from "../../providers/layout/context";
-import { WindowSize } from "../../providers/layout/consts";
+import Style from "./index.module.scss";
 
 const defaultKey = "default";
 

@@ -1,14 +1,14 @@
 "use client";
 
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import Style from "./style.module.scss";
-import Text from "../../../text";
-import { pressPositiveKey } from "../../../../utilities/attributes";
+import { forwardRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemProps } from "../../$types";
+import { pressPositiveKey } from "../../../../utilities/attributes";
+import Text from "../../../text";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 export type CheckBoxProps<
   T extends string | number | boolean = boolean,
