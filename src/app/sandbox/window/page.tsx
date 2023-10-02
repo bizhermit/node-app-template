@@ -77,35 +77,35 @@ const Component = () => {
       <div className="flex row g-m">
         <Button
           $onClick={() => {
-            win.close();
+            win.closeChildren();
           }}
         >
           close
         </Button>
         <Button
           $onClick={() => {
-            win.close({ unmout: true });
+            win.closeChildren({ unmout: true });
           }}
         >
           close (hook-unmount)
         </Button>
         <Button
           $onClick={() => {
-            win.close({ page: true });
+            win.closeChildren({ page: true });
           }}
         >
           close (hook-page)
         </Button>
         <Button
           $onClick={() => {
-            win.close({ tab: true });
+            win.closeChildren({ tab: true });
           }}
         >
           close (hook-tab)
         </Button>
         <Button
           $onClick={() => {
-            win.close();
+            win.closeChildren();
           }}
         >
           close all
