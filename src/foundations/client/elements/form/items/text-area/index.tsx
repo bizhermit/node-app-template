@@ -1,16 +1,16 @@
 "use client";
 
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import Style from "./style.module.scss";
-import Resizer from "../../../resizer";
-import { convertSizeNumToStr } from "../../../../utilities/attributes";
-import { StringData } from "../../../../../data-items/string";
+import { forwardRef, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
+import { StringData } from "../../../../../data-items/string";
+import { convertSizeNumToStr } from "../../../../utilities/attributes";
+import Resizer from "../../../resizer";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 

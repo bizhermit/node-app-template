@@ -1,14 +1,14 @@
 "use client";
 
-import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import Style from "./style.module.scss";
-import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type Key, type ReactNode } from "react";
 import useToggleAnimation from "../../hooks/toggle-animation";
-import NextLink from "../link";
-import Text from "../text";
+import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
+import NextLink from "../link";
 import { useNavigation } from "../navigation-container/context";
+import Text from "../text";
+import Style from "./index.module.scss";
 
 type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick" | "onKeyDown">;
 

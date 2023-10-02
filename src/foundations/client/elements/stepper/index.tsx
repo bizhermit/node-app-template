@@ -1,9 +1,9 @@
 "use client";
 
-import { forwardRef, type HTMLAttributes, type ReactNode, useImperativeHandle, useRef } from "react";
-import Style from "./style.module.scss";
-import Text from "../text";
+import { forwardRef, useImperativeHandle, useRef, type HTMLAttributes, type ReactNode } from "react";
 import { attributesWithoutChildren } from "../../utilities/attributes";
+import Text from "../text";
+import Style from "./index.module.scss";
 
 export type StepState = "done" | "current" | "future" | "prev" | "next";
 

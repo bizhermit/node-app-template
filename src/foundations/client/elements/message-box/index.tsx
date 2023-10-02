@@ -1,10 +1,10 @@
-import { type FC, type ReactElement, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type FC, type ReactElement, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import Button, { type ButtonProps } from "../button";
-import Style from "./style.module.scss";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { convertSizeNumToStr, joinClassNames } from "../../utilities/attributes";
+import Button, { type ButtonProps } from "../button";
 import Text from "../text";
+import Style from "./index.module.scss";
 
 type ShowOptions = {
   preventEscape?: boolean;

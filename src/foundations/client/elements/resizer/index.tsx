@@ -1,8 +1,8 @@
 "use client";
 
 import type { CSSProperties, FC, MutableRefObject } from "react";
-import Style from "./style.module.scss";
 import { convertSizeNumToStr, releaseCursor, setCursor } from "../../utilities/attributes";
+import Style from "./index.module.scss";
 
 export type ResizeDirection = "x" | "y" | "xy";
 export type ResizerProps = {

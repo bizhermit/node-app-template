@@ -1,12 +1,12 @@
 "use client";
 
-import { forwardRef, type HTMLAttributes, type ReactNode, useEffect, useRef, useState, useReducer } from "react";
-import Style from "./style.module.scss";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import { forwardRef, useEffect, useReducer, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
 import useToggleAnimation from "../../hooks/toggle-animation";
-import Text from "../text";
-import Resizer from "../resizer";
+import { attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
+import Resizer from "../resizer";
+import Text from "../text";
+import Style from "./index.module.scss";
 
 type ReactNodeArray = Array<ReactNode>;
 type IconPosition = "start" | "end" | "both" | "none";

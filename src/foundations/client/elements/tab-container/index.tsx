@@ -1,8 +1,8 @@
 "use client";
 
-import { type FC, forwardRef, type HTMLAttributes, type Key, type ReactElement, type ReactNode, useEffect, useRef, useState, ForwardedRef, type FunctionComponent } from "react";
-import Style from "./style.module.scss";
+import { ForwardedRef, forwardRef, useEffect, useRef, useState, type FC, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
 import { attributesWithoutChildren } from "../../utilities/attributes";
+import Style from "./index.module.scss";
 
 type OmitAttributes = "color" | "children";
 export type TabContainerProps<K extends Key = Key> =

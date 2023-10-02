@@ -1,13 +1,13 @@
 "use client";
 
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useMemo, useRef } from "react";
-import Style from "./style.module.scss";
-import { convertSizeNumToStr } from "../../../../utilities/attributes";
+import { forwardRef, useMemo, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemProps } from "../../$types";
+import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
   $max?: number;

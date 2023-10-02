@@ -1,15 +1,15 @@
 "use client";
 
-import { type FC, type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import Style from "./style.module.scss";
+import { forwardRef, useEffect, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
+import type { FormItemProps, FormItemValidation } from "../../$types";
 import { releaseCursor, setCursor } from "../../../../utilities/attributes";
 import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "../../../icon";
-import type { FormItemProps, FormItemValidation } from "../../$types";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 export type ElectronicSignatureProps<
   D extends DataItem_String | DataItem_File | undefined = undefined

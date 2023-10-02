@@ -1,9 +1,9 @@
 "use client";
 
-import { type ButtonHTMLAttributes, forwardRef, type ReactNode, useImperativeHandle, useMemo, useRef, useState } from "react";
-import Style from "./style.module.scss";
+import { forwardRef, useImperativeHandle, useMemo, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
 import useForm from "../form/context";
+import Style from "./index.module.scss";
 
 export type ButtonOptions = {
   $size?: Size;

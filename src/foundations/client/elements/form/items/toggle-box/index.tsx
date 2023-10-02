@@ -1,14 +1,14 @@
 "use client";
 
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import Style from "./style.module.scss";
+import { forwardRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
+import type { FormItemProps } from "../../$types";
 import { pressPositiveKey } from "../../../../utilities/attributes";
 import Text from "../../../text";
-import type { FormItemProps } from "../../$types";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 export type ToggleBoxProps<
   T extends string | number | boolean = boolean,

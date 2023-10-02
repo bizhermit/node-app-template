@@ -1,18 +1,18 @@
 "use client";
 
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef } from "react";
 import { add, minus, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import Style from "./style.module.scss";
-import Resizer from "../../../resizer";
-import { convertSizeNumToStr } from "../../../../utilities/attributes";
-import { NumberData } from "../../../../../data-items/number";
-import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
+import { forwardRef, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
+import { NumberData } from "../../../../../data-items/number";
+import { convertSizeNumToStr } from "../../../../utilities/attributes";
+import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
+import Resizer from "../../../resizer";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
   $min?: number;
