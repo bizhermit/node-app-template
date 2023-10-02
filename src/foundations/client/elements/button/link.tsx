@@ -1,13 +1,13 @@
 "use client";
 
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useMemo, type HTMLAttributes } from "react";
 import type { UrlObject } from "url";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import Style from "./style.module.scss";
 import { attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
 import type { ButtonOptions } from "../button";
-import NextLink from "../link";
 import useForm from "../form/context";
+import NextLink from "../link";
+import Style from "./index.module.scss";
 
 export type LinkButtonOptions = ButtonOptions & {
   href?: string | UrlObject;

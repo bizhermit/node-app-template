@@ -1,10 +1,10 @@
 "use client";
 
-import { type FC, forwardRef, type HTMLAttributes, useEffect, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes } from "react";
 import { createPortal } from "react-dom";
-import Style from "./style.module.scss";
-import { attributesWithoutChildren } from "../../utilities/attributes";
 import usePortalElement from "../../hooks/portal-element";
+import { attributesWithoutChildren } from "../../utilities/attributes";
+import Style from "./index.module.scss";
 
 export type LoadingAppearance = "bar" | "circle";
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { type FC, forwardRef, type HTMLAttributes, type ReactElement, type ReactNode, useEffect, useRef, useState } from "react";
-import Style from "./style.module.scss";
+import { forwardRef, useEffect, useRef, useState, type FC, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
 import { attributesWithoutChildren } from "../../utilities/attributes";
 import Text from "../text";
+import Style from "./index.module.scss";
 
 type SlideState = "before" | "previous" | "current" | "next" | "after";
 export type SlideDirection = "horizontal" | "horizontal-reverse" | "vertical" | "vertical-reverse";

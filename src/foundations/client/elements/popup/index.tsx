@@ -1,11 +1,11 @@
 "use client";
 
-import { forwardRef, type HTMLAttributes, type MutableRefObject, useEffect, useImperativeHandle, useRef, useState, createContext, useContext } from "react";
+import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
-import Style from "./style.module.scss";
 import usePortalElement from "../../hooks/portal-element";
-import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
 import useToggleAnimation from "../../hooks/toggle-animation";
+import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
+import Style from "./index.module.scss";
 
 type PopupContextProps = {
   isPopup?: boolean;

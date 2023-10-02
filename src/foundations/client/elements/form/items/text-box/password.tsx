@@ -1,19 +1,19 @@
 "use client";
 
-import { type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, forwardRef, useRef, useState } from "react";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import Style from "./style.module.scss";
+import { forwardRef, useRef, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
-import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../../items/hooks";
-import { FormItemWrap } from "../../items/common";
-import type { TextBoxProps } from "../../items/text-box";
-import { convertDataItemValidationToFormItemValidation } from "../../utilities";
-import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { StringData } from "../../../../../data-items/string";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "../../../../elements/icon";
 import Resizer from "../../../../elements/resizer";
+import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { includeElement } from "../../../../utilities/parent-child";
+import useForm from "../../context";
+import { FormItemWrap } from "../../items/common";
+import { useDataItemMergedProps, useFormItemContext } from "../../items/hooks";
+import type { TextBoxProps } from "../../items/text-box";
+import { convertDataItemValidationToFormItemValidation } from "../../utilities";
+import Style from "./index.module.scss";
 
 type InputMode = Extract<HTMLAttributes<HTMLInputElement>["inputMode"],
   | "email"

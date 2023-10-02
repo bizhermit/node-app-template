@@ -1,17 +1,17 @@
 "use client";
 
-import Style from "./style.module.scss";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { forwardRef, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
+import type { FormItemProps, FormItemValidation } from "../../$types";
+import { StringData } from "../../../../../data-items/string";
 import { CrossIcon } from "../../../../elements/icon";
 import Resizer from "../../../../elements/resizer";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
-import { StringData } from "../../../../../data-items/string";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { type ForwardedRef, forwardRef, type FunctionComponent, type ReactElement, useRef, type HTMLAttributes } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import Style from "./index.module.scss";
 
 type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
