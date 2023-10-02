@@ -1,15 +1,15 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import useMessageBox from "#/hooks/message-box";
-import useRouter from "#/hooks/router";
+import Button from "#/client/elements/button";
+import useMessageBox from "#/client/elements/message-box";
+import useRouter from "#/client/hooks/router";
 
 const Page = () => {
   const msg = useMessageBox({ preventUnmountClose: true });
   const router = useRouter();
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Button
         $onClick={async (unlock) => {
           const res = await msg.alert("alert", { preventEscape: true });

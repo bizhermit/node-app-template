@@ -1,0 +1,116 @@
+@use "../../../../styles/mixins" as mixins;
+@use "../../../../styles/var" as var;
+
+@layer base {
+
+  .inputs {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1 0 auto;
+    z-index: 0;
+    outline: none;
+
+    &[data-input="false"] {
+      cursor: pointer;
+
+      >.y,
+      >.m,
+      >.d {
+        cursor: inherit;
+      }
+    }
+
+    &[data-editable="true"] {
+      &:focus-within {
+        >.sep {
+          color: inherit;
+          opacity: 1;
+        }
+      }
+
+      >.y,
+      >.m,
+      >.d {
+        &:last-child {
+          margin-right: 0 !important;
+        }
+      }
+    }
+  }
+
+  .y,
+  .m,
+  .d {
+    @include mixins.inputProps(true);
+    height: var(--cs-m);
+    min-width: 0;
+    padding: calc(var(--pt-t) + 0.1rem) 0 0 0;
+    text-align: center;
+    flex: none;
+
+    &:first-child {
+      margin-left: #{var.$textPadding};
+    }
+
+    &:last-child {
+      margin-right: #{var.$textPadding};
+    }
+  }
+
+  .y {
+    width: calc(var(--cs-m) * 1.4);
+  }
+
+  .m,
+  .d {
+    width: calc(var(--cs-m) * 0.8);
+  }
+
+  .sep {
+    box-sizing: border-box;
+    flex: none;
+    height: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    padding-top: var(--pt-t);
+    cursor: inherit;
+
+    &[data-show="false"] {
+      color: transparent;
+    }
+
+    &[data-show="true"] {
+      transition: color #{var.$transitionTime},
+      opacity #{var.$transitionTime};
+
+      &[data-has="false"] {
+        color: var(--c-placeholder_);
+        opacity: #{var.$placeholderOpacity};
+      }
+    }
+
+    &:first-child,
+    &:last-child {
+      display: none;
+    }
+  }
+
+  .picker,
+  .clear {
+    @include mixins.inputButton;
+  }
+
+  .popup {
+    @include mixins.pickerShadow;
+    overflow: visible !important;
+  }
+
+  @include mixins.hoverAnimation;
+
+}

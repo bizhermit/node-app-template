@@ -1,13 +1,12 @@
-import GroupBox from "#/components/elements/group-box";
-import Row from "#/components/elements/row";
+import GroupBox from "#/client/elements/group-box";
 
 const Page = () => {
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
-      <Row className="gap-1">
+    <div className="flex w-100 h-100 p-xs g-s">
+      <div className="flex row bottom g-s">
         <GroupBox
           $caption="GroupBox"
-          $bodyClassName="pb-1 px-2"
+          $bodyClassName="pb-xs px-m r-m"
         >
           <h1>Header 1</h1>
           <h2>Header 2</h2>
@@ -20,7 +19,7 @@ const Page = () => {
           className="es-2"
           $caption="GroupBox"
           $color="primary"
-          $bodyClassName="pb-1 px-2"
+          $bodyClassName="pb-xs px-m"
         >
           <h1>Header 1</h1>
           <h2>Header 2</h2>
@@ -32,7 +31,7 @@ const Page = () => {
         <GroupBox
           className="es-4"
           $color="main"
-          $bodyClassName="pb-1 px-2"
+          $bodyClassName="pb-xs px-m"
         >
           <h1>Header 1</h1>
           <h2>Header 2</h2>
@@ -41,7 +40,7 @@ const Page = () => {
           <h5>Header 5</h5>
           <h6>Header 6</h6>
         </GroupBox>
-      </Row>
+      </div>
     </div>
   );
 };

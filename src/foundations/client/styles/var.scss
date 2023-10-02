@@ -1,0 +1,153 @@
+$sizes: xs, s, m, l, xl;
+$transitionTime: 0.2s;
+$placeholderOpacity: 0.6;
+$disabledOpacity: 0.6;
+$inputBorderWidth: 0.1rem;
+$textPaddingBold: calc(var(--cs-m) / 2);
+$textPadding: calc(var(--cs-m) / 4);
+$textPaddingThin: calc(var(--cs-m) / 8);
+
+$baseColor: (
+  "light": rgb(240, 240, 247),
+  "light_r": rgb(20, 20, 22),
+  "dark": rgb(57, 57, 59),
+  "dark_r": rgb(250, 250, 250),
+);
+$lightMainColor: rgb(16, 77, 121);
+$darkMainColor: rgb(26, 87, 141);
+$lightSubColor: rgb(228, 187, 203);
+$darkSubColor: rgb(228, 187, 203);
+$lightenRate: 10%;
+$darkenRate: 10%;
+
+$colorMap: (
+  "base": $baseColor,
+  "none": (
+    "light": transparent,
+    "light_r": transparent,
+    "dark": transparent,
+    "dark_r": transparent,
+  ),
+  "pure": (
+    "light": rgb(255, 255, 255),
+    "light_r": #000,
+    "dark": rgb(20, 20, 23),
+    "dark_r": #fff,
+  ),
+  "dull": (
+    "light": rgb(250, 250, 255),
+    "light_r": rgb(100, 100, 102),
+    "dark": rgb(30, 30, 33),
+    "dark_r": rgb(200, 200, 203),
+  ),
+  "border": (
+    "light": rgb(200, 200, 210),
+    "dark": rgb(108, 108, 114),
+  ),
+  "shadow": (
+    "light": rgba(0, 0, 0, 0.4),
+    "dark": rgba(0, 0, 0, 0.8),
+  ),
+  "mask": (
+    "light": rgba(127, 127, 127, 0.3),
+    "light_r": map-get($baseColor, light_r),
+    "dark": rgba(60, 60, 63, 0.3),
+    "dark_r": map-get($baseColor, dark_r),
+  ),
+  "input": (
+    "light": #fff,
+    "light_r": map-get($baseColor, light_r),
+    "dark": rgb(50, 50, 53),
+    "dark_r": map-get($baseColor, dark_r),
+  ),
+  "placeholder": (
+    "light": #fff,
+    "light_r": #999,
+    "dark": rgb(50, 50, 53),
+    "dark_r": #888,
+  ),
+  "error": (
+    "light": rgb(255, 225, 225),
+    "light_r": map-get($baseColor, light_r),
+    "dark": rgb(70, 48, 48),
+    "dark_r": map-get($baseColor, dark_r),
+  ),
+  "selected": (
+    "light": rgb(210, 230, 255),
+    "dark": rgb(50, 60, 100),
+  ),
+  "hover": (
+    "light": rgb(240, 240, 243),
+    "dark": rgb(60, 60, 63),
+  ),
+  "scroll": (
+    "light": rgba(100, 100, 105, 0.3),
+    "light_r": rgba(210, 210, 215, 0.5),
+    "dark": rgba(200, 200, 205, 0.3),
+    "dark_r": rgba(200, 200, 205, 0.3),
+  ),
+  "nav": (
+    "light": rgb(225,220,230),
+    "dark": rgb(27, 35, 40),
+  ),
+  "sunday": (
+    "light": rgb(255, 150, 150),
+    "dark": rgb(180, 110, 110),
+  ),
+  "saturday": (
+    "light": rgb(150, 170, 255),
+    "dark": rgb(100, 100, 180),
+  ),
+  "main": (
+    "light": $lightMainColor,
+    "dark": $darkMainColor,
+  ),
+  "main-light": (
+    "light": lighten($lightMainColor, $lightenRate),
+    "dark": lighten($darkMainColor, $lightenRate),
+  ),
+  "main-dark": (
+    "light": darken($lightMainColor, $darkenRate),
+    "dark": darken($darkMainColor, $darkenRate),
+  ),
+  "sub": (
+    "light": $lightSubColor,
+    "dark": $darkSubColor,
+  ),
+  "sub-light": (
+    "light": lighten($lightSubColor, $lightenRate),
+    "dark": lighten($darkSubColor, $lightenRate),
+  ),
+  "sub-dark": (
+    "light": darken($lightSubColor, $darkenRate),
+    "dark": darken($darkSubColor, $darkenRate),
+  ),
+  "primary": (
+    "light": rgb(64, 140, 64),
+    "dark": rgb(40, 142, 40),
+  ),
+  "secondary": (
+    "light": rgb(55, 95, 185),
+    "dark": rgb(59, 105, 195),
+  ),
+  "tertiary": (
+    "light": rgb(91, 130, 145),
+    "dark": rgb(78, 111, 131),
+  ),
+  "warning": (
+    "light": rgb(225, 190, 0),
+    "dark": rgb(180, 180, 0),
+  ),
+  "danger": (
+    "light": rgb(208, 55, 55),
+    "dark": rgb(200, 63, 61),
+  ),
+  "cool": (
+    "light": rgb(18, 200, 220),
+    "dark": rgb(15, 190, 210),
+  ),
+  "pretty": (
+    "light": rgb(250, 151, 220),
+    "dark": rgb(230, 131, 200),
+  ),
+);

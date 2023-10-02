@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import SelectBox from "#/components/elements/form/items/select-box";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import SelectBox from "#/client/elements/form/items/select-box";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
@@ -21,8 +21,9 @@ const SelectBoxClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start p-1 w-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 g-s">
+      <div style={{ height: "100vh"}}></div>
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -39,7 +40,7 @@ const SelectBoxClient = () => {
           $onChange={v => setDisallowInput(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -104,7 +105,7 @@ const SelectBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-2">
+      <Row className="g-m">
         <SelectBox
           ref={ref}
           $tag="number"
@@ -154,6 +155,7 @@ const SelectBoxClient = () => {
       <SelectBox
         $tag="useState"
         $tagPosition="placeholder"
+        $initValue={18}
         $value={value}
         $onChange={v => {
           console.log("change", v);
@@ -198,7 +200,7 @@ const SelectBoxClient = () => {
         $disallowInput={disallowInput}
       />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

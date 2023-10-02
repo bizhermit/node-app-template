@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import CheckBox from "#/components/elements/form/items/check-box";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import CheckBox from "#/client/elements/form/items/check-box";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
@@ -18,8 +18,8 @@ const CheckBoxClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -31,7 +31,7 @@ const CheckBoxClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -89,7 +89,7 @@ const CheckBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-2">
+      <Row className="g-m">
         <CheckBox
           $onChange={v => console.log("no item: ", v)}
         >
@@ -178,7 +178,7 @@ const CheckBoxClient = () => {
           action="/api/form"
           method="post"
         >
-          <Row className="gap-2" $vAlign="bottom">
+          <Row className="g-m" $vAlign="bottom">
             <CheckBox
               $tag="form bind"
               name="check-box-form-bind"

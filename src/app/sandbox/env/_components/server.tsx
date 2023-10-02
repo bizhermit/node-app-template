@@ -1,5 +1,5 @@
-import StructView from "#/components/elements/struct-view";
-import Text from "#/components/elements/text";
+import StructView from "#/client/elements/struct-view";
+import Text from "#/client/elements/text";
 
 const EnvServer = () => {
   return (

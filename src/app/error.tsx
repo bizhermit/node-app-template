@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import { RedoIcon } from "#/components/elements/icon";
+import Button from "#/client/elements/button";
+import { RedoIcon } from "#/client/elements/icon";
 import { useEffect } from "react";
 
 const ErrorPage: ErrorFC = ({
@@ -14,7 +14,7 @@ const ErrorPage: ErrorFC = ({
   }, [error]);
 
   return (
-    <div className="flex-center w-100 h-100 gap-2">
+    <div className="flex column center middle w-100 h-100 g-m">
       <h2>Fatal Error</h2>
       <Button
         $icon={<RedoIcon />}

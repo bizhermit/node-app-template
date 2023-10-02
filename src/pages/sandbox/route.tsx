@@ -1,11 +1,11 @@
-import NextLink from "#/components/elements/link";
-import Text from "#/components/elements/text";
+import NextLink from "#/client/elements/link";
+import Text from "#/client/elements/text";
 import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
 import type { NextPageWithLayout } from "~/_app";
 
 const Page: NextPageWithLayout = () => {
   return (
-    <div className="flex-start p-2">
+    <div className="flex p-s">
       <Text>
         pages directory.
       </Text>

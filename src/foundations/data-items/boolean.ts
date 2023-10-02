@@ -1,4 +1,4 @@
-import { dataItemKey } from "#/data-items";
+import { dataItemKey } from ".";
 
 const booleanItem = <
   T extends boolean | number | string = boolean | number | string,

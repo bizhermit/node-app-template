@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
-import SplitContainer, { type SplitDirection } from "#/components/elements/split-container";
-import SplitContent from "#/components/elements/split-container/content";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
+import SplitContainer, { type SplitDirection } from "#/client/elements/split-container";
+import SplitContent from "#/client/elements/split-container/content";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";
 
@@ -19,8 +19,8 @@ const SplitContainerClient = () => {
   const [hide2, setHide2] = useState(false);
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
-      <Row $vAlign="bottom" className="gap-1">
+    <div className="flex w-100 h-100 p-xs g-s">
+      <Row $vAlign="bottom" className="g-s">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -58,7 +58,7 @@ const SplitContainerClient = () => {
       </Row>
       <Divider />
       <SplitContainer
-        className={`w-100${scroll ? " flex-1_1_0" : ""}`}
+        className={`w-100${scroll ? " flex-11" : ""}`}
         $disabled={disabled}
         $direction={direction}
         $reverse={reverse}
@@ -68,7 +68,7 @@ const SplitContainerClient = () => {
       // $defaultMount
       // $unmountDeselected
       >
-        <div className="box w-100 h-100 px-1 c-primary">
+        <div className="box w-100 h-100 px-s c-primary">
           <h1>Cotent 1</h1>
           <Button
             $outline
@@ -87,7 +87,7 @@ const SplitContainerClient = () => {
           minSize="10%"
           maxSize="80%"
         >
-          <div className="box w-100 h-100 px-1 c-secondary">
+          <div className="box w-100 h-100 px-s c-secondary">
             <h1>Content2 2</h1>
             <Button
               $outline

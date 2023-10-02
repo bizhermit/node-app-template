@@ -1,6 +1,6 @@
-import Card from "#/components/elements/card";
-import Row from "#/components/elements/row";
-import StructView, { type StructKey } from "#/components/elements/struct-view";
+import Card from "#/client/elements/card";
+import Row from "#/client/elements/row";
+import StructView, { type StructKey } from "#/client/elements/struct-view";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useMemo } from "react";
 
@@ -83,8 +83,8 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex-start w-100 p-1 gap-1">
-      <Row className="gap-1" $vAlign="top">
+    <div className="flex w-100 p-xs g-s">
+      <Row className="g-s" $vAlign="top">
         <StructView
           style={{ width: 350 }}
           $keys={keys}

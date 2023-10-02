@@ -1,10 +1,10 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Loading from "#/components/elements/loading";
-import Row from "#/components/elements/row";
-import Text from "#/components/elements/text";
-import useProcess from "#/hooks/process";
+import Button from "#/client/elements/button";
+import Loading from "#/client/elements/loading";
+import Row from "#/client/elements/row";
+import Text from "#/client/elements/text";
+import useProcess from "#/client/hooks/process";
 import { useState } from "react";
 
 const Page = () => {
@@ -65,12 +65,14 @@ const Page = () => {
     }
   };
 
+  console.log("--render--", process.ing, count);
+
   return (
-    <div className="flex-start p-2 gap-2">
+    <div className="flex p-s g-m">
       {process.ing && <Loading />}
       <Text>processing: {String(process.ing)}</Text>
       <Text>last: {last}</Text>
-      <Row className="gap-2">
+      <Row className="g-m">
         <Button
           $onClick={() => {
             setCount(count + 1);
@@ -95,9 +97,20 @@ const Page = () => {
         >
           add wait process as other key
         </Button>
+        <Button
+          $onClick={async (unlock) => {
+            setCount(count + 1);
+            await func(count + 1);
+            setCount(count + 2);
+            await func(count + 2);
+            unlock?.();
+          }}
+        >
+          chain
+        </Button>
         <Text>{count}</Text>
       </Row>
-      <Row className="gap-2">
+      <Row className="g-m">
         <Button
           $onClick={() => {
             console.log("- cancel", process.cancel());

@@ -1,10 +1,10 @@
-import Divider from "#/components/elements/divider";
-import Row from "#/components/elements/row";
+import Divider from "#/client/elements/divider";
+import Row from "#/client/elements/row";
 
 const Layout: LayoutFC = (props) => {
   return (
-    <div className="flex-stretch">
-      <div className="flex-stretch">
+    <div className="flex column">
+      <div className="flex column">
         {props.children}
       </div>
       <Divider />

@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "format",
+      "group": "none",
+      "type": "shell",
+      "command": "npx eslint --fix ./src"
+    },
+    {
+      "label": "build route",
+      "group": "none",
+      "type": "shell",
+      "command": "npm run route"
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import { DoubleDownIcon, DoubleLeftIcon } from "#/components/elements/icon";
-import Menu from "#/components/elements/menu";
-import Popup from "#/components/elements/popup";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import { DoubleDownIcon, DoubleLeftIcon } from "#/client/elements/icon";
+import Menu from "#/client/elements/menu";
+import Popup from "#/client/elements/popup";
+import Row from "#/client/elements/row";
 import { useRef, useState } from "react";
 
 const MenuClient = () => {
@@ -15,7 +15,7 @@ const MenuClient = () => {
   const [horizontal, setHorizontal] = useState(false);
 
   return (
-    <div className="flex-start p-1 h-100 w-100 gap-1">
+    <div className="flex p-xs h-100 w-100 g-s">
       <Row>
         <ToggleBox
           $tag="horizontal"
@@ -33,7 +33,7 @@ const MenuClient = () => {
         popup menu
       </Button>
       <Popup
-        className="es-3 r-2"
+        className="es-3 r-s"
         $show={show}
         $onToggle={v => setShow(v)}
         $anchor={buttonRef}
@@ -46,7 +46,7 @@ const MenuClient = () => {
         $animationDirection={horizontal ? "horizontal" : "vertical"}
       >
         <div
-          className="flex-stretch"
+          className="flex column"
           style={{ width: 500 }}
         >
           <Menu

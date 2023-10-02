@@ -1,9 +1,9 @@
 "use client";
 
-import Card from "#/components/elements/card";
-import Divider from "#/components/elements/divider";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Card from "#/client/elements/card";
+import Divider from "#/client/elements/divider";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { type FC, useEffect, useState } from "react";
 
 const CardClient = () => {
@@ -12,8 +12,8 @@ const CardClient = () => {
   const [accordion, setAccordion] = useState(true);
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1">
+    <div className="flex p-xs w-100 h-100 g-s">
+      <Row className="g-s">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -32,7 +32,7 @@ const CardClient = () => {
       </Row>
       <Divider />
       <Card
-        className="w-100 r-2 e-4"
+        className="w-100 r-s e-4"
         // $opened={opened}
         $defaultOpened={false}
         // $defaultMount
@@ -47,13 +47,15 @@ const CardClient = () => {
         $footerAlign="end"
         $toggleTriger="h&f"
       >
-        <span className="px-1 py-2">Header</span>
+        Header
+        {/* <span className="px-s py-m">
+        </span> */}
         <Content />
         Footer
       </Card>
-      <Row className="flex-1 gap-2" $vAlign="stretch">
+      <Row className="flex-1 g-m" $vAlign="stretch">
         <Card
-          className="e-1 r-1"
+          className="e-1 r-xs"
           $color="main"
           // $opened={opened}
           $defaultOpened={false}
@@ -67,14 +69,15 @@ const CardClient = () => {
             footer: "end"
           }}
         >
-          <span className="px-2">あいうえお</span>
+          {/* <span className="px-m">あいうえお</span> */}
+          あいうえお
           <Content />
-          ん
+          わをん
         </Card>
         <Card
           $color="main"
           $resize
-          // $resize="xy"
+        // $resize="xy"
         >
           Resize
           <Content />
@@ -84,8 +87,8 @@ const CardClient = () => {
   );
 };
 
-const Content: FC = () =>{
-  
+const Content: FC = () => {
+
   useEffect(() => {
     console.log("mount");
     return () => {
@@ -94,7 +97,7 @@ const Content: FC = () =>{
   }, []);
 
   return (
-    <div className="flex-center p-3 h-100 w-100 c-pure">
+    <div className="flex column center middle p-m h-100 w-100 c-pure">
       Content
     </div>
   )

@@ -1,4 +1,4 @@
-import Loading from "#/components/elements/loading";
+import Loading from "#/client/elements/loading";
 import LoadingClient from "@/sandbox/elements/loading/_components/client";
 
 const Page = () => {

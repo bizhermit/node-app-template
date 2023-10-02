@@ -1,13 +1,13 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import { CloudIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
-import SlideContainer, { type SlideDirection } from "#/components/elements/slide-container";
-import SlideContent from "#/components/elements/slide-container/content";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import { CloudIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
+import SlideContainer, { type SlideDirection } from "#/client/elements/slide-container";
+import SlideContent from "#/client/elements/slide-container/content";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";
 
@@ -21,8 +21,8 @@ const SlideContainerClient = () => {
   const [breadcrumbs, setBreadcrumbs] = useState(false);
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
-      <Row $vAlign="bottom" className="gap-1">
+    <div className="flex w-100 h-100 p-xs g-s">
+      <Row $vAlign="bottom" className="g-s">
         <RadioButtons
           $tag="slide destination"
           $source={[
@@ -73,7 +73,7 @@ const SlideContainerClient = () => {
       </Row>
       <Divider />
       <SlideContainer
-        className={`w-100${scroll ? " flex-1_1_0" : ""}`}
+        className={`w-100${scroll ? " flex-11" : ""}`}
         onWheel={(e) => {
           switch (direction) {
             case "vertical":
@@ -117,7 +117,7 @@ const SlideContainerClient = () => {
       // $unmountDeselected
       >
         <SlideContent label="Slide 0">
-          <div className="box h-min100 px-1 c-primary">
+          <div className="box h-min100 px-s c-primary">
             <h1>Slide 0</h1>
             {ArrayUtils.generateArray(10, (idx) => (
               <Row key={idx}>
@@ -127,7 +127,7 @@ const SlideContainerClient = () => {
           </div>
         </SlideContent>
         <SlideContent label="Slide 1">
-          <div className="box w-100 h-min100 px-1 c-secondary">
+          <div className="box w-100 h-min100 px-s c-secondary">
             <h1>Slide 1</h1>
             {ArrayUtils.generateArray(15, (idx) => (
               <Row key={idx}>
@@ -136,8 +136,8 @@ const SlideContainerClient = () => {
             ))}
           </div>
         </SlideContent>
-        <SlideContent label={<Row $nowrap><CloudIcon /><span>Slide2</span></Row>}>
-          {/* <div className="box w-100 h-min100 c-tertiary p-1"> */}
+        <SlideContent label={<><CloudIcon /><span>Slide2</span></>}>
+          {/* <div className="box w-100 h-min100 c-tertiary p-xs"> */}
           <h1>Slide 2</h1>
           {ArrayUtils.generateArray(20, (idx) => (
             <Row key={idx}>

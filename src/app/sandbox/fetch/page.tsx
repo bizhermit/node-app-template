@@ -1,15 +1,15 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Form from "#/components/elements/form";
-import FileDrop from "#/components/elements/form/items/file-drop";
-import TextBox from "#/components/elements/form/items/text-box";
-import GroupBox from "#/components/elements/group-box";
-import Loading from "#/components/elements/loading";
-import Row from "#/components/elements/row";
-import StructView from "#/components/elements/struct-view";
-import useFetch from "#/hooks/fetch-api";
-import useProcess from "#/hooks/process";
+import Button from "#/client/elements/button";
+import Form from "#/client/elements/form";
+import FileDrop from "#/client/elements/form/items/file-drop";
+import TextBox from "#/client/elements/form/items/text-box";
+import GroupBox from "#/client/elements/group-box";
+import Loading from "#/client/elements/loading";
+import Row from "#/client/elements/row";
+import StructView from "#/client/elements/struct-view";
+import useFetch from "#/client/hooks/fetch-api";
+import useProcess from "#/client/hooks/process";
 import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_date, sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
@@ -28,13 +28,13 @@ const Page = () => {
   const [response, setResponse] = useState<any>({});
 
   return (
-    <div className="flex-start p-1 gap-1 w-100">
+    <div className="flex p-xs g-s w-100">
       {process.ing && <Loading />}
       <GroupBox
         $caption="/fetch"
-        $bodyClassName="p-1"
+        $bodyClassName="p-xs"
       >
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             $onClick={async (unlock) => {
               await process(async () => {
@@ -119,16 +119,21 @@ const Page = () => {
       </GroupBox>
       <GroupBox
         $caption="/fetch formdata"
-        $bodyClassName="p-1"
+        $bodyClassName="p-xs"
       >
         <Form
-          className="flex-start gap-1"
+          className="flex g-s"
           $submitDataType="formData"
           $onSubmit={(formData, method) => {
             process(async () => {
               switch (method) {
                 case "get":
-                  return await api.get("/api/fetch", formData, { contentType: "formData" });
+                  return await api.get("/api/fetch", formData, {
+                    contentType: "formData",
+                    messageChecked: (ctx) => {
+                      console.log(ctx);
+                    },
+                  });
                 case "post":
                   return await api.post("/api/fetch", formData, { contentType: "formData" });
                 case "put":
@@ -156,7 +161,7 @@ const Page = () => {
               height: "10rem",
             }}
           />
-          <Row className="gap-1">
+          <Row className="g-s">
             <Button type="submit" formMethod="get">get</Button>
             <Button type="submit" formMethod="post">post</Button>
             <Button type="submit" formMethod="put">put</Button>
@@ -166,9 +171,9 @@ const Page = () => {
       </GroupBox>
       <GroupBox
         $caption="/pages/api"
-        $bodyClassName="p-1"
+        $bodyClassName="p-xs"
       >
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button $onClick={async (unlock) => {
             await process(async () => {
               const res = await api.get("/api/hello", {

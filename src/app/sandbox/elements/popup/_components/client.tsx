@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Form from "#/components/elements/form";
-import DateBox from "#/components/elements/form/items/date-box";
-import SelectBox from "#/components/elements/form/items/select-box";
-import TextBox from "#/components/elements/form/items/text-box";
-import Popup from "#/components/elements/popup";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Form from "#/client/elements/form";
+import DateBox from "#/client/elements/form/items/date-box";
+import SelectBox from "#/client/elements/form/items/select-box";
+import TextBox from "#/client/elements/form/items/text-box";
+import Popup from "#/client/elements/popup";
+import Row from "#/client/elements/row";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { type FC, useRef, useState } from "react";
 
@@ -19,7 +19,7 @@ const Component: FC = () => {
   const anchorRef = useRef<HTMLButtonElement>(null!);
 
   return (
-    <div className="flex-center w-100 h-100">
+    <div className="flex column center middle w-100 h-100">
       <Button
         // className="mr-auto mb-auto"
         ref={anchorRef}
@@ -30,7 +30,7 @@ const Component: FC = () => {
         show
       </Button>
       <Popup
-        className="e-4 overflow"
+        className="es-4 ov-auto"
         $show={show}
         $onToggle={(v) => {
           setShow(v);
@@ -47,9 +47,9 @@ const Component: FC = () => {
         // $animationDirection="horizontal"
         // $animationDirection="vertical"
       >
-        <div className="flex-start c-pure r-2 p-2">
+        <div className="flex c-pure r-m p-s">
           <Form
-            className="flex-start p-1 gap-1 border"
+            className="flex p-xs g-s border"
             action="/api/form"
             method="get"
           >
@@ -66,7 +66,7 @@ const Component: FC = () => {
             <DateBox
               name="date"
             />
-            <Row $hAlign="center" className="gap-1 w-100">
+            <Row $hAlign="center" className="g-s w-100">
               <Button type="submit">submit</Button>
               <Button
                 $onClick={() => {

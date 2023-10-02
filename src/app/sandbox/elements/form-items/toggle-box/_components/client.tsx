@@ -1,10 +1,10 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_boolean, sample_boolean_num, sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
@@ -17,8 +17,8 @@ const ToggleBoxClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -30,7 +30,7 @@ const ToggleBoxClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -88,7 +88,7 @@ const ToggleBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-2">
+      <Row className="g-m">
         <ToggleBox
           $onChange={v => console.log("no item: ", v)}
         >
@@ -119,7 +119,7 @@ const ToggleBoxClient = () => {
           string
         </ToggleBox>
       </Row>
-      <Row $vAlign="top" className="gap-1">
+      <Row $vAlign="top" className="g-s">
         <ToggleBox
           $tag="useState"
           $value={value}
@@ -135,7 +135,7 @@ const ToggleBoxClient = () => {
           ToggleBox
         </ToggleBox>
         <Form
-          className="flex-start gap-1"
+          className="flex g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}
@@ -154,7 +154,7 @@ const ToggleBoxClient = () => {
         return (
           <Row key={color}>
             <ToggleBox $color={color} $defaultValue />
-            <span className={`pt-t px-1 c-${color}`}>{color}</span>
+            <span className={`pt-t px-s c-${color}`}>{color}</span>
           </Row>
         );
       })}

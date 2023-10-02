@@ -1,13 +1,13 @@
 "use client"
 
-import Button from "#/components/elements/button";
-import DateBox from "#/components/elements/form/items/date-box";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import DateBox from "#/client/elements/form/items/date-box";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { useState } from "react";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
 
 const DateBoxClient = () => {
@@ -20,8 +20,8 @@ const DateBoxClient = () => {
   const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -48,7 +48,7 @@ const DateBoxClient = () => {
           $onChange={v => setDisallowInput(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -106,7 +106,7 @@ const DateBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-2">
+      <Row className="g-m">
         <DateBox
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
@@ -167,14 +167,14 @@ const DateBoxClient = () => {
         $disallowInput={disallowInput}
       />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}
         action="/api/form"
         method="post"
       >
-        <Row $vAlign="bottom" className="gap-1">
+        <Row $vAlign="bottom" className="g-s">
           <DateBox
             $type={type}
             name="date-box-form-bind"
@@ -187,7 +187,7 @@ const DateBoxClient = () => {
               disallowSame: true,
             }}
           />
-          <span className="h-size pt-t flex-center">～</span>
+          <span className="h-size pt-t flex column center middle">～</span>
           <DateBox
             $type={type}
             $tag="pair"

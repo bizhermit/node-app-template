@@ -1,11 +1,11 @@
 "use client";
 
-import Divider from "#/components/elements/divider";
-import NumberBox from "#/components/elements/form/items/number-box";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import { CloudIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
-import Stepper from "#/components/elements/stepper";
+import Divider from "#/client/elements/divider";
+import NumberBox from "#/client/elements/form/items/number-box";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import { CloudIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
+import Stepper from "#/client/elements/stepper";
 import { sizes } from "#/utilities/sandbox";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { type ReactNode, useMemo, useState } from "react";
@@ -17,7 +17,7 @@ const StepperClient = () => {
   const [size, setSize] = useState<Size>("m");
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
+    <div className="flex w-100 h-100 p-xs g-s">
       <Row>
         <NumberBox
           $required
@@ -83,7 +83,7 @@ const StepperClient = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row key={idx} className="gap-1">
+              <Row key={idx} className="g-s">
                 <CloudIcon />
                 <span className="box pt-t">{idx}</span>
               </Row>
@@ -100,7 +100,7 @@ const StepperClient = () => {
         {useMemo(() => {
           return ArrayUtils.generateArray(maxStep, idx => {
             return (
-              <Row key={idx} className="gap-1">
+              <Row key={idx} className="g-s">
                 <CloudIcon />
                 <span className="box pt-t">{idx}</span>
               </Row>

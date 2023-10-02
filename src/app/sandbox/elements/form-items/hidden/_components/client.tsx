@@ -1,20 +1,20 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Hidden from "#/components/elements/form/items/hidden";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Hidden from "#/client/elements/form/items/hidden";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import Row from "#/client/elements/row";
 import { useState } from "react";
-import type { FormItemMessageDisplayMode } from "#/components/elements/form/$types";
-import Form from "#/components/elements/form";
+import type { FormItemMessageDisplayMode } from "#/client/elements/form/$types";
+import Form from "#/client/elements/form";
 
 const HiddenClient = () => {
   const [value, setValue] = useState<any>();
   const [messagePos, setMessagePos] = useState<Nullable<FormItemMessageDisplayMode>>("bottom");
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
+    <div className="flex p-xs w-100 h-100 g-s">
       <Row>
         <RadioButtons<FormItemMessageDisplayMode>
           $source={[
@@ -30,7 +30,7 @@ const HiddenClient = () => {
       </Row>
       <Divider />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind
         $onSubmit={(data) => {
           console.log(JSON.stringify(data, null, 2));
@@ -49,7 +49,7 @@ const HiddenClient = () => {
           $value={value}
           $show
         />
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             type="submit"
             $ignoreFormValidation
@@ -60,7 +60,7 @@ const HiddenClient = () => {
             reset
           </Button>
         </Row>
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             $onClick={() => setValue(undefined)}
           >

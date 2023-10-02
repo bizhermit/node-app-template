@@ -1,13 +1,13 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import { CloudIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
-import TabContainer from "#/components/elements/tab-container";
-import TabContent from "#/components/elements/tab-container/content";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import { CloudIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
+import TabContainer from "#/client/elements/tab-container";
+import TabContent from "#/client/elements/tab-container/content";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { type Key, useState, useRef } from "react";
 
@@ -21,8 +21,8 @@ const TabContainerClient = () => {
   const ref = useRef<HTMLDivElement>();
 
   return (
-    <div className="flex-start w-100 h-100 p-1 gap-1">
-      <Row $vAlign="bottom" className="gap-1">
+    <div className="flex w-100 h-100 p-xs g-s">
+      <Row $vAlign="bottom" className="g-s">
         <RadioButtons
           $tag="tab position"
           $source={[
@@ -51,7 +51,7 @@ const TabContainerClient = () => {
       <Divider />
       <TabContainer<TabKey>
         ref={ref}
-        className={`w-100${tabScroll ? " flex-1_1_0" : ""}`}
+        className={`w-100${tabScroll ? " flex-11" : ""}`}
         $tabPosition={position}
         $overlap={overlap}
         // $bodyColor="pure"
@@ -67,7 +67,7 @@ const TabContainerClient = () => {
           key="tab1"
           label="Tab 1"
         >
-          <div className="box h-100 px-1">
+          <div className="box h-100 px-s">
             <h1>Tab 1</h1>
             <Button
               $outline
@@ -86,7 +86,7 @@ const TabContainerClient = () => {
           key="tab2"
           label="Tab 2"
         >
-          <div className="box w-100 h-100 px-1">
+          <div className="box w-100 h-100 px-s">
             <h1>Tab 2</h1>
             <Button
               $outline
@@ -103,7 +103,7 @@ const TabContainerClient = () => {
         </TabContent>
         <TabContent
           key="tab3"
-          label={<Row><CloudIcon /><span>Tab3</span></Row>}
+          label={<><CloudIcon /><span>Tab3</span></>}
         >
           <h1>Tab 3</h1>
           <Button

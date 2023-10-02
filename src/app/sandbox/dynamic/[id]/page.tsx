@@ -1,4 +1,4 @@
-import Text from "#/components/elements/text";
+import Text from "#/client/elements/text";
 
 type Params = {
   id: string;
@@ -8,7 +8,7 @@ const Page: PageFC<Params> = (props) => {
   console.log("dyanmic", props);
   console.log("- ", props.params.id);
   return (
-    <div className="flex-stretch">
+    <div className="flex column">
       <Text>
         dynamic routing
       </Text>

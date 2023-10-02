@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import ElectronicSignature from "#/components/elements/form/items/electronic-signature";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import ElectronicSignature from "#/client/elements/form/items/electronic-signature";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_file, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
@@ -20,8 +20,8 @@ const ElectronicSignatureClient = () => {
   const [buttonsPosition, setButtonsPosition] = useState<"hide" | "top" | "left" | "bottom" | "right">();
 
   return (
-    <div className="flex-start h-100 w-100 p-1 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex h-100 w-100 p-xs g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -50,7 +50,7 @@ const ElectronicSignatureClient = () => {
           ]}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -101,7 +101,7 @@ const ElectronicSignatureClient = () => {
         $dataItem={sample_file}
         $onChange={v => console.log("file: ", v)}
       />
-      <Row className="gap-1">
+      <Row className="g-s">
         <ElectronicSignature
           $tag="useState"
           $disabled={disabled}
@@ -123,7 +123,7 @@ const ElectronicSignatureClient = () => {
           $required
         />
         <Form
-          className="flex-start gap-1"
+          className="flex g-s"
           $disabled={disabled}
           $readOnly={readOnly}
           $bind={formBind}

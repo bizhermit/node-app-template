@@ -1,12 +1,12 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import FileButton from "#/components/elements/form/items/file-button";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import { RightIcon } from "#/components/elements/icon";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import FileButton from "#/client/elements/form/items/file-button";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import { RightIcon } from "#/client/elements/icon";
+import Row from "#/client/elements/row";
 import { sample_file } from "$/data-items/sample/item";
 import { useState } from "react";
 
@@ -18,8 +18,8 @@ const FileButtonClient = () => {
   const [formBind, setFormBind] = useState({});
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -31,7 +31,7 @@ const FileButtonClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -99,7 +99,7 @@ const FileButtonClient = () => {
         $required
       />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

@@ -1,13 +1,13 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "#/components/elements/data-table";
-import dataTableButtonColumn from "#/components/elements/data-table/button";
-import dataTableCheckBoxColumn from "#/components/elements/data-table/check-box";
-import NumberBox from "#/components/elements/form/items/number-box";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
-import { joinClassNames } from "#/components/utilities/attributes";
+import Button from "#/client/elements/button";
+import DataTable, { DataTableCellLabel, DataTableColumn, dataTableRowNumberColumn } from "#/client/elements/data-table";
+import dataTableButtonColumn from "#/client/elements/data-table/button";
+import dataTableCheckBoxColumn from "#/client/elements/data-table/check-box";
+import NumberBox from "#/client/elements/form/items/number-box";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
+import { joinClassNames } from "#/client/utilities/attributes";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useMemo, useState } from "react";
 
@@ -145,9 +145,9 @@ const DataTableClient = () => {
   const [perPage, setPerPage] = useState(10);
 
   return (
-    <div className="flex-start w-100 h-100 gap-1 p-1">
-      <Row className="gap-1">
-        <Row className="gap-1">
+    <div className="flex w-100 h-100 g-s p-xs">
+      <Row className="g-s">
+        <Row className="g-s">
           <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(0)}>0</Button>
           <Button $size="s" $fitContent $onClick={() => generateItems(1)}>1</Button>
@@ -161,7 +161,7 @@ const DataTableClient = () => {
           <Button $size="s" $fitContent $onClick={() => generateItems(100000)}>100000</Button>
           <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
         </Row>
-        <Row className="gap-1">
+        <Row className="g-s">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>
           <ToggleBox $value={rowBorder} $onChange={v => setRowBorder(v!)}>row border</ToggleBox>
           <ToggleBox $value={cellBorder} $onChange={v => setCellBorder(v!)}>cell border</ToggleBox>

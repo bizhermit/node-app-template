@@ -4,6 +4,8 @@
 type AppDir = true;
 
 type AppRoutePath = "/"
+ | "/sandbox/group-a"
+ | "/sandbox/group-b"
  | "/sandbox/color"
  | "/sandbox/dynamic"
  | "/sandbox/dynamic/[id]"
@@ -19,6 +21,7 @@ type AppRoutePath = "/"
  | "/sandbox/elements/divider"
  | "/sandbox/elements/form"
  | "/sandbox/elements/form-items/check-box"
+ | "/sandbox/elements/form-items/credit-card-number-box"
  | "/sandbox/elements/form-items/date-box"
  | "/sandbox/elements/form-items/date-picker"
  | "/sandbox/elements/form-items/electronic-signature"
@@ -49,8 +52,10 @@ type AppRoutePath = "/"
  | "/sandbox/fetch"
  | "/sandbox/message-box"
  | "/sandbox"
+ | "/sandbox/post/sender"
  | "/sandbox/process"
- | "/sandbox/storage";
+ | "/sandbox/storage"
+ | "/sandbox/window";
 
 type AppApiPath = "/api/fetch"
  | "/api";
@@ -65,6 +70,7 @@ type PagesRoutePath = "/404"
  | "/root"
  | "/sandbox/nest/[id]"
  | "/sandbox/pages"
+ | "/sandbox/post/recipient"
  | "/sandbox/route";
 
 type PagesApiPath = "/api/form"

@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import TimePicker from "#/components/elements/form/items/time-picker";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import TimePicker from "#/client/elements/form/items/time-picker";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_number, sample_string, sample_time } from "$/data-items/sample/item";
 import { useState } from "react";
 
@@ -17,8 +17,8 @@ const TimePickerClient = () => {
   const [formBind, setFormBind] = useState<Struct>({ "pair-time": "12:00" });
 
   return (
-    <div className="flex-start gap-1 p-1 w-100">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex g-s p-xs w-100">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -30,7 +30,7 @@ const TimePickerClient = () => {
           $onChange={v => setReadOnly(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -97,7 +97,7 @@ const TimePickerClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <TimePicker
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
@@ -118,7 +118,7 @@ const TimePickerClient = () => {
           $onChange={v => console.log("string: ", v)}
         />
       </Row>
-      <Row $vAlign="top" className="gap-1">
+      <Row $vAlign="top" className="g-s">
         <TimePicker
           $tag="useState"
           $value={value}
@@ -148,7 +148,7 @@ const TimePickerClient = () => {
           }}
         />
         <Form
-          className="flex-start gap-1"
+          className="flex g-s"
           $bind={formBind}
           $disabled={disabled}
           $readOnly={readOnly}

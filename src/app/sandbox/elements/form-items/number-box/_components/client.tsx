@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import NumberBox from "#/components/elements/form/items/number-box";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import NumberBox from "#/client/elements/form/items/number-box";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
 import { sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
@@ -18,8 +18,8 @@ const NumberBoxClient = () => {
   const [disallowInput, setDisallowInput] = useState(false);
 
   return (
-    <div className="flex-start p-1 w-100 h-100 gap-1">
-      <Row className="gap-1" $vAlign="bottom">
+    <div className="flex p-xs w-100 h-100 g-s">
+      <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
           $value={disabled}
@@ -36,7 +36,7 @@ const NumberBoxClient = () => {
           $onChange={v => setDisallowInput(v!)}
         />
       </Row>
-      <Row className="gap-1">
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("-------------------");
@@ -94,7 +94,7 @@ const NumberBoxClient = () => {
         </Button>
       </Row>
       <Divider />
-      <Row className="gap-1">
+      <Row className="g-s">
         <NumberBox
           $tag="number"
           $dataItem={sample_number}
@@ -135,7 +135,7 @@ const NumberBoxClient = () => {
         $disallowInput={disallowInput}
       />
       <Form
-        className="flex-start gap-1"
+        className="flex g-s"
         $bind={formBind}
         $disabled={disabled}
         $readOnly={readOnly}

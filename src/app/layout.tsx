@@ -1,6 +1,6 @@
-import "#/styles/globals.scss";
-import "#/styles/color.scss";
-import "#/styles/utility.scss";
+import "#/client/styles/root.scss";
+import "#/client/styles/global.scss";
+import "#/client/styles/color.scss";
 import RootProvider from "@/_components/root-provider";
 
 export const metadata = {
@@ -18,9 +18,11 @@ const RootLayout: LayoutFC = ({ children }) => {
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/favicons/favicon.ico" />
       </head>
       <body>
-        <RootProvider>
-          {children}
-        </RootProvider>
+        <div id="__next">
+          <RootProvider>
+            {children}
+          </RootProvider>
+        </div>
       </body>
     </html>
   );

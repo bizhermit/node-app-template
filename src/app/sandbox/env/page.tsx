@@ -1,10 +1,10 @@
-import Divider from "#/components/elements/divider";
+import Divider from "#/client/elements/divider";
 import EnvClient from "@/sandbox/env/_components/client";
 import EnvServer from "@/sandbox/env/_components/server";
 
 const Page = () => {
   return (
-    <div className="flex-stretch p-2 gap-2">
+    <div className="flex column p-s g-m">
       <EnvServer />
       <Divider />
       <EnvClient />

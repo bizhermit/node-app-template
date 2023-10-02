@@ -1,11 +1,11 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import Divider from "#/components/elements/divider";
-import ToggleBox from "#/components/elements/form/items/toggle-box";
-import Row from "#/components/elements/row";
-import Text from "#/components/elements/text";
-import { useLocalState, useSessionState } from "#/hooks/storage";
+import Button from "#/client/elements/button";
+import Divider from "#/client/elements/divider";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
+import Row from "#/client/elements/row";
+import Text from "#/client/elements/text";
+import { useLocalState, useSessionState } from "#/client/hooks/storage";
 import { useState } from "react";
 
 const Page = () => {
@@ -14,7 +14,7 @@ const Page = () => {
   const local = useLocalState("local", () => 3);
 
   return (
-    <div className="flex-stretch p-1">
+    <div className="flex column p-xs">
       <Row>
         <ToggleBox
           $value={autoSave}
@@ -23,8 +23,8 @@ const Page = () => {
           Auto save
         </ToggleBox>
       </Row>
-      <Divider className="my-1" />
-      <Row className="gap-1">
+      <Divider className="my-xs" />
+      <Row className="g-s">
         <Button
           $onClick={() => {
             console.log("count up");

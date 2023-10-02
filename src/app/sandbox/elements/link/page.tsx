@@ -1,13 +1,12 @@
-import Divider from "#/components/elements/divider";
-import Form from "#/components/elements/form";
-import CheckBox from "#/components/elements/form/items/check-box";
-import NextLink from "#/components/elements/link";
-import LinkButton from "#/components/elements/link-button";
-import Row from "#/components/elements/row";
+import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import CheckBox from "#/client/elements/form/items/check-box";
+import NextLink from "#/client/elements/link";
+import LinkButton from "#/client/elements/button/link";
 
 const Page = () => {
   return (
-    <div className="flex-start p-1 gap-2 w-100">
+    <div className="flex p-xs g-m w-100">
       <NextLink href="/sandbox/elements/link">next link</NextLink>
       <NextLink href="https://bizhermit.com">normal link</NextLink>
       <NextLink>no link</NextLink>
@@ -26,8 +25,8 @@ const Page = () => {
       <LinkButton>
         link button (no href)
       </LinkButton>
-      <Form className="flex-center w-100">
-        <Row className="gap-2 w-100">
+      <Form className="flex column center middle w-100">
+        <div className="flex row g-m w-100">
           <CheckBox $required />
           <LinkButton href="https://bizhermit.com" $form className="flex-1">
             link button (form)
@@ -35,7 +34,7 @@ const Page = () => {
           <LinkButton href="https://bizhermit.com" className="flex-1">
             link button (no form)
           </LinkButton>
-        </Row>
+        </div>
       </Form>
     </div>
   );

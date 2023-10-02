@@ -1,10 +1,10 @@
 "use client";
 
-import Button from "#/components/elements/button";
-import RadioButtons from "#/components/elements/form/items/radio-buttons";
-import Loading from "#/components/elements/loading";
-import useLoading from "#/components/elements/loading/context";
-import Row from "#/components/elements/row";
+import Button from "#/client/elements/button";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import Loading from "#/client/elements/loading";
+import useLoading from "#/client/elements/loading/context";
+import Row from "#/client/elements/row";
 import { useState } from "react";
 
 const LoadingClient = () => {
@@ -13,7 +13,7 @@ const LoadingClient = () => {
   const [show, setShow] = useState(false);
 
   return (
-    <div className="flex-top w-100 p-1">
+    <div className="flex-top w-100 p-xs">
       <h1>Loading</h1>
       <section>
         <h2>appearance</h2>
@@ -29,7 +29,7 @@ const LoadingClient = () => {
       <section>
         <h2>provider</h2>
         {/* <ScreenLoadingBar /> */}
-        <Row className="gap-1">
+        <Row className="g-s">
           <Button
             $onClick={() => {
               loading.show();
@@ -56,7 +56,7 @@ const LoadingClient = () => {
             $color="main"
             $mask
           >
-            <div className="flex-center h-100">
+            <div className="flex column center middle h-100">
               <Button $onClick={() => setShow(false)}>hide</Button>
             </div>
           </Loading>
@@ -67,11 +67,11 @@ const LoadingClient = () => {
         {colors.map(color => {
           return (
             <div key={color} style={{ height: "10rem" }}>
-              <Row className="p-1 mt-1">
+              <Row className="p-xs mt-xs">
                 <Loading $color={color} $appearance={appearance} />
                 <span>{color}</span>
               </Row>
-              <Row className={`p-1 c-${color}`}>
+              <Row className={`p-xs c-${color}`}>
                 <Loading $color={color} $reverseColor $appearance={appearance} />
                 <span>{color} reverse</span>
               </Row>
