@@ -1,7 +1,7 @@
-import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import type { DataTableBaseColumn, DataTableColumn } from ".";
-import CheckBox, { type CheckBoxProps } from "../form/items/check-box";
 import { getValue, setValue } from "../../../data-items/utilities";
+import CheckBox, { type CheckBoxProps } from "../form/items/check-box";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {
   checkBoxProps?: CheckBoxProps;
@@ -29,7 +29,7 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
       }, [items]);
       return (
         <CheckBox
-          className="mx-auto"
+          style={{ marginLeft: "auto", marginRight: "auto" }}
           $borderCheck
           $disabled={items.length === 0}
           $value={checked}
