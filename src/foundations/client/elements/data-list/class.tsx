@@ -3,7 +3,7 @@ import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import { getValue } from "../../../data-items/utilities";
 import { convertSizeNumToStr } from "../../utilities/attributes";
 import DomClassComponent, { cloneDomElement } from "../../utilities/dom-class-component";
-import Style from "./style.module.scss";
+import Style from "./index.module.scss";
 
 type DataListCellAlign = "left" | "center" | "right";
 

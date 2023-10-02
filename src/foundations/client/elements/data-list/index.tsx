@@ -5,7 +5,7 @@ import useLoadableArray from "../../hooks/loadable-array";
 import { attributes } from "../../utilities/attributes";
 import Resizer, { type ResizeDirection } from "../resizer";
 import DataListClass, { type DataListColumn } from "./class";
-import Style from "./style.module.scss";
+import Style from "./index.module.scss";
 
 type OmitAttributes = "children";
 type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
