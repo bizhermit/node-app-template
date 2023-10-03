@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useCallback, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { WindowSize } from "../../providers/layout/consts";
