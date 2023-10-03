@@ -133,8 +133,6 @@ ${(() => {
 
 type PagePath = AppRoutePath | PagesRoutePath;
 
-type ApiPath = AppApiPath | PagesApiPath;
-
 type TypeofApi = TypeofAppApi & TypeofPagesApi;
 `;
 fse.writeFileSync(path.join(srcRootPath, "route.d.ts"), contents);
