@@ -83,6 +83,4 @@ type TypeofPagesApi = {
 
 type PagePath = AppRoutePath | PagesRoutePath;
 
-type ApiPath = AppApiPath | PagesApiPath;
-
 type TypeofApi = TypeofAppApi & TypeofPagesApi;
