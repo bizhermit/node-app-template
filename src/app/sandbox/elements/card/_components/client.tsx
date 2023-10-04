@@ -4,7 +4,7 @@ import Card from "#/client/elements/card";
 import Divider from "#/client/elements/divider";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { type FC, useEffect, useState } from "react";
+import { useEffect, useState, type FC } from "react";
 
 const CardClient = () => {
   const [disabled, setDisabled] = useState(false);
@@ -34,7 +34,7 @@ const CardClient = () => {
       <Card
         className="w-100 r-s e-4"
         // $opened={opened}
-        $defaultOpened={false}
+        $defaultClosed={false}
         // $defaultMount
         $accordion={accordion}
         $disabled={disabled}
@@ -58,7 +58,7 @@ const CardClient = () => {
           className="e-1 r-xs"
           $color="main"
           // $opened={opened}
-          $defaultOpened={false}
+          $defaultClosed={false}
           // $defaultMount
           $accordion={accordion}
           $disabled={disabled}
@@ -81,6 +81,20 @@ const CardClient = () => {
         >
           Resize
           <Content />
+        </Card>
+        <Card
+          className="e-3"
+          $accordion
+          $defaultClosed
+          style={{ width: "40rem", alignSelf: "flex-start" }}
+        >
+          <>Card</>
+          <div className="flex g-s p-m">
+            Body
+            Body
+            <br />
+            Body
+          </div>
         </Card>
       </Row>
     </div>

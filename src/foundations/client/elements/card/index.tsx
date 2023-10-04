@@ -24,7 +24,7 @@ export type CardProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
     footer?: IconPosition;
   };
   $direction?: "vertical" | "horizontal";
-  $defaultOpened?: boolean;
+  $defaultClosed?: boolean;
   $opened?: boolean;
   $defaultMount?: boolean;
   $unmountBody?: boolean;
@@ -37,7 +37,7 @@ export type CardProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
 
 const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
   const bref = useRef<HTMLDivElement>(null!);
-  const [opened, setOpened] = useState(props.$accordion ? (props.$opened ?? props.$defaultOpened ?? true) : true);
+  const [opened, setOpened] = useState(props.$accordion ? (props.$opened ?? props.$defaultClosed !== true) : true);
   const mounted = useRef(props.$accordion ? (opened ? true : (props.$defaultMount ?? false)) : true);
   const [mount, setMount] = useReducer((_: boolean, action: boolean) => {
     return mounted.current = action;
