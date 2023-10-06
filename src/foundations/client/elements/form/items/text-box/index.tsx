@@ -1,7 +1,7 @@
 "use client";
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { forwardRef, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
+import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
@@ -200,6 +200,12 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
   };
 
   const hasData = StringUtils.isNotEmpty(ctx.value);
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      iref.current?.focus();
+    }
+  }, []);
 
   return (
     <FormItemWrap

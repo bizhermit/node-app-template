@@ -377,6 +377,12 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
 
   const hasData = ctx.value != null && ctx.value !== "";
 
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      focus();
+    }
+  }, []);
+
   return (
     <FormItemWrap
       {...props}

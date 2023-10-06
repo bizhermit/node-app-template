@@ -5,8 +5,8 @@ import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_boolean, sample_boolean_num, sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
+import { sample_boolean, sample_boolean_num, sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const ToggleBoxClient = () => {
@@ -91,6 +91,7 @@ const ToggleBoxClient = () => {
       <Row className="g-m">
         <ToggleBox
           $onChange={v => console.log("no item: ", v)}
+          $focusWhenMounted
         >
           no item
         </ToggleBox>

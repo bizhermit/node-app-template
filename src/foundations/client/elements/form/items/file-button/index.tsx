@@ -158,6 +158,7 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
           $size={props.$size}
           $color={props.$color}
           $fitContent={props.$fitContent}
+          $focusWhenMounted={props.$focusWhenMounted}
         >
           {props.children ?? "ファイルを選択"}
         </Button>

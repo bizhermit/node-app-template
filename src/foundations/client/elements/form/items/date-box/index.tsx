@@ -373,6 +373,12 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
 
   const hasData = ctx.value != null && ctx.value !== "";
 
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      focus();
+    }
+  }, []);
+
   return (
     <FormItemWrap
       {...props}

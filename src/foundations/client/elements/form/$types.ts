@@ -66,6 +66,7 @@ export type FormItemProps<
   $error?: string | null | undefined;
   $dataItem?: D;
   $messages?: Partial<FormItemMessages>;
+  $focusWhenMounted?: boolean;
 };
 
 export type FormItemMountProps = {
