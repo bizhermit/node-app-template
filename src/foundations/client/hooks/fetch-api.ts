@@ -1,6 +1,6 @@
-import useMessage, { type ProviderMessage } from "../providers/message/context";
 import { equals } from "../../data-items/utilities";
 import fetchApi, { type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
+import useMessage, { type ProviderMessage } from "../providers/message/context";
 
 type FetchHookOptions<U extends ApiPath, M extends ApiMethods> = {
   messageChecked?: (ctx: {
@@ -46,7 +46,7 @@ const useFetch = () => {
 
       if (res.ok) {
         msg.append(msgs, {
-          checked: options?.messageChecked,
+          checked: getMsgChecked(res),
         });
         return res;
       }
