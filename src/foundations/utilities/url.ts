@@ -38,7 +38,7 @@ export const getDynamicUrlContext = <T extends Struct | FormData | undefined | n
   };
 
   let url: string = pathName;
-  pathName.match(/\[([^\]]*)\]/g)?.forEach(dynamicKey => {
+  pathName.match(/\[\[?([^\]]*)\]?\]/g)?.forEach(dynamicKey => {
     const key = dynamicKey.match(/\[(.*)\]/)![1];
     const slugKey = key.match(/^\[(?:\.\.\.)(.*)\]$/)?.[1];
     const v = (() => {
