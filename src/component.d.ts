@@ -12,7 +12,7 @@ type LayoutFC<
   params: P;
   searchParams: S;
   children: React.ReactNode
-}) => (React.ReactElement | Promise<React.ReactElement>);
+}) => (React.ReactNode | React.ReactElement | Promise<React.ReactNode | React.ReactElement>);
 
 type PageFC<
   P extends { [key: string]: undefined | string | string[] } | undefined = { [key: string]: undefined | string | string[] } | undefined,
@@ -20,9 +20,9 @@ type PageFC<
 > = (props: {
   params: P;
   searchParams: S;
-}) => (React.ReactElement | Promise<React.ReactElement>);
+}) => (React.ReactNode | React.ReactElement | Promise<React.ReactNode | React.ReactElement>);
 
 type ErrorFC = (props: {
   error: Error;
   reset: () => void;
-}) => React.ReactElement;
+}) => (React.ReactNode | React.ReactElement);
