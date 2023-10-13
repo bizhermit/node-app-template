@@ -49,7 +49,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) =
       ref={ref}
     >
       <button
-        className={`${Style.wrap} ${Style.link}`}
+        className={Style.wrap}
         type="button"
         disabled={disabled}
         onClick={click}
