@@ -1,17 +1,14 @@
 "use client";
 
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useMemo, type HTMLAttributes } from "react";
-import type { UrlObject } from "url";
 import { attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
 import type { ButtonOptions } from "../button";
 import useForm from "../form/context";
-import NextLink from "../link";
+import NextLink, { type NextLinkProps } from "../link";
 import Style from "./index.module.scss";
 
 export type LinkButtonOptions = ButtonOptions & {
-  href?: string | UrlObject;
-  as?: string | UrlObject;
+  href?: NextLinkProps["href"];
   target?: string;
   $disabled?: boolean;
   $form?: boolean;
@@ -24,10 +21,10 @@ export type LinkButtonProps = Omit<HTMLAttributes<HTMLElement>, OmitAttributes> 
 const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) => {
   const form = useForm();
 
-  const hrefDisabled = StringUtils.isEmpty(props.href?.toString());
+  const hrefStr = typeof props.href === "string" ? props.href : props.href?.pathname;
   const submitDisabled = props.$form && (form.hasError || form.disabled);
 
-  const disabled = props.$disabled || hrefDisabled || submitDisabled;
+  const disabled = props.$disabled || !hrefStr || submitDisabled;
 
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled) {
