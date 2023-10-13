@@ -3,7 +3,9 @@ import { attributes, isReactNode } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
 type TextProps = HTMLAttributes<HTMLElement> & {
-  $ib?: boolean; // inline-block
+  $iblock?: boolean; // inline-block
+  $block?: boolean; // block
+  $bold?: boolean; // bold
 };
 
 const Text = forwardRef<HTMLElement, TextProps>((props, ref) => {
@@ -13,7 +15,9 @@ const Text = forwardRef<HTMLElement, TextProps>((props, ref) => {
     <span
       {...attributes(props, Style.main)}
       ref={ref}
-      data-ib={props.$ib}
+      data-iblock={props.$iblock}
+      data-block={props.$block}
+      data-bold={props.$bold}
     />
   );
 });

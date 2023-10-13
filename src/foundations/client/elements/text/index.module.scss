@@ -3,8 +3,16 @@
   .main {
     padding-top: var(--pt-t);
 
-    &[data-ib="true"] {
+    &[data-iblock="true"] {
       display: inline-block;
+    }
+
+    &[data-block="true"] {
+      display: block;
+    }
+
+    &[data-bold="true"] {
+      font-weight: bold;
     }
   }
 
