@@ -1,5 +1,5 @@
-import { type DynamicUrlContextOptions, getDynamicUrlContext } from "../../utilities/url";
 import { useRouter as $useRouter, usePathname } from "next/navigation";
+import { getDynamicUrlContext, type DynamicUrlContextOptions } from "../../utilities/url";
 
 const useRouter = () => {
   const router = $useRouter();
@@ -18,7 +18,7 @@ const useRouter = () => {
     _replace: router.replace,
     replaceUrl: (url: PagePath, params?: Struct, options?: DynamicUrlContextOptions) => {
       if (typeof window === "undefined") return;
-      window.history.replaceState(undefined, "", getDynamicUrlContext(url, params, options).url);
+      window.history.replaceState({}, "", getDynamicUrlContext(url, params, options).url);
     },
   } as const;
 };
