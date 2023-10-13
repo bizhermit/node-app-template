@@ -7,8 +7,7 @@ import useForm from "../form/context";
 import NextLink, { type NextLinkProps } from "../link";
 import Style from "./index.module.scss";
 
-export type LinkButtonOptions = ButtonOptions & {
-  href?: NextLinkProps["href"];
+export type LinkButtonOptions = ButtonOptions & Pick<NextLinkProps, "href" | "replace"> & {
   target?: string;
   $disabled?: boolean;
   $form?: boolean;

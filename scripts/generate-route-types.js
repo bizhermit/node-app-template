@@ -17,7 +17,6 @@ const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
     if (/index.ts[x]?$/.test(b)) return 1;
     return 0;
   }).forEach(name => {
-    console.log(name);
     let api = underApi;
     if (name.startsWith("@")) return;
     if (name === "api") api = true;

@@ -5,7 +5,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type FC,
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
-import NextLink, { NextLinkProps } from "../link";
+import NextLink, { type NextLinkProps } from "../link";
 import { useNavigation } from "../navigation-container/context";
 import Text from "../text";
 import Style from "./index.module.scss";
@@ -97,8 +97,9 @@ type MenuItemPropsImpl = MenuItemProps & {
 };
 
 const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) => {
+  const pathname = typeof props.pathname === "string" ? props.pathname : props.pathname?.pathname;
   if (props.$judgeSelected == null) {
-    return routerPathname === props.pathname;
+    return routerPathname === pathname;
   }
   return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
 };
