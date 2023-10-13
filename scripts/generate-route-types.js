@@ -19,6 +19,7 @@ const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
   }).forEach(name => {
     console.log(name);
     let api = underApi;
+    if (name.startsWith("@")) return;
     if (name === "api") api = true;
 
     const fullName = path.join(dirName, name);
