@@ -1,5 +1,3 @@
-"use client";
-
 import { useParams, usePathname } from "next/navigation";
 import { useEffect, type FC, type MutableRefObject } from "react";
 import type { windowOpen } from "../../utilities/window-open";
