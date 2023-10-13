@@ -5,6 +5,16 @@ type CommonStyleProps = {
 
 type CFC<P extends { [key: string]: any } = { [key: string]: any }> = React.FC<P & { children?: React.ReactNode; }>;
 
+type LayoutWithSlotsFC<
+  T extends string = string,
+  P extends { [key: string]: undefined | string | string[] } | undefined = { [key: string]: undefined | string | string[] } | undefined,
+  S extends { [key: string]: undefined | string | string[] } | undefined = { [key: string]: undefined | string | string[] } | undefined
+> = (props: {
+  params: P;
+  searchParams: S;
+  children: React.ReactNode
+} & Record<T, React.ReactNode>) => (React.ReactNode | React.ReactElement | Promise<React.ReactNode | React.ReactElement>);
+
 type LayoutFC<
   P extends { [key: string]: undefined | string | string[] } | undefined = { [key: string]: undefined | string | string[] } | undefined,
   S extends { [key: string]: undefined | string | string[] } | undefined = { [key: string]: undefined | string | string[] } | undefined
