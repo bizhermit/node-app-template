@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { getItem, getReturnMessages, hasError } from "./main";
 
 export type NextApiConfig = {
@@ -139,7 +139,7 @@ const apiHandler = <
         return data;
       })();
       if (hasError(msgs)) {
-        statusCode = 400;
+        statusCode = 422;
         throw new Error("validation error");
       }
 

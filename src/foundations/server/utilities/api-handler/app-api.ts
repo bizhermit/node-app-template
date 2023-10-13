@@ -1,5 +1,5 @@
 import { type RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { getItem, getReturnMessages, hasError } from "./main";
 
 const getSession = (req: NextRequest): SessionStruct => {
@@ -67,7 +67,7 @@ const apiMethodHandler = <
       })();
 
       if (hasError(msgs)) {
-        statusCode = 400;
+        statusCode = 422;
         throw new Error("validation error");
       }
 
