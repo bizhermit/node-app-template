@@ -209,7 +209,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               style={toggleAnimationInitStyle}
               data-mode={navMode}
               data-pos={navPosition}
-              data-show={showedNav}
+              data-show={showedNav || navMode === "visible"}
               onClick={click}
               onMouseEnter={mouseEnter}
               onMouseLeave={mouseLeave}
