@@ -148,7 +148,8 @@ type RelativePagePath = ${(() => {
     if (idx !== arr.indexOf(str)) return false;
     return str != null;
   }).map(str => {
-    const rets = [`"./${str}"`];
+    // const rets = [`"./${str}"`];
+    const rets = [];
     for (let i = 1; i < nestLevel; i++) {
       rets.push(`"${"../".repeat(i)}${str}"`);
     }
