@@ -9,7 +9,7 @@ import useLoadableArray from "../../hooks/loadable-array";
 import { attributes, convertSizeNumToStr, joinClassNames } from "../../utilities/attributes";
 import Button from "../button";
 import { DoubleLeftIcon, DoubleRightIcon, LeftIcon, RightIcon } from "../icon";
-import NextLink from "../link";
+import NextLink, { type NextLinkProps } from "../link";
 import Resizer from "../resizer";
 import Text from "../text";
 import Style from "./index.module.scss";
@@ -32,7 +32,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   minWidth?: number | string;
   maxWidth?: number | string;
   align?: "left" | "center" | "right";
-  href?: (ctx: DataTableCellContext<T>) => string;
+  href?: (ctx: DataTableCellContext<T>) => NextLinkProps["href"];
   hrefOptions?: {
     target?: HTMLAttributeAnchorTarget;
     decoration?: boolean;

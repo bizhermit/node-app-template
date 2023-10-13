@@ -5,7 +5,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type FC,
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
-import NextLink from "../link";
+import NextLink, { NextLinkProps } from "../link";
 import { useNavigation } from "../navigation-container/context";
 import Text from "../text";
 import Style from "./index.module.scss";
@@ -14,7 +14,7 @@ type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick
 
 export type MenuItemProps = {
   key?: Key;
-  pathname?: string;
+  pathname?: NextLinkProps["href"];
   label?: ReactNode;
   icon?: ReactNode;
   items?: Array<MenuItemProps | null | undefined>;

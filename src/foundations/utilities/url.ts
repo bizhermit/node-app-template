@@ -8,9 +8,11 @@ export type DynamicUrlContextOptions = {
   queryArrayIndex?: boolean;
 };
 
+type UrlPath = PagePath | RelativePagePath | `http${string}` | `tel:${string}` | `mailto:${string}` | ApiPath;
+
 export const getDynamicUrlContext = <
   T extends Struct | FormData | undefined | null,
-  U extends PagePath | RelativePagePath | ApiPath = PagePath | RelativePagePath | ApiPath
+  U extends UrlPath = UrlPath
 >(pathName: U, params?: T, options?: DynamicUrlContextOptions): {
   url: U;
   data: T;
@@ -94,7 +96,7 @@ export const getDynamicUrlContext = <
 
 export const getDynamicUrl = <
   T extends Struct | FormData | undefined | null,
-  U extends PagePath | RelativePagePath | ApiPath = PagePath | RelativePagePath | ApiPath
+  U extends UrlPath = UrlPath
 >(pathName: U, params?: T, options?: DynamicUrlContextOptions) => {
   return getDynamicUrlContext<T, U>(pathName, params, options).url;
 };
