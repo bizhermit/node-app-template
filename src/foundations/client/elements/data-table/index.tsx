@@ -479,6 +479,19 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
         </DataTableCellLabel>
       );
       const pageFirstIndex = pagination ? pagination.index * pagination.perPage : 0;
+      const content = column.body ?
+        <column.body
+          index={index}
+          column={column}
+          data={data}
+          pageFirstIndex={pageFirstIndex}
+          items={items}
+          setHeaderRev={setHeaderRev}
+          setBodyRev={setBodyRev}
+        >
+          <CellLabel />
+        </column.body> :
+        <CellLabel />;
       return (
         <div
           key={column.name}
@@ -489,36 +502,25 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           data-name={column.name}
           data-pointer={column.pointer}
         >
-          <NextLink
-            href={column.href?.({
-              column,
-              data,
-              index,
-              pageFirstIndex,
-              items,
-              setHeaderRev,
-              setBodyRev,
-            })}
-            target={column.hrefOptions?.target}
-            rel={column.hrefOptions?.rel}
-            $noDecoration={column.hrefOptions?.decoration === false}
-            className={Style.link}
-          >
-            {column.body ?
-              <column.body
-                index={index}
-                column={column}
-                data={data}
-                pageFirstIndex={pageFirstIndex}
-                items={items}
-                setHeaderRev={setHeaderRev}
-                setBodyRev={setBodyRev}
-              >
-                <CellLabel />
-              </column.body> :
-              <CellLabel />
-            }
-          </NextLink>
+          {column.href ?
+            <NextLink
+              href={column.href?.({
+                column,
+                data,
+                index,
+                pageFirstIndex,
+                items,
+                setHeaderRev,
+                setBodyRev,
+              }) as PagePath}
+              target={column.hrefOptions?.target}
+              rel={column.hrefOptions?.rel}
+              $noDecoration={column.hrefOptions?.decoration === false}
+              className={Style.link}
+            >
+              {content}
+            </NextLink> : content
+          }
         </div>
       );
     };
