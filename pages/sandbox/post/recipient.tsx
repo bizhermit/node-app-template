@@ -1,8 +1,6 @@
 import NextLink from "#/client/elements/link";
 import StructView from "#/client/elements/struct-view";
 import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
-import { GetServerSideProps } from "next";
-import queryString from "querystring";
 import { NextPageWithLayout } from "~/_app";
 
 type Props = {
@@ -37,22 +35,22 @@ Page.layout = (page) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  console.log("------------------", ctx.req.method);
-  if (ctx.req.method?.toUpperCase() === "POST") {
-    const buf = ctx.req.read();
-    const data = queryString.parse(buf?.toString());
-    return {
-      props: {
-        data,
-      }
-    };
-  }
-  return {
-    props: {
-      data: {},
-    }
-  };
-};
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   console.log("------------------", ctx.req.method);
+//   if (ctx.req.method?.toUpperCase() === "POST") {
+//     const buf = ctx.req.read();
+//     const data = queryString.parse(buf?.toString());
+//     return {
+//       props: {
+//         data,
+//       }
+//     };
+//   }
+//   return {
+//     props: {
+//       data: {},
+//     }
+//   };
+// };
 
 export default Page;
