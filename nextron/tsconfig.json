@@ -9,13 +9,15 @@
   "exclude": [
     "../node_modules",
     "../nxpress",
-    "../foundations/client",
+    "foundations/client",
     "**/*.tsx"
   ],
   "include": [
     "**/*.ts",
+    "../types/*",
     "../foundations/**/*.ts",
     "../app/**/api/**/*.ts",
-    "../pages/**/api/**/*.ts"
+    "../pages/**/api/**/*.ts",
+    "../features/**/*.ts"
   ]
 }
