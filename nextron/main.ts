@@ -1,12 +1,12 @@
-import path from "path";
-import url from "url";
-import { BrowserWindow, app, protocol, ipcMain, screen, nativeTheme, IpcMainEvent, IpcMainInvokeEvent } from "electron";
-import prepareNext from "electron-next";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
+import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { BrowserWindow, IpcMainEvent, IpcMainInvokeEvent, app, ipcMain, nativeTheme, protocol, screen } from "electron";
+import prepareNext from "electron-next";
 import { existsSync, mkdir, readFile, writeFile } from "fs-extra";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 import type { NextResponse } from "next/server";
+import path from "path";
+import url from "url";
 
 const $global = global as { [key: string]: any };
 const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
@@ -279,14 +279,14 @@ app.on("ready", async () => {
             returnJudge();
           },
         };
-        import(path.join(appRoot, ".main/src/pages", uri)).then((handler) => {
+        import(path.join(appRoot, ".main/pages", uri)).then((handler) => {
           try {
             handler.default(req, res);
           } catch (err) {
             reject(err);
           }
         }).catch((_err) => {
-          import(path.join(appRoot, ".main/src/app", uri, "route")).then((handler) => {
+          import(path.join(appRoot, ".main/app", uri, "route")).then((handler) => {
             try {
               const methodHandler = handler[req.method.toUpperCase()];
               if (methodHandler == null) {

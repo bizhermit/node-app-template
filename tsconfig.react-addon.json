@@ -10,7 +10,11 @@
     "target": "esnext",
     "jsx": "react-jsx"
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "foundations/**/*.ts",
+    "foundations/**/*.tsx"
+  ],
   "exclude": [
     "node_modules",
     "scripts",
@@ -18,9 +22,7 @@
     "nexpress",
     "nextron",
     ".*",
-    "src/pages",
-    "src/app",
-    "src/hooks/fetch*",
-    "src/utilities"
+    "pages",
+    "app",
   ],
 }

@@ -1,7 +1,7 @@
 const path = require("path");
 const fse = require("fs-extra");
 
-const srcRootPath = path.join(__dirname, "../src");
+const srcRootPath = path.join(__dirname, "../");
 const appRootPath = path.join(srcRootPath, "app");
 const pageRootPath = path.join(srcRootPath, "pages");
 

@@ -9,16 +9,13 @@
   "exclude": [
     "../node_modules",
     "../nxpress",
-    "../src/foundations/components",
-    "../src/foundations/hooks",
-    "../src/foundations/styles",
-    "../src/features/components",
-    "../src/features/hooks",
-    "../src/features/styles",
+    "../foundations/client",
     "**/*.tsx"
   ],
   "include": [
     "**/*.ts",
-    "../src/**/*.ts"
+    "../foundations/**/*.ts",
+    "../app/**/api/**/*.ts",
+    "../pages/**/api/**/*.ts"
   ]
 }

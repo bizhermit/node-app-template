@@ -17,10 +17,10 @@ module.exports = {
     "import/resolver": {
       alias: {
         map: [
-          ["#", path.join(__dirname, "./src/foundations")],
-          ["$", path.join(__dirname, "./src/features")],
-          ["~", path.join(__dirname, "./src/pages")],
-          ["@", path.join(__dirname, "./src/app")],
+          ["#", path.join(__dirname, "./foundations")],
+          ["$", path.join(__dirname, "./features")],
+          ["~", path.join(__dirname, "./pages")],
+          ["@", path.join(__dirname, "./app")],
         ],
         extensions: [".json", ".js", ".jsx", ".ts", ".tsx"]
       }

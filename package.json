@@ -85,9 +85,13 @@
       "main": ".main/nextron/main.js"
     },
     "files": [
-      "!src",
+      "!foundations",
+      "!features",
+      "!app",
+      "!pages",
       "!nextron",
       "!nexpress",
+      "!*.d.ts",
       ".main/**/*",
       ".renderer/**/*",
       "public"

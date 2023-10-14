@@ -1,7 +1,7 @@
 /.eslintrc.js
 /next.config.js
 /scripts
-/src/pages/sandbox/*
-/src/app/sandbox/*
+/pages/sandbox/*
+/app/sandbox/*
 /nextron
 /nexpress

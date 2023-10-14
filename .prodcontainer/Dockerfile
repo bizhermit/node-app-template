@@ -7,7 +7,11 @@ COPY . /workspace
 RUN npm install \
   && npm run build \
   && npx rimraf \
-    src \
+    foundations \
+    app \
+    pages \
+    features \
+    *.d.ts \
     nexpress \
     scripts \
     .babelrc \
