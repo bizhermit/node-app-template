@@ -11,8 +11,9 @@ RUN npm install \
     app \
     pages \
     features \
-    *.d.ts \
+    types \
     nexpress \
+    nextron \
     scripts \
     .babelrc \
     .eslint* \
