@@ -59,3 +59,5 @@ type ImportApi<T extends TypeofApi> = {
 type Api = ImportApi<TypeofApi> & _Api<{
   // custom api endpoints
 }>;
+
+type ApiPath = keyof Api;

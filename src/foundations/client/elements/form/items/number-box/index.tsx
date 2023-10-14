@@ -2,7 +2,7 @@
 
 import { add, minus, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import { forwardRef, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
+import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
 import { NumberData } from "../../../../../data-items/number";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
@@ -255,6 +255,12 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
   };
 
   const hasData = ctx.value != null;
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      iref.current?.focus();
+    }
+  }, []);
 
   return (
     <FormItemWrap

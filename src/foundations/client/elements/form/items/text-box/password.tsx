@@ -1,7 +1,7 @@
 "use client";
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import { forwardRef, useRef, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
+import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "../../../../elements/icon";
@@ -159,6 +159,12 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
   };
 
   const hasData = StringUtils.isNotEmpty(ctx.value);
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      iref.current?.focus();
+    }
+  }, []);
 
   return (
     <FormItemWrap

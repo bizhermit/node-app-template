@@ -5,7 +5,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type FC,
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
-import NextLink from "../link";
+import NextLink, { type NextLinkProps } from "../link";
 import { useNavigation } from "../navigation-container/context";
 import Text from "../text";
 import Style from "./index.module.scss";
@@ -14,7 +14,7 @@ type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick
 
 export type MenuItemProps = {
   key?: Key;
-  pathname?: string;
+  pathname?: NextLinkProps["href"];
   label?: ReactNode;
   icon?: ReactNode;
   items?: Array<MenuItemProps | null | undefined>;
@@ -22,6 +22,7 @@ export type MenuItemProps = {
   openedIcon?: ReactNode;
   closedIcon?: ReactNode;
   defaultOpen?: boolean;
+  iconSpace?: boolean;
   onClick?: (props: AddonMenuItemProps, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 };
 type AddonMenuItemProps = MenuItemProps & { nestLevel: number; };
@@ -35,6 +36,7 @@ export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
   $defaultClosedIcon?: ReactNode;
+  $defaultIconSpace?: boolean;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean;
 };
 
@@ -58,14 +60,8 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
 });
 
 const MenuGroup: FC<MenuProps & {
-  $items?: Array<MenuItemProps | null | undefined>;
   $nestLevel?: number;
-  $direction?: Direction;
-  $itemDefaultAttributes?: ItemAttributes;
-  $defaultOpenedIcon?: ReactNode;
-  $defaultClosedIcon?: ReactNode;
   $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
-  $judgeSelected?: (props: AddonMenuItemProps) => boolean
 }> = (props) => {
   if (props.$items == null || props.$items.length === 0) return <></>;
   return (
@@ -81,6 +77,7 @@ const MenuGroup: FC<MenuProps & {
           $itemDefaultAttributes={props.$itemDefaultAttributes}
           $defaultOpenedIcon={props.$defaultOpenedIcon}
           $defaultClosedIcon={props.$defaultClosedIcon}
+          $defaultIconSpace={props.$defaultIconSpace}
           $toggleParent={props.$toggleParent}
           $judgeSelected={props.$judgeSelected}
         />
@@ -94,13 +91,15 @@ type MenuItemPropsImpl = MenuItemProps & {
   $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
   $defaultClosedIcon?: ReactNode;
+  $defaultIconSpace?: boolean;
   $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
   $judgeSelected?: (props: AddonMenuItemProps) => boolean
 };
 
 const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) => {
+  const pathname = typeof props.pathname === "string" ? props.pathname : props.pathname?.pathname;
   if (props.$judgeSelected == null) {
-    return routerPathname === props.pathname;
+    return routerPathname === pathname;
   }
   return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
 };
@@ -168,11 +167,13 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     animationDuration: Math.min(250, (props.items?.length ?? 0) * 30),
   });
 
+  const iconSpace = props.iconSpace ?? props.$defaultIconSpace;
+
   const node = (
     <div
       {...attrs}
       className={`${Style.content}${attrs.className ? ` ${attrs.className}` : ""}`}
-      style={{ ...attrs.style, paddingLeft: `calc(1.5rem * ${props.nestLevel})` }}
+      style={{ ...attrs.style, paddingLeft: `calc(1.6rem * ${props.nestLevel})` }}
       onClick={click}
       onKeyDown={keydown}
       data-selectable={selectable}
@@ -180,9 +181,11 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       data-selected={selected}
       tabIndex={selectable ? 0 : undefined}
     >
-      {props.icon &&
+      {(props.icon || iconSpace) &&
         <div className={Style.icon}>
-          <Text>{props.icon}</Text>
+          {props.icon &&
+            <Text>{props.icon}</Text>
+          }
         </div>
       }
       <div className={Style.node}>
@@ -223,6 +226,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
           $itemDefaultAttributes={attrs}
           $defaultOpenedIcon={props.openedIcon ?? props.$defaultOpenedIcon}
           $defaultClosedIcon={props.closedIcon ?? props.$defaultClosedIcon}
+          $defaultIconSpace={iconSpace}
         />
       </div>
     </li>

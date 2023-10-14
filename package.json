@@ -12,11 +12,11 @@
   "scripts": {
     "clean": "npx rimraf .next",
     "clean:libs": "npx rimraf dist/libs",
-    "cleanup": "npx rimraf .next .main .renderer .nexpress dist out",
+    "cleanup": "npx rimraf .next .main .renderer .nexpress dist out package-lock.json node_modules",
     "route": "node scripts/generate-route-types",
     "lint": "npx next lint",
     "predev": "npm run route",
-    "dev": "npx next dev -p 3003",
+    "dev": "npm run clean && npx next dev -p 3333",
     "prebuild": "npm run route",
     "build": "npx next build",
     "next": "npm run clean && npm run build && npx next start",
@@ -47,7 +47,7 @@
     "formidable": "^2.1.1",
     "fs-extra": "^10.1.0",
     "helmet": "^7.0.0",
-    "next": "13.4.3",
+    "next": "13",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

@@ -1,9 +1,7 @@
-const Page404 = () => {
-  return (
-    <div className="flex column center middle g-s w-100 h-100">
-      <span className="bold">404&nbsp;|&nbsp;Not&nbsp;Found</span>
-    </div>
-  );
+import Error404 from "#/client/elements/error/404";
+
+const NotFound = () => {
+  return <Error404 />;
 };
 
-export default Page404;
+export default NotFound;

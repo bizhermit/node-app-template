@@ -1,11 +1,15 @@
-import type { UrlObject } from "url";
-import { type AnchorHTMLAttributes, type LegacyRef, type ReactNode, forwardRef, type Ref } from "react";
+import { getDynamicUrl } from "#/utilities/url";
 import Link, { type LinkProps } from "next/link";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { forwardRef, type AnchorHTMLAttributes, type LegacyRef, type ReactNode, type Ref } from "react";
 import { attributes } from "../../utilities/attributes";
 
+type Href = PagePath | RelativePagePath | `http${string}` | `tel:${string}` | `mailto:${string}`;
+
 export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
-  href?: string | UrlObject;
+  href?: Href | {
+    pathname?: Href;
+    params?: { [key: string]: any };
+  };
   $noDecoration?: boolean;
   $disabled?: boolean;
   children?: ReactNode;
@@ -13,9 +17,13 @@ export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<
 
 const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>((props, ref) => {
   const attrs = attributes(props, props.$noDecoration ? "plain-text" : undefined);
-  const href = attrs.href?.toString();
+  const href = (() => {
+    if (typeof props.href === "string") return props.href;
+    if (!props.href?.pathname) return undefined;
+    return getDynamicUrl(props.href.pathname, props.href.params, { appendQuery: true });
+  })();
 
-  if (StringUtils.isEmpty(href) || props.$disabled) {
+  if (!href || props.$disabled) {
     return <a {...attrs} ref={ref} href={undefined} />;
   }
 
@@ -30,10 +38,13 @@ const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>((props, ref) => {
       />
     );
   }
+
   return (
     <Link
       {...attrs}
-      href={attrs.href!}
+      href={href}
+      replace={props.replace}
+      prefetch={false}
       ref={ref as Ref<HTMLAnchorElement> | undefined}
     />
   );

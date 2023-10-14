@@ -18,7 +18,7 @@ const Page: NextPageWithLayout = () => {
       <NextLink href="/sandbox/route">
         sandbox/route
       </NextLink>
-      <NextLink href="/sandbox/nest/10">
+      <NextLink href={{ pathname: "/sandbox/nest/[id]", params: { id: 10 } }}>
         sandbox/nest/[id]
       </NextLink>
       <NextLink href="/pages">

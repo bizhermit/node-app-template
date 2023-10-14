@@ -90,7 +90,6 @@ $shadowPadding: .2rem;
     min-height: 0;
     overflow: visible;
     z-index: 2;
-    transition: padding #{var.$transitionTime};
 
     &[data-pos="left"] {
       flex-direction: row;

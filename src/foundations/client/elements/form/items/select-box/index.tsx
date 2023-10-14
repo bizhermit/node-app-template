@@ -314,6 +314,12 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const hasLabel = StringUtils.isNotEmpty(label);
   const hasData = !(ctx.value == null || ctx.value === "");
 
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      iref.current?.focus();
+    }
+  }, []);
+
   return (
     <FormItemWrap
       {...props}

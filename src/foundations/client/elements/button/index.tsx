@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useImperativeHandle, useMemo, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
 import useForm from "../form/context";
 import Style from "./index.module.scss";
@@ -15,6 +15,7 @@ export type ButtonOptions = {
   $fillLabel?: boolean;
   $fitContent?: boolean;
   $noPadding?: boolean;
+  $focusWhenMounted?: boolean;
 };
 
 type OmitAttributes = "onClick" | "color";
@@ -65,6 +66,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
     }
     return `c-${color} bdc-${color}`;
   }, [props.$color, props.$outline]);
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      ref.current?.focus();
+    }
+  }, []);
 
   return (
     <button

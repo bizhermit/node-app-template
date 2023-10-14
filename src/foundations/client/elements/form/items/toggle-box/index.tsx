@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemProps } from "../../$types";
 import { pressPositiveKey } from "../../../../utilities/attributes";
 import Text from "../../../text";
@@ -28,7 +28,10 @@ interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
 const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
->(p: ToggleBoxProps<T, D>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: ToggleBoxProps<T, D>, $ref: ForwardedRef<HTMLDivElement>) => {
+  const ref = useRef<HTMLDivElement>(null!);
+  useImperativeHandle($ref, () => ref.current);
+
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
@@ -97,6 +100,12 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
     if (!ctx.editable) return;
     pressPositiveKey(e, () => toggleCheck());
   };
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
+    }
+  }, []);
 
   return (
     <FormItemWrap

@@ -6,8 +6,8 @@ import Form from "#/client/elements/form";
 import CheckBox from "#/client/elements/form/items/check-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
+import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const CheckBoxClient = () => {
@@ -92,6 +92,7 @@ const CheckBoxClient = () => {
       <Row className="g-m">
         <CheckBox
           $onChange={v => console.log("no item: ", v)}
+          $focusWhenMounted
         >
           no item
         </CheckBox>

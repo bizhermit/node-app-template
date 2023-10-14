@@ -47,7 +47,10 @@ const DataTableClient = () => {
         resize: false,
         sortNeutral: false,
         href: (ctx) => {
-          return `/sandbox/elements/data-table?id=${ctx.data.id}`;
+          return {
+            pathname: "/sandbox/elements/data-table",
+            params: { id: ctx.data.id },
+          };
         },
         hrefOptions: {
           rel: ""

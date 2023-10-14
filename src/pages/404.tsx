@@ -1,8 +1,8 @@
+import Error404 from "#/client/elements/error/404";
 import type { NextPage } from "next";
-import Page404 from "#/client/404";
 
 const Page: NextPage = () => {
-  return <Page404 className="w-100 h-100" />;
+  return <Error404 className="w-100 h-100" />;
 };
 
 export default Page;

@@ -1,0 +1,13 @@
+@layer base {
+
+  .main {
+    &[data-flex="true"] {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: stretch;
+      align-items: stretch;
+      gap: var(--b-m);
+    }
+  }
+
+}

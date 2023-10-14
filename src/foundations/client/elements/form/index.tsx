@@ -1,10 +1,11 @@
 "use client";
 
-import { type FormHTMLAttributes, forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FunctionComponent, type ForwardedRef, type ReactElement } from "react";
-import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "./$types";
-import { attributes } from "../../utilities/attributes";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FormHTMLAttributes, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import { getValue, setValue } from "../../../data-items/utilities";
+import { attributes } from "../../utilities/attributes";
+import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "./$types";
 import { FormContext, type UseFormItemContextOptions } from "./context";
+import Style from "./index.module.scss";
 import { isErrorObject } from "./utilities";
 
 type FormRef = {
@@ -47,10 +48,10 @@ export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLF
   $messageDisplayMode?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
   $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
-  $preventResetWhenRebind?: boolean;
   encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
   $onError?: (error: Struct) => void;
   $preventEnterSubmit?: boolean;
+  $flexLayout?: boolean;
 } & (PlainFormProps | BindFormProps<T>);
 
 interface FormFC extends FunctionComponent<FormProps> {
@@ -294,12 +295,6 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
     }
   }, [errors, exErrors]);
 
-  useEffect(() => {
-    if (props.$preventResetWhenRebind !== true) {
-      ref.current?.reset?.();
-    }
-  }, [bind]);
-
   if (props.$formRef) {
     props.$formRef.getValue = get;
     props.$formRef.setValue = set;
@@ -323,7 +318,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
       mount,
       unmount,
       validation,
-      messageDisplayMode: props.$messageDisplayMode ?? "tooltip",
+      messageDisplayMode: props.$messageDisplayMode ?? "bottom-hide",
       messageWrap: props.$messageWrap,
       getValue: get,
       setValue: set,
@@ -332,7 +327,8 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
       getErrorMessages,
     }}>
       <form
-        {...attributes(props)}
+        {...attributes(props, Style.main)}
+        data-flex={props.$flexLayout}
         ref={ref}
         method={method}
         onSubmit={submit}

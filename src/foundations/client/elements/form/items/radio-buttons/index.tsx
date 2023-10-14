@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useMemo, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemProps } from "../../$types";
 import { equals, getValue, setValue } from "../../../../../data-items/utilities";
 import useLoadableArray from "../../../../hooks/loadable-array";
@@ -41,7 +41,10 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Struct = Struct
->(p: RadioButtonsProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: RadioButtonsProps<T, D, S>, $ref: ForwardedRef<HTMLDivElement>) => {
+  const ref = useRef<HTMLDivElement>(null!);
+  useImperativeHandle($ref, () => ref.current);
+
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem, method }) => {
@@ -204,6 +207,13 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
       });
     }
   }, [ctx.value, source]);
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      ((ref.current?.querySelector(`.${Style.item}[data-selected="true"][tabindex]`) ??
+        ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
+    }
+  }, []);
 
   return (
     <FormItemWrap

@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useCallback, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { WindowSize } from "../../providers/layout/consts";
@@ -207,7 +209,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               style={toggleAnimationInitStyle}
               data-mode={navMode}
               data-pos={navPosition}
-              data-show={showedNav}
+              data-show={showedNav || navMode === "visible"}
               onClick={click}
               onMouseEnter={mouseEnter}
               onMouseLeave={mouseLeave}

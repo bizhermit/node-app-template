@@ -15,9 +15,6 @@ const nextConfig = {
     output: "export",
     distDir: ".renderer",
   } : {}),
-  experimental: {
-    appDir: true,
-  },
   webpack(config) {
     config.resolve.alias['#'] = path.join(__dirname, 'src/foundations');
     config.resolve.alias['$'] = path.join(__dirname, 'src/features');

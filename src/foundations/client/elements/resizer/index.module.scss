@@ -18,7 +18,7 @@ $size: 0.8rem;
     background: transparent;
     z-index: 999;
     overflow: hidden;
-    opacity: 0.6;
+    opacity: 0.2;
     transition: opacity #{var.$transitionTime};
 
     @include mixins.crossHover {
