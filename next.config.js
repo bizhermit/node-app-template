@@ -10,6 +10,7 @@ const nextConfig = {
   ...(mode === "dist" ? {
     output: "export",
     distDir: "dist/out",
+    trailingSlash: true,
   } : {}),
   ...(mode === "renderer" ? {
     output: "export",
