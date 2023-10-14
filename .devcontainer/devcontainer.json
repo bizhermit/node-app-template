@@ -24,9 +24,11 @@
         "yzhang.markdown-all-in-one",
         "shd101wyy.markdown-preview-enhanced",
         "GrapeCity.gc-excelviewer",
-        "hediet.vscode-drawio"
+        "hediet.vscode-drawio",
+        "ritwickdey.LiveServer"
       ],
       "settings": {
+        "liveServer.settings.root": "/dist/out",
         "typescript.preferences.importModuleSpecifier": "non-relative",
         "editor.codeActionsOnSave": {
           "source.fixAll.eslint": true,
