@@ -157,7 +157,7 @@ type RelativePagePath = ${(() => {
   }).flat(1).join("\n | ");
 })()};
 `;
-fse.writeFileSync(path.join(srcRootPath, "route.d.ts"), contents);
+fse.writeFileSync(path.join(srcRootPath, "types", "route.d.ts"), contents);
 
 const duplicatedRoutes = [];
 appRoutes.forEach(appRoute => {
