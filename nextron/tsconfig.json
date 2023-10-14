@@ -7,8 +7,8 @@
     "outDir": "../.main"
   },
   "exclude": [
-    "../node_modules",
-    "../nxpress",
+    "node_modules",
+    "nxpress",
     "foundations/client",
     "**/*.tsx"
   ],
