@@ -4,12 +4,14 @@
     "module": "commonjs",
     "noEmit": false,
     "rootDir": "./",
-    "outDir": "../.nexpress"
+    "outDir": "../.nexpress",
+    "paths": {}
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "../types/*"
   ]
 }
