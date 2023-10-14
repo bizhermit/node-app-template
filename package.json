@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "npx rimraf .next",
     "clean:libs": "npx rimraf dist/libs",
-    "clean:all": "npx rimraf .next .renderer .main .nexpress",
+    "clean:all": "npx rimraf .next .renderer .main .nexpress dist",
     "cleanup": "npx rimraf .next .main .renderer .nexpress dist out package-lock.json node_modules",
     "route": "node scripts/generate-route-types",
     "lint": "npx next lint",
