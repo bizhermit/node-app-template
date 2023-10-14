@@ -1,6 +1,6 @@
 import fileItem from "#/data-items/file";
 import stringItem from "#/data-items/string";
-import apiMethodHandler from "#/server/utilities/api-handler/app-api";
+import apiMethodHandler from "#/server/api-handler/app-api";
 
 const text = stringItem({ required: true });
 const blobFile = fileItem({ required: true });

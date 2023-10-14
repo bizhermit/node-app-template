@@ -1,5 +1,5 @@
 import stringItem from "#/data-items/string";
-import apiHandler from "#/server/utilities/api-handler/page-api";
+import apiHandler from "#/server/api-handler/page-api";
 
 const hello = stringItem({
   name: "hello",
