@@ -18,17 +18,17 @@
     "baseUrl": ".",
     "paths": {
       "#/*": [
-        "src/foundations/*"
+        "foundations/*"
       ],
       "$/*": [
-        "src/features/*"
+        "features/*"
       ],
       "~/*": [
-        "src/pages/*"
+        "pages/*"
       ],
       "@/*": [
-        "src/app/*"
-      ],
+        "app/*"
+      ]
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,

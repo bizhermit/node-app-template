@@ -5,7 +5,7 @@
       "label": "format",
       "group": "none",
       "type": "shell",
-      "command": "npx eslint --fix ./src"
+      "command": "npx eslint --fix ./"
     },
     {
       "label": "build route",

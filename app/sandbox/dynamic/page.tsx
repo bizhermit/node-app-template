@@ -1,5 +1,7 @@
 import Text from "#/client/elements/text";
 
+export const dynamic = "force-static";
+
 const Page: PageFC = (props) => {
   console.log("dynamic index", props);
   return (

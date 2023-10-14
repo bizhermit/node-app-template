@@ -10,16 +10,17 @@ const nextConfig = {
   ...(mode === "dist" ? {
     output: "export",
     distDir: "dist/out",
+    trailingSlash: true,
   } : {}),
   ...(mode === "renderer" ? {
     output: "export",
     distDir: ".renderer",
   } : {}),
   webpack(config) {
-    config.resolve.alias['#'] = path.join(__dirname, 'src/foundations');
-    config.resolve.alias['$'] = path.join(__dirname, 'src/features');
-    config.resolve.alias['~'] = path.join(__dirname, 'src/pages');
-    config.resolve.alias['@'] = path.join(__dirname, 'src/app');
+    config.resolve.alias['#'] = path.join(__dirname, 'foundations');
+    config.resolve.alias['$'] = path.join(__dirname, 'features');
+    config.resolve.alias['~'] = path.join(__dirname, 'pages');
+    config.resolve.alias['@'] = path.join(__dirname, 'app');
     return config;
   },
 }
