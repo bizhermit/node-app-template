@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type HTMLAttributes, type MutableRefObject } from "react";
+import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type ForwardedRef, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
@@ -54,8 +54,19 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
 const baseZIndex = 10000000;
 
 const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
+  const [init, setInit] = useState(props.$show);
+
+  useEffect(() => {
+    if (props.$show) setInit(true);
+  }, [props.$show]);
+
+  if (!init) return null!;
+  return <Impl {...props} $ref={$ref} />;
+});
+
+const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
+  useImperativeHandle(props.$ref, () => ref.current);
   const aref = useRef<HTMLDivElement>(null!);
   const mref = useRef<HTMLDivElement>(null!);
   const zIndex = useRef<number>(0);
@@ -398,6 +409,6 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
         , portal)}
     </>
   );
-});
+};
 
 export default Popup;
