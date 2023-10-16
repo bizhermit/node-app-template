@@ -56,7 +56,10 @@ export const useFormItemContext = <
     if (props == null) return undefined;
     if ("$value" in props) return props.$value;
     if (props.name) {
-      // if (props.$bind) return getValue(props.$bind, props.name);
+      // if (props.$bind) {
+      //   const v = getValue(props.$bind, props.name);
+      //   if (v != null) return v;
+      // }
       if (form.bind) {
         const v = getValue(form.bind, props.name);
         if (v != null) return v;
