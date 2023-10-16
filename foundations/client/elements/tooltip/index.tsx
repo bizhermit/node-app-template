@@ -1,8 +1,8 @@
 "use client";
 
-import { forwardRef, type HTMLAttributes, type ReactNode, useCallback, useImperativeHandle, useRef, useState } from "react";
-import Popup from "../popup";
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
 import { attributesWithoutChildren } from "../../utilities/attributes";
+import Popup from "../popup";
 
 type OmitAttributes = "color" | "children";
 type TooltipProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
