@@ -161,7 +161,7 @@ const CheckBoxClient = () => {
         </CheckBox>
         <CheckBox
           $tag="bind"
-          $bind={bind}
+          // $bind={bind}
           name="check-box-bind"
           $borderCheck
           $checkedValue={"1"}

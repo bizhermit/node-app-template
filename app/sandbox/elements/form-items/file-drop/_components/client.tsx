@@ -113,7 +113,7 @@ const FileDropClient = () => {
           $disabled={disabled}
           $readOnly={readOnly}
           name="file-drop-bind"
-          $bind={bind}
+          // $bind={bind}
           $required
           $hideClearButton
           style={{

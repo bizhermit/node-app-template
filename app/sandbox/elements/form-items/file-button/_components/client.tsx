@@ -95,7 +95,7 @@ const FileButtonClient = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         name="file-button-bind"
-        $bind={bind}
+        // $bind={bind}
         $required
       />
       <Form

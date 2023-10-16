@@ -104,7 +104,7 @@ const TextAreaClient = () => {
         />
         <TextArea
           name="text-area-bind"
-          $bind={bind}
+          // $bind={bind}
           $tag="bind"
           $disabled={disabled}
           $readOnly={readOnly}

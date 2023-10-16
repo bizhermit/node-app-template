@@ -57,7 +57,7 @@ export const useFormItemContext = <
     if ("$value" in props) return props.$value;
     if ("$defaultValue" in props) return props.$defaultValue;
     if (props.name) {
-      if (props.$bind) return getValue(props.$bind, props.name);
+      // if (props.$bind) return getValue(props.$bind, props.name);
       if (form.bind) return getValue(form.bind, props.name);
     }
     return undefined;
@@ -68,13 +68,18 @@ export const useFormItemContext = <
   };
   const setBind = useCallback((value: ValueType<T, D, V> | null | undefined) => {
     if (!props.name) return;
-    if (props.$bind) {
-      setValue(props.$bind, props.name, value);
-    }
+    // if (props.$bind) {
+    //   setValue(props.$bind, props.name, value);
+    // }
     if (form.bind && !props.$preventFormBind) {
       setValue(form.bind, props.name, value);
     }
-  }, [props.name, props.$bind, form.bind, props.$preventFormBind]);
+  }, [
+    props.name,
+    // props.$bind,
+    form.bind,
+    props.$preventFormBind
+  ]);
   useMemo(() => {
     setBind(value);
   }, []);
@@ -118,7 +123,7 @@ export const useFormItemContext = <
     const msgs: Array<string | null | undefined> = [];
     const bind = (() => {
       if (props == null) return {};
-      if ("$bind" in props) return props.$bind;
+      // if ("$bind" in props) return props.$bind;
       if (!props.$preventFormBind) return form.bind;
       return {};
     })();
@@ -147,7 +152,14 @@ export const useFormItemContext = <
       });
     }
     return msg;
-  }, [validations, form.bind, props?.name, props?.$bind, props?.$preventFormBind, getMessage]);
+  }, [
+    validations,
+    form.bind,
+    props?.name,
+    // props?.$bind,
+    props?.$preventFormBind,
+    getMessage,
+  ]);
 
   useEffect(() => {
     form.setExErrors(cur => {
@@ -206,19 +218,19 @@ export const useFormItemContext = <
     options?.effect?.(valueRef.current);
   }, [form.bind, props?.$preventFormBind]);
 
-  useEffect(() => {
-    const name = props?.name;
-    if (props == null || name == null || props.$bind == null || "$value" in props) return;
-    const before = valueRef.current;
-    setCurrentValue(getValue(props.$bind, name));
-    const errorMessage = validation();
-    props.$onChange?.(
-      valueRef.current,
-      before,
-      { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
-    );
-    options?.effect?.(valueRef.current);
-  }, [props?.$bind]);
+  // useEffect(() => {
+  //   const name = props?.name;
+  //   if (props == null || name == null || props.$bind == null || "$value" in props) return;
+  //   const before = valueRef.current;
+  //   setCurrentValue(getValue(props.$bind, name));
+  //   const errorMessage = validation();
+  //   props.$onChange?.(
+  //     valueRef.current,
+  //     before,
+  //     { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
+  //   );
+  //   options?.effect?.(valueRef.current);
+  // }, [props?.$bind]);
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;

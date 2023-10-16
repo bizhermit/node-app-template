@@ -202,7 +202,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
       props.$tieInNames.forEach(tieItem => {
         const { dataName, hiddenName } =
           typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
-        setValue(props.$bind, hiddenName, item?.[dataName]);
+        // setValue(props.$bind, hiddenName, item?.[dataName]);
         setValue(ctx.bind, hiddenName, item?.[dataName]);
       });
     }

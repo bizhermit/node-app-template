@@ -252,7 +252,11 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
     if (!("$value" in props)) {
       clearHistory();
     }
-  }, [props.$value, props.$bind, ctx.bind]);
+  }, [
+    props.$value,
+    // props.$bind,
+    ctx.bind,
+  ]);
 
   useEffect(() => {
     const imageData = history.current[revision];

@@ -53,7 +53,8 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
         <CheckBox
           {...props.checkBoxProps}
           name={dataName}
-          $bind={{ ...data }}
+          // $bind={{ ...data }}
+          $value={getValue(data, dataName)}
           $onEdit={(a, b, d) => {
             setValue(data, dataName, a);
             if (props.bulk) {

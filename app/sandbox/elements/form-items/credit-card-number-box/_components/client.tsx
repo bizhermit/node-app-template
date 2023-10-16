@@ -103,7 +103,7 @@ const CreditCardCreditCardNumberBoxClient = () => {
       </Row>
       <CreditCardNumberBox
         name="cc-number-box-bind"
-        $bind={bind}
+        // $bind={bind}
         $tag="bind"
         $disabled={disabled}
         $readOnly={readOnly}

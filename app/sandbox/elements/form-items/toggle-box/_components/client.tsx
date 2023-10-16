@@ -131,7 +131,7 @@ const ToggleBoxClient = () => {
         <ToggleBox
           $tag="form bind"
           name="toggle-box-bind"
-          $bind={bind}
+          // $bind={bind}
         >
           ToggleBox
         </ToggleBox>

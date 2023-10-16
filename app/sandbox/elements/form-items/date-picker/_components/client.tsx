@@ -1,15 +1,15 @@
 "use client"
 
 import Button from "#/client/elements/button";
-import DatePicker from "#/client/elements/form/items/date-picker";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
+import DatePicker from "#/client/elements/form/items/date-picker";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import TextBox from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { useState } from "react";
-import TextBox from "#/client/elements/form/items/text-box";
-import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
+import { useState } from "react";
 
 const DatePickerClient = () => {
   const [disabled, setDisabled] = useState(false);
@@ -200,7 +200,7 @@ const DatePickerClient = () => {
         />
         <DatePicker
           name="date-picker-bind"
-          $bind={bind}
+          // $bind={bind}
           $tag="bind"
           $disabled={disabled}
           $readOnly={readOnly}

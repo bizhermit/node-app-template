@@ -6,8 +6,8 @@ import Form from "#/client/elements/form";
 import Slider from "#/client/elements/form/items/slider";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
+import { sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const SliderClient = () => {
@@ -112,7 +112,7 @@ const SliderClient = () => {
       <Slider
         $tag="bind"
         name="slider-bind"
-        $bind={bind}
+        // $bind={bind}
         $readOnly={readOnly}
         $disabled={disabled}
         $step={10}

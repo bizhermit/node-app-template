@@ -6,8 +6,8 @@ import Form from "#/client/elements/form";
 import SelectBox from "#/client/elements/form/items/select-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
+import { sample_number, sample_string } from "$/data-items/sample/item";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useRef, useState } from "react";
 
@@ -178,7 +178,7 @@ const SelectBoxClient = () => {
       <SelectBox
         $tag="bind"
         name="select-box-bind"
-        $bind={bind}
+        // $bind={bind}
         $disabled={disabled}
         $readOnly={readOnly}
         $required

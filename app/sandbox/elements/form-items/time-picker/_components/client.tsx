@@ -139,7 +139,7 @@ const TimePickerClient = () => {
         <TimePicker
           $tag="bind"
           name="time-picker-bind"
-          $bind={bind}
+          // $bind={bind}
           $disabled={disabled}
           $readOnly={readOnly}
           // $required

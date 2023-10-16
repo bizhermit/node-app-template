@@ -1,14 +1,14 @@
 "use client"
 
 import Button from "#/client/elements/button";
-import DateBox from "#/client/elements/form/items/date-box";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
+import DateBox from "#/client/elements/form/items/date-box";
+import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { useState } from "react";
-import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
+import { useState } from "react";
 
 const DateBoxClient = () => {
   const [disabled, setDisabled] = useState(false);
@@ -159,7 +159,7 @@ const DateBoxClient = () => {
       <DateBox
         $type={type}
         name="date-box-bind"
-        $bind={bind}
+        // $bind={bind}
         $tag="bind"
         $disabled={disabled}
         $readOnly={readOnly}

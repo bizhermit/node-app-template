@@ -7,8 +7,8 @@ import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import { CalendarIcon, ClockIcon, CloudIcon, SaveIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
-import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
+import { sample_number, sample_string } from "$/data-items/sample/item";
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";
 
@@ -179,7 +179,7 @@ const RadioButtonsClient = () => {
         $tag="bind"
         $appearance={appearance}
         $outline={outline}
-        $bind={bind}
+        // $bind={bind}
         $disabled={disabled}
         $readOnly={readOnly}
         $required
