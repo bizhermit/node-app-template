@@ -44,7 +44,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   resize?: boolean;
   wrap?: boolean;
   header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
-  body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; }>;
+  body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; rev: number }>;
   footer?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
   pointer?: boolean;
 };
@@ -488,6 +488,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           items={items}
           setHeaderRev={setHeaderRev}
           setBodyRev={setBodyRev}
+          rev={bodyRev}
         >
           <CellLabel />
         </column.body> :
@@ -527,7 +528,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     return items.map((item, index) => {
       return (
         <div
-          key={getValue(item, idDn) ?? index}
+          key={`${getValue(item, idDn) ?? index}__${bodyRev}`}
           className={Style.brow}
           style={rowStyle}
           data-border={props.$rowBorder}

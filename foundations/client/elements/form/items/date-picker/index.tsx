@@ -716,7 +716,11 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       setYear(date.getFullYear());
       setMonth(date.getMonth());
     }
-  }, [props.$value, props.$bind, ctx.bind]);
+  }, [
+    props.$value,
+    // props.$bind,
+    ctx.bind,
+  ]);
 
   return (
     <FormItemWrap

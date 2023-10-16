@@ -143,7 +143,7 @@ const TimeBoxClient = () => {
         <TimeBox
           $tag="bind"
           name="time-box-bind"
-          $bind={bind}
+          // $bind={bind}
           $disabled={disabled}
           $readOnly={readOnly}
           $typeof="string"

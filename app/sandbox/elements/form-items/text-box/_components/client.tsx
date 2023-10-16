@@ -6,8 +6,8 @@ import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_number, sample_string } from "$/data-items/sample/item";
 import { colors } from "#/utilities/sandbox";
+import { sample_number, sample_string } from "$/data-items/sample/item";
 import { useRef, useState } from "react";
 
 const TextBoxClient = () => {
@@ -151,7 +151,7 @@ const TextBoxClient = () => {
           $disabled={disabled}
           $readOnly={readOnly}
           name="text-box-bind"
-          $bind={bind}
+          // $bind={bind}
         />
         <Form
           $bind={formBind}

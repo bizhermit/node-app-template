@@ -117,7 +117,7 @@ const ElectronicSignatureClient = () => {
           $disabled={disabled}
           $readOnly={readOnly}
           name="electronic-signature-bind"
-          $bind={bind}
+          // $bind={bind}
           $autoSave={autoSave}
           $buttonsPosition={buttonsPosition}
           $required

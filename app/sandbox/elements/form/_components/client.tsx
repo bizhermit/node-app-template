@@ -159,7 +159,7 @@ const FormClient = () => {
               <TextBox
                 // name="self-bind-text-box"
                 $preventFormBind
-                $bind={bind}
+                // $bind={bind}
                 $required
                 // $defaultValue="hoge"
                 $onChange={(a, b) => {
@@ -169,7 +169,7 @@ const FormClient = () => {
               <CheckBox
                 // name="self-bind-check-box"
                 $preventFormBind
-                $bind={bind}
+                // $bind={bind}
                 $required
               />
             </Row>

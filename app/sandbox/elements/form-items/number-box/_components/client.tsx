@@ -121,7 +121,7 @@ const NumberBoxClient = () => {
       />
       <NumberBox
         name="number-box-bind"
-        $bind={bind}
+        // $bind={bind}
         $tag="bind"
         $disabled={disabled}
         $readOnly={readOnly}

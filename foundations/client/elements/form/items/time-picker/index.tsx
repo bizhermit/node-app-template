@@ -340,7 +340,11 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
       else setSecond(undefined);
     }
     setTimeout(scrollToSelected, 20);
-  }, [props.$value, props.$bind, ctx.bind]);
+  }, [
+    props.$value,
+    // props.$bind,
+    ctx.bind,
+  ]);
 
   return (
     <FormItemWrap
