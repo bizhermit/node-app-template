@@ -55,11 +55,14 @@ export const useFormItemContext = <
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
     if (props == null) return undefined;
     if ("$value" in props) return props.$value;
-    if ("$defaultValue" in props) return props.$defaultValue;
     if (props.name) {
       // if (props.$bind) return getValue(props.$bind, props.name);
-      if (form.bind) return getValue(form.bind, props.name);
+      if (form.bind) {
+        const v = getValue(form.bind, props.name);
+        if (v != null) return v;
+      }
     }
+    if ("$defaultValue" in props) return props.$defaultValue;
     return undefined;
   })());
   const [value, setValueImpl] = useState(valueRef.current);
