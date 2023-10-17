@@ -38,20 +38,20 @@ type _Api<A extends {
 type ImportApi<T extends TypeofApi> = {
   [P in keyof T]: {
     get: {
-      req: DataItemValueType<P extends AppApiPath ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false>;
-      res: DataItemValueType<P extends AppApiPath ? T[P]["GET"]["res"] : T[P]["default"]["get"], true>;
+      req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false>;
+      res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["GET"]["res"] : T[P]["default"]["get"], true>;
     };
     put: {
-      req: DataItemValueType<P extends AppApiPath ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false>;
-      res: DataItemValueType<P extends AppApiPath ? T[P]["PUT"]["res"] : T[P]["default"]["put"], true>;
+      req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false>;
+      res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["PUT"]["res"] : T[P]["default"]["put"], true>;
     };
     post: {
-      req: DataItemValueType<P extends AppApiPath ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false>;
-      res: DataItemValueType<P extends AppApiPath ? T[P]["POST"]["res"] : T[P]["default"]["post"], true>;
+      req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false>;
+      res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["POST"]["res"] : T[P]["default"]["post"], true>;
     };
     delete: {
-      req: DataItemValueType<P extends AppApiPath ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false>;
-      res: DataItemValueType<P extends AppApiPath ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"], true>;
+      req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false>;
+      res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"], true>;
     };
   };
 };
