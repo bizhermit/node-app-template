@@ -169,7 +169,7 @@ export const useFormItemContext = <
 
   useEffect(() => {
     form.setExErrors(cur => {
-      if (props?.$error) {
+      if (isErrorObject(props?.$error)) {
         if (equals(cur[id.current], props.$error)) return cur;
         return {
           ...cur,
