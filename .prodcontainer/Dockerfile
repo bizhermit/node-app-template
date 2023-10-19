@@ -12,6 +12,7 @@ RUN npm install \
     pages \
     features \
     types \
+    middleware* \
     nexpress \
     nextron \
     scripts \
