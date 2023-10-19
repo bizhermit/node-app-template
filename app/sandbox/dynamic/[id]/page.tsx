@@ -4,7 +4,7 @@ type Params = {
   id: string;
 };
 
-export const dynamic = "force-static";
+// export const dynamic = "force-static";
 export const generateStaticParams = async () => {
   return [
     "",
