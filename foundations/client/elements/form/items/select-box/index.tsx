@@ -72,7 +72,9 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   });
   const [bindSource, setBindSource] = useState(source);
   const emptyItem = (() => {
-    if (props.$emptyItem == null) return undefined;
+    if (props.$emptyItem == null || props.$emptyItem === false) {
+      return undefined;
+    }
     switch (typeof props.$emptyItem) {
       case "boolean":
         return {
@@ -153,7 +155,11 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
 
   const clear = () => {
     if (!ctx.editable) return;
-    if (props.$emptyItem != null && !(typeof props.$emptyItem === "boolean" || typeof props.$emptyItem === "string")) {
+    if (
+      props.$emptyItem != null &&
+      props.$emptyItem !== false &&
+      !(typeof props.$emptyItem === "boolean" || typeof props.$emptyItem === "string")
+    ) {
       ctx.change(props.$emptyItem.value);
       return;
     }
