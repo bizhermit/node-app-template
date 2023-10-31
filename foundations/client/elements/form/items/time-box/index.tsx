@@ -416,7 +416,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onChange={changeH}
             autoComplete="off"
             inputMode="numeric"
-            placeholder={props.$hourPlaceholder}
+            placeholder={ctx.editable ? props.$hourPlaceholder : ""}
           />
         }
         <span
@@ -441,7 +441,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onChange={changeM}
             autoComplete="off"
             inputMode="numeric"
-            placeholder={props.$minutePlaceholder}
+            placeholder={ctx.editable ? props.$minutePlaceholder : ""}
           />
         }
         {needS &&
@@ -467,7 +467,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
               onChange={changeS}
               autoComplete="off"
               inputMode="numeric"
-              placeholder={props.$secondPlaceholder}
+              placeholder={ctx.editable ? props.$secondPlaceholder : ""}
             />
           </>
         }
