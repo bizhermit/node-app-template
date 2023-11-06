@@ -334,7 +334,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
         onSubmit={submit}
         onReset={reset}
         onKeyDown={props.$preventEnterSubmit ? (e) => {
-          if (e.code === "Enter") {
+          if (e.key === "Enter") {
             if ((e.target as HTMLElement).tagName !== "BUTTON") {
               e.preventDefault();
             }
