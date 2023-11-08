@@ -37,7 +37,7 @@ type PlainFormProps = {
 type BindFormProps<T extends Struct = Struct> = {
   $submitDataType?: "struct";
   $onSubmit?: (((data: T, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
-  $onlyMountedData?: boolean;
+  $preventExcludeNotMountedValue?: boolean;
 };
 
 export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
@@ -157,7 +157,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
     }
     const ret = props.$onSubmit(
       (props.$submitDataType === "formData" ? new FormData(e.currentTarget) : (() => {
-        if (!props.$onlyMountedData) {
+        if (props.$preventExcludeNotMountedValue) {
           return { ...bind };
         }
         const ret: Struct = {};
