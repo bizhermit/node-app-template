@@ -115,9 +115,9 @@ const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
       {...props}
       ref={ref}
       $context={ctx}
+      $useHidden
       $preventFieldLayout
       $clickable
-      $useHidden
       $mainProps={{
         className: Style.main,
         onClick: click,

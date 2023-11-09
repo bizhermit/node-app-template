@@ -112,9 +112,9 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
       {...props}
       ref={ref}
       $context={ctx}
+      $useHidden
       $preventFieldLayout
       $clickable
-      $useHidden
       $mainProps={{
         className: Style.main,
         onClick: click,
