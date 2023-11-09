@@ -1,9 +1,14 @@
-import type { DataTableBaseColumn, DataTableColumn } from "#/client/elements/data-table";
+import type { DataTableBaseColumn, DataTableColumn, DataTableDateColumn, DataTableNumberColumn } from "#/client/elements/data-table";
 import { getValue } from "#/data-items/utilities";
 
-const dataTableDataItemColumn = <T extends Struct>(
+const dataTableDataItemColumn = <T extends Struct, D extends DataItem>(
   dataItem: DataItem & { name: string },
-  props?: Partial<DataTableBaseColumn<T>>
+  props?: Partial<
+    D["type"] extends DataItem_String["type"] ? DataTableBaseColumn<T> :
+    D["type"] extends DataItem_Number["type"] ? DataTableNumberColumn<T> :
+    D["type"] extends DataItem_Date["type"] ? DataTableDateColumn<T> :
+    DataTableBaseColumn<T>
+  >
 ): DataTableColumn<T> => {
   return {
     name: dataItem.name,
@@ -42,6 +47,18 @@ const dataTableDataItemColumn = <T extends Struct>(
             type: "label",
           };
       }
+    })(),
+    ...(() => {
+      if ("source" in dataItem) {
+        return {
+          align: "left",
+          body: (props) => {
+            const v = props.data[dataItem.name];
+            return <>{(dataItem.source as Array<Struct>).find(item => item.id === v)?.name}</>;
+          },
+        };
+      }
+      return {};
     })(),
     ...props,
   };
