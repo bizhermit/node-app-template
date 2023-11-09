@@ -163,7 +163,6 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
       {...props}
       ref={ref}
       $context={ctx}
-      $useHidden
       data-has={StringUtils.isNotEmpty(ctx.value)}
       $mainProps={{
         style: {

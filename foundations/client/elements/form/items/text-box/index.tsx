@@ -212,7 +212,6 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
       {...props}
       ref={ref}
       $context={ctx}
-      $useHidden
       data-round={props.$round}
       data-has={hasData}
       $mainProps={{
