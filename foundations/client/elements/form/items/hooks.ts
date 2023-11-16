@@ -8,8 +8,8 @@ import { isErrorObject } from "../utilities";
 
 const formValidationMessages: FormItemMessages = {
   default: "入力エラーです。",
-  required: "値を入力してください。",
-  typeMissmatch: "型が不適切です。",
+  required: "{label}を入力してください。",
+  typeMissmatch: "{label}の型が不適切です。",
 };
 
 export const useDataItemMergedProps = <
@@ -26,6 +26,7 @@ export const useDataItemMergedProps = <
       if (dataItem == null) return {};
       return {
         name: dataItem.name,
+        $label: dataItem.label,
         $required: form.method === "get" ? false : dataItem.required,
         ...merge?.under?.({ props, dataItem, method: form.method }),
       };
@@ -90,8 +91,11 @@ export const useFormItemContext = <
     setBind(value);
   }, []);
 
-  const getMessage = useCallback((key: keyof FormItemMessages) => {
-    return props.$messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
+  const getMessage = useCallback((key: keyof FormItemMessages, ...texts: Array<string>) => {
+    let m = props.$messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
+    m = m.replace(/\{label\}/g, props.$label || "値");
+    texts.forEach((t, i) => m = m.replace(new RegExp(`\\{${i}\\}`, "g"), `${t ?? ""}`));
+    return m;
   }, []);
 
   const validations = useMemo(() => {
@@ -122,7 +126,14 @@ export const useFormItemContext = <
       }
     }
     return rets;
-  }, [props.$required, options?.multiple, props?.$validations, getMessage, ...(options?.validationsDeps ?? [])]);
+  }, [
+    props.$required,
+    options?.multiple,
+    props?.$validations,
+    props.$label,
+    getMessage,
+    ...(options?.validationsDeps ?? []),
+  ]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -164,6 +175,7 @@ export const useFormItemContext = <
     props?.name,
     // props?.$bind,
     props?.$preventFormBind,
+    props.$label,
     getMessage,
   ]);
 

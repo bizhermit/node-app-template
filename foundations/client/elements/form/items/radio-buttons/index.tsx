@@ -78,7 +78,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     },
     generateChangeCallbackDataDeps: [source],
     messages: {
-      required: "値を選択してください。"
+      required: "{label}を選択してください。"
     },
   });
 

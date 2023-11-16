@@ -103,7 +103,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     },
     generateChangeCallbackDataDeps: [source],
     messages: {
-      required: "値を選択してください。",
+      required: "{label}を選択してください。",
     },
   });
 
