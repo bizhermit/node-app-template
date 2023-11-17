@@ -126,23 +126,23 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
 
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
-    validations: () => {
+    validations: (_, label) => {
       const validations: Array<FormItemValidation<any>> = [];
       const max = DateData.dateAsLast(maxDate, type);
       const min = DateData.dateAsFirst(minDate, type);
       if (max != null && min != null) {
-        validations.push(DateInput.rangeValidation(min, max, type));
+        validations.push(DateInput.rangeValidation(min, max, type, label));
       } else {
         if (max != null) {
-          validations.push(DateInput.maxValidation(max, type));
+          validations.push(DateInput.maxValidation(max, type, label));
         }
         if (min != null) {
-          validations.push(DateInput.minValidation(min, type));
+          validations.push(DateInput.minValidation(min, type, label));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = DateInput.contextValidation(rangePair, type);
+        const { validation } = DateInput.contextValidation(rangePair, type, label);
         validations.push(validation);
       }
       if (props.$validDays) {

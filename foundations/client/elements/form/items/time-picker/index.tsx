@@ -112,22 +112,22 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
 
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
-    validations: () => {
+    validations: (_, label) => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
       if (maxTime != null && minTime != null) {
-        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit));
+        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit, label));
       } else {
         if (maxTime != null) {
-          validations.push(TimeInput.maxValidation(maxTime, type, unit));
+          validations.push(TimeInput.maxValidation(maxTime, type, unit, label));
         }
         if (minTime != null) {
-          validations.push(TimeInput.minValidation(minTime, type, unit));
+          validations.push(TimeInput.minValidation(minTime, type, unit, label));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = TimeInput.contextValidation(rangePair, type, unit);
+        const { validation } = TimeInput.contextValidation(rangePair, type, unit, label);
         validations.push(validation);
       }
       return validations;

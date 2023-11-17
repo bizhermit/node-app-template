@@ -45,10 +45,10 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
 
   const ctx = useFormItemContext(form, props, {
     effect: renderFormattedValue,
-    validations: () => {
+    validations: (_, label) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
-      validations.push(v => StringData.minLengthValidation(v, 14));
-      validations.push(v => StringData.maxLengthValidation(v, 16));
+      validations.push(v => StringData.minLengthValidation(v, 14, label));
+      validations.push(v => StringData.maxLengthValidation(v, 16, label));
       return validations;
     },
   });

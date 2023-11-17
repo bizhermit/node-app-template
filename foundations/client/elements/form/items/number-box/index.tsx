@@ -107,17 +107,17 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
     effect: () => {
       renderFormattedValue();
     },
-    validations: () => {
+    validations: (_, label) => {
       const validations: Array<FormItemValidation<Nullable<number>>> = [];
       const max = props.$max, min = props.$min;
       if (max != null && min != null) {
-        validations.push(v => NumberData.rangeValidation(v, min, max));
+        validations.push(v => NumberData.rangeValidation(v, min, max, label));
       } else {
         if (min != null) {
-          validations.push(v => NumberData.minValidation(v, min));
+          validations.push(v => NumberData.minValidation(v, min, label));
         }
         if (max != null) {
-          validations.push(v => NumberData.maxValidation(v, max));
+          validations.push(v => NumberData.maxValidation(v, max, label));
         }
       }
       return validations;

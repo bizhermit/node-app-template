@@ -96,7 +96,9 @@ export const useFormItemContext = <
     m = m.replace(/\{label\}/g, props.$label || "値");
     texts.forEach((t, i) => m = m.replace(new RegExp(`\\{${i}\\}`, "g"), `${t ?? ""}`));
     return m;
-  }, [props.$label]);
+  }, [
+    props.$label
+  ]);
 
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<ValueType<T, D, V> | null | undefined>> = [];
@@ -116,7 +118,7 @@ export const useFormItemContext = <
       }
     }
     if (options?.validations) {
-      rets.push(...options.validations(getMessage));
+      rets.push(...options.validations(getMessage, props.$label || "値"));
     }
     if (props?.$validations) {
       if (Array.isArray(props.$validations)) {

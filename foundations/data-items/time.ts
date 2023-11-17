@@ -1,6 +1,6 @@
 import Time, { TimeUtils } from "@bizhermit/time";
-import type { FormItemValidation } from "../client/elements/form/$types";
 import { dataItemKey } from ".";
+import type { FormItemValidation } from "../client/elements/form/$types";
 
 const timeDefaultTypeof: TimeValueType = "number";
 
@@ -218,7 +218,7 @@ export namespace TimeInput {
     }
   };
 
-  export const rangeValidation = (minTime: number, maxTime: number, mode: TimeMode, unit: TimeUnit) => {
+  export const rangeValidation = (minTime: number, maxTime: number, mode: TimeMode, unit: TimeUnit, itemName?: string) => {
     const maxTimeStr = formatByTimeMode(maxTime, mode);
     const minTimeStr = formatByTimeMode(minTime, mode);
     return (v: any) => TimeData.rangeValidation(
@@ -227,37 +227,37 @@ export namespace TimeInput {
       maxTime,
       mode,
       "millisecond",
-      undefined,
+      itemName,
       minTimeStr,
       maxTimeStr
     );
   };
 
-  export const minValidation = (minTime: number, mode: TimeMode, unit: TimeUnit) => {
+  export const minValidation = (minTime: number, mode: TimeMode, unit: TimeUnit, itemName?: string) => {
     const minTimeStr = formatByTimeMode(minTime, mode);
     return (v: any) => TimeData.minValidation(
       TimeData.convertTime(v, unit),
       minTime,
       mode,
       "millisecond",
-      undefined,
+      itemName,
       minTimeStr
     );
   };
 
-  export const maxValidation = (maxTime: number, mode: TimeMode, unit: TimeUnit) => {
+  export const maxValidation = (maxTime: number, mode: TimeMode, unit: TimeUnit, itemName?: string) => {
     const maxTimeStr = formatByTimeMode(maxTime, mode);
     return (v: any) => TimeData.maxValidation(
       TimeData.convertTime(v, unit),
       maxTime,
       mode,
       "millisecond",
-      undefined,
+      itemName,
       maxTimeStr
     );
   };
 
-  export const contextValidation = (rangePair: TimeRangePair, mode: TimeMode, unit: TimeUnit) => {
+  export const contextValidation = (rangePair: TimeRangePair, mode: TimeMode, unit: TimeUnit, itemName?: string) => {
     const pairTimeUnit = rangePair.unit ?? "minute";
     const compare = (value: TimeValue, pairTime: number) =>
       TimeData.contextValidation(
@@ -266,7 +266,7 @@ export namespace TimeInput {
         { [rangePair.name]: pairTime },
         mode,
         "millisecond",
-        undefined,
+        itemName,
         undefined,
         undefined
       );

@@ -106,26 +106,26 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: () => {
+    validations: (_, label) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$minLength != null) {
-        validations.push(v => StringData.minLengthValidation(v, props.$minLength!));
+        validations.push(v => StringData.minLengthValidation(v, props.$minLength!, label));
       }
       if (props.$maxLength != null) {
-        validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!));
+        validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!, label));
       }
       switch (props.$charType) {
         case "h-num":
-          validations.push(v => StringData.halfWidthNumericValidation(v));
+          validations.push(v => StringData.halfWidthNumericValidation(v, label));
           break;
         case "h-alpha":
-          validations.push(v => StringData.halfWidthAlphabetValidation(v));
+          validations.push(v => StringData.halfWidthAlphabetValidation(v, label));
           break;
         case "h-alpha-num":
-          validations.push(v => StringData.halfWidthAlphaNumericValidation(v));
+          validations.push(v => StringData.halfWidthAlphaNumericValidation(v, label));
           break;
         case "h-alpha-num-syn":
-          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v));
+          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v, label));
           break;
         default:
           break;

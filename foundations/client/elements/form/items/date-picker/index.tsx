@@ -175,13 +175,13 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
     multiple: props.$multiple,
-    validations: () => {
+    validations: (_, label) => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
       const maxTime = DateData.dateAsLast(maxDate, type);
       const minTime = DateData.dateAsFirst(minDate, type);
       if (maxTime != null && minTime != null) {
-        const compare = DateInput.rangeValidation(minTime, maxTime, type);
+        const compare = DateInput.rangeValidation(minTime, maxTime, type, label);
         if (multiple) {
           validations.push(v => multiValidationIterator(v, compare));
         } else {
@@ -189,7 +189,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         }
       } else {
         if (maxTime != null) {
-          const compare = DateInput.maxValidation(maxTime, type);
+          const compare = DateInput.maxValidation(maxTime, type, label);
           if (multiple) {
             validations.push(v => multiValidationIterator(v, compare));
           } else {
@@ -197,7 +197,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
           }
         }
         if (minTime != null) {
-          const compare = DateInput.minValidation(minTime, type);
+          const compare = DateInput.minValidation(minTime, type, label);
           if (multiple) {
             validations.push(v => multiValidationIterator(v, compare));
           } else {
@@ -207,7 +207,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { compare, getPairDate, validation } = DateInput.contextValidation(rangePair, type);
+        const { compare, getPairDate, validation } = DateInput.contextValidation(rangePair, type, label);
         if (multiple) {
           validations.push((v, d) => {
             if (d == null) return undefined;
