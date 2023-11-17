@@ -135,7 +135,11 @@ const apiHandler = <
           }
         }
         if (dataContext == null) return data;
-        getItem(msgs, null, dataContext, data);
+        getItem(msgs, {
+          key: null!,
+          dataItem: dataContext,
+          data,
+        });
         return data;
       })();
       if (hasError(msgs)) {

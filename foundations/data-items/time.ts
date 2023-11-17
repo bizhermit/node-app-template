@@ -110,7 +110,7 @@ export namespace TimeData {
   export const contextValidation = (
     v: number | null | undefined,
     rangePair: TimeRangePair,
-    data: Struct | undefined,
+    data: { [key: string]: any } | null | undefined,
     mode: TimeMode,
     unit: TimeUnit,
     itemName?: string,

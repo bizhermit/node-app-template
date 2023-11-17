@@ -62,7 +62,11 @@ const apiMethodHandler = <
           return data;
         })();
         if (dataContext == null) return data;
-        getItem(msgs, null, dataContext, data);
+        getItem(msgs, {
+          key: null!,
+          dataItem: dataContext,
+          data,
+        });
         return data;
       })();
 

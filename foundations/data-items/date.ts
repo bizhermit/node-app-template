@@ -135,7 +135,7 @@ export namespace DateData {
   export const contextValidation = (
     v: Nullable<Date>,
     rangePair: DateRangePair,
-    data: Struct | undefined,
+    data: { [key: string]: any } | null | undefined,
     type: DateType = "date",
     itemName?: string,
     pairItemName?: string
