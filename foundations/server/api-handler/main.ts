@@ -18,8 +18,9 @@ type GetItemContext<D extends DataItem | DataContext> = {
 
 const getPushValidationMsgFunc = (msgs: Array<Message>, { key, index, dataItem, data }: GetItemContext<any>) => {
   const name = dataItem.label || dataItem.name || String(key);
-  return (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
+  const ret = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
     if (res) {
+      if (type === "error") ret.hasError = true;
       if (typeof res === "string") {
         msgs.push({ title: "入力エラー", type, key, name, index, body: `${index != null ? `${index}:` : ""}${res}`, value: data?.[key] });
       } else {
@@ -27,6 +28,8 @@ const getPushValidationMsgFunc = (msgs: Array<Message>, { key, index, dataItem, 
       }
     }
   };
+  ret.hasError = false;
+  return ret;
 };
 
 export const getItem = (
@@ -102,15 +105,20 @@ const getStringItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_String
 
   if (di.required) {
     pushMsg(StringData.requiredValidation(v, name));
+    if (pushMsg.hasError) return;
   }
   if (di.length != null) {
     pushMsg(StringData.lengthValidation(v, di.length, name));
-  }
-  if (di.minLength != null) {
-    pushMsg(StringData.minLengthValidation(v, di.minLength, name));
-  }
-  if (di.maxLength != null) {
-    pushMsg(StringData.maxLengthValidation(v, di.maxLength, name));
+    if (pushMsg.hasError) return;
+  } else {
+    if (di.minLength != null) {
+      pushMsg(StringData.minLengthValidation(v, di.minLength, name));
+      if (pushMsg.hasError) return;
+    }
+    if (di.maxLength != null) {
+      pushMsg(StringData.maxLengthValidation(v, di.maxLength, name));
+      if (pushMsg.hasError) return;
+    }
   }
   switch (di.charType) {
     case "h-num":
@@ -161,9 +169,11 @@ const getStringItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_String
     default:
       break;
   }
+  if (pushMsg.hasError) return;
   if (di.validations) {
     for (const validation of di.validations) {
       pushMsg(validation(v, ctx));
+      if (pushMsg.hasError) return;
     }
   }
 };
@@ -199,24 +209,30 @@ const getNumberItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Number
 
   if (di.required) {
     pushMsg(NumberData.requiredValidation(v, name));
+    if (pushMsg.hasError) return;
   }
   if (di.min != null && di.max != null) {
     pushMsg(NumberData.rangeValidation(v, di.min, di.max, name));
+    if (pushMsg.hasError) return;
   } else {
     if (di.min != null) {
       pushMsg(NumberData.minValidation(v, di.min, name));
+      if (pushMsg.hasError) return;
     }
     if (di.max != null) {
       pushMsg(NumberData.maxValidation(v, di.max, name));
+      if (pushMsg.hasError) return;
     }
   }
   if (di.float != null) {
     pushMsg(NumberData.floatValidation(v, di.float, name));
+    if (pushMsg.hasError) return;
   }
 
   if (di.validations) {
     for (const validation of di.validations) {
       pushMsg(validation(v, ctx));
+      if (pushMsg.hasError) return;
     }
   }
 };
@@ -246,12 +262,14 @@ const getBooleanItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Boole
   if (di.required) {
     if (v !== tv && v !== fv) {
       pushMsg(`${name}を入力してください。`);
+      if (pushMsg.hasError) return;
     }
   }
 
   if (di.validations) {
     for (const validation of di.validations) {
       pushMsg(validation(v, ctx));
+      if (pushMsg.hasError) return;
     }
   }
 };
@@ -306,27 +324,33 @@ const getDateItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Date>) =
 
   if (di.required) {
     pushMsg(DateData.requiredValidation(date, name));
+    if (pushMsg.hasError) return;
   }
   if (di.min != null && di.max != null) {
     pushMsg(DateData.rangeValidation(date, di.min, di.max, di.type, name));
+    if (pushMsg.hasError) return;
   } else {
     if (di.min) {
       pushMsg(DateData.minValidation(date, di.min, di.type, name));
+      if (pushMsg.hasError) return;
     }
     if (di.max) {
       pushMsg(DateData.maxValidation(date, di.max, di.type, name));
+      if (pushMsg.hasError) return;
     }
   }
   if (di.rangePair) {
     const pairCtx = ctx.parentDataContext?.[di.rangePair.name];
     if (pairCtx != null && dataItemKey in pairCtx && (pairCtx.type === "date" || pairCtx.type === "month" || pairCtx.type === "year")) {
       pushMsg(DateData.contextValidation(date, di.rangePair, ctx.data, di.type, name, pairCtx?.label));
+      if (pushMsg.hasError) return;
     }
   }
 
   if (di.validations) {
     for (const validation of di.validations) {
       pushMsg(validation(date, ctx));
+      if (pushMsg.hasError) return;
     }
   }
 };
@@ -372,27 +396,33 @@ const getTimeItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Time>) =
 
   if (di.required) {
     pushMsg(TimeData.requiredValidation(timeNum, name));
+    if (pushMsg.hasError) return;
   }
   if (di.min != null && di.max != null) {
     pushMsg(TimeData.rangeValidation(timeNum, di.min, di.max, di.mode, di.unit, name));
+    if (pushMsg.hasError) return;
   } else {
     if (di.min) {
       pushMsg(TimeData.minValidation(timeNum, di.min, di.mode, di.unit, name));
+      if (pushMsg.hasError) return;
     }
     if (di.max) {
       pushMsg(TimeData.maxValidation(timeNum, di.max, di.mode, di.unit, name));
+      if (pushMsg.hasError) return;
     }
   }
   if (di.rangePair) {
     const pairCtx = ctx.parentDataContext?.[di.rangePair.name];
     if (pairCtx != null && dataItemKey in pairCtx && pairCtx.type === "time") {
       pushMsg(TimeData.contextValidation(timeNum, di.rangePair, ctx.data, di.mode, di.unit, name, pairCtx?.unit, pairCtx?.label));
+      if (pushMsg.hasError) return;
     }
   }
 
   if (di.validations) {
     for (const validation of di.validations) {
       pushMsg(validation(timeNum, ctx));
+      if (pushMsg.hasError) return;
     }
   }
 };
@@ -434,6 +464,7 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
     if (di.required) {
       if (v == null || v.length === 0) {
         pushMsg(`${name}をアップロードしてください。`);
+        if (pushMsg.hasError) return;
       }
     }
 
@@ -483,6 +514,7 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
   if (di.validations) {
     for (const validation of di.validations) {
       pushMsg(validation(data?.[key], ctx));
+      if (pushMsg.hasError) return;
     }
   }
 };
@@ -501,21 +533,23 @@ const getArrayItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Array>)
   if (di.required) {
     if (v == null || v.length === 0) {
       pushMsg(`${name}は1件以上設定してください。`);
+      if (pushMsg.hasError) return;
     }
   }
   if (di.length != null) {
     if (v != null && v.length !== di.length) {
       pushMsg(`${name}は${di.minLength}件で設定してください。`);
     }
-  }
-  if (di.minLength != null) {
-    if (v != null && v.length < di.minLength) {
-      pushMsg(`${name}は${di.minLength}件以上を設定してください。`);
+  } else {
+    if (di.minLength != null) {
+      if (v != null && v.length < di.minLength) {
+        pushMsg(`${name}は${di.minLength}件以上を設定してください。`);
+      }
     }
-  }
-  if (di.maxLength != null) {
-    if (v == null || v.length > di.maxLength) {
-      pushMsg(`${name}は${di.maxLength}件以内で設定してください。`);
+    if (di.maxLength != null) {
+      if (v == null || v.length > di.maxLength) {
+        pushMsg(`${name}は${di.maxLength}件以内で設定してください。`);
+      }
     }
   }
   if (di.validations) {
@@ -562,6 +596,7 @@ const getStructItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Struct
   if (di.required) {
     if (v == null) {
       pushMsg(`${name}を設定してください。`);
+      if (pushMsg.hasError) return;
     }
   }
   if (di.validations) {

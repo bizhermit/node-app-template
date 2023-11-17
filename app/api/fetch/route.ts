@@ -1,13 +1,15 @@
 import fileItem from "#/data-items/file";
 import stringItem from "#/data-items/string";
 import apiMethodHandler from "#/server/api-handler/app-api";
-import { sample_string } from "$/data-items/sample/item";
+import { sample_date, sample_number, sample_string } from "$/data-items/sample/item";
 
 const text = stringItem({ required: true });
 const blobFile = fileItem({ required: true });
 
 export const GET = apiMethodHandler({
   [sample_string.name]: sample_string,
+  [sample_number.name]: sample_number,
+  [sample_date.name]: sample_date,
 }, async (ctx) => {
   // console.log("get");
   const data = ctx.getData();
@@ -18,7 +20,7 @@ export const GET = apiMethodHandler({
 });
 
 export const POST = apiMethodHandler({
-  text,
+  [sample_string.name]: sample_string,
   file: blobFile,
 }, async (ctx) => {
   // console.log("post");
