@@ -98,7 +98,7 @@ const getStringItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_String
     const v = data[key];
     if (v != null && typeof v !== "string") data[key] = String(v);
   }
-  const v = data?.[key] as Nullable<string>;
+  const v = data?.[key] as string | null | undefined;
 
   if (di.required) {
     pushMsg(StringData.requiredValidation(v, name));
@@ -195,7 +195,7 @@ const getNumberItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Number
     }
   }
 
-  const v = data?.[key] as Nullable<number>;
+  const v = data?.[key] as number | null | undefined;
 
   if (di.required) {
     pushMsg(NumberData.requiredValidation(v, name));
@@ -492,7 +492,7 @@ const getArrayItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Array>)
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
 
-  const v = data?.[key] as Nullable<Array<any>>;
+  const v = data?.[key] as Array<any> | null | undefined;
 
   if (v != null && !Array.isArray(v)) {
     pushMsg(`${name}の形式が配列ではありません。`);
@@ -553,7 +553,7 @@ const getStructItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Struct
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
 
-  const v = data?.[key] as Nullable<Struct<any>>;
+  const v = data?.[key] as { [key: string]: any } | null | undefined;
 
   if (v != null && typeof v !== "object") {
     pushMsg(`${name}の形式が構造体ではありません。`);

@@ -15,7 +15,7 @@ const getSession = (req: NextApiRequest): SessionStruct => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends Struct | void = void> =
+type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: string]: any } | void = void> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
@@ -28,13 +28,13 @@ type MethodProcess<Req extends DataContext = DataContext, Res extends Struct | v
 
 const apiHandler = <
   GetReq extends DataContext = DataContext,
-  GetRes extends Struct | void = void,
+  GetRes extends { [key: string]: any } | void = void,
   PostReq extends DataContext = DataContext,
-  PostRes extends Struct | void = void,
+  PostRes extends { [key: string]: any } | void = void,
   PutReq extends DataContext = DataContext,
-  PutRes extends Struct | void = void,
+  PutRes extends { [key: string]: any } | void = void,
   DeleteReq extends DataContext = DataContext,
-  DeleteRes extends Struct | void = void
+  DeleteRes extends { [key: string]: any } | void = void
 >(methods: Readonly<{
   $get?: GetReq;
   get?: MethodProcess<GetReq, GetRes>;
@@ -59,7 +59,7 @@ const apiHandler = <
 
       const dataContext = methods[`$${method}`];
       const reqData = await (async () => {
-        let data: Struct = { ...req.query };
+        let data: { [key: string]: any } = { ...req.query };
         const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
         if (req.body == null) {
           if (method !== "get") {
