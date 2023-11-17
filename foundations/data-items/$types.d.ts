@@ -13,9 +13,14 @@ type DataItemValidationResult = {
   body: string;
 };
 
-type DataItemValidation<T, D extends (DataItem | DataContext)> =
-  readonly ((v: T | null | undefined, key: string | number, ctx: D, data: Struct | Array<any> | null | undefined, index: number | null | undefined, pctx: DataContext | null | undefined)
-    => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
+type DataItemValidation<T, D extends DataItem | DataContext> =
+  readonly ((v: T | null | undefined, ctx: {
+    dataItem: D;
+    key: string | number;
+    data: { [key: string]: any } | Array<any> | null | undefined;
+    index?: number;
+    parentDataContext?: DataContext | null | undefined;
+  }) => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
 
 type LoadableArray<T = Struct> = Array<T> | Readonly<Array<T>> | (() => Array<T>) | (() => Promise<Array<T>>);
 type DataItemSource<V> = Array<{ value: V } & { [key: string]: any }> | LoadableArray

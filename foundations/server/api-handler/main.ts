@@ -13,7 +13,7 @@ type GetItemContext<D extends DataItem | DataContext> = {
   key: string | number;
   data: { [key: string]: any } | null | undefined;
   index?: number;
-  parentDataContext?: DataContext;
+  parentDataContext?: DataContext | null | undefined;
 };
 
 const getPushValidationMsgFunc = (msgs: Array<Message>, { key, index, dataItem, data }: GetItemContext<any>) => {
@@ -163,7 +163,7 @@ const getStringItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_String
   }
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(v, key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(v, ctx));
     }
   }
 };
@@ -216,7 +216,7 @@ const getNumberItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Number
 
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(v, key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(v, ctx));
     }
   }
 };
@@ -251,7 +251,7 @@ const getBooleanItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Boole
 
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(v, key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(v, ctx));
     }
   }
 };
@@ -326,7 +326,7 @@ const getDateItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Date>) =
 
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(date, key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(date, ctx));
     }
   }
 };
@@ -392,7 +392,7 @@ const getTimeItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Time>) =
 
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(timeNum, key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(timeNum, ctx));
     }
   }
 };
@@ -482,7 +482,7 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
 
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(data?.[key], key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(data?.[key], ctx));
     }
   }
 };
@@ -520,7 +520,7 @@ const getArrayItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Array>)
   }
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(v, key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(v, ctx));
     }
   }
 
@@ -566,7 +566,7 @@ const getStructItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Struct
   }
   if (di.validations) {
     for (const validation of di.validations) {
-      pushMsg(validation(v, key, di, data, ctx.index, ctx.parentDataContext));
+      pushMsg(validation(v, ctx));
     }
   }
 

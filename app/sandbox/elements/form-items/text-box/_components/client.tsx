@@ -113,6 +113,12 @@ const TextBoxClient = () => {
                 console.log("no item: ", a);
                 data.errorMessage;
               }}
+              $validations={[
+                (...args) => {
+                  console.log(args);
+                  return undefined;
+                }
+              ]}
             />
             <TextBox
               $tag="string"

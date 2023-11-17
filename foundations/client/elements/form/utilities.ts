@@ -27,14 +27,13 @@ export const convertDataItemValidationToFormItemValidation = <T, U, P extends Fo
   convertValue?: (v: ValueType<T, D, V>) => U | null | undefined
 ) => {
   return (v: any | null | undefined, bindData: Struct | undefined) => {
-    const res = func(
-      convertValue ? convertValue(v) : v as U | null | undefined,
-      props?.name || $dataItem.name || "",
-      $dataItem,
-      bindData,
-      undefined,
-      undefined
-    );
+    const res = func(convertValue ? convertValue(v) : v as U | null | undefined, {
+      key: props?.name || $dataItem.name!,
+      dataItem: $dataItem,
+      data: bindData,
+      index: undefined,
+      parentDataContext: undefined
+    });
     if (res == null) return undefined;
     if (typeof res === "string") return res;
     return res.body;

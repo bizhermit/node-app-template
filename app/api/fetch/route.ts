@@ -1,12 +1,13 @@
 import fileItem from "#/data-items/file";
 import stringItem from "#/data-items/string";
 import apiMethodHandler from "#/server/api-handler/app-api";
+import { sample_string } from "$/data-items/sample/item";
 
 const text = stringItem({ required: true });
 const blobFile = fileItem({ required: true });
 
 export const GET = apiMethodHandler({
-  text,
+  [sample_string.name]: sample_string,
 }, async (ctx) => {
   // console.log("get");
   const data = ctx.getData();

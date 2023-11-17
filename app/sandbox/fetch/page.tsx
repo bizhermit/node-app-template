@@ -39,7 +39,7 @@ const Page = () => {
             $onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.get("/api/fetch", {
-                  text: "tetetetette",
+                  s_string: "tetetetette",
                 }, {
                   contentType: "json",
                 });
@@ -152,7 +152,14 @@ const Page = () => {
           }}
         >
           <TextBox
-            name="text"
+            // name="text"
+            $dataItem={sample_string}
+            // $validations={[
+            //   (...args) => {
+            //     console.log("validation-item:", args);
+            //     return undefined;
+            //   }
+            // ]}
           />
           <FileDrop
             name="file"

@@ -101,9 +101,9 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         case "number":
           return {
             ...common,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, key, ctx, data, index, pctx) => {
-              if (value == null || !Array.isArray(value)) return f(value, key, ctx, data, index, pctx);
-              return value.map(v => f(v, key, ctx, data, index, pctx))[0];
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
+              if (value == null || !Array.isArray(value)) return f(value, ctx);
+              return value.map(v => f(v, ctx))[0];
             }, props, dataItem)),
           } as DatePickerProps<D>;
         case "date":
@@ -111,17 +111,17 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         case "year":
           return {
             ...common,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, key, ctx, data, index, pctx) => {
-              if (value == null || !Array.isArray(value)) return f(convertDate(value), key, ctx, data, index, pctx);
-              return value.map(v => f(convertDate(v), key, ctx, data, index, pctx))[0];
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
+              if (value == null || !Array.isArray(value)) return f(convertDate(value), ctx);
+              return value.map(v => f(convertDate(v), ctx))[0];
             }, props, dataItem)),
           } as DatePickerProps<D>;
         default:
           return {
             ...common,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, key, ctx, data, index, pctx) => {
-              if (value == null || !Array.isArray(value)) return f(value, key, ctx, data, index, pctx);
-              return value.map(v => f(v, key, ctx, data, index, pctx))[0];
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
+              if (value == null || !Array.isArray(value)) return f(value, ctx);
+              return value.map(v => f(v, ctx))[0];
             }, props, dataItem)),
           } as DatePickerProps<D>;
       }
