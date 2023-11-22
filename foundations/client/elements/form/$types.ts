@@ -37,6 +37,7 @@ export type FormItemProps<
   U extends Struct = {}
 > = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
+  $ref?: FormItemHook<ValueType<T, D, V> | null | undefined>;
   $label?: string;
   // $bind?: Struct;
   $disabled?: boolean;
@@ -68,16 +69,15 @@ export type FormItemProps<
   $dataItem?: D;
   $messages?: Partial<FormItemMessages>;
   $focusWhenMounted?: boolean;
-  $ref?: FormItemHook<ValueType<T, D, V> | null | undefined>;
 };
 
-export type FormItemHook<T, Q extends { [key: string]: any } = {}> = {
+export type FormItemHook<T, Q extends { [key: string]: any } = {}> = Omit<{
   focus: () => void;
-  getValue: () => T;
-  setValue: (v: T) => void;
+  getValue: () => (T | null | undefined);
+  setValue: (v: T | null | undefined) => void;
   setDefaultValue: () => void;
   clear: () => void;
-} & Q;
+}, keyof Q> & Q;
 
 export type FormItemMountProps = {
   validation: () => string | null | undefined;

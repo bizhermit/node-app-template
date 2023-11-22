@@ -2,7 +2,7 @@
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon } from "../../../icon";
@@ -10,21 +10,21 @@ import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItem, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
 type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
-type TextBoxHook = FormItemHook<string | null | undefined>;
+type TextBoxHook<T extends string | number> = FormItemHook<T>;
 
-export const useTextBox = useFormItem<string | null | undefined>;
+export const useTextBox = <T extends string | number = string>() => useFormItemBase<FormItemHook<T>>();
 
 export type TextBoxProps<
   D extends DataItem_String | DataItem_Number | undefined = undefined
 > =
-  FormItemProps<string | number, D, string> & {
-    $ref?: TextBoxHook;
+  FormItemProps<string | number, D, string, {}> & {
+    $ref?: TextBoxHook<ValueType<string | number, D, string>>;
     $type?: InputType;
     $inputMode?: InputMode;
     $length?: number;

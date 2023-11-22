@@ -303,19 +303,19 @@ export const useFormItemContext = <
 // eslint-disable-next-line no-console
 const printNotSetWarn = () => console.warn("useFormItem not set");
 
-export const useFormItem = <T = any>() => useFormItemBase<T>(() => ({ }));
+export const useFormItem = <T = any>() => useFormItemBase<FormItemHook<T, {}>>(() => ({}));
 
-export const useFormItemBase = <T = any, Q extends { [key: string]: any } = {}>(
-  addons: (warningMessage: typeof printNotSetWarn) => Q
+export const useFormItemBase = <H extends FormItemHook<any, any>>(
+  addons?: (warningMessage: typeof printNotSetWarn) => Omit<H, keyof FormItemHook<any, {}>>
 ) => {
-  return useMemo<FormItemHook<T, Q>>(() => {
+  return useMemo<H>(() => {
     return {
       focus: () => {
         printNotSetWarn();
       },
       getValue: () => {
         printNotSetWarn();
-        return undefined as T;
+        return undefined as any;
       },
       setValue: () => {
         printNotSetWarn();
@@ -326,7 +326,7 @@ export const useFormItemBase = <T = any, Q extends { [key: string]: any } = {}>(
       clear: () => {
         printNotSetWarn();
       },
-      ...(addons(printNotSetWarn))
+      ...(addons?.(printNotSetWarn) as any),
     };
   }, []);
 };

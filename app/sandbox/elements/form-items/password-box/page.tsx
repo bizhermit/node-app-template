@@ -2,9 +2,7 @@
 
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
-import Form from "#/client/elements/form";
-import PasswordBox from "#/client/elements/form/items/text-box/password";
-import TextBox from "#/client/elements/form/items/text-box";
+import PasswordBox, { usePasswordBox } from "#/client/elements/form/items/text-box/password";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { useState } from "react";
@@ -15,6 +13,7 @@ const PasswordBoxClient = () => {
   const [value, setValue] = useState<Nullable<string>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const passwordBoxRef = usePasswordBox();
 
   return (
     <div className="flex p-xs g-s">
@@ -93,7 +92,26 @@ const PasswordBoxClient = () => {
           // $round
           // $hideToggleButton
           // $hideClearButton
+          $ref={passwordBoxRef}
         />
+        <Button $onClick={() => passwordBoxRef.focus()}>
+          focus
+        </Button>
+        <Button $onClick={() => console.log(passwordBoxRef.getValue())}>
+          get value
+        </Button>
+        <Button $onClick={() => passwordBoxRef.setValue("pass")}>
+          set value
+        </Button>
+        <Button $onClick={() => passwordBoxRef.setDefaultValue()}>
+          set default value
+        </Button>
+        <Button $onClick={() => passwordBoxRef.clear()}>
+          clear
+        </Button>
+        <Button $onClick={() => passwordBoxRef.toggleMask()}>
+          toggle mask
+        </Button>
         {/* <TextBox
           $tag="useState"
           $disabled={disabled}

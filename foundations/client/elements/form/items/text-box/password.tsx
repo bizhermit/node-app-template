@@ -2,7 +2,7 @@
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "../../../../elements/icon";
 import Resizer from "../../../../elements/resizer";
@@ -10,7 +10,7 @@ import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { includeElement } from "../../../../utilities/parent-child";
 import useForm from "../../context";
 import { FormItemWrap } from "../../items/common";
-import { useDataItemMergedProps, useFormItemContext } from "../../items/hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../../items/hooks";
 import type { TextBoxProps } from "../../items/text-box";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import Style from "./index.module.scss";
@@ -22,6 +22,17 @@ type InputMode = Extract<HTMLAttributes<HTMLInputElement>["inputMode"],
   | "text"
   | "none"
 >;
+
+type PasswordBoxHookAddon = {
+  toggleMask: () => void;
+};
+type PasswordBoxHook<T extends string | number> = FormItemHook<T, PasswordBoxHookAddon>;
+
+export const usePasswordBox = <T extends string | number = string>() => useFormItemBase<PasswordBoxHook<T>>(w => {
+  return {
+    toggleMask: () => w(),
+  };
+});
 
 export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & Pick<TextBoxProps<D>,
   | "$minLength"
@@ -35,6 +46,7 @@ export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> 
   | "$autoComplete"
   | "$align"
 > & {
+  $ref?: PasswordBoxHook<ValueType<string | number, D, string>>;
   $charType?: Extract<StringCharType,
     | "h-num"
     | "h-alpha"
@@ -165,6 +177,15 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
       iref.current?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => iref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.toggleMask = () => toggle();
+  }
 
   return (
     <FormItemWrap

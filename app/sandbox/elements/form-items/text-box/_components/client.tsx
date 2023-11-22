@@ -3,6 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
+import { useFormItem } from "#/client/elements/form/items/hooks";
 import TextBox, { useTextBox } from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
@@ -17,7 +18,7 @@ const TextBoxClient = () => {
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
   const ref = useRef<HTMLDivElement>();
-  // const formItemRef = useFormItem();
+  const formItemRef = useFormItem();
   const textBoxRef = useTextBox();
 
   return (
@@ -105,6 +106,9 @@ const TextBoxClient = () => {
           ref={ref}
           // $ref={formItemRef}
           $ref={textBoxRef}
+          $onChange={(v) => {
+            console.log(v);
+          }}
           $required
           $label="名前"
         />
@@ -134,6 +138,7 @@ const TextBoxClient = () => {
         </Button>
         <Button
           $onClick={() => {
+            // formItemRef.setDefaultValue();
             textBoxRef.setDefaultValue();
           }}
         >
@@ -141,6 +146,7 @@ const TextBoxClient = () => {
         </Button>
         <Button
           $onClick={() => {
+            // formItemRef.clear();
             textBoxRef.clear();
           }}
         >
