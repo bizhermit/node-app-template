@@ -68,7 +68,16 @@ export type FormItemProps<
   $dataItem?: D;
   $messages?: Partial<FormItemMessages>;
   $focusWhenMounted?: boolean;
+  $ref?: FormItemHook<ValueType<T, D, V> | null | undefined>;
 };
+
+export type FormItemHook<T, Q extends { [key: string]: any } = {}> = {
+  focus: () => void;
+  getValue: () => T;
+  setValue: (v: T) => void;
+  setDefaultValue: () => void;
+  clear: () => void;
+} & Q;
 
 export type FormItemMountProps = {
   validation: () => string | null | undefined;

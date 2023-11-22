@@ -1,6 +1,6 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { FormItemMessages, FormItemProps, FormItemValidation, ValueType } from "../$types";
+import type { FormItemHook, FormItemMessages, FormItemProps, FormItemValidation, ValueType } from "../$types";
 import { equals, getValue, setValue } from "../../../../data-items/utilities";
 import type useForm from "../context";
 import { type UseFormItemContextOptions } from "../context";
@@ -294,8 +294,39 @@ export const useFormItemContext = <
     error: error ?? props?.$error,
     setError,
     effect: options?.effect,
-    messageDisplayMode: props?.$messagePosition ?? form.messageDisplayMode,
+    messageDisplayMode: props?.$messagePosition ?? form.messageDisplayMode ?? "bottom-hide",
     messageWrap: props?.$messageWrap ?? form.messageWrap,
     getMessage,
   };
+};
+
+// eslint-disable-next-line no-console
+const printNotSetWarn = () => console.warn("useFormItem not set");
+
+export const useFormItem = <T = any>() => useFormItemBase<T>(() => ({ }));
+
+export const useFormItemBase = <T = any, Q extends { [key: string]: any } = {}>(
+  addons: (warningMessage: typeof printNotSetWarn) => Q
+) => {
+  return useMemo<FormItemHook<T, Q>>(() => {
+    return {
+      focus: () => {
+        printNotSetWarn();
+      },
+      getValue: () => {
+        printNotSetWarn();
+        return undefined as T;
+      },
+      setValue: () => {
+        printNotSetWarn();
+      },
+      setDefaultValue: () => {
+        printNotSetWarn();
+      },
+      clear: () => {
+        printNotSetWarn();
+      },
+      ...(addons(printNotSetWarn))
+    };
+  }, []);
 };

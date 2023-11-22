@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import TextBox from "#/client/elements/form/items/text-box";
+import TextBox, { useTextBox } from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
@@ -17,6 +17,8 @@ const TextBoxClient = () => {
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
   const ref = useRef<HTMLDivElement>();
+  // const formItemRef = useFormItem();
+  const textBoxRef = useTextBox();
 
   return (
     <div className="flex p-xs g-s">
@@ -88,14 +90,62 @@ const TextBoxClient = () => {
         >
           set form bind
         </Button>
+        <Button>
+          hoge
+        </Button>
       </Row>
       <Divider />
       <section>
         <h2>inputmode</h2>
         <TextBox
           $type="tel"
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $defaultValue={"default"}
           ref={ref}
+          // $ref={formItemRef}
+          $ref={textBoxRef}
+          $required
+          $label="名前"
         />
+        <Button
+          $onClick={() => {
+            // formItemRef.focus();
+            textBoxRef.focus();
+          }}
+        >
+          focus
+        </Button>
+        <Button
+          $onClick={() => {
+            // console.log(formItemRef.getValue());
+            console.log(textBoxRef.getValue());
+          }}
+        >
+          get value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setValue("set from form-item hook");
+            textBoxRef.setValue("set from text-box hook");
+          }}
+        >
+          set value
+        </Button>
+        <Button
+          $onClick={() => {
+            textBoxRef.setDefaultValue();
+          }}
+        >
+          set default value
+        </Button>
+        <Button
+          $onClick={() => {
+            textBoxRef.clear();
+          }}
+        >
+          clear
+        </Button>
       </section>
       <section>
         <h2>DataItem</h2>

@@ -2,7 +2,7 @@
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon } from "../../../icon";
@@ -10,16 +10,21 @@ import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItem, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
 type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
+type TextBoxHook = FormItemHook<string | null | undefined>;
+
+export const useTextBox = useFormItem<string | null | undefined>;
+
 export type TextBoxProps<
   D extends DataItem_String | DataItem_Number | undefined = undefined
 > =
   FormItemProps<string | number, D, string> & {
+    $ref?: TextBoxHook;
     $type?: InputType;
     $inputMode?: InputMode;
     $length?: number;
@@ -206,6 +211,14 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
       iref.current?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => iref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+  }
 
   return (
     <FormItemWrap
