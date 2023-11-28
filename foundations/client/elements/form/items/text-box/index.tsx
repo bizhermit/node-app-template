@@ -22,25 +22,24 @@ export const useTextBox = <T extends string | number = string>() => useFormItemB
 
 export type TextBoxProps<
   D extends DataItem_String | DataItem_Number | undefined = undefined
-> =
-  FormItemProps<string | number, D, string, {}> & {
-    $ref?: TextBoxHook<ValueType<string | number, D, string>>;
-    $type?: InputType;
-    $inputMode?: InputMode;
-    $length?: number;
-    $preventInputWithinLength?: boolean;
-    $minLength?: number;
-    $maxLength?: number;
-    $charType?: StringCharType;
-    $round?: boolean;
-    $resize?: boolean;
-    $width?: number | string;
-    $maxWidth?: number | string;
-    $minWidth?: number | string;
-    $hideClearButton?: boolean;
-    $autoComplete?: string;
-    $align?: "left" | "center" | "right";
-  };
+> = FormItemProps<string | number, D, string, {}> & {
+  $ref?: TextBoxHook<ValueType<string | number, D, string>> | TextBoxHook<string | number>;
+  $type?: InputType;
+  $inputMode?: InputMode;
+  $length?: number;
+  $preventInputWithinLength?: boolean;
+  $minLength?: number;
+  $maxLength?: number;
+  $charType?: StringCharType;
+  $round?: boolean;
+  $resize?: boolean;
+  $width?: number | string;
+  $maxWidth?: number | string;
+  $minWidth?: number | string;
+  $hideClearButton?: boolean;
+  $autoComplete?: string;
+  $align?: "left" | "center" | "right";
+};
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
   <D extends DataItem_String | DataItem_Number | undefined = undefined>(
@@ -215,7 +214,7 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
   if (props.$ref) {
     props.$ref.focus = () => iref.current?.focus();
     props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v) => ctx.change(v, false);
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
     props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
     props.$ref.clear = () => ctx.change(undefined, false);
   }

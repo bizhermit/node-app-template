@@ -37,7 +37,7 @@ export type FormItemProps<
   U extends Struct = {}
 > = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
   name?: string;
-  $ref?: FormItemHook<ValueType<T, D, V> | null | undefined>;
+  $ref?: FormItemHook<ValueType<T, D, V> | null | undefined> | FormItemHook<any | null | undefined>;
   $label?: string;
   // $bind?: Struct;
   $disabled?: boolean;

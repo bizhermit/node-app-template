@@ -93,7 +93,7 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
   if (props.$ref) {
     props.$ref.focus = () => iref.current?.focus();
     props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v) => ctx.change(v, false);
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
     props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
     props.$ref.clear = () => ctx.change(undefined, false);
   }

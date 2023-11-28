@@ -46,7 +46,7 @@ export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> 
   | "$autoComplete"
   | "$align"
 > & {
-  $ref?: PasswordBoxHook<ValueType<string | number, D, string>>;
+  $ref?: PasswordBoxHook<ValueType<string | number, D, string>> | PasswordBoxHook<string | number>;
   $charType?: Extract<StringCharType,
     | "h-num"
     | "h-alpha"
@@ -181,7 +181,7 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
   if (props.$ref) {
     props.$ref.focus = () => iref.current?.focus();
     props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v) => ctx.change(v, false);
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
     props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
     props.$ref.clear = () => ctx.change(undefined, false);
     props.$ref.toggleMask = () => toggle();

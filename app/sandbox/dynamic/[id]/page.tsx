@@ -5,22 +5,22 @@ type Params = {
 };
 
 // export const dynamic = "force-static";
-export const generateStaticParams = async () => {
-  return [
-    "",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "10",
-    "100",
-    "x",
-    "xxx",
-  ].map(id => {
-    return { id };
-  })
-};
+// export const generateStaticParams = async () => {
+//   return [
+//     "",
+//     "1",
+//     "2",
+//     "3",
+//     "4",
+//     "5",
+//     "10",
+//     "100",
+//     "x",
+//     "xxx",
+//   ].map(id => {
+//     return { id };
+//   })
+// };
 
 
 const Page: PageFC<Params> = (props) => {
