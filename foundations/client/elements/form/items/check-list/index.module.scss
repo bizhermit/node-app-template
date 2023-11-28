@@ -1,0 +1,14 @@
+@layer base {
+
+  .main {
+    &:not([data-nowrap="true"]) {
+      flex-wrap: wrap !important;
+    }
+
+    &[data-direction="vertical"] {
+      flex-flow: column;
+      align-items: flex-start;
+    }
+  }
+
+}

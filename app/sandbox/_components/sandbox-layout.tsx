@@ -110,6 +110,11 @@ const Navigation: FC = () => {
                 icon: "C",
                 pathname: "/sandbox/elements/form-items/check-box",
               }, {
+                key: "check-list",
+                label: "CheckList",
+                icon: "CL",
+                pathname: "/sandbox/elements/form-items/check-list",
+              }, {
                 key: "toggle-box",
                 label: "ToggleBox",
                 icon: "T",
