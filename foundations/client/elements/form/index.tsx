@@ -236,7 +236,10 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
   const set = (name: string, value: any) => {
     if (bind == null) return;
     Object.keys(items.current).forEach(id => {
-      if (items.current[id].props.name !== name) return;
+      if (items.current[id].props.name !== name) {
+        setValue(bind, name, value);
+        return;
+      }
       items.current[id]?.change(value, false);
     });
   };
