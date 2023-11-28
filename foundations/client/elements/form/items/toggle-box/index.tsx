@@ -1,19 +1,37 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemProps } from "../../$types";
+import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import { pressPositiveKey } from "../../../../utilities/attributes";
 import Text from "../../../text";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
+
+type ToggleBoxHookAddon = {
+  on: () => void;
+  off: () => void;
+  toggle: () => void;
+};
+type ToggleBoxHook<T extends string | number | boolean = string | number | boolean> = FormItemHook<T, ToggleBoxHookAddon>;
+
+export const useToggleBox = <
+  T extends string | number | boolean = string | number | boolean
+>() => useFormItemBase<ToggleBoxHook<T>>(w => {
+  return {
+    on: () => w(),
+    off: () => w(),
+    toggle: () => w(),
+  };
+});
 
 export type ToggleBoxProps<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 > = Omit<FormItemProps<T, D>, "$tagPosition"> & {
+  $ref?: ToggleBoxHook<ValueType<T, D, T>> | ToggleBoxHook<string | number | boolean>;
   $checkedValue?: T;
   $uncheckedValue?: T;
   children?: ReactNode;
@@ -106,6 +124,17 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
       (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.on = () => ctx.change(checkedValue, false);
+    props.$ref.off = () => ctx.change(uncheckedValue, false);
+    props.$ref.toggle = () => ctx.change(ctx.valueRef.current === checkedValue ? uncheckedValue : checkedValue, false);
+  }
 
   return (
     <FormItemWrap

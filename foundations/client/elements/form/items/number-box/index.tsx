@@ -3,7 +3,7 @@
 import { add, minus, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { NumberData } from "../../../../../data-items/number";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
@@ -11,10 +11,35 @@ import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
+type NumberBoxHookAddon = {
+  up: (ctrl?: boolean) => number;
+  down: (ctrl?: boolean) => number;
+  add: (v: number) => number;
+};
+type NumberBoxHook<T extends string | number = number> = FormItemHook<T, NumberBoxHookAddon>;
+
+export const useNumberBox = <T extends string | number = number>() => useFormItemBase<NumberBoxHook<T>>(w => {
+  return {
+    up: () => {
+      w();
+      return 0;
+    },
+    down: () => {
+      w();
+      return 0;
+    },
+    add: () => {
+      w();
+      return 0;
+    },
+  };
+});
+
 export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
+  $ref?: NumberBoxHook<ValueType<number, D, number>> | NumberBoxHook<string | number>;
   $min?: number;
   $max?: number;
   $minLength?: number;
@@ -183,22 +208,24 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
     return val;
   };
 
-  const incrementValue = (format?: boolean, ctr?: boolean) => {
+  const incrementValue = (format?: boolean, ctr?: boolean, edit: boolean = true) => {
     const num = changeImpl(String(ctx.valueRef.current == null ? (ctr ? props.$max : props.$min ?? 0) :
       ((ctr && props.$max != null) ? props.$max :
         steppedValue(add(ctx.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
-    ctx.change(num);
+    ctx.change(num, edit);
     if (format) renderFormattedValue();
     else renderNumberValue();
+    return num;
   };
 
-  const decrementValue = (format?: boolean, ctr?: boolean) => {
+  const decrementValue = (format?: boolean, ctr?: boolean, edit: boolean = true) => {
     const num = changeImpl(String(ctx.valueRef.current == null ? (props.$min ?? 0) :
       ((ctr && props.$min != null) ? props.$min :
         steppedValue(minus(ctx.valueRef.current ?? 0, props.$step ?? 1)))), true)!;
-    ctx.change(num);
+    ctx.change(num, edit);
     if (format) renderFormattedValue();
     else renderNumberValue();
+    return num;
   };
 
   const mousedown = (increment: boolean, ctr: boolean) => {
@@ -261,6 +288,21 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
       iref.current?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => iref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.up = (ctrl) => incrementValue(true, ctrl, false);
+    props.$ref.down = (ctrl) => decrementValue(true, ctrl, false);
+    props.$ref.add = (num) => {
+      const v = steppedValue(add(ctx.valueRef.current ?? 0, num));
+      ctx.change(v, false);
+      return v;
+    };
+  }
 
   return (
     <FormItemWrap

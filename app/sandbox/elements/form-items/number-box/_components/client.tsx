@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import NumberBox from "#/client/elements/form/items/number-box";
+import NumberBox, { useNumberBox } from "#/client/elements/form/items/number-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { sample_number, sample_string } from "$/data-items/sample/item";
@@ -16,6 +16,7 @@ const NumberBoxClient = () => {
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
   const [disallowInput, setDisallowInput] = useState(false);
+  const numberBoxRef = useNumberBox();
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
@@ -96,6 +97,7 @@ const NumberBoxClient = () => {
       <Divider />
       <Row className="g-s">
         <NumberBox
+          $ref={numberBoxRef}
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
@@ -105,6 +107,69 @@ const NumberBoxClient = () => {
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
         />
+      </Row>
+      <Row className="g-s">
+        <Button
+          $onClick={() => {
+            // formItemRef.focus();
+            numberBoxRef.focus();
+          }}
+        >
+          focus
+        </Button>
+        <Button
+          $onClick={() => {
+            // console.log(formItemRef.getValue());
+            console.log(numberBoxRef.getValue());
+          }}
+        >
+          get value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setValue("set from form-item hook");
+            numberBoxRef.setValue(1);
+          }}
+        >
+          set value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setDefaultValue();
+            numberBoxRef.setDefaultValue();
+          }}
+        >
+          set default value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.clear();
+            numberBoxRef.clear();
+          }}
+        >
+          clear
+        </Button>
+        <Button
+          $onClick={() => {
+            numberBoxRef.up();
+          }}
+        >
+          up
+        </Button>
+        <Button
+          $onClick={() => {
+            numberBoxRef.down();
+          }}
+        >
+          down
+        </Button>
+        <Button
+          $onClick={() => {
+            numberBoxRef.add(123);
+          }}
+        >
+          add
+        </Button>
       </Row>
       <NumberBox
         $tag="useState"

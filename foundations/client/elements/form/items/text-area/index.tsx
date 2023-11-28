@@ -2,19 +2,24 @@
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
+type TextAreaHook<T extends string> = FormItemHook<T>;
+
+export const useTextBox = <T extends string = string>() => useFormItemBase<TextAreaHook<T>>();
+
 export type TextAreaProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & {
+  $ref?: TextAreaHook<ValueType<string, D, string>> | TextAreaHook<string>;
   $inputMode?: InputMode;
   $length?: number;
   $preventInputWithinLength?: boolean;

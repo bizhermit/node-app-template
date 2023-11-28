@@ -1,15 +1,40 @@
 "use client";
 
-import { forwardRef, useMemo, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemProps } from "../../$types";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
+import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
+type SliderHookAddon = {
+  up: () => number;
+  down: () => number;
+  add: (v: number) => number;
+};
+type SliderHook<T extends string | number = number> = FormItemHook<T, SliderHookAddon>;
+
+export const useSlider = <T extends string | number = number>() => useFormItemBase<SliderHook<T>>(w => {
+  return {
+    up: () => {
+      w();
+      return 0;
+    },
+    down: () => {
+      w();
+      return 0;
+    },
+    add: () => {
+      w();
+      return 0;
+    },
+  };
+});
+
 export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
+  $ref?: SliderHook<ValueType<number, D, number>> | SliderHook<number | string>;
   $max?: number;
   $min?: number;
   $step?: number;
@@ -30,7 +55,10 @@ const defaultMin = 0;
 
 const Slider = forwardRef<HTMLDivElement, SliderProps>(<
   D extends DataItem_Number | DataItem_String | undefined = undefined
->(p: SliderProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: SliderProps<D>, $ref: ForwardedRef<HTMLDivElement>) => {
+  const ref = useRef<HTMLDivElement>(null!);
+  useImperativeHandle($ref, () => ref.current);
+
   const railRef = useRef<HTMLDivElement>(null!);
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
@@ -124,6 +152,35 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
         break;
     }
   };
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      ref.current?.focus();
+    }
+  }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => ref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.up = () => {
+      const v = Math.min(props.$max ?? max, Math.max(props.$min ?? min, (ctx.valueRef.current ?? min + (props.$step ?? 1))));
+      ctx.change(v, false);
+      return v;
+    };
+    props.$ref.down = () => {
+      const v = Math.min(props.$max ?? max, Math.max(props.$min ?? min, (ctx.valueRef.current ?? min + (props.$step ?? 1))));
+      ctx.change(v, false);
+      return v;
+    };
+    props.$ref.add = (num) => {
+      const v = Math.min(props.$max ?? max, Math.max(props.$min ?? min, (ctx.valueRef.current ?? min + num)));
+      ctx.change(v, false);
+      return v;
+    };
+  }
 
   return (
     <FormItemWrap
