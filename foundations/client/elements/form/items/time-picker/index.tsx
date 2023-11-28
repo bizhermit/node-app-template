@@ -2,18 +2,23 @@
 
 import Time from "@bizhermit/time";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode, type Ref } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { TimeData, TimeInput } from "../../../../../data-items/time";
 import { CrossIcon } from "../../../icon";
 import Text from "../../../text";
 import useForm from "../../context";
 import { FormItemWrap } from "../../items/common";
-import { useDataItemMergedProps, useFormItemContext } from "../../items/hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../../items/hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import Style from "./index.module.scss";
 
+type TimePickerHook<T extends number | string> = FormItemHook<T>;
+
+export const useTimePicker = <T extends number | string>() => useFormItemBase<TimePickerHook<T>>();
+
 export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   ref?: Ref<HTMLDivElement>;
+  $ref?: TimePickerHook<ValueType<number | string, D, number | string>> | TimePickerHook<number | string>;
   $onClickPositive?: (value: Nullable<T>) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
@@ -345,6 +350,24 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
     // props.$bind,
     ctx.bind,
   ]);
+
+  const focus = () => {
+    (hourElemRef.current ?? minuteElemRef.current ?? secondElemRef.current)?.focus();
+  };
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      focus();
+    }
+  }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+  }
 
   return (
     <FormItemWrap

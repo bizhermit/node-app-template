@@ -28,9 +28,11 @@ type PasswordBoxHookAddon = {
 };
 type PasswordBoxHook<T extends string | number> = FormItemHook<T, PasswordBoxHookAddon>;
 
-export const usePasswordBox = <T extends string | number = string>() => useFormItemBase<PasswordBoxHook<T>>(w => {
+export const usePasswordBox = <T extends string | number = string>() => useFormItemBase<PasswordBoxHook<T>>(e => {
   return {
-    toggleMask: () => w(),
+    toggleMask: () => {
+      throw e;
+    },
   };
 });
 

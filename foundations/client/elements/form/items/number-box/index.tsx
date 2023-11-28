@@ -21,19 +21,16 @@ type NumberBoxHookAddon = {
 };
 type NumberBoxHook<T extends string | number = number> = FormItemHook<T, NumberBoxHookAddon>;
 
-export const useNumberBox = <T extends string | number = number>() => useFormItemBase<NumberBoxHook<T>>(w => {
+export const useNumberBox = <T extends string | number = number>() => useFormItemBase<NumberBoxHook<T>>(e => {
   return {
     up: () => {
-      w();
-      return 0;
+      throw e;
     },
     down: () => {
-      w();
-      return 0;
+      throw e;
     },
     add: () => {
-      w();
-      return 0;
+      throw e;
     },
   };
 });

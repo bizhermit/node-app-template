@@ -16,19 +16,16 @@ type SliderHookAddon = {
 };
 type SliderHook<T extends string | number = number> = FormItemHook<T, SliderHookAddon>;
 
-export const useSlider = <T extends string | number = number>() => useFormItemBase<SliderHook<T>>(w => {
+export const useSlider = <T extends string | number = number>() => useFormItemBase<SliderHook<T>>(e => {
   return {
     up: () => {
-      w();
-      return 0;
+      throw e;
     },
     down: () => {
-      w();
-      return 0;
+      throw e;
     },
     add: () => {
-      w();
-      return 0;
+      throw e;
     },
   };
 });

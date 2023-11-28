@@ -2,18 +2,44 @@
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { releaseCursor, setCursor } from "../../../../utilities/attributes";
 import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "../../../icon";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
+
+type ElectronicSignatureHookAddon = {
+  save: () => void;
+  redo: () => void;
+  undo: () => void;
+  clearCanvas: (history?: boolean) => void;
+};
+type ElectronicSignatureHook<T extends string | File> = FormItemHook<T, ElectronicSignatureHookAddon>;
+
+export const useElectronicSignature = <T extends string | File>() => useFormItemBase<ElectronicSignatureHook<T>>((e) => {
+  return {
+    save: () => {
+      throw e;
+    },
+    redo: () => {
+      throw e;
+    },
+    undo: () => {
+      throw e;
+    },
+    clearCanvas: () => {
+      throw e;
+    },
+  };
+});
 
 export type ElectronicSignatureProps<
   D extends DataItem_String | DataItem_File | undefined = undefined
 > = FormItemProps<string, D, string> & {
+  $ref?: ElectronicSignatureHook<ValueType<string, D, string>> | ElectronicSignatureHook<string | File>;
   $typeof?: FileValueType;
   $width?: number | string;
   $height?: number | string;
@@ -276,6 +302,24 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
       href.current.files = dt.files;
     }
   }, [ctx.value]);
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      cref.current?.focus();
+    }
+  }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => cref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.save = () => save();
+    props.$ref.redo = () => redo();
+    props.$ref.undo = () => undo();
+    props.$ref.clearCanvas = (hist) => clearCanvas(hist);
+  }
 
   return (
     <FormItemWrap

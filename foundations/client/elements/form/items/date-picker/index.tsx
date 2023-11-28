@@ -2,22 +2,28 @@
 
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import DatetimeUtils, { convertDate, dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, type Ref } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, type Ref } from "react";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { DateData, DateInput } from "../../../../../data-items/date";
 import { CalendarIcon, CrossIcon, LeftIcon, ListIcon, RightIcon, TodayIcon } from "../../../icon";
 import Text from "../../../text";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation, multiValidationIterator } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
+type DatePickerHook<T extends string | number | Date | Array<string | number | Date>> = FormItemHook<T>;
+
+export const useDatePicker = <T extends string | number | Date | Array<string | number | Date>>() => useFormItemBase<DatePickerHook<T>>();
+
 export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
   ref?: Ref<HTMLDivElement>;
+  $ref?: DatePickerHook<ValueType<string | number | Date | Array<string | number | Date>, D, string | number | Date | Array<string | number | Date>>>
+  | DatePickerHook<string | number | Date | Array<string | number | Date>>;
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
@@ -68,7 +74,10 @@ interface DatePickerFC extends FunctionComponent<DatePickerProps> {
 
 const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
   D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
->(p: DatePickerProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: DatePickerProps<D>, $ref: ForwardedRef<HTMLDivElement>) => {
+  const ref = useRef<HTMLDivElement>(null!);
+  useImperativeHandle($ref, () => ref.current);
+
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
@@ -721,6 +730,42 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     // props.$bind,
     ctx.bind,
   ]);
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      ref.current?.focus();
+    }
+  }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => ref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => {
+      if (v == null) {
+        ctx.change(undefined, false);
+        return;
+      }
+      if (multiple) {
+        ctx.change(Array.isArray(v) ? v : [v], false);
+        return;
+      }
+      ctx.change(Array.isArray(v) ? v[0] : v, false);
+    };
+    props.$ref.setDefaultValue = () => {
+      if (props.$defaultValue == null) {
+        ctx.change(undefined, false);
+        return;
+      }
+      if (multiple) {
+        ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue : [props.$defaultValue], false);
+        return;
+      }
+      ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue[0] : props.$defaultValue, false);
+    };
+    props.$ref.clear = () => {
+      ctx.change(undefined, false);
+    };
+  }
 
   return (
     <FormItemWrap

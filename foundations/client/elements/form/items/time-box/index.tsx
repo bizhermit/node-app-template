@@ -3,7 +3,7 @@
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import Time from "@bizhermit/time";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { TimeData, TimeInput } from "../../../../../data-items/time";
 import { equals } from "../../../../../data-items/utilities";
 import { ClockIcon, CrossIcon } from "../../../icon";
@@ -11,11 +11,16 @@ import Popup from "../../../popup";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import TimePicker from "../time-picker";
 import Style from "./index.module.scss";
 
+type TimeBoxHook<T extends number | string> = FormItemHook<T>;
+
+export const useTimeBox = <T extends number | string>() => useFormItemBase<TimeBoxHook<T>>();
+
 type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
+  $ref?: TimeBoxHook<ValueType<number | string, D, number | string>> | TimeBoxHook<number | string>;
   $disallowInput?: boolean;
   $hourPlaceholder?: string;
   $minutePlaceholder?: string;
@@ -382,6 +387,14 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
       focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+  }
 
   return (
     <FormItemWrap

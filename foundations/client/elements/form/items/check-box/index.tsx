@@ -19,11 +19,17 @@ type CheckBoxHook<T extends string | number | boolean = string | number | boolea
 
 export const useCheckBox = <
   T extends string | number | boolean = string | number | boolean
->() => useFormItemBase<CheckBoxHook<T>>(w => {
+>() => useFormItemBase<CheckBoxHook<T>>(e => {
   return {
-    check: () => w(),
-    uncheck: () => w(),
-    toggle: () => w(),
+    check: () => {
+      throw e;
+    },
+    uncheck: () => {
+      throw e;
+    },
+    toggle: () => {
+      throw e;
+    },
   };
 });
 

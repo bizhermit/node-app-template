@@ -19,11 +19,17 @@ type ToggleBoxHook<T extends string | number | boolean = string | number | boole
 
 export const useToggleBox = <
   T extends string | number | boolean = string | number | boolean
->() => useFormItemBase<ToggleBoxHook<T>>(w => {
+>() => useFormItemBase<ToggleBoxHook<T>>(e => {
   return {
-    on: () => w(),
-    off: () => w(),
-    toggle: () => w(),
+    on: () => {
+      throw e;
+    },
+    off: () => {
+      throw e;
+    },
+    toggle: () => {
+      throw e;
+    },
   };
 });
 

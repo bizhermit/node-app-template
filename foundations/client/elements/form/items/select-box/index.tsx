@@ -26,11 +26,10 @@ type SelectBoxHook<
 export const useSelectBox = <
   T extends string | number,
   Q extends { [key: string]: any } = { [key: string]: any }
->() => useFormItemBase<SelectBoxHook<T, Q>>(w => {
+>() => useFormItemBase<SelectBoxHook<T, Q>>(e => {
   return {
     getData: () => {
-      w();
-      return undefined;
+      throw e;
     },
   };
 });

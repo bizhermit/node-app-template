@@ -301,32 +301,31 @@ export const useFormItemContext = <
 };
 
 // eslint-disable-next-line no-console
-const printNotSetWarn = () => console.warn("useFormItem not set");
+const notSetError = new Error("useFormItem not set");
 
 export const useFormItem = <T = any>() => useFormItemBase<FormItemHook<T, {}>>(() => ({}));
 
 export const useFormItemBase = <H extends FormItemHook<any, any>>(
-  addons?: (warningMessage: typeof printNotSetWarn) => Omit<H, keyof FormItemHook<any, {}>>
+  addons?: (warningMessage: typeof notSetError) => Omit<H, keyof FormItemHook<any, {}>>
 ) => {
   return useMemo<H>(() => {
     return {
       focus: () => {
-        printNotSetWarn();
+        throw notSetError;
       },
       getValue: () => {
-        printNotSetWarn();
-        return undefined as any;
+        throw notSetError;
       },
       setValue: () => {
-        printNotSetWarn();
+        throw notSetError;
       },
       setDefaultValue: () => {
-        printNotSetWarn();
+        throw notSetError;
       },
       clear: () => {
-        printNotSetWarn();
+        throw notSetError;
       },
-      ...(addons?.(printNotSetWarn) as any),
+      ...(addons?.(notSetError) as any),
     };
   }, []);
 };

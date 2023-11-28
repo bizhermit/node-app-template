@@ -23,11 +23,10 @@ type RadioButtonsHook<
 export const useRadioButtons = <
   T extends string | number | boolean,
   Q extends { [key: string]: any } = { [key: string]: any }
->() => useFormItemBase<RadioButtonsHook<T, Q>>(w => {
+>() => useFormItemBase<RadioButtonsHook<T, Q>>(e => {
   return {
     getData: () => {
-      w();
-      return undefined;
+      throw e;
     },
   };
 });

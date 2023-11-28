@@ -3,7 +3,7 @@
 import DatetimeUtils, { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { DateData, DateInput } from "../../../../../data-items/date";
 import { equals } from "../../../../../data-items/utilities";
 import { CalendarIcon, CrossIcon } from "../../../icon";
@@ -12,11 +12,41 @@ import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
 import DatePicker from "../date-picker";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
+
+type DateBoxHookAddon = {
+  addDay: (num?: number) => Date;
+  addMonth: (num?: number) => Date;
+  addYear: (num?: number) => Date;
+  setFirstDate: () => Date;
+  setLastDate: () => Date;
+};
+type DateBoxHook<T extends string | number | Date> = FormItemHook<T, DateBoxHookAddon>;
+
+export const useDateBox = <T extends string | number | Date>() => useFormItemBase<DateBoxHook<T>>(e => {
+  return {
+    addDay: () => {
+      throw e;
+    },
+    addMonth: () => {
+      throw e;
+    },
+    addYear: () => {
+      throw e;
+    },
+    setFirstDate: () => {
+      throw e;
+    },
+    setLastDate: () => {
+      throw e;
+    },
+  };
+});
 
 type OmitAttributes = "placeholder";
 type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = Omit<FormItemProps<T, D>, OmitAttributes> & DateInput.FCPorps & {
+  $ref?: DateBoxHook<ValueType<T, D, string | number | Date>> | DateBoxHook<string | number | Date>;
   $disallowInput?: boolean;
   $pickerButtonless?: boolean;
   $yearPlaceholder?: string;
@@ -180,24 +210,24 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
     if (dref.current) dref.current.value = String(cacheD.current ?? "");
   };
 
-  const commitCache = () => {
+  const commitCache = (edit = true) => {
     const y = cacheY.current;
     const m = type !== "year" ? cacheM.current : 1;
     const d = type === "date" ? cacheD.current : 1;
     if (y == null || (type !== "year" && m == null) || (type === "date" && d == null)) {
       if (ctx.valueRef.current == null) setInputValues(undefined);
-      else ctx.change(undefined);
+      else ctx.change(undefined, edit);
       return;
     }
     const date = convertDate(`${y}-${m}-${d}`);
     if (date == null) {
       if (ctx.valueRef.current == null) setInputValues(undefined);
-      else ctx.change(undefined);
+      else ctx.change(undefined, edit);
       return;
     }
     const v = DateInput.convertDateToValue(date, props.$typeof);
     if (equals(v, ctx.valueRef.current)) setInputValues(v);
-    else ctx.change(v);
+    else ctx.change(v, edit);
   };
 
   const changeY = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -232,11 +262,10 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
     cacheD.current = isEmpty(v) ? undefined : Number(v);
   };
 
-  const updown = (y = 0, m = 0, d = 0) => {
-    let year = cacheY.current == null ? initValue.getFullYear() : cacheY.current + y;
-    let month = type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current + m);
-    let day = type === "date" ? (cacheD.current == null ? initValue.getDate() : cacheD.current + d) : 1;
-    const date = new Date(year, month - 1, day);
+  const setCache = (date: Date, edit = true) => {
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
     if (minDate) {
       if (DatetimeUtils.isBeforeDate(minDate, date)) {
         year = minDate.getFullYear();
@@ -251,11 +280,20 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
         day = maxDate.getDate();
       }
     }
-    if (!(cacheD.current !== day || cacheM.current !== month || cacheY.current !== year)) return;
+    if (!(cacheD.current !== day || cacheM.current !== month || cacheY.current !== year)) return date;
     cacheY.current = year;
     cacheM.current = month;
     cacheD.current = day;
-    commitCache();
+    commitCache(edit);
+    return date;
+  };
+
+  const updown = (y = 0, m = 0, d = 0, edit = true) => {
+    setCache(new Date(
+      cacheY.current == null ? initValue.getFullYear() : cacheY.current + y,
+      (type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current + m)) - 1,
+      type === "date" ? (cacheD.current == null ? initValue.getDate() : cacheD.current + d) : 1
+    ), edit);
   };
 
   const keydownY = (e: React.KeyboardEvent) => {
@@ -378,6 +416,40 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
       focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = focus;
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.addDay = (num = 1) => {
+      updown(0, 0, num, false);
+      return DatetimeUtils.copy(convertDate(ctx.valueRef.current)!);
+    };
+    props.$ref.addMonth = (num = 1) => {
+      updown(0, num, 0, false);
+      return DatetimeUtils.copy(convertDate(ctx.valueRef.current)!);
+    };
+    props.$ref.addYear = (num = 1) => {
+      updown(num, 0, 0, false);
+      return DatetimeUtils.copy(convertDate(ctx.valueRef.current)!);
+    };
+    props.$ref.setFirstDate = () => {
+      return setCache(new Date(
+        cacheY.current == null ? initValue.getFullYear() : cacheY.current,
+        (type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current)) - 1,
+        1
+      ), false);
+    };
+    props.$ref.setLastDate = () => {
+      return setCache(new Date(
+        cacheY.current == null ? initValue.getFullYear() : cacheY.current,
+        type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current),
+        0
+      ), false);
+    };
+  }
 
   return (
     <FormItemWrap

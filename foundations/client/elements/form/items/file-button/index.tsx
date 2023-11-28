@@ -1,15 +1,28 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { FileData } from "../../../../../data-items/file";
 import Button, { type ButtonOptions } from "../../../button";
 import { CrossIcon } from "../../../icon";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
+
+type FileButtonHookAddon = {
+  click: () => void;
+};
+type FileButtonHook<T extends File | Array<File>> = FormItemHook<T, FileButtonHookAddon>;
+
+export const useFileButton = <T extends File | Array<File>>() => useFormItemBase<FileButtonHook<T>>((e) => {
+  return {
+    click: () => {
+      throw e;
+    },
+  };
+});
 
 type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & ButtonOptions & {
   $typeof?: FileValueType;
@@ -22,10 +35,12 @@ type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = F
 };
 
 export type FileButtonProps_Single<D extends DataItem_File | undefined = undefined> = FileButtonBaseProps<File, D> & {
+  $ref?: FileButtonHook<ValueType<File, D, File>> | FileButtonHook<File | Array<File>>;
   $append?: false;
 };
 
 export type FileButtonProps_Multiple<D extends DataItem_File | undefined = undefined> = FileButtonBaseProps<Array<File>, D> & {
+  $ref?: FileButtonHook<ValueType<Array<File>, D, Array<File>>> | FileButtonHook<File | Array<File>>;
   $append?: boolean;
 };
 
@@ -66,6 +81,7 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
 
   const iref = useRef<HTMLInputElement>(null!);
   const href = useRef<HTMLInputElement>(null!);
+  const bref = useRef<HTMLButtonElement>(null!);
 
   const ctx = useFormItemContext(form, props, {
     multipartFormData: true,
@@ -138,6 +154,41 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     }
   }, [ctx.value]);
 
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      bref.current?.focus();
+    }
+  }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => bref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => {
+      if (v == null) {
+        ctx.change(undefined, false);
+        return;
+      }
+      if (multiable) {
+        ctx.change(Array.isArray(v) ? v : [v], false);
+        return;
+      }
+      ctx.change(Array.isArray(v) ? v[0] : v, false);
+    };
+    props.$ref.setDefaultValue = () => {
+      if (props.$defaultValue == null) {
+        ctx.change(undefined, false);
+        return;
+      }
+      if (multiable) {
+        ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue : [props.$defaultValue], false);
+        return;
+      }
+      ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue[0] : props.$defaultValue, false);
+    };
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.click = () => click();
+  }
+
   return (
     <FormItemWrap
       {...props}
@@ -147,6 +198,7 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     >
       {ctx.editable &&
         <Button
+          ref={bref}
           className={Style.button}
           $onClick={click}
           disabled={!ctx.editable}

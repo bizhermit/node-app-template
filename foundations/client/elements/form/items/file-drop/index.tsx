@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { FileData } from "../../../../../data-items/file";
 import { pressPositiveKey } from "../../../../utilities/attributes";
 import { CrossIcon } from "../../../icon";
@@ -9,8 +9,21 @@ import Text from "../../../text";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
+
+type FileDropHookAddon = {
+  picker: () => void;
+};
+type FileDropHook<T extends File | Array<File>> = FormItemHook<T, FileDropHookAddon>;
+
+export const useFileDrop = <T extends File | Array<File>>() => useFormItemBase<FileDropHook<T>>((e) => {
+  return {
+    picker: () => {
+      throw e;
+    },
+  };
+});
 
 type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & {
   $typeof?: FileValueType;
@@ -23,10 +36,12 @@ type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = For
 };
 
 export type FileDropProps_Single<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<File, D> & {
+  $ref?: FileDropHook<ValueType<File, D, File>> | FileDropHook<File | Array<File>>;
   $append?: false;
 };
 
 export type FileDropProps_Multiple<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<Array<File>, D> & {
+  $ref?: FileDropHook<ValueType<Array<File>, D, Array<File>>> | FileDropHook<File | Array<File>>;
   $append?: boolean;
 };
 
@@ -67,6 +82,7 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
 
   const iref = useRef<HTMLInputElement>(null!);
   const href = useRef<HTMLInputElement>(null!);
+  const bref = useRef<HTMLDivElement>(null);
 
   const ctx = useFormItemContext(form, props, {
     multipartFormData: true,
@@ -182,6 +198,41 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
     if (iref.current) iref.current.value = "";
   }, [ctx.value]);
 
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      bref.current?.focus();
+    }
+  }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => bref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => {
+      if (v == null) {
+        ctx.change(undefined, false);
+        return;
+      }
+      if (multiable) {
+        ctx.change(Array.isArray(v) ? v : [v], false);
+        return;
+      }
+      ctx.change(Array.isArray(v) ? v[0] : v, false);
+    };
+    props.$ref.setDefaultValue = () => {
+      if (props.$defaultValue == null) {
+        ctx.change(undefined, false);
+        return;
+      }
+      if (multiable) {
+        ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue : [props.$defaultValue], false);
+        return;
+      }
+      ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue[0] : props.$defaultValue, false);
+    };
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.picker = () => click();
+  }
+
   return (
     <FormItemWrap
       {...props}
@@ -210,6 +261,7 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
       }
       <div
         className={Style.body}
+        ref={bref}
         onClick={click}
         onDragOver={dragOver}
         onDragLeave={dragLeave}
