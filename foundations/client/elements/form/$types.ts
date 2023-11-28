@@ -77,6 +77,8 @@ export type FormItemHook<T, Q extends { [key: string]: any } = {}> = Omit<{
   setValue: (v: T | null | undefined) => void;
   setDefaultValue: () => void;
   clear: () => void;
+  hasError: () => boolean;
+  getErrorMessage: () => (string | null | undefined);
 }, keyof Q> & Q;
 
 export type FormItemMountProps = {

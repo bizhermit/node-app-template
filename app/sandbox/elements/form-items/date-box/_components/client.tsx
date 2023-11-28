@@ -116,6 +116,8 @@ const DateBoxClient = () => {
           $pickerButtonless
           $showSeparatorAlwarys
           $initValue={"2000-1-1"}
+          // $defaultValue={"2000-1-1"}
+          $required
         />
         <DateBox
           $tag="date"
@@ -220,6 +222,14 @@ const DateBoxClient = () => {
           }}
         >
           set last date
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log("has error", dateBoxRef.hasError());
+            console.log(`error message: [${dateBoxRef.getErrorMessage()}]`);
+          }}
+        >
+          error
         </Button>
       </Row>
       <DateBox

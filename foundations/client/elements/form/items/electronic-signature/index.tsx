@@ -311,10 +311,6 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
 
   if (props.$ref) {
     props.$ref.focus = () => cref.current?.focus();
-    props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v: any) => ctx.change(v, false);
-    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
-    props.$ref.clear = () => ctx.change(undefined, false);
     props.$ref.save = () => save();
     props.$ref.redo = () => redo();
     props.$ref.undo = () => undo();
