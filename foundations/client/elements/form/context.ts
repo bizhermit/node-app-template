@@ -56,7 +56,7 @@ export const FormContext = createContext<FormContextProps>({
   mount: () => "",
   unmount: () => { },
   validation: () => undefined,
-  messageDisplayMode: "tooltip",
+  messageDisplayMode: "bottom-hide",
   // eslint-disable-next-line comma-spacing
   getValue: <T,>() => undefined as T,
   setValue: () => { },

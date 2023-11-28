@@ -152,6 +152,14 @@ const TextBoxClient = () => {
         >
           clear
         </Button>
+        <Button
+          $onClick={() => {
+            console.log("has error: ", textBoxRef.hasError());
+            console.log(`err msg: [${textBoxRef.getErrorMessage()}]`);
+          }}
+        >
+          error
+        </Button>
       </section>
       <section>
         <h2>DataItem</h2>

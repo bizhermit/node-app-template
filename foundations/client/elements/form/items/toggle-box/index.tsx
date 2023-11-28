@@ -133,10 +133,6 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
 
   if (props.$ref) {
     props.$ref.focus = () => (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
-    props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v: any) => ctx.change(v, false);
-    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
-    props.$ref.clear = () => ctx.change(undefined, false);
     props.$ref.on = () => ctx.change(checkedValue, false);
     props.$ref.off = () => ctx.change(uncheckedValue, false);
     props.$ref.toggle = () => ctx.change(ctx.valueRef.current === checkedValue ? uncheckedValue : checkedValue, false);

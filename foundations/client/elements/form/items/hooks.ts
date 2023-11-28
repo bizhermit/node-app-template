@@ -281,6 +281,20 @@ export const useFormItemContext = <
   const disabled = props?.$disabled || form.disabled;
   const readOnly = props?.$readOnly || form.readOnly;
 
+  if (props.$ref) {
+    props.$ref.getValue = () => valueRef.current;
+    props.$ref.setValue = (v: any) => change(
+      v == null ? undefined :
+        options?.multiple ? (Array.isArray(v) ? v : [v]) as any :
+          Array.isArray(v) ? v[0] : v,
+      false
+    );
+    props.$ref.setDefaultValue = () => props.$ref?.setValue(props.$defaultValue);
+    props.$ref.clear = () => change(undefined, false);
+    props.$ref.hasError = () => isErrorObject(error ?? props?.$error);
+    props.$ref.getErrorMessage = () => error ?? props.$error;
+  }
+
   return {
     ...form,
     disabled,
@@ -323,6 +337,12 @@ export const useFormItemBase = <H extends FormItemHook<any, any>>(
         throw notSetError;
       },
       clear: () => {
+        throw notSetError;
+      },
+      hasError: () => {
+        throw notSetError;
+      },
+      getErrorMessage: () => {
         throw notSetError;
       },
       ...(addons?.(notSetError) as any),

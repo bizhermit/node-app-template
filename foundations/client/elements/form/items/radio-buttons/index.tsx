@@ -240,10 +240,6 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
       ((ref.current?.querySelector(`.${Style.item}[data-selected="true"][tabindex]`) ??
         ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
     };
-    props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v: any) => ctx.change(v, false);
-    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
-    props.$ref.clear = () => ctx.change(undefined, false);
     props.$ref.getData = () => {
       const v = ctx.valueRef.current;
       return source.find(item => item[vdn] === v) as S;

@@ -206,30 +206,6 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
 
   if (props.$ref) {
     props.$ref.focus = () => bref.current?.focus();
-    props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v: any) => {
-      if (v == null) {
-        ctx.change(undefined, false);
-        return;
-      }
-      if (multiable) {
-        ctx.change(Array.isArray(v) ? v : [v], false);
-        return;
-      }
-      ctx.change(Array.isArray(v) ? v[0] : v, false);
-    };
-    props.$ref.setDefaultValue = () => {
-      if (props.$defaultValue == null) {
-        ctx.change(undefined, false);
-        return;
-      }
-      if (multiable) {
-        ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue : [props.$defaultValue], false);
-        return;
-      }
-      ctx.change(Array.isArray(props.$defaultValue) ? props.$defaultValue[0] : props.$defaultValue, false);
-    };
-    props.$ref.clear = () => ctx.change(undefined, false);
     props.$ref.picker = () => click();
   }
 

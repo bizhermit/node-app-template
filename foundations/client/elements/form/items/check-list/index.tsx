@@ -102,10 +102,6 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
 
   if (props.$ref) {
     props.$ref.focus = () => focus();
-    props.$ref.getValue = () => ctx.valueRef.current;
-    props.$ref.setValue = (v: any) => ctx.change(v == null ? undefined : Array.isArray(v) ? v : [v], false);
-    props.$ref.setDefaultValue = () => props.$ref?.setValue(props.$defaultValue);
-    props.$ref.clear = () => ctx.change(undefined, false);
     props.$ref.checkAll = () => ctx.change(source.map(item => item[vdn]), false);
     props.$ref.uncheckAll = () => ctx.change([], false);
   }
