@@ -2,7 +2,7 @@
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon } from "../../../icon";
@@ -10,32 +10,36 @@ import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
 type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
+type TextBoxHook<T extends string | number> = FormItemHook<T>;
+
+export const useTextBox = <T extends string | number = string>() => useFormItemBase<FormItemHook<T>>();
+
 export type TextBoxProps<
   D extends DataItem_String | DataItem_Number | undefined = undefined
-> =
-  FormItemProps<string | number, D, string> & {
-    $type?: InputType;
-    $inputMode?: InputMode;
-    $length?: number;
-    $preventInputWithinLength?: boolean;
-    $minLength?: number;
-    $maxLength?: number;
-    $charType?: StringCharType;
-    $round?: boolean;
-    $resize?: boolean;
-    $width?: number | string;
-    $maxWidth?: number | string;
-    $minWidth?: number | string;
-    $hideClearButton?: boolean;
-    $autoComplete?: string;
-    $align?: "left" | "center" | "right";
-  };
+> = FormItemProps<string | number, D, string, {}> & {
+  $ref?: TextBoxHook<ValueType<string | number, D, string>> | TextBoxHook<string | number>;
+  $type?: InputType;
+  $inputMode?: InputMode;
+  $length?: number;
+  $preventInputWithinLength?: boolean;
+  $minLength?: number;
+  $maxLength?: number;
+  $charType?: StringCharType;
+  $round?: boolean;
+  $resize?: boolean;
+  $width?: number | string;
+  $maxWidth?: number | string;
+  $minWidth?: number | string;
+  $hideClearButton?: boolean;
+  $autoComplete?: string;
+  $align?: "left" | "center" | "right";
+};
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
   <D extends DataItem_String | DataItem_Number | undefined = undefined>(
@@ -122,63 +126,63 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: () => {
+    validations: (_, label) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
-        validations.push(v => StringData.lengthValidation(v, props.$length!));
+        validations.push(v => StringData.lengthValidation(v, props.$length!, label));
       } else {
         if (props.$minLength != null) {
-          validations.push(v => StringData.minLengthValidation(v, props.$minLength!));
+          validations.push(v => StringData.minLengthValidation(v, props.$minLength!, label));
         }
         if (props.$maxLength != null) {
-          validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!));
+          validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!, label));
         }
       }
       switch (props.$charType) {
         case "h-num":
-          validations.push(v => StringData.halfWidthNumericValidation(v));
+          validations.push(v => StringData.halfWidthNumericValidation(v, label));
           break;
         case "f-num":
-          validations.push(v => StringData.fullWidthNumericValidation(v));
+          validations.push(v => StringData.fullWidthNumericValidation(v, label));
           break;
         case "num":
-          validations.push(v => StringData.numericValidation(v));
+          validations.push(v => StringData.numericValidation(v, label));
           break;
         case "h-alpha":
-          validations.push(v => StringData.halfWidthAlphabetValidation(v));
+          validations.push(v => StringData.halfWidthAlphabetValidation(v, label));
           break;
         case "f-alpha":
-          validations.push(v => StringData.fullWidthAlphabetValidation(v));
+          validations.push(v => StringData.fullWidthAlphabetValidation(v, label));
           break;
         case "alpha":
-          validations.push(v => StringData.alphabetValidation(v));
+          validations.push(v => StringData.alphabetValidation(v, label));
           break;
         case "h-alpha-num":
-          validations.push(v => StringData.halfWidthAlphaNumericValidation(v));
+          validations.push(v => StringData.halfWidthAlphaNumericValidation(v, label));
           break;
         case "h-alpha-num-syn":
-          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v));
+          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v, label));
           break;
         case "int":
-          validations.push(v => StringData.integerValidation(v));
+          validations.push(v => StringData.integerValidation(v, label));
           break;
         case "h-katakana":
-          validations.push(v => StringData.halfWidthKatakanaValidation(v));
+          validations.push(v => StringData.halfWidthKatakanaValidation(v, label));
           break;
         case "f-katakana":
-          validations.push(v => StringData.fullWidthKatakanaValidation(v));
+          validations.push(v => StringData.fullWidthKatakanaValidation(v, label));
           break;
         case "katakana":
-          validations.push(v => StringData.katakanaValidation(v));
+          validations.push(v => StringData.katakanaValidation(v, label));
           break;
         case "email":
-          validations.push(v => StringData.mailAddressValidation(v));
+          validations.push(v => StringData.mailAddressValidation(v, label));
           break;
         case "tel":
-          validations.push(v => StringData.telValidation(v));
+          validations.push(v => StringData.telValidation(v, label));
           break;
         case "url":
-          validations.push(v => StringData.urlValidation(v));
+          validations.push(v => StringData.urlValidation(v, label));
           break;
         default:
           break;
@@ -206,6 +210,14 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
       iref.current?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => iref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+  }
 
   return (
     <FormItemWrap

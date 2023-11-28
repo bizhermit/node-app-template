@@ -1,14 +1,14 @@
-import { type Dispatch, type SetStateAction, createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
-import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "./$types";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { equals, setValue } from "../../../data-items/utilities";
+import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "./$types";
 
 export type UseFormItemContextOptions<T = any, U extends Struct = {}> = {
   effect?: (value: T | null | undefined) => void;
   effectDeps?: Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
-  validations?: (getMessage: FormItemMessageFunc) => Array<FormItemValidation<T | null | undefined>>;
+  validations?: (getMessage: FormItemMessageFunc, label: string) => Array<FormItemValidation<T | null | undefined>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;

@@ -41,10 +41,9 @@ const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>((props, ref) => {
 
   return (
     <Link
+      prefetch={false}
       {...attrs}
       href={href}
-      replace={props.replace}
-      prefetch={false}
       ref={ref as Ref<HTMLAnchorElement> | undefined}
     />
   );

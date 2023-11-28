@@ -8,9 +8,10 @@ import timeItem from "#/data-items/time";
 
 export const sample_string = stringItem({
   name: "s_string",
-  // required: true,
+  label: "テキスト",
+  required: true,
   minLength: 5,
-  // maxLength: 5,
+  maxLength: 16,
   // length: 5,
   // charType: "alpha",
   width: "20rem",
@@ -20,10 +21,10 @@ export const sample_string = stringItem({
     { value: "piyo", label: "piyo" },
   ],
   validations: [
-    (...args) => {
-      console.log(args);
-      return undefined;
-    },
+    // (...args) => {
+    //   console.log(args);
+    //   return undefined;
+    // },
     (v) => {
       console.log("string validation: ", typeof v, v);
       if (v == null) return undefined;

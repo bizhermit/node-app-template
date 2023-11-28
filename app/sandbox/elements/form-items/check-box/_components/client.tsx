@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import CheckBox from "#/client/elements/form/items/check-box";
+import CheckBox, { useCheckBox } from "#/client/elements/form/items/check-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
@@ -16,6 +16,7 @@ const CheckBoxClient = () => {
   const [value, setValue] = useState<boolean>(false);
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const checkBoxRef = useCheckBox();
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
@@ -93,36 +94,42 @@ const CheckBoxClient = () => {
         <CheckBox
           $onChange={v => console.log("no item: ", v)}
           $focusWhenMounted
+          // $ref={checkBoxRef}
         >
           no item
         </CheckBox>
         <CheckBox
           $dataItem={sample_boolean}
           $onChange={v => console.log("boolean: ", v)}
+          // $ref={checkBoxRef}
         >
           boolean
         </CheckBox>
         <CheckBox
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
+          // $ref={checkBoxRef}
         >
           number
         </CheckBox>
         <CheckBox
           $dataItem={sample_boolean_num}
           $onChange={v => console.log("boolean num: ", v)}
+          // $ref={checkBoxRef}
         >
           boolean num
         </CheckBox>
         <CheckBox
           $dataItem={sample_boolean_str}
           $onChange={v => console.log("boolean str: ", v)}
+          // $ref={checkBoxRef}
         >
           boolean str
         </CheckBox>
         <CheckBox
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
+          $ref={checkBoxRef}
         >
           string
         </CheckBox>
@@ -148,6 +155,69 @@ const CheckBoxClient = () => {
         >
           outline/circle
         </CheckBox>
+      </Row>
+      <Row className="g-s">
+        <Button
+          $onClick={() => {
+            // formItemRef.focus();
+            checkBoxRef.focus();
+          }}
+        >
+          focus
+        </Button>
+        <Button
+          $onClick={() => {
+            // console.log(formItemRef.getValue());
+            console.log(checkBoxRef.getValue());
+          }}
+        >
+          get value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setValue("set from form-item hook");
+            checkBoxRef.setValue("1");
+          }}
+        >
+          set value
+        </Button>
+        <Button
+          $onClick={() => {
+            checkBoxRef.check();
+          }}
+        >
+          check
+        </Button>
+        <Button
+          $onClick={() => {
+            checkBoxRef.uncheck();
+          }}
+        >
+          uncheck
+        </Button>
+        <Button
+          $onClick={() => {
+            checkBoxRef.toggle();
+          }}
+        >
+          toggle
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setDefaultValue();
+            checkBoxRef.setDefaultValue();
+          }}
+        >
+          set default value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.clear();
+            checkBoxRef.clear();
+          }}
+        >
+          clear
+        </Button>
       </Row>
       <Row>
         <CheckBox

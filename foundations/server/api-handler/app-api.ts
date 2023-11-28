@@ -6,7 +6,7 @@ const getSession = (req: NextRequest): SessionStruct => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends Struct | void = void> =
+type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: string]: any } | void = void> =
   (context: {
     req: NextRequest;
     getCookies: () => RequestCookies;
@@ -18,7 +18,7 @@ type MethodProcess<Req extends DataContext = DataContext, Res extends Struct | v
 
 const apiMethodHandler = <
   Req extends DataContext = DataContext,
-  Res extends Struct | void = void
+  Res extends { [key: string]: any } | void = void
 >(dataContext?: Req | null, process?: MethodProcess<Req, Res> | null) => {
   return (async (req: NextRequest, { params }: { params: QueryStruct }) => {
     if (process == null) {
@@ -33,7 +33,7 @@ const apiMethodHandler = <
       const reqData = await (async () => {
         const data = await (async () => {
           const { searchParams } = new URL(req.url);
-          const queryData: Struct = {};
+          const queryData: { [key: string]: any } = {};
           Array.from(searchParams.keys()).forEach(key => {
             queryData[key] = searchParams.get(key);
           });
@@ -51,7 +51,7 @@ const apiMethodHandler = <
               ...(await req.json()),
             };
           }
-          const data: Struct = {
+          const data: { [key: string]: any } = {
             ...queryData,
             ...params,
           };
@@ -62,7 +62,11 @@ const apiMethodHandler = <
           return data;
         })();
         if (dataContext == null) return data;
-        getItem(msgs, null, dataContext, data);
+        getItem(msgs, {
+          key: null!,
+          dataItem: dataContext,
+          data,
+        });
         return data;
       })();
 

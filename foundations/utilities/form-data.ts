@@ -74,6 +74,7 @@ export const appendStructData = (
         console.warn(`convert to form-data warning: ${key} is not supportted object type. try converting to json-stringify.`);
         formData.append(key, JSON.stringify(v));
       }
+      return;
     }
     formData.append(key, v);
   };

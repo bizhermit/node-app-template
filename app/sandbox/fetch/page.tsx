@@ -2,7 +2,9 @@
 
 import Button from "#/client/elements/button";
 import Form from "#/client/elements/form";
+import DateBox from "#/client/elements/form/items/date-box";
 import FileDrop from "#/client/elements/form/items/file-drop";
+import NumberBox from "#/client/elements/form/items/number-box";
 import TextBox from "#/client/elements/form/items/text-box";
 import GroupBox from "#/client/elements/group-box";
 import Loading from "#/client/elements/loading";
@@ -39,7 +41,7 @@ const Page = () => {
             $onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.get("/api/fetch", {
-                  text: "tetetetette",
+                  s_string: "tetetetette",
                 }, {
                   contentType: "json",
                 });
@@ -56,7 +58,7 @@ const Page = () => {
             $onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/api/fetch", {
-                  text: "a",
+                  s_string: "a",
                   // file: new File(),
                 }, {
                   contentType: "json",
@@ -152,7 +154,20 @@ const Page = () => {
           }}
         >
           <TextBox
-            name="text"
+            // name="text"
+            $dataItem={sample_string}
+            // $validations={[
+            //   (...args) => {
+            //     console.log("validation-item:", args);
+            //     return undefined;
+            //   }
+            // ]}
+          />
+          <NumberBox
+            $dataItem={sample_number}
+          />
+          <DateBox
+            $dataItem={sample_date}
           />
           <FileDrop
             name="file"

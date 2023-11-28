@@ -1,7 +1,7 @@
 import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import DatetimeUtils, { dateFormat, convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import type { FormItemValidation } from "../client/elements/form/$types";
+import DatetimeUtils, { convertDate, dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
 import { dataItemKey } from ".";
+import type { FormItemValidation } from "../client/elements/form/$types";
 
 const dateDefaultTypeof: DateValueType = "string";
 
@@ -135,7 +135,7 @@ export namespace DateData {
   export const contextValidation = (
     v: Nullable<Date>,
     rangePair: DateRangePair,
-    data: Struct | undefined,
+    data: { [key: string]: any } | null | undefined,
     type: DateType = "date",
     itemName?: string,
     pairItemName?: string
@@ -233,25 +233,25 @@ export namespace DateInput {
     return (date) => validWeeks.indexOf(date.getDay()) >= 0;
   };
 
-  export const rangeValidation = (min: Date, max: Date, type: DateType) => {
+  export const rangeValidation = (min: Date, max: Date, type: DateType, itemName?: string) => {
     const minDateStr = DateData.format(min, type);
     const maxDateStr = DateData.format(max, type);
-    return (v: any) => DateData.rangeValidation(convertDate(v), min, max, type, undefined, minDateStr, maxDateStr);
+    return (v: any) => DateData.rangeValidation(convertDate(v), min, max, type, itemName, minDateStr, maxDateStr);
   };
 
-  export const minValidation = (min: Date, type: DateType) => {
+  export const minValidation = (min: Date, type: DateType, itemName?: string) => {
     const minDateStr = DateData.format(min, type);
-    return (v: any) => DateData.minValidation(convertDate(v), min, type, undefined, minDateStr);
+    return (v: any) => DateData.minValidation(convertDate(v), min, type, itemName, minDateStr);
   };
 
-  export const maxValidation = (max: Date, type: DateType) => {
+  export const maxValidation = (max: Date, type: DateType, itemName?: string) => {
     const maxDateStr = DateData.format(max, type);
-    return (v: any) => DateData.maxValidation(convertDate(v), max, type, undefined, maxDateStr);
+    return (v: any) => DateData.maxValidation(convertDate(v), max, type, itemName, maxDateStr);
   };
 
-  export const contextValidation = (rangePair: DateRangePair, type: DateType) => {
+  export const contextValidation = (rangePair: DateRangePair, type: DateType, itemName?: string) => {
     const compare = (value: DateValue | any, pairDate: Date) =>
-      DateData.contextValidation(convertDate(value), rangePair, { [rangePair.name]: pairDate }, type, undefined, undefined);
+      DateData.contextValidation(convertDate(value), rangePair, { [rangePair.name]: pairDate }, type, itemName, undefined);
     const getPairDate = (data: Struct) => {
       if (data == null) return undefined;
       const pairValue = data[rangePair.name];

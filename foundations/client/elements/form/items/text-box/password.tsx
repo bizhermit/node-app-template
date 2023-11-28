@@ -2,7 +2,7 @@
 
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "../../../../elements/icon";
 import Resizer from "../../../../elements/resizer";
@@ -10,7 +10,7 @@ import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { includeElement } from "../../../../utilities/parent-child";
 import useForm from "../../context";
 import { FormItemWrap } from "../../items/common";
-import { useDataItemMergedProps, useFormItemContext } from "../../items/hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../../items/hooks";
 import type { TextBoxProps } from "../../items/text-box";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import Style from "./index.module.scss";
@@ -22,6 +22,19 @@ type InputMode = Extract<HTMLAttributes<HTMLInputElement>["inputMode"],
   | "text"
   | "none"
 >;
+
+type PasswordBoxHookAddon = {
+  toggleMask: () => void;
+};
+type PasswordBoxHook<T extends string | number> = FormItemHook<T, PasswordBoxHookAddon>;
+
+export const usePasswordBox = <T extends string | number = string>() => useFormItemBase<PasswordBoxHook<T>>(e => {
+  return {
+    toggleMask: () => {
+      throw e;
+    },
+  };
+});
 
 export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & Pick<TextBoxProps<D>,
   | "$minLength"
@@ -35,6 +48,7 @@ export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> 
   | "$autoComplete"
   | "$align"
 > & {
+  $ref?: PasswordBoxHook<ValueType<string | number, D, string>> | PasswordBoxHook<string | number>;
   $charType?: Extract<StringCharType,
     | "h-num"
     | "h-alpha"
@@ -106,26 +120,26 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: () => {
+    validations: (_, label) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$minLength != null) {
-        validations.push(v => StringData.minLengthValidation(v, props.$minLength!));
+        validations.push(v => StringData.minLengthValidation(v, props.$minLength!, label));
       }
       if (props.$maxLength != null) {
-        validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!));
+        validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!, label));
       }
       switch (props.$charType) {
         case "h-num":
-          validations.push(v => StringData.halfWidthNumericValidation(v));
+          validations.push(v => StringData.halfWidthNumericValidation(v, label));
           break;
         case "h-alpha":
-          validations.push(v => StringData.halfWidthAlphabetValidation(v));
+          validations.push(v => StringData.halfWidthAlphabetValidation(v, label));
           break;
         case "h-alpha-num":
-          validations.push(v => StringData.halfWidthAlphaNumericValidation(v));
+          validations.push(v => StringData.halfWidthAlphaNumericValidation(v, label));
           break;
         case "h-alpha-num-syn":
-          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v));
+          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v, label));
           break;
         default:
           break;
@@ -165,6 +179,15 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
       iref.current?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => iref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.toggleMask = () => toggle();
+  }
 
   return (
     <FormItemWrap

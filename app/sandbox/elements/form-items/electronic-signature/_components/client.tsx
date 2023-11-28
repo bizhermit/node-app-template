@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import ElectronicSignature from "#/client/elements/form/items/electronic-signature";
+import ElectronicSignature, { useElectronicSignature } from "#/client/elements/form/items/electronic-signature";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
@@ -18,6 +18,7 @@ const ElectronicSignatureClient = () => {
   const [formBind, setFormBind] = useState({});
   const [autoSave, setAutoSave] = useState(true);
   const [buttonsPosition, setButtonsPosition] = useState<"hide" | "top" | "left" | "bottom" | "right">();
+  const elecSignRef = useElectronicSignature();
 
   return (
     <div className="flex h-100 w-100 p-xs g-s">
@@ -88,9 +89,17 @@ const ElectronicSignatureClient = () => {
       </Row>
       <Divider />
       <ElectronicSignature
+        $ref={elecSignRef}
         $tag="no item"
         $onChange={v => console.log("no item: ", v)}
       />
+      <Button
+        $onClick={() => {
+          elecSignRef.focus();
+        }}
+      >
+        focus
+      </Button>
       <ElectronicSignature
         $tag="base64"
         $dataItem={sample_string}

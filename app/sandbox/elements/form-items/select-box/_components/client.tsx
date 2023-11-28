@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import SelectBox from "#/client/elements/form/items/select-box";
+import SelectBox, { useSelectBox } from "#/client/elements/form/items/select-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
@@ -19,10 +19,11 @@ const SelectBoxClient = () => {
   const [formBind, setFormBind] = useState({});
   const [disallowInput, setDisallowInput] = useState(false);
   const ref = useRef<HTMLDivElement>();
+  const selectBoxRef = useSelectBox();
 
   return (
     <div className="flex p-xs w-100 g-s">
-      <div style={{ height: "100vh"}}></div>
+      {/* <div style={{ height: "100vh" }}></div> */}
       <Row className="g-s" $vAlign="bottom">
         <ToggleBox
           $tag="disabled"
@@ -111,24 +112,26 @@ const SelectBoxClient = () => {
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
-          $source={ArrayUtils.generateArray(30, value => {
-            return {
-              value,
-              label: `item ${value}`,
-            };
-          })}
+          // $source={ArrayUtils.generateArray(30, value => {
+          //   return {
+          //     value,
+          //     label: `item ${value}`,
+          //   };
+          // })}
+          // $ref={selectBoxRef}
         />
         <SelectBox
           $tag="string"
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
-          $source={ArrayUtils.generateArray(30, value => {
-            return {
-              value: String(value),
-              label: `item ${value}`,
-            };
-          })}
+          // $source={ArrayUtils.generateArray(30, value => {
+          //   return {
+          //     value: String(value),
+          //     label: `item ${value}`,
+          //   };
+          // })}
           $tieInNames={["label", "value"]}
+          $ref={selectBoxRef}
         />
         <SelectBox<number>
           $tag="number"
@@ -151,6 +154,55 @@ const SelectBoxClient = () => {
           })}
           $tieInNames={["label", "value"]}
         />
+      </Row>
+      <Row className="g-s">
+        <Button
+          $onClick={() => {
+            // formItemRef.focus();
+            selectBoxRef.focus();
+          }}
+        >
+          focus
+        </Button>
+        <Button
+          $onClick={() => {
+            // console.log(formItemRef.getValue());
+            console.log(selectBoxRef.getValue());
+          }}
+        >
+          get value
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(selectBoxRef.getData());
+          }}
+        >
+          get data
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setValue("set from form-item hook");
+            selectBoxRef.setValue("2");
+          }}
+        >
+          set value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setDefaultValue();
+            selectBoxRef.setDefaultValue();
+          }}
+        >
+          set default value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.clear();
+            selectBoxRef.clear();
+          }}
+        >
+          clear
+        </Button>
       </Row>
       <SelectBox
         $tag="useState"

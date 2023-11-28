@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import DateBox from "#/client/elements/form/items/date-box";
+import DateBox, { useDateBox } from "#/client/elements/form/items/date-box";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
@@ -18,6 +18,7 @@ const DateBoxClient = () => {
   const [formBind, setFormBind] = useState({});
   const [type, setType] = useState<"date" | "month" | "year">("date");
   const [disallowInput, setDisallowInput] = useState(false);
+  const dateBoxRef = useDateBox();
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
@@ -108,6 +109,7 @@ const DateBoxClient = () => {
       <Divider />
       <Row className="g-m">
         <DateBox
+          $ref={dateBoxRef}
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
           // $typeof="date"
@@ -142,6 +144,83 @@ const DateBoxClient = () => {
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
         />
+      </Row>
+      <Row className="g-s">
+        <Button
+          $onClick={() => {
+            // formItemRef.focus();
+            dateBoxRef.focus();
+          }}
+        >
+          focus
+        </Button>
+        <Button
+          $onClick={() => {
+            // console.log(formItemRef.getValue());
+            console.log(dateBoxRef.getValue());
+          }}
+        >
+          get value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setValue("set from form-item hook");
+            dateBoxRef.setValue("2023-12-31");
+          }}
+        >
+          set value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setDefaultValue();
+            dateBoxRef.setDefaultValue();
+          }}
+        >
+          set default value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.clear();
+            dateBoxRef.clear();
+          }}
+        >
+          clear
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(dateBoxRef.addDay(1));
+          }}
+        >
+          add day
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(dateBoxRef.addMonth());
+          }}
+        >
+          add month
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(dateBoxRef.addYear());
+          }}
+        >
+          add year
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(dateBoxRef.setFirstDate());
+          }}
+        >
+          set first day
+        </Button>
+        <Button
+          $onClick={() => {
+            console.log(dateBoxRef.setLastDate());
+          }}
+        >
+          set last date
+        </Button>
       </Row>
       <DateBox
         $type={type}

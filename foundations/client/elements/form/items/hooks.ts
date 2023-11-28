@@ -1,6 +1,6 @@
 import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { FormItemMessages, FormItemProps, FormItemValidation, ValueType } from "../$types";
+import type { FormItemHook, FormItemMessages, FormItemProps, FormItemValidation, ValueType } from "../$types";
 import { equals, getValue, setValue } from "../../../../data-items/utilities";
 import type useForm from "../context";
 import { type UseFormItemContextOptions } from "../context";
@@ -8,8 +8,8 @@ import { isErrorObject } from "../utilities";
 
 const formValidationMessages: FormItemMessages = {
   default: "入力エラーです。",
-  required: "値を入力してください。",
-  typeMissmatch: "型が不適切です。",
+  required: "{label}を入力してください。",
+  typeMissmatch: "{label}の型が不適切です。",
 };
 
 export const useDataItemMergedProps = <
@@ -26,6 +26,7 @@ export const useDataItemMergedProps = <
       if (dataItem == null) return {};
       return {
         name: dataItem.name,
+        $label: dataItem.label,
         $required: form.method === "get" ? false : dataItem.required,
         ...merge?.under?.({ props, dataItem, method: form.method }),
       };
@@ -90,9 +91,14 @@ export const useFormItemContext = <
     setBind(value);
   }, []);
 
-  const getMessage = useCallback((key: keyof FormItemMessages) => {
-    return props.$messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
-  }, []);
+  const getMessage = useCallback((key: keyof FormItemMessages, ...texts: Array<string>) => {
+    let m = props.$messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
+    m = m.replace(/\{label\}/g, props.$label || "値");
+    texts.forEach((t, i) => m = m.replace(new RegExp(`\\{${i}\\}`, "g"), `${t ?? ""}`));
+    return m;
+  }, [
+    props.$label
+  ]);
 
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<ValueType<T, D, V> | null | undefined>> = [];
@@ -112,7 +118,7 @@ export const useFormItemContext = <
       }
     }
     if (options?.validations) {
-      rets.push(...options.validations(getMessage));
+      rets.push(...options.validations(getMessage, props.$label || "値"));
     }
     if (props?.$validations) {
       if (Array.isArray(props.$validations)) {
@@ -122,7 +128,13 @@ export const useFormItemContext = <
       }
     }
     return rets;
-  }, [props.$required, options?.multiple, props?.$validations, getMessage, ...(options?.validationsDeps ?? [])]);
+  }, [
+    props.$required,
+    options?.multiple,
+    props?.$validations,
+    getMessage,
+    ...(options?.validationsDeps ?? []),
+  ]);
 
   const validation = useCallback(() => {
     const value = valueRef.current;
@@ -169,7 +181,7 @@ export const useFormItemContext = <
 
   useEffect(() => {
     form.setExErrors(cur => {
-      if (props?.$error) {
+      if (isErrorObject(props?.$error)) {
         if (equals(cur[id.current], props.$error)) return cur;
         return {
           ...cur,
@@ -282,8 +294,38 @@ export const useFormItemContext = <
     error: error ?? props?.$error,
     setError,
     effect: options?.effect,
-    messageDisplayMode: props?.$messagePosition ?? form.messageDisplayMode,
+    messageDisplayMode: props?.$messagePosition ?? form.messageDisplayMode ?? "bottom-hide",
     messageWrap: props?.$messageWrap ?? form.messageWrap,
     getMessage,
   };
+};
+
+// eslint-disable-next-line no-console
+const notSetError = new Error("useFormItem not set");
+
+export const useFormItem = <T = any>() => useFormItemBase<FormItemHook<T, {}>>(() => ({}));
+
+export const useFormItemBase = <H extends FormItemHook<any, any>>(
+  addons?: (warningMessage: typeof notSetError) => Omit<H, keyof FormItemHook<any, {}>>
+) => {
+  return useMemo<H>(() => {
+    return {
+      focus: () => {
+        throw notSetError;
+      },
+      getValue: () => {
+        throw notSetError;
+      },
+      setValue: () => {
+        throw notSetError;
+      },
+      setDefaultValue: () => {
+        throw notSetError;
+      },
+      clear: () => {
+        throw notSetError;
+      },
+      ...(addons?.(notSetError) as any),
+    };
+  }, []);
 };

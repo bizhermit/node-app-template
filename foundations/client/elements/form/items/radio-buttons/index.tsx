@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemProps } from "../../$types";
+import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import { equals, getValue, setValue } from "../../../../../data-items/utilities";
 import useLoadableArray from "../../../../hooks/loadable-array";
 import { joinClassNames, pressPositiveKey } from "../../../../utilities/attributes";
@@ -9,14 +9,34 @@ import Text from "../../..//text";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
+
+type RadioButtonsHookAddon<Q extends { [key: string]: any } = { [key: string]: any }> = {
+  getData: () => (Q | null | undefined);
+};
+type RadioButtonsHook<
+  T extends string | number | boolean,
+  Q extends { [key: string]: any } = { [key: string]: any }
+> = FormItemHook<T, RadioButtonsHookAddon<Q>>;
+
+export const useRadioButtons = <
+  T extends string | number | boolean,
+  Q extends { [key: string]: any } = { [key: string]: any }
+>() => useFormItemBase<RadioButtonsHook<T, Q>>(e => {
+  return {
+    getData: () => {
+      throw e;
+    },
+  };
+});
 
 export type RadioButtonsProps<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
-  S extends Struct = Struct
+  S extends { [key: string]: any } = { [key: string]: any }
 > = Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, "$tagPosition"> & {
+  $ref?: RadioButtonsHook<ValueType<T, D, T>, S> | RadioButtonsHook<string | number | boolean, S>;
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
@@ -32,7 +52,7 @@ export type RadioButtonsProps<
 };
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
-  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Struct = Struct>(
+  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends { [key: string]: any } = { [key: string]: any }>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, RadioButtonsProps<T, D, S>>
   ): ReactElement<any> | null;
 }
@@ -40,7 +60,7 @@ interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
 const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
-  S extends Struct = Struct
+  S extends { [key: string]: any } = { [key: string]: any }
 >(p: RadioButtonsProps<T, D, S>, $ref: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
@@ -78,7 +98,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     },
     generateChangeCallbackDataDeps: [source],
     messages: {
-      required: "値を選択してください。"
+      required: "{label}を選択してください。"
     },
   });
 
@@ -120,7 +140,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
   const outline = props.$appearance !== "button" && props.$outline;
 
   const { nodes, selectedItem } = useMemo(() => {
-    let selectedItem: Struct | undefined = undefined;
+    let selectedItem: { [key: string]: any } | undefined = undefined;
     const appearance = props.$appearance || "point";
     const nodes = source.map(item => {
       const v = item[vdn] as T;
@@ -214,6 +234,21 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
         ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => {
+      ((ref.current?.querySelector(`.${Style.item}[data-selected="true"][tabindex]`) ??
+        ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
+    };
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.getData = () => {
+      const v = ctx.valueRef.current;
+      return source.find(item => item[vdn] === v) as S;
+    };
+  }
 
   return (
     <FormItemWrap

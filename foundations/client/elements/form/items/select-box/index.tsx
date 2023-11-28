@@ -2,7 +2,7 @@
 
 import StringUtils, { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useMemo, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemProps, ValueType } from "../../$types";
+import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import { equals, getValue, setValue } from "../../../../../data-items/utilities";
 import useLoadableArray from "../../../../hooks/loadable-array";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
@@ -12,14 +12,34 @@ import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
+
+type SelectBoxHookAddon<Q extends { [key: string]: any } = { [key: string]: any }> = {
+  getData: () => (Q | null | undefined);
+};
+type SelectBoxHook<
+  T extends string | number,
+  Q extends { [key: string]: any } = { [key: string]: any }
+> = FormItemHook<T, SelectBoxHookAddon<Q>>;
+
+export const useSelectBox = <
+  T extends string | number,
+  Q extends { [key: string]: any } = { [key: string]: any }
+>() => useFormItemBase<SelectBoxHook<T, Q>>(e => {
+  return {
+    getData: () => {
+      throw e;
+    },
+  };
+});
 
 export type SelectBoxProps<
   T extends string | number = string | number,
   D extends DataItem_String | DataItem_Number | undefined = undefined,
-  S extends Struct = Struct
+  S extends { [key: string]: any } = { [key: string]: any }
 > = FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }> & {
+  $ref?: SelectBoxHook<ValueType<T, D, T>, S> | SelectBoxHook<string | number, S>;
   $labelDataName?: string;
   $valueDataName?: string;
   $source?: LoadableArray<S>;
@@ -37,7 +57,7 @@ export type SelectBoxProps<
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
-  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends Struct = Struct>(
+  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends { [key: string]: any } = { [key: string]: any }>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, SelectBoxProps<T, D, S>>
   ): ReactElement<any> | null;
 }
@@ -45,7 +65,7 @@ interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
 const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   T extends string | number = string | number,
   D extends DataItem_String | DataItem_Number | undefined = undefined,
-  S extends Struct = Struct
+  S extends { [key: string]: any } = { [key: string]: any }
 >(p: SelectBoxProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
@@ -72,7 +92,9 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   });
   const [bindSource, setBindSource] = useState(source);
   const emptyItem = (() => {
-    if (props.$emptyItem == null) return undefined;
+    if (props.$emptyItem == null || props.$emptyItem === false) {
+      return undefined;
+    }
     switch (typeof props.$emptyItem) {
       case "boolean":
         return {
@@ -101,7 +123,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     },
     generateChangeCallbackDataDeps: [source],
     messages: {
-      required: "値を選択してください。",
+      required: "{label}を選択してください。",
     },
   });
 
@@ -153,7 +175,11 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
 
   const clear = () => {
     if (!ctx.editable) return;
-    if (props.$emptyItem != null && !(typeof props.$emptyItem === "boolean" || typeof props.$emptyItem === "string")) {
+    if (
+      props.$emptyItem != null &&
+      props.$emptyItem !== false &&
+      !(typeof props.$emptyItem === "boolean" || typeof props.$emptyItem === "string")
+    ) {
       ctx.change(props.$emptyItem.value);
       return;
     }
@@ -319,6 +345,18 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       iref.current?.focus();
     }
   }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => iref.current?.focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+    props.$ref.getData = () => {
+      const v = ctx.valueRef.current;
+      return source.find(item => item[vdn] === v) as S;
+    };
+  }
 
   return (
     <FormItemWrap

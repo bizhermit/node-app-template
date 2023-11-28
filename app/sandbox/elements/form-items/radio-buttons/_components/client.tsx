@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import RadioButtons from "#/client/elements/form/items/radio-buttons";
+import RadioButtons, { useRadioButtons } from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import { CalendarIcon, ClockIcon, CloudIcon, SaveIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
@@ -20,6 +20,7 @@ const RadioButtonsClient = () => {
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const radioButtonsRef = useRadioButtons();
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
@@ -111,6 +112,7 @@ const RadioButtonsClient = () => {
       <Divider />
       <Row>
         <RadioButtons
+          $ref={radioButtonsRef}
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
@@ -118,6 +120,8 @@ const RadioButtonsClient = () => {
             return { value, label: `item ${value}` };
           })}
           $appearance={appearance}
+          $unselectable
+          $allowNull
           $outline={outline}
         />
         <RadioButtons
@@ -141,6 +145,48 @@ const RadioButtonsClient = () => {
           $appearance={appearance}
           $outline={outline}
         />
+      </Row>
+      <Row className="g-s">
+        <Button
+          $onClick={() => {
+            // formItemRef.focus();
+            radioButtonsRef.focus();
+          }}
+        >
+          focus
+        </Button>
+        <Button
+          $onClick={() => {
+            // console.log(formItemRef.getValue());
+            console.log(radioButtonsRef.getValue());
+          }}
+        >
+          get value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setValue("set from form-item hook");
+            radioButtonsRef.setValue(1);
+          }}
+        >
+          set value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.setDefaultValue();
+            radioButtonsRef.setDefaultValue();
+          }}
+        >
+          set default value
+        </Button>
+        <Button
+          $onClick={() => {
+            // formItemRef.clear();
+            radioButtonsRef.clear();
+          }}
+        >
+          clear
+        </Button>
       </Row>
       <RadioButtons
         // style={{ width: 500 }}

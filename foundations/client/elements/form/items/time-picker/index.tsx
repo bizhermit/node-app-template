@@ -2,18 +2,23 @@
 
 import Time from "@bizhermit/time";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode, type Ref } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
+import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { TimeData, TimeInput } from "../../../../../data-items/time";
 import { CrossIcon } from "../../../icon";
 import Text from "../../../text";
 import useForm from "../../context";
 import { FormItemWrap } from "../../items/common";
-import { useDataItemMergedProps, useFormItemContext } from "../../items/hooks";
+import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../../items/hooks";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import Style from "./index.module.scss";
 
+type TimePickerHook<T extends number | string> = FormItemHook<T>;
+
+export const useTimePicker = <T extends number | string>() => useFormItemBase<TimePickerHook<T>>();
+
 export type TimePickerBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
   ref?: Ref<HTMLDivElement>;
+  $ref?: TimePickerHook<ValueType<number | string, D, number | string>> | TimePickerHook<number | string>;
   $onClickPositive?: (value: Nullable<T>) => void;
   $onClickNegative?: () => void;
   $positiveText?: ReactNode;
@@ -112,22 +117,22 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
 
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
-    validations: () => {
+    validations: (_, label) => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
       if (maxTime != null && minTime != null) {
-        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit));
+        validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit, label));
       } else {
         if (maxTime != null) {
-          validations.push(TimeInput.maxValidation(maxTime, type, unit));
+          validations.push(TimeInput.maxValidation(maxTime, type, unit, label));
         }
         if (minTime != null) {
-          validations.push(TimeInput.minValidation(minTime, type, unit));
+          validations.push(TimeInput.minValidation(minTime, type, unit, label));
         }
       }
       const rangePair = props.$rangePair;
       if (rangePair != null) {
-        const { validation } = TimeInput.contextValidation(rangePair, type, unit);
+        const { validation } = TimeInput.contextValidation(rangePair, type, unit, label);
         validations.push(validation);
       }
       return validations;
@@ -345,6 +350,24 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
     // props.$bind,
     ctx.bind,
   ]);
+
+  const focus = () => {
+    (hourElemRef.current ?? minuteElemRef.current ?? secondElemRef.current)?.focus();
+  };
+
+  useEffect(() => {
+    if (props.$focusWhenMounted) {
+      focus();
+    }
+  }, []);
+
+  if (props.$ref) {
+    props.$ref.focus = () => focus();
+    props.$ref.getValue = () => ctx.valueRef.current;
+    props.$ref.setValue = (v: any) => ctx.change(v, false);
+    props.$ref.setDefaultValue = () => ctx.change(props.$defaultValue, false);
+    props.$ref.clear = () => ctx.change(undefined, false);
+  }
 
   return (
     <FormItemWrap

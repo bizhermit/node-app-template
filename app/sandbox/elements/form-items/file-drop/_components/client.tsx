@@ -4,7 +4,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import CheckBox from "#/client/elements/form/items/check-box";
-import FileDrop from "#/client/elements/form/items/file-drop";
+import FileDrop, { useFileDrop } from "#/client/elements/form/items/file-drop";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { sample_file } from "$/data-items/sample/item";
@@ -16,6 +16,7 @@ const FileDropClient = () => {
   const [value, setValue] = useState<Array<File>>([]);
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
+  const fileDropRef = useFileDrop();
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
@@ -70,10 +71,25 @@ const FileDropClient = () => {
       <Divider />
       <Row className="g-s">
         <FileDrop
+          $ref={fileDropRef}
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
           style={{ height: 100, width: 100, }}
         />
+        <Button
+          $onClick={() => {
+            fileDropRef.focus();
+          }}
+        >
+          focus
+        </Button>
+        <Button
+          $onClick={() => {
+            fileDropRef.picker();
+          }}
+        >
+          picker
+        </Button>
         <FileDrop
           $tag="file"
           $dataItem={sample_file}
@@ -129,7 +145,7 @@ const FileDropClient = () => {
           $readOnly={readOnly}
           method="post"
           action="/api/form"
-          // encType="multipart/form-data"
+        // encType="multipart/form-data"
         >
           <FileDrop
             $tag="form bind"
