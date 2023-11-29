@@ -1,4 +1,4 @@
-import { equals } from "../../data-items/utilities";
+import equals from "../../objects/equal";
 import fetchApi, { type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
 import useMessage, { type ProviderMessage } from "../providers/message/context";
 

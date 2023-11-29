@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormItemHook, FormItemMessages, FormItemProps, FormItemValidation, ValueType } from "../$types";
-import { equals, getValue, setValue } from "../../../../data-items/utilities";
+import equals from "../../../../objects/equal";
 import { generateUuidV4 } from "../../../../objects/string/generator";
+import { getValue } from "../../../../objects/struct/get";
+import { setValue } from "../../../../objects/struct/set";
 import type useForm from "../context";
 import { type UseFormItemContextOptions } from "../context";
 import { isErrorObject } from "../utilities";

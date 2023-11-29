@@ -1,5 +1,5 @@
-import type { DataTableBaseColumn, DataTableColumn, DataTableDateColumn, DataTableNumberColumn } from "#/client/elements/data-table";
-import { getValue } from "#/data-items/utilities";
+import { getValue } from "../../../objects/struct/get";
+import type { DataTableBaseColumn, DataTableColumn, DataTableDateColumn, DataTableNumberColumn } from "../data-table";
 
 const dataTableDataItemColumn = <T extends Struct, D extends DataItem>(
   dataItem: DataItem & { name: string },

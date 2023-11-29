@@ -1,6 +1,6 @@
-import generateArray from "#/objects/array/generator";
 import { dataItemKey } from ".";
 import type { FormItemValidation } from "../client/elements/form/$types";
+import generateArray from "../objects/array/generator";
 import { getFirstDateAtMonth, getFirstDateAtYear, getLastDateAtMonth, getLastDateAtYear } from "../objects/date/calc";
 import { isAfterDate, isBeforeDate } from "../objects/date/compare";
 import { equalDate } from "../objects/date/equal";

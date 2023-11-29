@@ -2,8 +2,10 @@
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
-import { equals, getValue, setValue } from "../../../../../data-items/utilities";
+import equals from "../../../../../objects/equal";
 import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
+import { getValue } from "../../../../../objects/struct/get";
+import { setValue } from "../../../../../objects/struct/set";
 import useLoadableArray from "../../../../hooks/loadable-array";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon, DownIcon } from "../../../icon";

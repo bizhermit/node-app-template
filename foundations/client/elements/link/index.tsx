@@ -1,6 +1,6 @@
-import { getDynamicUrl } from "#/utilities/url";
 import Link, { type LinkProps } from "next/link";
 import { forwardRef, type AnchorHTMLAttributes, type LegacyRef, type ReactNode, type Ref } from "react";
+import { getDynamicUrl } from "../../../utilities/url";
 import { attributes } from "../../utilities/attributes";
 
 type Href = PagePath | `http${string}` | `tel:${string}` | `mailto:${string}`;

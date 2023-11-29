@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { equals } from "../../data-items/utilities";
+import equals from "../../objects/equal";
 
 export type ValueObject<T> = ReturnType<typeof useValue<T>>;
 

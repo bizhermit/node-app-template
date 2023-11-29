@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
-import { equals, setValue } from "../../../data-items/utilities";
+import equals from "../../../objects/equal";
 import { generateUuidV4 } from "../../../objects/string/generator";
+import { setValue } from "../../../objects/struct/set";
 import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "./$types";
 
 export type UseFormItemContextOptions<T = any, U extends Struct = {}> = {

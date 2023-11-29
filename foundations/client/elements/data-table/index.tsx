@@ -1,10 +1,11 @@
 "use client";
 
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type Dispatch, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction } from "react";
-import { equals, getValue } from "../../../data-items/utilities";
 import formatDate from "../../../objects/date/format";
+import equals from "../../../objects/equal";
 import formatNum from "../../../objects/number/format";
 import { generateUuidV4 } from "../../../objects/string/generator";
+import { getValue } from "../../../objects/struct/get";
 import useLoadableArray from "../../hooks/loadable-array";
 import { attributes, convertSizeNumToStr, joinClassNames } from "../../utilities/attributes";
 import Button from "../button";

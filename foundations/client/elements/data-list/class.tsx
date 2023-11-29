@@ -1,6 +1,6 @@
-import { getValue } from "../../../data-items/utilities";
 import formatDate from "../../../objects/date/format";
 import formatNum from "../../../objects/number/format";
+import { getValue } from "../../../objects/struct/get";
 import { convertSizeNumToStr } from "../../utilities/attributes";
 import DomClassComponent, { cloneDomElement } from "../../utilities/dom-class-component";
 import Style from "./index.module.scss";
