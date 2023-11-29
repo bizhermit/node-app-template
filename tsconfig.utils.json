@@ -2,8 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": false,
-    "rootDir": ".",
-    "outDir": "./dist/libs/utils",
+    "rootDir": "./foundations/objects",
+    "outDir": "./dist/libs/utils/dist",
     "declaration": true,
     "incremental": false,
     "module": "es6",
