@@ -8,26 +8,22 @@ if (!fse.existsSync(root)) {
   process.exit();
 }
 
-const projectRootPkg = JSON.parse(fse.readFileSync(path.join(__dirname,"package.json")).toString());
+const projectRootPkg = JSON.parse(fse.readFileSync(path.join(__dirname, "package.json")).toString());
 const version = (projectRootPkg.version ?? "").match(/(\d)\.(\d)\.(\d)(?:$|\-([^\.]*)\.(\d))/) ?? [];
 let majorVer = Number(version[1] ?? 0);
 let minorVer = Number(version[2] ?? 0);
 let patchVer = Number(version[3] ?? 0);
 const preVerName = version[4];
 let preVer = preVerName ? Number(version[5] ?? 0) : undefined;
-console.log("current version", majorVer, minorVer, patchVer, preVerName, preVer);
-if (preVerName) {
-  preVer++;
-} else {
-  patchVer++;
-}
-console.log("new version", majorVer, minorVer, patchVer, preVerName, preVer);
+console.log("version", majorVer, minorVer, patchVer, preVerName, preVer);
 
 const pkg = {
   ...projectRootPkg,
 };
 const authorName = (pkg.author ?? "").match(/([^(<|\())]*)(\s|$)/)?.[1] ?? "";
 fse.writeFileSync(path.join(root, "package.json"), JSON.stringify(pkg, null, 2));
+
+fse.copySync(path.join(__dirname, "README.md"), path.join(root, "README.md"));
 
 const license = `
 MIT License
