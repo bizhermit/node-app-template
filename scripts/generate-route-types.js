@@ -130,32 +130,6 @@ ${(() => {
 type PagePath = AppRoutePath | PagesRoutePath;
 
 type TypeofApi = TypeofAppApi & TypeofPagesApi;
-
-type RelativePagePath = ${(() => {
-  let nestLevel = 0;
-  return appRoutes.map(pathName => {
-    const splitted = pathName.split("/");
-    splitted.shift();
-    const len = splitted.length;
-    nestLevel = Math.max(nestLevel, len);
-    const rets = [];
-    for (let i = 0; i < len; i++) {
-      const ret = splitted.filter((str, idx) => idx >= i).join("/");
-      rets.push(ret);
-    }
-    return rets;
-  }).flat(1).filter((str, idx, arr) => {
-    if (idx !== arr.indexOf(str)) return false;
-    return str != null;
-  }).map(str => {
-    // const rets = [`"./${str}"`];
-    const rets = [];
-    for (let i = 1; i < nestLevel; i++) {
-      rets.push(`"${"../".repeat(i)}${str}"`);
-    }
-    return rets;
-  }).flat(1).join("\n | ");
-})()};
 `;
 fse.writeFileSync(path.join(srcRootPath, "types", "route.d.ts"), contents);
 

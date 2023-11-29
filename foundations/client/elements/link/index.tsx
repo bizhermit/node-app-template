@@ -3,7 +3,7 @@ import Link, { type LinkProps } from "next/link";
 import { forwardRef, type AnchorHTMLAttributes, type LegacyRef, type ReactNode, type Ref } from "react";
 import { attributes } from "../../utilities/attributes";
 
-type Href = PagePath | RelativePagePath | `http${string}` | `tel:${string}` | `mailto:${string}`;
+type Href = PagePath | `http${string}` | `tel:${string}` | `mailto:${string}`;
 
 export type NextLinkProps = Omit<LinkProps, "href"> & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   href?: Href | {

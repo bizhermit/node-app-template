@@ -8,7 +8,7 @@ export type DynamicUrlContextOptions = {
   queryArrayIndex?: boolean;
 };
 
-type UrlPath = PagePath | RelativePagePath | `http${string}` | `tel:${string}` | `mailto:${string}` | ApiPath;
+type UrlPath = PagePath | `http${string}` | `tel:${string}` | `mailto:${string}` | ApiPath;
 
 export const getDynamicUrlContext = <
   T extends Struct | FormData | undefined | null,
