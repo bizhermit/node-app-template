@@ -1,3 +1,6 @@
+import formatDate from "#/objects/date/format";
+import { isEmpty, isNotEmpty } from "#/objects/string/empty";
+import strJoin from "#/objects/string/join";
 import { BrowserWindow, IpcMainEvent, IpcMainInvokeEvent, app, ipcMain, nativeTheme, protocol, screen } from "electron";
 import prepareNext from "electron-next";
 import { existsSync, mkdir, readFile, writeFile } from "fs-extra";
@@ -5,9 +8,6 @@ import { RequestInit } from "next/dist/server/web/spec-extension/request";
 import type { NextResponse } from "next/server";
 import path from "path";
 import url from "url";
-import formatDate from "../foundations/objects/date/format";
-import { isEmpty, isNotEmpty } from "../foundations/objects/string/empty";
-import strJoin from "../foundations/objects/string/join";
 
 const $global = global as { [key: string]: any };
 const logFormat = (...contents: Array<string>) => `${formatDate(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${strJoin(" ", ...contents)}\n`;
