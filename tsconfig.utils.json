@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": ".",
+    "outDir": "./dist/libs/utils",
+    "declaration": true,
+    "incremental": false,
+    "module": "es6",
+    "target": "esnext",
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "foundations/objects/**/*.ts"
+  ],
+}
