@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
-import { StringData } from "../../../../../data-items/string";
+import StringValidation from "../../../../../data-items/string/validations";
 import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
 import { CrossIcon } from "../../../icon";
 import useForm from "../../context";
@@ -47,8 +47,8 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
     effect: renderFormattedValue,
     validations: (_, label) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
-      validations.push(v => StringData.minLengthValidation(v, 14, label));
-      validations.push(v => StringData.maxLengthValidation(v, 16, label));
+      validations.push(v => StringValidation.minLength(v, 14, label));
+      validations.push(v => StringValidation.maxLength(v, 16, label));
       return validations;
     },
   });

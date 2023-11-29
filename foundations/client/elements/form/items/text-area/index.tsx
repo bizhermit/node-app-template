@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
-import { StringData } from "../../../../../data-items/string";
+import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import Resizer from "../../../resizer";
@@ -89,60 +89,60 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
     validations: (_, label) => {
       const validations: Array<FormItemValidation<Nullable<string>>> = [];
       if (props.$length != null) {
-        validations.push(v => StringData.lengthValidation(v, props.$length!, label));
+        validations.push(v => StringValidation.length(v, props.$length!, label));
       } else {
         if (props.$minLength != null) {
-          validations.push(v => StringData.minLengthValidation(v, props.$minLength!, label));
+          validations.push(v => StringValidation.minLength(v, props.$minLength!, label));
         }
         if (props.$maxLength != null) {
-          validations.push(v => StringData.maxLengthValidation(v, props.$maxLength!, label));
+          validations.push(v => StringValidation.maxLength(v, props.$maxLength!, label));
         }
       }
       switch (props.$charType) {
         case "h-num":
-          validations.push(v => StringData.halfWidthNumericValidation(v, label));
+          validations.push(v => StringValidation.halfWidthNumeric(v, label));
           break;
         case "f-num":
-          validations.push(v => StringData.fullWidthNumericValidation(v, label));
+          validations.push(v => StringValidation.fullWidthNumeric(v, label));
           break;
         case "num":
-          validations.push(v => StringData.numericValidation(v, label));
+          validations.push(v => StringValidation.numeric(v, label));
           break;
         case "h-alpha":
-          validations.push(v => StringData.halfWidthAlphabetValidation(v, label));
+          validations.push(v => StringValidation.halfWidthAlphabet(v, label));
           break;
         case "f-alpha":
-          validations.push(v => StringData.fullWidthAlphabetValidation(v, label));
+          validations.push(v => StringValidation.fullWidthAlphabet(v, label));
           break;
         case "alpha":
-          validations.push(v => StringData.alphabetValidation(v, label));
+          validations.push(v => StringValidation.alphabet(v, label));
           break;
         case "h-alpha-num":
-          validations.push(v => StringData.halfWidthAlphaNumericValidation(v, label));
+          validations.push(v => StringValidation.halfWidthAlphaNumeric(v, label));
           break;
         case "h-alpha-num-syn":
-          validations.push(v => StringData.halfWidthAlphaNumericAndSymbolsValidation(v, label));
+          validations.push(v => StringValidation.halfWidthAlphaNumericAndSymbols(v, label));
           break;
         case "int":
-          validations.push(v => StringData.integerValidation(v, label));
+          validations.push(v => StringValidation.integer(v, label));
           break;
         case "h-katakana":
-          validations.push(v => StringData.halfWidthKatakanaValidation(v, label));
+          validations.push(v => StringValidation.halfWidthKatakana(v, label));
           break;
         case "f-katakana":
-          validations.push(v => StringData.fullWidthKatakanaValidation(v, label));
+          validations.push(v => StringValidation.fullWidthKatakana(v, label));
           break;
         case "katakana":
-          validations.push(v => StringData.katakanaValidation(v, label));
+          validations.push(v => StringValidation.katakana(v, label));
           break;
         case "email":
-          validations.push(v => StringData.mailAddressValidation(v, label));
+          validations.push(v => StringValidation.mailAddress(v, label));
           break;
         case "tel":
-          validations.push(v => StringData.telValidation(v, label));
+          validations.push(v => StringValidation.tel(v, label));
           break;
         case "url":
-          validations.push(v => StringData.urlValidation(v, label));
+          validations.push(v => StringValidation.url(v, label));
           break;
         default:
           break;
