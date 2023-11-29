@@ -1,6 +1,7 @@
-import Time, { TimeUtils } from "@bizhermit/time";
 import { dataItemKey } from ".";
 import type { FormItemValidation } from "../client/elements/form/$types";
+import Time from "../objects/time";
+import { TimeUtils } from "../objects/time/utilities";
 
 const timeDefaultTypeof: TimeValueType = "number";
 

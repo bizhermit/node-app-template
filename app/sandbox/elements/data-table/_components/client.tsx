@@ -8,7 +8,7 @@ import NumberBox from "#/client/elements/form/items/number-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { joinClassNames } from "#/client/utilities/attributes";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import generateArray from "#/objects/array/generator";
 import { useMemo, useState } from "react";
 
 type Data = {
@@ -125,7 +125,7 @@ const DataTableClient = () => {
   const [items, setItems] = useState<Array<Data>>(null!);
 
   const generateItems = (length = 0) => {
-    setItems(ArrayUtils.generateArray(length, index => {
+    setItems(generateArray(length, index => {
       return {
         id: index,
         col1: `col1 - ${index}`,

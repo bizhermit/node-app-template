@@ -1,7 +1,7 @@
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormItemHook, FormItemMessages, FormItemProps, FormItemValidation, ValueType } from "../$types";
 import { equals, getValue, setValue } from "../../../../data-items/utilities";
+import { generateUuidV4 } from "../../../../objects/string/generator";
 import type useForm from "../context";
 import { type UseFormItemContextOptions } from "../context";
 import { isErrorObject } from "../utilities";
@@ -50,7 +50,7 @@ export const useFormItemContext = <
   U extends Struct = any,
   P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>
 >(form: ReturnType<typeof useForm>, props: P, options?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
-  const id = useRef(StringUtils.generateUuidV4());
+  const id = useRef(generateUuidV4());
   const [error, setError] = useState<string | null | undefined>(undefined);
 
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {

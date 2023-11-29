@@ -69,10 +69,6 @@ const pkg = {
   "files": [
     "dist"
   ],
-  "dependencies": {
-    "@bizhermit/basic-utils": "^2.0.0",
-    "@bizhermit/time": "^2.0.0"
-  },
   "peerDependencies": {
     "react": "18.X",
     "react-dom": "18.X",

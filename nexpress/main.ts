@@ -1,5 +1,6 @@
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import formatDate from "#/objects/date/format";
+import { generateUuidV4 } from "#/objects/string/generator";
+import strJoin from "#/objects/string/join";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import csrf from "csurf";
@@ -11,7 +12,7 @@ import helmet from "helmet";
 import next from "next";
 import path from "path";
 
-const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
+const logFormat = (...contents: Array<string>) => `${formatDate(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${strJoin(" ", ...contents)}\n`;
 const log = {
   debug: (...contents: Array<string>) => {
     if (!isDev) return;
@@ -25,7 +26,7 @@ const log = {
   },
 };
 
-const appRoot = path.join(__dirname, "../");
+const appRoot = path.join(__dirname, "../../");
 const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
 log.info(`::: nexpress :::${isDev ? " [dev]" : ""}`);
 
@@ -55,8 +56,8 @@ log.debug(JSON.stringify(process.env, null, 2));
 const basePath = process.env.BASE_PATH || "";
 const port = Number(process.env.PORT || (isDev ? 8000 : 80));
 const sessionName = process.env.SESSION_NAME || undefined;
-const sessionSecret = process.env.SESSION_SECRET || StringUtils.generateUuidV4();
-const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || StringUtils.generateUuidV4();
+const sessionSecret = process.env.SESSION_SECRET || generateUuidV4();
+const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || generateUuidV4();
 const corsOrigin = process.env.CORS_ORIGIN || undefined;
 
 const localhostUrl = `http://localhost:${port}${basePath}`;

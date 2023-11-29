@@ -1,8 +1,8 @@
 "use client";
 
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
+import { isNotEmpty } from "../../../../../objects/string/empty";
 import { releaseCursor, setCursor } from "../../../../utilities/attributes";
 import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "../../../icon";
 import useForm from "../../context";
@@ -118,7 +118,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
   });
 
   const position = props.$buttonsPosition || "right";
-  const canClear = StringUtils.isNotEmpty(ctx.value) && ctx.value !== nullValue.current;
+  const canClear = isNotEmpty(ctx.value) && ctx.value !== nullValue.current;
   const canRedo = revision >= 0 && revision < history.current.length - 1;
   const canUndo = revision > 0;
   const canClearHist = history.current.length > 1;
@@ -267,7 +267,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
   }, []);
 
   useEffect(() => {
-    if (StringUtils.isNotEmpty(ctx.valueRef.current)) {
+    if (isNotEmpty(ctx.valueRef.current)) {
       const canvas = get2DContext();
       const img = new Image();
       img.src = ctx.valueRef.current;

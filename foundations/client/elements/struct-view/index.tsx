@@ -1,6 +1,6 @@
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import formatDate from "../../../objects/date/format";
+import formatNum from "../../../objects/number/format";
 import { attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
@@ -40,7 +40,7 @@ const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Colo
   if (value instanceof Date) {
     return (
       <span className={Style.label} data-align={align}>
-        {DatetimeUtils.format(value, "yyyy/MM/dd")}
+        {formatDate(value, "yyyy/MM/dd")}
       </span>
     );
   }
@@ -72,7 +72,7 @@ const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Colo
   if (t === "number" || t === "bigint") {
     return (
       <span className={Style.label} data-align={align || "right"}>
-        {NumberUtils.format(value)}
+        {formatNum(value)}
       </span>
     );
   }

@@ -8,8 +8,8 @@ import { CloudIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
 import TabContainer from "#/client/elements/tab-container";
 import TabContent from "#/client/elements/tab-container/content";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { type Key, useState, useRef } from "react";
+import generateArray from "#/objects/array/generator";
+import { useRef, useState } from "react";
 
 type TabKey = "tab1" | "tab2" | "tab3" | 4;
 
@@ -75,7 +75,7 @@ const TabContainerClient = () => {
                 alert("tab1");
               }}
             />
-            {ArrayUtils.generateArray(10, (idx) => (
+            {generateArray(10, (idx) => (
               <Row key={idx}>
                 <h2>piyo {idx}</h2>
               </Row>
@@ -94,7 +94,7 @@ const TabContainerClient = () => {
                 alert("tab2");
               }}
             />
-            {ArrayUtils.generateArray(15, (idx) => (
+            {generateArray(15, (idx) => (
               <Row key={idx}>
                 <h2>fuga {idx}</h2>
               </Row>
@@ -112,7 +112,7 @@ const TabContainerClient = () => {
               alert("tab3");
             }}
           />
-          {ArrayUtils.generateArray(20, (idx) => (
+          {generateArray(20, (idx) => (
             <Row key={idx}>
               <h2>hoge {idx}</h2>
             </Row>

@@ -1,6 +1,6 @@
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import { getValue } from "../../../data-items/utilities";
+import formatDate from "../../../objects/date/format";
+import formatNum from "../../../objects/number/format";
 import { convertSizeNumToStr } from "../../utilities/attributes";
 import DomClassComponent, { cloneDomElement } from "../../utilities/dom-class-component";
 import Style from "./index.module.scss";
@@ -613,11 +613,11 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
             switch (oCol.dataType) {
               case "number":
                 return (data, col) => {
-                  return NumberUtils.format(data[col.displayName]) ?? "";
+                  return formatNum(data[col.displayName]) ?? "";
                 };
               case "date":
                 return (data, col) => {
-                  return DatetimeUtils.format(data[col.displayName], "yyyy/MM/dd") ?? "";
+                  return formatDate(data[col.displayName], "yyyy/MM/dd") ?? "";
                 };
               default:
                 return undefined;

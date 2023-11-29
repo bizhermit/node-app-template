@@ -1,9 +1,9 @@
 "use client";
 
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
+import { isNotEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon } from "../../../icon";
 import Resizer from "../../../resizer";
@@ -203,7 +203,7 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
     if (iref.current) iref.current.value = "";
   };
 
-  const hasData = StringUtils.isNotEmpty(ctx.value);
+  const hasData = isNotEmpty(ctx.value);
 
   useEffect(() => {
     if (props.$focusWhenMounted) {

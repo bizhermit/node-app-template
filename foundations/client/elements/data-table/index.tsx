@@ -1,10 +1,10 @@
 "use client";
 
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type Dispatch, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction } from "react";
 import { equals, getValue } from "../../../data-items/utilities";
+import formatDate from "../../../objects/date/format";
+import formatNum from "../../../objects/number/format";
+import { generateUuidV4 } from "../../../objects/string/generator";
 import useLoadableArray from "../../hooks/loadable-array";
 import { attributes, convertSizeNumToStr, joinClassNames } from "../../utilities/attributes";
 import Button from "../button";
@@ -204,7 +204,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
 const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   T extends Struct = Struct
 >(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
-  const uniqueKey = useRef(StringUtils.generateUuidV4());
+  const uniqueKey = useRef(generateUuidV4());
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
   const [pagination, setPagination] = useState<Pagination | undefined>(() => {
@@ -466,9 +466,9 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
             const v = getValue(data, column.displayName || column.name);
             switch (column.type) {
               case "date":
-                return DatetimeUtils.format(v, column.formatPattern ?? "yyyy/MM/dd");
+                return formatDate(v, column.formatPattern ?? "yyyy/MM/dd");
               case "number":
-                return NumberUtils.format(v, {
+                return formatNum(v, {
                   thou: column.thousandSseparator ?? true,
                   fpad: column.floatPadding ?? 0,
                 });

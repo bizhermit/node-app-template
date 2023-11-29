@@ -1,5 +1,5 @@
 import queryString from "querystring";
-import { convertFormDataToStruct } from "./form-data";
+import { convertFormDataToStruct } from "../objects/form-data/convert";
 
 export type DynamicUrlContextOptions = {
   appendQuery?: boolean;

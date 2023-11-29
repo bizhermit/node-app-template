@@ -8,7 +8,7 @@ import { CloudIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
 import SlideContainer, { type SlideDirection } from "#/client/elements/slide-container";
 import SlideContent from "#/client/elements/slide-container/content";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import generateArray from "#/objects/array/generator";
 import { useState } from "react";
 
 const SlideContainerClient = () => {
@@ -65,7 +65,7 @@ const SlideContainerClient = () => {
           $value={animation}
           $onChange={v => setAnimation(v!)}
         />
-        {ArrayUtils.generateArray(10, idx => {
+        {generateArray(10, idx => {
           return (
             <Button key={idx} $onClick={() => setIndex(idx)}>{idx}</Button>
           )
@@ -119,7 +119,7 @@ const SlideContainerClient = () => {
         <SlideContent label="Slide 0">
           <div className="box h-min100 px-s c-primary">
             <h1>Slide 0</h1>
-            {ArrayUtils.generateArray(10, (idx) => (
+            {generateArray(10, (idx) => (
               <Row key={idx}>
                 <h2>piyo {idx}</h2>
               </Row>
@@ -129,7 +129,7 @@ const SlideContainerClient = () => {
         <SlideContent label="Slide 1">
           <div className="box w-100 h-min100 px-s c-secondary">
             <h1>Slide 1</h1>
-            {ArrayUtils.generateArray(15, (idx) => (
+            {generateArray(15, (idx) => (
               <Row key={idx}>
                 <h2>fuga {idx}</h2>
               </Row>
@@ -139,7 +139,7 @@ const SlideContainerClient = () => {
         <SlideContent label={<><CloudIcon /><span>Slide2</span></>}>
           {/* <div className="box w-100 h-min100 c-tertiary p-xs"> */}
           <h1>Slide 2</h1>
-          {ArrayUtils.generateArray(20, (idx) => (
+          {generateArray(20, (idx) => (
             <Row key={idx}>
               <h2>hoge {idx}</h2>
             </Row>

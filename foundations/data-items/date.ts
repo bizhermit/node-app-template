@@ -1,7 +1,12 @@
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import DatetimeUtils, { convertDate, dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
+import generateArray from "#/objects/array/generator";
 import { dataItemKey } from ".";
 import type { FormItemValidation } from "../client/elements/form/$types";
+import { getFirstDateAtMonth, getFirstDateAtYear, getLastDateAtMonth, getLastDateAtYear } from "../objects/date/calc";
+import { isAfterDate, isBeforeDate } from "../objects/date/compare";
+import { equalDate } from "../objects/date/equal";
+import formatDate from "../objects/date/format";
+import parseDate from "../objects/date/parse";
+import { withoutTime } from "../objects/date/without-time";
 
 const dateDefaultTypeof: DateValueType = "string";
 
@@ -56,20 +61,20 @@ export namespace DateData {
 
   export const format = (v?: DateValue, type?: DateType) => {
     if (v == null) return "";
-    if (type === "year") return dateFormat(v, "yyyy年");
-    if (type === "month") return dateFormat(v, "yyyy/MM");
-    return dateFormat(v, "yyyy/MM/dd");
+    if (type === "year") return formatDate(v, "yyyy年");
+    if (type === "month") return formatDate(v, "yyyy/MM");
+    return formatDate(v, "yyyy/MM/dd");
   };
 
   export const dateAsFirst = (v?: DateValue, type: DateType = "date") => {
     if (v == null) return undefined;
     switch (type) {
       case "year":
-        return DatetimeUtils.getFirstDateAtYear(convertDate(v));
+        return getFirstDateAtYear(parseDate(v));
       case "month":
-        return DatetimeUtils.getFirstDateAtMonth(convertDate(v));
+        return getFirstDateAtMonth(parseDate(v));
       default:
-        return convertDate(v);
+        return parseDate(v);
     }
   };
 
@@ -77,11 +82,11 @@ export namespace DateData {
     if (v == null) return undefined;
     switch (type) {
       case "year":
-        return DatetimeUtils.getLastDateAtYear(convertDate(v));
+        return getLastDateAtYear(parseDate(v));
       case "month":
-        return DatetimeUtils.getLastDateAtMonth(convertDate(v));
+        return getLastDateAtMonth(parseDate(v));
       default:
-        return convertDate(v);
+        return parseDate(v);
     }
   };
 
@@ -144,15 +149,15 @@ export namespace DateData {
     const pairDate = (() => {
       const pv = data?.[rangePair.name];
       if (pv == null || Array.isArray(pv)) return undefined;
-      return convertDate(pv);
+      return parseDate(pv);
     })();
     if (pairDate == null) return undefined;
-    if (rangePair.disallowSame !== true && DatetimeUtils.equalDate(v, pairDate)) return undefined;
+    if (rangePair.disallowSame !== true && equalDate(v, pairDate)) return undefined;
     if (rangePair.position === "before") {
-      if (DatetimeUtils.isAfterDate(pairDate, v)) return undefined;
+      if (isAfterDate(pairDate, v)) return undefined;
       return `日付の前後関係が不適切です。${itemName || defaultItemName}は${pairItemName || rangePair.label || rangePair.name}[${format(pairDate, type)}]以降で入力してください。`;
     }
-    if (DatetimeUtils.isBeforeDate(pairDate, v)) return undefined;
+    if (isBeforeDate(pairDate, v)) return undefined;
     return `日付の前後関係が不適切です。${itemName || defaultItemName}は${pairItemName || rangePair.label || rangePair.name}[${format(pairDate, type)}]以前で入力してください。`;
   };
 
@@ -177,20 +182,20 @@ export namespace DateInput {
       case "number":
         return date?.getTime();
       default:
-        return dateFormat(date);
+        return formatDate(date);
     }
   };
 
   export const getMinDate = (props: FCPorps) => {
-    return DatetimeUtils.removeTime(convertDate(props.$min) ?? new Date(1900, 0, 1));
+    return withoutTime(parseDate(props.$min) ?? new Date(1900, 0, 1))!;
   };
 
   export const getMaxDate = (props: FCPorps) => {
-    return DatetimeUtils.removeTime(convertDate(props.$max) ?? new Date(2100, 0, 0));
+    return withoutTime(parseDate(props.$max) ?? new Date(2100, 0, 0))!;
   };
 
   export const getInitValue = (props: FCPorps) => {
-    return DatetimeUtils.removeTime(convertDate(props.$initValue) || new Date());
+    return withoutTime(parseDate(props.$initValue) || new Date())!;
   };
 
   export const selectableValidation = (props: FCPorps): ((date: Date) => boolean) => {
@@ -202,17 +207,17 @@ export namespace DateInput {
       props.$validDays.forEach(day => {
         if (typeof day === "object") {
           const { date, valid } = (day as Struct);
-          const d = convertDate(date);
+          const d = parseDate(date);
           if (d == null) return;
-          map[dateFormat(d)!] = valid ?? validModeIsAllow;
+          map[formatDate(d)!] = valid ?? validModeIsAllow;
           return;
         }
-        const d = convertDate(day);
+        const d = parseDate(day);
         if (d == null) return;
-        map[dateFormat(d)!] = validModeIsAllow;
+        map[formatDate(d)!] = validModeIsAllow;
       });
       return (date: Date) => {
-        const valid = map[dateFormat(date)!];
+        const valid = map[formatDate(date)!];
         if (validModeIsAllow) return valid === true;
         return valid !== false;
       };
@@ -224,7 +229,7 @@ export namespace DateInput {
       return (date: Date) => date.getDay() === 0 || date.getDay() === 6;
     }
     if (props.$validDays.length !== 7) return () => true;
-    const validWeeks = ArrayUtils.generateArray(7, index => {
+    const validWeeks = generateArray(7, index => {
       if ((props.$validDays as string)[index] !== "1") {
         return validModeIsAllow ? undefined : index;
       }
@@ -236,27 +241,27 @@ export namespace DateInput {
   export const rangeValidation = (min: Date, max: Date, type: DateType, itemName?: string) => {
     const minDateStr = DateData.format(min, type);
     const maxDateStr = DateData.format(max, type);
-    return (v: any) => DateData.rangeValidation(convertDate(v), min, max, type, itemName, minDateStr, maxDateStr);
+    return (v: any) => DateData.rangeValidation(parseDate(v), min, max, type, itemName, minDateStr, maxDateStr);
   };
 
   export const minValidation = (min: Date, type: DateType, itemName?: string) => {
     const minDateStr = DateData.format(min, type);
-    return (v: any) => DateData.minValidation(convertDate(v), min, type, itemName, minDateStr);
+    return (v: any) => DateData.minValidation(parseDate(v), min, type, itemName, minDateStr);
   };
 
   export const maxValidation = (max: Date, type: DateType, itemName?: string) => {
     const maxDateStr = DateData.format(max, type);
-    return (v: any) => DateData.maxValidation(convertDate(v), max, type, itemName, maxDateStr);
+    return (v: any) => DateData.maxValidation(parseDate(v), max, type, itemName, maxDateStr);
   };
 
   export const contextValidation = (rangePair: DateRangePair, type: DateType, itemName?: string) => {
     const compare = (value: DateValue | any, pairDate: Date) =>
-      DateData.contextValidation(convertDate(value), rangePair, { [rangePair.name]: pairDate }, type, itemName, undefined);
+      DateData.contextValidation(parseDate(value), rangePair, { [rangePair.name]: pairDate }, type, itemName, undefined);
     const getPairDate = (data: Struct) => {
       if (data == null) return undefined;
       const pairValue = data[rangePair.name];
       if (pairValue == null || Array.isArray(pairValue)) return undefined;
-      return convertDate(pairValue);
+      return parseDate(pairValue);
     };
     const validation: FormItemValidation<any> = (v, d) => {
       if (d == null) return undefined;

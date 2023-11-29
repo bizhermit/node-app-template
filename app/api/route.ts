@@ -1,6 +1,6 @@
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
 import { NextResponse } from "next/server";
+import formatDate from "../../foundations/objects/date/format";
 
 export const GET = async () => {
-  return new NextResponse(DatetimeUtils.format(new Date(), "yyyy/MM/dd hh:mm:ss.SSS"));
+  return new NextResponse(formatDate(new Date(), "yyyy/MM/dd hh:mm:ss.SSS"));
 };

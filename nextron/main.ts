@@ -1,5 +1,6 @@
-import DatetimeUtils from "@bizhermit/basic-utils/dist/datetime-utils";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import formatDate from "#/objects/date/format";
+import { isEmpty, isNotEmpty } from "#/objects/string/empty";
+import strJoin from "#/objects/string/join";
 import { BrowserWindow, IpcMainEvent, IpcMainInvokeEvent, app, ipcMain, nativeTheme, protocol, screen } from "electron";
 import prepareNext from "electron-next";
 import { existsSync, mkdir, readFile, writeFile } from "fs-extra";
@@ -9,7 +10,7 @@ import path from "path";
 import url from "url";
 
 const $global = global as { [key: string]: any };
-const logFormat = (...contents: Array<string>) => `${DatetimeUtils.format(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${StringUtils.join(" ", ...contents)}\n`;
+const logFormat = (...contents: Array<string>) => `${formatDate(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${strJoin(" ", ...contents)}\n`;
 const log = {
   debug: (...contents: Array<string>) => {
     if (!isDev) return;
@@ -66,7 +67,7 @@ app.on("ready", async () => {
         const [pathName, queryStr] = splited[splited.length - 1].split("?");
         const extension = path.extname(pathName);
         url = decodeURI(url.substring(0, url.lastIndexOf("/") + 1) + pathName);
-        if (StringUtils.isEmpty(extension) && StringUtils.isNotEmpty(queryStr)) {
+        if (isEmpty(extension) && isNotEmpty(queryStr)) {
           url += `?${queryStr}`;
         }
         if (path.isAbsolute(url)) {

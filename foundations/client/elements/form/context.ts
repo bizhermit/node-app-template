@@ -1,6 +1,6 @@
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { equals, setValue } from "../../../data-items/utilities";
+import { generateUuidV4 } from "../../../objects/string/generator";
 import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "./$types";
 
 export type UseFormItemContextOptions<T = any, U extends Struct = {}> = {
@@ -73,7 +73,7 @@ type Value<D extends DataItem | any> =
   D extends DataItem ? (DataItemValueType<D, true, "client"> | undefined) : (D | undefined);
 
 export const useFormValue = <D>(dataItemOrName: D | string, init?: Value<D> | (() => Value<D>)) => {
-  const id = useRef(StringUtils.generateUuidV4());
+  const id = useRef(generateUuidV4());
   const name = typeof dataItemOrName === "string" ?
     dataItemOrName : (dataItemOrName as D extends DataItem ? D : { name?: string; }).name;
   const form = useForm();

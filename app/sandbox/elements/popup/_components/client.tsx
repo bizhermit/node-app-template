@@ -7,8 +7,8 @@ import SelectBox from "#/client/elements/form/items/select-box";
 import TextBox from "#/client/elements/form/items/text-box";
 import Popup from "#/client/elements/popup";
 import Row from "#/client/elements/row";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { type FC, useRef, useState } from "react";
+import generateArray from "#/objects/array/generator";
+import { useRef, useState, type FC } from "react";
 
 const PopupClient = () => {
   return <Component />;
@@ -56,7 +56,7 @@ const Component: FC = () => {
             <TextBox name="text" style={{ width: 300 }} />
             <SelectBox
               name="select"
-              $source={ArrayUtils.generateArray(10, (idx) => {
+              $source={generateArray(10, (idx) => {
                 return {
                   value: idx,
                   label: `item${idx}`,

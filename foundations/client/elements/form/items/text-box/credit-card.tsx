@@ -1,9 +1,9 @@
 "use client";
 
-import StringUtils, { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemProps, FormItemValidation } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
+import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
 import { CrossIcon } from "../../../icon";
 import useForm from "../../context";
 import { FormItemWrap } from "../common";
@@ -82,7 +82,7 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
     if (iref.current) iref.current.value = "";
   };
 
-  const hasData = StringUtils.isNotEmpty(ctx.value);
+  const hasData = isNotEmpty(ctx.value);
 
   useEffect(() => {
     if (props.$focusWhenMounted) {

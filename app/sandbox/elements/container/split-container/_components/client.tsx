@@ -7,7 +7,7 @@ import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import SplitContainer, { type SplitDirection } from "#/client/elements/split-container";
 import SplitContent from "#/client/elements/split-container/content";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import generateArray from "#/objects/array/generator";
 import { useState } from "react";
 
 const SplitContainerClient = () => {
@@ -76,7 +76,7 @@ const SplitContainerClient = () => {
               alert("content1");
             }}
           />
-          {ArrayUtils.generateArray(10, (idx) => (
+          {generateArray(10, (idx) => (
             <Row key={idx}>
               <h2>piyo {idx}</h2>
             </Row>
@@ -95,7 +95,7 @@ const SplitContainerClient = () => {
                 alert("content2");
               }}
             />
-            {ArrayUtils.generateArray(15, (idx) => (
+            {generateArray(15, (idx) => (
               <Row key={idx}>
                 <h2>fuga {idx}</h2>
               </Row>

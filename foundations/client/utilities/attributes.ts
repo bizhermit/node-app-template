@@ -1,8 +1,8 @@
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import type { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
+import strJoin from "../../objects/string/join";
 
 export const joinClassNames = (...classNames: Array<string | null | undefined>) => {
-  return StringUtils.join(" ", ...classNames);
+  return strJoin(" ", ...classNames);
 };
 
 export const attributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
@@ -13,7 +13,7 @@ export const attributes = (props: Struct, ...classNames: Array<string | null | u
       ret[key] = props[key];
     });
   }
-  ret.className = StringUtils.join(" ", ...classNames, props.className) || undefined;
+  ret.className = strJoin(" ", ...classNames, props.className) || undefined;
   return ret;
 };
 

@@ -1,9 +1,9 @@
 "use client";
 
-import StringUtils, { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useMemo, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import { equals, getValue, setValue } from "../../../../../data-items/utilities";
+import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
 import useLoadableArray from "../../../../hooks/loadable-array";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon, DownIcon } from "../../../icon";
@@ -165,7 +165,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       return;
     }
     setBindSource(source.filter(item => {
-      return StringUtils.contains(item[ldn], text);
+      return String(item[ldn] ?? "").indexOf(text) > -1;
     }));
     openPicker({
       scroll: false,
@@ -337,7 +337,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   }, [ctx.value, source]);
 
   const isEmptyValue = ctx.value == null || ctx.value === "";
-  const hasLabel = StringUtils.isNotEmpty(label);
+  const hasLabel = isNotEmpty(label);
   const hasData = !(ctx.value == null || ctx.value === "");
 
   useEffect(() => {

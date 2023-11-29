@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { generateUuidV4 } from "../../objects/string/generator";
 
 type ProcessKillMode = "sameKey" | "otherKey";
 type ProcessCancelMode = "sameKey" | "otherKey";
@@ -238,7 +238,7 @@ const useProcess = () => {
     }
 
     const item: ProcessItem = {
-      id: StringUtils.generateUuidV4(),
+      id: generateUuidV4(),
       func,
       opts: options,
       resolve: () => { },
