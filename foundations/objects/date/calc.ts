@@ -1,15 +1,15 @@
-export const addDay = (date: Date, add: number) => {
-  date.setDate(date.getDate() + add);
+export const addDay = (date: Date, num: number) => {
+  date.setDate(date.getDate() + num);
   return date;
 };
 
-export const addMonth = (date: Date, add: number) => {
-  date.setMonth(date.getMonth() + add);
+export const addMonth = (date: Date, num: number) => {
+  date.setMonth(date.getMonth() + num);
   return date;
 };
 
-export const addYear = (date: Date, add: number) => {
-  date.setFullYear(date.getFullYear() + add);
+export const addYear = (date: Date, num: number) => {
+  date.setFullYear(date.getFullYear() + num);
   return date;
 };
 
