@@ -45,7 +45,7 @@ next-env.d.ts
 !.vscode/launch.json
 !.vscode/extensions.json
 
-/.nexpress
+/.server
 /.main
 /.renderer
 /dist

@@ -12,7 +12,7 @@ next-env.d.ts
 .vscode
 .next
 .main
-.nexpress
+.server
 .renderer
 resources/config.json
 nextron

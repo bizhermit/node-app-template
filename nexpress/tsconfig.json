@@ -3,15 +3,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "noEmit": false,
-    "rootDir": "./",
-    "outDir": "../.nexpress",
-    "paths": {}
+    "rootDir": "../",
+    "outDir": "../.server",
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
     "**/*.ts",
-    "../types/*"
   ]
 }
