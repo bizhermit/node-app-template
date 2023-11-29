@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
-import { NumberData } from "../../../../../data-items/number";
+import NumberValidation from "../../../../../data-items/number/validations";
 import { add, minus } from "../../../../../objects/number/calc";
 import formatNum from "../../../../../objects/number/format";
 import { isEmpty } from "../../../../../objects/string/empty";
@@ -134,13 +134,13 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
       const validations: Array<FormItemValidation<Nullable<number>>> = [];
       const max = props.$max, min = props.$min;
       if (max != null && min != null) {
-        validations.push(v => NumberData.rangeValidation(v, min, max, label));
+        validations.push(v => NumberValidation.range(v, min, max, label));
       } else {
         if (min != null) {
-          validations.push(v => NumberData.minValidation(v, min, label));
+          validations.push(v => NumberValidation.min(v, min, label));
         }
         if (max != null) {
-          validations.push(v => NumberData.maxValidation(v, max, label));
+          validations.push(v => NumberValidation.max(v, max, label));
         }
       }
       return validations;

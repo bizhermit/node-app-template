@@ -1,9 +1,10 @@
 import { dataItemKey } from "../../data-items";
-import { DateData } from "../../data-items/date";
-import { FileData } from "../../data-items/file";
-import { NumberData } from "../../data-items/number";
-import { StringData } from "../../data-items/string";
-import { TimeData } from "../../data-items/time";
+import DateValidation from "../../data-items/date/validations";
+import FileValidation from "../../data-items/file/validations";
+import NumberValidation from "../../data-items/number/validations";
+import StringValidation from "../../data-items/string/validations";
+import TimeItemUtils from "../../data-items/time/utilities";
+import TimeValidation from "../../data-items/time/validations";
 import formatDate from "../../objects/date/format";
 import parseDate from "../../objects/date/parse";
 import { withoutTime } from "../../objects/date/without-time";
@@ -107,67 +108,67 @@ const getStringItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_String
   const v = data?.[key] as string | null | undefined;
 
   if (di.required) {
-    pushMsg(StringData.requiredValidation(v, name));
+    pushMsg(StringValidation.required(v, name));
     if (pushMsg.hasError) return;
   }
   if (di.length != null) {
-    pushMsg(StringData.lengthValidation(v, di.length, name));
+    pushMsg(StringValidation.length(v, di.length, name));
     if (pushMsg.hasError) return;
   } else {
     if (di.minLength != null) {
-      pushMsg(StringData.minLengthValidation(v, di.minLength, name));
+      pushMsg(StringValidation.minLength(v, di.minLength, name));
       if (pushMsg.hasError) return;
     }
     if (di.maxLength != null) {
-      pushMsg(StringData.maxLengthValidation(v, di.maxLength, name));
+      pushMsg(StringValidation.maxLength(v, di.maxLength, name));
       if (pushMsg.hasError) return;
     }
   }
   switch (di.charType) {
     case "h-num":
-      pushMsg(StringData.halfWidthNumericValidation(v, name));
+      pushMsg(StringValidation.halfWidthNumeric(v, name));
       break;
     case "f-num":
-      pushMsg(StringData.fullWidthNumericValidation(v, name));
+      pushMsg(StringValidation.fullWidthNumeric(v, name));
       break;
     case "num":
-      pushMsg(StringData.numericValidation(v, name));
+      pushMsg(StringValidation.numeric(v, name));
       break;
     case "h-alpha":
-      pushMsg(StringData.halfWidthAlphabetValidation(v, name));
+      pushMsg(StringValidation.halfWidthAlphabet(v, name));
       break;
     case "f-alpha":
-      pushMsg(StringData.fullWidthAlphabetValidation(v, name));
+      pushMsg(StringValidation.fullWidthAlphabet(v, name));
       break;
     case "alpha":
-      pushMsg(StringData.alphabetValidation(v, name));
+      pushMsg(StringValidation.alphabet(v, name));
       break;
     case "h-alpha-num":
-      pushMsg(StringData.halfWidthAlphaNumericValidation(v, name));
+      pushMsg(StringValidation.halfWidthAlphaNumeric(v, name));
       break;
     case "h-alpha-num-syn":
-      pushMsg(StringData.halfWidthAlphaNumericAndSymbolsValidation(v, name));
+      pushMsg(StringValidation.halfWidthAlphaNumericAndSymbols(v, name));
       break;
     case "int":
-      pushMsg(StringData.integerValidation(v, name));
+      pushMsg(StringValidation.integer(v, name));
       break;
     case "h-katakana":
-      pushMsg(StringData.halfWidthKatakanaValidation(v, name));
+      pushMsg(StringValidation.halfWidthKatakana(v, name));
       break;
     case "f-katakana":
-      pushMsg(StringData.fullWidthKatakanaValidation(v, name));
+      pushMsg(StringValidation.fullWidthKatakana(v, name));
       break;
     case "katakana":
-      pushMsg(StringData.katakanaValidation(v, name));
+      pushMsg(StringValidation.katakana(v, name));
       break;
     case "email":
-      pushMsg(StringData.mailAddressValidation(v, name));
+      pushMsg(StringValidation.mailAddress(v, name));
       break;
     case "tel":
-      pushMsg(StringData.telValidation(v, name));
+      pushMsg(StringValidation.tel(v, name));
       break;
     case "url":
-      pushMsg(StringData.urlValidation(v, name));
+      pushMsg(StringValidation.url(v, name));
       break;
     default:
       break;
@@ -211,24 +212,24 @@ const getNumberItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Number
   const v = data?.[key] as number | null | undefined;
 
   if (di.required) {
-    pushMsg(NumberData.requiredValidation(v, name));
+    pushMsg(NumberValidation.required(v, name));
     if (pushMsg.hasError) return;
   }
   if (di.min != null && di.max != null) {
-    pushMsg(NumberData.rangeValidation(v, di.min, di.max, name));
+    pushMsg(NumberValidation.range(v, di.min, di.max, name));
     if (pushMsg.hasError) return;
   } else {
     if (di.min != null) {
-      pushMsg(NumberData.minValidation(v, di.min, name));
+      pushMsg(NumberValidation.min(v, di.min, name));
       if (pushMsg.hasError) return;
     }
     if (di.max != null) {
-      pushMsg(NumberData.maxValidation(v, di.max, name));
+      pushMsg(NumberValidation.max(v, di.max, name));
       if (pushMsg.hasError) return;
     }
   }
   if (di.float != null) {
-    pushMsg(NumberData.floatValidation(v, di.float, name));
+    pushMsg(NumberValidation.float(v, di.float, name));
     if (pushMsg.hasError) return;
   }
 
@@ -326,26 +327,26 @@ const getDateItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Date>) =
   }
 
   if (di.required) {
-    pushMsg(DateData.requiredValidation(date, name));
+    pushMsg(DateValidation.required(date, name));
     if (pushMsg.hasError) return;
   }
   if (di.min != null && di.max != null) {
-    pushMsg(DateData.rangeValidation(date, di.min, di.max, di.type, name));
+    pushMsg(DateValidation.range(date, di.min, di.max, di.type, name));
     if (pushMsg.hasError) return;
   } else {
     if (di.min) {
-      pushMsg(DateData.minValidation(date, di.min, di.type, name));
+      pushMsg(DateValidation.min(date, di.min, di.type, name));
       if (pushMsg.hasError) return;
     }
     if (di.max) {
-      pushMsg(DateData.maxValidation(date, di.max, di.type, name));
+      pushMsg(DateValidation.max(date, di.max, di.type, name));
       if (pushMsg.hasError) return;
     }
   }
   if (di.rangePair) {
     const pairCtx = ctx.parentDataContext?.[di.rangePair.name];
     if (pairCtx != null && dataItemKey in pairCtx && (pairCtx.type === "date" || pairCtx.type === "month" || pairCtx.type === "year")) {
-      pushMsg(DateData.contextValidation(date, di.rangePair, ctx.data, di.type, name, pairCtx?.label));
+      pushMsg(DateValidation.context(date, di.rangePair, ctx.data, di.type, name, pairCtx?.label));
       if (pushMsg.hasError) return;
     }
   }
@@ -387,7 +388,7 @@ const getTimeItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Time>) =
         }
         if (di.typeof === "string") {
           if (timeNum != null) {
-            data[key] = TimeData.format(TimeUtils.convertUnitToMilliseconds(timeNum, di.unit), di.mode);
+            data[key] = TimeItemUtils.format(TimeUtils.convertUnitToMilliseconds(timeNum, di.unit), di.mode);
           }
         }
       } catch {
@@ -398,26 +399,26 @@ const getTimeItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Time>) =
   }
 
   if (di.required) {
-    pushMsg(TimeData.requiredValidation(timeNum, name));
+    pushMsg(TimeValidation.required(timeNum, name));
     if (pushMsg.hasError) return;
   }
   if (di.min != null && di.max != null) {
-    pushMsg(TimeData.rangeValidation(timeNum, di.min, di.max, di.mode, di.unit, name));
+    pushMsg(TimeValidation.range(timeNum, di.min, di.max, di.mode, di.unit, name));
     if (pushMsg.hasError) return;
   } else {
     if (di.min) {
-      pushMsg(TimeData.minValidation(timeNum, di.min, di.mode, di.unit, name));
+      pushMsg(TimeValidation.min(timeNum, di.min, di.mode, di.unit, name));
       if (pushMsg.hasError) return;
     }
     if (di.max) {
-      pushMsg(TimeData.maxValidation(timeNum, di.max, di.mode, di.unit, name));
+      pushMsg(TimeValidation.max(timeNum, di.max, di.mode, di.unit, name));
       if (pushMsg.hasError) return;
     }
   }
   if (di.rangePair) {
     const pairCtx = ctx.parentDataContext?.[di.rangePair.name];
     if (pairCtx != null && dataItemKey in pairCtx && pairCtx.type === "time") {
-      pushMsg(TimeData.contextValidation(timeNum, di.rangePair, ctx.data, di.mode, di.unit, name, pairCtx?.unit, pairCtx?.label));
+      pushMsg(TimeValidation.context(timeNum, di.rangePair, ctx.data, di.mode, di.unit, name, pairCtx?.unit, pairCtx?.label));
       if (pushMsg.hasError) return;
     }
   }
@@ -472,7 +473,7 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
     }
 
     if (di.accept) {
-      const f = FileData.fileTypeValidationAsServer(di.accept);
+      const f = FileValidation.typeForServer(di.accept);
       v?.forEach(item => {
         pushMsg(f(item));
       });
@@ -481,7 +482,7 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
     if (di.fileSize != null) {
       v?.forEach(item => {
         if (item.size > di.fileSize!) {
-          pushMsg(`${name}のサイズは${FileData.getSizeText(di.fileSize!)}以内でアップロードしてください。`);
+          pushMsg(`${name}のサイズは${FileValidation.getSizeText(di.fileSize!)}以内でアップロードしてください。`);
         }
       });
     }
@@ -491,7 +492,7 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
         return pv + item.size;
       }, 0) as number ?? 0;
       if (size > di.totalFileSize) {
-        pushMsg(`${name}の合計サイズは${FileData.getSizeText(di.totalFileSize)}以内でアップロードしてください。`);
+        pushMsg(`${name}の合計サイズは${FileValidation.getSizeText(di.totalFileSize)}以内でアップロードしてください。`);
       }
     }
   } else {
@@ -504,12 +505,12 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
     }
 
     if (v != null && di.accept != null) {
-      pushMsg(FileData.fileTypeValidationAsServer(di.accept)(v));
+      pushMsg(FileValidation.typeForServer(di.accept)(v));
     }
 
     if (v != null && di.fileSize != null) {
       if (v.size > di.fileSize) {
-        pushMsg(`${name}のサイズは${FileData.getSizeText(di.fileSize!)}以内でアップロードしてください。`);
+        pushMsg(`${name}のサイズは${FileValidation.getSizeText(di.fileSize!)}以内でアップロードしてください。`);
       }
     }
   }

@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
-import { FileData } from "../../../../../data-items/file";
+import FileValidation from "../../../../../data-items/file/validations";
 import Button, { type ButtonOptions } from "../../../button";
 import { CrossIcon } from "../../../icon";
 import useForm from "../../context";
@@ -89,13 +89,13 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
       if (props.$accept) {
-        validations.push(FileData.fileTypeValidation(props.$accept));
+        validations.push(FileValidation.type(props.$accept));
       }
       if (props.$fileSize != null) {
-        validations.push(FileData.fileSizeValidation(props.$fileSize));
+        validations.push(FileValidation.size(props.$fileSize));
       }
       if (props.$totalFileSize != null) {
-        validations.push(FileData.totalFileSizeValidation(props.$totalFileSize));
+        validations.push(FileValidation.totalSize(props.$totalFileSize));
       }
       return validations;
     },

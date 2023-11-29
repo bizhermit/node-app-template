@@ -2,7 +2,8 @@
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode, type Ref } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
-import { TimeData, TimeInput } from "../../../../../data-items/time";
+import TimeInput from "../../../../../data-items/time/input";
+import TimeItemUtils from "../../../../../data-items/time/utilities";
 import Time from "../../../../../objects/time";
 import { CrossIcon } from "../../../icon";
 import Text from "../../../text";
@@ -331,7 +332,7 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
   }, [ctx.editable]);
 
   useEffect(() => {
-    const time = TimeData.convertTime(ctx.valueRef.current, unit);
+    const time = TimeItemUtils.convertTime(ctx.valueRef.current, unit);
     if (time == null) {
       setHour(undefined);
       setMinute(undefined);

@@ -1,21 +1,4 @@
-import { dataItemKey } from ".";
-
-const fileItem = <
-  C extends Omit<DataItem_File, DataItemKey | "type">
->(ctx?: Readonly<C>) => {
-  return Object.freeze<C & {
-    [dataItemKey]: undefined;
-    type: "file";
-    multiple: C extends { multiple: infer Multiple } ? Multiple : false;
-  }>({
-    multiple: false,
-    ...(ctx as any),
-    [dataItemKey]: undefined,
-    type: "file",
-  });
-};
-
-export namespace FileData {
+namespace FileValidation {
 
   export const getSizeText = (size: number) => {
     if (size < 1024) return `${size}B`;
@@ -24,7 +7,7 @@ export namespace FileData {
     return `${Math.floor(size / 1073741824 * 10) / 10}GB`;
   };
 
-  export const fileTypeValidation = (accept: string) => {
+  export const type = (accept: string) => {
     const accepts = accept.split(",");
     const validAccept = (file: File) => {
       if (file == null) return true;
@@ -49,7 +32,7 @@ export namespace FileData {
     };
   };
 
-  export const fileSizeValidation = (fileSize: number) => {
+  export const size = (fileSize: number) => {
     return (files: File | Array<File>) => {
       const values = Array.isArray(files) ? files : [files];
       let ret: string | undefined;
@@ -62,7 +45,7 @@ export namespace FileData {
     };
   };
 
-  export const fileTypeValidationAsServer = (accept: string) => {
+  export const typeForServer = (accept: string) => {
     const accepts = accept.split(",");
     const validAccept = (file: FileValue) => {
       if (file == null) return true;
@@ -88,7 +71,7 @@ export namespace FileData {
     };
   };
 
-  export const totalFileSizeValidation = (totalFileSize: number) => {
+  export const totalSize = (totalFileSize: number) => {
     return (files: File | Array<File>) => {
       const values = Array.isArray(files) ? files : [files];
       const sum = values.reduce((sum, file) => sum + (file?.size || 0), 0);
@@ -99,4 +82,4 @@ export namespace FileData {
 
 }
 
-export default fileItem;
+export default FileValidation;

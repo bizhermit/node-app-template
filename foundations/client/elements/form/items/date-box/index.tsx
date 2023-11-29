@@ -2,7 +2,8 @@
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
-import { DateData, DateInput } from "../../../../../data-items/date";
+import DateInput from "../../../../../data-items/date/input";
+import DateItemUtils from "../../../../../data-items/date/utilities";
 import { isBeforeDate } from "../../../../../objects/date/compare";
 import parseDate from "../../../../../objects/date/parse";
 import equals from "../../../../../objects/equal";
@@ -159,8 +160,8 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
     interlockValidation: props.$rangePair != null,
     validations: (_, label) => {
       const validations: Array<FormItemValidation<any>> = [];
-      const max = DateData.dateAsLast(maxDate, type);
-      const min = DateData.dateAsFirst(minDate, type);
+      const max = DateItemUtils.dateAsLast(maxDate, type);
+      const min = DateItemUtils.dateAsFirst(minDate, type);
       if (max != null && min != null) {
         validations.push(DateInput.rangeValidation(min, max, type, label));
       } else {

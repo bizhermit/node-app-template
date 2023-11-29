@@ -2,7 +2,8 @@
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
-import { TimeData, TimeInput } from "../../../../../data-items/time";
+import TimeInput from "../../../../../data-items/time/input";
+import TimeItemUtils from "../../../../../data-items/time/utilities";
 import equals from "../../../../../objects/equal";
 import { isEmpty } from "../../../../../objects/string/empty";
 import Time from "../../../../../objects/time";
@@ -157,7 +158,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
   });
 
   const setInputValues = (value?: TimeValue) => {
-    const time = TimeData.convertTime(value, unit);
+    const time = TimeItemUtils.convertTime(value, unit);
     if (time == null) {
       cacheH.current = cacheM.current = cacheS.current = undefined;
     } else {

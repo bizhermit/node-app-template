@@ -2,7 +2,8 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, type Ref } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
-import { DateData, DateInput } from "../../../../../data-items/date";
+import DateInput from "../../../../../data-items/date/input";
+import DateItemUtils from "../../../../../data-items/date/utilities";
 import generateArray from "../../../../../objects/array/generator";
 import { addDay, getFirstDateAtMonth, getFirstDateAtYear, getLastDateAtMonth } from "../../../../../objects/date/calc";
 import cloneDate from "../../../../../objects/date/clone";
@@ -193,8 +194,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     validations: (_, label) => {
       if (props.$skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
-      const maxTime = DateData.dateAsLast(maxDate, type);
-      const minTime = DateData.dateAsFirst(minDate, type);
+      const maxTime = DateItemUtils.dateAsLast(maxDate, type);
+      const minTime = DateItemUtils.dateAsFirst(minDate, type);
       if (maxTime != null && minTime != null) {
         const compare = DateInput.rangeValidation(minTime, maxTime, type, label);
         if (multiple) {
