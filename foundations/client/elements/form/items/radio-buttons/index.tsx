@@ -2,7 +2,9 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
-import { equals, getValue, setValue } from "../../../../../data-items/utilities";
+import equals from "../../../../../objects/equal";
+import { getValue } from "../../../../../objects/struct/get";
+import { setValue } from "../../../../../objects/struct/set";
 import useLoadableArray from "../../../../hooks/loadable-array";
 import { joinClassNames, pressPositiveKey } from "../../../../utilities/attributes";
 import Text from "../../..//text";

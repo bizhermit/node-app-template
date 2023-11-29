@@ -34,7 +34,7 @@
     "dist:mac": "npm run dist -- --mac & npm run clean:nextron",
     "pack": "npm run dist -- --dir --win & npm run clean:nextron",
     "exec": "npm run dist:win && .\\dist\\pack\\win-unpacked\\node-app-template.exe",
-    "export:react-addon": "npx rimraf dist/libs/react-addon && npx tsc -p tsconfig.react-addon.json && npx tsc-alias -p tsconfig.react-addon.json && node scripts/export-react-addon && npx minifier dist/libs/react-addon"
+    "export:utils": "npx rimraf dist/libs/utils && npx tsc -p tsconfig.utils.json && npx minifier dist/libs/utils && node scripts/export-utils"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",

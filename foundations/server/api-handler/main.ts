@@ -1,4 +1,3 @@
-import { structKeys } from "#/data-items/struct";
 import { dataItemKey } from "../../data-items";
 import { DateData } from "../../data-items/date";
 import { FileData } from "../../data-items/file";
@@ -8,6 +7,7 @@ import { TimeData } from "../../data-items/time";
 import formatDate from "../../objects/date/format";
 import parseDate from "../../objects/date/parse";
 import { withoutTime } from "../../objects/date/without-time";
+import structKeys from "../../objects/struct/keys";
 import Time from "../../objects/time";
 import { TimeUtils } from "../../objects/time/utilities";
 

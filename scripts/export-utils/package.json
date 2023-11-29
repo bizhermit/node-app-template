@@ -1,0 +1,33 @@
+{
+  "name": "@bizhermit/utils",
+  "version": "0.0.0-alpha.0",
+  "description": "js/ts utilities",
+  "keywords": [
+    "utils",
+    "string",
+    "number",
+    "date",
+    "time",
+    "array",
+    "struct",
+    "clone"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bizhermit/node-app-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bizhermit/node-app-template/issues"
+  },
+  "author": "Senda Ryoichi <rsenda@bizhermit.com> (https://bizhermit.com)",
+  "homepage": "https://bizhermit.com",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "CREDIT",
+    "index.d.ts"
+  ],
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}

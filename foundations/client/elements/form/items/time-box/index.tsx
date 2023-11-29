@@ -3,7 +3,7 @@
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { TimeData, TimeInput } from "../../../../../data-items/time";
-import { equals } from "../../../../../data-items/utilities";
+import equals from "../../../../../objects/equal";
 import { isEmpty } from "../../../../../objects/string/empty";
 import Time from "../../../../../objects/time";
 import { ClockIcon, CrossIcon } from "../../../icon";

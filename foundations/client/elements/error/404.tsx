@@ -1,6 +1,6 @@
-import NextLink from "#/client/elements/link";
 import { type FC, type HTMLAttributes } from "react";
 import { attributes } from "../../utilities/attributes";
+import NextLink from "../link";
 import Style from "./index.module.scss";
 
 const Error404: FC<HTMLAttributes<HTMLDivElement>> = (props) => {

@@ -3,9 +3,9 @@
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { DateData, DateInput } from "../../../../../data-items/date";
-import { equals } from "../../../../../data-items/utilities";
 import { isBeforeDate } from "../../../../../objects/date/compare";
 import parseDate from "../../../../../objects/date/parse";
+import equals from "../../../../../objects/equal";
 import { isEmpty } from "../../../../../objects/string/empty";
 import { CalendarIcon, CrossIcon } from "../../../icon";
 import Popup from "../../../popup";

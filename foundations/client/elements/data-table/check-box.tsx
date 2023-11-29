@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import type { DataTableBaseColumn, DataTableColumn } from ".";
-import { getValue, setValue } from "../../../data-items/utilities";
+import { getValue } from "../../../objects/struct/get";
+import { setValue } from "../../../objects/struct/set";
 import CheckBox, { type CheckBoxProps } from "../form/items/check-box";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {

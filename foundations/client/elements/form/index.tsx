@@ -1,7 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FormHTMLAttributes, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import { getValue, setValue } from "../../../data-items/utilities";
+import { getValue } from "../../../objects/struct/get";
+import { setValue } from "../../../objects/struct/set";
 import { attributes } from "../../utilities/attributes";
 import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "./$types";
 import { FormContext, type UseFormItemContextOptions } from "./context";
