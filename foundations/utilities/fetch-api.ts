@@ -1,5 +1,5 @@
 import type { RequestInit } from "next/dist/server/web/spec-extension/request";
-import { convertFormDataToStruct, convertStructToFormData } from "./form-data";
+import { convertFormDataToStruct, convertStructToFormData } from "../objects/form-data/convert";
 import { getDynamicUrlContext } from "./url";
 
 export type FetchOptions = {
