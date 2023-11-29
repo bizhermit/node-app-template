@@ -1,11 +1,11 @@
 "use client";
 
-import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
-import Time from "@bizhermit/time";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { TimeData, TimeInput } from "../../../../../data-items/time";
 import { equals } from "../../../../../data-items/utilities";
+import { isEmpty } from "../../../../../objects/string/empty";
+import Time from "../../../../../objects/time";
 import { ClockIcon, CrossIcon } from "../../../icon";
 import Popup from "../../../popup";
 import useForm from "../../context";
@@ -46,8 +46,7 @@ export type TimeBoxProps<D extends DataItem_Time | DataItem_Number | DataItem_St
   );
 
 const isNumericOrEmpty = (value?: string): value is string => {
-  if (isEmpty(value)) return true;
-  return /^[0-9]+$/.test(value);
+  return isEmpty(value) || /^[0-9]+$/.test(value);
 };
 
 interface TimeBoxFC extends FunctionComponent<TimeBoxProps> {

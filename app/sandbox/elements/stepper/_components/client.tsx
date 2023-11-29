@@ -6,9 +6,9 @@ import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { CloudIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
 import Stepper from "#/client/elements/stepper";
+import generateArray from "#/objects/array/generator";
 import { sizes } from "#/utilities/sandbox";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import { type ReactNode, useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 const maxStep = 10;
 
@@ -47,7 +47,7 @@ const StepperClient = () => {
         $size={size}
       >
         {useMemo(() => {
-          return ArrayUtils.generateArray(maxStep, idx => {
+          return generateArray(maxStep, idx => {
             return `item${idx}`;
           }) as [ReactNode, ...Array<ReactNode>];
         }, [maxStep])}
@@ -64,7 +64,7 @@ const StepperClient = () => {
         $size={size}
       >
         {useMemo(() => {
-          return ArrayUtils.generateArray(maxStep, idx => {
+          return generateArray(maxStep, idx => {
             return `item${idx}`;
           }) as [ReactNode, ...Array<ReactNode>];
         }, [maxStep])}
@@ -81,7 +81,7 @@ const StepperClient = () => {
         $size={size}
       >
         {useMemo(() => {
-          return ArrayUtils.generateArray(maxStep, idx => {
+          return generateArray(maxStep, idx => {
             return (
               <Row key={idx} className="g-s">
                 <CloudIcon />
@@ -98,7 +98,7 @@ const StepperClient = () => {
         $size={size}
       >
         {useMemo(() => {
-          return ArrayUtils.generateArray(maxStep, idx => {
+          return generateArray(maxStep, idx => {
             return (
               <Row key={idx} className="g-s">
                 <CloudIcon />

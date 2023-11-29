@@ -1,10 +1,16 @@
 "use client";
 
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
-import DatetimeUtils, { convertDate, dateFormat } from "@bizhermit/basic-utils/dist/datetime-utils";
+import generateArray from "#/objects/array/generator";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, type Ref } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { DateData, DateInput } from "../../../../../data-items/date";
+import { addDay, getFirstDateAtMonth, getFirstDateAtYear, getLastDateAtMonth } from "../../../../../objects/date/calc";
+import cloneDate from "../../../../../objects/date/clone";
+import { isAfterDate, isBeforeDate, isBeforeDatetime } from "../../../../../objects/date/compare";
+import { Month, Week } from "../../../../../objects/date/consts";
+import { equalDate, equalYearMonth } from "../../../../../objects/date/equal";
+import formatDate from "../../../../../objects/date/format";
+import parseDate from "../../../../../objects/date/parse";
 import { CalendarIcon, CrossIcon, LeftIcon, ListIcon, RightIcon, TodayIcon } from "../../../icon";
 import Text from "../../../text";
 import useForm from "../../context";
@@ -121,8 +127,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
           return {
             ...common,
             $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
-              if (value == null || !Array.isArray(value)) return f(convertDate(value), ctx);
-              return value.map(v => f(convertDate(v), ctx))[0];
+              if (value == null || !Array.isArray(value)) return f(parseDate(value), ctx);
+              return value.map(v => f(parseDate(v), ctx))[0];
             }, props, dataItem)),
           } as DatePickerProps<D>;
         default:
@@ -155,16 +161,16 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
   });
   const monthTexts = useMemo(() => {
     if (props.$monthTexts == null || props.$monthTexts === "num") return monthTextsNum;
-    if (props.$monthTexts === "en") return DatetimeUtils.Month.En;
-    if (props.$monthTexts === "en-s") return DatetimeUtils.Month.en;
-    if (props.$monthTexts === "ja") return DatetimeUtils.Month.Ja;
+    if (props.$monthTexts === "en") return Month.en;
+    if (props.$monthTexts === "en-s") return Month.en;
+    if (props.$monthTexts === "ja") return Month.ja;
     if (props.$monthTexts.length !== 12) return monthTextsNum;
     return props.$monthTexts;
   }, [props.$monthTexts]);
   const weekTexts = useMemo(() => {
-    if (props.$weekTexts == null || props.$weekTexts === "ja") return DatetimeUtils.Week.ja;
-    if (props.$weekTexts === "en") return DatetimeUtils.Week.en;
-    if (props.$weekTexts.length !== 7) return DatetimeUtils.Week.ja;
+    if (props.$weekTexts == null || props.$weekTexts === "ja") return Week.ja_s;
+    if (props.$weekTexts === "en") return Week.en_s;
+    if (props.$weekTexts.length !== 7) return Week.ja_s;
     return props.$weekTexts;
   }, [props.$weekTexts]);
   const minDate = useMemo(() => {
@@ -230,7 +236,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       }
       if (props.$validDays) {
         const judge = (value: string | number | Date | null) => {
-          const date = convertDate(value);
+          const date = parseDate(value);
           if (date == null) return undefined;
           return judgeValid(date) ? undefined : "選択可能な日付ではありません。";
         };
@@ -269,7 +275,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     const vals = getArrayValue();
     const val = vals[vals.length - 1];
     if (val == null) return undefined;
-    return convertDate(val);
+    return parseDate(val);
   };
 
   const yearNodes = useMemo(() => {
@@ -283,7 +289,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     };
     const isSelected = (num: number) => {
       if (days.length === findCount) return false;
-      const ret = days.find(v => convertDate(v)?.getFullYear() === num) != null;
+      const ret = days.find(v => parseDate(v)?.getFullYear() === num) != null;
       if (ret) findCount++;
       return ret;
     };
@@ -300,7 +306,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       }
       if (selected) {
         const vals = [...getArrayValue()];
-        const index = vals.findIndex(v => convertDate(v)?.getFullYear() === num);
+        const index = vals.findIndex(v => parseDate(v)?.getFullYear() === num);
         vals.splice(index, 1);
         ctx.change(vals);
         return;
@@ -308,7 +314,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       const vals = [...getArrayValue()];
       vals.push(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
       ctx.change(vals.sort((d1, d2) => {
-        return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
+        return isBeforeDatetime(parseDate(d1)!, parseDate(d2)!) ? 1 : -1;
       }));
     };
     const nodes = [];
@@ -347,23 +353,23 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     let findCount = 0, findToday = false;
     const isToday = (date: Date) => {
       if (findToday) return false;
-      return findToday = DatetimeUtils.equalYearMonth(date, today);
+      return findToday = equalYearMonth(date, today);
     };
     const isSelected = (date: Date) => {
       if (days.length === findCount) return false;
-      const ret = days.find(v => DatetimeUtils.equalYearMonth(v, date)) != null;
+      const ret = days.find(v => equalYearMonth(v, date)) != null;
       if (ret) findCount++;
       return ret;
     };
     let afterMin = false;
     let beforeMax = true;
-    const minFirstDate = DatetimeUtils.getFirstDateAtMonth(minDate);
-    const maxLastDate = DatetimeUtils.getLastDateAtMonth(maxDate);
+    const minFirstDate = getFirstDateAtMonth(minDate);
+    const maxLastDate = getLastDateAtMonth(maxDate);
     const isInRange = (date: Date) => {
-      if (!afterMin && !DatetimeUtils.isBeforeDate(minFirstDate, date)) {
+      if (!afterMin && !isBeforeDate(minFirstDate, date)) {
         afterMin = true;
       }
-      if (beforeMax && DatetimeUtils.isAfterDate(maxLastDate, date)) {
+      if (beforeMax && isAfterDate(maxLastDate, date)) {
         beforeMax = false;
       }
       return afterMin && beforeMax;
@@ -381,7 +387,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       }
       if (selected) {
         const vals = [...getArrayValue()];
-        const index = vals.findIndex(v => DatetimeUtils.equalYearMonth(convertDate(v), date));
+        const index = vals.findIndex(v => equalYearMonth(parseDate(v), date));
         vals.splice(index, 1);
         ctx.change(vals);
         return;
@@ -389,14 +395,14 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       const vals = [...getArrayValue()];
       vals.push(DateInput.convertDateToValue(date, props.$typeof));
       ctx.change(vals.sort((d1, d2) => {
-        return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
+        return isBeforeDatetime(parseDate(d1)!, parseDate(d2)!) ? 1 : -1;
       }));
     };
-    return ArrayUtils.generateArray(12, num => {
+    return generateArray(12, num => {
       const cursor = new Date(year, num, 1);
       const selected = type === "month" ? isSelected(cursor) : month === num;
       const inRange = type === "month" ? isInRange(cursor) :
-        isInRange(cursor) || isInRange(DatetimeUtils.getLastDateAtMonth(cursor));
+        isInRange(cursor) || isInRange(getLastDateAtMonth(cursor));
       return (
         <div
           key={num}
@@ -432,11 +438,11 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     let findCount = 0, findToday = false;
     const isToday = (date: Date) => {
       if (findToday) return false;
-      return findToday = DatetimeUtils.equalDate(date, today);
+      return findToday = equalDate(date, today);
     };
     const isSelected = (date: Date) => {
       if (days.length === findCount) return false;
-      const ret = days.find(v => DatetimeUtils.equalDate(v, date)) != null;
+      const ret = days.find(v => equalDate(v, date)) != null;
       if (ret) findCount++;
       return ret;
     };
@@ -444,16 +450,16 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     let beforeMax = true;
     const isInRange = (date: Date) => {
       if (!judgeValid(date)) return false;
-      if (!afterMin && !DatetimeUtils.isBeforeDate(minDate, date)) {
+      if (!afterMin && !isBeforeDate(minDate, date)) {
         afterMin = true;
       }
-      if (beforeMax && DatetimeUtils.isAfterDate(maxDate, date)) {
+      if (beforeMax && isAfterDate(maxDate, date)) {
         beforeMax = false;
       }
       return afterMin && beforeMax;
     };
     const select = (dateStr: string, selected: boolean) => {
-      const date = convertDate(dateStr)!;
+      const date = parseDate(dateStr)!;
       if (!multiple) {
         const v = DateInput.convertDateToValue(date, props.$typeof);
         ctx.change(v);
@@ -466,7 +472,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       }
       if (selected) {
         const vals = [...getArrayValue()];
-        const index = vals.findIndex(v => DatetimeUtils.equalDate(convertDate(v), date));
+        const index = vals.findIndex(v => equalDate(parseDate(v), date));
         vals.splice(index, 1);
         ctx.change(vals);
         return;
@@ -474,11 +480,11 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       const vals = [...getArrayValue()];
       vals.push(DateInput.convertDateToValue(date, props.$typeof));
       ctx.change(vals.sort((d1, d2) => {
-        return DatetimeUtils.isBefore(convertDate(d1)!, convertDate(d2)!) ? 1 : -1;
+        return isBeforeDatetime(parseDate(d1)!, parseDate(d2)!) ? 1 : -1;
       }));
     };
     const generateCellNode = (key: Key, date: Date, state: string) => {
-      const dateStr = dateFormat(cursor)!;
+      const dateStr = formatDate(cursor)!;
       const selected = isSelected(cursor);
       const inRange = isInRange(date);
       return (
@@ -503,7 +509,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     if (mode === "calendar") {
       let beforeLength = (cursor.getDay() - (props.$firstWeek ?? 0) + 7) % 7 || 7;
       if (beforeLength < threshold) beforeLength += 7;
-      DatetimeUtils.addDay(cursor, beforeLength * -1);
+      addDay(cursor, beforeLength * -1);
       const m = cursor.getMonth();
       while (cursor.getMonth() === m) {
         nodes.push(
@@ -513,7 +519,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
             "before"
           )
         );
-        DatetimeUtils.addDay(cursor, 1);
+        addDay(cursor, 1);
       }
     }
     while (cursor.getMonth() === month) {
@@ -524,7 +530,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
           "current",
         )
       );
-      DatetimeUtils.addDay(cursor, 1);
+      addDay(cursor, 1);
     }
     if (mode === "calendar") {
       for (let i = 0, il = (7 - nodes.length % 7); i < il; i++) {
@@ -535,7 +541,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
             "after",
           )
         );
-        DatetimeUtils.addDay(cursor, 1);
+        addDay(cursor, 1);
       }
     }
     return nodes;
@@ -624,11 +630,11 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       return true;
     }
     if (type === "month") {
-      const minFirstDate = DatetimeUtils.getFirstDateAtMonth(minDate);
-      const maxLastDate = DatetimeUtils.getLastDateAtMonth(maxDate);
-      return !DatetimeUtils.isAfterDate(today, minFirstDate) && !DatetimeUtils.isBeforeDate(today, maxLastDate);
+      const minFirstDate = getFirstDateAtMonth(minDate);
+      const maxLastDate = getLastDateAtMonth(maxDate);
+      return !isAfterDate(today, minFirstDate) && !isBeforeDate(today, maxLastDate);
     }
-    return !DatetimeUtils.isAfterDate(today, minDate) && !DatetimeUtils.isBeforeDate(today, maxDate) && judgeValid(today);
+    return !isAfterDate(today, minDate) && !isBeforeDate(today, maxDate) && judgeValid(today);
   }, [minDate, maxDate, type]);
 
   const selectToday = () => {
@@ -638,13 +644,13 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     let date: Date;
     switch (type) {
       case "year":
-        date = DatetimeUtils.getFirstDateAtYear(DatetimeUtils.copy(today));
+        date = getFirstDateAtYear(cloneDate(today));
         break;
       case "month":
-        date = DatetimeUtils.getFirstDateAtMonth(DatetimeUtils.copy(today));
+        date = getFirstDateAtMonth(cloneDate(today));
         break;
       default:
-        date = DatetimeUtils.copy(today);
+        date = cloneDate(today);
         break;
     }
     if (multiple) {
@@ -668,7 +674,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
   useEffect(() => {
     setDays(
       getArrayValue()
-        .map(v => convertDate(v)!)
+        .map(v => parseDate(v)!)
         .filter(v => v != null)
       ?? []
     );

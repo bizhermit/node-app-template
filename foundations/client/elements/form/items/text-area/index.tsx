@@ -1,9 +1,9 @@
 "use client";
 
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { StringData } from "../../../../../data-items/string";
+import { isNotEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import Resizer from "../../../resizer";
 import useForm from "../../context";
@@ -168,7 +168,7 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
       {...props}
       ref={ref}
       $context={ctx}
-      data-has={StringUtils.isNotEmpty(ctx.value)}
+      data-has={isNotEmpty(ctx.value)}
       $mainProps={{
         style: {
           width: convertSizeNumToStr(props.$width),

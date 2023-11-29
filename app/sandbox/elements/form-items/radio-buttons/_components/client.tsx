@@ -7,9 +7,9 @@ import RadioButtons, { useRadioButtons } from "#/client/elements/form/items/radi
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import { CalendarIcon, ClockIcon, CloudIcon, SaveIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
+import generateArray from "#/objects/array/generator";
 import { colors } from "#/utilities/sandbox";
 import { sample_number, sample_string } from "$/data-items/sample/item";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useState } from "react";
 
 const RadioButtonsClient = () => {
@@ -116,7 +116,7 @@ const RadioButtonsClient = () => {
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
-          $source={ArrayUtils.generateArray(3, (value) => {
+          $source={generateArray(3, (value) => {
             return { value, label: `item ${value}` };
           })}
           $appearance={appearance}
@@ -128,7 +128,7 @@ const RadioButtonsClient = () => {
           $tag="string"
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
-          $source={ArrayUtils.generateArray(3, (value) => {
+          $source={generateArray(3, (value) => {
             return { value: String(value), label: `item ${value}` };
           })}
           $appearance={appearance}
@@ -231,7 +231,7 @@ const RadioButtonsClient = () => {
         $required
         $allowNull
         $messagePosition="bottom"
-        $source={ArrayUtils.generateArray(5, idx => {
+        $source={generateArray(5, idx => {
           return {
             value: idx,
             label: `item${idx}`,
@@ -282,7 +282,7 @@ const RadioButtonsClient = () => {
           $readOnly={readOnly}
           $disabled={disabled}
           $direction="vertical"
-          $source={ArrayUtils.generateArray(3, idx => {
+          $source={generateArray(3, idx => {
             return {
               value: idx,
               label: `item${idx}`,

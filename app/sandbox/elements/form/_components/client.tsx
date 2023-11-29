@@ -7,7 +7,7 @@ import CheckBox from "#/client/elements/form/items/check-box";
 import TextBox from "#/client/elements/form/items/text-box";
 import Row from "#/client/elements/row";
 import StructView from "#/client/elements/struct-view";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import generateArray from "#/objects/array/generator";
 import { useState } from "react";
 
 const FormClient = () => {
@@ -15,7 +15,7 @@ const FormClient = () => {
   const [bind, setBind] = useState<Struct>({});
   const [viewBind, setViewBind] = useState(bind);
   const [formBind, setFormBind] = useState<Struct>({
-    array: ArrayUtils.generateArray(10, idx => {
+    array: generateArray(10, idx => {
       return {
         id: idx,
         text: `item${idx}`,

@@ -1,14 +1,14 @@
 import Card from "#/client/elements/card";
 import Row from "#/client/elements/row";
 import StructView, { type StructKey } from "#/client/elements/struct-view";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import generateArray from "#/objects/array/generator";
 import { useMemo } from "react";
 
 const Page = () => {
 
   const struct = useMemo(() => {
     const ret: Struct = {};
-    ArrayUtils.generateArray(10, index => {
+    generateArray(10, index => {
       ret[`item${index}`] = `value ${index}`;
     });
     ret.left = "left";

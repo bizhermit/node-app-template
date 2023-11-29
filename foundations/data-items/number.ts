@@ -1,5 +1,5 @@
-import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
 import { dataItemKey } from ".";
+import { getFloatPosition } from "../objects/number/float";
 
 const numberItem = <
   V extends number,
@@ -40,7 +40,7 @@ export namespace NumberData {
   };
 
   export const floatValidation = (v: number | null | undefined, float: number, itemName?: string) => {
-    if (v == null || NumberUtils.getFloatPosition(v) <= float) return undefined;
+    if (v == null || getFloatPosition(v) <= float) return undefined;
     return `${itemName || defaultItemName}は小数第${float}位までで入力してください。`;
   };
 

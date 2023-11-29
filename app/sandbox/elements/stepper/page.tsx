@@ -1,8 +1,8 @@
 import { CloudIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
 import Stepper from "#/client/elements/stepper";
+import generateArray from "#/objects/array/generator";
 import StepperClient from "@/sandbox/elements/stepper/_components/client";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { ReactNode } from "react";
 
 const Page = () => {
@@ -12,7 +12,7 @@ const Page = () => {
         <Stepper
           className="w-100"
           $step={3}
-          children={ArrayUtils.generateArray(10, idx => {
+          children={generateArray(10, idx => {
             return (
               <Row key={idx} className="g-s">
                 <CloudIcon />

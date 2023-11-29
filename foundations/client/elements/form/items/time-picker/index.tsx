@@ -1,9 +1,9 @@
 "use client";
 
-import Time from "@bizhermit/time";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode, type Ref } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { TimeData, TimeInput } from "../../../../../data-items/time";
+import Time from "../../../../../objects/time";
 import { CrossIcon } from "../../../icon";
 import Text from "../../../text";
 import useForm from "../../context";

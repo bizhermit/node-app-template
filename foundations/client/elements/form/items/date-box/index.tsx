@@ -1,11 +1,12 @@
 "use client";
 
-import DatetimeUtils, { convertDate } from "@bizhermit/basic-utils/dist/datetime-utils";
-import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { DateData, DateInput } from "../../../../../data-items/date";
 import { equals } from "../../../../../data-items/utilities";
+import { isBeforeDate } from "../../../../../objects/date/compare";
+import parseDate from "../../../../../objects/date/parse";
+import { isEmpty } from "../../../../../objects/string/empty";
 import { CalendarIcon, CrossIcon } from "../../../icon";
 import Popup from "../../../popup";
 import useForm from "../../context";
@@ -120,7 +121,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
         case "month":
         case "year":
           return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, convertDate)),
+            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, parseDate)),
           } as DateBoxProps<D>;
         default:
           return {
@@ -177,7 +178,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
       }
       if (props.$validDays) {
         const judge = (value: DateValue | null) => {
-          const date = convertDate(value);
+          const date = parseDate(value);
           if (date == null) return undefined;
           return judgeValid(date) ? undefined : "選択可能な日付ではありません。";
         };
@@ -197,7 +198,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   });
 
   const setInputValues = (value?: DateValue) => {
-    const date = convertDate(value);
+    const date = parseDate(value);
     if (date == null) {
       cacheY.current = cacheM.current = cacheD.current = undefined;
     } else {
@@ -219,7 +220,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
       else ctx.change(undefined, edit);
       return;
     }
-    const date = convertDate(`${y}-${m}-${d}`);
+    const date = parseDate(`${y}-${m}-${d}`);
     if (date == null) {
       if (ctx.valueRef.current == null) setInputValues(undefined);
       else ctx.change(undefined, edit);
@@ -267,14 +268,14 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
     let month = date.getMonth() + 1;
     let day = date.getDate();
     if (minDate) {
-      if (DatetimeUtils.isBeforeDate(minDate, date)) {
+      if (isBeforeDate(minDate, date)) {
         year = minDate.getFullYear();
         month = minDate.getMonth() + 1;
         day = minDate.getDate();
       }
     }
     if (maxDate) {
-      if (!DatetimeUtils.isBeforeDate(maxDate, date)) {
+      if (!isBeforeDate(maxDate, date)) {
         year = maxDate.getFullYear();
         month = maxDate.getMonth() + 1;
         day = maxDate.getDate();
@@ -421,15 +422,15 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
     props.$ref.focus = focus;
     props.$ref.addDay = (num = 1) => {
       updown(0, 0, num, false);
-      return DatetimeUtils.copy(convertDate(ctx.valueRef.current)!);
+      return parseDate(ctx.valueRef.current)!;
     };
     props.$ref.addMonth = (num = 1) => {
       updown(0, num, 0, false);
-      return DatetimeUtils.copy(convertDate(ctx.valueRef.current)!);
+      return parseDate(ctx.valueRef.current)!;
     };
     props.$ref.addYear = (num = 1) => {
       updown(num, 0, 0, false);
-      return DatetimeUtils.copy(convertDate(ctx.valueRef.current)!);
+      return parseDate(ctx.valueRef.current)!;
     };
     props.$ref.setFirstDate = () => {
       return setCache(new Date(

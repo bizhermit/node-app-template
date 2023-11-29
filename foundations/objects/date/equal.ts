@@ -22,6 +22,10 @@ export const equalWeek = (d1: Date | null | undefined, d2: Date | null | undefin
   return d1?.getDay() === d2?.getDay();
 };
 
-export const equalMOnthDay = (d1: Date | null | undefined, d2: Date | null | undefined) => {
+export const equalMonthDay = (d1: Date | null | undefined, d2: Date | null | undefined) => {
   return equalDay(d1, d2) && equalMonth(d1, d2);
+};
+
+export const equalYearMonth = (d1: Date | null | undefined, d2: Date | null | undefined) => {
+  return equalMonth(d1, d2) && equalYear(d1, d2);
 };

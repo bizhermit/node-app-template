@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef } from "react";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { generateUuidV4 } from "../../../objects/string/generator";
 
 type LoadingContextProps = {
   show: (id: string) => void;
@@ -17,7 +17,7 @@ export const LoadingContext = createContext<LoadingContextProps>({
 
 const useLoading = () => {
   const ctx = useContext(LoadingContext);
-  const id = useRef(StringUtils.generateUuidV4());
+  const id = useRef(generateUuidV4());
 
   const show = () => {
     ctx.show(id.current);

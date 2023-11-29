@@ -1,5 +1,5 @@
 import stringItem from "#/data-items/string";
-import StringUtils from "@bizhermit/basic-utils/dist/string-utils";
+import { isHWAlphanumericAndSymbols } from "#/objects/string/validation";
 
 const user_password = stringItem({
   name: "password",
@@ -7,7 +7,7 @@ const user_password = stringItem({
   maxLength: 32,
   validations: [
     (v) => {
-      if (StringUtils.isHalfWidthAlphanumericAndSymbols(v)) return undefined;
+      if (isHWAlphanumericAndSymbols(v)) return undefined;
       return "半角英数字記号で入力してください。";
     },
   ],

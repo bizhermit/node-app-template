@@ -1,10 +1,11 @@
 "use client";
 
-import { add, minus, numFormat } from "@bizhermit/basic-utils/dist/number-utils";
-import { isEmpty } from "@bizhermit/basic-utils/dist/string-utils";
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { NumberData } from "../../../../../data-items/number";
+import { add, minus } from "../../../../../objects/number/calc";
+import formatNum from "../../../../../objects/number/format";
+import { isEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
 import Resizer from "../../../resizer";
@@ -114,7 +115,7 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
   });
 
   const toString = (v?: Nullable<number>) => {
-    return numFormat(v, {
+    return formatNum(v, {
       thou: !props.$preventThousandSeparate,
       fpad: props.$float ?? 0,
     }) ?? "";
@@ -148,7 +149,7 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
 
   const renderNumberValue = () => {
     if (!iref.current) return;
-    iref.current.value = numFormat(ctx.valueRef.current, { fpad: props.$float ?? 0, thou: false }) || "";
+    iref.current.value = formatNum(ctx.valueRef.current, { fpad: props.$float ?? 0, thou: false }) || "";
   };
 
   const changeImpl = (value?: string, preventCommit?: boolean): Nullable<number> => {

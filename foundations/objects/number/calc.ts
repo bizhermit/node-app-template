@@ -1,9 +1,4 @@
-const getFloatPosition = (num: number | null | undefined) => {
-  if (num == null) return 0;
-  const str = num.toString(10);
-  if (str.indexOf(".") < 0) return 0;
-  return str.length - 1 - str.lastIndexOf(".");
-};
+import { getFloatPosition } from "./float";
 
 export const add = (num1: number | null | undefined, num2: number | null | undefined) => {
   if (num2 == null) return num1 ?? 0;

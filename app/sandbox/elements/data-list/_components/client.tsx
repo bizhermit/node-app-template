@@ -7,7 +7,7 @@ import NumberBox from "#/client/elements/form/items/number-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { joinClassNames } from "#/client/utilities/attributes";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
+import generateArray from "#/objects/array/generator";
 import { FC, useMemo, useState } from "react";
 
 type Data = {
@@ -22,8 +22,8 @@ type Data = {
   date: string;
 };
 
-const generateArray = (length = 0) => {
-  return ArrayUtils.generateArray(length, index => {
+const generateDataArray = (length = 0) => {
+  return generateArray(length, index => {
     return {
       id: index,
       string: `data ${index}`,
@@ -131,7 +131,7 @@ const DataListClient = () => {
   const [items, setItems] = useState<Array<Data>>(null!);
 
   const setAndGenerateItems = (length = 0) => {
-    setItems(generateArray(length));
+    setItems(generateDataArray(length));
   };
 
   const [outline, setOutline] = useState(true);

@@ -6,6 +6,10 @@ export const isFWNumeric = (str: string | null | undefined) => {
   return str != null && /^[０-９]+$/.test(str);
 };
 
+export const isNumeric = (str: string | null | undefined) => {
+  return str != null && /^[0-9０-９]+$/.test(str);
+};
+
 export const isHWAlphabet = (str: string | null | undefined) => {
   return str != null && /^[a-zA-Z]+$/.test(str);
 };
@@ -84,7 +88,7 @@ export const isMailAddress = (str: string | null | undefined) => {
 };
 
 export const isUrl = (str: string | null | undefined): str is `http${string}` => {
-  return str != null && /^https?:\/\//.test(str);
+  return str != null && /^https?:\/\/[a-zA-Z0-9!-/:-@¥[-`{-~]+/.test(str);
 };
 
 export const isIpv4Address = (str: string | null | undefined) => {

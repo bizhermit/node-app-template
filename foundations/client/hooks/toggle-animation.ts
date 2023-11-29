@@ -1,5 +1,5 @@
-import { type CSSProperties, type MutableRefObject, useEffect, useMemo, useRef } from "react";
-import NumberUtils from "@bizhermit/basic-utils/dist/number-utils";
+import { useEffect, useMemo, useRef, type CSSProperties, type MutableRefObject } from "react";
+import { round } from "../../objects/number/float";
 import { convertSizeNumToStr } from "../utilities/attributes";
 
 type Props<T extends Struct = {}> = {
@@ -177,7 +177,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
               }
               break;
           }
-          const opacity = Math.min(1, NumberUtils.round(oCount / 100, 2));
+          const opacity = Math.min(1, round(oCount / 100, 2));
           if (changeOpacity) {
             props.elementRef.current.style.opacity = String(opacity);
           }
@@ -304,7 +304,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
               }
               break;
           }
-          const opacity = Math.min(1, NumberUtils.round(oCount / 100, 2));
+          const opacity = Math.min(1, round(oCount / 100, 2));
           if (changeOpacity) {
             props.elementRef.current.style.opacity = String(opacity);
           }

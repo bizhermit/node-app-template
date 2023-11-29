@@ -8,7 +8,9 @@ export const isNotNull = <T = any>(o: T | null | undefined): o is Exclude<T, nul
 
 export const isEmpty = (o: any | null | undefined) => {
   if (o == null) return true;
-  if (typeof o === "object") return false;
+  const t = typeof o;
+  if (t === "string") return o === "";
+  if (t !== "object") return false;
   switch (toString.call(o).slice(8, -1)) {
     case "Array":
       return (o as Array<any>).length === 0;

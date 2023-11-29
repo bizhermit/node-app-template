@@ -6,9 +6,9 @@ import Form from "#/client/elements/form";
 import SelectBox, { useSelectBox } from "#/client/elements/form/items/select-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
+import generateArray from "#/objects/array/generator";
 import { colors } from "#/utilities/sandbox";
 import { sample_number, sample_string } from "$/data-items/sample/item";
-import ArrayUtils from "@bizhermit/basic-utils/dist/array-utils";
 import { useRef, useState } from "react";
 
 const SelectBoxClient = () => {
@@ -112,7 +112,7 @@ const SelectBoxClient = () => {
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
-          // $source={ArrayUtils.generateArray(30, value => {
+          // $source={generateArray(30, value => {
           //   return {
           //     value,
           //     label: `item ${value}`,
@@ -124,7 +124,7 @@ const SelectBoxClient = () => {
           $tag="string"
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
-          // $source={ArrayUtils.generateArray(30, value => {
+          // $source={generateArray(30, value => {
           //   return {
           //     value: String(value),
           //     label: `item ${value}`,
@@ -136,7 +136,7 @@ const SelectBoxClient = () => {
         <SelectBox<number>
           $tag="number"
           $onChange={v => console.log("number: ", v)}
-          $source={ArrayUtils.generateArray(30, value => {
+          $source={generateArray(30, value => {
             return {
               value,
               label: `item ${value}`,
@@ -146,7 +146,7 @@ const SelectBoxClient = () => {
         <SelectBox<"item1" | "item2" | 3>
           $tag="string"
           $onChange={v => console.log("string: ", v)}
-          $source={ArrayUtils.generateArray(30, value => {
+          $source={generateArray(30, value => {
             return {
               value: String(value),
               label: `item ${value}`,
@@ -218,7 +218,7 @@ const SelectBoxClient = () => {
         $readOnly={readOnly}
         $required
         $resize
-        $source={ArrayUtils.generateArray(30, idx => {
+        $source={generateArray(30, idx => {
           return {
             value: idx,
             label: `item ${idx}`,
@@ -242,7 +242,7 @@ const SelectBoxClient = () => {
           label: "(empty)",
         }}
         $source={() => {
-          return ArrayUtils.generateArray(10, idx => {
+          return generateArray(10, idx => {
             return {
               value: idx,
               label: `item ${idx}`,
