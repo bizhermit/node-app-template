@@ -43,6 +43,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
   sortNeutral?: boolean;
   resize?: boolean;
+  fixed?: boolean;
   wrap?: boolean;
   header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
   body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; rev: number }>;
@@ -199,6 +200,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   width: `${calcRowNumberColumnWidth(0)}rem`,
   align: "center",
   resize: false,
+  fixed: true,
   body: props => <Text>{(props.index + props.pageFirstIndex) + 1}</Text>,
 } as const;
 
@@ -323,6 +325,28 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     setSorts(newSorts);
   }, [sorts, props.$multiSort, props.$onSort]);
 
+  const headerRef = useRef<HTMLDivElement>(null!);
+  const bodyRef = useRef<HTMLDivElement>(null!);
+  const calcFixedPosition = (absolute = false) => {
+    const zIdxBase = 1000;
+    let widthSum = 0, count = zIdxBase, changed = absolute;
+    const cach: Array<string> = [];
+    headerRef.current?.querySelectorAll(`:scope>.${Style.hrow}>.${Style.hcell}[data-fixed="true"]`).forEach((elem) => {
+      const left = convertSizeNumToStr(widthSum)!;
+      changed = changed || (elem as HTMLDivElement).style.left !== left;
+      cach.push((elem as HTMLDivElement).style.left = left);
+      (elem as HTMLDivElement).style.zIndex = String(count++);
+      widthSum += (elem as HTMLDivElement).offsetWidth;
+    });
+    if (!changed) return;
+    bodyRef.current?.querySelectorAll(`:scope>.${Style.brow}`).forEach((elem) => {
+      elem.querySelectorAll(`:scope>.${Style.bcell}[data-fixed="true"]`).forEach((elem, idx) => {
+        (elem as HTMLDivElement).style.left = cach[idx];
+        (elem as HTMLDivElement).style.zIndex = String(zIdxBase + idx);
+      });
+    });
+  };
+
   const header = useMemo(() => {
     if (!props.$header) return undefined;
     const generateCell = (column: DataTableColumn<T>, nestLevel = 0) => {
@@ -375,6 +399,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
             changeSort(column, sort);
           } : undefined}
           data-border={column.border ?? props.$cellBorder}
+          data-fixed={nestLevel === 0 && column.fixed}
         >
           <div className={Style.content}>
             {column.header ?
@@ -401,6 +426,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 column.width = width;
                 setHeaderRev(r => r + 1);
                 setBodyRev(r => r + 1);
+                calcFixedPosition();
               }}
             />
           }
@@ -503,6 +529,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           data-border={column.border ?? props.$cellBorder}
           data-name={column.name}
           data-pointer={column.pointer}
+          data-fixed={nestLevel === 0 && column.fixed}
         >
           {column.href ?
             <NextLink
@@ -680,6 +707,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     });
   };
 
+  useEffect(() => {
+    calcFixedPosition(true);
+  }, [body]);
+
   return (
     <div
       {...attributes(props, Style.wrap)}
@@ -698,6 +729,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           <div
             className={Style.header}
             style={appendedColorStyle({ $color: props.$color })}
+            ref={headerRef}
           >
             {header}
           </div>
@@ -708,6 +740,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           </div> :
           <div
             className={Style.body}
+            ref={bodyRef}
             data-scroll={props.$scroll}
             onClick={clickBody}
           >

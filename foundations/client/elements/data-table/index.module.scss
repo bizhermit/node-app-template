@@ -1,7 +1,8 @@
 @use "../../styles/var" as var;
 @use "../../styles/mixins" as mixins;
 
-$borderStyle: 1px solid var(--c-border);
+$borderWidth: 0.1rem;
+$borderStyle: #{$borderWidth} solid var(--c-border);
 
 @layer base {
 
@@ -69,8 +70,8 @@ $borderStyle: 1px solid var(--c-border);
     align-items: stretch;
     background: inherit;
     color: inherit;
-    overflow: hidden;
     z-index: 0;
+    overflow: visible;
 
     &:not(:first-child) {
       &[data-border="true"] {
@@ -78,9 +79,9 @@ $borderStyle: 1px solid var(--c-border);
       }
     }
 
-    @include mixins.crossHover {
-      overflow: visible;
-    }
+    // @include mixins.crossHover(false) {
+    //   overflow: visible;
+    // }
   }
 
   .brow {
@@ -93,7 +94,7 @@ $borderStyle: 1px solid var(--c-border);
     }
 
     @include mixins.crossHover {
-      background: var(--c-hover) !important;
+      background-color: var(--c-hover) !important;
     }
 
     &:has(>.radio:checked) {
@@ -106,7 +107,7 @@ $borderStyle: 1px solid var(--c-border);
         width: 100%;
         top: 0;
         left: 0;
-        z-index: 999;
+        z-index: 9999;
         pointer-events: none;
       }
     }
@@ -125,7 +126,7 @@ $borderStyle: 1px solid var(--c-border);
     align-items: center;
     background: inherit;
     color: inherit;
-    overflow: hidden;
+    overflow: visible;
     z-index: 0;
 
     &[data-align="left"] {
@@ -140,9 +141,26 @@ $borderStyle: 1px solid var(--c-border);
       justify-content: right;
     }
 
-    @include mixins.crossHover {
-      overflow: visible;
+    &[data-fixed="true"] {
+      position: sticky;
+
+      &[data-border="true"] {
+        &::after {
+          box-sizing: border-box;
+          position: absolute;
+          content: "";
+          top: 0;
+          right: -#{$borderWidth};
+          height: 100%;
+          width: #{$borderWidth};
+          background-color: var(--c-border);
+        }
+      }
     }
+
+    // @include mixins.crossHover(false) {
+    //   overflow: visible;
+    // }
   }
 
   .hcell {
@@ -181,7 +199,7 @@ $borderStyle: 1px solid var(--c-border);
       max-width: 100%;
     }
 
-    @include mixins.crossHover {
+    @include mixins.crossHover(false) {
       background: var(--c-selected);
     }
 

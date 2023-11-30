@@ -28,6 +28,7 @@ const DataTableClient = () => {
       dataTableCheckBoxColumn({
         name: "selected",
         bulk: true,
+        fixed: true,
       }),
       dataTableButtonColumn({
         name: "button",
@@ -35,6 +36,7 @@ const DataTableClient = () => {
         round: true,
         outline: true,
         width: "9rem",
+        resize: true,
         onClick: (ctx) => {
           console.log(ctx);
         },
@@ -46,6 +48,7 @@ const DataTableClient = () => {
         sort: true,
         resize: false,
         sortNeutral: false,
+        fixed: true,
         href: (ctx) => {
           return {
             pathname: "/sandbox/elements/data-table",
