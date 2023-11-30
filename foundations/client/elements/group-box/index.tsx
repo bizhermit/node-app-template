@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import { attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -11,23 +11,22 @@ export type GroupBoxProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes>
 };
 
 const GroupBox = forwardRef<HTMLDivElement, GroupBoxProps>((props, ref) => {
-  const borderColorClassName = `bdc-${props.$color || "border"}`;
-
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
+      style={appendedColorStyle(props, true)}
       ref={ref}
     >
       {props.$caption &&
-        <div className={`${Style.caption} fgc-${props.$color || "base"}`}>
-          <div className={`${Style.prev} ${borderColorClassName}`} />
+        <div className={Style.caption}>
+          <div className={Style.prev} />
           <Text>
             {props.$caption}
           </Text>
-          <div className={`${Style.next} ${borderColorClassName}`} />
+          <div className={Style.next} />
         </div>
       }
-      <div className={joinClassNames(Style.body, borderColorClassName, props.$bodyClassName)}>
+      <div className={joinClassNames(Style.body, props.$bodyClassName)}>
         {props.children}
       </div>
     </div>

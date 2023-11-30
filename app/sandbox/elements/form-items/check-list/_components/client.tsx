@@ -4,7 +4,6 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import CheckList, { useCheckList } from "#/client/elements/form/items/check-list";
-import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import { CalendarIcon, ClockIcon, CloudIcon, SaveIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
@@ -16,7 +15,8 @@ import { useState } from "react";
 const CheckListClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [appearance, setAppearance] = useState<"point" | "check" | "check-outline" | "button">("point");
+  const [circle, setCircle] = useState(false);
+  const [fill, setFill] = useState(false);
   const [outline, setOutline] = useState(false);
   // const [value, setValue] = useState<Nullable<Array<number | string>>>();
   const [bind, setBind] = useState({});
@@ -36,16 +36,15 @@ const CheckListClient = () => {
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
-        <RadioButtons<"point" | "check" | "check-outline" | "button">
-          $tag="appearance"
-          $source={[
-            { value: "point", label: "Point" },
-            { value: "check", label: "Check" },
-            { value: "check-outline", label: "Check outline" },
-            { value: "button", label: "Button" }
-          ]}
-          $value={appearance}
-          $onChange={v => setAppearance(v!)}
+        <ToggleBox
+          $tag="circle"
+          $value={circle}
+          $onChange={v => setCircle(v!)}
+        />
+        <ToggleBox
+          $tag="fill"
+          $value={fill}
+          $onChange={v => setFill(v!)}
         />
         <ToggleBox
           $tag="outline"
@@ -120,6 +119,10 @@ const CheckListClient = () => {
           $source={generateArray(3, (value) => {
             return { value, label: `item ${value}` };
           })}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $circle={circle}
+          $fill={fill}
           $outline={outline}
         />
         <CheckList
@@ -129,6 +132,10 @@ const CheckListClient = () => {
           $source={generateArray(3, (value) => {
             return { value: String(value), label: `item ${value}` };
           })}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $circle={circle}
+          $fill={fill}
           $outline={outline}
         />
         <CheckList
@@ -137,6 +144,10 @@ const CheckListClient = () => {
             label: "selected",
           }]}
           $onChange={console.log}
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $circle={circle}
+          $fill={fill}
           $outline={outline}
         />
       </Row>

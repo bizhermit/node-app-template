@@ -46,6 +46,8 @@ $borderStyle: 1px solid var(--c-border);
     z-index: 1;
     position: sticky;
     top: 0;
+    background-color: var(--s-color, var(--c-main));
+    color: var(--s-color_, var(--c-main_));
   }
 
   .body {
@@ -95,11 +97,22 @@ $borderStyle: 1px solid var(--c-border);
     }
 
     &:has(>.radio:checked) {
-      background: var(--c-selected) !important;
+      &::after {
+        box-sizing: border-box;
+        position: absolute;
+        content: "";
+        border: 0.2rem solid var(--c-border);
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        pointer-events: none;
+      }
     }
 
     &[data-pointer="true"] {
-      cursor: pointer;
+      cursor: cell;
     }
   }
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { appendedColorStyle, attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
 import useForm from "../form/context";
 import Style from "./index.module.scss";
 
@@ -59,14 +59,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
     return false;
   };
 
-  const colorClassName = useMemo(() => {
-    const color = props.$color || "main";
-    if (props.$outline) {
-      return `fgc-${color} bdc-${color}`;
-    }
-    return `c-${color} bdc-${color}`;
-  }, [props.$color, props.$outline]);
-
   useEffect(() => {
     if (props.$focusWhenMounted) {
       ref.current?.focus();
@@ -76,6 +68,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
   return (
     <button
       {...attributesWithoutChildren(props, Style.wrap)}
+      style={appendedColorStyle(props)}
       ref={ref}
       type={props.type ?? "button"}
       disabled={props.disabled || submitDisabled || disabled}
@@ -85,7 +78,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
       data-round={props.$round}
     >
       <div
-        className={`${Style.main} ${colorClassName}`}
+        className={Style.main}
         data-outline={props.$outline}
         data-icon={props.$icon != null && (props.$iconPosition || "left")}
       >

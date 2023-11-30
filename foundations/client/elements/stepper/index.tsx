@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type HTMLAttributes, type ReactNode } from "react";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -37,14 +37,12 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
   const getStateColor = (state: StepState) => {
     switch (state) {
       case "current":
-        return props.$color?.current || "main";
+        return props.$color?.current;
       case "done":
       case "prev":
-        if (appearance === "line") return props.$color?.done || "input";
-        return props.$color?.done || "input";
+        return props.$color?.done;
       default:
-        if (appearance === "line") return props.$color?.future || "input";
-        return props.$color?.future || "input";
+        return props.$color?.future;
     }
   };
 
@@ -57,24 +55,22 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
     >
       {props.children.map((step, index) => {
         const state = getStateText(index);
-        const color = getStateColor(state);
 
         return (
           <div
             className={Style.step}
+            style={appendedColorStyle({ $color: getStateColor(state) })}
             key={index}
             data-state={state}
             data-appearance={appearance}
           >
             {appearance === "arrow" ?
-              <div className={`${Style.arrow} c-${color}`} /> :
+              <div className={Style.arrow} /> :
               <div className={Style.line}>
-                <div className={`${Style.point} bgc-${color}`} />
+                <div className={Style.point} />
               </div>
             }
-            <div
-              className={`${Style.label}${appearance === "arrow" ? ` fgc-${color}_r` : ""}`}
-            >
+            <div className={Style.label}>
               <Text>{step}</Text>
             </div>
           </div>

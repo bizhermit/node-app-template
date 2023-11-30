@@ -7,7 +7,7 @@ import formatNum from "../../../objects/number/format";
 import { generateUuidV4 } from "../../../objects/string/generator";
 import { getValue } from "../../../objects/struct/get";
 import useLoadableArray from "../../hooks/loadable-array";
-import { attributes, convertSizeNumToStr, joinClassNames } from "../../utilities/attributes";
+import { appendedColorStyle, attributes, convertSizeNumToStr } from "../../utilities/attributes";
 import Button from "../button";
 import { DoubleLeftIcon, DoubleRightIcon, LeftIcon, RightIcon } from "../icon";
 import NextLink, { type NextLinkProps } from "../link";
@@ -607,14 +607,13 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     if (pagination == null) return undefined;
     const { index, perPage } = pagination;
     const lastIndex = Math.floor(Math.max(0, total - 1) / perPage);
-    const color = props.$color || "main";
     return (
       <>
         <Button
           disabled={index <= 0}
           $size="s"
           $outline
-          $color={color}
+          $color={props.$color}
           $onClick={() => clickPage(0)}
           $icon={<DoubleLeftIcon />}
         />
@@ -622,7 +621,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           disabled={index <= 0}
           $size="s"
           $outline
-          $color={color}
+          $color={props.$color}
           $onClick={() => clickPage(index - 1)}
           $icon={<LeftIcon />}
         />
@@ -635,7 +634,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           disabled={index >= lastIndex}
           $size="s"
           $outline
-          $color={color}
+          $color={props.$color}
           $onClick={() => clickPage(index + 1)}
           $icon={<RightIcon />}
         />
@@ -643,7 +642,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           disabled={index >= lastIndex}
           $size="s"
           $outline
-          $color={color}
+          $color={props.$color}
           $onClick={() => clickPage(lastIndex)}
           $icon={<DoubleRightIcon />}
         />
@@ -696,7 +695,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
         data-border={props.$outline}
       >
         {props.$header &&
-          <div className={joinClassNames(Style.header, `c-${props.$color || "main"}`)}>
+          <div
+            className={Style.header}
+            style={appendedColorStyle({ $color: props.$color })}
+          >
             {header}
           </div>
         }

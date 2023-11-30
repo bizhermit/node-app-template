@@ -17,6 +17,8 @@
       >.footer {
         flex-flow: row nowrap;
         min-height: var(--cs-m);
+        color: var(--s-color_, inherit);
+        background-color: var(--s-color, inherit);
 
         &[data-icon="start"] {
           >.content {

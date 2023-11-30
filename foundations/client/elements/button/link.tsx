@@ -1,7 +1,7 @@
 "use client";
 
-import { forwardRef, useMemo, type HTMLAttributes } from "react";
-import { attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
+import { forwardRef, type HTMLAttributes } from "react";
+import { appendedColorStyle, attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
 import type { ButtonOptions } from "../button";
 import useForm from "../form/context";
 import NextLink, { type NextLinkProps } from "../link";
@@ -34,14 +34,6 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) =
     }
   };
 
-  const colorClassName = useMemo(() => {
-    const color = props.$color || "main";
-    if (props.$outline) {
-      return `fgc-${color} bdc-${color}`;
-    }
-    return `c-${color} bdc-${color}`;
-  }, [props.$color, props.$outline]);
-
   return (
     <NextLink
       {...attributesWithoutChildren(props)}
@@ -50,6 +42,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) =
     >
       <button
         className={Style.wrap}
+        style={appendedColorStyle({ $color: props.$color })}
         type="button"
         disabled={disabled}
         onClick={click}
@@ -58,7 +51,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>((props, ref) =
         data-round={props.$round}
       >
         <div
-          className={`${Style.main} ${colorClassName}`}
+          className={Style.main}
           data-outline={props.$outline}
           data-icon={props.$icon != null && (props.$iconPosition || "left")}
         >

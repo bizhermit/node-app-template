@@ -6,7 +6,7 @@ import equals from "../../../../../objects/equal";
 import { getValue } from "../../../../../objects/struct/get";
 import { setValue } from "../../../../../objects/struct/set";
 import useLoadableArray from "../../../../hooks/loadable-array";
-import { joinClassNames, pressPositiveKey } from "../../../../utilities/attributes";
+import { appendedColorStyle, pressPositiveKey } from "../../../../utilities/attributes";
 import Text from "../../..//text";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
@@ -44,7 +44,7 @@ export type RadioButtonsProps<
   $colorDataName?: string;
   $stateDataName?: string;
   $direction?: "horizontal" | "vertical";
-  $appearance?: "point" | "check" | "check-outline" | "button";
+  $appearance?: "point" | "check" | "check-fill" | "button";
   $outline?: boolean;
   $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
@@ -147,7 +147,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     const nodes = source.map(item => {
       const v = item[vdn] as T;
       const l = item[ldn] as ReactNode;
-      const c = (item[cdn] as string) || props.$color;
+      const c = (item[cdn] as Color) || props.$color;
       const s = (() => {
         switch (item[sdn]) {
           case "readonly":
@@ -166,7 +166,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
       return (
         <div
           key={typeof v === "boolean" ? String(v) : v ?? null}
-          className={joinClassNames(Style.item, c ? `bdc-${c}` : undefined)}
+          className={Style.item}
           data-selected={selected}
           tabIndex={s === "disabled" ? undefined : 0}
           onClick={(ctx.editable && s === "active") ? () => select(v) : undefined}
@@ -174,30 +174,12 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
           data-appearance={appearance}
           data-outline={outline}
           data-state={s}
+          style={appendedColorStyle({ $color: c })}
         >
-          {(appearance === "point" || appearance === "check" || appearance === "check-outline") &&
-            <div
-              className={`${Style.box} bdc-${c || "border"}`}
-            >
-              <div
-                className={
-                  `${Style.check} ${appearance === "check-outline" ?
-                    `bdc-${c || "input"}` :
-                    `bgc-${c || (appearance === "check" ? "main" : "input_r")} bdc-${c || "main"}_r`
-                  }`
-                }
-                data-selected={selected}
-              />
-            </div>
+          {(appearance === "point" || appearance === "check" || appearance === "check-fill") &&
+            <div className={Style.check} />
           }
-          <div
-            className={
-              `${Style.content} ${appearance === "button" ?
-                `bdc-${c || "border"} ${selected ? `c-${c || "main"}` : `fgc-${c}`}` :
-                `fgc-${c}`
-              }`
-            }
-          >
+          <div className={Style.content}>
             <Text className={Style.label}>{l}</Text>
           </div>
         </div>

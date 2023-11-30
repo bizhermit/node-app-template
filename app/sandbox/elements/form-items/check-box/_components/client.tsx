@@ -155,6 +155,13 @@ const CheckBoxClient = () => {
         >
           outline/circle
         </CheckBox>
+        <CheckBox
+          $disabled={disabled}
+          $readOnly={readOnly}
+          $fill
+        >
+          fill
+        </CheckBox>
       </Row>
       <Row className="g-s">
         <Button
@@ -233,7 +240,7 @@ const CheckBoxClient = () => {
           $tag="bind"
           // $bind={bind}
           name="check-box-bind"
-          $borderCheck
+          $fill
           $checkedValue={"1"}
           $uncheckedValue={"0"}
           $disabled={disabled}
@@ -270,8 +277,11 @@ const CheckBoxClient = () => {
         return (
           <Row key={color}>
             <CheckBox $color={color} $defaultValue name={color} />
-            <CheckBox $color={color} $borderCheck $defaultValue />
+            <CheckBox $color={color} $fill $defaultValue />
             <CheckBox $color={color} $outline $defaultValue $circle>
+              {color}
+            </CheckBox>
+            <CheckBox $color={color} $outline $fill $defaultValue $circle>
               {color}
             </CheckBox>
           </Row>

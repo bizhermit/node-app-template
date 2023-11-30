@@ -61,6 +61,7 @@ $tagMoveTransitionTime: 0.5s;
     width: 0;
     white-space: nowrap;
     overflow: visible;
+    color: var(--s-color, inherit);
 
     &[data-pos="placeholder"] {
       position: absolute;
@@ -92,7 +93,6 @@ $tagMoveTransitionTime: 0.5s;
     min-height: 0;
     min-width: 0;
     border-radius: var(--radius);
-    border-color: var(--c-border);
     transition: color #{var.$transitionTime};
 
     &[data-field="true"] {
@@ -104,7 +104,7 @@ $tagMoveTransitionTime: 0.5s;
         width: 100%;
         border-width: #{var.$inputBorderWidth};
         border-style: solid;
-        border-color: inherit;
+        border-color: var(--s-color, var(--c-border));
         border-radius: var(--radius);
         z-index: 0;
         transition: background-color #{var.$transitionTime},
@@ -115,7 +115,7 @@ $tagMoveTransitionTime: 0.5s;
     &[data-disabled="false"] {
       &[data-field="true"] {
         &:focus-within {
-          @include mixins.outline;
+          @include mixins.focusOutline(var(--s-color, var(--c-border)));
         }
       }
     }

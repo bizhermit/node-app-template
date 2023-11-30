@@ -40,12 +40,54 @@ $arrowMargin: 0.15rem;
     &[data-appearance="line"] {
       flex-flow: column nowrap;
       justify-content: flex-end;
+
+      &[data-state="done"],
+      &[data-state="prev"] {
+        .point {
+          background-color: var(--s-color, var(--c-border));
+        }
+      }
+      &[data-state="current"] {
+        .point {
+          background-color: var(--s-color, var(--c-main));
+        }
+      }
+      &[data-state="next"],
+      &[data-state="future"] {
+        .point {
+          background-color: var(--s-color, transparent);
+        }
+      }
     }
 
     &[data-appearance="arrow"] {
       flex-flow: row nowrap;
       justify-content: center;
       height: var(--point-size);
+
+      &[data-state="done"],
+      &[data-state="prev"] {
+        color: var(--s-color_, var(--c-border_));
+        
+        .arrow {
+          background-color: var(--s-color, var(--c-border));
+        }
+      }
+      &[data-state="current"] {
+        color: var(--s-color_, var(--c-main_));
+
+        .arrow {
+          background-color: var(--s-color, var(--c-main));
+        }
+      }
+      &[data-state="next"],
+      &[data-state="future"] {
+        color: var(--s-color_, --c-input_);
+
+        .arrow {
+          background-color: var(--s-color, var(--c-input));
+        }
+      }
     }
 
     &:first-child {
@@ -123,8 +165,8 @@ $arrowMargin: 0.15rem;
     height: var(--point-size);
     width: var(--point-size);
     border-radius: 9999px;
-    border: 0.2rem solid var(--c-border);
     z-index: 1;
+    border: 0.2rem solid var(--c-border);
     transition: background-color #{var.$transitionTime};
   }
 
@@ -147,7 +189,7 @@ $arrowMargin: 0.15rem;
       height: 100%;
       width: calc(var(--point-size) * 0.5);
       top: 0;
-      background: inherit;
+      background-color: inherit;
     }
 
     &::before {

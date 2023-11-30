@@ -51,7 +51,7 @@
     flex: none;
     touch-action: none;
     border-radius: var(--radius);
-    border: #{var.$inputBorderWidth} solid var(--c-border);
+    border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
     background-color: #fff;
     z-index: 0;
   }
@@ -80,23 +80,8 @@
     background: transparent;
     z-index: 0;
     border-radius: var(--radius);
-
-    &:not(:disabled) {
-      cursor: pointer;
-      user-select: none;
-      @include mixins.hoverTransition;
-
-      @include mixins.crossHover {
-        @include mixins.hover;
-
-        &:active {
-          @include mixins.hoverActive;
-        }
-      }
-    }
+    @include mixins.inputButtonHover;
   }
-
-  @include mixins.hoverAnimation;
 
   .file {
     display: none !important;

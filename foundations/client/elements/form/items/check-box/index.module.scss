@@ -8,37 +8,28 @@ $checkTransitionTime: 0.1s;
   .main {
     &[data-disabled="false"] {
       &:focus {
-        @include mixins.outline;
+        @include mixins.focusOutline(var(--s-color, var(--c-border)));
       }
     }
 
     &[data-editable="true"] {
-      &[data-outline="true"] {
-        outline-offset: -0.1rem;
-        @include mixins.hoverTransition;
-
-        @include mixins.crossHover {
-          @include mixins.hover;
-
-          &:active {
-            @include mixins.hoverActive;
-          }
+      >.body {
+        &::before {
+          background: var(--c-input);
         }
       }
 
-      &:not([data-outline="true"]) {
-        @include mixins.crossHover {
-          .box {
-            &::before {
-              @include mixins.hover;
-            }
+      @include mixins.crossHover {
+        >.body {
+          &::before {
+            @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
           }
+        }
 
-          &:active {
-            .box {
-              &::before {
-                @include mixins.hoverActive;
-              }
+        &:active {
+          >.body {
+            &::before {
+              @include mixins.buttonHoverActive;
             }
           }
         }
@@ -46,17 +37,15 @@ $checkTransitionTime: 0.1s;
 
       &[data-error="true"] {
         >.body {
-          >.box {
-            &::before {
-              background: var(--c-error);
-            }
+          &::before {
+            background: var(--c-error);
           }
         }
       }
     }
 
     &[data-outline="true"] {
-      border: #{var.$inputBorderWidth} solid var(--c-border);
+      border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
       border-radius: 9999px;
 
       >.body {
@@ -69,8 +58,6 @@ $checkTransitionTime: 0.1s;
     }
   }
 
-  @include mixins.hoverAnimation;
-
   .body {
     box-sizing: border-box;
     position: relative;
@@ -78,61 +65,17 @@ $checkTransitionTime: 0.1s;
     height: var(--cs-m);
     width: var(--cs-m);
 
-    &[data-circle="true"] {
-
-      >.box,
-      >.check {
-        &::before {
-          border-radius: 9999px;
-        }
-      }
-    }
-  }
-
-  @mixin box {
-    box-sizing: border-box;
-    position: absolute;
-    content: "";
-    top: 15%;
-    left: 15%;
-    width: 70%;
-    height: 70%;
-    border-radius: var(--radius);
-  }
-
-  .box {
-    box-sizing: border-box;
-    z-index: 0;
-
     &::before {
-      @include box;
-      border-width: #{var.$inputBorderWidth};
-      border-style: solid;
-      border-color: inherit;
-      @include mixins.hoverTransition;
-    }
-
-    &[data-editable="true"] {
-      &::before {
-        background: var(--c-input);
-      }
-    }
-  }
-
-  .check {
-    box-sizing: border-box;
-    background: transparent;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity #{$checkTransitionTime};
-
-    &[data-checked="true"] {
-      opacity: 1;
-    }
-
-    &::before {
-      @include box;
-      background: inherit;
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      top: 15%;
+      left: 15%;
+      width: 70%;
+      height: 70%;
+      border-radius: var(--radius);
+      border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
+      transition: background-color #{$checkTransitionTime};
     }
 
     &::after {
@@ -143,14 +86,39 @@ $checkTransitionTime: 0.1s;
       left: 37%;
       width: 28%;
       height: 45%;
-      border-bottom-width: 0.25rem;
-      border-bottom-style: solid;
-      border-bottom-color: inherit;
-      border-right-width: 0.25rem;
-      border-right-style: solid;
-      border-right-color: inherit;
+      border-bottom: 0.25rem solid var(--s-color, var(--c-input_));
+      border-right: 0.25rem solid var(--s-color, var(--c-input_));
       transform: rotate(45deg);
+      background: transparent;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity #{$checkTransitionTime};
     }
+
+    &[data-fill="true"] {
+      &::after {
+        border-color: var(--s-color_, var(--c-main_));
+      }
+    }
+
+    &[data-checked="true"] {
+      &::after {
+        opacity: 1;
+      }
+
+      &[data-fill="true"] {
+        &::before {
+          background-color: var(--s-color, var(--c-main));
+        }
+      }
+    }
+
+    &[data-circle="true"] {
+      &::before {
+        border-radius: 9999px;
+      }
+    }
+
   }
 
   .content {
@@ -161,6 +129,7 @@ $checkTransitionTime: 0.1s;
     align-items: center;
     height: 100%;
     flex: 1;
+    color: var(--s-color, inherit);
     transition: background-color #{var.$transitionTime},
     color #{var.$transitionTime};
     padding-right: #{var.$textPadding};

@@ -118,6 +118,7 @@ const DateBoxClient = () => {
           $initValue={"2000-1-1"}
           // $defaultValue={"2000-1-1"}
           $required
+          $color="main"
         />
         <DateBox
           $tag="date"

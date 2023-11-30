@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -14,19 +14,20 @@ export type DividerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> 
 
 const Divider = forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
   const align = props.children ? props.$align || "center" : undefined;
-  const colorClassName = `bgc-${props.$color || "border"}${props.$reverseColor ? "_r" : ""}`;
 
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
+      style={appendedColorStyle(props)}
       ref={ref}
     >
       <div
-        className={`${Style.border} ${colorClassName}`}
+        className={Style.border}
         style={{
           height: convertSizeNumToStr(props.$height),
           width: align === "left" ? convertSizeNumToStr(props.$shortWidth) : undefined,
         }}
+        data-reverse={props.$reverseColor}
         data-short={align === "left"}
       />
       {props.children &&
@@ -35,11 +36,12 @@ const Divider = forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
             <Text className={Style.text}>{props.children}</Text>
           </div>
           <div
-            className={`${Style.border} ${colorClassName}`}
+            className={Style.border}
             style={{
               height: convertSizeNumToStr(props.$height),
               width: align === "right" ? convertSizeNumToStr(props.$shortWidth) : undefined,
             }}
+            data-reverse={props.$reverseColor}
             data-short={align === "right"}
           />
         </>

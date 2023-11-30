@@ -1,4 +1,5 @@
 import GroupBox from "#/client/elements/group-box";
+import Button from "../../../../foundations/client/elements/button";
 
 const Page = () => {
   return (
@@ -19,7 +20,7 @@ const Page = () => {
           className="es-2"
           $caption="GroupBox"
           $color="primary"
-          $bodyClassName="pb-xs px-m"
+          $bodyClassName="px-m p-xs"
         >
           <h1>Header 1</h1>
           <h2>Header 2</h2>
@@ -27,6 +28,7 @@ const Page = () => {
           <h4>Header 4</h4>
           <h5>Header 5</h5>
           <h6>Header 6</h6>
+          <Button>button</Button>
         </GroupBox>
         <GroupBox
           className="es-4"

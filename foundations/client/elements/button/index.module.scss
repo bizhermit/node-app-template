@@ -24,27 +24,35 @@
     max-width: 100%;
     max-height: 100%;
     user-select: none;
+    --c: var(--s-color, var(--c-main));
+    --c_: var(--s-color_, var(--c-main_));
 
     &:not(:disabled) {
       cursor: pointer;
 
-      >.main {
-        @include mixins.hoverable;
-      }
-
       &:focus {
         >.main {
-          @include mixins.outline;
+          @include mixins.focusOutline(var(--c));
           outline-offset: 0.1rem;
         }
       }
 
       @include mixins.crossHover {
-        .main {
-          @include mixins.hover;
+        >.main {
+          @include mixins.buttonHoverAnimation(var(--c));
+
+          &::before {
+            opacity: 0.8;
+          }
+
+          &[data-outline="true"] {
+            &::before {
+              opacity: 0.15;
+            }
+          }
 
           &:active {
-            @include mixins.hoverActive;
+            @include mixins.buttonHoverActive;
           }
         }
       }
@@ -92,8 +100,6 @@
     }
   }
 
-  @include mixins.hoverAnimation;
-
   .main {
     box-sizing: border-box;
     display: flex;
@@ -104,8 +110,29 @@
     border-radius: var(--radius);
     height: 100%;
     width: 100%;
-    border: 0.15rem solid var(--c-border);
-    @include mixins.hoverTransition;
+    color: var(--c_);
+    border: 0.15rem solid var(--c);
+
+    &::before {
+      position: absolute;
+      content: "";
+      background-color: var(--c);
+      z-index: 0;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      transition: opacity 0.2s;
+      border-radius: inherit;
+    }
+
+    &[data-outline="true"] {
+      color: var(--c);
+
+      &::before {
+        opacity: 0;
+      }
+    }
 
     &[data-icon="left"] {
       >.label {
@@ -123,6 +150,7 @@
   .label {
     box-sizing: border-box;
     text-overflow: ellipsis;
+    z-index: 1;
 
     &[data-fill="true"] {
       flex: 1 0 0rem;
@@ -148,6 +176,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    z-index: 1;
 
     &:only-child {
       width: 100%;

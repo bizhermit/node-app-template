@@ -8,7 +8,7 @@ import Row from "#/client/elements/row";
 import Stepper from "#/client/elements/stepper";
 import generateArray from "#/objects/array/generator";
 import { sizes } from "#/utilities/sandbox";
-import { useMemo, useState, type ReactNode } from "react";
+import { Fragment, useMemo, useState, type ReactNode } from "react";
 
 const maxStep = 10;
 
@@ -74,19 +74,19 @@ const StepperClient = () => {
         $step={step}
         $appearance="line"
         $color={{
-          // done: "base",
-          // current: "danger",
-          // future: "warning",
+          current: "primary",
+          done: "secondary",
+          future: "tertiary",
         }}
         $size={size}
       >
         {useMemo(() => {
           return generateArray(maxStep, idx => {
             return (
-              <Row key={idx} className="g-s">
+              <Fragment key={idx}>
                 <CloudIcon />
                 <span className="box pt-t">{idx}</span>
-              </Row>
+              </Fragment>
             );
           }) as [ReactNode, ...Array<ReactNode>];
         }, [maxStep])}
@@ -96,14 +96,19 @@ const StepperClient = () => {
         $appearance="arrow"
         $step={step}
         $size={size}
+        $color={{
+          current: "primary",
+          done: "secondary",
+          future: "tertiary",
+        }}
       >
         {useMemo(() => {
           return generateArray(maxStep, idx => {
             return (
-              <Row key={idx} className="g-s">
+              <Fragment key={idx}>
                 <CloudIcon />
                 <span className="box pt-t">{idx}</span>
-              </Row>
+              </Fragment>
             );
           }) as [ReactNode, ...Array<ReactNode>];
         }, [maxStep])}

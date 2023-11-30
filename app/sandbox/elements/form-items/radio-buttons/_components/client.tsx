@@ -15,7 +15,7 @@ import { useState } from "react";
 const RadioButtonsClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [appearance, setAppearance] = useState<"point" | "check" | "check-outline" | "button">("point");
+  const [appearance, setAppearance] = useState<"point" | "check" | "check-fill" | "button">("point");
   const [outline, setOutline] = useState(false);
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
@@ -35,12 +35,12 @@ const RadioButtonsClient = () => {
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
-        <RadioButtons<"point" | "check" | "check-outline" | "button">
+        <RadioButtons<"point" | "check" | "check-fill" | "button">
           $tag="appearance"
           $source={[
             { value: "point", label: "Point" },
             { value: "check", label: "Check" },
-            { value: "check-outline", label: "Check outline" },
+            { value: "check-fill", label: "Check fill" },
             { value: "button", label: "Button" }
           ]}
           $value={appearance}

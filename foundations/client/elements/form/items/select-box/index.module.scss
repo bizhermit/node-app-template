@@ -27,8 +27,6 @@
     @include mixins.inputButton;
   }
 
-  @include mixins.hoverAnimation;
-
   .list {
     display: flex;
     flex-flow: column nowrap;
@@ -53,15 +51,7 @@
     color: var(--c-input_);
     z-index: 0;
     outline: none;
-    @include mixins.listHoverTransition;
-
-    @include mixins.crossHover {
-      @include mixins.listHover;
-
-      &:active {
-        @include mixins.listHoverActive;
-      }
-    }
+    @include mixins.listHover;
 
     &:focus {
       background: var(--c-hover);

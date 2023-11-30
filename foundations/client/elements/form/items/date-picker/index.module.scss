@@ -37,20 +37,12 @@ $pulldownTransitionTime: 0.5s;
         >.date,
         >.yearmonth>.label>.year,
         >.yearmonth>.label>.month {
+
           @include mixins.crossHover {}
 
           >.cell {
             &[data-selectable="true"] {
-              cursor: pointer;
-              @include mixins.hoverTransition;
-
-              @include mixins.crossHover {
-                @include mixins.hover;
-
-                &:active {
-                  @include mixins.hoverActive;
-                }
-              }
+              @include mixins.listHover;
             }
 
             &[data-selectable="false"] {
@@ -88,7 +80,6 @@ $pulldownTransitionTime: 0.5s;
         flex: 1;
         z-index: 0;
         padding: calc(var(--cs-m) * 2.85) var(--b-xs);
-        gap: var(--b-xs);
 
         >.cell {
           height: calc(var(--cs-m) * 0.75);
@@ -239,24 +230,12 @@ $pulldownTransitionTime: 0.5s;
     width: calc(var(--cs-m) * 0.8);
     user-select: none;
     border-radius: var(--radius);
-    @include mixins.hoverTransition;
+    @include mixins.inputButtonHover;
 
     &[data-disabled="true"] {
       opacity: 0;
       visibility: hidden;
       user-select: none;
-    }
-
-    &[data-disabled="false"] {
-      cursor: pointer;
-
-      @include mixins.crossHover {
-        @include mixins.hover;
-
-        &:active {
-          @include mixins.hoverActive;
-        }
-      }
     }
   }
 
@@ -372,8 +351,6 @@ $pulldownTransitionTime: 0.5s;
   .negative {
     @include mixins.inputButton(true);
   }
-
-  @include mixins.hoverAnimation;
 
   .positive,
   .negative {

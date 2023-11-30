@@ -42,17 +42,16 @@
     overflow: hidden;
     cursor: pointer;
     user-select: none;
-    @include mixins.hoverTransition("background-color #{var.$transitionTime}, color #{var.$transitionTime}");
+    @include mixins.inputButtonHoverable("background-color #{var.$transitionTime}, color #{var.$transitionTime}");
     --is: var(--is-s);
 
     @include mixins.crossHover {
-      @include mixins.hover;
+      @include mixins.inputButtonHoverAnimation;
     }
 
     &:active {
-      @include mixins.hoverActive;
-      outline: none;
-      background: var(--c-selected);
+      @include mixins.inputButtonHoverActive;
+      background-color: var(--c-selected);
       color: var(--c-selected_);
     }
 
@@ -66,7 +65,5 @@
       padding-bottom: 5%;
     }
   }
-
-  @include mixins.hoverAnimation;
 
 }

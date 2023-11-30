@@ -60,22 +60,8 @@
     height: var(--nav-size);
     z-index: 0;
     overflow: visible;
-    transition: padding-left #{var.$transitionTime};
-
-    &[data-selectable="true"] {
-      cursor: pointer;
-
-      @include mixins.crossHover {
-        @include mixins.hover;
-
-        &:active {
-          @include mixins.hoverActive;
-        }
-      }
-    }
+    @include mixins.listHover(padding-left #{var.$transitionTime});
   }
-
-  @include mixins.hoverAnimation;
 
   .icon,
   .toggle {
