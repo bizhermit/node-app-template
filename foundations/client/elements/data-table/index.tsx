@@ -426,7 +426,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 column.width = width;
                 setHeaderRev(r => r + 1);
                 setBodyRev(r => r + 1);
-                calcFixedPosition();
+                calcFixedPosition(column.fixed === true);
               }}
             />
           }
