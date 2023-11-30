@@ -327,16 +327,18 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
 
   const headerRef = useRef<HTMLDivElement>(null!);
   const bodyRef = useRef<HTMLDivElement>(null!);
-  const calcFixedPosition = () => {
+  const calcFixedPosition = (absolute = false) => {
     const zIdxBase = 1000;
-    let widthSum = 0, count = zIdxBase;
+    let widthSum = 0, count = zIdxBase, changed = absolute;
     const cach: Array<string> = [];
     headerRef.current?.querySelectorAll(`:scope>.${Style.hrow}>.${Style.hcell}[data-fixed="true"]`).forEach((elem) => {
       const left = convertSizeNumToStr(widthSum)!;
-      (elem as HTMLDivElement).style.zIndex = String(count++);
+      changed = changed || (elem as HTMLDivElement).style.left !== left;
       cach.push((elem as HTMLDivElement).style.left = left);
+      (elem as HTMLDivElement).style.zIndex = String(count++);
       widthSum += (elem as HTMLDivElement).offsetWidth;
     });
+    if (!changed) return;
     bodyRef.current?.querySelectorAll(`:scope>.${Style.brow}`).forEach((elem) => {
       elem.querySelectorAll(`:scope>.${Style.bcell}[data-fixed="true"]`).forEach((elem, idx) => {
         (elem as HTMLDivElement).style.left = cach[idx];
@@ -706,7 +708,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   };
 
   useEffect(() => {
-    calcFixedPosition();
+    calcFixedPosition(true);
   }, [body]);
 
   return (
