@@ -48,10 +48,14 @@ $borderStyle: 0.1rem solid var(--c-border);
 .header {
   z-index: 2;
   top: 0;
+  background-color: var(--s-color, var(--c-main)) !important;
+  color: var(--s-color_, var(--s-color_)) !important;
 }
 
 .footer {
   z-index: 2;
+  background-color: var(--s-color, var(--c-main)) !important;
+  color: var(--s-color_, var(--s-color_)) !important;
 }
 
 .body {

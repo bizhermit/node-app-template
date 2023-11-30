@@ -82,7 +82,6 @@ const BulkCheckBox = <T extends { [key: string]: any }>({
   return (
     <CheckBox
       style={{ marginLeft: "auto", marginRight: "auto" }}
-      $fill
       $disabled={items.length === 0}
       $value={checked}
       $onEdit={v => {

@@ -208,8 +208,10 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       this.element.appendChild(elem);
     });
     this.headerElement = this.header ? cloneDomElement(div, elem => {
-      elem.classList.add(Style.header, Style.row, `c-${this.color}`);
+      elem.classList.add(Style.header, Style.row);
       elem.style.height = convertSizeNumToStr(this.headerHeight)!;
+      elem.style.setProperty("--s-color", `var(--c-${this.color})`);
+      elem.style.setProperty("--s-color_", `var(--c-${this.color}_)`);
       this.element.appendChild(elem);
     }) : undefined;
     this.bodyElement = cloneDomElement(div, elem => {
@@ -219,7 +221,9 @@ class DataListClass<T extends Struct = Struct> extends DomClassComponent {
       this.element.appendChild(elem);
     });
     this.footerElement = this.footer ? cloneDomElement(div, elem => {
-      elem.classList.add(Style.footer, Style.row, `c-${this.color}`);
+      elem.classList.add(Style.footer, Style.row);
+      elem.style.setProperty("--s-color", `var(--c-${this.color})`);
+      elem.style.setProperty("--s-color_", `var(--c-${this.color}_)`);
       elem.style.height = convertSizeNumToStr(this.footerHeight)!;
       elem.style.top = `calc(100% - ${convertSizeNumToStr(this.footerHeight)})`;
       this.element.appendChild(elem);

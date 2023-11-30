@@ -239,6 +239,7 @@ $vTransitionTime: 0.5s;
     z-index: 0;
     opacity: 0.99;
     overflow: auto;
+    background-color: var(--c-base);
 
     &[data-preselected="true"] {
       z-index: 2;

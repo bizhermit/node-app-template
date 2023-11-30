@@ -24,7 +24,7 @@
     border: none;
     background: var(--c-pure);
     color: var(--c-pure_);
-    padding: var(--b-m);
+    // padding: var(--b-m);
     border-radius: var(--radius);
     min-width: calc(var(--cs-m) * 9);
     max-height: 100vh;
@@ -41,12 +41,11 @@
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
-    border-radius: var(--radius);
     font-weight: bold;
     min-height: var(--cs-m);
-    padding-left: var(--b-m);
-    padding-right: var(--b-m);
+    padding: var(--b-s) var(--b-m);
     font-size: var(--fs-l);
+    background-color: var(--s-color, var(--c-main));
   }
 
   .body {
@@ -66,6 +65,7 @@
     align-items: flex-start;
     padding: var(--b-m);
     flex: 1 1 0rem;
+    min-height: 8rem;
   }
 
   .footer {
@@ -74,9 +74,9 @@
     flex-flow: row nowrap;
     justify-content: flex-end;
     align-items: center;
-    gap: var(--b-m);
-    padding-left: var(--b-m);
-    margin-top: var(--b-s);
+    gap: var(--b-s);
+    padding: var(--b-s) var(--b-s) var(--b-s) var(--b-m);
+    border-top: 0.1rem solid var(--c-border);
   }
 
   .mask1,
