@@ -40,7 +40,7 @@ export type CheckBoxProps<
   $ref?: CheckBoxHook<ValueType<T, D, T>> | CheckBoxHook<string | number | boolean>;
   $checkedValue?: T;
   $uncheckedValue?: T;
-  $borderCheck?: boolean;
+  $fill?: boolean;
   $outline?: boolean;
   $circle?: boolean;
   children?: ReactNode;
@@ -159,17 +159,10 @@ const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
     >
       <div
         className={Style.body}
+        data-checked={ctx.value === checkedValue}
         data-circle={props.$circle}
-      >
-        <div
-          className={`${Style.box} bdc-${props.$color || "border"}`}
-          data-editable={ctx.editable}
-        />
-        <div
-          className={`${Style.check} ${props.$borderCheck ? `bdc-${props.$color || "input"}` : `bdc-${props.$color || "main"}_r bgc-${props.$color || "main"}`}`}
-          data-checked={ctx.value === checkedValue}
-        />
-      </div>
+        data-fill={props.$fill}
+      />
       {props.children &&
         <div className={Style.content}>
           <Text className={Style.label}>

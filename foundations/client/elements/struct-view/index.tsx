@@ -1,7 +1,7 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import formatDate from "../../../objects/date/format";
 import formatNum from "../../../objects/number/format";
-import { attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
 export type StructKey = {
@@ -24,8 +24,7 @@ export type StructViewProps = Omit<HTMLAttributes<HTMLTableElement>, OmitAttribu
 
 const emptyText = "(empty)";
 
-const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Color): ReactNode => {
-  const c = item.color || color || "main";
+const switchNode = (item: StructKey, value: any): ReactNode => {
   const align = item.align;
   if (value == null) {
     return (
@@ -64,8 +63,6 @@ const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Colo
       <StructView
         $keys={item.children}
         $value={value}
-        $color={c}
-        $baseColor={baseColor}
       />
     );
   }
@@ -83,13 +80,11 @@ const switchNode = (item: StructKey, value: any, color?: Color, baseColor?: Colo
 };
 
 const StructView = forwardRef<HTMLTableElement, StructViewProps>((props, ref) => {
-  const color = props.$color || "main";
-  const baseColor = props.$baseColor || "base";
-
   if (props.$value == null || Object.keys(props.$value).length === 0) return <></>;
   return (
     <table
-      {...attributesWithoutChildren(props, Style.table, `c-${baseColor}`, `bdc-${color}`)}
+      {...attributesWithoutChildren(props, Style.table)}
+      style={appendedColorStyle(props, true)}
       ref={ref}
       data-outline={props.$outline}
     >
@@ -108,14 +103,14 @@ const StructView = forwardRef<HTMLTableElement, StructViewProps>((props, ref) =>
             if (item.format != null) {
               return item.format(v);
             }
-            return switchNode(item, v, color);
+            return switchNode(item, v);
           })();
           return (
             <tr key={item.key} className={Style.row}>
-              <th className={`${Style.hcell} c-${color}`}>
+              <th className={Style.hcell}>
                 {item.label ?? item.key}
               </th>
-              <td className={`${Style.bcell} bdc-${color}`}>
+              <td className={Style.bcell}>
                 {node}
               </td>
             </tr>

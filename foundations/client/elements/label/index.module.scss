@@ -18,6 +18,8 @@
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
+    color: var(--s-color_, var(--c-main_));
+    background-color: var(--s-color, var(--c-main));
 
     &:empty {
       visibility: hidden;

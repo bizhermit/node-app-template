@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -12,10 +12,11 @@ const Label = forwardRef<HTMLDivElement, LabelProps>((props, ref) => {
   return (
     <div
       {...attributesWithoutChildren(props, Style.wrap)}
+      style={appendedColorStyle(props)}
       ref={ref}
     >
       <div
-        className={joinClassNames(Style.main, `c-${props.$color || "main"}`)}
+        className={Style.main}
         data-size={props.$size || "m"}
       >
         <Text>{props.children}</Text>

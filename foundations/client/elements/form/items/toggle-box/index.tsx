@@ -153,18 +153,23 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
         tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
       }}
     >
-      <div className={Style.body}>
+      <div
+        className={Style.body}
+        data-checked={ctx.value === checkedValue}
+      >
         <div
-          className={`${Style.box} bdc-${props.$color || "border"} bgc-${props.$color || "main"}`}
+          className={Style.box}
           data-editable={ctx.editable}
-          data-checked={ctx.value === checkedValue}
         />
-        <div
-          className={`${Style.handle} bdc-${props.$color || "border"}`}
-          data-checked={ctx.value === checkedValue}
-        />
+        <div className={Style.handle} />
       </div>
-      {props.children && <Text className={Style.label}>{props.children}</Text>}
+      {props.children &&
+        <div className={Style.content}>
+          <Text className={Style.label}>
+            {props.children}
+          </Text>
+        </div>
+      }
     </FormItemWrap>
   );
 }) as ToggleBoxFC;

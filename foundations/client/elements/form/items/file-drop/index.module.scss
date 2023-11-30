@@ -5,31 +5,40 @@
 
   .main {
     min-height: var(--cs-m);
+    outline: none !important;
+
+    &[data-disabled="false"] {
+      >.body {
+        &[data-dialog="true"] {
+          &:focus {
+            @include mixins.focusOutline(var(--s-color, var(--c-border)));
+            outline-offset: 0.1rem;
+          }
+        }
+      }
+    }
 
     &[data-editable="true"] {
       >.body {
         &[data-dialog="true"] {
           cursor: pointer;
           user-select: none;
-          @include mixins.hoverTransition;
 
           @include mixins.crossHover(false) {
-            @include mixins.hover;
+            @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
 
             &:active {
-              @include mixins.hoverActive;
+              @include mixins.buttonHoverActive;
             }
           }
         }
 
         &[data-active] {
-          @include mixins.hover;
+          @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
         }
       }
     }
   }
-
-  @include mixins.hoverAnimation;
 
   .body {
     box-sizing: border-box;

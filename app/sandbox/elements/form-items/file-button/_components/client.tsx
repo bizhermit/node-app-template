@@ -71,6 +71,7 @@ const FileButtonClient = () => {
       <FileButton
         $tag="no item"
         $onChange={v => console.log("no item", v)}
+        $color="sub"
       />
       <FileButton
         $tag="file"

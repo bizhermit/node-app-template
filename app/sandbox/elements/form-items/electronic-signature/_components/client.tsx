@@ -92,6 +92,7 @@ const ElectronicSignatureClient = () => {
         $ref={elecSignRef}
         $tag="no item"
         $onChange={v => console.log("no item: ", v)}
+        $color="main"
       />
       <Button
         $onClick={() => {

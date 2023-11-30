@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useReducer, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
 import useToggleAnimation from "../../hooks/toggle-animation";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
 import Resizer from "../resizer";
 import Text from "../text";
@@ -119,7 +119,8 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
     >
       {childCtx.header != null &&
         <div
-          className={`${Style.header} c-${props.$color}`}
+          className={Style.header}
+          style={appendedColorStyle({ $color: props.$color })}
           data-accordion={toggleTriger.header}
           data-icon={toggleTriger.header ? iconPosCtx.header : "none"}
           onClick={toggleTriger.header ? toggle : undefined}
@@ -150,7 +151,8 @@ const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
       </div>
       {childCtx.footer != null &&
         <div
-          className={`${Style.footer} c-${props.$color}`}
+          className={Style.footer}
+          style={appendedColorStyle({ $color: props.$color })}
           data-accordion={toggleTriger.footer}
           data-icon={toggleTriger.footer ? iconPosCtx.footer : "none"}
           onClick={toggleTriger.footer ? toggle : undefined}

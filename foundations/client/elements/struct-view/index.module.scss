@@ -44,6 +44,8 @@ $space: 0.3rem;
     padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     white-space: nowrap;
     width: 0;
+    background-color: var(--s--color, var(--c-main));
+    color: var(--s--color_, var(--c-main_));
   }
 
   .row {

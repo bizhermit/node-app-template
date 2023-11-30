@@ -1,7 +1,7 @@
 "use client";
 
 import { ForwardedRef, forwardRef, useEffect, useRef, useState, type FC, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
 type OmitAttributes = "color" | "children";
@@ -14,7 +14,6 @@ export type TabContainerProps<K extends Key = Key> =
     $defaultMount?: boolean;
     $unmountDeselected?: boolean;
     $color?: Color;
-    $bodyColor?: Color;
     $preventAnimation?: boolean;
     $overlap?: boolean;
     children?: ReactElement | [ReactElement, ...Array<ReactElement>];
@@ -29,9 +28,6 @@ interface TabContainerFC extends FunctionComponent<TabContainerProps> {
 const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<
   K extends Key = Key
 >(props: TabContainerProps<K>, ref: ForwardedRef<HTMLDivElement>) => {
-  const color = props.$color || "main";
-  const bodyColor = props.$bodyColor || "base";
-
   const [key, setKey] = useState(() => {
     if (props.$key != null) return props.$key;
     if (props.$defaultKey != null) return props.$defaultKey;
@@ -50,7 +46,7 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<
       tabs.push(
         <div
           key={child.key}
-          className={`${Style.tab} bdc-${color}${selected ? ` c-${color}` : ""}`}
+          className={Style.tab}
           data-selected={selected}
           onClick={() => setKey(child?.key!)}
         >
@@ -60,7 +56,6 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<
       bodys.push(
         <Content
           key={child.key}
-          color={bodyColor}
           selected={selected}
           preventAnimation={preventAnimation}
           overlap={child.props?.overlap ?? props.$overlap ?? false}
@@ -90,11 +85,17 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<
       ref={ref}
       data-pos={props.$tabPosition || "top"}
     >
-      <div className={Style.header}>
+      <div
+        className={Style.header}
+        style={appendedColorStyle({ $color: props.$color })}
+      >
         {tabs}
       </div>
-      <div className={`${Style.divider} bgc-${color}`} />
-      <div className={`${Style.body} c-${bodyColor}`}>
+      <div
+        className={Style.divider}
+        style={appendedColorStyle({ $color: props.$color })}
+      />
+      <div className={Style.body}>
         {bodys}
       </div>
     </div>
@@ -106,7 +107,6 @@ const Content: FC<{
   defaultMount: boolean;
   unmountDeselected: boolean;
   preventAnimation: boolean;
-  color: Color;
   overlap: boolean;
   children: ReactNode;
 }> = (props) => {
@@ -152,7 +152,7 @@ const Content: FC<{
   return (
     <div
       ref={ref}
-      className={`${Style.content} c-${props.color}`}
+      className={Style.content}
       style={{
         visibility: "hidden",
       }}

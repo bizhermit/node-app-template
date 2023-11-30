@@ -154,7 +154,9 @@ const ToggleBoxClient = () => {
       {colors.map(color => {
         return (
           <Row key={color}>
-            <ToggleBox $color={color} $defaultValue />
+            <ToggleBox $color={color} $defaultValue>
+              {color}
+            </ToggleBox>
             <span className={`pt-t px-s c-${color}`}>{color}</span>
           </Row>
         );

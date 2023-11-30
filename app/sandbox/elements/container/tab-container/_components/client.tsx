@@ -57,6 +57,7 @@ const TabContainerClient = () => {
         // $bodyColor="pure"
         // $defaultMount
         // $unmountDeselected
+        $color="primary"
         $key={key}
         $onChange={(key) => {
           console.log(key, ref.current);

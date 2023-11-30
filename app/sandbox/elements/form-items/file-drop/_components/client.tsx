@@ -75,6 +75,7 @@ const FileDropClient = () => {
           $tag="no item"
           $onChange={v => console.log("no item: ", v)}
           style={{ height: 100, width: 100, }}
+          $color="main"
         />
         <Button
           $onClick={() => {

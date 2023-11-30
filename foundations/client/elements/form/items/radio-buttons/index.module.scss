@@ -7,7 +7,13 @@
     &[data-disabled="false"] {
       >.item {
         &:focus {
-          @include mixins.outline;
+          @include mixins.focusOutline(var(--s-color, var(--c-border)));
+        }
+
+        &[data-appearance="button"] {
+          &:focus {
+            outline-offset: 0.1rem;
+          }
         }
       }
     }
@@ -17,71 +23,33 @@
         cursor: pointer;
         user-select: none;
 
-        >.box {
+        >.check {
           &::before {
-            background: var(--c-input);
+            background-color: var(--c-input);
           }
         }
 
-        @include mixins.crossHover {}
+        @include mixins.crossHover {
+          &[data-appearance="button"] {
+            @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
 
-        &:not([data-outline="true"]) {
-          outline-color: var(--c-main);
+            &:active {
+              @include mixins.buttonHoverActive;
+            }
+          }
 
-          &[data-state="active"] {
-            >.box {
+          &[data-appearance="point"],
+          &[data-appearance="check"],
+          &[data-appearance="check-fill"] {
+            >.check {
               &::before {
-                @include mixins.hoverTransition;
+                @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
               }
             }
 
-            @include mixins.crossHover {
-              >.box {
-                &::before {
-                  @include mixins.hover;
-                }
-              }
-
-              &:active {
-                >.box {
-                  &::before {
-                    @include mixins.hoverActive;
-                  }
-                }
-              }
+            &:active {
+              @include mixins.buttonHoverActive;
             }
-          }
-        }
-
-        &[data-outline="true"] {
-          outline-offset: -0.1rem;
-
-          &[data-state="active"] {
-            @include mixins.hoverTransition;
-
-            @include mixins.crossHover {
-              @include mixins.hover;
-
-              &:active {
-                @include mixins.hoverActive;
-              }
-            }
-          }
-        }
-
-        &[data-appearance="button"] {
-          &[data-state="active"] {
-            @include mixins.crossHover {
-              @include mixins.hover;
-
-              &:active {
-                @include mixins.hoverActive;
-              }
-            }
-          }
-
-          >.content {
-            background: var(--c-input);
           }
         }
 
@@ -89,13 +57,13 @@
         &[data-state="disabled"] {
           >.box {
             &::before {
-              background: none !important;
+              background-color: none !important;
             }
           }
 
           &[data-appearance="button"] {
             >.content {
-              background: none !important;
+              background-color: none !important;
             }
           }
         }
@@ -200,8 +168,6 @@
     }
   }
 
-  @include mixins.hoverAnimation;
-
   .item {
     box-sizing: border-box;
     position: relative;
@@ -215,41 +181,48 @@
     flex: 1 0 auto;
     border-radius: var(--radius);
 
-    &[data-selected="true"],
     &:focus {
       z-index: 1;
     }
 
+    &[data-selected="true"] {
+      >.check {
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      &[data-appearance="button"] {
+        >.content {
+          background-color: var(--s-color, var(--c-main)) !important;
+          color: var(--s-color_, var(--c-main_)) !important;
+        }
+      }
+    }
+
     &[data-appearance="button"] {
       >.content {
-        border-width: #{var.$inputBorderWidth};
-        border-style: solid;
-        border-color: inherit;
+        border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
         justify-content: center;
       }
     }
 
     &[data-appearance="point"] {
-      >.box {
+      >.check {
         &::before {
-          box-sizing: border-box;
-          position: absolute;
-          content: "";
-          border-width: #{var.$inputBorderWidth};
-          border-style: solid;
-          border-color: inherit;
-          border-radius: 9999px;
           height: 50%;
           width: 50%;
           top: 25%;
           left: 25%;
         }
 
-        >.check {
-          height: calc(var(--cs-m) * 0.3);
-          width: calc(var(--cs-m) * 0.3);
+        &::after {
+          height: 30%;
+          width: 30%;
           top: 35%;
           left: 35%;
+          background-color: var(--s-color, var(--c-input_));
+          border-radius: 9999px;
         }
       }
 
@@ -259,79 +232,85 @@
     }
 
     &[data-appearance="check"],
-    &[data-appearance="check-outline"] {
-      >.box {
+    &[data-appearance="check-fill"] {
+      >.check {
         &::before {
-          box-sizing: border-box;
-          position: absolute;
-          content: "";
-          border-width: #{var.$inputBorderWidth};
-          border-style: solid;
-          border-color: inherit;
-          border-radius: 9999px;
-          height: 70%;
-          width: 70%;
           top: 15%;
           left: 15%;
+          width: 70%;
+          height: 70%;
         }
 
-        >.check {
-          height: calc(var(--cs-m) * 0.7);
-          width: calc(var(--cs-m) * 0.7);
-          top: 15%;
-          left: 15%;
-
-          &::before {
-            box-sizing: border-box;
-            position: absolute;
-            content: "";
-            top: 14%;
-            left: 32%;
-            width: 37%;
-            height: 60%;
-            border-bottom-width: 0.25rem;
-            border-bottom-style: solid;
-            border-bottom-color: inherit;
-            border-right-width: 0.25rem;
-            border-right-style: solid;
-            border-right-color: inherit;
-            transform: rotate(45deg);
-          }
+        &::after {
+          top: 14%;
+          left: 32%;
+          width: 37%;
+          height: 60%;
+          top: 22%;
+          left: 37%;
+          width: 28%;
+          height: 45%;
+          border-bottom: 0.25rem solid var(--s-color, var(--c-input_));
+          border-right: 0.25rem solid var(--s-color, var(--c-input_));
+          transform: rotate(45deg);
+          background: transparent;
         }
       }
 
       >.content {
         padding-right: #{var.$textPadding};
-        
+
         >.label {
           padding-left: #{var.$textPaddingThin};
         }
       }
     }
 
+    &[data-appearance="check-fill"] {
+      >.check {
+        &::after {
+          border-color: var(--s-color_, var(--c-main_));
+        }
+      }
+
+      &[data-selected="true"] {
+        >.check {
+          &::before {
+            background-color: var(--s-color, var(--c-main));
+          }
+        }
+      }
+    }
+
     &[data-outline="true"] {
-      border: #{var.$inputBorderWidth} solid var(--c-border);
+      border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
       border-radius: 9999px;
     }
   }
 
-  .box {
+  .check {
     box-sizing: border-box;
     position: relative;
     height: var(--cs-m);
     width: var(--cs-m);
     flex: none;
-  }
 
-  .check {
-    box-sizing: border-box;
-    position: absolute;
-    border-radius: 9999px;
-    opacity: 0;
-    transition: opacity #{var.$transitionTime};
+    &::before {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      border-radius: 9999px;
+      border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
+      transition: background-color #{var.$transitionTime};
+    }
 
-    &[data-selected="true"] {
-      opacity: 1;
+    &::after {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      z-index: 1;
+      opacity: 0;
+      transition: opacity #{var.$transitionTime};
     }
   }
 

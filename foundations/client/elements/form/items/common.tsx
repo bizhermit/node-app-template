@@ -2,7 +2,7 @@
 
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import type { FormItemProps } from "../$types";
-import { attributes, attributesWithoutChildren } from "../../../utilities/attributes";
+import { appendedColorStyle, attributes, attributesWithoutChildren } from "../../../utilities/attributes";
 import Tooltip from "../../tooltip";
 import { convertHiddenValue, isErrorObject } from "../utilities";
 import Style from "./form-item.module.scss";
@@ -47,7 +47,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
     );
 
   const attrs = {
-    ...attributes(props.$mainProps ?? {}, Style.main, `bdc-${props.$color || "border"}`),
+    ...attributes(props.$mainProps ?? {}, Style.main),
     "data-editable": props.$context.editable,
     "data-field": props.$preventFieldLayout !== true,
     "data-disabled": props.$context.disabled,
@@ -60,13 +60,14 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props
   return (
     <div
       {...inputAttributes(props, Style.wrap, props.$className)}
+      style={appendedColorStyle(props)}
       ref={ref}
       data-tagpad={tagPlaceholder}
       data-hidden={props.$hideWhenNoError ? !isErrorObject(props.$context.error) || props.$messagePosition === "none" : undefined}
     >
       {props.$tag &&
         <div
-          className={`${Style.tag}${props.$color ? ` fgc-${props.$color}` : ""}`}
+          className={Style.tag}
           data-pos={!tagPlaceholder ? "top" : props.$tagPosition || "top"}
         >
           {props.$tag}

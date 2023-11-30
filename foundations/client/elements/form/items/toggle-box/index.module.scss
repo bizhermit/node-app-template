@@ -8,22 +8,32 @@ $animationTime: 0.4s;
   .main {
     &[data-disabled="false"] {
       &:focus {
-        @include mixins.outline;
+        @include mixins.focusOutline(var(--s-color, var(--c-border)));
       }
     }
 
     &[data-editable="true"] {
+      >.body {
+        >.box {
+          background-color: var(--c-input);
+        }
+      }
+
       @include mixins.crossHover {
-        .handle {
-          &::before {
-            @include mixins.hover;
+        >.body {
+          >.handle {
+            &::before {
+              @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
+            }
           }
         }
 
         &:active {
-          .handle {
-            &::before {
-              @include mixins.hoverActive;
+          >.body {
+            >.handle {
+              &::before {
+                @include mixins.buttonHoverActive;
+              }
             }
           }
         }
@@ -41,14 +51,24 @@ $animationTime: 0.4s;
     }
   }
 
-  @include mixins.hoverAnimation;
-
   .body {
     box-sizing: border-box;
     position: relative;
     display: block;
     height: var(--cs-m);
     width: calc(var(--cs-m) * 1.75);
+
+    &[data-checked="true"] {
+      >.box {
+        &::before {
+          background-color: var(--s-color, var(--c-main));
+        }
+      }
+
+      >.handle {
+        left: calc(100% - var(--cs-m));
+      }
+    }
   }
 
   .box {
@@ -63,23 +83,9 @@ $animationTime: 0.4s;
       width: 60%;
       height: 60%;
       border-radius: 9999px;
-      border-width: #{var.$inputBorderWidth};
-      border-style: solid;
-      border-color: inherit;
+      border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
       background: inherit;
       transition: background-color #{$animationTime};
-    }
-
-    &[data-editable="true"] {
-      &[data-checked="false"] {
-        background: var(--c-input) !important;
-      }
-    }
-
-    &[data-editable="false"] {
-      &[data-checked="false"] {
-        background: transparent !important;
-      }
     }
   }
 
@@ -99,21 +105,30 @@ $animationTime: 0.4s;
       height: calc(var(--cs-m) * 0.8);
       width: calc(var(--cs-m) * 0.8);
       border-radius: 9999px;
-      border-width: #{var.$inputBorderWidth};
-      border-style: solid;
-      border-color: inherit;
+      border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
       background: var(--c-input);
-      @include mixins.hoverTransition;
     }
+  }
 
-    &[data-checked="true"] {
-      left: calc(100% - var(--cs-m));
-    }
+  .content {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    color: var(--s-color, inherit);
+    transition: background-color #{var.$transitionTime},
+    color #{var.$transitionTime};
+    padding-right: #{var.$textPadding};
   }
 
   .label {
     display: inline-block;
-    padding-right: calc(var(--cs-m) / 3);
+    color: var(--s-color, inherit);
+    padding-left: #{var.$textPaddingThin};
+    padding-right: #{var.$textPaddingThin};
   }
 
 }

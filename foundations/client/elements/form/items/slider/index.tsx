@@ -198,7 +198,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
       >
         <div className={Style.bar}>
           <div
-            className={`${Style.rate} bgc-${props.$color || "main"}`}
+            className={Style.rate}
             style={{ width: rate }}
           />
         </div>

@@ -97,6 +97,7 @@ $circleWidth: calc(var(--cs-m) / 3);
       width: #{$bar1Width};
       left: -#{$bar1Width};
       animation-name: bar1;
+      background-color: var(--s-color, var(--c-main));
     }
 
     &::after {
@@ -104,6 +105,7 @@ $circleWidth: calc(var(--cs-m) / 3);
       left: -#{$bar2Width};
       animation-name: bar2;
       animation-delay: 1.2s;
+      background-color: var(--s-color, var(--c-main));
     }
   }
 
@@ -147,9 +149,7 @@ $circleWidth: calc(var(--cs-m) / 3);
       position: absolute;
       content: "";
       border-radius: 9999px;
-      border-width: #{$circleWidth};
-      border-style: solid;
-      border-color: inherit;
+      border: #{$circleWidth} solid var(--s-color, var(--c-main));
       top: 0;
       left: 0;
       height: 100%;

@@ -45,7 +45,10 @@ export type CheckListProps<
   $ref?: CheckListHook<ValueType<T, D, T>> | CheckListHook<Array<string | number>>;
   $labelDataName?: string;
   $valueDataName?: string;
+  $colorDataName?: string;
+  $stateDataName?: string;
   $nowrap?: boolean;
+  $fill?: boolean;
   $outline?: boolean;
   $circle?: boolean;
   $source?: LoadableArray<Struct>;
@@ -81,6 +84,8 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
 
   const vdn = props.$valueDataName ?? "value";
   const ldn = props.$labelDataName ?? "label";
+  const cdn = props.$colorDataName ?? "color";
+  const sdn = props.$stateDataName ?? "state";
   const [source, loading] = useLoadableArray(props.$source, {
     preventMemorize: props.$preventSourceMemorize,
   });
@@ -122,13 +127,27 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
       {!loading && source.map((item, index) => {
         const v = item[vdn];
         const val = getArrayValue().find(val => val === v);
+        const c = (item[cdn] as Color) || props.$color;
+        const s = (() => {
+          switch (item[sdn]) {
+            case "readonly":
+              return "readonly";
+            case "disabled":
+              return "disabled";
+            case "hidden":
+              return "hidden";
+            default:
+              return "active";
+          }
+        })();
+        if (s === "hidden") return null;
         return (
           <CheckBox
             key={v}
             className={props.$itemClassName}
             $preventFormBind
-            $disabled={props.$disabled || ctx.disabled}
-            $readOnly={props.$readOnly || ctx.readOnly}
+            $disabled={props.$disabled || ctx.disabled || s === "disabled"}
+            $readOnly={props.$readOnly || ctx.readOnly || s === "readonly"}
             $value={v === val}
             $onChange={() => {
               const vals = [...getArrayValue()];
@@ -137,6 +156,8 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
               else vals.splice(i, 1);
               ctx.change(vals);
             }}
+            $color={c}
+            $fill={props.$fill}
             $outline={props.$outline}
             $circle={props.$circle}
             $focusWhenMounted={index === 0 && props.$focusWhenMounted}

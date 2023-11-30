@@ -3,7 +3,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes } from "react";
 import { createPortal } from "react-dom";
 import usePortalElement from "../../hooks/portal-element";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
 export type LoadingAppearance = "bar" | "circle";
@@ -40,10 +40,16 @@ const Loading = forwardRef<HTMLDivElement, LoadingProps>((props, $ref) => {
         data-appearance={appearance}
       >
         {appearance === "bar" &&
-          <div className={`${Style.bar} bgc-${props.$color || "main"}${props.$reverseColor ? "_r" : ""}`} />
+          <div
+            className={Style.bar}
+            style={appendedColorStyle({ $color: props.$color })}
+          />
         }
         {appearance === "circle" &&
-          <div className={`${Style.circle} bdc-${props.$color || "main"}${props.$reverseColor ? "_r" : ""}`} />
+          <div
+            className={Style.circle}
+            style={appendedColorStyle({ $color: props.$color })}
+          />
         }
       </div>
       {props.children != null &&

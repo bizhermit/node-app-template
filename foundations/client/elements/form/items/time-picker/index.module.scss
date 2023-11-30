@@ -26,16 +26,7 @@
 
           >.cell {
             &[data-selectable="true"] {
-              cursor: pointer;
-              @include mixins.hoverTransition;
-
-              @include mixins.crossHover {
-                @include mixins.hover;
-
-                &:active {
-                  @include mixins.hoverActive;
-                }
-              }
+              @include mixins.listHover;
             }
 
             &[data-selectable="false"] {
@@ -69,7 +60,6 @@
     flex: 1;
     overflow: auto;
     padding: calc(var(--cs-m) * 2.85) var(--b-xs);
-    gap: var(--b-xs);
   }
 
   .cell {
@@ -137,8 +127,6 @@
   .negative {
     @include mixins.inputButton(true);
   }
-
-  @include mixins.hoverAnimation;
 
   .positive,
   .negative {
