@@ -32,8 +32,6 @@ const calcState = (index: number, current: number): SlideState => {
 };
 
 const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, ref) => {
-  const bodyColor = props.$bodyColor || "base";
-
   const { breadcrumbs, bodys } = (() => {
     const children = Array.isArray(props.children) ? props.children : [props.children];
     const breadcrumbs: Array<ReactNode> = [];
@@ -58,7 +56,6 @@ const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, r
         <Content
           key={i}
           current={props.$index}
-          color={bodyColor}
           overlap={child.props?.overlap ?? props.$overlap ?? false}
           defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
           preventAnimation={preventAnimation}
@@ -84,7 +81,7 @@ const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, r
           {breadcrumbs}
         </div>
       }
-      <div className={`${Style.body} c-${bodyColor}`}>
+      <div className={Style.body}>
         {bodys}
       </div>
     </div>
@@ -158,7 +155,6 @@ const Content: FC<{
   defaultMount: boolean;
   preventUnmountDeselected: boolean;
   preventAnimation: boolean;
-  color: Color;
   overlap: boolean;
   children: ReactNode;
 }> = (props) => {
@@ -197,7 +193,7 @@ const Content: FC<{
   return (
     <div
       ref={ref}
-      className={`${Style.content} c-${props.color}`}
+      className={Style.content}
       style={{
         visibility: "hidden",
       }}
