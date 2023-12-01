@@ -1,10 +1,12 @@
-import { ForwardedRef, FunctionComponent, ReactElement, forwardRef, useCallback, useState, type HTMLAttributes } from "react";
-import { ValueType } from "../../$types";
+import { ForwardedRef, FunctionComponent, ReactElement, forwardRef, useCallback, useEffect, useState, type HTMLAttributes } from "react";
+import { FormItemHook, ValueType } from "../../$types";
 import DateValidation from "../../../../../data-items/date/validations";
 import parseDate from "../../../../../objects/date/parse";
+import structKeys from "../../../../../objects/struct/keys";
 import { attributes } from "../../../../utilities/attributes";
 import useForm from "../../context";
 import DateBox, { DateBoxProps, useDateBox } from "../date-box";
+import { formItemHookNotSetError, useFormItemBase } from "../hooks";
 import Style from "./index.module.scss";
 
 type InputOmitProps = "name"
@@ -15,10 +17,20 @@ type InputOmitProps = "name"
   | "onChange"
   | "children";
 
-type DateRangeBoxProps<D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & ({
+type DateRangeBoxHookAddon = {
+  focus: (target?: "from" | "to") => void;
+};
+type DateRangeBoxHook<T extends DateValue> = FormItemHook<{ from: T | null | undefined; to: T | null | undefined; }, DateRangeBoxHookAddon>;
+
+export const useDateRangeBox = <T extends DateValue>() => useFormItemBase<DateRangeBoxHook<T>>();
+
+type DateRangeBoxProps<D extends DataItem_Date | undefined = undefined> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & ({
+  $ref?: DateRangeBoxHook<ValueType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
   $from: DateBoxProps<D>;
   $to: DateBoxProps<D>;
-} | (Omit<DateBoxProps<D>, "$onChange" | "$onEdit" | "$value" | "$defaultValue" | "$initValue"> & {
+} | (Omit<DateBoxProps<D>, "$onChange" | "$onEdit" | "$value" | "$defaultValue" | "$initValue" | "$dataItem" | "$ref"> & {
+  $ref?: DateRangeBoxHook<ValueType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
+  $dataItem?: D;
   $onChange?: (
     after: { from: ValueType<DateValue, D>; to: ValueType<DateValue, D>; },
     before: { from: ValueType<DateValue, D>; to: ValueType<DateValue, D>; },
@@ -37,7 +49,7 @@ type DateRangeBoxProps<D extends DataItem_Date | DataItem_String | DataItem_Numb
   $toInitValue?: ValueType<DateValue, D> | null | undefined;
 }))
 
-interface DateRangeBoxFC extends FunctionComponent<DateRangeBoxProps> {
+interface DateRangeBoxFC extends FunctionComponent<DateRangeBoxProps<DataItem_Date | undefined>> {
   <D extends DataItem_Date | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, DateRangeBoxProps<D>>
   ): ReactElement<any> | null;
@@ -60,14 +72,15 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
         to: props.$to,
       };
     }
-    const dataItem = props.$dataItem ?? {
+    const dataItem = {
       $$: undefined,
       type: "date" as const,
-      name: props.name,
+      name: props.name ?? "no_name",
       max: props.$max,
       min: props.$min,
       typeof: props.$typeof,
       label: props.$label,
+      // ...props.$dataItem,
     };
     const fromSuffixName = "from";
     const toSuffixName = "to";
@@ -111,7 +124,7 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
         $dataItem: {
           ...dataItem,
           name: toName,
-          $rangePair: {
+          rangePair: {
             name: fromName,
             position: "before",
             disallowSame: props.$rangePair?.disallowSame,
@@ -131,8 +144,8 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
   })();
 
   const contextValidation = useCallback((f: ValueType<DateValue, D>, t: ValueType<DateValue, D>) => {
-    const fromRangePair = from.$rangePair ?? from.$dataItem?.rangePair ?? { name: "to", position: "after" };
-    const fromErr = DateValidation.context(
+    const fromRangePair = from.$rangePair ?? from.$dataItem?.rangePair ?? { name: to.name!, position: "after" };
+    const fromErr = !fromRangePair.name ? undefined : DateValidation.context(
       parseDate(f),
       fromRangePair,
       { [fromRangePair.name]: t },
@@ -141,8 +154,8 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
       to.$label ?? to.$dataItem?.label,
     );
     setFromError(fromErr);
-    const toRangePair = to.$rangePair ?? to.$dataItem?.rangePair ?? { name: "from", position: "before" };
-    const toErr = DateValidation.context(
+    const toRangePair = to.$rangePair ?? to.$dataItem?.rangePair ?? { name: from.name!, position: "before" };
+    const toErr = !toRangePair.name ? undefined : DateValidation.context(
       parseDate(t),
       toRangePair,
       { [toRangePair.name]: f },
@@ -185,6 +198,40 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
     to.$preventMemorizeOnChange ? (props as any).$onChange : undefined,
     to.$preventMemorizeOnChange ? (props as any).$to?.$onChange : undefined,
   ]);
+
+  if (props.$ref) {
+    props.$ref.focus = (target = "from") => target === "to" ? toRef.focus() : fromRef.focus();
+    props.$ref.getValue = () => ({
+      from: fromRef.getValue() as ValueType<DateValue, D, DateValue>,
+      to: toRef.getValue() as ValueType<DateValue, D, DateValue>
+    });
+    props.$ref.setValue = (v) => {
+      fromRef.setValue(v?.from);
+      toRef.setValue(v?.to);
+    };
+    props.$ref.setDefaultValue = () => {
+      fromRef.setDefaultValue();
+      toRef.setDefaultValue();
+    };
+    props.$ref.clear = () => {
+      fromRef.clear();
+      toRef.clear();
+    };
+    props.$ref.hasError = () => fromRef.hasError() || toRef.hasError();
+    props.$ref.getErrorMessage = () => fromRef.getErrorMessage() || toRef.getErrorMessage();
+  }
+
+  useEffect(() => {
+    return () => {
+      if (props.$ref) {
+        structKeys(props.$ref).forEach(k => {
+          props.$ref![k] = () => {
+            throw formItemHookNotSetError;
+          };
+        });
+      }
+    };
+  }, []);
 
   return (
     <div

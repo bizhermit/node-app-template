@@ -3,6 +3,7 @@ import type { FormItemHook, FormItemMessages, FormItemProps, FormItemValidation,
 import equals from "../../../../objects/equal";
 import { generateUuidV4 } from "../../../../objects/string/generator";
 import { getValue } from "../../../../objects/struct/get";
+import structKeys from "../../../../objects/struct/keys";
 import { setValue } from "../../../../objects/struct/set";
 import type useForm from "../context";
 import { type UseFormItemContextOptions } from "../context";
@@ -297,6 +298,18 @@ export const useFormItemContext = <
     props.$ref.getErrorMessage = () => error ?? props.$error;
   }
 
+  useEffect(() => {
+    return () => {
+      if (props.$ref) {
+        structKeys(props.$ref).forEach(k => {
+          props.$ref![k] = () => {
+            throw formItemHookNotSetError;
+          };
+        });
+      }
+    };
+  }, []);
+
   return {
     ...form,
     disabled,
@@ -317,37 +330,37 @@ export const useFormItemContext = <
 };
 
 // eslint-disable-next-line no-console
-const notSetError = new Error("useFormItem not set");
+export const formItemHookNotSetError = new Error("useFormItem not set");
 
 export const useFormItem = <T = any>() => useFormItemBase<FormItemHook<T, {}>>(() => ({}));
 
 export const useFormItemBase = <H extends FormItemHook<any, any>>(
-  addons?: (warningMessage: typeof notSetError) => Omit<H, keyof FormItemHook<any, {}>>
+  addons?: (warningMessage: typeof formItemHookNotSetError) => Omit<H, keyof FormItemHook<any, {}>>
 ) => {
   return useMemo<H>(() => {
     return {
       focus: () => {
-        throw notSetError;
+        throw formItemHookNotSetError;
       },
       getValue: () => {
-        throw notSetError;
+        throw formItemHookNotSetError;
       },
       setValue: () => {
-        throw notSetError;
+        throw formItemHookNotSetError;
       },
       setDefaultValue: () => {
-        throw notSetError;
+        throw formItemHookNotSetError;
       },
       clear: () => {
-        throw notSetError;
+        throw formItemHookNotSetError;
       },
       hasError: () => {
-        throw notSetError;
+        throw formItemHookNotSetError;
       },
       getErrorMessage: () => {
-        throw notSetError;
+        throw formItemHookNotSetError;
       },
-      ...(addons?.(notSetError) as any),
+      ...(addons?.(formItemHookNotSetError) as any),
     };
   }, []);
 };
