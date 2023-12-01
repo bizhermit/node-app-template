@@ -5,6 +5,7 @@ import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from 
 import DateInput from "../../../../../data-items/date/input";
 import DateItemUtils from "../../../../../data-items/date/utilities";
 import { isBeforeDate } from "../../../../../objects/date/compare";
+import formatDate from "../../../../../objects/date/format";
 import parseDate from "../../../../../objects/date/parse";
 import equals from "../../../../../objects/equal";
 import { isEmpty } from "../../../../../objects/string/empty";
@@ -24,9 +25,9 @@ type DateBoxHookAddon = {
   setFirstDate: () => Date;
   setLastDate: () => Date;
 };
-type DateBoxHook<T extends string | number | Date> = FormItemHook<T, DateBoxHookAddon>;
+type DateBoxHook<T extends DateValue> = FormItemHook<T, DateBoxHookAddon>;
 
-export const useDateBox = <T extends string | number | Date>() => useFormItemBase<DateBoxHook<T>>(e => {
+export const useDateBox = <T extends DateValue>() => useFormItemBase<DateBoxHook<T>>(e => {
   return {
     addDay: () => {
       throw e;
@@ -47,8 +48,9 @@ export const useDateBox = <T extends string | number | Date>() => useFormItemBas
 });
 
 type OmitAttributes = "placeholder";
-type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = Omit<FormItemProps<T, D>, OmitAttributes> & DateInput.FCPorps & {
-  $ref?: DateBoxHook<ValueType<T, D, string | number | Date>> | DateBoxHook<string | number | Date>;
+export type DateBoxProps<D extends DataItem_Date | undefined = undefined> = Omit<FormItemProps<DateValue, D>, OmitAttributes> & DateInput.FCPorps & {
+  $ref?: DateBoxHook<ValueType<DateValue, D, DateValue>> | DateBoxHook<DateValue>;
+  $typeof?: DateValueType;
   $disallowInput?: boolean;
   $pickerButtonless?: boolean;
   $yearPlaceholder?: string;
@@ -57,78 +59,35 @@ type DateBoxBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Nu
   $showSeparatorAlwarys?: boolean;
 };
 
-export type DateBoxProps_TypeString<D extends DataItem_String | undefined = undefined> = DateBoxBaseProps<string, D>;
-
-export type DateBoxProps_TypeNumber<D extends DataItem_Number | undefined = undefined> = DateBoxBaseProps<number, D>;
-
-export type DateBoxProps_TypeDate<D extends DataItem_Date | undefined = undefined> = DateBoxBaseProps<Date, D>;
-
-export type DateBoxProps<D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = D extends undefined ?
-  (
-    (DateBoxProps_TypeString & { $typeof?: "string" }) | (DateBoxProps_TypeNumber & { $typeof: "number" }) | (DateBoxProps_TypeDate & { $typeof: "date" })
-  ) : (
-    D extends { type: infer T } ? (
-      T extends DataItem_Date["type"] ? (DateBoxProps_TypeDate<Exclude<D, DataItem_String | DataItem_Number>> & { $typeof?: "date" }) :
-      T extends DataItem_Number["type"] ? (DateBoxProps_TypeNumber<Exclude<D, DataItem_Date | DataItem_String>> & { $typeof?: "number" }) :
-      (DateBoxProps_TypeString<Exclude<D, DataItem_Date | DataItem_Number>> & { $typeof?: "string" })
-    ) : (DateBoxProps_TypeString & { $typeof?: "string" }) | (DateBoxProps_TypeNumber & { $typeof: "number" }) | (DateBoxProps_TypeDate & { $typeof: "date" })
-  );
-
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
   return /^[0-9]+$/.test(value);
 };
 
 interface DateBoxFC extends FunctionComponent<DateBoxProps> {
-  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(
+  <D extends DataItem_Date | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, DateBoxProps<D>>
   ): ReactElement<any> | null;
 }
 
 const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
-  D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
+  D extends DataItem_Date | undefined = undefined
 >(p: DateBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
-      switch (dataItem.type) {
-        case "number":
-          return {
-            $typeof: "number",
-          } as DateBoxProps<D>;
-        case "date":
-        case "month":
-        case "year":
-          return {
-            $type: dataItem.type as DateType,
-            $typeof: dataItem.typeof,
-            $min: dataItem.min,
-            $max: dataItem.max,
-            $rangePair: dataItem.rangePair,
-          } as DateBoxProps<D>;
-        default:
-          return {
-            $typeof: "string",
-          } as DateBoxProps<D>;
-      }
+      return {
+        $type: dataItem.type as DateType,
+        $typeof: dataItem.typeof,
+        $min: dataItem.min,
+        $max: dataItem.max,
+        $rangePair: dataItem.rangePair,
+      } as DateBoxProps<D>;
     },
     over: ({ dataItem, props }) => {
-      switch (dataItem.type) {
-        case "number":
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
-          } as DateBoxProps<D>;
-        case "date":
-        case "month":
-        case "year":
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, parseDate)),
-          } as DateBoxProps<D>;
-        default:
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
-          } as DateBoxProps<D>;
-      }
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, parseDate)),
+      } as DateBoxProps<D>;
     },
   });
 
@@ -158,6 +117,13 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
 
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
+    receive: (v): any => {
+      switch (props.$typeof) {
+        case "date": return parseDate(v);
+        case "number": return parseDate(v)?.getTime();
+        default: return formatDate(v);
+      }
+    },
     validations: (_, label) => {
       const validations: Array<FormItemValidation<any>> = [];
       const max = DateItemUtils.dateAsLast(maxDate, type);

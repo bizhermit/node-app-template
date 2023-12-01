@@ -5,6 +5,7 @@ import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from 
 import NumberValidation from "../../../../../data-items/number/validations";
 import { add, minus } from "../../../../../objects/number/calc";
 import formatNum from "../../../../../objects/number/format";
+import parseNum from "../../../../../objects/number/parse";
 import { isEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
@@ -20,9 +21,9 @@ type NumberBoxHookAddon = {
   down: (ctrl?: boolean) => number;
   add: (v: number) => number;
 };
-type NumberBoxHook<T extends string | number = number> = FormItemHook<T, NumberBoxHookAddon>;
+type NumberBoxHook<T extends number = number> = FormItemHook<T, NumberBoxHookAddon>;
 
-export const useNumberBox = <T extends string | number = number>() => useFormItemBase<NumberBoxHook<T>>(e => {
+export const useNumberBox = <T extends number = number>() => useFormItemBase<NumberBoxHook<T>>(e => {
   return {
     up: () => {
       throw e;
@@ -36,8 +37,8 @@ export const useNumberBox = <T extends string | number = number>() => useFormIte
   };
 });
 
-export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
-  $ref?: NumberBoxHook<ValueType<number, D, number>> | NumberBoxHook<string | number>;
+export type NumberBoxProps<D extends DataItem_Number | undefined = undefined> = FormItemProps<number, D, number> & {
+  $ref?: NumberBoxHook<ValueType<number, D, number>> | NumberBoxHook<number>;
   $min?: number;
   $max?: number;
   $minLength?: number;
@@ -59,58 +60,36 @@ export type NumberBoxProps<D extends DataItem_Number | DataItem_String | undefin
 };
 
 interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
-  <D extends DataItem_Number | DataItem_String | undefined = undefined>(
+  <D extends DataItem_Number | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, NumberBoxProps<D>>
   ): ReactElement<any> | null;
 }
 
 const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
-  D extends DataItem_Number | DataItem_String | undefined = undefined
+  D extends DataItem_Number | undefined = undefined
 >(p: NumberBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLInputElement>(null!);
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem, method }) => {
       const isSearch = method === "get";
-      switch (dataItem.type) {
-        case "string":
-          return {
-            $min: 0,
-            $minLength: isSearch ? undefined : dataItem.minLength,
-            $maxLength: dataItem.maxLength ?? dataItem.length,
-            $float: 0,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v?.toString())),
-            $align: dataItem.align || "left",
-            $width: dataItem.width,
-            $minWidth: dataItem.minWidth,
-            $maxWidth: dataItem.maxWidth,
-          };
-        default:
-          return {
-            $min: dataItem.min,
-            $max: dataItem.max,
-            $minLength: isSearch ? undefined : dataItem.minLength,
-            $maxLength: dataItem.maxLength,
-            $float: dataItem.float,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v)),
-            $align: dataItem.align,
-            $width: dataItem.width,
-            $minWidth: dataItem.minWidth,
-            $maxWidth: dataItem.maxWidth,
-          };
-      }
+      return {
+        $min: dataItem.min,
+        $max: dataItem.max,
+        $minLength: isSearch ? undefined : dataItem.minLength,
+        $maxLength: dataItem.maxLength,
+        $float: dataItem.float,
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v)),
+        $align: dataItem.align,
+        $width: dataItem.width,
+        $minWidth: dataItem.minWidth,
+        $maxWidth: dataItem.maxWidth,
+      };
     },
     over: ({ dataItem }) => {
-      switch (dataItem.type) {
-        case "string":
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem, v => v?.toString())),
-          };
-        default:
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem)),
-          };
-      }
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, p, dataItem)),
+      };
     },
   });
 
@@ -127,6 +106,7 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
   };
 
   const ctx = useFormItemContext(form, props, {
+    receive: parseNum,
     effect: () => {
       renderFormattedValue();
     },

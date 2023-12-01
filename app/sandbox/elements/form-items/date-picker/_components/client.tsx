@@ -8,13 +8,13 @@ import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import TextBox from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
+import { sample_date, sample_month, sample_year } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const DatePickerClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<string>>();
+  const [value, setValue] = useState<Nullable<DateValue>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState<Struct>({ "pair-date": "2022-12-11" });
   const [type, setType] = useState<"date" | "month" | "year">("date");
@@ -150,20 +150,6 @@ const DatePickerClient = () => {
           // $multiple
           $buttonless={buttonless}
         />
-        <DatePicker
-          $tag="string"
-          $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
-          // $multiple
-          $buttonless={buttonless}
-        />
-        <DatePicker
-          $tag="number"
-          $dataItem={sample_number}
-          $onChange={v => console.log("number: ", v)}
-          // $multiple
-          $buttonless={buttonless}
-        />
       </Row>
       <Row className="g-s" $vAlign="top">
         <DatePicker
@@ -172,7 +158,11 @@ const DatePickerClient = () => {
           $readOnly={readOnly}
           $type={type}
           $value={value}
-          $onChange={v => setValue(v)}
+          $typeof="date"
+          $onChange={v => {
+            console.log(v);
+            setValue(v)
+          }}
           $required
           $messagePosition="bottom"
           $onClickPositive={(value) => {

@@ -10,6 +10,7 @@ import Row from "#/client/elements/row";
 import { joinClassNames } from "#/client/utilities/attributes";
 import generateArray from "#/objects/array/generator";
 import { useMemo, useState } from "react";
+import SelectBox from "../../../../../foundations/client/elements/form/items/select-box";
 
 type Data = {
   id: number;
@@ -20,6 +21,8 @@ type Data = {
   col5?: string;
 };
 
+type DragScroll = boolean | "vertical" | "horizontal";
+
 const DataTableClient = () => {
   const columns = useMemo(() => {
     const cols: Array<DataTableColumn<Data>> = [];
@@ -28,7 +31,7 @@ const DataTableClient = () => {
       dataTableCheckBoxColumn({
         name: "selected",
         bulk: true,
-        fixed: true,
+        sticky: true,
       }),
       dataTableButtonColumn({
         name: "button",
@@ -37,6 +40,7 @@ const DataTableClient = () => {
         outline: true,
         width: "9rem",
         resize: true,
+        // padding: false,
         onClick: (ctx) => {
           console.log(ctx);
         },
@@ -48,7 +52,7 @@ const DataTableClient = () => {
         sort: true,
         resize: false,
         sortNeutral: false,
-        fixed: true,
+        sticky: true,
         href: (ctx) => {
           return {
             pathname: "/sandbox/elements/data-table",
@@ -149,6 +153,7 @@ const DataTableClient = () => {
   const [scroll, setScroll] = useState(true);
   const [page, setPage] = useState(false);
   const [perPage, setPerPage] = useState(10);
+  const [dragScroll, setDragScroll] = useState<DragScroll>(true);
 
   return (
     <div className="flex w-100 h-100 g-s p-xs">
@@ -174,6 +179,24 @@ const DataTableClient = () => {
           <ToggleBox $value={scroll} $onChange={v => setScroll(v!)}>scroll</ToggleBox>
           <ToggleBox $value={page} $onChange={v => setPage(v!)}>page</ToggleBox>
           <NumberBox $value={perPage} $onChange={v => setPerPage(v ?? 20)} $min={1} $max={100} $width={100} $hideClearButton />
+          <SelectBox
+            style={{ width: "25rem" }}
+            placeholder="drag scroll"
+            $source={[
+              { value: true, label: "drag scroll" },
+              { value: false, label: "no drag scroll" },
+              { value: "vertical", label: "drag vertical scroll" },
+              { value: "horizontal", label: "drag horizontal scroll" },
+            ]}
+            $value={dragScroll as any}
+            $onChange={
+              v => setDragScroll((() => {
+                if (v === "true") return true;
+                if (v === "false") return false;
+                return v;
+              }))
+            }
+          />
         </Row>
       </Row>
       <DataTable<Data>
@@ -200,7 +223,8 @@ const DataTableClient = () => {
         }}
         $radio
         $stripes
-        $rowPointer
+        // $rowPointer
+        $dragScroll={dragScroll}
       />
     </div>
   );

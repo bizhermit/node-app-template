@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { DataTableBaseColumn, DataTableCellContext, DataTableColumn } from ".";
+import { DataTableCellLabel, type DataTableBaseColumn, type DataTableCellContext, type DataTableColumn } from ".";
 import Button, { type ButtonProps } from "../button";
 
 type Props<T extends Struct> = DataTableBaseColumn<T> & {
@@ -22,19 +22,23 @@ const dataTableButtonColumn = <T extends Struct>(props: Props<T>): DataTableColu
     resize: false,
     body: (bprops) => {
       return (
-        <Button
-          $onClick={(unlock, event) => props.onClick?.(bprops, unlock, event)}
-          $outline={props.outline}
-          $size={props.size ?? "s"}
-          $color={props.color}
-          $icon={props.icon}
-          $fillLabel={props.fillLabel}
-          $iconPosition={props.iconPosition}
-          $fitContent={props.fitContent ?? true}
-          $round={props.round}
+        <DataTableCellLabel
+          padding={props.padding}
         >
-          {props.buttonText ?? bprops.children}
-        </Button>
+          <Button
+            $onClick={(unlock, event) => props.onClick?.(bprops, unlock, event)}
+            $outline={props.outline}
+            $size={props.size ?? "s"}
+            $color={props.color}
+            $icon={props.icon}
+            $fillLabel={props.fillLabel}
+            $iconPosition={props.iconPosition}
+            $fitContent={props.fitContent ?? true}
+            $round={props.round}
+          >
+            {props.buttonText ?? bprops.children}
+          </Button>
+        </DataTableCellLabel>
       );
     },
     ...props,

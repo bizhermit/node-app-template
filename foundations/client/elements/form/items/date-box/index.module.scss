@@ -107,7 +107,7 @@
   }
 
   .popup {
-    @include mixins.pickerShadow;
+    @include mixins.popupShadow;
     overflow: visible !important;
   }
 

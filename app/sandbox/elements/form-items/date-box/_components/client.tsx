@@ -4,21 +4,23 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import DateBox, { useDateBox } from "#/client/elements/form/items/date-box";
+import DateRangeBox, { useDateRangeBox } from "#/client/elements/form/items/date-range-box";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
+import { sample_date, sample_month, sample_year } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const DateBoxClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<string>>();
+  const [value, setValue] = useState<Nullable<DateValue>>();
   const [bind, setBind] = useState({});
-  const [formBind, setFormBind] = useState({});
+  const [formBind, setFormBind] = useState<Struct>({ "date-box-form-bind": new Date() });
   const [type, setType] = useState<"date" | "month" | "year">("date");
   const [disallowInput, setDisallowInput] = useState(false);
   const dateBoxRef = useDateBox();
+  const dateRangeBoxRef = useDateRangeBox();
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
@@ -137,16 +139,6 @@ const DateBoxClient = () => {
           $dataItem={sample_year}
           $onChange={v => console.log("year: ", v)}
         />
-        <DateBox
-          $tag="string"
-          $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
-        />
-        <DateBox
-          $tag="number"
-          $dataItem={sample_number}
-          $onChange={v => console.log("number: ", v)}
-        />
       </Row>
       <Row className="g-s">
         <Button
@@ -233,6 +225,13 @@ const DateBoxClient = () => {
           error
         </Button>
       </Row>
+      <DateRangeBox
+        // name="hoge"
+        $required
+        $onChange={(...args) => {
+          console.log(JSON.stringify(args, null, 2));
+        }}
+      />
       <DateBox
         $type={type}
         $tag="useState"
@@ -276,6 +275,10 @@ const DateBoxClient = () => {
               position: "after",
               disallowSame: true,
             }}
+            $onChange={v => {
+              console.log("----change date----");
+              console.log(v);
+            }}
           />
           <span className="h-size pt-t flex column center middle">～</span>
           <DateBox
@@ -290,6 +293,19 @@ const DateBoxClient = () => {
             }}
           />
         </Row>
+        <DateRangeBox
+          // name="hogehoge"
+          // $dataItem={sample_date}
+          $dataItem={sample_date}
+          $ref={dateRangeBoxRef}
+        />
+        <Button
+          $onClick={() => {
+            dateRangeBoxRef.focus();
+          }}
+        >
+          focus
+        </Button>
         <Button type="submit">submit</Button>
       </Form>
     </div>

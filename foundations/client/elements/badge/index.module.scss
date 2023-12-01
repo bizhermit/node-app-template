@@ -44,6 +44,10 @@ $pushout: calc(var(--cs-m) * -0.25);
         font-size: var(--fs-#{$size});
       }
     }
+
+    &[data-round="true"] {
+      border-radius: 9999px;
+    }
   }
 
 }

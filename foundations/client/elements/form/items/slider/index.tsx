@@ -2,6 +2,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
+import parseNum from "../../../../../objects/number/parse";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
@@ -14,9 +15,9 @@ type SliderHookAddon = {
   down: () => number;
   add: (v: number) => number;
 };
-type SliderHook<T extends string | number = number> = FormItemHook<T, SliderHookAddon>;
+type SliderHook<T extends number = number> = FormItemHook<T, SliderHookAddon>;
 
-export const useSlider = <T extends string | number = number>() => useFormItemBase<SliderHook<T>>(e => {
+export const useSlider = <T extends number = number>() => useFormItemBase<SliderHook<T>>(e => {
   return {
     up: () => {
       throw e;
@@ -30,8 +31,8 @@ export const useSlider = <T extends string | number = number>() => useFormItemBa
   };
 });
 
-export type SliderProps<D extends DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<number, D, number> & {
-  $ref?: SliderHook<ValueType<number, D, number>> | SliderHook<number | string>;
+export type SliderProps<D extends DataItem_Number | undefined = undefined> = FormItemProps<number, D, number> & {
+  $ref?: SliderHook<ValueType<number, D, number>> | SliderHook<number>;
   $max?: number;
   $min?: number;
   $step?: number;
@@ -41,7 +42,7 @@ export type SliderProps<D extends DataItem_Number | DataItem_String | undefined 
 };
 
 interface SliderFC extends FunctionComponent<SliderProps> {
-  <D extends DataItem_Number | DataItem_String | undefined = undefined>(
+  <D extends DataItem_Number | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, SliderProps<D>>
   ): ReactElement<any> | null;
 }
@@ -51,7 +52,7 @@ const defaultMax = 100;
 const defaultMin = 0;
 
 const Slider = forwardRef<HTMLDivElement, SliderProps>(<
-  D extends DataItem_Number | DataItem_String | undefined = undefined
+  D extends DataItem_Number | undefined = undefined
 >(p: SliderProps<D>, $ref: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
@@ -60,40 +61,24 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
-      switch (dataItem.type) {
-        case "string":
-          return {
-            $min: 0,
-            $width: dataItem.width,
-            $minWidth: dataItem.minWidth,
-            $maxWidth: dataItem.maxWidth,
-          };
-        default:
-          return {
-            $min: dataItem.min,
-            $max: dataItem.max,
-            $width: dataItem.width,
-            $minWidth: dataItem.minWidth,
-            $maxWidth: dataItem.maxWidth,
-          };
-      }
+      return {
+        $min: dataItem.min,
+        $max: dataItem.max,
+        $width: dataItem.width,
+        $minWidth: dataItem.minWidth,
+        $maxWidth: dataItem.maxWidth,
+      };
     },
     over: ({ dataItem, props }) => {
-      switch (dataItem.type) {
-        case "string":
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v?.toString())),
-          };
-        default:
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
-          };
-      }
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem)),
+      };
     },
   });
 
   const ctx = useFormItemContext(form, props, {
     preventRequiredValidation: true,
+    receive: parseNum,
   });
 
   const max = props.$max ?? defaultMax;

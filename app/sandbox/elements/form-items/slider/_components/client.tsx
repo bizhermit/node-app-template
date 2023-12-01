@@ -7,7 +7,7 @@ import Slider from "#/client/elements/form/items/slider";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
-import { sample_number, sample_string } from "$/data-items/sample/item";
+import { sample_number } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const SliderClient = () => {
@@ -15,7 +15,7 @@ const SliderClient = () => {
   const [readOnly, setReadOnly] = useState(false);
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
-  const [formBind, setFormBind] = useState({});
+  const [formBind, setFormBind] = useState<Struct>({ "slider-form-bind": "50" });
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
@@ -94,11 +94,6 @@ const SliderClient = () => {
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
-        />
-        <Slider
-          $tag="string"
-          $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
         />
       </Row>
       <Slider

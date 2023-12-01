@@ -33,6 +33,16 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     &[data-border="true"] {
       border: #{$borderStyle};
     }
+
+    &[data-drag-scroll="true"] {
+      cursor: cell;
+    }
+
+    &:active {
+      &:not([data-dragging]) {
+        cursor: unset;
+      }
+    }
   }
 
   .header,
@@ -49,6 +59,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     top: 0;
     background-color: var(--s-color, var(--c-main));
     color: var(--s-color_, var(--c-main_));
+    cursor: default;
   }
 
   .body {
@@ -78,10 +89,6 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
         border-top: #{$borderStyle};
       }
     }
-
-    // @include mixins.crossHover(false) {
-    //   overflow: visible;
-    // }
   }
 
   .brow {
@@ -113,7 +120,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     }
 
     &[data-pointer="true"] {
-      cursor: cell;
+      cursor: pointer;
     }
   }
 
@@ -141,7 +148,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
       justify-content: right;
     }
 
-    &[data-fixed="true"] {
+    &[data-sticky="true"] {
       position: sticky;
 
       &[data-border="true"] {
@@ -157,10 +164,6 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
         }
       }
     }
-
-    // @include mixins.crossHover(false) {
-    //   overflow: visible;
-    // }
   }
 
   .hcell {
@@ -196,7 +199,14 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
 
   .bcell {
     >a {
-      max-width: 100%;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      overflow: visible;
     }
 
     @include mixins.crossHover(false) {
@@ -220,9 +230,12 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
   .label {
     box-sizing: border-box;
     display: block;
-    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     max-width: 100%;
     overflow: hidden;
+
+    &[data-padding="true"] {
+      padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
+    }
 
     &[data-wrap="false"] {
       white-space: nowrap;
