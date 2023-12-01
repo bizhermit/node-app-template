@@ -37,6 +37,7 @@ const DataTableClient = () => {
         outline: true,
         width: "9rem",
         resize: true,
+        // padding: false,
         onClick: (ctx) => {
           console.log(ctx);
         },

@@ -196,7 +196,14 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
 
   .bcell {
     >a {
-      max-width: 100%;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      overflow: visible;
     }
 
     @include mixins.crossHover(false) {
@@ -220,9 +227,12 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
   .label {
     box-sizing: border-box;
     display: block;
-    padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     max-width: 100%;
     overflow: hidden;
+
+    &[data-padding="true"] {
+      padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
+    }
 
     &[data-wrap="false"] {
       white-space: nowrap;

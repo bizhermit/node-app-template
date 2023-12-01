@@ -45,6 +45,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   resize?: boolean;
   fixed?: boolean;
   wrap?: boolean;
+  padding?: boolean;
   header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
   body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; rev: number }>;
   footer?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
@@ -488,7 +489,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
       }
 
       const CellLabel: FC = () => (
-        <DataTableCellLabel wrap={column.wrap}>
+        <DataTableCellLabel
+          wrap={column.wrap}
+          padding={column.padding}
+        >
           {(() => {
             const v = getValue(data, column.displayName || column.name);
             switch (column.type) {
@@ -759,12 +763,14 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
 
 export const DataTableCellLabel: FC<{
   wrap?: boolean;
+  padding?: boolean;
   children?: ReactNode;
-}> = ({ wrap, children }) => {
+}> = ({ wrap, padding, children }) => {
   return (
     <div
       className={Style.label}
       data-wrap={wrap === true}
+      data-padding={padding !== false}
     >
       {children}
     </div>
