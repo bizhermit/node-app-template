@@ -331,37 +331,12 @@ const Navigation: FC = () => {
             label: "Window",
             icon: "W",
             pathname: "/sandbox/window",
+          }, {
+            key: "post",
+            label: "Post",
+            icon: "P",
+            pathname: "/sandbox/post/sender",
           }],
-        }, {
-          key: "message-box",
-          label: "MessageBox",
-          icon: "M",
-          pathname: "/sandbox/message-box",
-        }, {
-          key: "fetch",
-          label: "Fetch",
-          icon: "F",
-          pathname: "/sandbox/fetch",
-        }, {
-          key: "storage",
-          label: "Storage",
-          icon: "S",
-          pathname: "/sandbox/storage"
-        }, {
-          key: "process",
-          label: "Process",
-          icon: "P",
-          pathname: "/sandbox/process"
-        }, {
-          key: "dynamic",
-          label: "Dynamic",
-          icon: "D",
-          pathname: "/sandbox/dynamic",
-        }, {
-          key: "post",
-          label: "Post",
-          icon: "P",
-          pathname: "/sandbox/post/sender",
         }]}
       />
     </div>
