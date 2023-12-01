@@ -98,8 +98,8 @@ export const sample_boolean_str = booleanItem({
 
 export const sample_date = dateItem({
   name: "sample_date",
-  // typeof: "string",
-  typeof: "date",
+  typeof: "string",
+  // typeof: "date",
   // typeof: "number",
   required: true,
   validations: [

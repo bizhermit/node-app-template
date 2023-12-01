@@ -11,18 +11,18 @@ import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
-type CheckListHookAddon<Q extends { [key: string]: any } = { [key: string]: any }> = {
+type CheckListHookAddon<Q extends { [v: string]: any } = { [v: string]: any }> = {
   getData: () => Array<(Q | null | undefined)>;
   checkAll: () => void;
   uncheckAll: () => void;
 };
 type CheckListHook<
-  T extends Array<string | number>,
+  T extends Array<string | number | boolean>,
   Q extends { [key: string]: any } = { [key: string]: any }
 > = FormItemHook<T, CheckListHookAddon<Q>>;
 
 export const useCheckList = <
-  T extends Array<string | number>,
+  T extends Array<string | number | boolean>,
   Q extends { [key: string]: any } = { [key: string]: any }
 >() => useFormItemBase<CheckListHook<T, Q>>(e => {
   return {
@@ -39,10 +39,10 @@ export const useCheckList = <
 });
 
 export type CheckListProps<
-  T extends Array<string | number> = Array<string | number>,
+  T extends Array<string | number | boolean> = Array<string | number | boolean>,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 > = Omit<FormItemProps<T, D, Array<ValueType<T, D>>>, "$tagPosition"> & {
-  $ref?: CheckListHook<ValueType<T, D, T>> | CheckListHook<Array<string | number>>;
+  $ref?: CheckListHook<ValueType<T, D, T>> | CheckListHook<Array<string | number | boolean>>;
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
@@ -59,24 +59,36 @@ export type CheckListProps<
 };
 
 interface CheckListFC extends FunctionComponent<CheckListProps> {
-  <T extends Array<string | number> = Array<string | number>, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
+  <T extends Array<string | number | boolean> = Array<string | number | boolean>, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, CheckListProps<T, D>>
   ): ReactElement<any> | null;
 }
 
 const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
-  V extends string | number = string | number,
+  V extends string | number | boolean = string | number | boolean,
   T extends Array<V> = Array<V>,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  S extends { [v: string | number]: any } = { [v: string | number]: any }
 >(p: CheckListProps<T, D>, $ref: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
 
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem, method }) => {
+    under: ({ dataItem }) => {
+      if (dataItem.type === "boolean") {
+        return {
+          $source: (() => {
+            return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
+              return {
+                [p.$valueDataName ?? "value"]: v,
+                [p.$labelDataName ?? "label"]: String(v ?? ""),
+              };
+            });
+          })() as LoadableArray<S>,
+        };
+      }
       return {
-        $required: method === "get" ? undefined : dataItem.required,
         $source: dataItem.source,
       };
     },

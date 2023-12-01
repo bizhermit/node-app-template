@@ -6,7 +6,7 @@ import Form from "#/client/elements/form";
 import NumberBox, { useNumberBox } from "#/client/elements/form/items/number-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_number, sample_string } from "$/data-items/sample/item";
+import { sample_number } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const NumberBoxClient = () => {
@@ -101,11 +101,6 @@ const NumberBoxClient = () => {
           $tag="number"
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
-        />
-        <NumberBox
-          $tag="string"
-          $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
         />
       </Row>
       <Row className="g-s">

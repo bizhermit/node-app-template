@@ -23,14 +23,15 @@ import Style from "./index.module.scss";
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
-type DatePickerHook<T extends string | number | Date | Array<string | number | Date>> = FormItemHook<T>;
+type DatePickerHook<T extends DateValue | Array<DateValue>> = FormItemHook<T>;
 
-export const useDatePicker = <T extends string | number | Date | Array<string | number | Date>>() => useFormItemBase<DatePickerHook<T>>();
+export const useDatePicker = <T extends DateValue | Array<DateValue>>() => useFormItemBase<DatePickerHook<T>>();
 
-export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
+export type DatePickerBaseProps<T extends DateValue | Array<DateValue>, D extends DataItem_Date | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
   ref?: Ref<HTMLDivElement>;
-  $ref?: DatePickerHook<ValueType<string | number | Date | Array<string | number | Date>, D, string | number | Date | Array<string | number | Date>>>
-  | DatePickerHook<string | number | Date | Array<string | number | Date>>;
+  $ref?: DatePickerHook<ValueType<DateValue | Array<DateValue>, D, DateValue | Array<DateValue>>>
+  | DatePickerHook<DateValue | Array<DateValue>>;
+  $typeof?: DateValueType;
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   $monthTexts?: "en" | "en-s" | "ja" | "num" | [string, string, string, string, string, string, string, string, string, string, string, string];
@@ -43,44 +44,24 @@ export type DatePickerBaseProps<T, D extends DataItem_Date | DataItem_String | D
   $buttonless?: boolean;
 };
 
-export type DatePickerProps_TypeString_Single<D extends DataItem_String | undefined = undefined> = DatePickerBaseProps<string, D>;
-export type DatePickerProps_TypeString_Multiple<D extends DataItem_String | undefined = undefined> = DatePickerBaseProps<Array<string>, D>;
-export type DatePickerProps_TypeString<D extends DataItem_String | undefined = undefined> = (DatePickerProps_TypeString_Single<D> & { $multiple?: false; })
-  | (DatePickerProps_TypeString_Multiple<D> & { $multiple: true; });
+export type DatePickerProps_Single<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<DateValue, D>;
+export type DatePickerProps_Multiple<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<Array<DateValue>, D>;
 
-export type DatePickerProps_TypeNumber_Single<D extends DataItem_Number | undefined = undefined> = DatePickerBaseProps<number, D>;
-export type DatePickerProps_TypeNumber_Multiple<D extends DataItem_Number | undefined = undefined> = DatePickerBaseProps<Array<number>, D>;
-export type DatePickerProps_TypeNumber<D extends DataItem_Number | undefined = undefined> = (DatePickerProps_TypeNumber_Single<D> & { $multiple?: false; })
-  | (DatePickerProps_TypeNumber_Multiple<D> & { $multiple: true; });
-
-export type DatePickerProps_TypeDate_Single<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<Date, D>;
-export type DatePickerProps_TypeDate_Multiple<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<Array<Date>, D>;
-export type DatePickerProps_TypeDate<D extends DataItem_Date | undefined = undefined> = (DatePickerProps_TypeDate_Single<D> & { $multiple?: false; })
-  | (DatePickerProps_TypeDate_Multiple<D> & { $multiple: true; });
-
-export type DatePickerProps<D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined> = D extends undefined ?
-  (
-    (DatePickerProps_TypeString & { $typeof?: "string" }) | (DatePickerProps_TypeNumber & { $typeof: "number" }) | (DatePickerProps_TypeDate & { $typeof: "date" })
-  ) :
-  (
-    D extends { type: infer T } ? (
-      T extends DataItem_Date["type"] ? (DatePickerProps_TypeDate<Exclude<D, DataItem_String | DataItem_Number>> & { $typeof?: "date" }) :
-      T extends DataItem_Number["type"] ? (DatePickerProps_TypeNumber<Exclude<D, DataItem_Date | DataItem_String>> & { $typeof?: "number" }) :
-      (DatePickerProps_TypeString<Exclude<D, DataItem_Date | DataItem_Number>> & { $typeof?: "string" })
-    ) : (DatePickerProps_TypeString & { $typeof?: "string" }) | (DatePickerProps_TypeNumber & { $typeof: "number" }) | (DatePickerProps_TypeDate & { $typeof: "date" })
-  );
+export type DatePickerProps<D extends DataItem_Date | undefined = undefined> =
+  | (DatePickerProps_Single<D> & { $multiple?: false; })
+  | (DatePickerProps_Multiple<D> & { $multiple: true; });
 
 const today = new Date();
 const threshold = 2;
 
 interface DatePickerFC extends FunctionComponent<DatePickerProps> {
-  <D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined>(
+  <D extends DataItem_Date | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, DatePickerProps<D>>
   ): ReactElement<any> | null;
 }
 
 const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
-  D extends DataItem_Date | DataItem_String | DataItem_Number | undefined = undefined
+  D extends DataItem_Date | undefined = undefined
 >(p: DatePickerProps<D>, $ref: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
@@ -88,59 +69,22 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
-      switch (dataItem.type) {
-        case "number":
-          return {
-            $typeof: "number",
-          } as DatePickerProps<D>;
-        case "date":
-        case "month":
-        case "year":
-          return {
-            $type: dataItem.type,
-            $typeof: dataItem.typeof,
-            $min: dataItem.min,
-            $max: dataItem.max,
-            $rangePair: dataItem.rangePair,
-          } as DatePickerProps<D>;
-        default:
-          return {
-            $typeof: "string",
-          } as DatePickerProps<D>;
-      }
+      return {
+        $type: dataItem.type,
+        $typeof: dataItem.typeof,
+        $min: dataItem.min,
+        $max: dataItem.max,
+        $rangePair: dataItem.rangePair,
+      };
     },
     over: ({ dataItem, props }) => {
-      const common: FormItemProps = {
+      return {
         $messagePosition: "bottom-hide",
-      };
-      switch (dataItem.type) {
-        case "number":
-          return {
-            ...common,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
-              if (value == null || !Array.isArray(value)) return f(value, ctx);
-              return value.map(v => f(v, ctx))[0];
-            }, props, dataItem)),
-          } as DatePickerProps<D>;
-        case "date":
-        case "month":
-        case "year":
-          return {
-            ...common,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
-              if (value == null || !Array.isArray(value)) return f(parseDate(value), ctx);
-              return value.map(v => f(parseDate(v), ctx))[0];
-            }, props, dataItem)),
-          } as DatePickerProps<D>;
-        default:
-          return {
-            ...common,
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
-              if (value == null || !Array.isArray(value)) return f(value, ctx);
-              return value.map(v => f(v, ctx))[0];
-            }, props, dataItem)),
-          } as DatePickerProps<D>;
-      }
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation((value, ctx) => {
+          if (value == null || !Array.isArray(value)) return f(parseDate(value), ctx);
+          return value.map(v => f(parseDate(v), ctx))[0];
+        }, props, dataItem)),
+      } as DatePickerProps<D>;
     },
   });
 
@@ -236,7 +180,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         }
       }
       if (props.$validDays) {
-        const judge = (value: string | number | Date | null) => {
+        const judge = (value: DateValue | null) => {
           const date = parseDate(value);
           if (date == null) return undefined;
           return judgeValid(date) ? undefined : "選択可能な日付ではありません。";

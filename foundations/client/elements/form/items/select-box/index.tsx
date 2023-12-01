@@ -17,17 +17,17 @@ import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
-type SelectBoxHookAddon<Q extends { [key: string]: any } = { [key: string]: any }> = {
+type SelectBoxHookAddon<Q extends { [v: string]: any } = { [v: string]: any }> = {
   getData: () => (Q | null | undefined);
 };
 type SelectBoxHook<
-  T extends string | number,
-  Q extends { [key: string]: any } = { [key: string]: any }
+  T extends string | number | boolean,
+  Q extends { [v: string | number]: any } = { [v: string | number]: any }
 > = FormItemHook<T, SelectBoxHookAddon<Q>>;
 
 export const useSelectBox = <
-  T extends string | number,
-  Q extends { [key: string]: any } = { [key: string]: any }
+  T extends string | number | boolean,
+  Q extends { [v: string | number]: any } = { [v: string | number]: any }
 >() => useFormItemBase<SelectBoxHook<T, Q>>(e => {
   return {
     getData: () => {
@@ -37,9 +37,9 @@ export const useSelectBox = <
 });
 
 export type SelectBoxProps<
-  T extends string | number = string | number,
-  D extends DataItem_String | DataItem_Number | undefined = undefined,
-  S extends { [key: string]: any } = { [key: string]: any }
+  T extends string | number | boolean = string | number | boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  S extends { [v: string | number]: any } = { [v: string | number]: any }
 > = FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }> & {
   $ref?: SelectBoxHook<ValueType<T, D, T>, S> | SelectBoxHook<string | number, S>;
   $labelDataName?: string;
@@ -59,19 +59,31 @@ export type SelectBoxProps<
 };
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
-  <T extends string | number = string | number, D extends DataItem_String | DataItem_Number | undefined = undefined, S extends { [key: string]: any } = { [key: string]: any }>(
+  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends { [key: string]: any } = { [key: string]: any }>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, SelectBoxProps<T, D, S>>
   ): ReactElement<any> | null;
 }
 
 const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
-  T extends string | number = string | number,
-  D extends DataItem_String | DataItem_Number | undefined = undefined,
-  S extends { [key: string]: any } = { [key: string]: any }
+  T extends string | number | boolean = string | number | boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  S extends { [v: string | number]: any } = { [v: string | number]: any }
 >(p: SelectBoxProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
+      if (dataItem.type === "boolean") {
+        return {
+          $source: (() => {
+            return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
+              return {
+                [p.$valueDataName ?? "value"]: v,
+                [p.$labelDataName ?? "label"]: String(v ?? ""),
+              };
+            });
+          })() as LoadableArray<S>,
+        };
+      }
       return {
         $source: dataItem.source as LoadableArray<S>,
         $align: dataItem.align,

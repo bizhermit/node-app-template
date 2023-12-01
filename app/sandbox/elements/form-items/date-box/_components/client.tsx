@@ -8,13 +8,13 @@ import DateRangeBox, { useDateRangeBox } from "#/client/elements/form/items/date
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_date, sample_month, sample_number, sample_string, sample_year } from "$/data-items/sample/item";
+import { sample_date, sample_month, sample_year } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const DateBoxClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<string>>();
+  const [value, setValue] = useState<Nullable<DateValue>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState({});
   const [type, setType] = useState<"date" | "month" | "year">("date");
@@ -138,16 +138,6 @@ const DateBoxClient = () => {
           $tag="year"
           $dataItem={sample_year}
           $onChange={v => console.log("year: ", v)}
-        />
-        <DateBox
-          $tag="string"
-          $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
-        />
-        <DateBox
-          $tag="number"
-          $dataItem={sample_number}
-          $onChange={v => console.log("number: ", v)}
         />
       </Row>
       <Row className="g-s">

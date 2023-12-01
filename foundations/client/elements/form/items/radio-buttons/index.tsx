@@ -69,9 +69,20 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
 
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
-    under: ({ dataItem, method }) => {
+    under: ({ dataItem }) => {
+      if (dataItem.type === "boolean") {
+        return {
+          $source: (() => {
+            return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
+              return {
+                [p.$valueDataName ?? "value"]: v,
+                [p.$labelDataName ?? "label"]: String(v ?? ""),
+              };
+            });
+          })() as LoadableArray<S>,
+        };
+      }
       return {
-        $required: method === "get" ? undefined : dataItem.required,
         $source: dataItem.source as LoadableArray<S>,
       };
     },
