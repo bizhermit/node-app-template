@@ -46,6 +46,7 @@
     padding: var(--b-s) var(--b-m);
     font-size: var(--fs-l);
     background-color: var(--s-color, var(--c-main));
+    color: var(--s-color_, var(--c-main_));
   }
 
   .body {
