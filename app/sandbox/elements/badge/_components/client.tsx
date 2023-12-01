@@ -41,6 +41,7 @@ const BadgeClient = () => {
             className="c-base e-4 round"
             $position="right-top"
             $size={size}
+            $round
           >
             {count}
           </Badge>
