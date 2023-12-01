@@ -202,7 +202,7 @@ export const useFormItemContext = <
     const before = valueRef.current;
     setCurrentValue(value);
     setBind(value);
-    const errorMessage = (props?.$interlockValidation || options?.interlockValidation) ?
+    const errorMessage = (props?.$interlockValidation || (props.$interlockValidation !== false && options?.interlockValidation)) ?
       form.validation(id.current) : validation();
     if (props.$onChange != null || (props.$onEdit != null && edit)) {
       const data = options?.generateChangeCallbackData?.(valueRef.current, before) as U;

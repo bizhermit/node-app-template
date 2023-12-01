@@ -4,6 +4,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import DateBox, { useDateBox } from "#/client/elements/form/items/date-box";
+import DateRangeBox from "#/client/elements/form/items/date-range-box";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
@@ -233,6 +234,13 @@ const DateBoxClient = () => {
           error
         </Button>
       </Row>
+      <DateRangeBox
+        name="hoge"
+        $required
+        $onChange={(...args) => {
+          console.log(JSON.stringify(args, null, 2));
+        }}
+      />
       <DateBox
         $type={type}
         $tag="useState"
@@ -290,6 +298,9 @@ const DateBoxClient = () => {
             }}
           />
         </Row>
+        <DateRangeBox
+          name="hogehoge"
+        />
         <Button type="submit">submit</Button>
       </Form>
     </div>
