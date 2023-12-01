@@ -2,6 +2,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
+import parseNum from "../../../../../objects/number/parse";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
@@ -77,6 +78,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
 
   const ctx = useFormItemContext(form, props, {
     preventRequiredValidation: true,
+    receive: parseNum,
   });
 
   const max = props.$max ?? defaultMax;

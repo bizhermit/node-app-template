@@ -5,6 +5,7 @@ import { setValue } from "../../../objects/struct/set";
 import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "./$types";
 
 export type UseFormItemContextOptions<T = any, U extends Struct = {}> = {
+  receive?: (v: any) => (T | null | undefined);
   effect?: (value: T | null | undefined) => void;
   effectDeps?: Array<any>;
   multiple?: boolean;

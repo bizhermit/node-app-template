@@ -16,7 +16,7 @@ const DateBoxClient = () => {
   const [readOnly, setReadOnly] = useState(false);
   const [value, setValue] = useState<Nullable<DateValue>>();
   const [bind, setBind] = useState({});
-  const [formBind, setFormBind] = useState({});
+  const [formBind, setFormBind] = useState<Struct>({ "date-box-form-bind": new Date() });
   const [type, setType] = useState<"date" | "month" | "year">("date");
   const [disallowInput, setDisallowInput] = useState(false);
   const dateBoxRef = useDateBox();
@@ -274,6 +274,10 @@ const DateBoxClient = () => {
               name: "date-box-form-bind-pair",
               position: "after",
               disallowSame: true,
+            }}
+            $onChange={v => {
+              console.log("----change date----");
+              console.log(v);
             }}
           />
           <span className="h-size pt-t flex column center middle">～</span>

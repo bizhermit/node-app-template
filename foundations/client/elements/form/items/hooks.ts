@@ -57,20 +57,24 @@ export const useFormItemContext = <
   const [error, setError] = useState<string | null | undefined>(undefined);
 
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
-    if (props == null) return undefined;
-    if ("$value" in props) return props.$value;
-    if (props.name) {
-      // if (props.$bind) {
-      //   const v = getValue(props.$bind, props.name);
-      //   if (v != null) return v;
-      // }
-      if (form.bind) {
-        const v = getValue(form.bind, props.name);
-        if (v != null) return v;
+    const v = (() => {
+      if (props == null) return undefined;
+      if ("$value" in props) return props.$value;
+      if (props.name) {
+        // if (props.$bind) {
+        //   const v = getValue(props.$bind, props.name);
+        //   if (v != null) return v;
+        // }
+        if (form.bind) {
+          const v = getValue(form.bind, props.name);
+          if (v != null) return v;
+        }
       }
-    }
-    if ("$defaultValue" in props) return props.$defaultValue;
-    return undefined;
+      if ("$defaultValue" in props) return props.$defaultValue;
+      return undefined;
+    })();
+    if (v == null || options?.receive == null) return v;
+    return options.receive(v);
   })());
   const [value, setValueImpl] = useState(valueRef.current);
   const setCurrentValue = (value: ValueType<T, D, V> | null | undefined) => {
@@ -229,7 +233,8 @@ export const useFormItemContext = <
     const name = props?.name;
     if (props == null || name == null || form.bind == null || "$bind" in props || "$value" in props || props.$preventFormBind) return;
     const before = valueRef.current;
-    setCurrentValue(getValue(form.bind, name));
+    const v = getValue(form.bind, name);
+    setCurrentValue(options?.receive ? options.receive(v) : v);
     const errorMessage = validation();
     props.$onChange?.(
       valueRef.current,
@@ -243,7 +248,8 @@ export const useFormItemContext = <
   //   const name = props?.name;
   //   if (props == null || name == null || props.$bind == null || "$value" in props) return;
   //   const before = valueRef.current;
-  //   setCurrentValue(getValue(props.$bind, name));
+  //   const v = getValue(props.$bind, name);
+  //   setCurrentValue(options?.receive ? options.receive(v) : v);
   //   const errorMessage = validation();
   //   props.$onChange?.(
   //     valueRef.current,
@@ -255,8 +261,9 @@ export const useFormItemContext = <
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
-    setCurrentValue(props.$value);
-    setBind(props.$value);
+    const v = options?.receive ? options.receive(props.$value) : props.$value;
+    setCurrentValue(v);
+    setBind(v);
     options?.effect?.(valueRef.current);
     validation();
   }, [props?.$value, setBind]);

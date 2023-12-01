@@ -15,7 +15,7 @@ const SliderClient = () => {
   const [readOnly, setReadOnly] = useState(false);
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
-  const [formBind, setFormBind] = useState({});
+  const [formBind, setFormBind] = useState<Struct>({ "slider-form-bind": "50" });
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">

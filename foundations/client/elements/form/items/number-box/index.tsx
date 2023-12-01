@@ -5,6 +5,7 @@ import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from 
 import NumberValidation from "../../../../../data-items/number/validations";
 import { add, minus } from "../../../../../objects/number/calc";
 import formatNum from "../../../../../objects/number/format";
+import parseNum from "../../../../../objects/number/parse";
 import { isEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/attributes";
 import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
@@ -105,6 +106,7 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
   };
 
   const ctx = useFormItemContext(form, props, {
+    receive: parseNum,
     effect: () => {
       renderFormattedValue();
     },

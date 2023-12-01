@@ -14,7 +14,7 @@ const NumberBoxClient = () => {
   const [readOnly, setReadOnly] = useState(false);
   const [value, setValue] = useState<Nullable<number>>();
   const [bind, setBind] = useState({});
-  const [formBind, setFormBind] = useState({});
+  const [formBind, setFormBind] = useState<Struct>({ "number-box-form-bind": "1111" });
   const [disallowInput, setDisallowInput] = useState(false);
   const numberBoxRef = useNumberBox();
 

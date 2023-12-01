@@ -5,6 +5,7 @@ import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from 
 import DateInput from "../../../../../data-items/date/input";
 import DateItemUtils from "../../../../../data-items/date/utilities";
 import { isBeforeDate } from "../../../../../objects/date/compare";
+import formatDate from "../../../../../objects/date/format";
 import parseDate from "../../../../../objects/date/parse";
 import equals from "../../../../../objects/equal";
 import { isEmpty } from "../../../../../objects/string/empty";
@@ -116,6 +117,13 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
 
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
+    receive: (v): any => {
+      switch (props.$typeof) {
+        case "date": return parseDate(v);
+        case "number": return parseDate(v)?.getTime();
+        default: return formatDate(v);
+      }
+    },
     validations: (_, label) => {
       const validations: Array<FormItemValidation<any>> = [];
       const max = DateItemUtils.dateAsLast(maxDate, type);
