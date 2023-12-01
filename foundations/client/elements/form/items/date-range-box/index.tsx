@@ -29,12 +29,12 @@ type DateRangeBoxProps<D extends DataItem_Date | DataItem_String | DataItem_Numb
     before: { from: ValueType<DateValue, D>; to: ValueType<DateValue, D>; },
     data: { errorMessage: string | null | undefined }
   ) => void;
-  $fromValue?: any;
-  $fromDefaultValue?: any;
-  $fromInitValue?: any;
-  $toValue?: any;
-  $toDefaultValue?: any;
-  $toInitValue?: any;
+  $fromValue?: ValueType<DateValue, D> | null | undefined;
+  $fromDefaultValue?: ValueType<DateValue, D> | null | undefined;
+  $fromInitValue?: ValueType<DateValue, D> | null | undefined;
+  $toValue?: ValueType<DateValue, D> | null | undefined;
+  $toDefaultValue?: ValueType<DateValue, D> | null | undefined;
+  $toInitValue?: ValueType<DateValue, D> | null | undefined;
 }))
 
 interface DateRangeBoxFC extends FunctionComponent<DateRangeBoxProps> {
@@ -168,6 +168,7 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
   }, [
     contextValidation,
     from.$preventMemorizeOnChange ? (props as any).$onChange : undefined,
+    from.$preventMemorizeOnChange ? (props as any).$from.$onChange : undefined,
   ]);
 
   const toChange = useCallback((a: ValueType<DateValue, D>, b: ValueType<DateValue, D>, data: any) => {
@@ -182,6 +183,7 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
   }, [
     contextValidation,
     to.$preventMemorizeOnChange ? (props as any).$onChange : undefined,
+    to.$preventMemorizeOnChange ? (props as any).$to?.$onChange : undefined,
   ]);
 
   return (
