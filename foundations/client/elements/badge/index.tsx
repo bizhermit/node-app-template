@@ -6,6 +6,7 @@ import Style from "./index.module.scss";
 type OmitAttributes = "color";
 export type BadgeProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $position?: "left-top" | "right-top" | "left-bottom" | "right-bottom";
+  $round?: boolean;
   $size?: Size;
 };
 
@@ -16,6 +17,7 @@ const Badge = forwardRef<HTMLDivElement, BadgeProps>((props, ref) => {
       ref={ref}
       data-size={props.$size || "m"}
       data-pos={props.$position || "right-top"}
+      data-round={props.$round}
     >
       <Text>{props.children}</Text>
     </div>
