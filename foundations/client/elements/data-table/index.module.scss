@@ -33,6 +33,16 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     &[data-border="true"] {
       border: #{$borderStyle};
     }
+
+    &[data-drag-scroll="true"] {
+      cursor: cell;
+    }
+
+    &:active {
+      &:not([data-dragging]) {
+        cursor: unset;
+      }
+    }
   }
 
   .header,
@@ -49,6 +59,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     top: 0;
     background-color: var(--s-color, var(--c-main));
     color: var(--s-color_, var(--c-main_));
+    cursor: default;
   }
 
   .body {
@@ -78,10 +89,6 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
         border-top: #{$borderStyle};
       }
     }
-
-    // @include mixins.crossHover(false) {
-    //   overflow: visible;
-    // }
   }
 
   .brow {
@@ -113,7 +120,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     }
 
     &[data-pointer="true"] {
-      cursor: cell;
+      cursor: pointer;
     }
   }
 
@@ -141,7 +148,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
       justify-content: right;
     }
 
-    &[data-fixed="true"] {
+    &[data-sticky="true"] {
       position: sticky;
 
       &[data-border="true"] {
@@ -157,10 +164,6 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
         }
       }
     }
-
-    // @include mixins.crossHover(false) {
-    //   overflow: visible;
-    // }
   }
 
   .hcell {

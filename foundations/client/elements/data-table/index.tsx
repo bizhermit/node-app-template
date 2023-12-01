@@ -43,7 +43,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
   sortNeutral?: boolean;
   resize?: boolean;
-  fixed?: boolean;
+  sticky?: boolean;
   wrap?: boolean;
   padding?: boolean;
   header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
@@ -118,6 +118,7 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $rowPointer?: boolean;
   $radio?: boolean;
   $stripes?: boolean;
+  $dragScroll?: boolean | "vertical" | "horizontal";
 };
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
@@ -201,7 +202,7 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   width: `${calcRowNumberColumnWidth(0)}rem`,
   align: "center",
   resize: false,
-  fixed: true,
+  sticky: true,
   body: props => <Text>{(props.index + props.pageFirstIndex) + 1}</Text>,
 } as const;
 
@@ -328,11 +329,11 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
 
   const headerRef = useRef<HTMLDivElement>(null!);
   const bodyRef = useRef<HTMLDivElement>(null!);
-  const calcFixedPosition = (absolute = false) => {
+  const calcStickyPosition = (absolute = false) => {
     const zIdxBase = 1000;
     let widthSum = 0, count = zIdxBase, changed = absolute;
     const cach: Array<string> = [];
-    headerRef.current?.querySelectorAll(`:scope>.${Style.hrow}>.${Style.hcell}[data-fixed="true"]`).forEach((elem) => {
+    headerRef.current?.querySelectorAll(`:scope>.${Style.hrow}>.${Style.hcell}[data-sticky="true"]`).forEach((elem) => {
       const left = convertSizeNumToStr(widthSum)!;
       changed = changed || (elem as HTMLDivElement).style.left !== left;
       cach.push((elem as HTMLDivElement).style.left = left);
@@ -341,7 +342,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     });
     if (!changed) return;
     bodyRef.current?.querySelectorAll(`:scope>.${Style.brow}`).forEach((elem) => {
-      elem.querySelectorAll(`:scope>.${Style.bcell}[data-fixed="true"]`).forEach((elem, idx) => {
+      elem.querySelectorAll(`:scope>.${Style.bcell}[data-sticky="true"]`).forEach((elem, idx) => {
         (elem as HTMLDivElement).style.left = cach[idx];
         (elem as HTMLDivElement).style.zIndex = String(zIdxBase + idx);
       });
@@ -400,7 +401,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
             changeSort(column, sort);
           } : undefined}
           data-border={column.border ?? props.$cellBorder}
-          data-fixed={nestLevel === 0 && column.fixed}
+          data-sticky={nestLevel === 0 && column.sticky}
         >
           <div className={Style.content}>
             {column.header ?
@@ -427,7 +428,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 column.width = width;
                 setHeaderRev(r => r + 1);
                 setBodyRev(r => r + 1);
-                calcFixedPosition(column.fixed === true);
+                calcStickyPosition(column.sticky === true);
               }}
             />
           }
@@ -533,7 +534,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           data-border={column.border ?? props.$cellBorder}
           data-name={column.name}
           data-pointer={column.pointer}
-          data-fixed={nestLevel === 0 && column.fixed}
+          data-sticky={nestLevel === 0 && column.sticky}
         >
           {column.href ?
             <NextLink
@@ -712,8 +713,49 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   };
 
   useEffect(() => {
-    calcFixedPosition(true);
+    calcStickyPosition(true);
   }, [body]);
+
+  const dragScrollEvent = !props.$dragScroll ? undefined : (e: React.MouseEvent<HTMLElement>) => {
+    if (e.ctrlKey) return;
+    const headElem = e.currentTarget.querySelector(`:scope>.${Style.header}`);
+    let elem = e.target as HTMLElement;
+    while (elem != null) {
+      if (
+        elem === headElem ||
+        elem.tagName === "A" ||
+        elem.tagName === "BUTTON" ||
+        (elem.classList.contains(Style.bcell) && elem.getAttribute("data-pointer") === "true")
+      ) return;
+      if (elem === e.currentTarget) break;
+      elem = elem.parentElement!;
+    }
+    const rootElem = e.currentTarget as HTMLDivElement;
+    const lastPosX = rootElem.scrollLeft, lastPosY = rootElem.scrollTop, posX = e.clientX, posY = e.clientY;
+    let et: NodeJS.Timeout | null = null;
+    const move = (e: MouseEvent) => {
+      if (et) return;
+      et = setTimeout(() => {
+        if (props.$dragScroll !== "vertical") {
+          rootElem.scrollLeft = posX - e.clientX + lastPosX;
+        }
+        if (props.$dragScroll !== "horizontal") {
+          rootElem.scrollTop = posY - e.clientY + lastPosY;
+        }
+        et = null;
+      }, 20);
+    };
+    document.onselectstart = () => false;
+    rootElem.setAttribute("data-dragging", "");
+    const end = () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", end);
+      rootElem.removeAttribute("data-dragging");
+      document.onselectstart = () => true;
+    };
+    window.addEventListener("mouseup", end, { passive: true });
+    window.addEventListener("mousemove", move, { passive: true });
+  };
 
   return (
     <div
@@ -728,6 +770,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
       <div
         className={Style.table}
         data-border={props.$outline}
+        onMouseDown={dragScrollEvent}
+        data-drag-scroll={!!props.$dragScroll}
       >
         {props.$header &&
           <div

@@ -22,6 +22,7 @@ const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableCo
     align: "center",
     width: "4rem",
     resize: false,
+    pointer: true,
     header: props.bulk ? ({ items, setBodyRev }) => {
       return (
         <BulkCheckBox
