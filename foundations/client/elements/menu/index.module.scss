@@ -96,7 +96,7 @@
   nav {
     .content {
       &[data-selected="true"] {
-        background: var(--c-base);
+        background-color: var(--c-base);
         color: var(--c-base_);
       }
     }
@@ -114,7 +114,7 @@
     &[data-pos="bottom"] {
       .content {
         padding-left: 0 !important;
-        background: var(--c-nav);
+        background-color: var(--c-nav);
         color: var(--c-nav_);
       }
 

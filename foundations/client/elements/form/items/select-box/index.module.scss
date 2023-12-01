@@ -69,8 +69,7 @@
   }
 
   .popup {
-    @include mixins.pickerShadow;
-    border-radius: var(--radius);
+    @include mixins.popupShadow;
     background: var(--c-input);
   }
 

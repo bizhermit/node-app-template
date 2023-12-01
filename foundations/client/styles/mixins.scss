@@ -178,11 +178,13 @@
 }
 
 @mixin listHoverAnimation {
-  background: var(--c-hover);
+  background-color: var(--c-hover);
+  color: var(--c-hover_);
 }
 
 @mixin listHoverActive {
-  background: var(--c-selected);
+  background-color: var(--c-selected);
+  color: var(--c-selected_);
 }
 
 @mixin listHover($addonTransition: null) {
@@ -198,7 +200,7 @@
   }
 }
 
-@mixin pickerShadow {
+@mixin popupShadow {
   box-shadow: 0 .1rem .8rem 0 var(--c-shadow) !important;
   border-radius: var(--radius);
 }

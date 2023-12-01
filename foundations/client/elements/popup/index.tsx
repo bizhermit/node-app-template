@@ -46,6 +46,7 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $preventUnmount?: boolean;
   $closeWhenClick?: boolean;
   $zIndex?: number;
+  $elevatation?: boolean;
   $onToggle?: (show: boolean) => void;
   $onToggled?: (show: boolean) => void;
   $destructor?: (open: boolean) => void;
@@ -394,6 +395,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
             style={toggleAnimationInitStyle}
             data-show={props.$show}
             data-showed={showed}
+            data-elevatation={props.$elevatation}
             onClick={click}
           >
             {mount && props.children}

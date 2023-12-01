@@ -33,7 +33,8 @@ const MenuClient = () => {
         popup menu
       </Button>
       <Popup
-        className="es-3 r-s"
+        // className="es-3 r-s"
+        $elevatation
         $show={show}
         $onToggle={v => setShow(v)}
         $anchor={buttonRef}
@@ -47,12 +48,12 @@ const MenuClient = () => {
       >
         <div
           className="flex column"
-          style={{ width: 500 }}
+          // style={{ width: 500 }}
         >
           <Menu
             $direction={horizontal ? "horizontal" : "vertical"}
             $itemDefaultAttributes={{
-              className: "c-base"
+              // className: "c-base"
             }}
             $defaultClosedIcon={<DoubleLeftIcon />}
             $defaultOpenedIcon={<DoubleDownIcon />}
