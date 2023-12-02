@@ -18,11 +18,9 @@ const RootLayout: LayoutFC = ({ children }) => {
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/favicons/favicon.ico" />
       </head>
       <body>
-        <div id="__next">
-          <RootProvider>
-            {children}
-          </RootProvider>
-        </div>
+        <RootProvider>
+          {children}
+        </RootProvider>
       </body>
     </html>
   );

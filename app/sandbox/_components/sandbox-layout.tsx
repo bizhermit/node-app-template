@@ -3,7 +3,6 @@
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import { useNavigation } from "#/client/elements/navigation-container/context";
-import { convertSizeNumToStr } from "#/client/utilities/attributes";
 import { FC, ReactNode } from "react";
 
 const SandboxLayoutProvider: FC<{
@@ -11,25 +10,13 @@ const SandboxLayoutProvider: FC<{
 }> = ({ children }) => {
   return (
     <NavigationContainer
-      className="w-100 h-100"
+      $header={"Header"}
+      $nav={<Navigation />}
+      $footer={"Footer"}
+      $navMode="minimize"
     >
-      <Header />
-      <Navigation />
       {children}
-      <Footer />
     </NavigationContainer>
-  );
-};
-
-const Header: FC = () => {
-  return (
-    <header className="flex row middle px-m h-m">Header</header>
-  );
-};
-
-const Footer: FC = () => {
-  return (
-    <div className="flex row middle px-s">foot</div>
   );
 };
 
@@ -37,11 +24,15 @@ const Navigation: FC = () => {
   const navigation = useNavigation();
 
   return (
-    <div className="pb-l">
+    <div
+      style={{
+        width: "100%",
+        position: "relative",
+      }}
+    >
       <Menu
-        className="flex-1"
-        $direction={navigation.position === "top" || navigation.position === "bottom" ? "horizontal" : "vertical"}
-        style={{ width: convertSizeNumToStr(280) }}
+        $direction="vertical"
+        style={{ width: "100%" }}
         $items={[{
           key: "index",
           icon: "I",

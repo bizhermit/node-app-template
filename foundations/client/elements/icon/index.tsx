@@ -66,12 +66,27 @@ export const CrossIcon = svg("CrossIcon", (props, ref) => (
 
 export const MenuIcon = svg("MenuIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <defs>
-      <line id="menu" x1="2" x2="18" />
-    </defs>
-    <use y="5" href="#menu" />
-    <use y="10" href="#menu" />
-    <use y="15" href="#menu" />
+    <line x1="2" x2="18" y1="5" y2="5" />
+    <line x1="2" x2="18" y1="10" y2="10" />
+    <line x1="2" x2="18" y1="15" y2="15" />
+  </svg>
+));
+
+export const MenuLeftIcon = svg("MenuLeftIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <line x1="2" x2="18" y1="5" y2="5" />
+    <line x1="5" x2="18" y1="10" y2="10" />
+    <line x1="2" x2="18" y1="15" y2="15" />
+    <path d="M6,6 L2,10 6,14" fill="none" />
+  </svg>
+));
+
+export const MenuRightIcon = svg("MenuRightIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <line x1="2" x2="18" y1="5" y2="5" />
+    <line x1="2" x2="15" y1="10" y2="10" />
+    <line x1="2" x2="18" y1="15" y2="15" />
+    <path d="M14,6 L18,10 14,14" fill="none" />
   </svg>
 ));
 

@@ -4,9 +4,16 @@ const Page = () => {
   return (
     <section>
       <h1>Node App Template</h1>
-      <NextLink href="/sandbox">
-        SandBox
-      </NextLink>
+      <div>
+        <NextLink href="/sandbox">
+          SandBox
+        </NextLink>
+      </div>
+      <div>
+        <NextLink href="/dev">
+          development
+        </NextLink>
+      </div>
     </section>
   );
 };
