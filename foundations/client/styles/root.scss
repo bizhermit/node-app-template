@@ -46,36 +46,21 @@ $iconSize: 1.6rem;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    height: 100%;
-    width: 100%;
     font-size: 62.5%;
     background: var(--c-base);
     color: var(--c-base_);
-  }
-
-  body {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    height: 100%;
-    width: 100%;
-    font-size: var(--fs-m);
-    --is: var(--is-m);
 
     &:has(dialog[open]) {
       overflow: hidden;
     }
   }
 
-  #__next {
+  body {
     box-sizing: border-box;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    overflow: auto;
+    padding: 0;
+    margin: 0;
+    font-size: var(--fs-m);
+    --is: var(--is-m);
   }
 
   h1,

@@ -8,13 +8,13 @@ $textPadding: calc(var(--cs-m) / 4);
 $textPaddingThin: calc(var(--cs-m) / 8);
 
 $baseColor: (
-  "light": rgb(240, 240, 247),
+  "light": rgb(234, 235, 239),
   "light_r": rgb(20, 20, 22),
   "dark": rgb(57, 57, 59),
   "dark_r": rgb(250, 250, 250),
 );
 $lightMainColor: rgb(16, 77, 121);
-$darkMainColor: rgb(26, 87, 141);
+$darkMainColor: rgb(56, 69, 111);
 $lightSubColor: rgb(228, 187, 203);
 $darkSubColor: rgb(228, 187, 203);
 $lightenRate: 10%;
@@ -87,8 +87,8 @@ $colorMap: (
     "dark_r": rgba(200, 200, 205, 0.3),
   ),
   "nav": (
-    "light": rgb(225,220,230),
-    "dark": rgb(27, 35, 40),
+    "light": rgb(245, 246, 249, 0.95),
+    "dark": rgba(27, 35, 40, 0.95),
   ),
   "sunday": (
     "light": rgb(255, 150, 150),

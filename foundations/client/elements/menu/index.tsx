@@ -6,7 +6,6 @@ import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
 import NextLink, { type NextLinkProps } from "../link";
-import { useNavigation } from "../navigation-container/context";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -106,7 +105,6 @@ const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) 
 
 const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const pathname = usePathname();
-  const nav = useNavigation();
   const ref = useRef<HTMLDivElement>(null!);
   const attrs = {
     ...props.$itemDefaultAttributes,
@@ -133,7 +131,6 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
 
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     setShowItems(c => !c);
-    if (props.pathname) nav.toggle(false);
     props.onClick?.(props, e);
   };
 
@@ -173,7 +170,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     <div
       {...attrs}
       className={`${Style.content}${attrs.className ? ` ${attrs.className}` : ""}`}
-      style={{ ...attrs.style, paddingLeft: `calc(1.6rem * ${props.nestLevel})` }}
+      style={{ ...attrs.style, ["--menu-pad" as string]: `calc(1.6rem * ${props.nestLevel})` }}
       onClick={click}
       onKeyDown={keydown}
       data-selectable={selectable}

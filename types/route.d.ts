@@ -1,7 +1,8 @@
 // generate by script
 // do not edit
 
-type AppRoutePath = "/"
+type AppRoutePath = "/dev"
+ | "/"
  | "/sandbox/group-a"
  | "/sandbox/group-b"
  | "/sandbox/color"

@@ -57,7 +57,8 @@
     justify-content: stretch;
     align-items: center;
     white-space: nowrap;
-    height: var(--nav-size);
+    height: var(--nav-min-size);
+    padding-left: var(--menu-pad, 0);
     z-index: 0;
     overflow: visible;
     @include mixins.listHover(padding-left #{var.$transitionTime});
@@ -72,7 +73,7 @@
     align-items: center;
     height: 100%;
     overflow: hidden;
-    width: var(--nav-size);
+    width: var(--nav-min-size);
     flex: none;
   }
 
@@ -103,44 +104,14 @@
 
     &[data-pos="left"],
     &[data-pos="right"] {
-      &[data-mode="minimize"][data-show="false"] {
+      &[data-mode="auto"],
+      &[data-mode="minimize"] {
         .content {
-          padding-left: 0 !important;
+          padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
         }
       }
     }
-
-    &[data-pos="top"],
-    &[data-pos="bottom"] {
-      .content {
-        padding-left: 0 !important;
-        background-color: var(--c-nav);
-        color: var(--c-nav_);
-      }
-
-      >.wrap {
-        height: var(--nav-size);
-        overflow: visible;
-      }
-    }
-
-    &[data-pos="bottom"] {
-      .wrap {
-        justify-content: flex-end;
-      }
-
-      .root {
-        &[data-direction="horizontal"] {
-          bottom: 0;
-          align-items: flex-end;
-        }
-
-        >.item {
-          bottom: 0;
-          flex-direction: column-reverse;
-        }
-      }
-    }
+    
   }
 
 }

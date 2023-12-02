@@ -1,258 +1,534 @@
 @use "../../styles/var" as var;
 @use "../../styles/mixins" as mixins;
 
-$shadowWidth: .3rem;
-$shadowPadding: .2rem;
+$navTransTime: 0.3s;
+$slideMenuPadding: true;
 
 @layer base {
 
   .wrap {
+    --nav-base-size: 28rem;
+    --nav-min-size: 5rem;
+    --nav-size: var(--nav-base-size);
+    --header-size: 5rem;
+
     box-sizing: border-box;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: stretch;
-    align-items: stretch;
-    overflow: hidden;
-  }
+    width: 100%;
+    max-width: 100%;
 
-  .header,
-  .footer {
-    box-sizing: border-box;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: stretch;
-    align-items: center;
-    overflow: hidden;
-    flex: none;
-    z-index: 3;
-    padding: 0;
-    margin: 0;
-
-    .contents {
-      box-sizing: border-box;
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: stretch;
-      align-items: center;
-      overflow: hidden;
-      flex: 1;
-    }
-
-    .button {
-      box-sizing: border-box;
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-      height: var(--cs-m);
-      width: var(--cs-m);
-    }
-  }
-
-  .header {
-    min-height: var(--cs-m);
-    background: var(--c-nav);
-    color: var(--c-nav_);
-    box-shadow: 0 .1rem #{$shadowWidth} 0 var(--c-shadow);
-
-    &[data-pos="right"] {
-      flex-direction: row-reverse;
-    }
-
-    +.body {
+    &[data-mode="visible"] {
       >.nav {
-        padding-top: #{$shadowPadding};
-      }
-
-      >.content {
-        >.main {
-          padding-top: #{$shadowPadding};
-        }
-      }
-    }
-  }
-
-  .footer {
-    background: var(--c-dull);
-    color: var(--c-dull_);
-  }
-
-  .body {
-    box-sizing: border-box;
-    position: relative;
-    display: flex;
-    justify-content: stretch;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    flex: 1;
-    min-height: 0;
-    overflow: visible;
-    z-index: 2;
-
-    &[data-pos="left"] {
-      flex-direction: row;
-
-      &[data-mode="minimize"] {
-        padding-left: var(--nav-size);
-      }
-    }
-
-    &[data-pos="right"] {
-      flex-direction: row-reverse;
-
-      &[data-mode="minimize"] {
-        padding-right: var(--nav-size);
-      }
-    }
-
-    &[data-pos="top"] {
-      flex-direction: column;
-    }
-
-    &[data-pos="bottom"] {
-      flex-direction: column-reverse;
-    }
-  }
-
-  .nav {
-    box-sizing: border-box;
-    position: relative;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex: none;
-    z-index: 2;
-    background: var(--c-nav);
-    color: var(--c-nav_);
-    @include mixins.scrollOverlay(var(--c-scroll_));
-
-    &[data-pos="left"],
-    &[data-pos="right"] {
-      flex-direction: column;
-      height: 0;
-      min-height: 100%;
-      max-width: 100%;
-
-      &[data-mode="minimize"],
-      &[data-mode="manual"] {
-        position: absolute;
         top: 0;
+        height: 100%;
+      }
+
+      .header {
+        &::before {
+          display: none;
+        }
       }
     }
 
-    &[data-pos="left"] {
-      left: 0;
-      box-shadow: .1rem 0 #{$shadowWidth} 0 var(--c-shadow);
+    &[data-mode="minimize"] {
+      --nav-size: var(--nav-min-size);
 
-      &[data-mode="visible"],
-      &[data-mode="minimize"] {
-        +.content {
-          >.main {
-            padding-left: #{$shadowPadding};
+      >.nav {
+        overflow: hidden;
+
+        @if $slideMenuPadding !=false {
+          --nav-menu-pad: 0;
+        }
+
+        @include mixins.crossHover {
+          width: var(--nav-base-size);
+          overflow: auto;
+
+          @if $slideMenuPadding !=false {
+            --nav-menu-pad: inherit !important;
+          }
+        }
+      }
+
+      .header {
+        width: calc(100% + var(--nav-min-size));
+
+        &::before {
+          display: none;
+        }
+      }
+
+      &[data-pos="left"] {
+        .header {
+          margin-left: calc(var(--nav-min-size) * -1);
+        }
+      }
+    }
+
+    &[data-mode="manual"] {
+      --nav-size: 0 !important;
+
+      .corner {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .max,
+  .min {
+    display: none;
+  }
+
+  .max {
+    &:checked {
+      &~.wrap {
+        &[data-mode="manual"] {
+          --nav-size: var(--nav-base-size);
+
+          .menuOpen {
+            display: unset;
           }
         }
       }
     }
 
-    &[data-pos="right"] {
-      right: 0;
-      box-shadow: -.1rem 0 #{$shadowWidth} 0 var(--c-shadow);
+    &:not(:checked) {
+      &~.wrap {
+        &[data-mode="manual"] {
+          --nav-size: var(--nav-min-size);
 
-      &[data-mode="visible"],
-      &[data-mode="minimize"] {
-        +.content {
-          >.main {
-            padding-right: #{$shadowPadding};
+          @if $slideMenuPadding !=false {
+            --nav-menu-pad: 0 !important;
+          }
+
+          .menuHide {
+            display: unset;
+          }
+
+          >.nav {
+            width: var(--nav-base-size);
+            overflow: auto;
+          }
+
+          >.mask {
+            display: block;
           }
         }
       }
     }
+  }
 
-    &[data-pos="top"],
-    &[data-pos="bottom"] {
-      flex-direction: row;
-      width: 100%;
-      max-height: 100%;
-      overflow: visible;
+  .menuOpen,
+  .menuHide,
+  .slideMax,
+  .slideMin,
+  .slideClose,
+  .slideOpen {
+    display: none;
+  }
 
-      &[data-mode="minimize"],
-      &[data-mode="manual"] {
-        position: absolute;
-        left: 0;
-      }
-    }
+  .corner {
+    box-sizing: border-box;
+    height: var(--header-size);
+    width: var(--nav-min-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: margin-left $navTransTime, margin-right $navTransTime;
+  }
 
-    &[data-pos="top"] {
+  .tomax,
+  .tomin {
+    display: block;
+    position: relative;
+    height: var(--cs-m);
+    width: var(--cs-m);
+    border-radius: var(--radius);
+    border: 0.1rem solid var(--c-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+
+    &::before {
+      position: absolute;
+      content: "";
       top: 0;
-      box-shadow: 0 .1rem #{$shadowWidth} 0 var(--c-shadow);
-
-      &[data-mode="visible"],
-      &[data-mode="minimize"] {
-        +.content {
-          >.main {
-            padding-top: #{$shadowPadding};
-          }
-        }
-      }
+      left: 0;
+      height: 100%;
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--c-nav_);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
 
-    &[data-pos="bottom"] {
-      bottom: 0;
-      align-items: flex-end;
-      box-shadow: 0 -.1rem #{$shadowWidth} 0 var(--c-shadow);
-
-      &[data-mode="visible"],
-      &[data-mode="minimize"] {
-        +.content {
-          padding-bottom: #{$shadowPadding};
-        }
+    @include mixins.crossHover {
+      &::before {
+        opacity: 0.1;
       }
     }
   }
 
   .mask {
-    box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    left: 0;
     height: 100%;
     width: 100%;
     background: var(--c-mask);
-    z-index: 1;
+    z-index: 97;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 100dvw;
+    display: none;
+    user-select: none;
   }
 
-  .content {
+  .nav {
     box-sizing: border-box;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: stretch;
-    align-items: stretch;
-    flex: 1 1 0;
+    z-index: 99;
+    position: fixed;
+    top: var(--header-size);
+    height: calc(100% - var(--header-size));
+    width: var(--nav-size);
+    background: var(--c-nav);
+    color: var(--c-nav_);
     overflow: auto;
-    z-index: 0;
+    transition: width $navTransTime, height $navTransTime, top $navTransTime;
+
+    @if $slideMenuPadding ==false {
+      --nav-menu-pad: 0;
+    }
+
+    &[data-pos="left"] {
+      left: 0;
+    }
+
+    &[data-pos="right"] {
+      right: 0;
+    }
+
+    &::-webkit-scrollbar {
+      height: 0.5rem !important;
+      width: 0.5rem !important;
+      background: transparent !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 0.2rem;
+      background: var(--c-scroll);
+    }
   }
 
-  .main {
+  .body {
     box-sizing: border-box;
-    position: relative;
+    width: 100%;
+    min-height: 100dvh;
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    overflow: auto;
-    z-index: 0;
-    min-height: 0;
-    min-width: 0;
+    flex: 1;
+    transition: padding-left $navTransTime, padding-right $navTransTime;
 
-    &[data-footer="end"] {
-      flex: 1 0 auto;
+    &[data-pos="left"] {
+      padding-left: var(--nav-size);
     }
 
-    &[data-footer="always"] {
-      flex: 1 0 0rem;
+    &[data-pos="right"] {
+      padding-right: var(--nav-size);
+    }
+  }
+
+  .header {
+    box-sizing: border-box;
+    z-index: 98;
+    width: 100%;
+    height: var(--header-size);
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    background: var(--c-nav);
+    color: var(--c-nav_);
+    transition: width $navTransTime, margin-left $navTransTime;
+
+    &::before {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      width: var(--nav-size);
+      height: var(--header-size);
+      top: 0;
+      background: var(--c-nav);
+      transition: width $navTransTime;
+      z-index: -1;
+    }
+
+    &[data-pos="left"] {
+      &::before {
+        right: 100%;
+      }
+
+      >.corner {
+        order: 1;
+        margin-left: calc(var(--nav-min-size) * -1);
+      }
+
+      >.hcontent {
+        order: 2;
+      }
+    }
+
+    &[data-pos="right"] {
+      &::before {
+        left: 100%;
+      }
+
+      >.corner {
+        order: 2;
+        margin-right: calc(var(--nav-min-size) * -1);
+      }
+
+      >.hcontent {
+        order: 1;
+      }
+    }
+  }
+
+  .hcontent {
+    box-sizing: border-box;
+    flex: 1;
+  }
+
+  .main {
+    box-sizing: border-box;
+    width: 100%;
+    flex: 1 1 0rem;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .footer {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    background: var(--c-nav);
+    color: var(--c-nav_);
+    position: sticky;
+    bottom: 0;
+  }
+
+  @media screen and (width >=980px) {
+    .min {
+      &:not(:checked) {
+        &~.wrap {
+          &[data-mode="auto"] {
+            >.nav {
+              top: 0;
+              height: 100%;
+            }
+
+            .slideMax {
+              display: unset;
+            }
+
+            &[data-pos="left"] {
+              .corner {
+                margin-left: 0;
+              }
+            }
+
+            &[data-pos="right"] {
+              .corner {
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+
+      &:checked {
+        &~.wrap {
+          &[data-mode="auto"] {
+            --nav-size: var(--nav-min-size);
+
+            .slideMin {
+              display: unset;
+            }
+
+            >.nav {
+              overflow: hidden;
+
+              @if $slideMenuPadding !=false {
+                --nav-menu-pad: 0;
+              }
+
+              @include mixins.crossHover(false) {
+                width: var(--nav-base-size);
+                overflow: auto;
+
+                @if $slideMenuPadding !=false {
+                  --nav-menu-pad: inherit !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .wrap {
+      &[data-mode="auto"] {
+        .tomax {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media screen and (width < 980px) {
+    .max {
+      &:not(:checked) {
+        &~.wrap {
+          >.nav {
+            @if $slideMenuPadding !=false {
+              --nav-menu-pad: 0 !important;
+            }
+          }
+        }
+      }
+
+      &:checked {
+        &~.wrap {
+          &[data-mode="auto"] {
+            --nav-size: var(--nav-base-size);
+          }
+        }
+      }
+    }
+
+
+    .wrap {
+      &[data-mode="auto"] {
+        --nav-size: var(--nav-min-size);
+
+        .tomin {
+          display: none;
+        }
+
+        .nav {
+          overflow: hidden;
+        }
+      }
+    }
+
+  }
+
+  @media screen and (720px <=width < 980px) {
+    .max {
+      &:not(:checked) {
+        &~.wrap {
+          &[data-mode="auto"] {
+            >.nav {
+              @include mixins.crossHover(false) {
+                width: var(--nav-base-size);
+                overflow: auto;
+
+                @if $slideMenuPadding !=false {
+                  --nav-menu-pad: inherit !important;
+                }
+              }
+            }
+
+            .slideOpen {
+              display: unset;
+            }
+          }
+        }
+      }
+
+      &:checked {
+        &~.wrap {
+          &[data-mode="auto"] {
+            >.nav {
+              top: 0;
+              height: 100%;
+              overflow: auto;
+            }
+
+            .slideClose {
+              display: unset;
+            }
+
+            &[data-pos="left"] {
+              .corner {
+                margin-left: 0;
+              }
+
+            }
+
+            &[data-pos="right"] {
+              .corner {
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (width < 720px) {
+    .max {
+      &:not(:checked) {
+        &~.wrap {
+          &[data-mode="auto"] {
+            .menuOpen {
+              display: unset;
+            }
+          }
+        }
+      }
+
+      &:checked {
+        &~.wrap {
+          &[data-mode="auto"] {
+            .menuHide {
+              display: unset;
+            }
+
+            >.nav {
+              width: var(--nav-base-size);
+              overflow: auto;
+            }
+
+            >.mask {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    .wrap {
+      &[data-mode="auto"] {
+        --nav-size: 0 !important;
+
+        .corner {
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+        }
+      }
     }
   }
 

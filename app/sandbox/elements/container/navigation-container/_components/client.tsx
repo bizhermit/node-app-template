@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import { type NavigationPosition, useNavigation, NavigationMode, NavigationHeaderVisible, NavigationFooterVisible } from "#/client/elements/navigation-container/context";
+import { NavigationMode, useNavigation, type NavigationPosition } from "#/client/elements/navigation-container/context";
 import Row from "#/client/elements/row";
 import StructView from "#/client/elements/struct-view";
 
@@ -14,100 +14,52 @@ const NavigationClient = () => {
     <div className="flex w-100 h-100 p-xs g-s">
       <StructView
         $keys={[
-          { key: "position" },
-          { key: "mode" },
-          { key: "state" },
-          { key: "headerVisible" },
-          { key: "footerVisible" },
+          { key: "navPos" },
+          { key: "navMode" },
         ]}
         $value={navigation}
       />
       <Divider />
       <Row className="g-s">
-        <Button $onClick={() => navigation.setPosition("default")}>default</Button>
         <RadioButtons<NavigationPosition>
           $source={[
             "left",
             "right",
-            "top",
-            "bottom"
           ].map(v => {
             return { value: v, label: v };
           })}
-          $value={navigation.position}
+          $value={navigation.navPos}
           $onChange={v => {
-            navigation.setPosition(v!);
+            navigation.setNavPos(v!);
           }}
           $tag="navigation position"
         />
       </Row>
       <Row className="g-s">
-        <Button $onClick={() => navigation.setMode("default")}>default</Button>
         <RadioButtons<NavigationMode>
           $source={[
             "auto",
             "visible",
             "minimize",
             "manual",
-            "none",
           ].map(v => {
             return { value: v, label: v };
           })}
-          $value={navigation.mode}
+          $value={navigation.navMode}
           $onChange={v => {
-            navigation.setMode(v!);
+            navigation.setNavMode(v!);
           }}
           $tag="navigation mode"
-        />
-      </Row>
-      <Row className="g-s">
-        <Button $onClick={() => navigation.setHeaderVisible("default")}>default</Button>
-        <RadioButtons<NavigationHeaderVisible>
-          $source={[
-            "always",
-            "none",
-          ].map(v => {
-            return { value: v, label: v };
-          })}
-          $value={navigation.headerVisible}
-          $onChange={v => {
-            navigation.setHeaderVisible(v!);
-          }}
-          $tag="header"
-        />
-      </Row>
-      <Row className="g-s">
-        <Button $onClick={() => navigation.setFooterVisible("default")}>default</Button>
-        <RadioButtons<NavigationFooterVisible>
-          $source={[
-            "always",
-            "end",
-            "none",
-          ].map(v => {
-            return { value: v, label: v };
-          })}
-          $value={navigation.footerVisible}
-          $onChange={v => {
-            navigation.setFooterVisible(v!);
-          }}
-          $tag="footer"
         />
       </Row>
       <Divider />
       <Row className="g-s">
         <Button
           $onClick={() => {
-            navigation.toggle(true);
+            navigation.toggle();
           }}
         >
-          open
-        </Button>
-        <Button
-          $onClick={() => {
-            navigation.toggle(false);
-          }}
-        >
-          close
+          toggle
         </Button>
       </Row>
     </div>
