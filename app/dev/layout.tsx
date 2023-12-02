@@ -3,7 +3,6 @@ import NavigationContainer from "#/client/elements/navigation-container";
 const Layout: LayoutFC = ({ children }) => {
   return (
     <NavigationContainer
-      $navMode="minimize"
       $header={
         <div>
           header/headerhe

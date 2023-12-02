@@ -13,7 +13,6 @@ const SandboxLayoutProvider: FC<{
       $header={"Header"}
       $nav={<Navigation />}
       $footer={"Footer"}
-      $navMode="minimize"
     >
       {children}
     </NavigationContainer>
