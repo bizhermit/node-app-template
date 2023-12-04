@@ -62,6 +62,13 @@ const NavigationClient = () => {
           toggle
         </Button>
       </Row>
+      <div
+        style={{
+          height: "100rem",
+          width: "100rem",
+          background: "linear-gradient(-225deg, var(--c-main) 0%, var(--c-sub) 100%)",
+        }}
+      />
     </div>
   );
 };

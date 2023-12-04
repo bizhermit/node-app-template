@@ -9,6 +9,9 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: stretch;
+
+    --menu-nest-pad: calc(var(--cs-m) / 2);
+    --is: var(--is-xl);
   }
 
   .list {
@@ -95,6 +98,11 @@
   }
 
   nav {
+    .wrap {
+      --menu-nest-pad: calc(var(--nav-min-size) / 2);
+      width: 100%;
+    }
+
     .content {
       &[data-selected="true"] {
         background-color: var(--c-base);
@@ -102,16 +110,14 @@
       }
     }
 
-    &[data-pos="left"],
-    &[data-pos="right"] {
-      &[data-mode="auto"],
-      &[data-mode="minimize"] {
-        .content {
-          padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
-        }
+    &[data-mode="auto"],
+    &[data-mode="minimize"],
+    &[data-mode="manual"] {
+      .content {
+        padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
       }
     }
-    
+
   }
 
 }
