@@ -10,6 +10,8 @@ type NavigationContextProps = {
   navMode: NavigationMode;
   setNavMode: (mode: NavigationMode) => void;
   toggle: () => void;
+  resetRadio: () => void;
+  closeMenu: () => void;
 }
 
 export const NavigationContext = createContext<NavigationContextProps>({
@@ -18,6 +20,8 @@ export const NavigationContext = createContext<NavigationContextProps>({
   navMode: "auto",
   setNavMode: () => { },
   toggle: () => { },
+  resetRadio: () => { },
+  closeMenu: () => { },
 });
 
 export const useNavigation = () => {
