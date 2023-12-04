@@ -257,3 +257,9 @@ export const SyncIcon = svg("SyncIcon", (props, ref) => (
     <path d="M17,1.5l0,5 -5,0M2.5,9a7.5 7.5 -180 0 1 14,-3M3,18l0,-5 5,0M17.5,9.5a7.5 7.5 0 0 1 -14,4" fill="none" />
   </svg>
 ));
+
+export const HomeIcon = svg("HomeIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M10,2 L19,10 16,10 16,18 12,18 12,13 8,13 8,18 4,18 4,10 1,10 10,2" fill="none" />
+  </svg>
+));
