@@ -1,3 +1,4 @@
+import parseNum from "#/objects/number/parse";
 import { useCallback, useEffect, useRef, useState, type FC, type ReactElement, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import useToggleAnimation from "../../hooks/toggle-animation";
@@ -15,6 +16,9 @@ type MessageBoxFCProps = ShowOptions & {
   showed: boolean;
   children?: ReactNode;
 };
+
+const dialogAttrName = "data-dialog";
+const getDialogNum = () => parseNum(document.documentElement.getAttribute(dialogAttrName)) ?? 0;
 
 const MessageBox: FC<MessageBoxFCProps> = (props) => {
   const ref = useRef<HTMLDialogElement>(null!);
@@ -37,9 +41,12 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
     onToggle: (open) => {
       if (open) {
         ref.current?.showModal?.();
+        // ref.current?.show();
+        const num = getDialogNum();
+        document.documentElement.setAttribute(dialogAttrName, String(num + 1));
         if (ref.current) {
-          ref.current.style.top = convertSizeNumToStr((document.body.clientHeight - ref.current.offsetHeight) / 2)!;
-          ref.current.style.left = convertSizeNumToStr((document.body.clientWidth - ref.current.offsetWidth) / 2)!;
+          ref.current.style.top = convertSizeNumToStr((window.innerHeight - ref.current.offsetHeight) / 2)!;
+          ref.current.style.left = convertSizeNumToStr((window.innerWidth - ref.current.offsetWidth) / 2)!;
         }
         if (mref.current) {
           mref.current.style.removeProperty("display");
@@ -62,6 +69,8 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
       } else {
         setMount(false);
         ref.current?.close?.();
+        const num = getDialogNum();
+        if (num < 2) document.documentElement.removeAttribute(dialogAttrName);
         if (mref.current) {
           mref.current.style.display = "none";
           mref.current.style.opacity = "0";
