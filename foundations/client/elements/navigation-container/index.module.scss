@@ -74,15 +74,14 @@ $slideMenuPadding: true;
       }
 
       >.body {
-        
+
         >.header {
           >.corner {
             margin-left: 0 !important;
             margin-right: 0 !important;
           }
 
-          .btnVis,
-          .btnMin {
+          :is(.btnVis, .btnMin) {
             display: none;
           }
         }
@@ -157,9 +156,9 @@ $slideMenuPadding: true;
     transition: margin-left $navTransTime, margin-right $navTransTime;
   }
 
-  .btnVis,
-  .btnMin,
-  .btnMnu {
+
+
+  .btn {
     box-sizing: border-box;
     position: relative;
     height: var(--cs-m);
@@ -374,8 +373,7 @@ $slideMenuPadding: true;
       }
     }
 
-    .tglVis:not(:checked)+.tglMin:not(:checked),
-    .tglVis:checked {
+    :is(.tglVis:not(:checked)+.tglMin:not(:checked), .tglVis:checked) {
       &~.wrap {
         &[data-mode="auto"] {
           >.nav {
@@ -487,8 +485,7 @@ $slideMenuPadding: true;
       }
     }
 
-    .tglVis:not(:checked)+.tglMin:not(:checked),
-    .tglMin:checked {
+    :is(.tglVis:not(:checked)+.tglMin:not(:checked), .tglMin:checked) {
       &~.wrap {
         &[data-mode="auto"] {
           >.nav {
@@ -585,8 +582,7 @@ $slideMenuPadding: true;
         >.body {
           >.header {
 
-            .btnVis,
-            .btnMin {
+            :is(.btnVis, .btnMin) {
               display: none;
             }
           }

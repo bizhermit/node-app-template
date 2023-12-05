@@ -129,21 +129,21 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               data-mode={mode}
             >
               <label
-                className={Style.btnVis}
+                className={`${Style.btn} ${Style.btnVis}`}
                 htmlFor={`${name}_${toggleVisId}`}
               >
                 <MenuLeftIcon className={Style.slideLeft} />
                 <MenuRightIcon className={Style.slideRight} />
               </label>
               <label
-                className={Style.btnMin}
+                className={`${Style.btn} ${Style.btnMin}` }
                 htmlFor={`${name}_${toggleMinId}`}
               >
                 <MenuLeftIcon className={Style.slideLeft} />
                 <MenuRightIcon className={Style.slideRight} />
               </label>
               <label
-                className={Style.btnMnu}
+                className={`${Style.btn} ${Style.btnMnu}`}
                 htmlFor={`${name}_${toggleMnuId}`}
               >
                 <MenuIcon className={Style.menuOpen} />
