@@ -246,7 +246,7 @@ export const ReloadIcon = svg("ReloadIcon", (props, ref) => (
   </svg>
 ));
 
-export const ReloadLeftIcon = svg("ReloadLeftIcon", (props, ref) => (
+export const UnloadIcon = svg("UnloadIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <path d="M2.5,2l0,5 5,0M3.5,6a7.5 7.5 -150 1 1 0,8" fill="none" />
   </svg>
