@@ -35,6 +35,7 @@ $slideMenuPadding: true;
 
       >.nav {
         overflow: hidden;
+        z-index: 97;
 
         @if $slideMenuPadding !=false {
           --nav-menu-pad: 0;
@@ -67,8 +68,9 @@ $slideMenuPadding: true;
 
     &[data-mode="manual"] {
       --nav-size: 0;
+
       >.nav {
-        box-shadow: 0 0.2rem 0.2rem 0 var(--c-shadow);
+        z-index: 97;
       }
 
       >.body {
@@ -195,7 +197,7 @@ $slideMenuPadding: true;
     height: 100%;
     width: 100%;
     background: var(--c-mask);
-    z-index: 97;
+    z-index: 96;
     position: fixed;
     top: 0;
     left: 0;
@@ -216,7 +218,7 @@ $slideMenuPadding: true;
     color: var(--c-nav_);
     overflow: auto;
     padding-bottom: 1rem;
-    box-shadow: 0 0rem 0.2rem 0 var(--c-shadow);
+    filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     overscroll-behavior: contain;
     transition: width $navTransTime, height $navTransTime, top $navTransTime;
 
@@ -277,7 +279,7 @@ $slideMenuPadding: true;
     align-items: center;
     background: var(--c-nav);
     color: var(--c-nav_);
-    box-shadow: 0 0 0.2rem 0 var(--c-shadow);
+    filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     transition: width $navTransTime, margin-left $navTransTime;
 
     &::before {
@@ -341,7 +343,6 @@ $slideMenuPadding: true;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: stretch;
-    padding: var(--b-m) 0;
   }
 
   .footer {
@@ -353,7 +354,7 @@ $slideMenuPadding: true;
     align-items: center;
     background: var(--c-nav);
     color: var(--c-nav_);
-    box-shadow: 0 0 0.2rem 0 var(--c-shadow);
+    filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     // position: sticky;
     // bottom: 0;
     padding: var(--b-xs);
@@ -420,7 +421,7 @@ $slideMenuPadding: true;
 
           >.nav {
             overflow: hidden;
-            box-shadow: 0 0.2rem 0.2rem 0 var(--c-shadow);
+            z-index: 97;
 
             @if $slideMenuPadding !=false {
               --nav-menu-pad: 0;
@@ -491,7 +492,7 @@ $slideMenuPadding: true;
       &~.wrap {
         &[data-mode="auto"] {
           >.nav {
-            box-shadow: 0 0.2rem 0.2rem 0 var(--c-shadow);
+            z-index: 97;
 
             @if $slideMenuPadding !=false {
               --nav-menu-pad: 0 !important;
@@ -578,7 +579,7 @@ $slideMenuPadding: true;
     .wrap {
       &[data-mode="auto"] {
         >.nav {
-          box-shadow: 0 0.2rem 0.2rem 0 var(--c-shadow);
+          z-index: 97;
         }
 
         >.body {
