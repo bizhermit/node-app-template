@@ -4,6 +4,7 @@
 type AppRoutePath = "/dev/elements/container/navigation"
  | "/dev/elements/icon"
  | "/dev/elements"
+ | "/dev/elements/popup"
  | "/dev"
  | "/"
  | "/sandbox/group-a"

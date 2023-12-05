@@ -54,6 +54,12 @@ const Layout: LayoutFC = ({ children }) => {
                     },
                   ],
                 },
+                {
+                  key: "popup",
+                  icon: "P",
+                  label: "Popup",
+                  pathname: "/dev/elements/popup",
+                }
               ],
             }
           ]}

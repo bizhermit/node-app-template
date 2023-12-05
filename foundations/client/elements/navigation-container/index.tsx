@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
 import { attributesWithoutChildren } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, type NavigationMode, type NavigationPosition } from "../navigation-container/context";
@@ -41,6 +41,19 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   const pos = props.$navPosition ?? navPos ?? "left";
   const mode = props.$navMode ?? navMode ?? "auto";
 
+  const resetRadio = () => {
+    const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
+    if (visElem) visElem.checked = false;
+    const minElem = document.getElementById(`${name}_${toggleMinId}`) as HTMLInputElement;
+    if (minElem) minElem.checked = false;
+  };
+
+  useEffect(() => {
+    if (mode === "auto") {
+      resetRadio();
+    }
+  }, [mode]);
+
   return (
     <NavigationContext.Provider
       value={{
@@ -55,12 +68,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             return getComputedStyle(elem).display !== "none";
           })?.click();
         },
-        resetRadio: () => {
-          const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
-          if (visElem) visElem.checked = false;
-          const minElem = document.getElementById(`${name}_${toggleMinId}`) as HTMLInputElement;
-          if (minElem) minElem.checked = false;
-        },
+        resetRadio,
         closeMenu: () => {
           const mnuElem = document.getElementById(`${name}_${toggleMnuId}`) as HTMLInputElement;
           if (mnuElem) mnuElem.checked = false;
