@@ -40,7 +40,7 @@ $slideMenuPadding: true;
           --nav-menu-pad: 0;
         }
 
-        @include mixins.crossHover {
+        @include mixins.crossHover(false) {
           width: var(--nav-base-size);
           overflow: auto;
 
@@ -217,6 +217,7 @@ $slideMenuPadding: true;
     overflow: auto;
     padding-bottom: 1rem;
     box-shadow: 0 0rem 0.2rem 0 var(--c-shadow);
+    overscroll-behavior: contain;
     transition: width $navTransTime, height $navTransTime, top $navTransTime;
 
     @if $slideMenuPadding ==false {
