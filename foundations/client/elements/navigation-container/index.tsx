@@ -1,13 +1,15 @@
 "use client";
 
-import { forwardRef, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import { forwardRef, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
+import parseNum from "../../../objects/number/parse";
+import { attributesWithoutChildren, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, type NavigationMode, type NavigationPosition } from "../navigation-container/context";
 import Style from "./index.module.scss";
 
 type OmitAttributes = "color" | "children";
 export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+  $name?: string;
   $defaultNavPosition?: NavigationPosition;
   $navPosition?: NavigationPosition;
   $defaultNavMode?: NavigationMode;
@@ -22,39 +24,95 @@ export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, Omit
   children: ReactNode;
 };
 
+const toggleVisId = "navTglVis";
+const toggleMinId = "navTglMin";
+const toggleMnuId = "navTglMnu";
+
 const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
-  const cornerRef = useRef<HTMLDivElement>(null!);
-  const [navPos, setNavPos] = useState(props.$defaultNavPosition);
-  const [navMode, setNavMode] = useState(props.$defaultNavMode);
+  const cref = useRef<HTMLDivElement>(null!);
+  const [navPos, setPosition] = useState(props.$defaultNavPosition);
+  const [navMode, setMode] = useState(props.$defaultNavMode);
 
   const HeaderTag = props.$headerTag ?? "header";
   const FooterTag = props.$footerTag ?? "footer";
   const NavTag = props.$navTag ?? "nav";
   const MainTag = props.$mainTag ?? "main";
 
+  const name = props.$name ?? "nav";
   const pos = props.$navPosition ?? navPos ?? "left";
   const mode = props.$navMode ?? navMode ?? "auto";
+
+  const resetRadio = () => {
+    const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
+    if (visElem) visElem.checked = false;
+    const minElem = document.getElementById(`${name}_${toggleMinId}`) as HTMLInputElement;
+    if (minElem) minElem.checked = false;
+  };
+
+  const getHeaderSizeNum = () => {
+    if (typeof window === "undefined" || cref.current == null) return 0;
+    return convertRemToPxNum(
+      parseNum(
+        (getComputedStyle(cref.current).getPropertyValue("--header-size") || "0rem").replace("rem", "")
+      )
+    ) ?? 0;
+  };
+
+  useEffect(() => {
+    if (mode === "auto") {
+      resetRadio();
+    }
+  }, [mode]);
 
   return (
     <NavigationContext.Provider
       value={{
-        navPos: pos,
-        setNavPos,
-        navMode: mode,
-        setNavMode,
+        position: pos,
+        setPosition,
+        mode,
+        setMode,
         toggle: () => {
-
+          const m = cref.current?.getAttribute("data-mode") as NavigationMode;
+          if (!(m === "auto" || m === "manual")) return;
+          (Array.from(cref.current.querySelectorAll(":scope>label")) as Array<HTMLLabelElement>).find(elem => {
+            return getComputedStyle(elem).display !== "none";
+          })?.click();
+        },
+        resetRadio,
+        closeMenu: () => {
+          const mnuElem = document.getElementById(`${name}_${toggleMnuId}`) as HTMLInputElement;
+          if (mnuElem) mnuElem.checked = false;
+        },
+        getHeaderSizeNum,
+        scrollIntoView: (elem, arg) => {
+          if (elem == null) return;
+          elem.scrollIntoView(arg);
+          document.documentElement.scrollTop = document.documentElement.scrollTop - getHeaderSizeNum();
+        },
+        scrollNavIntoView: (elem, arg) => {
+          if (elem == null) return;
+          const navElem = document.querySelector("nav");
+          if (navElem == null) return;
+          elem.scrollIntoView(arg);
+          navElem.scrollTop = navElem.scrollTop - getHeaderSizeNum();
         },
       }}
     >
       <input
-        className={Style.max}
-        id="nav-menu"
-        type="checkbox"
+        className={Style.tglVis}
+        id={`${name}_${toggleVisId}`}
+        name={name}
+        type="radio"
       />
       <input
-        className={Style.min}
-        id="nav-min"
+        className={Style.tglMin}
+        id={`${name}_${toggleMinId}`}
+        name={name}
+        type="radio"
+      />
+      <input
+        className={Style.tglMnu}
+        id={`${name}_${toggleMnuId}`}
         type="checkbox"
       />
       <div
@@ -65,11 +123,15 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
       >
         <label
           className={Style.mask}
-          htmlFor="nav-menu"
+          htmlFor={`${name}_${toggleMnuId}`}
         />
         {props.$nav &&
           <NavTag
             className={Style.nav}
+            onScroll={(e: React.UIEvent) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
             data-pos={pos}
             data-mode={mode}
           >
@@ -84,39 +146,33 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             className={Style.header}
             data-pos={pos}
           >
-            {(mode === "auto" || mode === "manual") &&
-              <div
-                className={Style.corner}
-                ref={cornerRef}
+            <div
+              className={Style.corner}
+              ref={cref}
+              data-mode={mode}
+            >
+              <label
+                className={`${Style.btn} ${Style.btnVis}`}
+                htmlFor={`${name}_${toggleVisId}`}
               >
-                <label
-                  className={Style.tomax}
-                  htmlFor="nav-menu"
-                >
-                  <MenuIcon className={Style.menuOpen} />
-                  <CrossIcon className={Style.menuHide} />
-                  <MenuLeftIcon
-                    className={pos === "left" ? Style.slideClose : Style.slideOpen}
-                  />
-                  <MenuRightIcon
-                    className={pos === "left" ? Style.slideOpen : Style.slideClose}
-                  />
-                </label>
-                {mode === "auto" &&
-                  <label
-                    className={Style.tomin}
-                    htmlFor="nav-min"
-                  >
-                    <MenuLeftIcon
-                      className={pos === "left" ? Style.slideMax : Style.slideMin}
-                    />
-                    <MenuRightIcon
-                      className={pos === "left" ? Style.slideMin : Style.slideMax}
-                    />
-                  </label>
-                }
-              </div>
-            }
+                <MenuLeftIcon className={Style.slideLeft} />
+                <MenuRightIcon className={Style.slideRight} />
+              </label>
+              <label
+                className={`${Style.btn} ${Style.btnMin}` }
+                htmlFor={`${name}_${toggleMinId}`}
+              >
+                <MenuLeftIcon className={Style.slideLeft} />
+                <MenuRightIcon className={Style.slideRight} />
+              </label>
+              <label
+                className={`${Style.btn} ${Style.btnMnu}`}
+                htmlFor={`${name}_${toggleMnuId}`}
+              >
+                <MenuIcon className={Style.menuOpen} />
+                <CrossIcon className={Style.menuHide} />
+              </label>
+            </div>
             <div className={Style.hcontent}>
               {props.$header}
             </div>

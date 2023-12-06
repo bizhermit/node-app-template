@@ -71,8 +71,11 @@ const isValidBodyParams = (params?: any) => {
   return !(t === "string" || t === "bigint" || t === "number" || t === "boolean");
 };
 
-const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit => {
+const convertToRequestInit = (params?: any, options?: FetchOptions, noBody?: boolean): RequestInit => {
   const contentType = electron ? "json" : options?.contentType ?? "json";
+  if (noBody) {
+    return {};
+  }
   if (contentType === "formData") {
     return {
       body: (() => {
@@ -83,6 +86,9 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
     };
   }
   return {
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
     body: (() => {
       if (params instanceof FormData) {
         return JSON.stringify(convertFormDataToStruct(params, { removeItem: "null" }));
@@ -90,9 +96,6 @@ const convertToRequestInit = (params?: any, options?: FetchOptions): RequestInit
       if (!isValidBodyParams(params)) return "{}";
       return JSON.stringify(params);
     })(),
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
   };
 };
 
@@ -105,9 +108,12 @@ const update = <U extends ApiPath, M extends ApiMethods>(url: U, method: M, para
 };
 
 const fetchApi = {
-  get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, _options?: FetchOptions) => {
+  get: <U extends ApiPath>(url: U, params?: ApiRequest<U, "get"> | FormData, options?: FetchOptions) => {
     const ctx = getDynamicUrlContext(url, params, { appendQuery: true, queryArrayIndex: true });
-    return crossFetch<ApiResponse<U, "get">>(ctx.url, { method: "GET" });
+    return crossFetch<ApiResponse<U, "get">>(ctx.url, {
+      method: "GET",
+      ...convertToRequestInit(ctx.data, options, true),
+    });
   },
   put: <U extends ApiPath>(url: U, params?: ApiRequest<U, "put"> | FormData, options?: FetchOptions) => {
     return update(url, "put", params, options);

@@ -28,9 +28,9 @@ const NavigationClient = () => {
           ].map(v => {
             return { value: v, label: v };
           })}
-          $value={navigation.navPos}
+          $value={navigation.position}
           $onChange={v => {
-            navigation.setNavPos(v!);
+            navigation.setPosition(v!);
           }}
           $tag="navigation position"
         />
@@ -45,9 +45,9 @@ const NavigationClient = () => {
           ].map(v => {
             return { value: v, label: v };
           })}
-          $value={navigation.navMode}
+          $value={navigation.mode}
           $onChange={v => {
-            navigation.setNavMode(v!);
+            navigation.setMode(v!);
           }}
           $tag="navigation mode"
         />
@@ -62,6 +62,13 @@ const NavigationClient = () => {
           toggle
         </Button>
       </Row>
+      <div
+        style={{
+          height: "100rem",
+          width: "100rem",
+          background: "linear-gradient(-225deg, var(--c-main) 0%, var(--c-sub) 100%)",
+        }}
+      />
     </div>
   );
 };

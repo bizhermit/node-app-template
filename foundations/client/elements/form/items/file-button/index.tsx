@@ -76,7 +76,7 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
           return [v];
         })),
       };
-    }
+    },
   });
 
   const iref = useRef<HTMLInputElement>(null!);

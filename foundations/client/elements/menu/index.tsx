@@ -6,6 +6,7 @@ import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
 import NextLink, { type NextLinkProps } from "../link";
+import { useNavigation } from "../navigation-container/context";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -96,14 +97,15 @@ type MenuItemPropsImpl = MenuItemProps & {
 };
 
 const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) => {
-  const pathname = typeof props.pathname === "string" ? props.pathname : props.pathname?.pathname;
   if (props.$judgeSelected == null) {
+    const pathname = typeof props.pathname === "string" ? props.pathname : props.pathname?.pathname;
     return routerPathname === pathname;
   }
   return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
 };
 
 const MenuItem: FC<MenuItemPropsImpl> = (props) => {
+  const nav = useNavigation();
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null!);
   const attrs = {
@@ -131,6 +133,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
 
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     setShowItems(c => !c);
+    nav.closeMenu();
     props.onClick?.(props, e);
   };
 
@@ -155,6 +158,11 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     if (props.nestLevel > 0 && selected) {
       props.$toggleParent?.(true, true);
     }
+    if (selected) {
+      setTimeout(() => {
+        nav.scrollNavIntoView(ref.current);
+      }, 100);
+    }
   }, []);
 
   const toggleAnimationInitStyle = useToggleAnimation({
@@ -170,7 +178,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     <div
       {...attrs}
       className={`${Style.content}${attrs.className ? ` ${attrs.className}` : ""}`}
-      style={{ ...attrs.style, ["--menu-pad" as string]: `calc(1.6rem * ${props.nestLevel})` }}
+      style={{ ...attrs.style, ["--menu-pad" as string]: `calc(var(--menu-nest-pad) * ${props.nestLevel})` }}
       onClick={click}
       onKeyDown={keydown}
       data-selectable={selectable}

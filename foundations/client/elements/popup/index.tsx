@@ -2,6 +2,7 @@
 
 import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type ForwardedRef, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
+import parseNum from "../../../objects/number/parse";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
@@ -53,6 +54,8 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const baseZIndex = 10000000;
+const dialogAttrName = "data-dialog";
+const getDialogNum = () => parseNum(document.documentElement.getAttribute(dialogAttrName)) ?? 0;
 
 const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const [init, setInit] = useState(props.$show);
@@ -119,7 +122,8 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   }, [props.$show]);
 
   const resetPosition = () => {
-    const bodyElem = document.body;
+    const winH = window.innerHeight;
+    const winW = window.innerWidth;
     const hMax = ref.current.offsetHeight;
     const wMax = ref.current.offsetWidth;
     let posX = props.$position?.x || "center";
@@ -129,10 +133,9 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
     const marginY = props.$position?.marginY ?? 0;
     let rect = {
       top: 0, bottom: 0, left: 0, right: 0,
-      width: 0, height: 0,
+      width: winW, height: winH,
     };
     if (props.$anchor == null) {
-      rect = bodyElem.getBoundingClientRect();
       if (posX.startsWith("outer")) posX = "center";
       if (posY.startsWith("outer")) posY = "center";
     } else if (props.$anchor === "parent") {
@@ -141,7 +144,6 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
     } else if ("current" in props.$anchor) {
       const anchor = props.$anchor.current;
       if (anchor == null) {
-        rect = bodyElem.getBoundingClientRect();
         if (posX.startsWith("outer")) posX = "center";
         if (posY.startsWith("outer")) posY = "center";
       } else {
@@ -163,19 +165,19 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
       rect.bottom += marginY;
     }
 
-    const scrollLeft = document.documentElement.scrollLeft + bodyElem.scrollLeft;
+    const scrollLeft = 0;
     switch (posX) {
       case "center":
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.left + rect.width / 2 - wMax / 2 + scrollLeft :
-          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2 + scrollLeft), bodyElem.clientWidth - ref.current.offsetWidth + scrollLeft)
+          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2 + scrollLeft), winW - ref.current.offsetWidth + scrollLeft)
         )!;
         break;
       case "inner":
-        if (bodyElem.clientWidth - rect.left < wMax && rect.left > bodyElem.clientWidth - rect.right) {
+        if (winW - rect.left < wMax && rect.left > winW - rect.right) {
           ref.current.style.removeProperty("left");
-          ref.current.style.right = convertSizeNumToStr(bodyElem.clientWidth - rect.right)!;
+          ref.current.style.right = convertSizeNumToStr(winW - rect.right)!;
         } else {
           ref.current.style.removeProperty("right");
           ref.current.style.left = convertSizeNumToStr(rect.left)!;
@@ -185,20 +187,20 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.left :
-          Math.min(rect.left, bodyElem.clientWidth - ref.current.offsetWidth)
+          Math.min(rect.left, winW - ref.current.offsetWidth)
         )!;
         break;
       case "inner-right":
         ref.current.style.removeProperty("left");
         ref.current.style.right = convertSizeNumToStr(posAbs ?
-          bodyElem.clientWidth - rect.right :
-          Math.min(bodyElem.clientWidth - rect.right, bodyElem.clientWidth - ref.current.offsetWidth)
+          winW - rect.right :
+          Math.min(winW - rect.right, winW - ref.current.offsetWidth)
         )!;
         break;
       case "outer":
-        if (bodyElem.clientWidth - rect.right < wMax && rect.left > bodyElem.clientWidth - rect.right) {
+        if (winW - rect.right < wMax && rect.left > winW - rect.right) {
           ref.current.style.removeProperty("left");
-          ref.current.style.right = convertSizeNumToStr(bodyElem.clientWidth - rect.left)!;
+          ref.current.style.right = convertSizeNumToStr(winW - rect.left)!;
         } else {
           ref.current.style.removeProperty("right");
           ref.current.style.left = convertSizeNumToStr(rect.right)!;
@@ -207,33 +209,33 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
       case "outer-left":
         ref.current.style.removeProperty("left");
         ref.current.style.right = convertSizeNumToStr(posAbs ?
-          bodyElem.clientWidth - rect.left :
-          Math.min(bodyElem.clientWidth - rect.left, bodyElem.clientWidth - ref.current.offsetWidth)
+          winW - rect.left :
+          Math.min(winW - rect.left, winW - ref.current.offsetWidth)
         )!;
         break;
       case "outer-right":
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.right :
-          Math.min(rect.right, bodyElem.clientWidth - ref.current.offsetWidth)
+          Math.min(rect.right, winW - ref.current.offsetWidth)
         )!;
         break;
       default: break;
     }
 
-    const scrollTop = document.documentElement.scrollTop + bodyElem.scrollTop;
+    const scrollTop = 0;
     switch (posY) {
       case "center":
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.top + rect.height / 2 - hMax / 2 + scrollTop :
-          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2 + scrollTop), bodyElem.clientHeight - ref.current.offsetHeight + scrollTop)
+          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2 + scrollTop), winH - ref.current.offsetHeight + scrollTop)
         )!;
         break;
       case "inner":
-        if (bodyElem.clientHeight - rect.top < hMax && rect.top > bodyElem.clientHeight - rect.bottom) {
+        if (winH - rect.top < hMax && rect.top > winH - rect.bottom) {
           ref.current.style.removeProperty("top");
-          ref.current.style.bottom = convertSizeNumToStr(bodyElem.clientHeight - rect.bottom)!;
+          ref.current.style.bottom = convertSizeNumToStr(winH - rect.bottom)!;
         } else {
           ref.current.style.removeProperty("bottom");
           ref.current.style.top = convertSizeNumToStr(rect.top)!;
@@ -243,20 +245,20 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.top :
-          Math.min(rect.top, bodyElem.clientHeight - ref.current.offsetHeight)
+          Math.min(rect.top, winH - ref.current.offsetHeight)
         )!;
         break;
       case "inner-bottom":
         ref.current.style.removeProperty("top");
         ref.current.style.bottom = convertSizeNumToStr(posAbs ?
-          bodyElem.clientHeight - rect.bottom :
-          Math.min(bodyElem.clientHeight - rect.bottom, bodyElem.clientHeight - ref.current.offsetHeight)
+          winH - rect.bottom :
+          Math.min(winH - rect.bottom, winH - ref.current.offsetHeight)
         )!;
         break;
       case "outer":
-        if (bodyElem.clientHeight - rect.bottom < hMax && rect.top > bodyElem.clientHeight - rect.bottom) {
+        if (winH - rect.bottom < hMax && rect.top > winH - rect.bottom) {
           ref.current.style.removeProperty("top");
-          ref.current.style.bottom = convertSizeNumToStr(bodyElem.clientHeight - rect.top)!;
+          ref.current.style.bottom = convertSizeNumToStr(winH - rect.top)!;
         } else {
           ref.current.style.removeProperty("bottom");
           ref.current.style.top = convertSizeNumToStr(rect.bottom)!;
@@ -265,15 +267,15 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
       case "outer-top":
         ref.current.style.removeProperty("top");
         ref.current.style.bottom = convertSizeNumToStr(posAbs ?
-          bodyElem.clientHeight - rect.top :
-          Math.min(bodyElem.clientHeight - rect.top, bodyElem.clientHeight - ref.current.offsetHeight)
+          winH - rect.top :
+          Math.min(winH - rect.top, winH - ref.current.offsetHeight)
         )!;
         break;
       case "outer-bottom":
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.bottom :
-          Math.min(rect.bottom, bodyElem.clientHeight - ref.current.offsetHeight)
+          Math.min(rect.bottom, winH - ref.current.offsetHeight)
         )!;
         break;
       default: break;
@@ -315,6 +317,8 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
 
       if (open) {
         showedRef.current = true;
+        const num = getDialogNum();
+        document.documentElement.setAttribute(dialogAttrName, String(num + 1));
         updateZIndex.current();
         if (mref.current) {
           mref.current.style.removeProperty("display");
@@ -330,6 +334,8 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "1";
         }
+        const num = getDialogNum();
+        if (num < 2) document.documentElement.removeAttribute(dialogAttrName);
       }
       props.$onToggle?.(open);
 
@@ -387,6 +393,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
               tabIndex={0}
               onKeyDown={keydownMask1}
               data-mode={props.$mask}
+              style={{ display: "none" }}
             />
           }
           <div

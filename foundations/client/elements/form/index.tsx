@@ -74,10 +74,10 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
     return props.$bind;
   }, [props.$bind]);
 
-  const disabledRef = useRef(false);
+  const disabledRef = useRef(true);
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
     return disabledRef.current = action;
-  }, false);
+  }, disabledRef.current);
   const items = useRef<Struct<FormItemMountProps & { props: FormItemProps; options: UseFormItemContextOptions; }>>({});
   const [errors, setErrors] = useState<Struct>({});
   const [exErrors, setExErrors] = useState<Struct>({});
@@ -298,6 +298,10 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
       props.$onError({ ...exE, ...e });
     }
   }, [errors, exErrors]);
+
+  useEffect(() => {
+    setDisabled(false);
+  }, []);
 
   if (props.$formRef) {
     props.$formRef.getValue = get;

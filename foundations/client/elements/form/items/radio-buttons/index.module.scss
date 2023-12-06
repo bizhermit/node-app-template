@@ -23,47 +23,46 @@
         cursor: pointer;
         user-select: none;
 
-        >.check {
-          &::before {
-            background-color: var(--c-input);
-          }
-        }
-
-        @include mixins.crossHover {
-          &[data-appearance="button"] {
-            @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
-
-            &:active {
-              @include mixins.buttonHoverActive;
-            }
-          }
-
-          &[data-appearance="point"],
-          &[data-appearance="check"],
-          &[data-appearance="check-fill"] {
-            >.check {
-              &::before {
-                @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
+        &[data-state="active"] {
+          @include mixins.crossHover {
+            &[data-appearance="button"] {
+              @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
+  
+              &:active {
+                @include mixins.buttonHoverActive;
               }
             }
+  
+            :is(&[data-appearance="point"], &[data-appearance="check"], &[data-appearance="check-fill"]) {
+              >.check {
+                &::before {
+                  @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
+                }
+              }
+  
+              &:active {
+                @include mixins.buttonHoverActive;
+              }
+            }
+          }
 
-            &:active {
-              @include mixins.buttonHoverActive;
+          >.check {
+            &::before {
+              background-color: var(--c-input);
             }
           }
         }
 
-        &[data-state="readonly"],
-        &[data-state="disabled"] {
-          >.box {
+        &:is(&[data-state="readonly"], &[data-state="disabled"]) {
+          >.check {
             &::before {
-              background-color: none !important;
+              background-color: transparent !important;
             }
           }
 
           &[data-appearance="button"] {
             >.content {
-              background-color: none !important;
+              background-color: transparent !important;
             }
           }
         }
@@ -79,7 +78,7 @@
 
       &[data-error="true"] {
         >.item {
-          >.box {
+          >.check {
             &::before {
               background: var(--c-error);
             }
@@ -231,8 +230,7 @@
       }
     }
 
-    &[data-appearance="check"],
-    &[data-appearance="check-fill"] {
+    :is(&[data-appearance="check"], &[data-appearance="check-fill"]) {
       >.check {
         &::before {
           top: 15%;
@@ -276,7 +274,7 @@
       &[data-selected="true"] {
         >.check {
           &::before {
-            background-color: var(--s-color, var(--c-main));
+            background-color: var(--s-color, var(--c-main)) !important;
           }
         }
       }

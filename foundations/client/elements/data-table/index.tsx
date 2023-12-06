@@ -46,6 +46,8 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   sticky?: boolean;
   wrap?: boolean;
   padding?: boolean;
+  prefix?: string;
+  suffix?: string;
   header?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
   body?: FunctionComponent<DataTableCellContext<T> & { children: ReactNode; rev: number }>;
   footer?: FunctionComponent<Omit<DataTableCellContext<T>, "index" | "data" | "pageFirstIndex"> & { children: ReactElement; }>;
@@ -68,6 +70,7 @@ export type DataTableGroupColumn<T extends Struct = Struct> = {
   label?: string;
   rows: Array<Array<DataTableColumn<T>>>;
   border?: boolean;
+  rowBorder?: boolean;
 };
 
 export type DataTableColumn<T extends Struct = Struct> =
@@ -228,6 +231,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
       perPage: defaultPerPage,
     };
   });
+  const rowBorder = props.$rowBorder ?? true;
+  const cellBorder = props.$cellBorder ?? false;
 
   const columns = useRef<Array<DataTableColumn<T>>>(null!);
   columns.current = useMemo(() => {
@@ -357,7 +362,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           <div
             key={column.name}
             className={Style.rcell}
-            data-border={column.border ?? props.$cellBorder}
+            data-border={column.border ?? cellBorder}
           >
             {column.rows.map((row, index) => {
               if (row.length === 0) {
@@ -365,11 +370,11 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                   <div
                     key={index}
                     className={Style.grow}
-                    data-border={props.$rowBorder}
+                    data-border={column.rowBorder ?? rowBorder}
                   >
                     <div
                       className={Style.hcell}
-                      data-border={column.border ?? props.$cellBorder}
+                      data-border={column.border ?? cellBorder}
                     >
                       <DataTableCellLabel>
                         {column.label}
@@ -382,7 +387,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 <div
                   key={index}
                   className={Style.hrow}
-                  data-border={props.$rowBorder}
+                  data-border={column.rowBorder ?? rowBorder}
                 >
                   {row?.map(c => generateCell(c))}
                 </div>
@@ -400,7 +405,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           onClick={column.sort ? () => {
             changeSort(column, sort);
           } : undefined}
-          data-border={column.border ?? props.$cellBorder}
+          data-border={column.border ?? cellBorder}
           data-sticky={nestLevel === 0 && column.sticky}
         >
           <div className={Style.content}>
@@ -441,7 +446,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
         style={{
           height: convertSizeNumToStr(props.$headerHeight),
         }}
-        data-border={props.$rowBorder}
+        data-border={rowBorder}
       >
         {columns.current?.map(col => generateCell(col))}
       </div>
@@ -452,8 +457,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     props.$headerHeight,
     sorts,
     changeSort,
-    props.$rowBorder,
-    props.$cellBorder,
+    rowBorder,
+    cellBorder,
     rowNumColWidth,
     items,
   ]);
@@ -471,7 +476,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           <div
             key={column.name}
             className={Style.rcell}
-            data-border={column.border ?? props.$cellBorder}
+            data-border={column.border ?? cellBorder}
           >
             {column.rows.map((row, index) => {
               if (row.length === 0) return undefined;
@@ -479,7 +484,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 <div
                   key={index}
                   className={Style.grow}
-                  data-border={props.$rowBorder}
+                  data-border={column.rowBorder ?? rowBorder}
                 >
                   {row?.map(c => generateCell(index, data, c))}
                 </div>
@@ -494,6 +499,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           wrap={column.wrap}
           padding={column.padding}
         >
+          {column.prefix}
           {(() => {
             const v = getValue(data, column.displayName || column.name);
             switch (column.type) {
@@ -508,6 +514,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 return v;
             }
           })()}
+          {column.suffix}
         </DataTableCellLabel>
       );
       const pageFirstIndex = pagination ? pagination.index * pagination.perPage : 0;
@@ -531,7 +538,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           className={Style.bcell}
           style={getColumnStyle(column, nestLevel)}
           data-align={getCellAlign(column)}
-          data-border={column.border ?? props.$cellBorder}
+          data-border={column.border ?? cellBorder}
           data-name={column.name}
           data-pointer={column.pointer}
           data-sticky={nestLevel === 0 && column.sticky}
@@ -564,7 +571,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           key={`${getValue(item, idDn) ?? index}__${bodyRev}`}
           className={Style.brow}
           style={rowStyle}
-          data-border={props.$rowBorder}
+          data-border={rowBorder}
           data-stripes={props.$stripes}
           data-pointer={props.$rowPointer}
         >
@@ -586,8 +593,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     props.$rowHeight,
     props.$rowMinHeight,
     props.$rowMaxHeight,
-    props.$rowBorder,
-    props.$cellBorder,
+    rowBorder,
+    cellBorder,
     props.$stripes,
     props.$rowPointer,
     rowNumColWidth,
@@ -685,16 +692,22 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   const clickBody = (e: React.MouseEvent<HTMLDivElement>) => {
     let elem: HTMLElement | null = e.target as HTMLElement;
     let cellElem: HTMLElement | null = null;
+    const checkRadio = (elem: HTMLElement) => {
+      const radioElem = elem.querySelector(`input[name="${uniqueKey.current}"]`) as HTMLInputElement;
+      if (radioElem) {
+        radioElem.checked = true;
+      }
+    };
     do {
       if (elem.classList.contains(Style.bcell)) cellElem = elem;
-      if (elem.classList.contains(Style.brow)) break;
+      if (elem.classList.contains(Style.brow)) {
+        checkRadio(elem);
+        break;
+      }
       elem = elem?.parentElement;
     } while (elem);
     if (cellElem == null || elem == null) return;
-    const radioElem = elem.querySelector(`input[name="${uniqueKey.current}"]`) as HTMLInputElement;
-    if (radioElem) {
-      radioElem.checked = true;
-    }
+    checkRadio(elem);
     if (props.$onClick == null) return;
     const index = [].slice.call(elem.parentElement!.childNodes).indexOf(elem as never);
     const column = findColumn(columns.current, cellElem.getAttribute("data-name")!)!;

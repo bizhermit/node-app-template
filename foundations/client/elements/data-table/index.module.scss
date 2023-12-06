@@ -138,14 +138,26 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
 
     &[data-align="left"] {
       justify-content: flex-start;
+
+      >a {
+        justify-content: flex-start;
+      }
     }
 
     &[data-align="center"] {
       justify-content: center;
+
+      >a {
+        justify-content: center;
+      }
     }
 
     &[data-align="right"] {
-      justify-content: right;
+      justify-content: flex-end;
+
+      >a {
+        justify-content: flex-end;
+      }
     }
 
     &[data-sticky="true"] {
