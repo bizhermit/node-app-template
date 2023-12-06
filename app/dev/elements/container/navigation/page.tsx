@@ -21,9 +21,9 @@ const Page = () => {
             ].map(v => {
               return { value: v, label: v };
             })}
-            $value={nav.navPos}
+            $value={nav.position}
             $onChange={v => {
-              nav.setNavPos(v!);
+              nav.setPosition(v!);
             }}
           />
         </ControlItem>
@@ -37,9 +37,9 @@ const Page = () => {
             ].map(v => {
               return { value: v, label: v };
             })}
-            $value={nav.navMode}
+            $value={nav.mode}
             $onChange={v => {
-              nav.setNavMode(v!);
+              nav.setMode(v!);
             }}
           />
         </ControlItem>

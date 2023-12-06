@@ -160,8 +160,8 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     }
     if (selected) {
       setTimeout(() => {
-        ref.current?.scrollIntoView({ block: "start" });
-      }, 1000);
+        nav.scrollNavIntoView(ref.current);
+      }, 100);
     }
   }, []);
 

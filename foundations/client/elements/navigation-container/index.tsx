@@ -1,7 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import parseNum from "../../../objects/number/parse";
+import { attributesWithoutChildren, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, type NavigationMode, type NavigationPosition } from "../navigation-container/context";
 import Style from "./index.module.scss";
@@ -29,8 +30,8 @@ const toggleMnuId = "navTglMnu";
 
 const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
   const cref = useRef<HTMLDivElement>(null!);
-  const [navPos, setNavPos] = useState(props.$defaultNavPosition);
-  const [navMode, setNavMode] = useState(props.$defaultNavMode);
+  const [navPos, setPosition] = useState(props.$defaultNavPosition);
+  const [navMode, setMode] = useState(props.$defaultNavMode);
 
   const HeaderTag = props.$headerTag ?? "header";
   const FooterTag = props.$footerTag ?? "footer";
@@ -48,6 +49,15 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
     if (minElem) minElem.checked = false;
   };
 
+  const getHeaderSizeNum = () => {
+    if (typeof window === "undefined" || cref.current == null) return 0;
+    return convertRemToPxNum(
+      parseNum(
+        (getComputedStyle(cref.current).getPropertyValue("--header-size") || "0rem").replace("rem", "")
+      )
+    ) ?? 0;
+  };
+
   useEffect(() => {
     if (mode === "auto") {
       resetRadio();
@@ -57,10 +67,10 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   return (
     <NavigationContext.Provider
       value={{
-        navPos: pos,
-        setNavPos,
-        navMode: mode,
-        setNavMode,
+        position: pos,
+        setPosition,
+        mode,
+        setMode,
         toggle: () => {
           const m = cref.current?.getAttribute("data-mode") as NavigationMode;
           if (!(m === "auto" || m === "manual")) return;
@@ -72,7 +82,20 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         closeMenu: () => {
           const mnuElem = document.getElementById(`${name}_${toggleMnuId}`) as HTMLInputElement;
           if (mnuElem) mnuElem.checked = false;
-        }
+        },
+        getHeaderSizeNum,
+        scrollIntoView: (elem, arg) => {
+          if (elem == null) return;
+          elem.scrollIntoView(arg);
+          document.documentElement.scrollTop = document.documentElement.scrollTop - getHeaderSizeNum();
+        },
+        scrollNavIntoView: (elem, arg) => {
+          if (elem == null) return;
+          const navElem = document.querySelector("nav");
+          if (navElem == null) return;
+          elem.scrollIntoView(arg);
+          navElem.scrollTop = navElem.scrollTop - getHeaderSizeNum();
+        },
       }}
     >
       <input
