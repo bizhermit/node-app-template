@@ -53,6 +53,7 @@ export const useFormItemContext = <
   U extends Struct = any,
   P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>
 >(form: ReturnType<typeof useForm>, props: P, options?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
+  const init = useRef(false);
   const id = useRef(generateUuidV4());
   const [error, setError] = useState<string | null | undefined>(undefined);
 
@@ -94,9 +95,9 @@ export const useFormItemContext = <
     form.bind,
     props.$preventFormBind
   ]);
-  useMemo(() => {
+  if (!init.current) {
     setBind(value);
-  }, []);
+  }
 
   const getMessage = useCallback((key: keyof FormItemMessages, ...texts: Array<string>) => {
     let m = props.$messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
@@ -229,55 +230,53 @@ export const useFormItemContext = <
     ...(options?.generateChangeCallbackDataDeps ?? []),
   ]);
 
+  const valueEffect = (v: any) => {
+    const before = valueRef.current;
+    setCurrentValue(v);
+    if (init.current || props.$onChange) {
+      const errorMessage = validation();
+      props.$onChange?.(
+        valueRef.current,
+        before,
+        { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
+      );
+    }
+    options?.effect?.(valueRef.current);
+  };
+
   useEffect(() => {
     const name = props?.name;
     if (props == null || name == null || form.bind == null || "$bind" in props || "$value" in props || props.$preventFormBind) return;
-    const before = valueRef.current;
-    const v = getValue(form.bind, name);
-    setCurrentValue(options?.receive ? options.receive(v) : v);
-    const errorMessage = validation();
-    props.$onChange?.(
-      valueRef.current,
-      before,
-      { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
-    );
-    options?.effect?.(valueRef.current);
+    valueEffect(getValue(form.bind, name));
   }, [form.bind, props?.$preventFormBind]);
 
   // useEffect(() => {
   //   const name = props?.name;
   //   if (props == null || name == null || props.$bind == null || "$value" in props) return;
-  //   const before = valueRef.current;
-  //   const v = getValue(props.$bind, name);
-  //   setCurrentValue(options?.receive ? options.receive(v) : v);
-  //   const errorMessage = validation();
-  //   props.$onChange?.(
-  //     valueRef.current,
-  //     before,
-  //     { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
-  //   );
-  //   options?.effect?.(valueRef.current);
+  //   valueEffect(getValue(props.$bind, name))
   // }, [props?.$bind]);
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
-    const v = options?.receive ? options.receive(props.$value) : props.$value;
-    setCurrentValue(v);
-    setBind(v);
-    options?.effect?.(valueRef.current);
-    validation();
+    setBind(props.$value);
+    valueEffect(props.$value);
   }, [props?.$value, setBind]);
 
   useEffect(() => {
+    init.current = true;
     if (props) {
       form.mount(id.current, props, {
         validation,
         change,
       }, options ?? { effect: () => { } });
       return () => {
+        init.current = false;
         form.unmount(id.current);
       };
     }
+    return () => {
+      init.current = false;
+    };
   }, [validation, change]);
 
   useEffect(() => {
