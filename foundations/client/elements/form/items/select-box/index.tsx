@@ -215,7 +215,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     if (!opts?.preventBindSource) setBindSource(source);
     setWidth((iref.current.parentElement as HTMLElement).offsetWidth);
     const rect = iref.current.getBoundingClientRect();
-    setMaxHeight((Math.max(document.body.clientHeight - rect.bottom, rect.top) - 10));
+    setMaxHeight((Math.max(window.innerHeight - rect.bottom, rect.top) - 10));
     setShowPicker(true);
   };
 
