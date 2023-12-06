@@ -109,9 +109,7 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
         onKeyDown={keydownMask1}
         style={{ opacity: "0" }}
       />
-      <div
-        className={Style.main}
-      >
+      <div className={Style.main}>
         {mount && props.children}
       </div>
       {showed &&
