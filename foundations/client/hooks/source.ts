@@ -1,11 +1,12 @@
+import { useCallback, type DependencyList } from "react";
 import useFetch from "./fetch-api";
-import { type DependencyList, useCallback } from "react";
 
-const cache: { [key: string]: Array<any> } = {};
+const cache: { [v: string]: Array<any> } = {};
 
 const useSource = <T extends { [key: string]: any }, K extends ApiPath>(
   apiPath: K,
-  params: ApiRequest<K, "get">, options?: {
+  params: ApiRequest<K, "get">,
+  options?: {
     name?: string;
     noCache?: boolean;
   }
