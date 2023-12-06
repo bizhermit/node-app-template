@@ -97,8 +97,8 @@ type MenuItemPropsImpl = MenuItemProps & {
 };
 
 const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) => {
-  const pathname = typeof props.pathname === "string" ? props.pathname : props.pathname?.pathname;
   if (props.$judgeSelected == null) {
+    const pathname = typeof props.pathname === "string" ? props.pathname : props.pathname?.pathname;
     return routerPathname === pathname;
   }
   return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
