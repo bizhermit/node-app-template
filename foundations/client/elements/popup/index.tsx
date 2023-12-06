@@ -2,6 +2,7 @@
 
 import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type ForwardedRef, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
+import parseNum from "../../../objects/number/parse";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
@@ -53,6 +54,8 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const baseZIndex = 10000000;
+const dialogAttrName = "data-dialog";
+const getDialogNum = () => parseNum(document.documentElement.getAttribute(dialogAttrName)) ?? 0;
 
 const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const [init, setInit] = useState(props.$show);
@@ -119,7 +122,6 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   }, [props.$show]);
 
   const resetPosition = () => {
-    const bodyElem = document.body;
     const winH = window.innerHeight;
     const winW = window.innerWidth;
     const hMax = ref.current.offsetHeight;
@@ -163,7 +165,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
       rect.bottom += marginY;
     }
 
-    const scrollLeft = document.documentElement.scrollLeft + bodyElem.scrollLeft;
+    const scrollLeft = 0;
     switch (posX) {
       case "center":
         ref.current.style.removeProperty("right");
@@ -221,7 +223,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
       default: break;
     }
 
-    const scrollTop = document.documentElement.scrollTop + bodyElem.scrollTop;
+    const scrollTop = 0;
     switch (posY) {
       case "center":
         ref.current.style.removeProperty("bottom");
@@ -315,6 +317,8 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
 
       if (open) {
         showedRef.current = true;
+        const num = getDialogNum();
+        document.documentElement.setAttribute(dialogAttrName, String(num + 1));
         updateZIndex.current();
         if (mref.current) {
           mref.current.style.removeProperty("display");
@@ -330,6 +334,8 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "1";
         }
+        const num = getDialogNum();
+        if (num < 2) document.documentElement.removeAttribute(dialogAttrName);
       }
       props.$onToggle?.(open);
 

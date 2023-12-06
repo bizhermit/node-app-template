@@ -51,6 +51,9 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
         if (mref.current) {
           mref.current.style.removeProperty("display");
         }
+      } else {
+        const num = getDialogNum();
+        if (num < 2) document.documentElement.removeAttribute(dialogAttrName);
       }
     },
     onToggling: (ctx) => {
@@ -69,8 +72,6 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
       } else {
         setMount(false);
         ref.current?.close?.();
-        const num = getDialogNum();
-        if (num < 2) document.documentElement.removeAttribute(dialogAttrName);
         if (mref.current) {
           mref.current.style.display = "none";
           mref.current.style.opacity = "0";
