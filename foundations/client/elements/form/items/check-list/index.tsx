@@ -79,6 +79,7 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
       if (dataItem.type === "boolean") {
         return {
           $source: (() => {
+            if (dataItem.source) return dataItem.source;
             return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
               return {
                 [p.$valueDataName ?? "value"]: v,
