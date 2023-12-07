@@ -170,9 +170,9 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             data-pos={pos}
           >
             <div
+              ref={cref}
               className={Style.corner}
               data-mode={mode}
-              ref={cref}
             >
               <label
                 className={`${Style.btn} ${Style.btnMnu}`}
