@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useRef, useState, type ElementType, type HTMLAtt
 import parseNum from "../../../objects/number/parse";
 import { attributesWithoutChildren, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
-import { NavigationContext, type NavigationMode, type NavigationPosition } from "../navigation-container/context";
+import { NavigationContext, type NavigationHeaderMode, type NavigationMode, type NavigationPosition } from "../navigation-container/context";
 import Style from "./index.module.scss";
 
 type OmitAttributes = "color" | "children";
@@ -14,6 +14,8 @@ export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, Omit
   $navPosition?: NavigationPosition;
   $defaultNavMode?: NavigationMode;
   $navMode?: NavigationMode;
+  $headerMode?: NavigationHeaderMode;
+  $defaultHeaderMode?: NavigationHeaderMode;
   $headerTag?: ElementType;
   $footerTag?: ElementType;
   $navTag?: ElementType;
@@ -33,6 +35,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   const cref = useRef<HTMLDivElement>(null!);
   const [navPos, setPosition] = useState(props.$defaultNavPosition);
   const [navMode, setMode] = useState(props.$defaultNavMode);
+  const [headerMode, setHeaderMode] = useState(props.$defaultHeaderMode);
 
   const HeaderTag = props.$headerTag ?? "header";
   const FooterTag = props.$footerTag ?? "footer";
@@ -42,6 +45,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   const name = props.$name ?? "nav";
   const pos = props.$navPosition ?? navPos ?? "left";
   const mode = props.$navMode ?? navMode ?? "auto";
+  const hmode = props.$headerMode ?? headerMode ?? "fill";
 
   const resetRadio = () => {
     const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
@@ -72,6 +76,8 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         setPosition,
         mode,
         setMode,
+        headerMode: hmode,
+        setHeaderMode,
         toggle: () => {
           const m = cref.current?.getAttribute("data-mode") as NavigationMode;
           if (!(m === "auto" || m === "manual")) return;
@@ -121,6 +127,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         ref={ref}
         data-pos={pos}
         data-mode={mode}
+        data-hmode={hmode}
       >
         <label
           className={Style.mask}

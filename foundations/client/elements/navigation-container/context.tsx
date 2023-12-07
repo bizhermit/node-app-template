@@ -4,11 +4,15 @@ export type NavigationPosition = "left" | "right";
 
 export type NavigationMode = "auto" | "visible" | "minimize" | "manual";
 
+export type NavigationHeaderMode = "fill" | "sticky" | "scroll";
+
 type NavigationContextProps = {
   position: NavigationPosition;
   setPosition: (pos: NavigationPosition) => void;
   mode: NavigationMode;
   setMode: (mode: NavigationMode) => void;
+  headerMode: NavigationHeaderMode;
+  setHeaderMode: (mode: NavigationHeaderMode) => void;
   toggle: () => void;
   resetRadio: () => void;
   closeMenu: () => void;
@@ -22,6 +26,8 @@ export const NavigationContext = createContext<NavigationContextProps>({
   setPosition: () => { },
   mode: "auto",
   setMode: () => { },
+  headerMode: "fill",
+  setHeaderMode: () => { },
   toggle: () => { },
   resetRadio: () => { },
   closeMenu: () => { },

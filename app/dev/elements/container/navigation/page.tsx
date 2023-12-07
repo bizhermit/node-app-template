@@ -1,7 +1,7 @@
 "use client";
 
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import { NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
+import { NavigationHeaderMode, NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
 import BaseLayout from "@/dev/_components/base-layout";
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 
@@ -40,6 +40,21 @@ const Page = () => {
             $value={nav.mode}
             $onChange={v => {
               nav.setMode(v!);
+            }}
+          />
+        </ControlItem>
+        <ControlItem caption="header mode">
+          <RadioButtons<NavigationHeaderMode>
+            $source={[
+              "fill",
+              "sticky",
+              "scroll",
+            ].map(v => {
+              return { value: v, label: v };
+            })}
+            $value={nav.headerMode}
+            $onChange={v => {
+              nav.setHeaderMode(v!);
             }}
           />
         </ControlItem>

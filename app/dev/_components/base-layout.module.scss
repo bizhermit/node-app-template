@@ -1,6 +1,6 @@
 .base {
   --h-size: var(--header-size);
-  --t-size: var(--header-size);
+  --t-size: max(var(--header-size), 5rem);
 
   box-sizing: border-box;
   display: flex;
