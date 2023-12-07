@@ -106,18 +106,20 @@ const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) 
 };
 
 const MenuItem: FC<MenuItemPropsImpl> = (props) => {
+  const len = props.items?.length ?? 0;
   const nav = useNavigation();
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null!);
+  const cref = useRef<HTMLDivElement>(null!);
   const attrs = {
     ...props.$itemDefaultAttributes,
-    ...props.attributes
+    ...props.attributes,
   };
 
   const selected = useMemo(() => {
     return judgeSelected(props, pathname);
   }, [pathname, props.$judgeSelected]);
-  const selectable = Boolean(pathname) || (props.items?.length ?? 0) > 0 || props.onClick != null;
+  const selectable = Boolean(pathname) || len > 0 || props.onClick != null;
 
   const [showItems, setShowItems] = useState(() => {
     if (props.defaultOpen != null) return props.defaultOpen;
@@ -162,15 +164,15 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     if (selected) {
       setTimeout(() => {
         nav.scrollNavIntoView(ref.current);
-      }, 2000);
+      }, 200);
     }
   }, []);
 
   const toggleAnimationInitStyle = useToggleAnimation({
-    elementRef: ref,
+    elementRef: cref,
     open: showItems,
     direction: "vertical",
-    animationDuration: Math.min(250, (props.items?.length ?? 0) * 30),
+    animationDuration: Math.min(250, len * 30),
   });
 
   const iconSpace = props.iconSpace ?? props.$defaultIconSpace;
@@ -178,8 +180,12 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const node = (
     <div
       {...attrs}
+      ref={ref}
       className={`${Style.content}${attrs.className ? ` ${attrs.className}` : ""}`}
-      style={{ ...attrs.style, ["--menu-pad" as string]: `calc(var(--menu-nest-pad) * ${props.nestLevel})` }}
+      style={{
+        ...attrs.style,
+        ["--menu-pad" as string]: `calc(var(--menu-nest-pad) * ${props.nestLevel})`,
+      }}
       onClick={click}
       onKeyDown={keydown}
       data-selectable={selectable}
@@ -221,7 +227,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
         </NextLink>
       }
       <div
-        ref={ref}
+        ref={cref}
         className={Style.children}
         style={toggleAnimationInitStyle}
       >
@@ -237,6 +243,10 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       </div>
     </li>
   );
+};
+
+const Child = () => {
+  return <></>;
 };
 
 export default Menu;
