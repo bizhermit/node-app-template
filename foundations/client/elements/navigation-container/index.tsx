@@ -21,6 +21,7 @@ export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, Omit
   $header?: ReactNode;
   $footer?: ReactNode;
   $nav?: ReactNode;
+  $navTitle?: ReactNode;
   children: ReactNode;
 };
 
@@ -135,7 +136,25 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             data-pos={pos}
             data-mode={mode}
           >
-            {props.$nav}
+            <div className={Style.corner}>
+              <label
+                className={`${Style.btn} ${Style.btnVis}`}
+                htmlFor={`${name}_${toggleVisId}`}
+              >
+                <MenuLeftIcon className={Style.slideLeft} />
+                <MenuRightIcon className={Style.slideRight} />
+              </label>
+              <label
+                className={`${Style.btn} ${Style.btnMin}`}
+                htmlFor={`${name}_${toggleMinId}`}
+              >
+                <MenuLeftIcon className={Style.slideLeft} />
+                <MenuRightIcon className={Style.slideRight} />
+              </label>
+            </div>
+            <div className={Style.ncontent}>
+              {props.$nav}
+            </div>
           </NavTag>
         }
         <div
@@ -151,20 +170,6 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               ref={cref}
               data-mode={mode}
             >
-              <label
-                className={`${Style.btn} ${Style.btnVis}`}
-                htmlFor={`${name}_${toggleVisId}`}
-              >
-                <MenuLeftIcon className={Style.slideLeft} />
-                <MenuRightIcon className={Style.slideRight} />
-              </label>
-              <label
-                className={`${Style.btn} ${Style.btnMin}` }
-                htmlFor={`${name}_${toggleMinId}`}
-              >
-                <MenuLeftIcon className={Style.slideLeft} />
-                <MenuRightIcon className={Style.slideRight} />
-              </label>
               <label
                 className={`${Style.btn} ${Style.btnMnu}`}
                 htmlFor={`${name}_${toggleMnuId}`}

@@ -12,6 +12,11 @@ const SandboxLayoutProvider: FC<{
     <NavigationContainer
       $header={"Header"}
       $nav={<Navigation />}
+      $navTitle={
+        <div style={{ fontWeight: "bold", padding: "0 var(--b-m)" }}>
+          SandBox
+        </div>
+      }
       $footer={"Footer"}
     >
       {children}

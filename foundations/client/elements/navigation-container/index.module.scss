@@ -10,6 +10,7 @@ $slideMenuPadding: true;
     --nav-min-size: 5rem;
     --nav-size: var(--nav-base-size);
     --header-size: 5rem;
+    --nav-top: 0rem;
 
     box-sizing: border-box;
     width: 100%;
@@ -17,13 +18,14 @@ $slideMenuPadding: true;
 
     &[data-mode="visible"] {
       >.nav {
-        top: 0;
-        height: 100%;
+        .corner {
+          display: none;
+        }
       }
 
       >.body {
         >.header {
-          &::before {
+          .corner {
             display: none;
           }
         }
@@ -34,33 +36,35 @@ $slideMenuPadding: true;
       --nav-size: var(--nav-min-size);
 
       >.nav {
-        overflow: hidden;
-        z-index: 97;
-
         @if $slideMenuPadding !=false {
           --nav-menu-pad: 0;
         }
 
         @include mixins.crossHover(false) {
           width: var(--nav-base-size);
-          overflow: auto;
 
           @if $slideMenuPadding !=false {
             --nav-menu-pad: inherit !important;
           }
+
+          >.ncontent {
+            overflow: auto;
+          }
+        }
+
+        .corner {
+          display: none;
+        }
+
+        >.ncontent {
+          overflow: hidden;
         }
       }
 
       >.body {
         >.header {
-          width: calc(100% + var(--nav-min-size));
-
-          &::before {
+          .corner {
             display: none;
-          }
-
-          &[data-pos="left"] {
-            margin-left: calc(var(--nav-min-size) * -1);
           }
         }
       }
@@ -71,19 +75,11 @@ $slideMenuPadding: true;
 
       >.nav {
         z-index: 97;
-      }
+        top: var(--header-size);
+        height: calc(100% - var(--header-size));
 
-      >.body {
-
-        >.header {
-          >.corner {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-          }
-
-          :is(.btnVis, .btnMin) {
-            display: none;
-          }
+        .corner {
+          display: none;
         }
       }
     }
@@ -119,7 +115,10 @@ $slideMenuPadding: true;
         &[data-mode="manual"] {
           >.nav {
             width: var(--nav-base-size);
-            overflow: auto;
+            
+            >.ncontent {
+              overflow: auto;
+            }
           }
 
           >.mask {
@@ -150,11 +149,12 @@ $slideMenuPadding: true;
     box-sizing: border-box;
     height: var(--header-size);
     width: var(--nav-min-size);
+    flex: none;
+    position: relative;
+    z-index: 99;
     display: flex;
     justify-content: center;
     align-items: center;
-    // background: inherit;
-    // color: inherit;
     transition: margin-left $navTransTime, margin-right $navTransTime;
   }
 
@@ -210,16 +210,19 @@ $slideMenuPadding: true;
     box-sizing: border-box;
     z-index: 99;
     position: fixed;
-    top: var(--header-size);
-    height: calc(100% - var(--header-size));
+    top: var(--nav-top);
+    height: calc(100% - var(--nav-top));
     width: var(--nav-size);
     background: var(--c-nav);
     color: var(--c-nav_);
-    overflow: auto;
-    padding-bottom: 1rem;
+    overflow: hidden;
     filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     overscroll-behavior: contain;
     transition: width $navTransTime, height $navTransTime, top $navTransTime;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
 
     @if $slideMenuPadding ==false {
       --nav-menu-pad: 0;
@@ -243,6 +246,16 @@ $slideMenuPadding: true;
       border-radius: 0.2rem;
       background: var(--c-scroll);
     }
+  }
+  
+  .ncontent {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 0;
+    flex: 1 1 0rem;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding-bottom: 2rem;
   }
 
   .body {
@@ -281,26 +294,9 @@ $slideMenuPadding: true;
     filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     transition: width $navTransTime, margin-left $navTransTime;
 
-    &::before {
-      box-sizing: border-box;
-      position: absolute;
-      content: "";
-      width: var(--nav-size);
-      height: var(--header-size);
-      top: 0;
-      background: var(--c-nav);
-      transition: width $navTransTime;
-      z-index: -1;
-    }
-
     &[data-pos="left"] {
-      &::before {
-        right: 100%;
-      }
-
       >.corner {
         order: 1;
-        margin-left: calc(var(--nav-min-size) * -1);
       }
 
       >.hcontent {
@@ -309,13 +305,8 @@ $slideMenuPadding: true;
     }
 
     &[data-pos="right"] {
-      &::before {
-        left: 100%;
-      }
-
       >.corner {
         order: 2;
-        margin-right: calc(var(--nav-min-size) * -1);
       }
 
       >.hcontent {
@@ -365,7 +356,7 @@ $slideMenuPadding: true;
       &[data-mode="auto"] {
         >.body {
           >.header {
-            .btnMnu {
+            >.corner {
               display: none;
             }
           }
@@ -377,35 +368,24 @@ $slideMenuPadding: true;
       &~.wrap {
         &[data-mode="auto"] {
           >.nav {
-            top: 0;
-            height: 100%;
-          }
-
-          >.body {
-            >.header {
-              &[data-pos="left"] {
-                >.corner {
-                  margin-left: 0;
-                }
-
-                .slideLeft {
-                  display: unset;
-                }
+            &[data-pos="left"] {
+              >.corner {
+                margin-left: calc(100% - var(--nav-min-size));
               }
 
-              &[data-pos="right"] {
-                >.corner {
-                  margin-right: 0;
-                }
-
-                .slideRight {
-                  display: unset;
-                }
+              .slideLeft {
+                display: unset;
               }
+            }
 
-              .btnVis {
-                display: none;
+            &[data-pos="right"] {
+              .slideRight {
+                display: unset;
               }
+            }
+
+            .btnVis {
+              display: none;
             }
           }
         }
@@ -418,40 +398,44 @@ $slideMenuPadding: true;
           --nav-size: var(--nav-min-size);
 
           >.nav {
-            overflow: hidden;
-            z-index: 97;
-
             @if $slideMenuPadding !=false {
               --nav-menu-pad: 0;
             }
 
             @include mixins.crossHover(false) {
               width: var(--nav-base-size);
-              overflow: auto;
 
               @if $slideMenuPadding !=false {
                 --nav-menu-pad: inherit !important;
               }
+
+              >.ncontent {
+                overflow: auto;
+              }
             }
-          }
 
-          >.body {
-            >.header {
-              &[data-pos="left"] {
-                .slideRight {
-                  display: unset;
-                }
+            &[data-pos="left"] {
+              .slideRight {
+                display: unset;
+              }
+            }
+
+            &[data-pos="right"] {
+              >.corner {
+                margin-left: calc(100% - var(--nav-min-size));
               }
 
-              &[data-pos="right"] {
-                .slideLeft {
-                  display: unset;
-                }
+              .slideLeft {
+                display: unset;
               }
+            }
 
-              .btnMin {
-                display: none;
-              }
+            .btnMin {
+              display: none;
+            }
+
+            >.ncontent {
+              overflow: hidden;
             }
           }
         }
@@ -465,7 +449,9 @@ $slideMenuPadding: true;
         --nav-size: var(--nav-min-size);
 
         >.nav {
-          overflow: hidden;
+          >.ncontent {
+            overflow: hidden;
+          }
         }
       }
     }
@@ -477,7 +463,7 @@ $slideMenuPadding: true;
       &[data-mode="auto"] {
         >.body {
           >.header {
-            .btnMnu {
+            >.corner {
               display: none;
             }
           }
@@ -489,39 +475,44 @@ $slideMenuPadding: true;
       &~.wrap {
         &[data-mode="auto"] {
           >.nav {
-            z-index: 97;
-
             @if $slideMenuPadding !=false {
               --nav-menu-pad: 0 !important;
             }
 
             @include mixins.crossHover(false) {
               width: var(--nav-base-size);
-              overflow: auto;
-
+              
               @if $slideMenuPadding !=false {
                 --nav-menu-pad: inherit !important;
               }
+
+              >.ncontent {
+                overflow: auto;
+              }
             }
-          }
 
-          >.body {
-            >.header {
-              &[data-pos="left"] {
-                .slideRight {
-                  display: unset;
-                }
+            &[data-pos="left"] {
+              .slideRight {
+                display: unset;
+              }
+            }
+
+            &[data-pos="right"] {
+              >.corner {
+                margin-left: calc(100% - var(--nav-min-size));
               }
 
-              &[data-pos="right"] {
-                .slideLeft {
-                  display: unset
-                }
+              .slideLeft {
+                display: unset
               }
+            }
 
-              .btnMin {
-                display: none;
-              }
+            .btnMin {
+              display: none;
+            }
+
+            >.ncontent {
+              overflow: hidden;
             }
           }
         }
@@ -534,39 +525,30 @@ $slideMenuPadding: true;
           --nav-size: var(--nav-base-size);
 
           >.nav {
-            top: 0;
-            height: 100%;
-            overflow: auto;
-          }
-
-          >.body {
-            >.header {
-              &[data-pos="left"] {
-                >.corner {
-                  margin-left: 0;
-                }
-
-                .slideLeft {
-                  display: unset;
-                }
+            &[data-pos="left"] {
+              >.corner {
+                margin-left: calc(100% - var(--nav-min-size));
               }
 
-              &[data-pos="right"] {
-                .corner {
-                  margin-right: 0;
-                }
-
-                .slideRight {
-                  display: unset;
-                }
-              }
-
-              .btnVis {
-                display: none;
+              .slideLeft {
+                display: unset;
               }
             }
-          }
 
+            &[data-pos="right"] {
+              .slideRight {
+                display: unset;
+              }
+            }
+
+            .btnVis {
+              display: none;
+            }
+
+            >.ncontent {
+              overflow: auto;
+            }
+          }
         }
       }
     }
@@ -577,14 +559,11 @@ $slideMenuPadding: true;
       &[data-mode="auto"] {
         >.nav {
           z-index: 97;
-        }
+          top: var(--header-size);
+          height: calc(100% - var(--header-size));
 
-        >.body {
-          >.header {
-
-            :is(.btnVis, .btnMin) {
-              display: none;
-            }
+          >.corner {
+            display: none;
           }
         }
       }
@@ -614,7 +593,10 @@ $slideMenuPadding: true;
           &[data-mode="auto"] {
             >.nav {
               width: var(--nav-base-size);
-              overflow: auto;
+              
+              >.ncontent {
+                overflow: auto;
+              }
             }
 
             >.mask {
@@ -636,15 +618,6 @@ $slideMenuPadding: true;
     .wrap {
       &[data-mode="auto"] {
         --nav-size: 0 !important;
-
-        >.body {
-          >.header {
-            >.corner {
-              margin-left: 0 !important;
-              margin-right: 0 !important;
-            }
-          }
-        }
       }
     }
   }
