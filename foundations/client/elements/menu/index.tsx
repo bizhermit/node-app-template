@@ -162,7 +162,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
     if (selected) {
       setTimeout(() => {
         nav.scrollNavIntoView(ref.current);
-      }, 100);
+      }, 2000);
     }
   }, []);
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { NavigationHeaderMode, NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
 import BaseLayout from "@/dev/_components/base-layout";
@@ -59,6 +60,13 @@ const Page = () => {
           />
         </ControlItem>
       </ControlLayout>
+      <Button
+        $onClick={() => {
+          nav.toggle();
+        }}
+      >
+        toggle
+      </Button>
       <div
         style={{
           height: "150vh",

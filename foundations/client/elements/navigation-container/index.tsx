@@ -33,6 +33,7 @@ const toggleMnuId = "navTglMnu";
 
 const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
   const cref = useRef<HTMLDivElement>(null!);
+  const nref = useRef<HTMLDivElement>(null!);
   const [navPos, setPosition] = useState(props.$defaultNavPosition);
   const [navMode, setMode] = useState(props.$defaultNavMode);
   const [headerMode, setHeaderMode] = useState(props.$defaultHeaderMode);
@@ -79,11 +80,8 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         headerMode: hmode,
         setHeaderMode,
         toggle: () => {
-          const m = cref.current?.getAttribute("data-mode") as NavigationMode;
-          if (!(m === "auto" || m === "manual")) return;
-          (Array.from(cref.current.querySelectorAll(":scope>label")) as Array<HTMLLabelElement>).find(elem => {
-            return getComputedStyle(elem).display !== "none";
-          })?.click();
+          if (!cref.current || getComputedStyle(cref.current).display === "none") return;
+          (cref.current.querySelector(":scope>label") as HTMLElement)?.click();
         },
         resetRadio,
         closeMenu: () => {
@@ -97,11 +95,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           document.documentElement.scrollTop = document.documentElement.scrollTop - getHeaderSizeNum();
         },
         scrollNavIntoView: (elem, arg) => {
-          if (elem == null) return;
-          const navElem = document.querySelector("nav");
-          if (navElem == null) return;
-          elem.scrollIntoView(arg);
-          navElem.scrollTop = navElem.scrollTop - getHeaderSizeNum();
+          elem?.scrollIntoView(arg);
         },
       }}
     >
@@ -159,7 +153,10 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
                 <MenuRightIcon className={Style.slideRight} />
               </label>
             </div>
-            <div className={Style.ncontent}>
+            <div
+              ref={nref}
+              className={Style.ncontent}
+            >
               {props.$nav}
             </div>
           </NavTag>
@@ -174,8 +171,8 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           >
             <div
               className={Style.corner}
-              ref={cref}
               data-mode={mode}
+              ref={cref}
             >
               <label
                 className={`${Style.btn} ${Style.btnMnu}`}
