@@ -52,6 +52,7 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
         $itemDefaultAttributes={props.$itemDefaultAttributes}
         $defaultOpenedIcon={props.$defaultOpenedIcon}
         $defaultClosedIcon={props.$defaultClosedIcon}
+        $defaultIconSpace={props.$defaultIconSpace}
         $direction={props.$direction || "vertical"}
         $judgeSelected={props.$judgeSelected}
       />
