@@ -10,8 +10,11 @@
     justify-content: flex-start;
     align-items: stretch;
 
+    --size: var(--cs-m);
     --menu-nest-pad: calc(var(--cs-m) / 2);
-    --is: var(--is-xl);
+    --icon-size: var(--is-m);
+    --tgl-icon-size: var(--is-m);
+    --tgl-trans-time: 0.3s;
   }
 
   .list {
@@ -53,6 +56,30 @@
     @include mixins.crossHover {}
   }
 
+  .check {
+    display: none;
+
+    &:not(:checked) {
+      &~.content {
+        .close {
+          display: none;
+        }
+      }
+    }
+
+    &:checked {
+      &~.content {
+        .open {
+          display: none;
+        }
+      }
+
+      &~.children {
+        grid-template-rows: 1fr;
+      }
+    }
+  }
+
   .content {
     box-sizing: border-box;
     display: flex;
@@ -60,11 +87,11 @@
     justify-content: stretch;
     align-items: center;
     white-space: nowrap;
-    height: var(--nav-min-size);
+    height: var(--nav-min-size, var(--size));
     padding-left: var(--menu-pad, 0);
     z-index: 0;
     overflow: visible;
-    @include mixins.listHover(padding-left var(--nav-trans-time));
+    @include mixins.listHover(padding-left var(--nav-trans-time, #{var.$transitionTime}));
   }
 
   .icon,
@@ -76,8 +103,16 @@
     align-items: center;
     height: 100%;
     overflow: hidden;
-    width: var(--nav-min-size);
+    width: var(--nav-min-size, var(--size));
     flex: none;
+  }
+
+  .icon {
+    --is: var(--icon-size);
+  }
+
+  .toggle {
+    --is: var(--tgl-icon-size);
   }
 
   .node {
@@ -95,18 +130,26 @@
 
   .children {
     box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--tgl-trans-time);
+  }
+
+  .childrenbody {
+    overflow: hidden;
   }
 
   nav {
     .wrap {
       --menu-nest-pad: calc(var(--nav-min-size) / 2);
+      --icon-size: var(--is-xl);
       width: 100%;
     }
 
     .content {
       &[data-selected="true"] {
-        background-color: var(--c-base);
-        color: var(--c-base_);
+        background-color: var(--c-nav-selected);
+        color: var(--c-nav-selected_);
       }
     }
 
@@ -117,7 +160,6 @@
         padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
       }
     }
-
   }
 
 }

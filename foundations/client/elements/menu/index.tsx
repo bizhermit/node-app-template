@@ -1,8 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type Key, type ReactNode } from "react";
-import useToggleAnimation from "../../hooks/toggle-animation";
+import { forwardRef, useEffect, useMemo, useRef, type FC, type HTMLAttributes, type Key, type ReactNode } from "react";
 import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
 import NextLink, { type NextLinkProps } from "../link";
@@ -33,7 +32,6 @@ type OmitAttributes = "color" | "children";
 export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
   $items?: Array<MenuItemProps | null | undefined>;
   $direction?: Direction;
-  $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
   $defaultClosedIcon?: ReactNode;
   $defaultIconSpace?: boolean;
@@ -49,7 +47,6 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
       <MenuGroup
         className={Style.root}
         $items={props.$items}
-        $itemDefaultAttributes={props.$itemDefaultAttributes}
         $defaultOpenedIcon={props.$defaultOpenedIcon}
         $defaultClosedIcon={props.$defaultClosedIcon}
         $defaultIconSpace={props.$defaultIconSpace}
@@ -62,7 +59,6 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
 
 const MenuGroup: FC<MenuProps & {
   $nestLevel?: number;
-  $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
 }> = (props) => {
   if (props.$items == null || props.$items.length === 0) return <></>;
   return (
@@ -75,11 +71,9 @@ const MenuGroup: FC<MenuProps & {
           {...item}
           key={item!.key ?? index}
           nestLevel={props.$nestLevel ?? 0}
-          $itemDefaultAttributes={props.$itemDefaultAttributes}
           $defaultOpenedIcon={props.$defaultOpenedIcon}
           $defaultClosedIcon={props.$defaultClosedIcon}
           $defaultIconSpace={props.$defaultIconSpace}
-          $toggleParent={props.$toggleParent}
           $judgeSelected={props.$judgeSelected}
         />
       )}
@@ -89,7 +83,6 @@ const MenuGroup: FC<MenuProps & {
 
 type MenuItemPropsImpl = MenuItemProps & {
   nestLevel: number;
-  $itemDefaultAttributes?: ItemAttributes;
   $defaultOpenedIcon?: ReactNode;
   $defaultClosedIcon?: ReactNode;
   $defaultIconSpace?: boolean;
@@ -111,31 +104,13 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null!);
   const cref = useRef<HTMLDivElement>(null!);
-  const attrs = {
-    ...props.$itemDefaultAttributes,
-    ...props.attributes,
-  };
 
   const selected = useMemo(() => {
     return judgeSelected(props, pathname);
   }, [pathname, props.$judgeSelected]);
   const selectable = Boolean(pathname) || len > 0 || props.onClick != null;
 
-  const [showItems, setShowItems] = useState(() => {
-    if (props.defaultOpen != null) return props.defaultOpen;
-    const func = (p: AddonMenuItemProps) => {
-      if (p !== props && judgeSelected({ ...p, $judgeSelected: props.$judgeSelected }, pathname)) return true;
-      if (p.items == null || p.items.length === 0) return false;
-      for (let i = 0, il = p.items.length; i < il; i++) {
-        if (func({ ...p.items[i], nestLevel: p.nestLevel + 1 })) return true;
-      }
-      return false;
-    };
-    return func(props);
-  });
-
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
-    setShowItems(c => !c);
     if (props.pathname) nav.closeMenu();
     props.onClick?.(props, e);
   };
@@ -143,73 +118,53 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      click(e);
+      e.currentTarget.click();
     }
   };
 
-  const toggle = useCallback((open?: boolean, mountInit?: boolean) => {
-    if (open && mountInit && props.defaultOpen === false) return;
-    if (open == null) {
-      setShowItems(c => !c);
-      return;
-    }
-    setShowItems(open);
-    if (open) props.$toggleParent?.(open);
-  }, []);
-
   useEffect(() => {
-    if (props.nestLevel > 0 && selected) {
-      props.$toggleParent?.(true, true);
+    if (cref.current?.querySelector(`.${Style.content}[data-selected="true"]`)) {
+      cref.current.style.setProperty("--tgl-trans-time", "0s");
+      const checkElem = cref.current.parentElement?.querySelector(`:scope>input.${Style.check}`) as HTMLInputElement;
+      if (checkElem) checkElem.checked = true;
+      setTimeout(() => {
+        cref.current.style.removeProperty("--tgl-trans-time");
+      }, 0);
     }
     if (selected) {
-      setTimeout(() => {
-        nav.scrollNavIntoView(ref.current);
-      }, 200);
+      nav.scrollNavIntoView(ref.current);
     }
   }, []);
-
-  const toggleAnimationInitStyle = useToggleAnimation({
-    elementRef: cref,
-    open: showItems,
-    direction: "vertical",
-    animationDuration: Math.min(250, len * 30),
-  });
 
   const iconSpace = props.iconSpace ?? props.$defaultIconSpace;
 
   const node = (
     <div
-      {...attrs}
+      {...attributes(props.attributes, Style.content)}
       ref={ref}
-      className={`${Style.content}${attrs.className ? ` ${attrs.className}` : ""}`}
       style={{
-        ...attrs.style,
+        ...props.attributes?.style,
         ["--menu-pad" as string]: `calc(var(--menu-nest-pad) * ${props.nestLevel})`,
       }}
       onClick={click}
       onKeyDown={keydown}
+      tabIndex={selectable ? 0 : undefined}
       data-selectable={selectable}
       data-nest={props.nestLevel ?? 0}
       data-selected={selected}
-      tabIndex={selectable ? 0 : undefined}
     >
       {(props.icon || iconSpace) &&
         <div className={Style.icon}>
-          {props.icon &&
-            <Text>{props.icon}</Text>
-          }
+          {props.icon && <Text>{props.icon}</Text>}
         </div>
       }
       <div className={Style.node}>
         <Text className={Style.label}>{props.label}</Text>
       </div>
-      {props.items != null && props.items.length > 0 &&
+      {len > 0 &&
         <div className={Style.toggle}>
-          {props.items == null || props.items.length === 0 ? <></> :
-            showItems ?
-              props.openedIcon ?? props.$defaultOpenedIcon ?? <MinusIcon /> :
-              props.closedIcon ?? props.$defaultClosedIcon ?? <PlusIcon />
-          }
+          <MinusIcon className={Style.close} />
+          <PlusIcon className={Style.open} />
         </div>
       }
     </div>
@@ -217,36 +172,40 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
 
   return (
     <li className={Style.item}>
-      {props.pathname == null ? node :
-        <NextLink
-          $noDecoration
-          prefetch={false}
-          href={props.pathname}
+      <label>
+        {len > 0 &&
+          <input
+            className={Style.check}
+            type="checkbox"
+            defaultChecked={props.defaultOpen}
+          />
+        }
+        {props.pathname == null ? node :
+          <NextLink
+            $noDecoration
+            prefetch={false}
+            href={props.pathname}
+          >
+            {node}
+          </NextLink>
+        }
+        <div
+          ref={cref}
+          className={Style.children}
         >
-          {node}
-        </NextLink>
-      }
-      <div
-        ref={cref}
-        className={Style.children}
-        style={toggleAnimationInitStyle}
-      >
-        <MenuGroup
-          $items={props.items}
-          $nestLevel={props.nestLevel + 1}
-          $toggleParent={toggle}
-          $itemDefaultAttributes={attrs}
-          $defaultOpenedIcon={props.openedIcon ?? props.$defaultOpenedIcon}
-          $defaultClosedIcon={props.closedIcon ?? props.$defaultClosedIcon}
-          $defaultIconSpace={iconSpace}
-        />
-      </div>
+          <div className={Style.childrenbody}>
+            <MenuGroup
+              $items={props.items}
+              $nestLevel={props.nestLevel + 1}
+              $defaultOpenedIcon={props.openedIcon ?? props.$defaultOpenedIcon}
+              $defaultClosedIcon={props.closedIcon ?? props.$defaultClosedIcon}
+              $defaultIconSpace={iconSpace}
+            />
+          </div>
+        </div>
+      </label>
     </li>
   );
-};
-
-const Child = () => {
-  return <></>;
 };
 
 export default Menu;
