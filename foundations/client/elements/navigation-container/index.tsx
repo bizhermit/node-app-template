@@ -14,6 +14,7 @@ const toggleMnuId = "navTglMnu";
 const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
   const cref = useRef<HTMLDivElement>(null!);
   const nref = useRef<HTMLDivElement>(null!);
+  const mref = useRef<HTMLElement>(null!);
   const [navPos, setPosition] = useState(props.$defaultNavPosition);
   const [navMode, setMode] = useState(props.$defaultNavMode);
   const [headerMode, setHeaderMode] = useState(props.$defaultHeaderMode);
@@ -36,10 +37,10 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   };
 
   const getHeaderSizeNum = () => {
-    if (typeof window === "undefined" || cref.current == null) return 0;
+    if (typeof window === "undefined" || mref.current == null) return 0;
     return convertRemToPxNum(
       parseNum(
-        (getComputedStyle(cref.current).getPropertyValue("--header-size") || "0rem").replace("rem", "")
+        (getComputedStyle(mref.current).getPropertyValue("--header-size") || "0rem").replace("rem", "")
       )
     ) ?? 0;
   };
@@ -171,6 +172,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           <MainTag
             className={Style.main}
             data-pos={pos}
+            ref={mref}
           >
             {props.children}
           </MainTag>
