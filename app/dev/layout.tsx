@@ -10,6 +10,9 @@ const Layout: LayoutFC = ({ children }) => {
       $footer="&copy; 2023 bizhermit.com"
       $nav={
         <Menu
+          style={{
+            minWidth: 280
+          }}
           $items={[
             {
               key: "index",

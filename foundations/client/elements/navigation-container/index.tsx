@@ -1,31 +1,11 @@
 "use client";
 
-import { forwardRef, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
 import { attributesWithoutChildren, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
-import { NavigationContext, type NavigationHeaderMode, type NavigationMode, type NavigationPosition } from "../navigation-container/context";
+import { NavigationContext, type NavigationContainerProps } from "../navigation-container/context";
 import Style from "./index.module.scss";
-
-type OmitAttributes = "color" | "children";
-export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $name?: string;
-  $defaultNavPosition?: NavigationPosition;
-  $navPosition?: NavigationPosition;
-  $defaultNavMode?: NavigationMode;
-  $navMode?: NavigationMode;
-  $headerMode?: NavigationHeaderMode;
-  $defaultHeaderMode?: NavigationHeaderMode;
-  $headerTag?: ElementType;
-  $footerTag?: ElementType;
-  $navTag?: ElementType;
-  $mainTag?: ElementType;
-  $header?: ReactNode;
-  $footer?: ReactNode;
-  $nav?: ReactNode;
-  $navTitle?: ReactNode;
-  children: ReactNode;
-};
 
 const toggleVisId = "navTglVis";
 const toggleMinId = "navTglMin";
@@ -155,7 +135,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             </div>
             <div
               ref={nref}
-              className={Style.ncontent}
+              className={Style.nmain}
             >
               {props.$nav}
             </div>
