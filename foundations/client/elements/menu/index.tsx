@@ -136,7 +136,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
 
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     setShowItems(c => !c);
-    nav.closeMenu();
+    if (props.pathname) nav.closeMenu();
     props.onClick?.(props, e);
   };
 
