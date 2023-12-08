@@ -1,9 +1,163 @@
 @use "../../styles/mixins" as mixins;
 
-$navTransTime: 0.3s;
 $slideMenuPadding: true;
 
 @layer base {
+
+  @mixin navVisStyles {
+    >.nav {
+      &[data-pos="left"] {
+        >.corner {
+          margin-left: calc(100% - var(--nav-min-size));
+        }
+
+        .slideLeft {
+          display: unset;
+        }
+      }
+
+      &[data-pos="right"] {
+        .slideRight {
+          display: unset;
+        }
+      }
+
+      .btnVis {
+        display: none;
+      }
+      
+      @content;
+    }
+  }
+
+  @mixin navMinStyles {
+    >.nav {
+      width: fit-content;
+      grid-template-columns: 0fr;
+
+      @if $slideMenuPadding !=false {
+        --nav-menu-pad: 0;
+      }
+
+      @include mixins.crossHover(false) {
+        grid-template-columns: 1fr;
+
+        @if $slideMenuPadding !=false {
+          --nav-menu-pad: inherit !important;
+        }
+
+        >.nmain {
+          min-width: var(--nav-base-size);
+          overflow: auto;
+        }
+      }
+
+      >.nmain {
+        overflow: hidden;
+      }
+
+      &[data-pos="left"] {
+        .slideRight {
+          display: unset;
+        }
+      }
+
+      &[data-pos="right"] {
+        >.corner {
+          margin-left: calc(100% - var(--nav-min-size));
+        }
+
+        .slideLeft {
+          display: unset
+        }
+      }
+
+      .btnMin {
+        display: none;
+      }
+
+      @content;
+    }
+  }
+
+  @mixin navMnuStyles {
+    >.nav {
+      z-index: 96;
+      top: var(--header-size);
+      height: calc(100% - var(--header-size));
+      width: fit-content;
+      grid-template-columns: 0fr;
+
+      >.nmain {
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      >.corner {
+        display: none;
+      }
+
+      @content;
+    }
+  }
+
+  @mixin navMnuCheckStyles($mode) {
+    .tglMnu {
+      &:not(:checked) {
+        &~.wrap {
+          &[data-mode=#{$mode}] {
+            @if $slideMenuPadding !=false {
+              --nav-menu-pad: 0 !important;
+            }
+
+            >.body {
+              >.header {
+                .menuOpen {
+                  display: unset;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &:checked {
+        &~.wrap {
+          &[data-mode=#{$mode}] {
+            >.nav {
+              grid-template-columns: 1fr;
+
+              >.nmain {
+                min-width: var(--nav-base-size);
+                overflow: auto;
+              }
+            }
+
+            >.mask {
+              display: block;
+            }
+
+            >.body {
+              >.header {
+                .menuHide {
+                  display: unset;
+                }
+              }
+            }
+
+            &[data-hmode="scroll"] {
+              >.body {
+                >.header {
+                  position: sticky;
+                  top: 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   .wrap {
     --nav-base-size: 28rem;
@@ -11,6 +165,7 @@ $slideMenuPadding: true;
     --nav-size: var(--nav-base-size);
     --header-size: 5rem;
     --nav-top: 0rem;
+    --nav-trans-time: 0.3s;
 
     box-sizing: border-box;
     width: 100%;
@@ -45,6 +200,8 @@ $slideMenuPadding: true;
 
     &[data-mode="visible"] {
       >.nav {
+        grid-template-columns: 1fr;
+
         .corner {
           display: none;
         }
@@ -62,29 +219,9 @@ $slideMenuPadding: true;
     &[data-mode="minimize"] {
       --nav-size: var(--nav-min-size);
 
-      >.nav {
-        @if $slideMenuPadding !=false {
-          --nav-menu-pad: 0;
-        }
-
-        @include mixins.crossHover(false) {
-          width: var(--nav-base-size);
-
-          @if $slideMenuPadding !=false {
-            --nav-menu-pad: inherit !important;
-          }
-
-          >.nmain {
-            overflow: auto;
-          }
-        }
-
+      @include navMinStyles {
         .corner {
           display: none;
-        }
-
-        >.nmain {
-          overflow: hidden;
         }
       }
 
@@ -100,15 +237,7 @@ $slideMenuPadding: true;
     &[data-mode="manual"] {
       --nav-size: 0rem;
 
-      >.nav {
-        z-index: 96;
-        top: var(--header-size);
-        height: calc(100% - var(--header-size));
-
-        .corner {
-          display: none;
-        }
-      }
+      @include navMnuStyles;
     }
   }
 
@@ -118,54 +247,7 @@ $slideMenuPadding: true;
     display: none !important;
   }
 
-  .tglMnu {
-    &:not(:checked) {
-      &~.wrap {
-        &[data-mode="manual"] {
-          @if $slideMenuPadding !=false {
-            --nav-menu-pad: 0 !important;
-          }
-
-          >.body {
-            >.header {
-              .menuOpen {
-                display: unset;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    &:checked {
-      &~.wrap {
-        &[data-mode="manual"] {
-          >.nav {
-            width: var(--nav-base-size);
-
-            >.nmain {
-              overflow: auto;
-            }
-          }
-
-          >.mask {
-            display: block;
-          }
-
-          >.body {
-            >.header {
-              position: sticky;
-              top: 0;
-
-              .menuHide {
-                display: unset;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  @include navMnuCheckStyles("manual");
 
   .menuOpen,
   .menuHide,
@@ -185,7 +267,7 @@ $slideMenuPadding: true;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: margin-left $navTransTime, margin-right $navTransTime;
+    transition: margin-left var(--nav-trans-time), margin-right var(--nav-trans-time);
   }
 
   .btn {
@@ -243,16 +325,15 @@ $slideMenuPadding: true;
     top: var(--nav-top);
     height: calc(100% - var(--nav-top));
     width: var(--nav-size);
-    background: var(--c-nav);
-    color: var(--c-nav_);
+    // background: var(--c-nav);
+    // color: var(--c-nav_);
     overflow: hidden;
     filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     overscroll-behavior: contain;
-    transition: width $navTransTime, height $navTransTime, top $navTransTime;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    transition: width var(--nav-trans-time), height var(--nav-trans-time), top var(--nav-trans-time), grid-template-columns var(--nav-trans-time);
 
     @if $slideMenuPadding ==false {
       --nav-menu-pad: 0;
@@ -281,11 +362,15 @@ $slideMenuPadding: true;
   .nmain {
     box-sizing: border-box;
     width: 100%;
+    min-width: var(--nav-min-size);
     min-height: 0;
     flex: 1 1 0rem;
     overflow: auto;
     overscroll-behavior: contain;
     padding-bottom: 2rem;
+    transition: min-width var(--nav-trans-time);
+    background: var(--c-nav);
+    color: var(--c-nav_);
   }
 
   .body {
@@ -296,8 +381,7 @@ $slideMenuPadding: true;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    flex: 1;
-    transition: padding-left $navTransTime, padding-right $navTransTime;
+    transition: padding-left var(--nav-trans-time), padding-right var(--nav-trans-time);
 
     &[data-pos="left"] {
       padding-left: var(--nav-size);
@@ -322,7 +406,7 @@ $slideMenuPadding: true;
     background: var(--c-nav);
     color: var(--c-nav_);
     filter: drop-shadow(0 0 0.1rem var(--c-shadow));
-    transition: width $navTransTime, margin-left $navTransTime;
+    transition: width var(--nav-trans-time), margin-left var(--nav-trans-time);
 
     &[data-pos="left"] {
       >.corner {
@@ -397,27 +481,7 @@ $slideMenuPadding: true;
     :is(.tglVis:not(:checked)+.tglMin:not(:checked), .tglVis:checked) {
       &~.wrap {
         &[data-mode="auto"] {
-          >.nav {
-            &[data-pos="left"] {
-              >.corner {
-                margin-left: calc(100% - var(--nav-min-size));
-              }
-
-              .slideLeft {
-                display: unset;
-              }
-            }
-
-            &[data-pos="right"] {
-              .slideRight {
-                display: unset;
-              }
-            }
-
-            .btnVis {
-              display: none;
-            }
-          }
+          @include navVisStyles;
         }
       }
     }
@@ -427,47 +491,7 @@ $slideMenuPadding: true;
         &[data-mode="auto"] {
           --nav-size: var(--nav-min-size);
 
-          >.nav {
-            @if $slideMenuPadding !=false {
-              --nav-menu-pad: 0;
-            }
-
-            @include mixins.crossHover(false) {
-              width: var(--nav-base-size);
-
-              @if $slideMenuPadding !=false {
-                --nav-menu-pad: inherit !important;
-              }
-
-              >.nmain {
-                overflow: auto;
-              }
-            }
-
-            &[data-pos="left"] {
-              .slideRight {
-                display: unset;
-              }
-            }
-
-            &[data-pos="right"] {
-              >.corner {
-                margin-left: calc(100% - var(--nav-min-size));
-              }
-
-              .slideLeft {
-                display: unset;
-              }
-            }
-
-            .btnMin {
-              display: none;
-            }
-
-            >.nmain {
-              overflow: hidden;
-            }
-          }
+          @include navMinStyles;
         }
       }
     }
@@ -504,47 +528,7 @@ $slideMenuPadding: true;
     :is(.tglVis:not(:checked)+.tglMin:not(:checked), .tglMin:checked) {
       &~.wrap {
         &[data-mode="auto"] {
-          >.nav {
-            @if $slideMenuPadding !=false {
-              --nav-menu-pad: 0 !important;
-            }
-
-            @include mixins.crossHover(false) {
-              width: var(--nav-base-size);
-
-              @if $slideMenuPadding !=false {
-                --nav-menu-pad: inherit !important;
-              }
-
-              >.nmain {
-                overflow: auto;
-              }
-            }
-
-            &[data-pos="left"] {
-              .slideRight {
-                display: unset;
-              }
-            }
-
-            &[data-pos="right"] {
-              >.corner {
-                margin-left: calc(100% - var(--nav-min-size));
-              }
-
-              .slideLeft {
-                display: unset
-              }
-            }
-
-            .btnMin {
-              display: none;
-            }
-
-            >.nmain {
-              overflow: hidden;
-            }
-          }
+          @include navMinStyles;
         }
       }
     }
@@ -554,27 +538,7 @@ $slideMenuPadding: true;
         &[data-mode="auto"] {
           --nav-size: var(--nav-base-size);
 
-          >.nav {
-            &[data-pos="left"] {
-              >.corner {
-                margin-left: calc(100% - var(--nav-min-size));
-              }
-
-              .slideLeft {
-                display: unset;
-              }
-            }
-
-            &[data-pos="right"] {
-              .slideRight {
-                display: unset;
-              }
-            }
-
-            .btnVis {
-              display: none;
-            }
-
+          @include navVisStyles {
             >.nmain {
               overflow: auto;
             }
@@ -587,72 +551,11 @@ $slideMenuPadding: true;
   @media screen and (width < 720px) {
     .wrap {
       &[data-mode="auto"] {
-        >.nav {
-          z-index: 96;
-          top: var(--header-size);
-          height: calc(100% - var(--header-size));
-
-          >.corner {
-            display: none;
-          }
-        }
+        @include navMnuStyles;
       }
     }
 
-    .tglMnu {
-      &:not(:checked) {
-        &~.wrap {
-          &[data-mode="auto"] {
-            @if $slideMenuPadding !=false {
-              --nav-menu-pad: 0 !important;
-            }
-
-            >.body {
-              >.header {
-                .menuOpen {
-                  display: unset;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      &:checked {
-        &~.wrap {
-          &[data-mode="auto"] {
-            >.nav {
-              width: var(--nav-base-size);
-
-              >.nmain {
-                overflow: auto;
-              }
-            }
-
-            >.mask {
-              display: block;
-            }
-
-            >.body {
-              >.header {
-                .menuHide {
-                  display: unset;
-                }
-              }
-            }
-            
-            &[data-hmode="scroll"] {
-              >.body {
-                >.header {
-                  position: sticky;
-                  top: 0;  
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    @include navMnuCheckStyles("auto");
 
     .wrap {
       &[data-mode="auto"] {

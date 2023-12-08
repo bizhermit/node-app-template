@@ -36,7 +36,7 @@ const Navigation: FC = () => {
     >
       <Menu
         $direction="vertical"
-        style={{ width: "100%" }}
+        // style={{ width: "100%" }}
         $items={[{
           key: "index",
           icon: "I",
