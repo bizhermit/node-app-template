@@ -506,6 +506,13 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
       </div>
       {ctx.editable &&
         <>
+          <div
+            className={Style.clear}
+            onClick={clear}
+            data-disabled={!hasData}
+          >
+            <CrossIcon />
+          </div>
           {!props.$disallowInput &&
             <div
               className={Style.picker}
@@ -515,13 +522,6 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
               <CalendarIcon />
             </div>
           }
-          <div
-            className={Style.clear}
-            onClick={clear}
-            data-disabled={!hasData}
-          >
-            <CrossIcon />
-          </div>
         </>
       }
       <Popup
