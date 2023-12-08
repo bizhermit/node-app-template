@@ -483,6 +483,13 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
       </div>
       {ctx.editable &&
         <>
+          <div
+            className={Style.clear}
+            onClick={clear}
+            data-disabled={!hasData}
+          >
+            <CrossIcon />
+          </div>
           {!props.$disallowInput &&
             <div
               className={Style.picker}
@@ -492,13 +499,6 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
               <ClockIcon />
             </div>
           }
-          <div
-            className={Style.clear}
-            onClick={clear}
-            data-disabled={!hasData}
-          >
-            <CrossIcon />
-          </div>
         </>
       }
       <Popup
