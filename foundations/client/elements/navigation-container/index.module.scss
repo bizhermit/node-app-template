@@ -99,6 +99,7 @@ $slideMenuPadding: true;
       >.nmain {
         min-width: 0;
         overflow: hidden;
+        height: calc(100dvh - var(--header-size));
       }
 
       >.nheader {
@@ -352,6 +353,10 @@ $slideMenuPadding: true;
 
     &[data-pos="left"] {
       left: 0;
+
+      >.nmain {
+        padding-bottom: 2rem;
+      }
     }
 
     &[data-pos="right"] {
@@ -381,10 +386,8 @@ $slideMenuPadding: true;
     width: 100%;
     min-width: var(--nav-min-size);
     min-height: 0;
-    flex: 1 1 0rem;
     overflow: auto;
     overscroll-behavior: contain;
-    padding-bottom: 2rem;
     transition: min-width var(--nav-trans-time);
     background: var(--c-nav);
     color: var(--c-nav_);
