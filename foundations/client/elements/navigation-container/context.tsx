@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, type ElementType, type HTMLAttributes, type ReactNode } from "react";
 
 export type NavigationPosition = "left" | "right";
 
@@ -38,4 +38,24 @@ export const NavigationContext = createContext<NavigationContextProps>({
 
 export const useNavigation = () => {
   return useContext(NavigationContext);
+};
+
+type OmitAttributes = "color" | "children";
+export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+  $name?: string;
+  $defaultNavPosition?: NavigationPosition;
+  $navPosition?: NavigationPosition;
+  $defaultNavMode?: NavigationMode;
+  $navMode?: NavigationMode;
+  $headerMode?: NavigationHeaderMode;
+  $defaultHeaderMode?: NavigationHeaderMode;
+  $headerTag?: ElementType;
+  $footerTag?: ElementType;
+  $navTag?: ElementType;
+  $mainTag?: ElementType;
+  $header?: ReactNode;
+  $footer?: ReactNode;
+  $nav?: ReactNode;
+  $navTitle?: ReactNode;
+  children: ReactNode;
 };
