@@ -6,9 +6,15 @@ $slideMenuPadding: true;
 
   @mixin navVisStyles {
     >.nav {
+      >.nmain {
+        min-width: var(--nav-base-size);
+      }
+
       &[data-pos="left"] {
-        >.corner {
-          margin-left: calc(100% - var(--nav-min-size));
+        >.nheader {
+          >.corner {
+            margin-left: calc(100% - var(--nav-min-size));
+          }
         }
 
         .slideLeft {
@@ -25,7 +31,7 @@ $slideMenuPadding: true;
       .btnVis {
         display: none;
       }
-      
+
       @content;
     }
   }
@@ -63,8 +69,10 @@ $slideMenuPadding: true;
       }
 
       &[data-pos="right"] {
-        >.corner {
-          margin-left: calc(100% - var(--nav-min-size));
+        >.nheader {
+          >.corner {
+            margin-left: calc(100% - var(--nav-min-size));
+          }
         }
 
         .slideLeft {
@@ -93,7 +101,7 @@ $slideMenuPadding: true;
         overflow: hidden;
       }
 
-      >.corner {
+      >.nheader {
         display: none;
       }
 
@@ -200,7 +208,9 @@ $slideMenuPadding: true;
 
     &[data-mode="visible"] {
       >.nav {
-        grid-template-columns: 1fr;
+        >.nmain {
+          min-width: var(--nav-base-size);
+        }
 
         .corner {
           display: none;
@@ -325,15 +335,16 @@ $slideMenuPadding: true;
     top: var(--nav-top);
     height: calc(100% - var(--nav-top));
     width: var(--nav-size);
-    // background: var(--c-nav);
-    // color: var(--c-nav_);
     overflow: hidden;
     filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     overscroll-behavior: contain;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    transition: width var(--nav-trans-time), height var(--nav-trans-time), top var(--nav-trans-time), grid-template-columns var(--nav-trans-time);
+    transition: width var(--nav-trans-time),
+      height var(--nav-trans-time),
+      top var(--nav-trans-time),
+      grid-template-columns var(--nav-trans-time);
 
     @if $slideMenuPadding ==false {
       --nav-menu-pad: 0;
@@ -357,6 +368,12 @@ $slideMenuPadding: true;
       border-radius: 0.2rem;
       background: var(--c-scroll);
     }
+  }
+
+  .nheader {
+    box-sizing: border-box;
+    width: 100%;
+    background: var(--c-nav);
   }
 
   .nmain {

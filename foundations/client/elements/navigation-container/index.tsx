@@ -117,21 +117,23 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             data-pos={pos}
             data-mode={mode}
           >
-            <div className={Style.corner}>
-              <label
-                className={`${Style.btn} ${Style.btnVis}`}
-                htmlFor={`${name}_${toggleVisId}`}
-              >
-                <MenuLeftIcon className={Style.slideLeft} />
-                <MenuRightIcon className={Style.slideRight} />
-              </label>
-              <label
-                className={`${Style.btn} ${Style.btnMin}`}
-                htmlFor={`${name}_${toggleMinId}`}
-              >
-                <MenuLeftIcon className={Style.slideLeft} />
-                <MenuRightIcon className={Style.slideRight} />
-              </label>
+            <div className={Style.nheader}>
+              <div className={Style.corner}>
+                <label
+                  className={`${Style.btn} ${Style.btnVis}`}
+                  htmlFor={`${name}_${toggleVisId}`}
+                >
+                  <MenuLeftIcon className={Style.slideLeft} />
+                  <MenuRightIcon className={Style.slideRight} />
+                </label>
+                <label
+                  className={`${Style.btn} ${Style.btnMin}`}
+                  htmlFor={`${name}_${toggleMinId}`}
+                >
+                  <MenuLeftIcon className={Style.slideLeft} />
+                  <MenuRightIcon className={Style.slideRight} />
+                </label>
+              </div>
             </div>
             <div
               ref={nref}
