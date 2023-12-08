@@ -12,6 +12,11 @@ const SandboxLayoutProvider: FC<{
     <NavigationContainer
       $header={"Header"}
       $nav={<Navigation />}
+      $navTitle={
+        <div style={{ fontWeight: "bold", padding: "0 var(--b-m)" }}>
+          SandBox
+        </div>
+      }
       $footer={"Footer"}
     >
       {children}
@@ -31,7 +36,7 @@ const Navigation: FC = () => {
     >
       <Menu
         $direction="vertical"
-        style={{ width: "100%" }}
+        // style={{ width: "100%" }}
         $items={[{
           key: "index",
           icon: "I",

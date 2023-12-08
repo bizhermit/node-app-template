@@ -10,6 +10,8 @@
     max-height: 100vh;
     max-width: 100vw;
     overflow: auto;
+    background: var(--c-base);
+    color: var(--c-base_);
 
     &[data-elevatation="true"] {
       @include mixins.popupShadow;

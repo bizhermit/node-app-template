@@ -5,7 +5,7 @@ export const joinClassNames = (...classNames: Array<string | null | undefined>) 
   return strJoin(" ", ...classNames);
 };
 
-export const attributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
+export const attributes = (props: Struct | null | undefined, ...classNames: Array<string | null | undefined>) => {
   const ret: Struct = {};
   if (props) {
     Object.keys(props).forEach(key => {
@@ -13,11 +13,11 @@ export const attributes = (props: Struct, ...classNames: Array<string | null | u
       ret[key] = props[key];
     });
   }
-  ret.className = strJoin(" ", ...classNames, props.className) || undefined;
+  ret.className = strJoin(" ", ...classNames, props?.className) || undefined;
   return ret;
 };
 
-export const attributesWithoutChildren = (props: Struct, ...classNames: Array<string | null | undefined>) => {
+export const attributesWithoutChildren = (props: Struct | null | undefined, ...classNames: Array<string | null | undefined>) => {
   const ret = attributes(props, ...classNames);
   if ("children" in ret) delete ret.children;
   return ret;

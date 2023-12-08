@@ -77,7 +77,7 @@ $colorMap: (
     "dark": rgb(50, 60, 100),
   ),
   "hover": (
-    "light": rgb(240, 240, 243),
+    "light": rgb(230, 230, 233),
     "dark": rgb(70, 70, 73),
   ),
   "scroll": (
@@ -89,6 +89,10 @@ $colorMap: (
   "nav": (
     "light": rgb(245, 246, 249, 0.95),
     "dark": rgba(27, 35, 40, 0.95),
+  ),
+  "nav-selected": (
+    "light": rgba(255, 255, 255, 1),
+    "dark": rgba(0, 0, 0, 1),
   ),
   "sunday": (
     "light": rgb(255, 150, 150),

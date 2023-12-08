@@ -1,7 +1,8 @@
 "use client";
 
+import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import { NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
+import { NavigationHeaderMode, NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
 import BaseLayout from "@/dev/_components/base-layout";
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 
@@ -43,7 +44,45 @@ const Page = () => {
             }}
           />
         </ControlItem>
+        <ControlItem caption="header mode">
+          <RadioButtons<NavigationHeaderMode>
+            $source={[
+              "fill",
+              "sticky",
+              "scroll",
+            ].map(v => {
+              return { value: v, label: v };
+            })}
+            $value={nav.headerMode}
+            $onChange={v => {
+              nav.setHeaderMode(v!);
+            }}
+          />
+        </ControlItem>
       </ControlLayout>
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          gap: "var(--b-s)",
+        }}
+      >
+        <Button
+          $onClick={() => {
+            nav.toggle();
+          }}
+        >
+          toggle
+        </Button>
+        <Button
+          $onClick={() => {
+            // eslint-disable-next-line no-console
+            console.log(nav.getHeaderSizeNum());
+          }}
+        >
+          get header size
+        </Button>
+      </div>
       <div
         style={{
           height: "150vh",

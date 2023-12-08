@@ -41,12 +41,12 @@
         >.main {
           @include mixins.buttonHoverAnimation(var(--c));
 
-          &::before {
+          &::after {
             opacity: 0.8;
           }
 
           &[data-outline="true"] {
-            &::before {
+            &::after {
               opacity: 0.15;
             }
           }
@@ -111,25 +111,26 @@
     height: 100%;
     width: 100%;
     color: var(--c_);
-    border: 0.15rem solid var(--c);
 
-    &::before {
+    &::after {
+      box-sizing: border-box;
       position: absolute;
       content: "";
       background-color: var(--c);
-      z-index: 0;
       top: 0;
       left: 0;
       height: 100%;
       width: 100%;
       transition: opacity 0.2s;
       border-radius: inherit;
+      border: 0.15rem solid var(--c);
+      z-index: -1;
     }
 
     &[data-outline="true"] {
       color: var(--c);
 
-      &::before {
+      &::after {
         opacity: 0;
       }
     }
@@ -150,7 +151,6 @@
   .label {
     box-sizing: border-box;
     text-overflow: ellipsis;
-    z-index: 1;
 
     &[data-fill="true"] {
       flex: 1 0 0rem;
@@ -176,7 +176,6 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    z-index: 1;
 
     &:only-child {
       width: 100%;

@@ -1,76 +1,97 @@
 "use client";
 
 import Button from "#/client/elements/button";
-import Divider from "#/client/elements/divider";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import { NavigationMode, useNavigation, type NavigationPosition } from "#/client/elements/navigation-container/context";
-import Row from "#/client/elements/row";
-import StructView from "#/client/elements/struct-view";
+import { NavigationHeaderMode, NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
+import BaseLayout from "@/dev/_components/base-layout";
+import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 
-const NavigationClient = () => {
-  const navigation = useNavigation();
+const Page = () => {
+  const nav = useNavigation();
 
   return (
-    <div className="flex w-100 h-100 p-xs g-s">
-      <StructView
-        $keys={[
-          { key: "navPos" },
-          { key: "navMode" },
-        ]}
-        $value={navigation}
-      />
-      <Divider />
-      <Row className="g-s">
-        <RadioButtons<NavigationPosition>
-          $source={[
-            "left",
-            "right",
-          ].map(v => {
-            return { value: v, label: v };
-          })}
-          $value={navigation.position}
-          $onChange={v => {
-            navigation.setPosition(v!);
-          }}
-          $tag="navigation position"
-        />
-      </Row>
-      <Row className="g-s">
-        <RadioButtons<NavigationMode>
-          $source={[
-            "auto",
-            "visible",
-            "minimize",
-            "manual",
-          ].map(v => {
-            return { value: v, label: v };
-          })}
-          $value={navigation.mode}
-          $onChange={v => {
-            navigation.setMode(v!);
-          }}
-          $tag="navigation mode"
-        />
-      </Row>
-      <Divider />
-      <Row className="g-s">
-        <Button
-          $onClick={() => {
-            navigation.toggle();
-          }}
-        >
-          toggle
-        </Button>
-      </Row>
+    <BaseLayout
+      title="Navigation Container"
+    >
+      <ControlLayout>
+        <ControlItem caption="position">
+          <RadioButtons<NavigationPosition>
+            $source={[
+              "left",
+              "right",
+            ].map(v => {
+              return { value: v, label: v };
+            })}
+            $value={nav.position}
+            $onChange={v => {
+              nav.setPosition(v!);
+            }}
+          />
+        </ControlItem>
+        <ControlItem caption="mode">
+          <RadioButtons<NavigationMode>
+            $source={[
+              "auto",
+              "visible",
+              "minimize",
+              "manual",
+            ].map(v => {
+              return { value: v, label: v };
+            })}
+            $value={nav.mode}
+            $onChange={v => {
+              nav.setMode(v!);
+            }}
+          />
+        </ControlItem>
+        <ControlItem caption="header mode">
+          <RadioButtons<NavigationHeaderMode>
+            $source={[
+              "fill",
+              "sticky",
+              "scroll",
+            ].map(v => {
+              return { value: v, label: v };
+            })}
+            $value={nav.headerMode}
+            $onChange={v => {
+              nav.setHeaderMode(v!);
+            }}
+          />
+        </ControlItem>
+      </ControlLayout>
+      <Button
+        $onClick={() => {
+          nav.toggle();
+        }}
+      >
+        toggle
+      </Button>
       <div
         style={{
-          height: "100rem",
-          width: "100rem",
+          height: "150vh",
+          // height: "10rem",
+          // height: "100%",
+          // width: "150vw",
+          // width: "10rem",
+          // width: "100%",
           background: "linear-gradient(-225deg, var(--c-main) 0%, var(--c-sub) 100%)",
+          display: "flex",
+          flexFlow: "column nowrap",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          // justifyContent: "flex-end",
+          // alignItems: "flex-end",
+          borderRadius: 10,
+          wordBreak: "break-all",
+          padding: 20,
         }}
-      />
-    </div>
+      >
+        bodybodybodybodybodybodybodybodybody
+        {/* bodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybodybody */}
+      </div>
+    </BaseLayout>
   );
 };
 
-export default NavigationClient;
+export default Page;

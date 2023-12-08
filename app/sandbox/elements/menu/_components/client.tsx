@@ -27,7 +27,7 @@ const MenuClient = () => {
       <Button
         ref={buttonRef}
         $onClick={() => {
-          setShow(true);
+          if (!show) setShow(true);
         }}
       >
         popup menu
@@ -52,9 +52,6 @@ const MenuClient = () => {
         >
           <Menu
             $direction={horizontal ? "horizontal" : "vertical"}
-            $itemDefaultAttributes={{
-              // className: "c-base"
-            }}
             $defaultClosedIcon={<DoubleLeftIcon />}
             $defaultOpenedIcon={<DoubleDownIcon />}
             $items={[{
@@ -117,9 +114,9 @@ const MenuClient = () => {
                 key: 3,
                 label: "c-item 3",
                 icon: "3",
-                onClick: (props) => {
-                  console.log(props);
-                }
+                // onClick: (props) => {
+                //   console.log(props);
+                // }
               }]
             }]}
           />
