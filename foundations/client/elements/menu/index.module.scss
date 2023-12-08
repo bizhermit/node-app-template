@@ -64,7 +64,7 @@
     padding-left: var(--menu-pad, 0);
     z-index: 0;
     overflow: visible;
-    @include mixins.listHover(padding-left #{var.$transitionTime});
+    @include mixins.listHover(padding-left var(--nav-trans-time));
   }
 
   .icon,
