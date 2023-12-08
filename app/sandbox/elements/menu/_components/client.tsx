@@ -114,9 +114,9 @@ const MenuClient = () => {
                 key: 3,
                 label: "c-item 3",
                 icon: "3",
-                onClick: (props) => {
-                  console.log(props);
-                }
+                // onClick: (props) => {
+                //   console.log(props);
+                // }
               }]
             }]}
           />

@@ -108,7 +108,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
   const selected = useMemo(() => {
     return judgeSelected(props, pathname);
   }, [pathname, props.$judgeSelected]);
-  const selectable = Boolean(pathname) || len > 0 || props.onClick != null;
+  const selectable = Boolean(props.pathname) || len > 0 || props.onClick != null;
 
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     if (props.pathname) nav.closeMenu();

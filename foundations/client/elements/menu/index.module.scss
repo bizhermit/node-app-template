@@ -91,7 +91,10 @@
     padding-left: var(--menu-pad, 0);
     z-index: 0;
     overflow: visible;
-    @include mixins.listHover(padding-left var(--nav-trans-time, #{var.$transitionTime}));
+
+    &[data-selectable="true"] {
+      @include mixins.listHover(padding-left var(--nav-trans-time, #{var.$transitionTime}));
+    }
   }
 
   .icon,
