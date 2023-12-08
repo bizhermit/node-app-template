@@ -111,10 +111,6 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         {props.$nav &&
           <NavTag
             className={Style.nav}
-            onScroll={(e: React.UIEvent) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
             data-pos={pos}
             data-mode={mode}
           >
