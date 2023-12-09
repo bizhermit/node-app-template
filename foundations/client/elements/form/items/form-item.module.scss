@@ -19,8 +19,7 @@ $tagMoveTransitionTime: 0.5s;
       padding-top: $tagHeight;
     }
 
-    &:focus-within,
-    &[data-has="true"] {
+    &:is(:focus-within, [data-has="true"]) {
       >.tag {
         &[data-pos="placeholder"] {
           top: 0;
@@ -169,8 +168,7 @@ $tagMoveTransitionTime: 0.5s;
       box-shadow: 0 .1rem .8rem 0 var(--c-shadow);
     }
 
-    &[data-mode="bottom"],
-    &[data-mode="bottom-hide"] {
+    &:is([data-mode="bottom"], [data-mode="bottom-hide"]) {
       padding: 0 .5rem;
       max-width: fit-content;
       color: var(--c-danger);

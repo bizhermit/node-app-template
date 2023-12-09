@@ -12,8 +12,7 @@ $vTransitionTime: 0.5s;
     align-items: stretch;
     flex-wrap: nowrap;
 
-    &[data-pos="top"],
-    &[data-pos="bottom"] {
+    &:is([data-pos="top"], [data-pos="bottom"]) {
       >.breadcrumbs {
         >.breadcrumb {
           height: 100%;
@@ -49,8 +48,7 @@ $vTransitionTime: 0.5s;
       flex-direction: column-reverse;
     }
 
-    &[data-pos="left"],
-    &[data-pos="right"] {
+    &:is([data-pos="left"], [data-pos="right"]) {
       >.breadcrumbs {
         writing-mode: vertical-rl;
 
@@ -97,8 +95,7 @@ $vTransitionTime: 0.5s;
             opacity #{$hTransitionTime};
           }
 
-          &[data-state="before"],
-          &[data-state="previous"] {
+          &:is([data-state="before"], [data-state="previous"]) {
             left: -100%;
           }
 
@@ -106,15 +103,13 @@ $vTransitionTime: 0.5s;
             left: 0%;
           }
 
-          &[data-state="next"],
-          &[data-state="after"] {
+          &:is([data-state="next"], [data-state="after"]) {
             left: 100%;
           }
 
           &[data-overlap="true"] {
 
-            &[data-state="before"],
-            &[data-state="previous"] {
+            &:is([data-state="before"], [data-state="previous"]) {
               left: 0%;
             }
           }
@@ -132,8 +127,7 @@ $vTransitionTime: 0.5s;
             opacity #{$hTransitionTime};
           }
 
-          &[data-state="before"],
-          &[data-state="previous"] {
+          &:is([data-state="before"], [data-state="previous"]) {
             left: 100%;
           }
 
@@ -141,15 +135,13 @@ $vTransitionTime: 0.5s;
             left: 0%;
           }
 
-          &[data-state="next"],
-          &[data-state="after"] {
+          &:is([data-state="next"], [data-state="after"]) {
             left: -100%;
           }
 
           &[data-overlap="true"] {
 
-            &[data-state="before"],
-            &[data-state="previous"] {
+            &:is([data-state="before"], [data-state="previous"]) {
               left: 0%;
             }
           }
@@ -167,8 +159,7 @@ $vTransitionTime: 0.5s;
             opacity #{$vTransitionTime};
           }
 
-          &[data-state="before"],
-          &[data-state="previous"] {
+          &:is([data-state="before"], [data-state="previous"]) {
             top: -100%;
           }
 
@@ -176,15 +167,13 @@ $vTransitionTime: 0.5s;
             top: 0%;
           }
 
-          &[data-state="next"],
-          &[data-state="after"] {
+          &:is([data-state="next"], [data-state="after"]) {
             top: 100%;
           }
 
           &[data-overlap="true"] {
 
-            &[data-state="before"],
-            &[data-state="previous"] {
+            &:is([data-state="before"], [data-state="previous"]) {
               top: 0%;
             }
           }
@@ -202,8 +191,7 @@ $vTransitionTime: 0.5s;
             opacity #{$vTransitionTime};
           }
 
-          &[data-state="before"],
-          &[data-state="previous"] {
+          &:is([data-state="before"], [data-state="previous"]) {
             top: 100%;
           }
 
@@ -211,15 +199,13 @@ $vTransitionTime: 0.5s;
             top: 0%;
           }
 
-          &[data-state="next"],
-          &[data-state="after"] {
+          &:is([data-state="next"], [data-state="after"]) {
             top: -100%;
           }
 
           &[data-overlap="true"] {
 
-            &[data-state="before"],
-            &[data-state="previous"] {
+            &:is([data-state="before"], [data-state="previous"]) {
               top: 0%;
             }
           }
@@ -257,9 +243,7 @@ $vTransitionTime: 0.5s;
       transition: opacity #{$vTransitionTime};
     }
 
-    &[data-state="before"],
-    &[data-state="previous"],
-    &[data-state="current"] {
+    &:is([data-state="before"], [data-state="previous"], [data-state="current"]) {
       opacity: 1;
     }
   }
@@ -289,8 +273,7 @@ $vTransitionTime: 0.5s;
       opacity: 1;
     }
 
-    &[data-state="next"],
-    &[data-state="after"] {
+    &:is([data-state="next"], [data-state="after"]) {
       z-index: 2;
     }
 

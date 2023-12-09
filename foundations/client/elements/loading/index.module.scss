@@ -76,7 +76,6 @@ $circleWidth: calc(var(--cs-m) / 3);
   }
 
   .bar {
-
     &::before,
     &::after {
       box-sizing: border-box;

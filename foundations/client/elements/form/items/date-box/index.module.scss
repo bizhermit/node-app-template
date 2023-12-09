@@ -34,9 +34,7 @@
         }
       }
 
-      >.y,
-      >.m,
-      >.d {
+      &>:is(.y, .m, .d) {
         &:last-child {
           margin-right: 0 !important;
         }
@@ -98,8 +96,7 @@
       }
     }
 
-    &:first-child,
-    &:last-child {
+    &:is(:first-child, :last-child) {
       display: none;
     }
   }

@@ -81,8 +81,7 @@
       }
     }
 
-    &:first-child,
-    &:last-child {
+    &:is(:first-child, :last-child) {
       display: none;
     }
   }

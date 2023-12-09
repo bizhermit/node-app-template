@@ -33,7 +33,7 @@
               }
             }
   
-            :is(&[data-appearance="point"], &[data-appearance="check"], &[data-appearance="check-fill"]) {
+            &:is([data-appearance="point"], [data-appearance="check"], [data-appearance="check-fill"]) {
               >.check {
                 &::before {
                   @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
@@ -53,7 +53,7 @@
           }
         }
 
-        &:is(&[data-state="readonly"], &[data-state="disabled"]) {
+        &:is([data-state="readonly"], [data-state="disabled"]) {
           >.check {
             &::before {
               background-color: transparent !important;
@@ -230,7 +230,7 @@
       }
     }
 
-    :is(&[data-appearance="check"], &[data-appearance="check-fill"]) {
+    &:is([data-appearance="check"], [data-appearance="check-fill"]) {
       >.check {
         &::before {
           top: 15%;

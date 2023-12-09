@@ -191,9 +191,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     justify-content: stretch;
     align-items: stretch;
 
-    >.grow,
-    >.hrow,
-    >.brow {
+    >:is(.grow, .hrow, .brow) {
       flex: 1;
       max-height: 100%;
     }

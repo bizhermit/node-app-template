@@ -32,9 +32,7 @@ $pulldownTransitionTime: 0.5s;
           }
         }
 
-        >.year,
-        >.month,
-        >.date,
+        &>:is(.year, .month, .date),
         >.yearmonth>.label>.year,
         >.yearmonth>.label>.month {
 
@@ -69,9 +67,7 @@ $pulldownTransitionTime: 0.5s;
     &[data-mode="list"] {
       flex-direction: row;
 
-      >.year,
-      >.month,
-      >.date {
+      &>:is(.year, .month, .date) {
         height: 100%;
         flex-flow: column nowrap;
         justify-content: flex-start;
@@ -89,13 +85,11 @@ $pulldownTransitionTime: 0.5s;
       >.date {
         >.cell {
 
-          &[data-state="before"],
-          &[data-state="after"] {
+          &:is([data-state="before"], [data-state="after"]) {
             display: none;
           }
 
-          &[data-week="0"],
-          &[data-week="6"] {
+          &:is([data-week="0"], [data-week="6"]) {
             &::after {
               box-sizing: border-box;
               position: absolute;
@@ -159,8 +153,7 @@ $pulldownTransitionTime: 0.5s;
         >.cell {
           width: #{$width7};
 
-          &[data-state="before"],
-          &[data-state="after"] {
+          &:is([data-state="before"], [data-state="after"]) {
             opacity: 0.5;
           }
         }
@@ -194,8 +187,7 @@ $pulldownTransitionTime: 0.5s;
     height: 100%;
     overflow: visible;
 
-    >.year,
-    >.month {
+    &>:is(.year, .month) {
       position: absolute;
       display: flex;
       flex-flow: column nowrap;
