@@ -15,11 +15,14 @@
 
     &[data-input="false"] {
       cursor: pointer;
-
-      >.y,
-      >.m,
-      >.d {
+      
+      >:is(.y, .m, .d) {
         cursor: inherit;
+
+        &:focus {
+          @include mixins.focusOutline((var(--s-color, var(--c-border))));
+          outline-offset: -0.3rem;
+        }
       }
     }
 

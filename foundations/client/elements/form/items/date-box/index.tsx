@@ -259,7 +259,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   const updown = (y = 0, m = 0, d = 0, edit = true) => {
     setCache(new Date(
       cacheY.current == null ? initValue.getFullYear() : cacheY.current + y,
-      (type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current + m)) - 1,
+      (type === "year" ? 1 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current + m)) - 1,
       type === "date" ? (cacheD.current == null ? initValue.getDate() : cacheD.current + d) : 1
     ), edit);
   };
@@ -431,7 +431,6 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
         onClick={clickInputs}
         data-input={!props.$disallowInput}
         data-editable={ctx.editable}
-        tabIndex={props.$disallowInput ? 0 : undefined}
       >
         <input
           ref={yref}
@@ -440,7 +439,6 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
           disabled={ctx.disabled}
           readOnly={props.$disallowInput || ctx.readOnly}
           maxLength={4}
-          tabIndex={props.$disallowInput ? -1 : undefined}
           defaultValue={cacheY.current || ""}
           onChange={changeY}
           onFocus={focusInput}
@@ -465,7 +463,6 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
               disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
-              tabIndex={props.$disallowInput ? -1 : undefined}
               defaultValue={cacheM.current || ""}
               onChange={changeM}
               onFocus={focusInput}
@@ -492,7 +489,6 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
               disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
-              tabIndex={props.$disallowInput ? -1 : undefined}
               defaultValue={cacheD.current || ""}
               onChange={changeD}
               onFocus={focusInput}
@@ -558,6 +554,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
             setShowPicker(false);
             setTimeout(focus);
           }}
+          $positiveButtonless
           $buttonless={props.$pickerButtonless}
         />
       </Popup>
