@@ -259,7 +259,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   const updown = (y = 0, m = 0, d = 0, edit = true) => {
     setCache(new Date(
       cacheY.current == null ? initValue.getFullYear() : cacheY.current + y,
-      (type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current + m)) - 1,
+      (type === "year" ? 1 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current + m)) - 1,
       type === "date" ? (cacheD.current == null ? initValue.getDate() : cacheD.current + d) : 1
     ), edit);
   };
