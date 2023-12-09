@@ -81,8 +81,7 @@ $vTransitionTime: 0.5s;
       }
     }
 
-    &[data-pos="top"],
-    &[data-pos="bottom"] {
+    &:is([data-pos="top"], [data-pos="bottom"]) {
       >.header {
         flex-direction: row;
 
@@ -159,8 +158,7 @@ $vTransitionTime: 0.5s;
       }
     }
 
-    &[data-pos="left"],
-    &[data-pos="right"] {
+    &:is([data-pos="left"], [data-pos="right"]) {
       >.header {
         flex-direction: row;
         writing-mode: vertical-rl;

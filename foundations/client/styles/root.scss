@@ -50,7 +50,7 @@ $iconSize: 1.6rem;
     background: var(--c-base);
     color: var(--c-base_);
 
-    :is(&[data-dialog], &:has(dialog[open])){
+    &:is([data-dialog], :has(dialog[open])){
       overflow: hidden;
     }
   }

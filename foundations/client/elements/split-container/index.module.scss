@@ -18,8 +18,7 @@
         cursor: col-resize;
       }
 
-      >.content0,
-      >.content1 {
+      >:is(.content0, .content1) {
         height: 100% !important;
         max-width: 100%;
       }
@@ -36,8 +35,7 @@
         cursor: row-resize;
       }
 
-      >.content0,
-      >.content1 {
+      >:is(.content0, .content1) {
         width: 100% !important;
         max-height: 100%;
       }
