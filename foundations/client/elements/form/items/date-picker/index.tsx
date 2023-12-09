@@ -41,6 +41,7 @@ export type DatePickerBaseProps<T extends DateValue | Array<DateValue>, D extend
   $positiveText?: ReactNode;
   $negativeText?: ReactNode;
   $skipValidation?: boolean;
+  $positiveButtonless?: boolean;
   $buttonless?: boolean;
 };
 
@@ -242,10 +243,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       if (!multiple) {
         const v = DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof);
         ctx.change(v);
-        if (props.$buttonless) {
-          setTimeout(() => {
-            props.$onClickPositive?.(v as never);
-          }, 0);
+        if ((props.$positiveButtonless || props.$buttonless) && props.$onClickPositive) {
+          props.$onClickPositive(v);
         }
         return;
       }
@@ -323,10 +322,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       if (!multiple) {
         const v = DateInput.convertDateToValue(date, props.$typeof);
         ctx.change(v);
-        if (props.$buttonless) {
-          setTimeout(() => {
-            props.$onClickPositive?.(v as never);
-          }, 0);
+        if ((props.$positiveButtonless || props.$buttonless) && props.$onClickPositive) {
+          props.$onClickPositive?.(v);
         }
         return;
       }
@@ -408,10 +405,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       if (!multiple) {
         const v = DateInput.convertDateToValue(date, props.$typeof);
         ctx.change(v);
-        if (props.$buttonless) {
-          setTimeout(() => {
-            props.$onClickPositive?.(v as never);
-          }, 0);
+        if ((props.$positiveButtonless || props.$buttonless) && props.$onClickPositive) {
+          props.$onClickPositive?.(v);
         }
         return;
       }
@@ -568,6 +563,9 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       return;
     }
     ctx.change(undefined);
+    if (props.$positiveButtonless && props.$onClickPositive) {
+      props.$onClickPositive(undefined);
+    }
   };
 
   const todayIsInRange = useMemo(() => {
@@ -598,11 +596,15 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         date = cloneDate(today);
         break;
     }
+    const v = DateInput.convertDateToValue(date, props.$typeof);
     if (multiple) {
-      ctx.change([DateInput.convertDateToValue(date, props.$typeof)]);
+      ctx.change([v]);
       return;
     }
-    ctx.change(DateInput.convertDateToValue(date, props.$typeof));
+    ctx.change(v);
+    if (props.$positiveButtonless && props.$onClickPositive) {
+      props.$onClickPositive?.(v);
+    }
   };
 
   const toggleMode = () => {
@@ -849,7 +851,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
               <Text>{props.$negativeText ?? "キャンセル"}</Text>
             </div>
           }
-          {props.$onClickPositive != null &&
+          {props.$onClickPositive != null && !props.$positiveButtonless &&
             <div
               className={Style.positive}
               onClick={() => {

@@ -558,6 +558,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
             setShowPicker(false);
             setTimeout(focus);
           }}
+          $positiveButtonless
           $buttonless={props.$pickerButtonless}
         />
       </Popup>
