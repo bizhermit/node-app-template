@@ -408,7 +408,6 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
         onClick={clickInputs}
         data-input={!props.$disallowInput}
         data-editable={ctx.editable}
-        tabIndex={props.$disallowInput ? 0 : undefined}
       >
         {needH &&
           <input
@@ -418,7 +417,6 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             disabled={ctx.disabled}
             readOnly={props.$disallowInput || ctx.readOnly}
             maxLength={2}
-            tabIndex={props.$disallowInput ? -1 : undefined}
             defaultValue={cacheH.current || ""}
             onFocus={focusInput}
             onKeyDown={keydownH}
@@ -443,7 +441,6 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             disabled={ctx.disabled}
             readOnly={props.$disallowInput || ctx.readOnly}
             maxLength={2}
-            tabIndex={props.$disallowInput ? -1 : undefined}
             defaultValue={cacheM.current || ""}
             onFocus={focusInput}
             onKeyDown={keydownM}
@@ -469,7 +466,6 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
               disabled={ctx.disabled}
               readOnly={props.$disallowInput || ctx.readOnly}
               maxLength={2}
-              tabIndex={props.$disallowInput ? -1 : undefined}
               defaultValue={cacheS.current || ""}
               onFocus={focusInput}
               onKeyDown={keydownS}
