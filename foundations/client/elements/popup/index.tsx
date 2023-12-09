@@ -352,6 +352,8 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
         if (mref.current) {
           mref.current.style.opacity = "1";
         }
+        (document.activeElement as HTMLElement)?.blur?.();
+        (ref.current.querySelector(`a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])`) as HTMLElement)?.focus?.();
       } else {
         removeZIndex.current();
         if (props.$preventUnmount !== true) setMount(false);
