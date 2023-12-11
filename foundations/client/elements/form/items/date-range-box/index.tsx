@@ -80,7 +80,7 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
       min: props.$min,
       typeof: props.$typeof,
       label: props.$label,
-      // ...props.$dataItem,
+      ...props.$dataItem,
     };
     const fromSuffixName = "from";
     const toSuffixName = "to";
