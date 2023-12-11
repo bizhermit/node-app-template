@@ -33,8 +33,7 @@ $pulldownTransitionTime: 0.5s;
         }
 
         &>:is(.year, .month, .date),
-        >.yearmonth>.label>.year,
-        >.yearmonth>.label>.month {
+        >.yearmonth>.label>:is(.year, .month) {
 
           @include mixins.crossHover {}
 
