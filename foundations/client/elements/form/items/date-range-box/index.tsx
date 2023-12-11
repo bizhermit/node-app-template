@@ -1,4 +1,4 @@
-import { ForwardedRef, FunctionComponent, ReactElement, forwardRef, useCallback, useEffect, useState, type HTMLAttributes } from "react";
+import { ForwardedRef, FunctionComponent, ReactElement, forwardRef, useCallback, useEffect, useMemo, useState, type HTMLAttributes } from "react";
 import { FormItemHook, ValueType } from "../../$types";
 import DateValidation from "../../../../../data-items/date/validations";
 import parseDate from "../../../../../objects/date/parse";
@@ -65,6 +65,13 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
   const [fromError, setFromError] = useState<string | undefined>();
   const [toError, setToError] = useState<string | undefined>();
 
+  const memorizedDataItem = useMemo(() => {
+    return {
+      from: {} as Partial<DataItem_Date>,
+      to: {} as Partial<DataItem_Date>,
+    };
+  }, [(props as any)?.$dataItem]);
+
   const { from, to } = (() => {
     if ("$from" in props) {
       return {
@@ -87,6 +94,36 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
     const name = props.name || dataItem.name;
     const fromName = `${name}_${fromSuffixName}`;
     const toName = `${name}_${toSuffixName}`;
+    const setFromDataItemValue = (k: string | number, v: any) => {
+      (memorizedDataItem.from as { [v: string]: any })[k] = v;
+    };
+    const setToDataItemValue = (k: string | number, v: any) => {
+      (memorizedDataItem.to as { [v: string]: any })[k] = v;
+    };
+    structKeys(memorizedDataItem.from).forEach(k => {
+      delete memorizedDataItem.from[k];
+    });
+    structKeys(memorizedDataItem.to).forEach(k => {
+      delete memorizedDataItem.to[k];
+    });
+    structKeys((dataItem as { [k: string]: any })).forEach(k => {
+      const v = (dataItem as { [v: string]: any })[k];
+      setFromDataItemValue(k, v);
+      setToDataItemValue(k, v);
+    });
+    setFromDataItemValue("name", fromName);
+    setFromDataItemValue("rangePair", {
+      name: toName,
+      position: "after",
+      disallowSame: props.$rangePair?.disallowSame,
+    });
+    setToDataItemValue("name", toName);
+    setToDataItemValue("rangePair", {
+      name: fromName,
+      position: "before",
+      disallowSame: props.$rangePair?.disallowSame,
+    });
+
     return {
       from: {
         ...props,
@@ -95,15 +132,7 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
         $defaultValue: props.$fromDefaultValue,
         $initValue: props.$fromInitValue,
         $interlockValidation: isFormItem,
-        $dataItem: {
-          ...dataItem,
-          name: fromName,
-          rangePair: {
-            name: toName,
-            position: "after",
-            disallowSame: props.$rangePair?.disallowSame,
-          },
-        } as const,
+        $dataItem: memorizedDataItem.from,
         ...(props.$onEdit && {
           $onEdit: (a: ValueType<DateValue, D>, b: ValueType<DateValue, D>, data: any) => {
             props.$onEdit?.(
@@ -121,15 +150,7 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
         $defaultValue: props.$toDefaultValue,
         $initValue: props.$toInitValue,
         $interlockValidation: isFormItem,
-        $dataItem: {
-          ...dataItem,
-          name: toName,
-          rangePair: {
-            name: fromName,
-            position: "before",
-            disallowSame: props.$rangePair?.disallowSame,
-          },
-        } as const,
+        $dataItem: memorizedDataItem.to,
         ...(props.$onEdit && {
           $onEdit: (a: ValueType<DateValue, D>, b: ValueType<DateValue, D>, data: any) => {
             props.$onChange?.(
