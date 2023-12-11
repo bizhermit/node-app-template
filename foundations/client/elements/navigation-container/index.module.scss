@@ -1,3 +1,4 @@
+@use "../../styles/var" as var;
 @use "../../styles/mixins" as mixins;
 
 $slideMenuPadding: true;
@@ -178,7 +179,7 @@ $minHoverToggle: true;
     --nav-size: var(--nav-base-size);
     --header-size: 5rem;
     --nav-top: 0rem;
-    --nav-trans-time: .15s;
+    --nav-trans-time: 0.3s;
 
     box-sizing: border-box;
     width: 100%;
@@ -282,7 +283,8 @@ $minHoverToggle: true;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: margin-left var(--nav-trans-time),
+    transition: color #{var.$transitionTime},
+      margin-left var(--nav-trans-time),
       margin-right var(--nav-trans-time);
   }
 
@@ -386,9 +388,14 @@ $minHoverToggle: true;
       width: 100%;
       height: 100%;
       cursor: pointer;
+      background-color: #{var.$transitionTime};
 
       @include mixins.crossHover(false) {
         background: var(--c-hover);
+        
+        ~.corner {
+          color: var(--c-hover_);
+        }
       }
     }
 
