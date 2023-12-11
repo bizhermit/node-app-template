@@ -1,6 +1,6 @@
-import parseNum from "#/objects/number/parse";
 import { useCallback, useEffect, useRef, useState, type FC, type ReactElement, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
+import parseNum from "../../../objects/number/parse";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { appendedColorStyle, convertSizeNumToStr } from "../../utilities/attributes";
 import Button, { type ButtonProps } from "../button";
