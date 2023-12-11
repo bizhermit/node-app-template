@@ -533,6 +533,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
         $closeWhenClick
         $preventClickEvent
         $mask="transparent"
+        $preventFocus
       >
         <DatePicker
           ref={pref}

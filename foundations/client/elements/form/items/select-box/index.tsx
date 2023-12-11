@@ -465,6 +465,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
           }
         }}
         $mask="transparent"
+        $preventFocus
       >
         <div
           className={Style.list}
