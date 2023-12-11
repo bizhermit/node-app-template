@@ -1,6 +1,7 @@
 @use "../../styles/mixins" as mixins;
 
 $slideMenuPadding: true;
+$minHoverToggle: true;
 
 @layer base {
 
@@ -45,16 +46,18 @@ $slideMenuPadding: true;
         --nav-menu-pad: 0;
       }
 
-      @include mixins.crossHover(false) {
-        grid-template-columns: 1fr;
+      @if $minHoverToggle ==true {
+        @include mixins.crossHover(false) {
+          grid-template-columns: 1fr;
 
-        @if $slideMenuPadding !=false {
-          --nav-menu-pad: inherit !important;
-        }
+          @if $slideMenuPadding !=false {
+            --nav-menu-pad: inherit !important;
+          }
 
-        >.nmain {
-          min-width: var(--nav-base-size);
-          overflow: auto;
+          >.nmain {
+            min-width: var(--nav-base-size);
+            overflow: auto;
+          }
         }
       }
 
@@ -143,7 +146,8 @@ $slideMenuPadding: true;
             }
 
             >.mask {
-              display: block;
+              opacity: 1;
+              pointer-events: auto;
             }
 
             >.body {
@@ -174,7 +178,7 @@ $slideMenuPadding: true;
     --nav-size: var(--nav-base-size);
     --header-size: 5rem;
     --nav-top: 0rem;
-    --nav-trans-time: 0.3s;
+    --nav-trans-time: .15s;
 
     box-sizing: border-box;
     width: 100%;
@@ -278,7 +282,8 @@ $slideMenuPadding: true;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: margin-left var(--nav-trans-time), margin-right var(--nav-trans-time);
+    transition: margin-left var(--nav-trans-time),
+      margin-right var(--nav-trans-time);
   }
 
   .btn {
@@ -325,8 +330,11 @@ $slideMenuPadding: true;
     left: 0;
     height: 100dvh;
     width: 100dvw;
-    display: none;
+    display: block;
+    pointer-events: none;
     user-select: none;
+    opacity: 0;
+    transition: opacity var(--nav-trans-time);
   }
 
   .nav {
@@ -366,9 +374,27 @@ $slideMenuPadding: true;
 
   .nheader {
     box-sizing: border-box;
+    position: relative;
     width: 100%;
     background: var(--c-nav);
     color: var(--c-nav_);
+
+    >:is(.btnVis, .btnMin) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+
+      @include mixins.crossHover(false) {
+        background: var(--c-hover);
+      }
+    }
+
+    >.corner {
+      pointer-events: none;
+    }
   }
 
   .nmain {
