@@ -59,7 +59,7 @@ export const isHiragana = (str: string | null | undefined) => {
 };
 
 export const isFullWidth = (str: string | null | undefined) => {
-  return str != null && str != null && /^[^\x20-\x7e]*$/.test(str);
+  return str != null && str != null && /^[^\x01-\x7E\uFF61-\uFF9F]*$/.test(str);
 };
 
 export const isInteger = (str: string | null | undefined) => {
