@@ -40,6 +40,7 @@ $pulldownTransitionTime: 0.5s;
           >.cell {
             &[data-selectable="true"] {
               @include mixins.listHover;
+              cursor: pointer;
             }
 
             &[data-selectable="false"] {
