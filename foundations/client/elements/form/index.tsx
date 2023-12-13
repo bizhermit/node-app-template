@@ -191,6 +191,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
     setTimeout(() => {
       Object.keys(items.current).forEach(id => {
         const item = items.current[id];
+        if (item.props.$preventFormBind) return;
         item.change(item.props.$defaultValue, false);
       });
     }, 0);

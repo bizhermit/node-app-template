@@ -162,12 +162,18 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
             $disabled={props.$disabled || ctx.disabled || s === "disabled"}
             $readOnly={props.$readOnly || ctx.readOnly || s === "readonly"}
             $value={v === val}
-            $onChange={() => {
-              const vals = [...getArrayValue()];
+            $onChange={(checked) => {
+              const vals = getArrayValue();
               const i = vals.findIndex(val => val === v);
-              if (i < 0) vals.push(v);
-              else vals.splice(i, 1);
-              ctx.change(vals);
+              if (checked) {
+                if (i >= 0) return;
+                ctx.change([...vals, v]);
+              } else {
+                if (i < 0) return;
+                const newVals = [...vals];
+                newVals.splice(i, 1);
+                ctx.change(newVals);
+              }
             }}
             $color={c}
             $fill={props.$fill}
