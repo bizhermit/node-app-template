@@ -1,7 +1,10 @@
 // generate by script
 // do not edit
 
-type AppRoutePath = "/dev/elements/button"
+type AppRoutePath = "/dev/dynamic-route/param/[slug]"
+ | "/dev/dynamic-route/slug-param/[...slug]"
+ | "/dev/dynamic-route/slugs-param/[[...slug]]"
+ | "/dev/elements/button"
  | "/dev/elements/container/navigation"
  | "/dev/elements/icon"
  | "/dev/elements/link"
