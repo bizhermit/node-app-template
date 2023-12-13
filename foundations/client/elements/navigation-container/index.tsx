@@ -164,7 +164,6 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             <div
               ref={cref}
               className={Style.corner}
-              data-mode={mode}
             >
               <label
                 className={`${Style.btn} ${Style.btnMnu}`}
