@@ -27,7 +27,7 @@ type MenuItemOptions = MenuBaseOptions & {
   label?: ReactNode;
   icon?: ReactNode;
   onClick?: (
-    ctx: { props: Omit<MenuItemProps, "onClick" | "pathname" | "query">; nestLevel: number },
+    ctx: { props: Omit<MenuItemProps, "onClick">; nestLevel: number },
     e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
   ) => void;
 };
@@ -99,6 +99,7 @@ type MenuItemPropsImpl = MenuItemProps & {
 };
 
 const MenuItem: FC<MenuItemPropsImpl> = ({
+  items,
   pathname,
   query,
   onClick,
@@ -110,7 +111,7 @@ const MenuItem: FC<MenuItemPropsImpl> = ({
   judgeSelected,
   ...props
 }) => {
-  const len = props.items?.length ?? 0;
+  const len = items?.length ?? 0;
   const nav = useNavigation();
   const currentPathname = usePathname();
   const ref = useRef<HTMLDivElement>(null!);
@@ -121,7 +122,7 @@ const MenuItem: FC<MenuItemPropsImpl> = ({
 
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
     if (pathname) nav.closeMenu();
-    onClick?.({ props, nestLevel }, e);
+    onClick?.({ props: { ...props, items, pathname, query }, nestLevel }, e);
   };
 
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -208,7 +209,7 @@ const MenuItem: FC<MenuItemPropsImpl> = ({
         >
           <div className={Style.childrenbody}>
             <MenuGroup
-              items={props.items}
+              items={items}
               nestLevel={nestLevel + 1}
               defaultOpenedIcon={defaultOpenedIcon}
               closedIcon={defaultClosedIcon}
