@@ -94,6 +94,7 @@
 
     &[data-selectable="true"] {
       @include mixins.listHover(padding-left var(--nav-trans-time, #{var.$transitionTime}));
+      cursor: pointer;
     }
   }
 

@@ -189,7 +189,6 @@
 
 @mixin listHover($addonTransition: null) {
   @include listHoverTransition($addonTransition);
-  cursor: pointer;
 
   @include crossHover {
     @include listHoverAnimation;

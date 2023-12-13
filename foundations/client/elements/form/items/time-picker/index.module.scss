@@ -27,6 +27,7 @@
           >.cell {
             &[data-selectable="true"] {
               @include mixins.listHover;
+              cursor: pointer;
             }
 
             &[data-selectable="false"] {

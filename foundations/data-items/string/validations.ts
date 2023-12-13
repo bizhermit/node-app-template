@@ -12,12 +12,12 @@ namespace StringValidation {
   };
 
   export const length = (v: Nullable<string>, length: number, itemName?: string) => {
-    if (strLen(v) === length) return undefined;
+    if (isEmpty(v) || strLen(v) === length) return undefined;
     return `${itemName || defaultItemName}は${length}文字で入力してください。`;
   };
 
   export const minLength = (v: Nullable<string>, minLength: number, itemName?: string) => {
-    if (v != null && strLen(v) >= minLength) return undefined;
+    if (isEmpty(v) || strLen(v) >= minLength) return undefined;
     return `${itemName || defaultItemName}は${minLength}文字以上で入力してください。`;
   };
 

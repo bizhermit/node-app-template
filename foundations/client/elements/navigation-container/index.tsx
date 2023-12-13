@@ -115,21 +115,19 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             data-mode={mode}
           >
             <div className={Style.nheader}>
+              <label
+                className={Style.btnVis}
+                htmlFor={`${name}_${toggleVisId}`}
+              />
+              <label
+                className={Style.btnMin}
+                htmlFor={`${name}_${toggleMinId}`}
+              />
               <div className={Style.corner}>
-                <label
-                  className={`${Style.btn} ${Style.btnVis}`}
-                  htmlFor={`${name}_${toggleVisId}`}
-                >
+                <div className={Style.btn}>
                   <MenuLeftIcon className={Style.slideLeft} />
                   <MenuRightIcon className={Style.slideRight} />
-                </label>
-                <label
-                  className={`${Style.btn} ${Style.btnMin}`}
-                  htmlFor={`${name}_${toggleMinId}`}
-                >
-                  <MenuLeftIcon className={Style.slideLeft} />
-                  <MenuRightIcon className={Style.slideRight} />
-                </label>
+                </div>
               </div>
             </div>
             <div

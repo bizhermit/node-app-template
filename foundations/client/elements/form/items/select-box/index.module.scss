@@ -46,12 +46,12 @@
     padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     height: var(--cs-m);
     flex: none;
-    cursor: pointer;
     background: var(--c-input);
     color: var(--c-input_);
     z-index: 0;
     outline: none;
     @include mixins.listHover;
+    cursor: pointer;
 
     &:focus {
       background: var(--c-hover);
