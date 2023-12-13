@@ -22,7 +22,7 @@ export const replaceDynamicPathname = <T extends NextLinkOptions["href"]>(href: 
       if (r[1]) return v.map(c => `${c}`).join("/");
       return v[0];
     }
-    return v || "null";
+    return v || "";
   }) as T;
 };
 

@@ -133,14 +133,24 @@
     }
 
     &[data-icon="left"] {
+      >.icon {
+        order: 1;
+      }
+
       >.label {
         padding-left: 0 !important;
+        order: 2;
       }
     }
 
     &[data-icon="right"] {
+      >.icon {
+        order: 2;
+      }
+
       >.label {
         padding-right: 0 !important;
+        order: 1;
       }
     }
   }

@@ -35,29 +35,21 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
 }, $ref) => {
   const ref = useRef<HTMLAnchorElement>(null!);
   useImperativeHandle($ref, () => ref.current);
-
   const router = useRouter();
-  // const pathname
+
   const form = useForm();
   const submitDisabled = $dependsOnForm && (form.disabled || ($dependsOnForm === "submit" && form.hasError));
 
   const disabledRef = useRef(false);
   const [disabled, setDisabeld] = useState(disabledRef.current);
 
-  const lock = () => {
-    setDisabeld(disabledRef.current = true);
-  };
-
-  const unlock = () => {
-    setDisabeld(disabledRef.current = false);
-  };
-
   const click = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!props.href || props.disabled || disabledRef.current || submitDisabled) {
       e.preventDefault();
       return;
     }
-    lock();
+    setDisabeld(disabledRef.current = true);
+    const unlock = () => setDisabeld(disabledRef.current = false);
     const res = onClick?.(unlock, e);
     if (res == null || typeof res === "boolean") {
       if (res === false) e.preventDefault();
@@ -73,7 +65,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
       structKeys(props.query).forEach(k => {
         url.searchParams.set(k.toString(), `${props.query?.[k]}`);
       });
-      if (pathname.match(/^(http|mailto:|tel:)/)) {
+      if (pathname.match(/^(http|mailto:|tel:)/) || props.target === "_blank") {
         window.open(url, props.target);
         return;
       }
@@ -105,9 +97,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
         data-text={$text}
         data-icon={$icon != null && ($iconPosition || "left")}
       >
-        {$icon != null && $iconPosition !== "right" &&
-          <div className={Style.icon}>{$icon}</div>
-        }
+        {$icon != null && <div className={Style.icon}>{$icon}</div>}
         <div
           className={Style.label}
           data-fill={$fillLabel}
@@ -116,9 +106,6 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
         >
           {children}
         </div>
-        {$icon != null && $iconPosition === "right" &&
-          <div className={Style.icon}>{$icon}</div>
-        }
       </div>
     </NextLink>
   );

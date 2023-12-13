@@ -6,7 +6,7 @@ import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
-import { CloudDownloadIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
+import { CloudDownloadIcon, CloudUploadIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
 import { colors } from "#/utilities/sandbox";
 import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "@/dev/_components/base-layout";
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
@@ -103,10 +103,10 @@ const Page = () => {
           </BaseRow>
           <h3>fill label</h3>
           <BaseRow>
-            <Button disabled={disabled} $icon={<CloudDownloadIcon />} $fillLabel>download</Button>
-            <Button disabled={disabled} $icon={<CloudDownloadIcon />} $fillLabel $iconPosition="right">download</Button>
-            <Button disabled={disabled} $icon={<CloudDownloadIcon />} $fillLabel $round>download</Button>
-            <Button disabled={disabled} $icon={<CloudDownloadIcon />} $fillLabel $round $iconPosition="right">download</Button>
+            <Button disabled={disabled} $icon={<CloudUploadIcon />} $fillLabel>uplaod</Button>
+            <Button disabled={disabled} $icon={<CloudUploadIcon />} $fillLabel $iconPosition="right">uplaod</Button>
+            <Button disabled={disabled} $icon={<CloudUploadIcon />} $fillLabel $round>uplaod</Button>
+            <Button disabled={disabled} $icon={<CloudUploadIcon />} $fillLabel $round $iconPosition="right">uplaod</Button>
           </BaseRow>
           <h3>size</h3>
           <BaseRow>

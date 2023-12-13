@@ -52,32 +52,21 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   const disabledRef = useRef(false);
   const [disabled, setDisabled] = useState(disabledRef.current);
 
-  const lock = () => {
-    setDisabled(disabledRef.current = true);
-  };
-
-  const unlock = () => {
-    setDisabled(disabledRef.current = false);
-  };
-
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (props.disabled || disabledRef.current || submitDisabled) {
       e.preventDefault();
       return;
     }
-    lock();
+    setDisabled(disabledRef.current = true);
+    const unlock = () => setDisabled(disabledRef.current = false);
     const res = onClick?.(unlock, e);
     if (res == null || typeof res === "boolean") {
       if (res !== true) unlock();
-      return res ?? false;
     }
-    return false;
   };
 
   useEffect(() => {
-    if ($focusWhenMounted) {
-      ref.current?.focus();
-    }
+    if ($focusWhenMounted) ref.current?.focus();
   }, []);
 
   return (
@@ -98,9 +87,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
         data-text={$text}
         data-icon={$icon != null && ($iconPosition || "left")}
       >
-        {$icon != null && $iconPosition !== "right" &&
-          <div className={Style.icon}>{$icon}</div>
-        }
+        {$icon != null && <div className={Style.icon}>{$icon}</div>}
         <div
           className={Style.label}
           data-fill={$fillLabel}
@@ -109,9 +96,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
         >
           {children}
         </div>
-        {$icon != null && $iconPosition === "right" &&
-          <div className={Style.icon}>{$icon}</div>
-        }
       </div>
     </button>
   );
