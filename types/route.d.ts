@@ -1,8 +1,10 @@
 // generate by script
 // do not edit
 
-type AppRoutePath = "/dev/elements/container/navigation"
+type AppRoutePath = "/dev/elements/button"
+ | "/dev/elements/container/navigation"
  | "/dev/elements/icon"
+ | "/dev/elements/link"
  | "/dev/elements"
  | "/dev/elements/popup"
  | "/dev"

@@ -1,4 +1,4 @@
-import { HomeIcon } from "#/client/elements/icon";
+import { ElementIcon, HomeIcon, SmileIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import Image from "next/image";
@@ -35,14 +35,26 @@ const Layout: LayoutFC = ({ children }) => {
             },
             {
               key: "elements",
-              icon: "E",
+              icon: <ElementIcon />,
               label: "Elements",
               items: [
                 {
                   key: "icon",
-                  icon: "I",
+                  icon: <SmileIcon />,
                   label: "Icon",
                   pathname: "/dev/elements/icon",
+                },
+                {
+                  key: "button",
+                  icon: "B",
+                  label: "Button",
+                  pathname: "/dev/elements/button",
+                },
+                {
+                  key: "link",
+                  icon: "L",
+                  label: "NextLink",
+                  pathname: "/dev/elements/link",
                 },
                 {
                   key: "cont",

@@ -54,10 +54,44 @@
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
-  align-items: stretch;
+  align-items: flex-start;
   gap: var(--b-s);
   background: var(--c-pure);
   border-radius: var(--radius);
   padding: var(--b-m);
   filter: drop-shadow(0 0 0.2rem var(--c-shadow));
+
+  &[data-stretch="true"] {
+    align-items: stretch;
+  }
+}
+
+.section {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.content {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--b-s);
+
+  &[data-stretch="true"] {
+    align-items: stretch;
+  }
+}
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--b-s);
 }

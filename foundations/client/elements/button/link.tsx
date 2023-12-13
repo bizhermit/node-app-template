@@ -1,6 +1,6 @@
 "use client";
 
-import Router from "next/router";
+import { useRouter } from "next/navigation";
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import structKeys from "../../../objects/struct/keys";
 import { attrs, isNotReactNode } from "../../utilities/attributes";
@@ -21,6 +21,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
   $color,
   $round,
   $outline,
+  $text,
   $icon,
   $iconPosition,
   $fillLabel,
@@ -35,6 +36,8 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
   const ref = useRef<HTMLAnchorElement>(null!);
   useImperativeHandle($ref, () => ref.current);
 
+  const router = useRouter();
+  // const pathname
   const form = useForm();
   const submitDisabled = $dependsOnForm && (form.disabled || ($dependsOnForm === "submit" && form.hasError));
 
@@ -62,25 +65,20 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
       return;
     }
     e.preventDefault();
-    res.then(r => {
-      if (r === false) return;
+    res.then(res => {
+      if (res === false) return;
       const pathname = replaceDynamicPathname(props.href, props.params);
       if (pathname == null) return;
+      const url = new URL(pathname, window.location.origin);
+      structKeys(props.query).forEach(k => {
+        url.searchParams.set(k.toString(), `${props.query?.[k]}`);
+      });
       if (pathname.match(/^(http|mailto:|tel:)/)) {
-        const url = new URL(pathname);
-        structKeys(props.query).forEach(k => {
-          url.searchParams.set(k.toString(), `${props.query?.[k]}`);
-        });
         window.open(url, props.target);
         return;
       }
-      Router[props.replace ? "replace" : "push"]({
-        pathname,
-        query: props.query,
-      }, undefined, {
-        locale: props.locale,
-        scroll: props.scroll,
-        shallow: props.shallow,
+      router[props.replace ? "replace" : "push"](url.toString(), {
+        scroll: props.scroll
       });
     });
   };
@@ -104,6 +102,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
       <div
         className={Style.main}
         data-outline={$outline}
+        data-text={$text}
         data-icon={$icon != null && ($iconPosition || "left")}
       >
         {$icon != null && $iconPosition !== "right" &&

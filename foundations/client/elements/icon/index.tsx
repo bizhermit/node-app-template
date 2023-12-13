@@ -154,6 +154,14 @@ export const DoubleDownIcon = svg("DoubleDownIcon", (props, ref) => (
   </svg>
 ));
 
+export const LeftRightIcon = svg("LeftRightIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M7,5 L2,10 7,15" fill="none" />
+    <path d="M13,5 L18,10 13,15" fill="none" />
+    <line x1="2" x2="18" y1="10" y2="10" />
+  </svg>
+));
+
 export const CalendarIcon = svg("CalendarIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <path d="M2,4H18V18H2Z M5,2V5Z M15,2V5Z M2,7H18Z" fill="none" />
@@ -261,5 +269,22 @@ export const SyncIcon = svg("SyncIcon", (props, ref) => (
 export const HomeIcon = svg("HomeIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <path d="M10,2 L19,10 16,10 16,18 12,18 12,13 8,13 8,18 4,18 4,10 1,10 10,2" fill="none" />
+  </svg>
+));
+
+export const ElementIcon = svg("ElementIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M6,6 L2,10 6,14" fill="none" />
+    <path d="M14,6 L18,10 14,14" fill="none" />
+    <line x1="12" x2="8" y1="5" y2="15" />
+  </svg>
+));
+
+export const SmileIcon = svg("SmileIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <circle cx="10" cy="10" r="8.5" fill="none" />
+    <circle cx="6.5" cy="8" r=".8" />
+    <circle cx="13.5" cy="8" r=".8" />
+    <path d="M 14.2,13 a 5 5 30 0 1 -8,0" fill="none" />
   </svg>
 ));

@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "#/client/elements/button";
-import { CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, HomeIcon, LeftIcon, ListIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, PlusIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SyncIcon, TodayIcon, UndoIcon, UnloadIcon, UpIcon } from "#/client/elements/icon";
+import { CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, ElementIcon, HomeIcon, LeftIcon, LeftRightIcon, ListIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, PlusIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SmileIcon, SyncIcon, TodayIcon, UndoIcon, UnloadIcon, UpIcon } from "#/client/elements/icon";
 import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
 
 const Page = () => {
@@ -46,6 +46,7 @@ const Page = () => {
               DoubleUpIcon,
               DownIcon,
               DoubleDownIcon,
+              LeftRightIcon,
               CalendarIcon,
               TodayIcon,
               ClockIcon,
@@ -63,6 +64,8 @@ const Page = () => {
               CircleIcon,
               CircleFillIcon,
               HomeIcon,
+              ElementIcon,
+              SmileIcon,
             ].reverse().map(Component => {
               const name = Component.name;
               return (

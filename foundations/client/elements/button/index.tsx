@@ -10,6 +10,7 @@ export type ButtonOptions = {
   $color?: Color;
   $round?: boolean;
   $outline?: boolean;
+  $text?: boolean;
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
@@ -27,6 +28,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   $color,
   $round,
   $outline,
+  $text,
   $icon,
   $iconPosition,
   $fillLabel,
@@ -93,6 +95,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
       <div
         className={Style.main}
         data-outline={$outline}
+        data-text={$text}
         data-icon={$icon != null && ($iconPosition || "left")}
       >
         {$icon != null && $iconPosition !== "right" &&

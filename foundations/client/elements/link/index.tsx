@@ -31,6 +31,13 @@ export const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>(({
   params,
   query,
   disabled,
+  replace,
+  scroll,
+  shallow,
+  passHref,
+  prefetch,
+  locale,
+  legacyBehavior,
   ...props
 }, ref) => {
   if (!href || disabled) {
@@ -38,10 +45,15 @@ export const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>(({
   }
   return (
     <Link
-      prefetch={false}
       {...props}
       ref={ref}
-      target={props.target}
+      replace={replace}
+      scroll={scroll}
+      shallow={shallow}
+      passHref={passHref}
+      prefetch={prefetch ?? false}
+      locale={locale}
+      legacyBehavior={legacyBehavior}
       href={{
         pathname: replaceDynamicPathname(href, params),
         query,

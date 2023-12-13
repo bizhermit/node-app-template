@@ -3,13 +3,6 @@
 
 @layer base {
 
-  // a {
-  //   >.wrap {
-  //     width: 100%;
-  //     height: 100%;
-  //   }
-  // }
-
   .wrap {
     box-sizing: border-box;
     position: relative;
@@ -46,7 +39,7 @@
             opacity: 0.8;
           }
 
-          &[data-outline="true"] {
+          &:is([data-outline="true"], [data-text="true"]) {
             &::after {
               opacity: 0.15;
             }
@@ -117,18 +110,21 @@
       box-sizing: border-box;
       position: absolute;
       content: "";
-      background-color: var(--c);
+      background: var(--c);
       top: 0;
       left: 0;
       height: 100%;
       width: 100%;
       transition: opacity 0.2s;
       border-radius: inherit;
-      border: 0.15rem solid var(--c);
       z-index: 0;
     }
 
     &[data-outline="true"] {
+      border: 0.15rem solid var(--c);
+    }
+
+    &:is([data-outline="true"], [data-text="true"]) {
       color: var(--c);
 
       &::after {
