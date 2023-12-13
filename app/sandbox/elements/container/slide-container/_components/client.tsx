@@ -67,7 +67,7 @@ const SlideContainerClient = () => {
         />
         {generateArray(10, idx => {
           return (
-            <Button key={idx} $onClick={() => setIndex(idx)}>{idx}</Button>
+            <Button key={idx} onClick={() => setIndex(idx)}>{idx}</Button>
           )
         })}
       </Row>

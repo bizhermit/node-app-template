@@ -40,7 +40,7 @@ const CreditCardCreditCardNumberBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -51,7 +51,7 @@ const CreditCardCreditCardNumberBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -59,7 +59,7 @@ const CreditCardCreditCardNumberBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -67,28 +67,28 @@ const CreditCardCreditCardNumberBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue(1001);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "cc-number-box-bind": 1001 });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "cc-number-box-form-bind": 1001 });
           }}
         >
@@ -103,19 +103,19 @@ const CreditCardCreditCardNumberBoxClient = () => {
           // $onChange={v => console.log("string: ", v)}
           $ref={textBoxRef}
         />
-        <Button $onClick={() => textBoxRef.focus()}>
+        <Button onClick={() => textBoxRef.focus()}>
           focus
         </Button>
-        <Button $onClick={() => console.log(textBoxRef.getValue())}>
+        <Button onClick={() => console.log(textBoxRef.getValue())}>
           get value
         </Button>
-        <Button $onClick={() => textBoxRef.setValue("hogehoge")}>
+        <Button onClick={() => textBoxRef.setValue("hogehoge")}>
           set value
         </Button>
-        <Button $onClick={() => textBoxRef.setDefaultValue()}>
+        <Button onClick={() => textBoxRef.setDefaultValue()}>
           set default value
         </Button>
-        <Button $onClick={() => textBoxRef.clear()}>
+        <Button onClick={() => textBoxRef.clear()}>
           clear
         </Button>
       </Row>

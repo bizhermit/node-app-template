@@ -21,14 +21,14 @@ const ButtonClient = () => {
         <h2>click event</h2>
         <Row className="g-s">
           <Button
-            $onClick={(_, e) => {
+            onClick={(_, e) => {
               console.log("click sync", e);
             }}
           >
             click sync
           </Button>
           <Button
-            $onClick={async (unlock, e) => {
+            onClick={async (unlock, e) => {
               console.log("click async", e);
               setTimeout(() => {
                 unlock();

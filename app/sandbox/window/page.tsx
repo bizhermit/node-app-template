@@ -13,7 +13,7 @@ const Page = () => {
     <div className="flex g-m p-m">
       <div className="flex row middle g-m">
         <Button
-          $onClick={() => {
+          onClick={() => {
             setCount(c => c + 1);
           }}
         >
@@ -32,7 +32,7 @@ const Component = () => {
   return (
     <div className="flex g-m p-m">
       <Button
-        $onClick={() => {
+        onClick={() => {
           const w = windowOpen("https://bizhermit.com");
           setTimeout(() => {
             // w.replace("https://bizhermit.com");
@@ -43,7 +43,7 @@ const Component = () => {
       </Button>
       <div className="flex row g-m">
         <Button
-          $onClick={() => {
+          onClick={() => {
             const w = win.open("/sandbox?mode=hook");
             setTimeout(() => {
               w.replace("/sandbox/window?mode=hook");
@@ -53,21 +53,21 @@ const Component = () => {
           open (hook)
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.open("/sandbox?mode=unmount", { closeWhenUnmount: true });
           }}
         >
           open (hook-unmount)
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.open("/sandbox?mode=page", { closeWhenPageMove: true });
           }}
         >
           open (hook-page)
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.open("/sandbox?mode=tab", { closeWhenTabClose: true });
           }}
         >
@@ -76,35 +76,35 @@ const Component = () => {
       </div>
       <div className="flex row g-m">
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.closeChildren();
           }}
         >
           close
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.closeChildren({ unmout: true });
           }}
         >
           close (hook-unmount)
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.closeChildren({ page: true });
           }}
         >
           close (hook-page)
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.closeChildren({ tab: true });
           }}
         >
           close (hook-tab)
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             win.closeChildren();
           }}
         >

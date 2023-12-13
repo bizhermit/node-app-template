@@ -44,9 +44,9 @@ const TabContainerClient = () => {
           $value={tabScroll}
           $onChange={v => setTabScroll(v!)}
         />
-        <Button $onClick={() => setKey("tab1")}>Tab 1</Button>
-        <Button $onClick={() => setKey("tab2")}>Tab 2</Button>
-        <Button $onClick={() => setKey("tab3")}>Tab 3</Button>
+        <Button onClick={() => setKey("tab1")}>Tab 1</Button>
+        <Button onClick={() => setKey("tab2")}>Tab 2</Button>
+        <Button onClick={() => setKey("tab3")}>Tab 3</Button>
       </Row>
       <Divider />
       <TabContainer<TabKey>
@@ -72,7 +72,7 @@ const TabContainerClient = () => {
             <h1>Tab 1</h1>
             <Button
               $outline
-              $onClick={() => {
+              onClick={() => {
                 alert("tab1");
               }}
             />
@@ -91,7 +91,7 @@ const TabContainerClient = () => {
             <h1>Tab 2</h1>
             <Button
               $outline
-              $onClick={() => {
+              onClick={() => {
                 alert("tab2");
               }}
             />
@@ -109,7 +109,7 @@ const TabContainerClient = () => {
           <h1>Tab 3</h1>
           <Button
             $outline
-            $onClick={() => {
+            onClick={() => {
               alert("tab3");
             }}
           />

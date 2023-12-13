@@ -11,7 +11,7 @@ const Page = () => {
   return (
     <div className="flex p-xs w-100 h-100 g-s">
       <Button
-        $onClick={async (unlock) => {
+        onClick={async (unlock) => {
           const res = await msg.alert("alert", { preventEscape: true });
           console.log(res);
           unlock();
@@ -20,7 +20,7 @@ const Page = () => {
         alert
       </Button>
       <Button
-        $onClick={async (unlock) => {
+        onClick={async (unlock) => {
           const res = await msg.alert({
             header: "お知らせ",
             body: "アラート",
@@ -33,7 +33,7 @@ const Page = () => {
         alert:header
       </Button>
       <Button
-        $onClick={async (unlock) => {
+        onClick={async (unlock) => {
           const res = await msg.confirm("確認");
           console.log(res);
           unlock();
@@ -42,7 +42,7 @@ const Page = () => {
         confirm
       </Button>
       <Button
-        $onClick={async (unlock) => {
+        onClick={async (unlock) => {
           const res = await msg.confirm({
             header: "確認",
             body: "削除します。\nよろしいですか？",
@@ -55,7 +55,7 @@ const Page = () => {
         confirm:header
       </Button>
       <Button
-        $onClick={async (unlock) => {
+        onClick={async (unlock) => {
           msg.alert({
             header: "動作確認",
             body: "表示中に遷移",

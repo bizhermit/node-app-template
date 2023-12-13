@@ -31,14 +31,14 @@ const LoadingClient = () => {
         {/* <ScreenLoadingBar /> */}
         <Row className="g-s">
           <Button
-            $onClick={() => {
+            onClick={() => {
               loading.show();
             }}
           >
             show
           </Button>
           <Button
-            $onClick={() => {
+            onClick={() => {
               loading.hide();
             }}
           >
@@ -49,7 +49,7 @@ const LoadingClient = () => {
       </section>
       <section>
         <h2>show mask loading</h2>
-        <Button $onClick={() => setShow(true)}>show</Button>
+        <Button onClick={() => setShow(true)}>show</Button>
         {show &&
           <Loading
             $appearance={appearance}
@@ -57,7 +57,7 @@ const LoadingClient = () => {
             $mask
           >
             <div className="flex column center middle h-100">
-              <Button $onClick={() => setShow(false)}>hide</Button>
+              <Button onClick={() => setShow(false)}>hide</Button>
             </div>
           </Loading>
         }

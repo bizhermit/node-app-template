@@ -50,10 +50,14 @@ $useDarkColor: true;
 
   @each $key, $value in var.$colorMap {
     $hasR: map-get($value, "light_r") != null;
-    .c-#{$key} {
-      background: var(--c-#{$key}) !important;
-      color: var(--c-#{$key}_) !important;
+    [data-color="#{$key}"] {
+      --s-color: var(--c-#{$key});
+      --s-color_: var(--c-#{$key}_);
     }
+    // .c-#{$key} {
+    //   // background: var(--c-#{$key}) !important;
+    //   // color: var(--c-#{$key}_) !important;
+    // }
     .bgc-#{$key} {
       background: var(--c-#{$key}) !important;
     }

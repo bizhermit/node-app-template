@@ -24,7 +24,7 @@ const Page = () => {
       <BaseSheet>
         <div>
           <Button
-            $onClick={() => {
+            onClick={() => {
               msgBox.alert("!hogehoge!");
             }}
           >
@@ -32,7 +32,7 @@ const Page = () => {
           </Button>
           <Button
             // ref={anchorRef}
-            $onClick={onClick}
+            onClick={onClick}
           >
             show
           </Button>
@@ -78,12 +78,12 @@ const Page = () => {
         <div>
           <Button
             // ref={anchorRef}
-            $onClick={onClick}
+            onClick={onClick}
           >
             show
           </Button>
           <Button
-            $onClick={() => {
+            onClick={() => {
               msgBox.alert("!hogehoge!");
             }}
           >

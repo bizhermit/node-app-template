@@ -1,0 +1,1 @@
+type ExtAttrs<T extends HTMLAttributes<any>, U> = Omit<T, keyof U> & U;

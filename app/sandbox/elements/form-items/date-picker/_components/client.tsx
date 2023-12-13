@@ -51,7 +51,7 @@ const DatePickerClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -62,7 +62,7 @@ const DatePickerClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -70,7 +70,7 @@ const DatePickerClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -78,7 +78,7 @@ const DatePickerClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind(cur => {
               return {
                 "pair-date": cur["pair-date"],
@@ -89,21 +89,21 @@ const DatePickerClient = () => {
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue("2022-12-10");
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "date-picker-bind": ["2022-12-10", "2022-12-12", "2022-12-13"] });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind(cur => {
               return {
                 ...cur,

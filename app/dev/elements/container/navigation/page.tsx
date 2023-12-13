@@ -68,14 +68,14 @@ const Page = () => {
         }}
       >
         <Button
-          $onClick={() => {
+          onClick={() => {
             nav.toggle();
           }}
         >
           toggle
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // eslint-disable-next-line no-console
             console.log(nav.getHeaderSizeNum());
           }}

@@ -43,7 +43,7 @@ const SelectBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -54,7 +54,7 @@ const SelectBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null!);
           }}
         >
@@ -62,7 +62,7 @@ const SelectBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -70,35 +70,35 @@ const SelectBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue(2);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "select-box-bind": 3 });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "select-box-form-bind": "main" });
           }}
         >
           set form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log(ref.current);
           }}
         >
@@ -157,7 +157,7 @@ const SelectBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.focus();
             selectBoxRef.focus();
           }}
@@ -165,7 +165,7 @@ const SelectBoxClient = () => {
           focus
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // console.log(formItemRef.getValue());
             console.log(selectBoxRef.getValue());
           }}
@@ -173,14 +173,14 @@ const SelectBoxClient = () => {
           get value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log(selectBoxRef.getData());
           }}
         >
           get data
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setValue("set from form-item hook");
             selectBoxRef.setValue("2");
           }}
@@ -188,7 +188,7 @@ const SelectBoxClient = () => {
           set value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setDefaultValue();
             selectBoxRef.setDefaultValue();
           }}
@@ -196,7 +196,7 @@ const SelectBoxClient = () => {
           set default value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.clear();
             selectBoxRef.clear();
           }}

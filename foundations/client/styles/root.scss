@@ -72,6 +72,13 @@ $iconSize: 1.6rem;
     margin-block: unset;
   }
 
+  a {
+    &[aria-disabled="true"] {
+      text-decoration: none;
+      color: inherit;
+    }
+  }
+
   ::placeholder {
     color: var(--c-placeholder_);
     opacity: #{var.$placeholderOpacity};

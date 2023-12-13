@@ -36,8 +36,8 @@ const DataTableClient = () => {
       dataTableButtonColumn({
         name: "button",
         // buttonText: "button",
-        round: true,
-        outline: true,
+        $round: true,
+        $outline: true,
         width: "9rem",
         resize: true,
         // padding: false,
@@ -53,14 +53,11 @@ const DataTableClient = () => {
         resize: false,
         sortNeutral: false,
         sticky: true,
-        href: (ctx) => {
+        link: (ctx) => {
           return {
             pathname: "/sandbox/elements/data-table",
-            params: { id: ctx.data.id },
+            query: { id: ctx.data.id },
           };
-        },
-        hrefOptions: {
-          rel: ""
         },
         // wrap: true,
       },
@@ -159,18 +156,18 @@ const DataTableClient = () => {
     <div className="flex w-100 h-100 g-s p-xs">
       <Row className="g-s">
         <Row className="g-s">
-          <Button $size="s" $fitContent $onClick={() => setItems(null!)}>null</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(0)}>0</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(1)}>1</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(10)}>10</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(50)}>50</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(99)}>99</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(100)}>100</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(101)}>101</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(1000)}>1000</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(10000)}>10000</Button>
-          <Button $size="s" $fitContent $onClick={() => generateItems(100000)}>100000</Button>
-          <Button $size="s" $fitContent $onClick={() => console.log(items)}>console.log</Button>
+          <Button $size="s" $fitContent onClick={() => setItems(null!)}>null</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(0)}>0</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(1)}>1</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(10)}>10</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(50)}>50</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(99)}>99</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(100)}>100</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(101)}>101</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(1000)}>1000</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(10000)}>10000</Button>
+          <Button $size="s" $fitContent onClick={() => generateItems(100000)}>100000</Button>
+          <Button $size="s" $fitContent onClick={() => console.log(items)}>console.log</Button>
         </Row>
         <Row className="g-s">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>

@@ -54,7 +54,7 @@ const CheckListClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             // console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -65,7 +65,7 @@ const CheckListClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             // setValue(null);
           }}
         >
@@ -73,7 +73,7 @@ const CheckListClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -81,28 +81,28 @@ const CheckListClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // setValue([1]);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "radio-buttons-bind": 2 });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "radio-buttons-form-bind": "primary" });
           }}
         >
@@ -153,7 +153,7 @@ const CheckListClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.focus();
             checkListRef.focus();
           }}
@@ -161,7 +161,7 @@ const CheckListClient = () => {
           focus
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // console.log(formItemRef.getValue());
             console.log(checkListRef.getValue());
           }}
@@ -169,7 +169,7 @@ const CheckListClient = () => {
           get value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setValue("set from form-item hook");
             checkListRef.setValue([1]);
           }}
@@ -177,7 +177,7 @@ const CheckListClient = () => {
           set value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setDefaultValue();
             checkListRef.setDefaultValue();
           }}
@@ -185,7 +185,7 @@ const CheckListClient = () => {
           set default value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.clear();
             checkListRef.clear();
           }}
@@ -193,14 +193,14 @@ const CheckListClient = () => {
           clear
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             checkListRef.checkAll();
           }}
         >
           check all
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             checkListRef.uncheckAll();
           }}
         >

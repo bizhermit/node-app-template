@@ -18,7 +18,7 @@ const ErrorPage: ErrorFC = ({
       <h2>Fatal Error</h2>
       <Button
         $icon={<RedoIcon />}
-        $onClick={reset}
+        onClick={reset}
       />
     </div>
   );

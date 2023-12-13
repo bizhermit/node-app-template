@@ -4,6 +4,7 @@ import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import { useNavigation } from "#/client/elements/navigation-container/context";
 import { FC, ReactNode } from "react";
+import { replaceDynamicPathname } from "../../../foundations/client/elements/link";
 
 const SandboxLayoutProvider: FC<{
   children?: ReactNode;
@@ -35,13 +36,18 @@ const Navigation: FC = () => {
       }}
     >
       <Menu
-        $direction="vertical"
+        direction="vertical"
         // style={{ width: "100%" }}
-        $items={[{
+        items={[{
           key: "index",
           icon: "I",
           label: "Index",
           pathname: "/",
+        }, {
+          key: "Dynmic",
+          icon: "D",
+          label: "Dynamic",
+          pathname: replaceDynamicPathname("/sandbox/dynamic/[id]", { id: 4 }),
         }, {
           key: "pages",
           icon: "P",

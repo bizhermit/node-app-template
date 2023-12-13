@@ -1,80 +1,89 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { forwardRef, useEffect, useMemo, useRef, type FC, type HTMLAttributes, type Key, type ReactNode } from "react";
-import { attributes, attributesWithoutChildren } from "../../utilities/attributes";
+import { forwardRef, useEffect, useRef, type FC, type HTMLAttributes, type Key, type ReactNode } from "react";
+import equals from "../../../objects/equal";
+import { attrs } from "../../utilities/attributes";
 import { MinusIcon, PlusIcon } from "../icon";
-import NextLink, { type NextLinkProps } from "../link";
+import NextLink, { type Href } from "../link";
 import { useNavigation } from "../navigation-container/context";
 import Text from "../text";
 import Style from "./index.module.scss";
 
-type ItemAttributes = Omit<HTMLAttributes<HTMLDivElement>, "children" | "onClick" | "onKeyDown">;
+type Direction = "vertical" | "horizontal";
 
-export type MenuItemProps = {
-  key?: Key;
-  pathname?: NextLinkProps["href"];
-  label?: ReactNode;
-  icon?: ReactNode;
+type MenuBaseOptions = {
   items?: Array<MenuItemProps | null | undefined>;
-  attributes?: ItemAttributes;
-  openedIcon?: ReactNode;
+  defaultOpenedIcon?: ReactNode;
   closedIcon?: ReactNode;
   defaultOpen?: boolean;
   iconSpace?: boolean;
-  onClick?: (props: AddonMenuItemProps, e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => void;
-};
-type AddonMenuItemProps = MenuItemProps & { nestLevel: number; };
-
-type Direction = "vertical" | "horizontal";
-
-type OmitAttributes = "color" | "children";
-export type MenuProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-  $items?: Array<MenuItemProps | null | undefined>;
-  $direction?: Direction;
-  $defaultOpenedIcon?: ReactNode;
-  $defaultClosedIcon?: ReactNode;
-  $defaultIconSpace?: boolean;
-  $judgeSelected?: (props: AddonMenuItemProps) => boolean;
 };
 
-const Menu = forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
+type MenuItemOptions = MenuBaseOptions & {
+  key?: Key;
+  pathname?: Href;
+  query?: { [v: string | number | symbol]: any };
+  label?: ReactNode;
+  icon?: ReactNode;
+  onClick?: (
+    ctx: { props: Omit<MenuItemProps, "onClick" | "pathname" | "query">; nestLevel: number },
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
+  ) => void;
+};
+
+export type MenuItemProps = ExtAttrs<HTMLAttributes<HTMLDivElement>, MenuItemOptions>;
+
+type MenuOptions = MenuBaseOptions & {
+  direction?: Direction;
+  judgeSelected?: (props: MenuItemProps, nestLevel: number) => boolean;
+};
+
+export type MenuProps = ExtAttrs<HTMLAttributes<HTMLDivElement>, MenuOptions>;
+
+const Menu = forwardRef<HTMLDivElement, MenuProps>(({
+  items,
+  direction,
+  defaultOpenedIcon: openedIcon,
+  closedIcon,
+  iconSpace,
+  judgeSelected,
+  ...props
+}, ref) => {
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
+      {...attrs(props, Style.wrap)}
       ref={ref}
     >
       <MenuGroup
         className={Style.root}
-        $items={props.$items}
-        $defaultOpenedIcon={props.$defaultOpenedIcon}
-        $defaultClosedIcon={props.$defaultClosedIcon}
-        $defaultIconSpace={props.$defaultIconSpace}
-        $direction={props.$direction || "vertical"}
-        $judgeSelected={props.$judgeSelected}
+        items={items}
+        defaultOpenedIcon={openedIcon}
+        closedIcon={closedIcon}
+        iconSpace={iconSpace}
+        direction={direction || "vertical"}
+        judgeSelected={judgeSelected}
       />
     </div>
   );
 });
 
-const MenuGroup: FC<MenuProps & {
-  $nestLevel?: number;
-}> = (props) => {
-  if (props.$items == null || props.$items.length === 0) return <></>;
+const MenuGroup: FC<MenuProps & { nestLevel?: number }> = (props) => {
+  if (props.items == null || props.items.length === 0) return <></>;
   return (
     <ul
-      {...attributesWithoutChildren(props, Style.list)}
-      data-direction={props.$direction}
+      className={Style.list}
+      data-direction={props.direction}
     >
-      {props.$items.filter(item => item != null).map((item, index) =>
+      {props.items.filter(item => item != null).map((item, index) =>
         <MenuItem
           {...item}
           key={item!.key ?? index}
-          nestLevel={props.$nestLevel ?? 0}
-          $defaultOpenedIcon={props.$defaultOpenedIcon}
-          $defaultClosedIcon={props.$defaultClosedIcon}
-          $defaultIconSpace={props.$defaultIconSpace}
-          $judgeSelected={props.$judgeSelected}
+          nestLevel={props.nestLevel ?? 0}
+          defaultOpenedIcon={props.defaultOpenedIcon}
+          defaultClosedIcon={props.closedIcon}
+          defaultIconSpace={props.iconSpace}
+          judgeSelected={props.judgeSelected}
         />
       )}
     </ul>
@@ -83,36 +92,36 @@ const MenuGroup: FC<MenuProps & {
 
 type MenuItemPropsImpl = MenuItemProps & {
   nestLevel: number;
-  $defaultOpenedIcon?: ReactNode;
-  $defaultClosedIcon?: ReactNode;
-  $defaultIconSpace?: boolean;
-  $toggleParent?: (open?: boolean, mountInit?: boolean) => void;
-  $judgeSelected?: (props: AddonMenuItemProps) => boolean
+  defaultOpenedIcon?: ReactNode;
+  defaultClosedIcon?: ReactNode;
+  defaultIconSpace?: boolean;
+  judgeSelected?: (props: MenuItemProps, nestLevel: number) => boolean
 };
 
-const judgeSelected = (props: MenuItemPropsImpl, routerPathname: string | null) => {
-  if (props.$judgeSelected == null) {
-    const pathname = typeof props.pathname === "string" ? props.pathname : props.pathname?.pathname;
-    return routerPathname === pathname;
-  }
-  return props.$judgeSelected(attributes(props) as AddonMenuItemProps);
-};
-
-const MenuItem: FC<MenuItemPropsImpl> = (props) => {
+const MenuItem: FC<MenuItemPropsImpl> = ({
+  pathname,
+  query,
+  onClick,
+  nestLevel,
+  defaultOpenedIcon,
+  defaultClosedIcon,
+  defaultIconSpace,
+  defaultOpen,
+  judgeSelected,
+  ...props
+}) => {
   const len = props.items?.length ?? 0;
   const nav = useNavigation();
-  const pathname = usePathname();
+  const currentPathname = usePathname();
   const ref = useRef<HTMLDivElement>(null!);
   const cref = useRef<HTMLDivElement>(null!);
 
-  const selected = useMemo(() => {
-    return judgeSelected(props, pathname);
-  }, [pathname, props.$judgeSelected]);
-  const selectable = Boolean(props.pathname) || len > 0 || props.onClick != null;
+  const selected = judgeSelected == null ? equals(currentPathname, pathname) : judgeSelected(props, nestLevel);
+  const selectable = Boolean(pathname) || len > 0 || onClick != null;
 
   const click = (e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>) => {
-    if (props.pathname) nav.closeMenu();
-    props.onClick?.(props, e);
+    if (pathname) nav.closeMenu();
+    onClick?.({ props, nestLevel }, e);
   };
 
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -120,6 +129,7 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       e.preventDefault();
       e.currentTarget.click();
     }
+    props.onKeyDown?.(e);
   };
 
   useEffect(() => {
@@ -132,25 +142,27 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
       }, 0);
     }
     if (selected) {
-      nav.scrollNavIntoView(ref.current);
+      setTimeout(() => {
+        nav.scrollNavIntoView(ref.current, { behavior: "smooth" });
+      }, 0);
     }
   }, []);
 
-  const iconSpace = props.iconSpace ?? props.$defaultIconSpace;
+  const iconSpace = props.iconSpace ?? defaultIconSpace;
 
   const node = (
     <div
-      {...attributes(props.attributes, Style.content)}
+      {...attrs(props, Style.content)}
       ref={ref}
       style={{
-        ...props.attributes?.style,
-        ["--menu-pad" as string]: `calc(var(--menu-nest-pad) * ${props.nestLevel})`,
+        ...props?.style,
+        ["--menu-pad" as string]: `calc(var(--menu-nest-pad) * ${nestLevel})`,
       }}
       onClick={click}
       onKeyDown={keydown}
-      tabIndex={selectable ? 0 : undefined}
+      tabIndex={selectable ? (props.tabIndex ?? 0) : -1}
       data-selectable={selectable}
-      data-nest={props.nestLevel ?? 0}
+      data-nest={nestLevel ?? 0}
       data-selected={selected}
     >
       {(props.icon || iconSpace) &&
@@ -177,14 +189,15 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
           <input
             className={Style.check}
             type="checkbox"
-            defaultChecked={props.defaultOpen}
+            defaultChecked={defaultOpen}
           />
         }
-        {props.pathname == null ? node :
+        {!pathname ? node :
           <NextLink
-            $noDecoration
+            className={Style.link}
             prefetch={false}
-            href={props.pathname}
+            href={pathname}
+            query={query}
           >
             {node}
           </NextLink>
@@ -195,11 +208,11 @@ const MenuItem: FC<MenuItemPropsImpl> = (props) => {
         >
           <div className={Style.childrenbody}>
             <MenuGroup
-              $items={props.items}
-              $nestLevel={props.nestLevel + 1}
-              $defaultOpenedIcon={props.openedIcon ?? props.$defaultOpenedIcon}
-              $defaultClosedIcon={props.closedIcon ?? props.$defaultClosedIcon}
-              $defaultIconSpace={iconSpace}
+              items={props.items}
+              nestLevel={nestLevel + 1}
+              defaultOpenedIcon={defaultOpenedIcon}
+              closedIcon={defaultClosedIcon}
+              iconSpace={iconSpace}
             />
           </div>
         </div>

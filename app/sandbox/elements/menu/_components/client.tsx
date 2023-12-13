@@ -26,7 +26,7 @@ const MenuClient = () => {
       <Divider />
       <Button
         ref={buttonRef}
-        $onClick={() => {
+        onClick={() => {
           if (!show) setShow(true);
         }}
       >
@@ -48,13 +48,13 @@ const MenuClient = () => {
       >
         <div
           className="flex column"
-          // style={{ width: 500 }}
+        // style={{ width: 500 }}
         >
           <Menu
-            $direction={horizontal ? "horizontal" : "vertical"}
-            $defaultClosedIcon={<DoubleLeftIcon />}
-            $defaultOpenedIcon={<DoubleDownIcon />}
-            $items={[{
+            direction={horizontal ? "horizontal" : "vertical"}
+            closedIcon={<DoubleLeftIcon />}
+            defaultOpenedIcon={<DoubleDownIcon />}
+            items={[{
               key: 1,
               label: `item 1`,
               icon: "1",
@@ -63,9 +63,7 @@ const MenuClient = () => {
               },
             }, {
               key: 2,
-              attributes: {
-                // className: "c-primary",
-              },
+              className: "fgc-primary",
               label: `item parent`,
               icon: "P",
               onClick: (props) => {
@@ -74,9 +72,7 @@ const MenuClient = () => {
               defaultOpen: true,
               items: [{
                 key: 1,
-                attributes: {
-                  // className: "c-secondary",
-                },
+                className: "fgc-secondary",
                 label: "c-item 1",
                 icon: "1",
                 onClick: (props) => {
@@ -84,9 +80,7 @@ const MenuClient = () => {
                 }
               }, {
                 key: 2,
-                attributes: {
-                  // className: "c-primary",
-                },
+                className: "fgc-primary",
                 label: <Row className="w-100" $hAlign="center">Parent</Row>,
                 icon: "P",
                 onClick: (props) => {
@@ -94,9 +88,7 @@ const MenuClient = () => {
                 },
                 items: [{
                   key: 1,
-                  attributes: {
-                    // className: "c-secondary",
-                  },
+                  className: "fgc-secondary",
                   label: "c-item 1",
                   icon: "1",
                   onClick: (props) => {

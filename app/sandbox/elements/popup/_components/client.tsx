@@ -23,7 +23,7 @@ const Component: FC = () => {
       <Button
         // className="mr-auto mb-auto"
         ref={anchorRef}
-        $onClick={() => {
+        onClick={() => {
           setShow(true);
         }}
       >
@@ -69,7 +69,7 @@ const Component: FC = () => {
             <Row $hAlign="center" className="g-s w-100">
               <Button type="submit">submit</Button>
               <Button
-                $onClick={() => {
+                onClick={() => {
                   setShow(false);
                 }}
               >

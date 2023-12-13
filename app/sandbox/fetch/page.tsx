@@ -38,7 +38,7 @@ const Page = () => {
       >
         <Row className="g-s">
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.get("/api/fetch", {
                   s_string: "tetetetette",
@@ -55,7 +55,7 @@ const Page = () => {
             get
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/api/fetch", {
                   s_string: "a",
@@ -73,7 +73,7 @@ const Page = () => {
             post as json
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/api/fetch", {
                   // text: "hoge",
@@ -90,7 +90,7 @@ const Page = () => {
             post as formData
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.put("/api/fetch", {
                 });
@@ -104,7 +104,7 @@ const Page = () => {
             put
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.delete("/api/fetch", {
                 });
@@ -189,7 +189,7 @@ const Page = () => {
         $bodyClassName="p-xs"
       >
         <Row className="g-s">
-          <Button $onClick={async (unlock) => {
+          <Button onClick={async (unlock) => {
             await process(async () => {
               const res = await api.get("/api/hello", {
                 hello: "hoge",

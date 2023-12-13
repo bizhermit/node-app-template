@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type Dispatch, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type Dispatch, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction } from "react";
 import formatDate from "../../../objects/date/format";
 import equals from "../../../objects/equal";
 import formatNum from "../../../objects/number/format";
@@ -33,12 +33,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   minWidth?: number | string;
   maxWidth?: number | string;
   align?: "left" | "center" | "right";
-  href?: (ctx: DataTableCellContext<T>) => NextLinkProps["href"];
-  hrefOptions?: {
-    target?: HTMLAttributeAnchorTarget;
-    decoration?: boolean;
-    rel?: string;
-  };
+  link?: (ctx: DataTableCellContext<T>) => NextLinkProps;
   border?: boolean;
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
   sortNeutral?: boolean;
@@ -543,9 +538,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           data-pointer={column.pointer}
           data-sticky={nestLevel === 0 && column.sticky}
         >
-          {column.href ?
+          {column.link ?
             <NextLink
-              href={column.href?.({
+              className={Style.link}
+              {...column.link({
                 column,
                 data,
                 index,
@@ -553,11 +549,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 items,
                 setHeaderRev,
                 setBodyRev,
-              }) as PagePath}
-              target={column.hrefOptions?.target}
-              rel={column.hrefOptions?.rel}
-              $noDecoration={column.hrefOptions?.decoration === false}
-              className={Style.link}
+              })}
             >
               {content}
             </NextLink> : content
@@ -653,7 +645,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           $size="s"
           $outline
           $color={props.$color}
-          $onClick={() => clickPage(0)}
+          onClick={() => clickPage(0)}
           $icon={<DoubleLeftIcon />}
         />
         <Button
@@ -661,7 +653,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           $size="s"
           $outline
           $color={props.$color}
-          $onClick={() => clickPage(index - 1)}
+          onClick={() => clickPage(index - 1)}
           $icon={<LeftIcon />}
         />
         <div className={Style.number}>
@@ -674,7 +666,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           $size="s"
           $outline
           $color={props.$color}
-          $onClick={() => clickPage(index + 1)}
+          onClick={() => clickPage(index + 1)}
           $icon={<RightIcon />}
         />
         <Button
@@ -682,7 +674,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           $size="s"
           $outline
           $color={props.$color}
-          $onClick={() => clickPage(lastIndex)}
+          onClick={() => clickPage(lastIndex)}
           $icon={<DoubleRightIcon />}
         />
       </>

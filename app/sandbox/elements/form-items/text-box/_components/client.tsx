@@ -37,7 +37,7 @@ const TextBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -48,7 +48,7 @@ const TextBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -56,7 +56,7 @@ const TextBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -64,28 +64,28 @@ const TextBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue("set");
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "text-box-bind": "set" });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "text-box-form-bind": "set" });
           }}
         >
@@ -113,7 +113,7 @@ const TextBoxClient = () => {
           $label="名前"
         />
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.focus();
             textBoxRef.focus();
           }}
@@ -121,7 +121,7 @@ const TextBoxClient = () => {
           focus
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // console.log(formItemRef.getValue());
             console.log(textBoxRef.getValue());
           }}
@@ -129,7 +129,7 @@ const TextBoxClient = () => {
           get value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setValue("set from form-item hook");
             textBoxRef.setValue("set from text-box hook");
           }}
@@ -137,7 +137,7 @@ const TextBoxClient = () => {
           set value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setDefaultValue();
             textBoxRef.setDefaultValue();
           }}
@@ -145,7 +145,7 @@ const TextBoxClient = () => {
           set default value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.clear();
             textBoxRef.clear();
           }}
@@ -153,7 +153,7 @@ const TextBoxClient = () => {
           clear
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("has error: ", textBoxRef.hasError());
             console.log(`err msg: [${textBoxRef.getErrorMessage()}]`);
           }}

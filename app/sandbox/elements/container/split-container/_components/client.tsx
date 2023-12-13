@@ -72,7 +72,7 @@ const SplitContainerClient = () => {
           <h1>Cotent 1</h1>
           <Button
             $outline
-            $onClick={() => {
+            onClick={() => {
               alert("content1");
             }}
           />
@@ -91,7 +91,7 @@ const SplitContainerClient = () => {
             <h1>Content2 2</h1>
             <Button
               $outline
-              $onClick={() => {
+              onClick={() => {
                 alert("content2");
               }}
             />

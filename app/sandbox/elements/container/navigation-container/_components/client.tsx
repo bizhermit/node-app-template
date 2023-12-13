@@ -61,7 +61,7 @@ const Page = () => {
         </ControlItem>
       </ControlLayout>
       <Button
-        $onClick={() => {
+        onClick={() => {
           nav.toggle();
         }}
       >

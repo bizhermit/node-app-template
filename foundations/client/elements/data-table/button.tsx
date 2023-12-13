@@ -1,17 +1,9 @@
 import type { ReactNode } from "react";
 import { DataTableCellLabel, type DataTableBaseColumn, type DataTableCellContext, type DataTableColumn } from ".";
-import Button, { type ButtonProps } from "../button";
+import Button, { ButtonOptions } from "../button";
 
-type Props<T extends Struct> = DataTableBaseColumn<T> & {
+type Props<T extends Struct> = DataTableBaseColumn<T> & Omit<ButtonOptions, "onClick" | "$focusWhenMounted" | "$notDependsOnForm"> & {
   onClick?: (ctx: DataTableCellContext<T>, unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);
-  outline?: Pick<ButtonProps, "$outline">["$outline"];
-  size?: Pick<ButtonProps, "$size">["$size"];
-  color?: Pick<ButtonProps, "$color">["$color"];
-  icon?: Pick<ButtonProps, "$icon">["$icon"];
-  fillLabel?: Pick<ButtonProps, "$fillLabel">["$fillLabel"];
-  iconPosition?: Pick<ButtonProps, "$iconPosition">["$iconPosition"];
-  fitContent?: Pick<ButtonProps, "$fitContent">["$fitContent"];
-  round?: Pick<ButtonProps, "$round">["$round"];
   buttonText?: ReactNode;
 };
 
@@ -26,15 +18,16 @@ const dataTableButtonColumn = <T extends Struct>(props: Props<T>): DataTableColu
           padding={props.padding}
         >
           <Button
-            $onClick={(unlock, event) => props.onClick?.(bprops, unlock, event)}
-            $outline={props.outline}
-            $size={props.size ?? "s"}
-            $color={props.color}
-            $icon={props.icon}
-            $fillLabel={props.fillLabel}
-            $iconPosition={props.iconPosition}
-            $fitContent={props.fitContent ?? true}
-            $round={props.round}
+            onClick={(unlock, event) => props.onClick?.(bprops, unlock, event)}
+            $outline={props.$outline}
+            $size={props.$size ?? "s"}
+            $color={props.$color}
+            $icon={props.$icon}
+            $fillLabel={props.$fillLabel}
+            $iconPosition={props.$iconPosition}
+            $fitContent={props.$fitContent ?? true}
+            $noPadding={props.$noPadding}
+            $round={props.$round}
           >
             {props.buttonText ?? bprops.children}
           </Button>

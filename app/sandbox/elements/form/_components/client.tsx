@@ -122,13 +122,13 @@ const FormClient = () => {
             <Row className="g-s">
               <Button type="submit">submit / show form bind</Button>
               <Button type="reset">reset</Button>
-              <Button $onClick={() => {
+              <Button onClick={() => {
                 console.log(formBind);
               }}>show form bind</Button>
             </Row>
             <Row className="g-s">
               <Button
-                $onClick={() => {
+                onClick={() => {
                   setCount(c => c + 1);
                   formRef.setValue("text-box", `abcd-${count}`);
                   
@@ -137,14 +137,14 @@ const FormClient = () => {
                 set from outer
               </Button>
               <Button
-                $onClick={() => {
+                onClick={() => {
                   formRef.reset();
                 }}
               >
                 reset
               </Button>
               <Button
-                $onClick={() => {
+                onClick={() => {
                   setFormBind({});
                 }}
               >
@@ -175,7 +175,7 @@ const FormClient = () => {
             </Row>
             <Row className="g-s">
               <Button
-                $onClick={() => {
+                onClick={() => {
                   console.log(bind);
                   setViewBind({ ...bind });
                 }}

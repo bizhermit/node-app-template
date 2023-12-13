@@ -15,8 +15,8 @@ const BadgeClient = () => {
   return (
     <div className="flex p-s w-100 h-100 g-s">
       <Row className="g-s">
-        <Button $onClick={() => setCount(c => c+1)}>count up</Button>
-        <Button $onClick={() => setCount(0)} $outline>reset</Button>
+        <Button onClick={() => setCount(c => c+1)}>count up</Button>
+        <Button onClick={() => setCount(0)} $outline>reset</Button>
         <RadioButtons
           $source={sizes.map(size => {
             return { value: size, label: size };

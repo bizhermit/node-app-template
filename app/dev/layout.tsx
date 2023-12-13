@@ -13,7 +13,7 @@ const Layout: LayoutFC = ({ children }) => {
           style={{
             minWidth: 280
           }}
-          $items={[
+          items={[
             {
               key: "index",
               icon: (

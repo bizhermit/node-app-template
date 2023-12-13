@@ -24,7 +24,7 @@ export const useFileButton = <T extends File | Array<File>>() => useFormItemBase
   };
 });
 
-type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & ButtonOptions & {
+type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & Omit<ButtonOptions, "onClick" | "$notDependsOnForm"> & {
   $typeof?: FileValueType;
   $accept?: string;
   $fileSize?: number;
@@ -55,7 +55,19 @@ interface FileButtonFC extends FunctionComponent {
 
 const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
   D extends DataItem_File | undefined = undefined
->(p: FileButtonProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+>({
+    $size: size,
+    $color: color,
+    $round: round,
+    $outline: outline,
+    $icon: icon,
+    $iconPosition: iconPosition,
+    $fillLabel: fillLabel,
+    $fitContent: fitContent,
+    $noPadding: noPadding,
+    $focusWhenMounted: focusWhenMounted,
+    ...p
+  }: FileButtonProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const props = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
@@ -154,12 +166,6 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     }
   }, [ctx.value]);
 
-  useEffect(() => {
-    if (props.$focusWhenMounted) {
-      bref.current?.focus();
-    }
-  }, []);
-
   if (props.$ref) {
     props.$ref.focus = () => bref.current?.focus();
     props.$ref.click = () => click();
@@ -176,17 +182,18 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
         <Button
           ref={bref}
           className={Style.button}
-          $onClick={click}
+          onClick={click}
           disabled={!ctx.editable}
-          $fillLabel={props.$fillLabel}
-          $icon={props.$icon}
-          $iconPosition={props.$iconPosition}
-          $outline={props.$outline}
-          $round={props.$round}
-          $size={props.$size}
-          $color={props.$color}
-          $fitContent={props.$fitContent}
-          $focusWhenMounted={props.$focusWhenMounted}
+          $fillLabel={fillLabel}
+          $icon={icon}
+          $iconPosition={iconPosition}
+          $outline={outline}
+          $round={round}
+          $size={size}
+          $color={color}
+          $fitContent={fitContent}
+          $noPadding={noPadding}
+          $focusWhenMounted={focusWhenMounted}
         >
           {props.children ?? "ファイルを選択"}
         </Button>

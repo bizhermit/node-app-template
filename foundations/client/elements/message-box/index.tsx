@@ -136,7 +136,7 @@ type MessageBoxProps = {
   color?: Color;
 };
 
-type MessageBoxButtonProps = Omit<ButtonProps, "$onClick">;
+type MessageBoxButtonProps = Omit<ButtonProps, "onClick">;
 
 type AlertProps = MessageBoxProps & {
   buttonProps?: MessageBoxButtonProps;
@@ -212,7 +212,7 @@ const getAlertComponent = (props: AlertProps): MessageBoxContentComponent<boolea
     >
       <Button
         {...btnProps}
-        $onClick={() => {
+        onClick={() => {
           close(true);
         }}
       />
@@ -241,13 +241,13 @@ const getConfirmComponent = (props: ConfirmProps): MessageBoxContentComponent<bo
     >
       <Button
         {...negativeBtnProps}
-        $onClick={() => {
+        onClick={() => {
           close(false);
         }}
       />
       <Button
         {...positiveBtnProps}
-        $onClick={() => {
+        onClick={() => {
           close(true);
         }}
       />

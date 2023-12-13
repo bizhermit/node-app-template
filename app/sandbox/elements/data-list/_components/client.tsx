@@ -34,14 +34,14 @@ const generateDataArray = (length = 0) => {
   });
 };
 
-const ArraySetterButton: FC<Pick<ButtonProps, "$onClick"> & {
+const ArraySetterButton: FC<Pick<ButtonProps, "onClick"> & {
   length: number | null;
 }> = (props) => {
   return (
     <Button
       $size="s"
       $fitContent
-      $onClick={props.$onClick}
+      onClick={props.onClick}
     >
       {String(props.length)}
     </Button>
@@ -145,19 +145,19 @@ const DataListClient = () => {
     <div className="flex w-100 h-100 g-m p-s">
       <Row className="g-s">
         <Row className="g-s">
-          <ArraySetterButton length={null} $onClick={() => setItems(null!)} />
-          <ArraySetterButton length={0} $onClick={() => setAndGenerateItems(0)} />
-          <ArraySetterButton length={1} $onClick={() => setAndGenerateItems(1)} />
-          <ArraySetterButton length={10} $onClick={() => setAndGenerateItems(10)} />
-          <ArraySetterButton length={50} $onClick={() => setAndGenerateItems(50)} />
-          <ArraySetterButton length={99} $onClick={() => setAndGenerateItems(99)} />
-          <ArraySetterButton length={100} $onClick={() => setAndGenerateItems(100)} />
-          <ArraySetterButton length={101} $onClick={() => setAndGenerateItems(101)} />
-          <ArraySetterButton length={1000} $onClick={() => setAndGenerateItems(1000)} />
-          <ArraySetterButton length={10000} $onClick={() => setAndGenerateItems(10000)} />
-          <ArraySetterButton length={100000} $onClick={() => setAndGenerateItems(100000)} />
-          <ArraySetterButton length={1000000} $onClick={() => setAndGenerateItems(1000000)} />
-          <Button $size="s" $fitContent $onClick={() => console.log(items)}>disp</Button>
+          <ArraySetterButton length={null} onClick={() => setItems(null!)} />
+          <ArraySetterButton length={0} onClick={() => setAndGenerateItems(0)} />
+          <ArraySetterButton length={1} onClick={() => setAndGenerateItems(1)} />
+          <ArraySetterButton length={10} onClick={() => setAndGenerateItems(10)} />
+          <ArraySetterButton length={50} onClick={() => setAndGenerateItems(50)} />
+          <ArraySetterButton length={99} onClick={() => setAndGenerateItems(99)} />
+          <ArraySetterButton length={100} onClick={() => setAndGenerateItems(100)} />
+          <ArraySetterButton length={101} onClick={() => setAndGenerateItems(101)} />
+          <ArraySetterButton length={1000} onClick={() => setAndGenerateItems(1000)} />
+          <ArraySetterButton length={10000} onClick={() => setAndGenerateItems(10000)} />
+          <ArraySetterButton length={100000} onClick={() => setAndGenerateItems(100000)} />
+          <ArraySetterButton length={1000000} onClick={() => setAndGenerateItems(1000000)} />
+          <Button $size="s" $fitContent onClick={() => console.log(items)}>disp</Button>
         </Row>
         <Row className="g-s">
           <ToggleBox $value={outline} $onChange={v => setOutline(v!)}>outline</ToggleBox>

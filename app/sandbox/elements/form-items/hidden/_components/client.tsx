@@ -2,12 +2,12 @@
 
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
+import Form from "#/client/elements/form";
+import type { FormItemMessageDisplayMode } from "#/client/elements/form/$types";
 import Hidden from "#/client/elements/form/items/hidden";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import Row from "#/client/elements/row";
 import { useState } from "react";
-import type { FormItemMessageDisplayMode } from "#/client/elements/form/$types";
-import Form from "#/client/elements/form";
 
 const HiddenClient = () => {
   const [value, setValue] = useState<any>();
@@ -52,7 +52,7 @@ const HiddenClient = () => {
         <Row className="g-s">
           <Button
             type="submit"
-            $ignoreFormValidation
+            $notDependsOnForm
           >
             submit
           </Button>
@@ -62,27 +62,27 @@ const HiddenClient = () => {
         </Row>
         <Row className="g-s">
           <Button
-            $onClick={() => setValue(undefined)}
+            onClick={() => setValue(undefined)}
           >
             clear
           </Button>
           <Button
-            $onClick={() => setValue("hoge")}
+            onClick={() => setValue("hoge")}
           >
             set string
           </Button>
           <Button
-            $onClick={() => setValue(100)}
+            onClick={() => setValue(100)}
           >
             set number
           </Button>
           <Button
-            $onClick={() => setValue([1, 2, 3])}
+            onClick={() => setValue([1, 2, 3])}
           >
             set array
           </Button>
           <Button
-            $onClick={() => setValue({ hoge: 1, fuga: "str" })}
+            onClick={() => setValue({ hoge: 1, fuga: "str" })}
           >
             set struct
           </Button>

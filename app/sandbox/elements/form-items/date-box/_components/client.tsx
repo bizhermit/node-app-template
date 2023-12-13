@@ -53,7 +53,7 @@ const DateBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -64,7 +64,7 @@ const DateBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -72,7 +72,7 @@ const DateBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -80,28 +80,28 @@ const DateBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue("2022-12-10");
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "date-box-bind": "2022-12-10" });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "date-box-form-bind": "2022-12-10" });
           }}
         >
@@ -142,7 +142,7 @@ const DateBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.focus();
             dateBoxRef.focus();
           }}
@@ -150,7 +150,7 @@ const DateBoxClient = () => {
           focus
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // console.log(formItemRef.getValue());
             console.log(dateBoxRef.getValue());
           }}
@@ -158,7 +158,7 @@ const DateBoxClient = () => {
           get value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setValue("set from form-item hook");
             dateBoxRef.setValue("2023-12-31");
           }}
@@ -166,7 +166,7 @@ const DateBoxClient = () => {
           set value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setDefaultValue();
             dateBoxRef.setDefaultValue();
           }}
@@ -174,7 +174,7 @@ const DateBoxClient = () => {
           set default value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.clear();
             dateBoxRef.clear();
           }}
@@ -182,42 +182,42 @@ const DateBoxClient = () => {
           clear
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log(dateBoxRef.addDay(1));
           }}
         >
           add day
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log(dateBoxRef.addMonth());
           }}
         >
           add month
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log(dateBoxRef.addYear());
           }}
         >
           add year
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log(dateBoxRef.setFirstDate());
           }}
         >
           set first day
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log(dateBoxRef.setLastDate());
           }}
         >
           set last date
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("has error", dateBoxRef.hasError());
             console.log(`error message: [${dateBoxRef.getErrorMessage()}]`);
           }}
@@ -300,7 +300,7 @@ const DateBoxClient = () => {
           $ref={dateRangeBoxRef}
         />
         <Button
-          $onClick={() => {
+          onClick={() => {
             dateRangeBoxRef.focus();
           }}
         >

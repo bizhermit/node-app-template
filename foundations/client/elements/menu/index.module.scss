@@ -80,6 +80,11 @@
     }
   }
 
+  .link {
+    text-decoration: none;
+    color: inherit;
+  }
+
   .content {
     box-sizing: border-box;
     display: flex;
