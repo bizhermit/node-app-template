@@ -40,8 +40,7 @@ export const useNavigation = () => {
   return useContext(NavigationContext);
 };
 
-type OmitAttributes = "color" | "children";
-export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+export type NavigationContainerOptions = {
   $name?: string;
   $defaultNavPosition?: NavigationPosition;
   $navPosition?: NavigationPosition;
@@ -56,6 +55,6 @@ export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, Omit
   $header?: ReactNode;
   $footer?: ReactNode;
   $nav?: ReactNode;
-  $navTitle?: ReactNode;
-  children: ReactNode;
 };
+
+export type NavigationContainerProps = ExtAttrs<HTMLAttributes<HTMLDivElement>, NavigationContainerOptions>;

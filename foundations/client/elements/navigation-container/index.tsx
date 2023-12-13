@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
-import { attributesWithoutChildren, convertRemToPxNum } from "../../utilities/attributes";
+import { attrs, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, type NavigationContainerProps } from "../navigation-container/context";
 import Style from "./index.module.scss";
@@ -11,23 +11,40 @@ const toggleVisId = "navTglVis";
 const toggleMinId = "navTglMin";
 const toggleMnuId = "navTglMnu";
 
-const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
+const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>(({
+  $name,
+  $defaultNavPosition,
+  $navPosition,
+  $defaultNavMode,
+  $navMode,
+  $headerMode,
+  $defaultHeaderMode,
+  $headerTag,
+  $footerTag,
+  $navTag,
+  $mainTag,
+  $header,
+  $footer,
+  $nav,
+  children,
+  ...props
+}, ref) => {
+  const HeaderTag = $headerTag ?? "header";
+  const FooterTag = $footerTag ?? "footer";
+  const NavTag = $navTag ?? "nav";
+  const MainTag = $mainTag ?? "main";
+
   const cref = useRef<HTMLDivElement>(null!);
   const nref = useRef<HTMLDivElement>(null!);
   const mref = useRef<HTMLElement>(null!);
-  const [navPos, setPosition] = useState(props.$defaultNavPosition);
-  const [navMode, setMode] = useState(props.$defaultNavMode);
-  const [headerMode, setHeaderMode] = useState(props.$defaultHeaderMode);
+  const [navPos, setPosition] = useState($defaultNavPosition);
+  const [navMode, setMode] = useState($defaultNavMode);
+  const [headerMode, setHeaderMode] = useState($defaultHeaderMode);
 
-  const HeaderTag = props.$headerTag ?? "header";
-  const FooterTag = props.$footerTag ?? "footer";
-  const NavTag = props.$navTag ?? "nav";
-  const MainTag = props.$mainTag ?? "main";
-
-  const name = props.$name ?? "nav";
-  const pos = props.$navPosition ?? navPos ?? "left";
-  const mode = props.$navMode ?? navMode ?? "auto";
-  const hmode = props.$headerMode ?? headerMode ?? "fill";
+  const name = $name ?? "nav";
+  const pos = $navPosition ?? navPos ?? "left";
+  const mode = $navMode ?? navMode ?? "auto";
+  const hmode = $headerMode ?? headerMode ?? "fill";
 
   const resetRadio = () => {
     const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
@@ -46,9 +63,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   };
 
   useEffect(() => {
-    if (mode === "auto") {
-      resetRadio();
-    }
+    if (mode === "auto") resetRadio();
   }, [mode]);
 
   return (
@@ -98,7 +113,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         type="checkbox"
       />
       <div
-        {...attributesWithoutChildren(props, Style.wrap)}
+        {...attrs(props, Style.wrap)}
         ref={ref}
         data-pos={pos}
         data-mode={mode}
@@ -108,7 +123,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           className={Style.mask}
           htmlFor={`${name}_${toggleMnuId}`}
         />
-        {props.$nav &&
+        {$nav &&
           <NavTag
             className={Style.nav}
             data-pos={pos}
@@ -134,7 +149,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               ref={nref}
               className={Style.nmain}
             >
-              {props.$nav}
+              {$nav}
             </div>
           </NavTag>
         }
@@ -160,7 +175,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               </label>
             </div>
             <div className={Style.hcontent}>
-              {props.$header}
+              {$header}
             </div>
           </HeaderTag>
           <MainTag
@@ -168,11 +183,11 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             data-pos={pos}
             ref={mref}
           >
-            {props.children}
+            {children}
           </MainTag>
-          {props.$footer &&
+          {$footer &&
             <FooterTag className={Style.footer}>
-              {props.$footer}
+              {$footer}
             </FooterTag>
           }
         </div>
