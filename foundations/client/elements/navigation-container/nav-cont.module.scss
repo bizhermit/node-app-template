@@ -6,7 +6,9 @@ $minHoverToggle: true;
 
 @layer base {
 
-  @mixin navVisStyles { // in .wrap
+  @mixin navVisStyles {
+
+    // in .wrap
     >.nav {
       >.nmain {
         min-width: var(--nav-base-size);
@@ -42,7 +44,9 @@ $minHoverToggle: true;
     }
   }
 
-  @mixin navMinStyles { // in .wrap
+  @mixin navMinStyles {
+
+    // in .wrap
     >.nav {
       width: fit-content;
       grid-template-columns: 0fr;
@@ -92,7 +96,7 @@ $minHoverToggle: true;
             margin-left: calc(100% - var(--nav-min-size));
           }
         }
-  
+
         .slideLeft {
           display: unset
         }
@@ -100,7 +104,9 @@ $minHoverToggle: true;
     }
   }
 
-  @mixin navMnuStyles { // in .wrap
+  @mixin navMnuStyles {
+
+    // in .wrap
     >.nav {
       z-index: 96;
       top: var(--header-size);
@@ -122,7 +128,9 @@ $minHoverToggle: true;
     }
   }
 
-  @mixin navMnuCheckStyles($mode) { // in root
+  @mixin navMnuCheckStyles($mode) {
+
+    // in root
     .tglMnu {
       &:not(:checked) {
         &~.wrap {
@@ -284,7 +292,7 @@ $minHoverToggle: true;
           >.corner {
             order: 1;
           }
-    
+
           >.hcontent {
             order: 2;
           }
@@ -304,7 +312,7 @@ $minHoverToggle: true;
           >.corner {
             order: 2;
           }
-    
+
           >.hcontent {
             order: 1;
           }
@@ -340,8 +348,8 @@ $minHoverToggle: true;
     justify-content: center;
     align-items: center;
     transition: color #{var.$transitionTime},
-      margin-left var(--nav-trans-time),
-      margin-right var(--nav-trans-time);
+    margin-left var(--nav-trans-time),
+    margin-right var(--nav-trans-time);
   }
 
   .btn {
@@ -436,7 +444,7 @@ $minHoverToggle: true;
 
       @include mixins.crossHover(false) {
         background: var(--c-hover);
-        
+
         ~.corner {
           color: var(--c-hover_);
         }

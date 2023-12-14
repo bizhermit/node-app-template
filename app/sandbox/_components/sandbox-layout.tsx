@@ -1,9 +1,8 @@
 "use client";
 
 import Menu from "#/client/elements/menu";
+import NavigationContainer from "#/client/elements/navigation-container";
 import { useNavigation } from "#/client/elements/navigation-container/context";
-// import NavigationContainer from "#/client/elements/navigation-container";
-import NavigationContainer from "#/client/elements/navigation-container/fat";
 import { FC, ReactNode } from "react";
 import { replaceDynamicPathname } from "../../../foundations/client/elements/link";
 

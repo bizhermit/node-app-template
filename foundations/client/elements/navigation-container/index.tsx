@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
 import { attrs, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
@@ -33,6 +33,14 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   const FooterTag = $footerTag ?? "footer";
   const NavTag = $navTag ?? "nav";
   const MainTag = $mainTag ?? "main";
+  const name = $name ?? "nav";
+
+  const resetRadio = () => {
+    const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
+    if (visElem) visElem.checked = false;
+    const minElem = document.getElementById(`${name}_${toggleMinId}`) as HTMLInputElement;
+    if (minElem) minElem.checked = false;
+  };
 
   const cref = useRef<HTMLDivElement>(null!);
   const nref = useRef<HTMLDivElement>(null!);
@@ -41,17 +49,9 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   const [navMode, setMode] = useState($defaultNavMode);
   const [headerMode, setHeaderMode] = useState($defaultHeaderMode);
 
-  const name = $name ?? "nav";
   const pos = $navPosition ?? navPos ?? "left";
   const mode = $navMode ?? navMode ?? "auto";
   const hmode = $headerMode ?? headerMode ?? "fill";
-
-  const resetRadio = () => {
-    const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
-    if (visElem) visElem.checked = false;
-    const minElem = document.getElementById(`${name}_${toggleMinId}`) as HTMLInputElement;
-    if (minElem) minElem.checked = false;
-  };
 
   const getHeaderSizeNum = () => {
     if (typeof window === "undefined" || mref.current == null) return 0;
@@ -61,10 +61,6 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
       )
     ) ?? 0;
   };
-
-  useEffect(() => {
-    if (mode === "auto") resetRadio();
-  }, [mode]);
 
   return (
     <NavigationContext.Provider
@@ -100,12 +96,14 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         id={`${name}_${toggleVisId}`}
         name={name}
         type="radio"
+        defaultChecked={$defaultNavMode === "visible"}
       />
       <input
         className={Style.tglMin}
         id={`${name}_${toggleMinId}`}
         name={name}
         type="radio"
+        defaultChecked={$defaultNavMode === "minimize"}
       />
       <input
         className={Style.tglMnu}
