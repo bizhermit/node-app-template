@@ -61,7 +61,7 @@ type FormOptions<T extends FormDataStruct = FormDataStruct> = {
 } & (PlainFormOptins | StructFormOptions<T>);
 
 export type FormProps<T extends FormDataStruct = FormDataStruct>
-  = ExtAttrs<FormHTMLAttributes<HTMLFormElement>, FormOptions<T>>;
+  = OverwriteAttrs<FormHTMLAttributes<HTMLFormElement>, FormOptions<T>>;
 
 interface FormFC extends FunctionComponent<FormProps> {
   <T extends FormDataStruct = FormDataStruct>(

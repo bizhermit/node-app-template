@@ -14,7 +14,7 @@ export type LinkButtonOptions = Omit<ButtonOptions, "onClick" | "notDependsOnFor
   onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLAnchorElement>) => (void | boolean | Promise<void | boolean>);
 };
 
-export type LinkButtonProps = ExtAttrs<NextLinkProps, LinkButtonOptions>;
+export type LinkButtonProps = OverwriteAttrs<NextLinkProps, LinkButtonOptions>;
 
 const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
   $size,

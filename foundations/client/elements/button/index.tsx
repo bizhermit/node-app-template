@@ -21,7 +21,7 @@ export type ButtonOptions = {
   onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void | boolean>);
 };
 
-export type ButtonProps = ExtAttrs<ButtonHTMLAttributes<HTMLButtonElement>, ButtonOptions>;
+export type ButtonProps = OverwriteAttrs<ButtonHTMLAttributes<HTMLButtonElement>, ButtonOptions>;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   $size,

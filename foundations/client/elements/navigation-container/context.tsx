@@ -55,4 +55,4 @@ export type NavigationContainerOptions = {
   $nav?: ReactNode;
 };
 
-export type NavigationContainerProps = ExtAttrs<HTMLAttributes<HTMLDivElement>, NavigationContainerOptions>;
+export type NavigationContainerProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, NavigationContainerOptions>;

@@ -20,9 +20,7 @@ type TextBoxHook<T extends string | number> = FormItemHook<T>;
 
 export const useTextBox = <T extends string | number = string>() => useFormItemBase<FormItemHook<T>>();
 
-export type TextBoxProps<
-  D extends DataItem_String | DataItem_Number | undefined = undefined
-> = FormItemProps<string | number, D, string, {}> & {
+type TextBoxOptions<D extends DataItem_String | DataItem_Number | undefined = undefined> = {
   $ref?: TextBoxHook<ValueType<string | number, D, string>> | TextBoxHook<string | number>;
   $type?: InputType;
   $inputMode?: InputMode;
@@ -40,6 +38,10 @@ export type TextBoxProps<
   $autoComplete?: string;
   $align?: "left" | "center" | "right";
 };
+
+export type TextBoxProps<
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+> = OverwriteAttrs<FormItemProps<string | number, D, string, {}>, TextBoxOptions<D>>;
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
   <D extends DataItem_String | DataItem_Number | undefined = undefined>(

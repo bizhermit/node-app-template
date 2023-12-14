@@ -11,7 +11,7 @@ export type NextLinkOptions = {
   disabled?: boolean;
 } & Omit<LinkProps, "href">;
 
-export type NextLinkProps = ExtAttrs<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href">, NextLinkOptions>;
+export type NextLinkProps = OverwriteAttrs<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href">, NextLinkOptions>;
 
 export const replaceDynamicPathname = <T extends NextLinkOptions["href"]>(href: T, params: NextLinkOptions["params"]): T => {
   if (href == null) return href;

@@ -32,14 +32,14 @@ type MenuItemOptions = MenuBaseOptions & {
   ) => void;
 };
 
-export type MenuItemProps = ExtAttrs<HTMLAttributes<HTMLDivElement>, MenuItemOptions>;
+export type MenuItemProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, MenuItemOptions>;
 
 type MenuOptions = MenuBaseOptions & {
   direction?: Direction;
   judgeSelected?: (props: MenuItemProps, nestLevel: number) => boolean;
 };
 
-export type MenuProps = ExtAttrs<HTMLAttributes<HTMLDivElement>, MenuOptions>;
+export type MenuProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, MenuOptions>;
 
 const Menu = forwardRef<HTMLDivElement, MenuProps>(({
   items,
