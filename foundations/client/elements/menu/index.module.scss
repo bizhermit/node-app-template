@@ -162,10 +162,8 @@
       }
     }
 
-    &:is([data-mode="auto"], [data-mode="minimize"], [data-mode="manual"]) {
-      .content {
-        padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
-      }
+    .content {
+      padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
     }
   }
 
