@@ -6,13 +6,21 @@ $minHoverToggle: true;
 
 @layer base {
 
-  @mixin navVisStyles {
+  @mixin navVisStyles { // in .wrap
     >.nav {
       >.nmain {
         min-width: var(--nav-base-size);
       }
 
-      &[data-pos="left"] {
+      .btnVis {
+        display: none;
+      }
+
+      @content;
+    }
+
+    &[data-pos="left"] {
+      >.nav {
         >.nheader {
           >.corner {
             margin-left: calc(100% - var(--nav-min-size));
@@ -23,22 +31,18 @@ $minHoverToggle: true;
           display: unset;
         }
       }
+    }
 
-      &[data-pos="right"] {
+    &[data-pos="right"] {
+      >.nav {
         .slideRight {
           display: unset;
         }
       }
-
-      .btnVis {
-        display: none;
-      }
-
-      @content;
     }
   }
 
-  @mixin navMinStyles {
+  @mixin navMinStyles { // in .wrap
     >.nav {
       width: fit-content;
       grid-template-columns: 0fr;
@@ -66,33 +70,37 @@ $minHoverToggle: true;
         overflow: hidden;
       }
 
-      &[data-pos="left"] {
-        .slideRight {
-          display: unset;
-        }
-      }
-
-      &[data-pos="right"] {
-        >.nheader {
-          >.corner {
-            margin-left: calc(100% - var(--nav-min-size));
-          }
-        }
-
-        .slideLeft {
-          display: unset
-        }
-      }
-
       .btnMin {
         display: none;
       }
 
       @content;
     }
+
+    &[data-pos="left"] {
+      >.nav {
+        .slideRight {
+          display: unset;
+        }
+      }
+    }
+
+    &[data-pos="right"] {
+      >.nav {
+        >.nheader {
+          >.corner {
+            margin-left: calc(100% - var(--nav-min-size));
+          }
+        }
+  
+        .slideLeft {
+          display: unset
+        }
+      }
+    }
   }
 
-  @mixin navMnuStyles {
+  @mixin navMnuStyles { // in .wrap
     >.nav {
       z-index: 96;
       top: var(--header-size);
@@ -114,7 +122,7 @@ $minHoverToggle: true;
     }
   }
 
-  @mixin navMnuCheckStyles($mode) {
+  @mixin navMnuCheckStyles($mode) { // in root
     .tglMnu {
       &:not(:checked) {
         &~.wrap {
@@ -192,8 +200,12 @@ $minHoverToggle: true;
         >.header {
           width: calc(100% + var(--nav-size));
           z-index: 99;
+        }
+      }
 
-          &[data-pos="left"] {
+      &[data-pos="left"] {
+        >.body {
+          >.header {
             margin-left: calc(var(--nav-size) * -1);
           }
         }
@@ -254,6 +266,50 @@ $minHoverToggle: true;
       --nav-size: 0rem;
 
       @include navMnuStyles;
+    }
+
+    &[data-pos="left"] {
+      >.nav {
+        left: 0;
+
+        >.nmain {
+          padding-bottom: 2rem;
+        }
+      }
+
+      >.body {
+        padding-left: var(--nav-size);
+
+        >.header {
+          >.corner {
+            order: 1;
+          }
+    
+          >.hcontent {
+            order: 2;
+          }
+        }
+      }
+    }
+
+    &[data-pos="right"] {
+      >.nav {
+        right: 0;
+      }
+
+      >.body {
+        padding-right: var(--nav-size);
+
+        >.header {
+          >.corner {
+            order: 2;
+          }
+    
+          >.hcontent {
+            order: 1;
+          }
+        }
+      }
     }
   }
 
@@ -360,18 +416,6 @@ $minHoverToggle: true;
     @if $slideMenuPadding ==false {
       --nav-menu-pad: 0;
     }
-
-    &[data-pos="left"] {
-      left: 0;
-
-      >.nmain {
-        padding-bottom: 2rem;
-      }
-    }
-
-    &[data-pos="right"] {
-      right: 0;
-    }
   }
 
   .nheader {
@@ -425,14 +469,6 @@ $minHoverToggle: true;
     justify-content: flex-start;
     align-items: flex-start;
     transition: padding-left var(--nav-trans-time), padding-right var(--nav-trans-time);
-
-    &[data-pos="left"] {
-      padding-left: var(--nav-size);
-    }
-
-    &[data-pos="right"] {
-      padding-right: var(--nav-size);
-    }
   }
 
   .header {
@@ -450,26 +486,6 @@ $minHoverToggle: true;
     color: var(--c-nav_);
     filter: drop-shadow(0 0 0.1rem var(--c-shadow));
     transition: width var(--nav-trans-time), margin-left var(--nav-trans-time);
-
-    &[data-pos="left"] {
-      >.corner {
-        order: 1;
-      }
-
-      >.hcontent {
-        order: 2;
-      }
-    }
-
-    &[data-pos="right"] {
-      >.corner {
-        order: 2;
-      }
-
-      >.hcontent {
-        order: 1;
-      }
-    }
   }
 
   .hcontent {

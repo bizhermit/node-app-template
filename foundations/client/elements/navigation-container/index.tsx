@@ -5,7 +5,7 @@ import parseNum from "../../../objects/number/parse";
 import { attrs, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, type NavigationContainerProps } from "../navigation-container/context";
-import Style from "./index.module.scss";
+import Style from "./nav-cont.module.scss";
 
 const toggleVisId = "navTglVis";
 const toggleMinId = "navTglMin";
@@ -124,11 +124,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           htmlFor={`${name}_${toggleMnuId}`}
         />
         {$nav &&
-          <NavTag
-            className={Style.nav}
-            data-pos={pos}
-            data-mode={mode}
-          >
+          <NavTag className={Style.nav}>
             <div className={Style.nheader}>
               <label
                 className={Style.btnVis}
@@ -153,14 +149,8 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
             </div>
           </NavTag>
         }
-        <div
-          className={Style.body}
-          data-pos={pos}
-        >
-          <HeaderTag
-            className={Style.header}
-            data-pos={pos}
-          >
+        <div className={Style.body}>
+          <HeaderTag className={Style.header}>
             <div
               ref={cref}
               className={Style.corner}
@@ -179,7 +169,6 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           </HeaderTag>
           <MainTag
             className={Style.main}
-            data-pos={pos}
             ref={mref}
           >
             {children}
