@@ -1,10 +1,10 @@
 "use client";
 
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useReducer, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
 import { attrs, convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
-import { NavigationContext, type NavigationContainerProps } from "../navigation-container/context";
+import { NavigationContext, NavigationHeaderMode, NavigationMode, NavigationPosition, type NavigationContainerProps } from "../navigation-container/context";
 import Style from "./nav-cont.module.scss";
 
 const toggleVisId = "navTglVis";
@@ -13,12 +13,10 @@ const toggleMnuId = "navTglMnu";
 
 const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>(({
   $name,
-  $defaultNavPosition,
   $navPosition,
   $defaultNavMode,
   $navMode,
   $headerMode,
-  $defaultHeaderMode,
   $headerTag,
   $footerTag,
   $navTag,
@@ -35,7 +33,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   const MainTag = $mainTag ?? "main";
   const name = $name ?? "nav";
 
-  const resetRadio = () => {
+  const resetAuto = () => {
     const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
     if (visElem) visElem.checked = false;
     const minElem = document.getElementById(`${name}_${toggleMinId}`) as HTMLInputElement;
@@ -45,9 +43,13 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
   const cref = useRef<HTMLDivElement>(null!);
   const nref = useRef<HTMLDivElement>(null!);
   const mref = useRef<HTMLElement>(null!);
-  const [navPos, setPosition] = useState($defaultNavPosition);
-  const [navMode, setMode] = useState($defaultNavMode);
-  const [headerMode, setHeaderMode] = useState($defaultHeaderMode);
+  const [navPos, setPosition] = useState<NavigationPosition>();
+  const [navMode, setMode] = useReducer((state: NavigationMode, action: NavigationMode = "auto") => {
+    if (state === action) return state;
+    if (!action || action === "auto") resetAuto();
+    return action;
+  }, "auto");
+  const [headerMode, setHeaderMode] = useState<NavigationHeaderMode>();
 
   const pos = $navPosition ?? navPos ?? "left";
   const mode = $navMode ?? navMode ?? "auto";
@@ -75,7 +77,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           if (!cref.current || getComputedStyle(cref.current).display === "none") return;
           (cref.current.querySelector(":scope>label") as HTMLElement)?.click();
         },
-        resetRadio,
+        resetAuto,
         closeMenu: () => {
           const mnuElem = document.getElementById(`${name}_${toggleMnuId}`) as HTMLInputElement;
           if (mnuElem) mnuElem.checked = false;

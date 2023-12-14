@@ -83,6 +83,7 @@ const Layout: LayoutFC = ({ children }) => {
       $header="Node App Template / Development"
       $footer="&copy; 2023 bizhermit.com"
       $nav={devMenus}
+      // $defaultNavMode="minimize"
     >
       {children}
     </NavigationContainer>
