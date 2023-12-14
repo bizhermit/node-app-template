@@ -62,7 +62,7 @@ export const useFormItemContext = <
   };
 
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
-    const v = (() => {
+    return receive((() => {
       if (props == null) return undefined;
       if ("$value" in props) return props.$value;
       if (props.name) {
@@ -77,8 +77,7 @@ export const useFormItemContext = <
       }
       if ("$defaultValue" in props) return props.$defaultValue;
       return undefined;
-    })();
-    return receive(v);
+    })());
   })());
   const [value, setValueImpl] = useState(valueRef.current);
   const setCurrentValue = (value: ValueType<T, D, V> | null | undefined) => {
@@ -296,7 +295,7 @@ export const useFormItemContext = <
   if (props.$ref) {
     props.$ref.getValue = () => valueRef.current;
     props.$ref.setValue = (v: any) => change(
-      v == null ? undefined : receive(
+      receive(v == null ? undefined :
         options?.multiple ? (Array.isArray(v) ? v : [v]) as any :
           Array.isArray(v) ? v[0] : v
       ), false
