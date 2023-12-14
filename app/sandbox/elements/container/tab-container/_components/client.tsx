@@ -1,14 +1,5 @@
 "use client";
 
-import Button from "#/client/elements/button";
-import Divider from "#/client/elements/divider";
-import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
-import { CloudIcon } from "#/client/elements/icon";
-import Row from "#/client/elements/row";
-import TabContainer from "#/client/elements/tab-container";
-import TabContent from "#/client/elements/tab-container/content";
-import generateArray from "#/objects/array/generator";
 import { useRef, useState } from "react";
 
 type TabKey = "tab1" | "tab2" | "tab3" | 4;
@@ -22,7 +13,7 @@ const TabContainerClient = () => {
 
   return (
     <div className="flex w-100 h-100 p-xs g-s">
-      <Row $vAlign="bottom" className="g-s">
+      {/* <Row $vAlign="bottom" className="g-s">
         <RadioButtons
           $tag="tab position"
           $source={[
@@ -119,7 +110,7 @@ const TabContainerClient = () => {
             </Row>
           ))}
         </TabContent>
-      </TabContainer>
+      </TabContainer> */}
     </div>
   );
 };

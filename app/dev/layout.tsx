@@ -1,4 +1,4 @@
-import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, NavContainerIcon, PopupIcon, SmileIcon, TextBoxIcon } from "#/client/elements/icon";
+import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, NavContainerIcon, PopupIcon, SmileIcon, TabContainerIcon, TextBoxIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 // import NavigationContainer from "#/client/elements/navigation-container/fat";
@@ -82,6 +82,12 @@ const devMenus = (
                 label: "Navigation",
                 pathname: "/dev/elements/container/navigation",
               },
+              {
+                key: "tab",
+                icon: <TabContainerIcon />,
+                label: "Tab",
+                pathname: "/dev/elements/container/tab",
+              }
             ],
           },
           {

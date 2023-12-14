@@ -7,6 +7,16 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: stretch;
+
+  &[data-scroll="true"] {
+    height: 100%;
+
+    >.contents {
+      flex: 1 1 0rem;
+      overflow: auto;
+      --header-size: 0rem;
+    }
+  }
 }
 
 .title {
@@ -47,6 +57,7 @@
   align-items: stretch;
   padding: var(--b-m) var(--b-m) var(--b-m) var(--b-m);
   gap: var(--b-s);
+  min-height: 0;
 }
 
 .sheet {

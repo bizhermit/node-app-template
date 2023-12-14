@@ -315,7 +315,7 @@ export const ContainerIcon = svg("ContainerIcon", (props, ref) => (
 
 export const NavContainerIcon = svg("NavContainerIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
-    <path d="M2,3H18V17H2Z M2,3H18V7H2Z M2,7H8V17H2Z" fill="none" />
+    <path d="M2,3H18V17H2Z M2,7H18 M8,7V17" fill="none" />
   </svg>
 ));
 
@@ -348,5 +348,11 @@ export const MagnifyingGlassIcon = svg("MagnifyingGlassIcon", (props, ref) => (
 export const TextBoxIcon = svg("TextBoxIcon", (props, ref) => (
   <svg {...svgAttrs(props)} ref={ref}>
     <path d="M7,7H2V13H7 M13,7H18V13H13 M10,5L10,15 M9,4H6M11,4H14 M9,16H6M11,16H14" fill="none" />
+  </svg>
+));
+
+export const TabContainerIcon = svg("TabContainerIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,3H18V17H2Z M2,7H18 M10,3V7" fill="none" />
   </svg>
 ));

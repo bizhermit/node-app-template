@@ -1,12 +1,16 @@
-import { FC, ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import Style from "./base-layout.module.scss";
 
 const BaseLayout: FC<{
   title: ReactNode;
+  scroll?: boolean;
   children: ReactNode;
 }> = (props) => {
   return (
-    <div className={Style.base}>
+    <div
+      className={Style.base}
+      data-scroll={props.scroll}
+    >
       <h1 className={Style.title}>
         {props.title}
       </h1>

@@ -1,14 +1,18 @@
-import type { FC, Key, ReactNode } from "react";
+import type { FC, HTMLAttributes, Key, ReactNode } from "react";
 
-const TabContent: FC<{
+type TabContentOptions = {
   key: Key;
-  label: ReactNode;
-  overlap?: boolean;
-  defaultMount?: boolean;
-  unmountDeselected?: boolean;
-  preventAnimation?: boolean;
-  children?: ReactNode;
-}> = ({ children }) => {
+  $label: ReactNode;
+  $color?: Color;
+  $overlap?: boolean;
+  $defaultMount?: boolean;
+  $unmountDeselected?: boolean;
+  $preventAnimation?: boolean;
+};
+
+export type TabContentProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, TabContentOptions>;
+
+const TabContent: FC<TabContentProps> = ({ children }) => {
   return <>{children}</>;
 };
 

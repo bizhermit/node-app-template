@@ -13,6 +13,8 @@ $vTransitionTime: 0.5s;
     justify-content: stretch;
     align-items: stretch;
     flex-wrap: nowrap;
+    min-height: 0;
+    min-width: 0;
 
     &[data-pos="top"] {
       flex-direction: column;
@@ -39,7 +41,6 @@ $vTransitionTime: 0.5s;
           top: -100%;
           transition: top #{$vTransitionTime},
           opacity #{$vTransitionTime};
-          --s-color: unset;
 
           &[data-selected="true"] {
             top: 0%;
@@ -86,8 +87,8 @@ $vTransitionTime: 0.5s;
         flex-direction: row;
 
         >.tab {
-          min-width: calc(var(--cs-m) * 4);
-          padding: calc(var(--pt-t) + #{$borderWidth}) #{var.$textPaddingBold} 0 #{var.$textPaddingBold};
+          flex: 1 1 calc(var(--cs-m) * 4);
+          padding: calc(var(--pt-t) + #{$borderWidth}) #{var.$textPadding} 0 #{var.$textPadding};
         }
       }
     }
@@ -164,8 +165,8 @@ $vTransitionTime: 0.5s;
         writing-mode: vertical-rl;
 
         .tab {
-          min-height: calc(var(--cs-m) * 4);
-          padding: #{var.$textPaddingBold} 0.4rem #{var.$textPaddingBold} 0;
+          flex: 1 1 calc(var(--cs-m) * 4);
+          padding: #{var.$textPadding} 0.4rem #{var.$textPadding} 0;
         }
       }
     }
@@ -221,9 +222,14 @@ $vTransitionTime: 0.5s;
   }
 
   .body {
+    --s-color: initial;
+    --s-color_: initial;
+
     box-sizing: border-box;
     position: relative;
-    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
     overflow: hidden;
   }
 
