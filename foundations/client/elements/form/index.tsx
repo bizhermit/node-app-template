@@ -1,13 +1,17 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FormHTMLAttributes, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FormHTMLAttributes, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
+import clone from "../../../objects/clone";
 import { getValue } from "../../../objects/struct/get";
 import { setValue } from "../../../objects/struct/set";
-import { attributes } from "../../utilities/attributes";
+import { attrs } from "../../utilities/attributes";
 import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "./$types";
 import { FormContext, type UseFormItemContextOptions } from "./context";
 import Style from "./index.module.scss";
 import { isErrorObject } from "./utilities";
+
+type FormDataStruct = { [v: string | number | symbol]: any };
+type ErrorStruct = { [v: string]: string };
 
 type FormRef = {
   getValue: <T>(name: string) => T;
@@ -30,57 +34,74 @@ export const useFormRef = () => {
   return ref.current;
 };
 
-type PlainFormProps = {
-  $submitDataType: "formData";
-  $onSubmit?: (((data: FormData, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
+type PlainFormOptins = {
+  $type: "formData";
+  $appendNotMountedValue?: undefined;
+  onSubmit?: ((data: FormData, ctx: { method: string; }, e: React.FormEvent<HTMLFormElement>) => (void | boolean | Promise<void>)) | boolean;
 };
 
-type BindFormProps<T extends Struct = Struct> = {
-  $submitDataType?: "struct";
-  $onSubmit?: (((data: T, method: string, e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
-  $preventExcludeNotMountedValue?: boolean;
+type StructFormOptions<T extends FormDataStruct = FormDataStruct> = {
+  $type?: "struct" | null | undefined;
+  $appendNotMountedValue?: boolean;
+  onSubmit?: ((data: T, ctx: { method: string; }, e: React.FormEvent<HTMLFormElement>) => (void | boolean | Promise<void>)) | boolean;
 };
 
-export type FormProps<T extends Struct = Struct> = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit" | "onReset" | "encType"> & {
+type FormOptions<T extends FormDataStruct = FormDataStruct> = {
   $formRef?: ReturnType<typeof useFormRef>;
-  $bind?: boolean | Struct | null | undefined;
+  $bind?: boolean | FormDataStruct | null | undefined;
   $disabled?: boolean;
   $readOnly?: boolean;
   $messageDisplayMode?: FormItemMessageDisplayMode;
   $messageWrap?: boolean;
-  $onReset?: (((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean);
-  encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
-  $onError?: (error: Struct) => void;
   $preventEnterSubmit?: boolean;
-  $flexLayout?: boolean;
-} & (PlainFormProps | BindFormProps<T>);
+  $layout?: "flex" | "grid";
+  encType?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+  onReset?: ((e: React.FormEvent<HTMLFormElement>) => (boolean | void | Promise<void>)) | boolean;
+  // $onError?: (error: ErrorStruct) => void;
+} & (PlainFormOptins | StructFormOptions<T>);
+
+export type FormProps<T extends FormDataStruct = FormDataStruct>
+  = ExtAttrs<FormHTMLAttributes<HTMLFormElement>, FormOptions<T>>;
 
 interface FormFC extends FunctionComponent<FormProps> {
-  <T extends Struct = Struct>(
+  <T extends FormDataStruct = FormDataStruct>(
     attrs: ComponentAttrsWithRef<HTMLFormElement, FormProps<T>>
   ): ReactElement<any> | null;
 }
 
-const Form = forwardRef<HTMLFormElement, FormProps>(<
-  T extends Struct = Struct
->(props: FormProps<T>, $ref: ForwardedRef<HTMLFormElement>) => {
+const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = FormDataStruct>({
+  $type,
+  $formRef,
+  $bind,
+  $disabled,
+  $readOnly,
+  $messageDisplayMode,
+  $messageWrap,
+  $preventEnterSubmit,
+  $layout,
+  $appendNotMountedValue,
+  onSubmit,
+  onReset,
+  // $onError,
+  ...props
+}: FormProps<T>, $ref: ForwardedRef<HTMLFormElement>) => {
   const ref = useRef<HTMLFormElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const method = props.method ?? "get";
 
   const bind = useMemo(() => {
-    if (props.$bind === false) return undefined;
-    if (props.$bind == null || props.$bind === true) return {};
-    return props.$bind;
-  }, [props.$bind]);
+    if ($bind === false) return undefined;
+    if ($bind == null || $bind === true) return {};
+    return $bind;
+  }, [$bind]);
 
   const disabledRef = useRef(true);
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
     return disabledRef.current = action;
   }, disabledRef.current);
-  const items = useRef<Struct<FormItemMountProps & { props: FormItemProps; options: UseFormItemContextOptions; }>>({});
-  const [errors, setErrors] = useState<Struct>({});
-  const [exErrors, setExErrors] = useState<Struct>({});
+  const items = useRef<{ [v: string]: FormItemMountProps & { props: FormItemProps; options: UseFormItemContextOptions; } }>({});
+  const [errors, setErrors] = useState<ErrorStruct>({});
+  const [exErrors, setExErrors] = useState<ErrorStruct>({});
 
   const mount = (
     id: string,
@@ -109,8 +130,8 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
   };
 
   const hasError = useMemo(() => {
-    return Object.keys(errors).find(key => isErrorObject(errors[key])) != null
-      || Object.keys(exErrors).find(key => isErrorObject(exErrors[key])) != null;
+    return Object.keys(errors).find(k => isErrorObject(errors[k])) != null
+      || Object.keys(exErrors).find(k => isErrorObject(exErrors[k])) != null;
   }, [errors, exErrors]);
 
   const validation = (returnId?: string) => {
@@ -124,10 +145,11 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
-    if (props.$disabled || disabledRef.current || hasError) {
+    if ($disabled || disabledRef.current || hasError) {
       e.preventDefault();
       return;
     }
+    setDisabled(true);
     if (props.encType) {
       e.currentTarget.enctype = props.encType;
     } else {
@@ -144,95 +166,84 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
         e.currentTarget.removeAttribute("enctype");
       }
     }
-    setDisabled(true);
-    if (props.$onSubmit == null) {
+    if (onSubmit == null || onSubmit === false) {
+      e.preventDefault();
       setDisabled(false);
       return;
     }
-    if (typeof props.$onSubmit === "boolean") {
-      if (props.$onSubmit !== true) {
-        e.preventDefault();
-      }
-      setDisabled(false);
-      return;
-    }
-    const ret = props.$onSubmit(
-      (props.$submitDataType === "formData" ? new FormData(e.currentTarget) : (() => {
-        if (props.$preventExcludeNotMountedValue) {
-          return { ...bind };
-        }
-        const ret: Struct = {};
-        Object.keys(items.current).forEach(key => {
-          const name = items.current[key].props.name;
-          if (!name) return;
-          setValue(ret, name, getValue(bind, name));
+    if (onSubmit === true) return;
+    const ret = onSubmit(
+      (() => {
+        if ($type === "formData") return new FormData(e.currentTarget);
+        if ($appendNotMountedValue) return clone(bind);
+        const ret = {};
+        Object.keys(items.current).forEach(k => {
+          const n = items.current[k].props.name;
+          if (!n) return;
+          setValue(ret, n, getValue(bind, n));
         });
         return ret;
-      })()) as any,
-      ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
+      })() as FormData & T,
+      {
+        method: ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
+      },
       e
     );
-    if (ret == null || typeof ret === "boolean") {
-      if (ret !== true) {
-        e.preventDefault();
-      }
+    if (ret == null || ret === false) {
+      e.preventDefault();
       setDisabled(false);
       return;
     }
+    if (ret === true) return;
     e.preventDefault();
-    if ("then" in ret) {
-      ret.then(() => {
-        setDisabled(false);
-      });
+    if ("finally" in ret) {
+      ret.finally(() => setDisabled(false));
     }
   };
 
-  const resetItems = () => {
+  const resetItems = (callback?: () => void) => {
     setTimeout(() => {
       Object.keys(items.current).forEach(id => {
         const item = items.current[id];
         if (item.props.$preventFormBind) return;
         item.change(item.props.$defaultValue, false);
       });
+      callback?.();
     }, 0);
   };
 
   const reset = (e: React.FormEvent<HTMLFormElement>) => {
-    if (props.$disabled || disabledRef.current) {
+    e.stopPropagation();
+    if ($disabled || disabledRef.current) {
       e.preventDefault();
       return;
     }
     setDisabled(true);
-    if (props.$onReset == null || typeof props.$onReset === "boolean") {
-      if (props.$onReset === false) {
-        e.preventDefault();
-      } else {
-        resetItems();
-      }
-      setDisabled(false);
-      return;
-    }
-    const ret = props.$onReset(e);
-    if (ret == null || typeof ret === "boolean") {
-      if (ret === false) {
-        e.preventDefault();
-      } else {
-        resetItems();
-      }
-      setDisabled(false);
-      return;
-    }
     e.preventDefault();
-    if ("then" in ret) {
-      ret.then(() => {
-        setDisabled(false);
-      });
+    if (onReset == null || onReset === true) {
+      resetItems(() => setDisabled(false));
+      return;
+    }
+    if (onReset === false) {
+      setDisabled(false);
+      return;
+    }
+    const ret = onReset(e);
+    if (ret == null || ret === true) {
+      resetItems(() => setDisabled(false));
+      return;
+    }
+    if (ret === false) {
+      setDisabled(false);
+      return;
+    }
+    if ("finally" in ret) {
+      ret.finally(() => setDisabled(false));
     }
   };
 
   const get = (name: string) => {
-    if (bind == null) return undefined;
-    return getValue(bind, name);
+    return bind == null ? undefined : getValue(bind, name);
   };
 
   const set = (name: string, value: any) => {
@@ -284,40 +295,39 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
     return Object.keys(items.current).map(id => errors[id]).filter(err => err);
   };
 
-  useEffect(() => {
-    if (props.$onError) {
-      const e = { ...errors };
-      Object.keys(e).forEach(id => {
-        if (isErrorObject(e[id])) return;
-        delete e[id];
-      });
-      const exE = { ...exErrors };
-      Object.keys(exE).forEach(id => {
-        if (isErrorObject(exE[id])) return;
-        delete exE[id];
-      });
-      props.$onError({ ...exE, ...e });
-    }
-  }, [errors, exErrors]);
+  // useEffect(() => {
+  //   if ($onError) {
+  //     const ret: ErrorStruct = {};
+  //     Object.keys(errors).forEach(id => {
+  //       const e = errors[id];
+  //       if (isErrorObject(e)) ret[id] = e;
+  //     });
+  //     Object.keys(exErrors).forEach(id => {
+  //       const e = exErrors[id];
+  //       if (isErrorObject(e)) ret[id] = e;
+  //     });
+  //     $onError(ret);
+  //   }
+  // }, [errors, exErrors]);
 
   useEffect(() => {
     setDisabled(false);
   }, []);
 
-  if (props.$formRef) {
-    props.$formRef.getValue = get;
-    props.$formRef.setValue = set;
-    props.$formRef.render = render;
-    props.$formRef.validation = validation;
-    props.$formRef.reset = () => ref.current?.reset?.();
-    props.$formRef.submit = () => ref.current?.submit?.();
+  if ($formRef) {
+    $formRef.getValue = get;
+    $formRef.setValue = set;
+    $formRef.render = render;
+    $formRef.validation = validation;
+    $formRef.reset = () => ref.current?.reset?.();
+    $formRef.submit = () => ref.current?.submit?.();
   }
 
   return (
     <FormContext.Provider value={{
       bind,
-      disabled: props.$disabled || disabled,
-      readOnly: props.$readOnly,
+      disabled: $disabled || disabled,
+      readOnly: $readOnly,
       method,
       errors,
       setErrors,
@@ -327,8 +337,8 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
       mount,
       unmount,
       validation,
-      messageDisplayMode: props.$messageDisplayMode ?? "bottom-hide",
-      messageWrap: props.$messageWrap,
+      messageDisplayMode: $messageDisplayMode ?? "bottom-hide",
+      messageWrap: $messageWrap,
       getValue: get,
       setValue: set,
       render,
@@ -336,13 +346,13 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<
       getErrorMessages,
     }}>
       <form
-        {...attributes(props, Style.main)}
-        data-flex={props.$flexLayout}
+        {...attrs(props, Style.main)}
         ref={ref}
         method={method}
+        data-layout={$layout}
         onSubmit={submit}
         onReset={reset}
-        onKeyDown={props.$preventEnterSubmit ? (e) => {
+        onKeyDown={$preventEnterSubmit ? (e) => {
           if (e.key === "Enter") {
             if ((e.target as HTMLElement).tagName !== "BUTTON") {
               e.preventDefault();

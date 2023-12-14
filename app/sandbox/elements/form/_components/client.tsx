@@ -40,7 +40,7 @@ const FormClient = () => {
           // $readOnly
           // $messageDisplayMode="bottom"
           $formRef={formRef}
-          $onSubmit={(fd) => {
+          onSubmit={(fd) => {
             console.log("----submit----");
             console.log(fd);
             setViewFormBind({
@@ -65,7 +65,7 @@ const FormClient = () => {
             });
             // return false;
           }}
-          $onReset={() => {
+          onReset={() => {
             console.log("reset");
             // return false;
           }}

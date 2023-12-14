@@ -32,7 +32,7 @@ const HiddenClient = () => {
       <Form
         className="flex g-s"
         $bind
-        $onSubmit={(data) => {
+        onSubmit={(data) => {
           console.log(JSON.stringify(data, null, 2));
         }}
         $messageDisplayMode={messagePos ?? undefined}

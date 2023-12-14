@@ -42,7 +42,7 @@ const ButtonClient = () => {
       <section>
         <h2>form button</h2>
         <Form
-          $onSubmit={() => {
+          onSubmit={() => {
             console.log("submit");
           }}
         // $bind={{}}

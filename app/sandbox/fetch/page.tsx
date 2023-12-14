@@ -125,8 +125,8 @@ const Page = () => {
       >
         <Form
           className="flex g-s"
-          $submitDataType="formData"
-          $onSubmit={(formData, method) => {
+          $type="formData"
+          onSubmit={(formData, { method }) => {
             process(async () => {
               switch (method) {
                 case "get":
@@ -156,12 +156,12 @@ const Page = () => {
           <TextBox
             // name="text"
             $dataItem={sample_string}
-            // $validations={[
-            //   (...args) => {
-            //     console.log("validation-item:", args);
-            //     return undefined;
-            //   }
-            // ]}
+          // $validations={[
+          //   (...args) => {
+          //     console.log("validation-item:", args);
+          //     return undefined;
+          //   }
+          // ]}
           />
           <NumberBox
             $dataItem={sample_number}

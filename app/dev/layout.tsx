@@ -1,4 +1,4 @@
-import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, HomeIcon, NavContainerIcon, PopupIcon, SmileIcon } from "#/client/elements/icon";
+import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, NavContainerIcon, PopupIcon, SmileIcon, TextBoxIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 // import NavigationContainer from "#/client/elements/navigation-container/fat";
@@ -9,6 +9,7 @@ const devMenus = (
     style={{
       minWidth: 280
     }}
+    iconSpace
     items={[
       {
         key: "index",
@@ -51,6 +52,24 @@ const devMenus = (
             icon: <ExLinkIcon />,
             label: "NextLink",
             pathname: "/dev/elements/link",
+          },
+          {
+            key: "form",
+            icon: <FormIcon />,
+            label: "Form",
+            pathname: "/dev/elements/form",
+          },
+          {
+            key: "form-items",
+            icon: <FormItemIcon />,
+            label: "FormItems",
+            items: [
+              {
+                key: "text-box",
+                icon: <TextBoxIcon />,
+                label: "TextBox",
+              }
+            ],
           },
           {
             key: "cont",

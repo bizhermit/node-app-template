@@ -94,12 +94,16 @@
     white-space: nowrap;
     height: var(--nav-min-size, var(--size));
     padding-left: var(--menu-pad, 0);
-    z-index: 0;
     overflow: visible;
 
+    $contentTransition: padding-left var(--nav-trans-time, #{var.$transitionTime});
     &[data-selectable="true"] {
-      @include mixins.listHover(padding-left var(--nav-trans-time, #{var.$transitionTime}));
+      @include mixins.listHover($contentTransition);
       cursor: pointer;
+    }
+
+    &:not([data-selectable="true"]) {
+      transition: $contentTransition;
     }
   }
 

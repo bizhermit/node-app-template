@@ -258,7 +258,7 @@ const SelectBoxClient = () => {
         $readOnly={readOnly}
         action="/api/form"
         method="post"
-      // $onSubmit={(data) => {
+      // onSubmit={(data) => {
       //   console.log(data);
       // }}
       >

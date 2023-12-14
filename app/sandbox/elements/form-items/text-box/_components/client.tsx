@@ -166,7 +166,7 @@ const TextBoxClient = () => {
         <Form
           method="post"
           $bind
-          $onSubmit={(bindData) => {
+          onSubmit={(bindData) => {
             console.log(bindData);
           }}
         >

@@ -52,8 +52,8 @@ const Page = () => {
         <Divider />
         <BaseSection title="in form">
           <Form
-            $flexLayout
-            $onSubmit={false}
+            $layout="flex"
+            onSubmit={false}
             $disabled={disabled}
           >
             <TextBox name="text" $required />
