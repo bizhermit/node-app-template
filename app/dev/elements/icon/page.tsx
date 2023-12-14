@@ -1,12 +1,39 @@
 "use client";
 
 import Button from "#/client/elements/button";
-import { CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, ElementIcon, HomeIcon, LeftIcon, LeftRightIcon, ListIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, PlusIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SmileIcon, SyncIcon, TodayIcon, UndoIcon, UnloadIcon, UpIcon } from "#/client/elements/icon";
+import SelectBox from "#/client/elements/form/items/select-box";
+import { ButtonIcon, CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, ContainerIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, ElementIcon, ExLinkIcon, HomeIcon, LeftIcon, LeftRightIcon, ListIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, NavContainerIcon, PlusIcon, PopupIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SmileIcon, SyncIcon, TodayIcon, UndoIcon, UnloadIcon, UpIcon } from "#/client/elements/icon";
+import { colors } from "#/utilities/sandbox";
 import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
+import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
+import { useState } from "react";
 
 const Page = () => {
+  const [fgColor, setFgColor] = useState("base");
+  const [bgColor, setBgColor] = useState("base");
+
   return (
     <BaseLayout title="Icon">
+      <ControlLayout>
+        <ControlItem caption="fg-color">
+          <SelectBox
+            $value={fgColor}
+            $onChange={v => setFgColor(v!)}
+            $source={colors.map(color => {
+              return { value: color, label: color };
+            })}
+          />
+        </ControlItem>
+        <ControlItem caption="bg-color">
+          <SelectBox
+            $value={bgColor}
+            $onChange={v => setBgColor(v!)}
+            $source={colors.map(color => {
+              return { value: color, label: color };
+            })}
+          />
+        </ControlItem>
+      </ControlLayout>
       <BaseSheet>
         <table>
           <style jsx>{`
@@ -66,28 +93,33 @@ const Page = () => {
               HomeIcon,
               ElementIcon,
               SmileIcon,
+              ButtonIcon,
+              ExLinkIcon,
+              ContainerIcon,
+              NavContainerIcon,
+              PopupIcon,
             ].reverse().map(Component => {
               const name = Component.name;
               return (
                 <tr key={name} className="g-m">
                   <th>{name}</th>
                   <td>
-                    <Component className="bgc-cool" $size="xs" />
+                    <Component className={`fgc-${fgColor} bgc-${bgColor}`} $size="xs" />
                   </td>
                   <td>
-                    <Component className="bgc-cool" $size="s" />
+                    <Component className={`fgc-${fgColor} bgc-${bgColor}`} $size="s" />
                   </td>
                   <td>
-                    <Component className="bgc-cool" $size="m" />
+                    <Component className={`fgc-${fgColor} bgc-${bgColor}`} $size="m" />
                   </td>
                   <td>
-                    <Component className="bgc-cool" $size="l" />
+                    <Component className={`fgc-${fgColor} bgc-${bgColor}`} $size="l" />
                   </td>
                   <td>
-                    <Component className="bgc-cool" $size="xl" />
+                    <Component className={`fgc-${fgColor} bgc-${bgColor}`} $size="xl" />
                   </td>
                   <td>
-                    <Component className="bgc-cool fs-xl" />
+                    <Component className={`fgc-${fgColor} bgc-${bgColor} fs-xl`} />
                   </td>
                   <td>
                     <Button $icon={<Component />} />

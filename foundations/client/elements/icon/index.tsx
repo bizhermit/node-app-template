@@ -285,6 +285,39 @@ export const SmileIcon = svg("SmileIcon", (props, ref) => (
     <circle cx="10" cy="10" r="8.5" fill="none" />
     <circle cx="6.5" cy="8" r=".8" />
     <circle cx="13.5" cy="8" r=".8" />
-    <path d="M 14.2,13 a 5 5 30 0 1 -8,0" fill="none" />
+    <path d="M14.2,13a5 5 30 0 1 -8,0" fill="none" />
+  </svg>
+));
+
+export const ButtonIcon = svg("ButtonIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,5H18V13H2Z" fill="none" />
+    <path d="M12,10L17,15 13.8,15 15,18.2 14.5,18.4 13.5,15 11,17Z" />
+  </svg>
+));
+
+export const ExLinkIcon = svg("ExLinkIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M8,2H2V18H18V12 M12,2H18V8" fill="none" />
+    <line x1="18" x2="8" y1="2" y2="12" />
+  </svg>
+));
+
+export const ContainerIcon = svg("ContainerIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,3H18V17H2Z M5,5H15V8H5Z M5,10H12V12H5Z M5,14H15V15H5Z" fill="none" />
+  </svg>
+));
+
+export const NavContainerIcon = svg("NavContainerIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,3H18V17H2Z M2,3H18V7H2Z M2,7H8V17H2Z" fill="none" />
+  </svg>
+));
+
+export const PopupIcon = svg("PopupIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M2,3H18V17H2Z" opacity=".6" fill="none" />
+    <path d="M4,5H16V13L12,13L10,15L8,13H4Z" fill="none" />
   </svg>
 ));

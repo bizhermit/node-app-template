@@ -1,4 +1,4 @@
-import { ElementIcon, HomeIcon, SmileIcon } from "#/client/elements/icon";
+import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, HomeIcon, NavContainerIcon, PopupIcon, SmileIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 // import NavigationContainer from "#/client/elements/navigation-container/fat";
@@ -42,24 +42,24 @@ const devMenus = (
           },
           {
             key: "button",
-            icon: "B",
+            icon: <ButtonIcon />,
             label: "Button",
             pathname: "/dev/elements/button",
           },
           {
             key: "link",
-            icon: "L",
+            icon: <ExLinkIcon />,
             label: "NextLink",
             pathname: "/dev/elements/link",
           },
           {
             key: "cont",
-            icon: "C",
+            icon: <ContainerIcon />,
             label: "Container",
             items: [
               {
                 key: "nav",
-                icon: "N",
+                icon: <NavContainerIcon />,
                 label: "Navigation",
                 pathname: "/dev/elements/container/navigation",
               },
@@ -67,7 +67,7 @@ const devMenus = (
           },
           {
             key: "popup",
-            icon: "P",
+            icon: <PopupIcon />,
             label: "Popup",
             pathname: "/dev/elements/popup",
           }
