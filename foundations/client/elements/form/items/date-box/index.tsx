@@ -118,6 +118,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   const ctx = useFormItemContext(form, props, {
     interlockValidation: props.$rangePair != null,
     receive: (v): any => {
+      if (v == null) return v;
       switch (props.$typeof) {
         case "date": return parseDate(v);
         case "number": return parseDate(v)?.getTime();

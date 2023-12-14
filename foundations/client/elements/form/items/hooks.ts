@@ -57,6 +57,10 @@ export const useFormItemContext = <
   const id = useRef(generateUuidV4());
   const [error, setError] = useState<string | null | undefined>(undefined);
 
+  const receive = (v: any) => {
+    return options?.receive ? options.receive(v) : v;
+  };
+
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
     const v = (() => {
       if (props == null) return undefined;
@@ -74,8 +78,7 @@ export const useFormItemContext = <
       if ("$defaultValue" in props) return props.$defaultValue;
       return undefined;
     })();
-    if (v == null || options?.receive == null) return v;
-    return options.receive(v);
+    return receive(v);
   })());
   const [value, setValueImpl] = useState(valueRef.current);
   const setCurrentValue = (value: ValueType<T, D, V> | null | undefined) => {
@@ -293,10 +296,10 @@ export const useFormItemContext = <
   if (props.$ref) {
     props.$ref.getValue = () => valueRef.current;
     props.$ref.setValue = (v: any) => change(
-      v == null ? undefined :
+      v == null ? undefined : receive(
         options?.multiple ? (Array.isArray(v) ? v : [v]) as any :
-          Array.isArray(v) ? v[0] : v,
-      false
+          Array.isArray(v) ? v[0] : v
+      ), false
     );
     props.$ref.setDefaultValue = () => props.$ref?.setValue(props.$defaultValue);
     props.$ref.clear = () => change(undefined, false);

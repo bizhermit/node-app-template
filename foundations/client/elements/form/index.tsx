@@ -206,7 +206,12 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
       Object.keys(items.current).forEach(id => {
         const item = items.current[id];
         if (item.props.$preventFormBind) return;
-        item.change(item.props.$defaultValue, false);
+        item.change(
+          item.options?.receive ?
+            item.options.receive(item.props.$defaultValue) :
+            item.props.$defaultValue,
+          false
+        );
       });
       callback?.();
     }, 0);
@@ -246,15 +251,15 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
     return bind == null ? undefined : getValue(bind, name);
   };
 
-  const set = (name: string, value: any) => {
+  const set = (name: string, v: any) => {
     if (bind == null) return;
+    let isSet = false;
     Object.keys(items.current).forEach(id => {
-      if (items.current[id].props.name !== name) {
-        setValue(bind, name, value);
-        return;
-      }
-      items.current[id]?.change(value, false);
+      const item = items.current[id];
+      if (item.props.name !== name) return;
+      item.change(item.options.receive ? item.options.receive(v) : v, false);
     });
+    if (!isSet) setValue(bind, name, v);
   };
 
   const render = (name?: string) => {

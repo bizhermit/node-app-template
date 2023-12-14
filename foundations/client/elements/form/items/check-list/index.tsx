@@ -105,6 +105,10 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
 
   const ctx = useFormItemContext(form, props, {
     multiple: true,
+    receive: (v) => {
+      if (v === null || Array.isArray(v)) return v;
+      return [v];
+    },
   });
 
   const getArrayValue = () => {
