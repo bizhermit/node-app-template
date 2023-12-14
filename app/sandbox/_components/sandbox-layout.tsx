@@ -92,20 +92,10 @@ const Navigation: FC = () => {
             icon: "E",
             label: "Elements",
             items: [{
-              key: "icon",
-              label: "Icon",
-              icon: "I",
-              pathname: "/sandbox/elements/icons"
-            }, {
               key: "form",
               label: "Form",
               icon: "F",
               items: [{
-                key: "form",
-                label: "Form",
-                icon: "F",
-                pathname: "/sandbox/elements/form",
-              }, {
                 key: "check-box",
                 label: "CheckBox",
                 icon: "C",
@@ -206,11 +196,6 @@ const Navigation: FC = () => {
               label: "Container",
               icon: "C",
               items: [{
-                key: "tab",
-                label: "Tab",
-                icon: "T",
-                pathname: "/sandbox/elements/container/tab-container",
-              }, {
                 key: "slide",
                 label: "Slide",
                 icon: "S",
@@ -220,22 +205,7 @@ const Navigation: FC = () => {
                 label: "Split",
                 icon: "S",
                 pathname: "/sandbox/elements/container/split-container",
-              }, {
-                key: "navigation",
-                label: "Navigation",
-                icon: "N",
-                pathname: "/sandbox/elements/container/navigation-container",
               }]
-            }, {
-              key: "button",
-              label: "Button",
-              icon: "B",
-              pathname: "/sandbox/elements/button",
-            }, {
-              key: "link",
-              label: "NextLink",
-              icon: "L",
-              pathname: "/sandbox/elements/link",
             }, {
               key: "loading",
               label: "Loading",

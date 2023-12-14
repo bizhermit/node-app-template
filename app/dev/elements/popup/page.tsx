@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import useMessageBox from "#/client/elements/message-box";
 import Popup from "#/client/elements/popup";
-import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
+import BaseLayout, { BaseRow, BaseSheet } from "@/dev/_components/base-layout";
 import { useRef, useState } from "react";
 
 const Page = () => {
@@ -22,7 +22,7 @@ const Page = () => {
   return (
     <BaseLayout title="Popup">
       <BaseSheet>
-        <div>
+        <BaseRow>
           <Button
             onClick={() => {
               msgBox.alert("!hogehoge!");
@@ -36,7 +36,7 @@ const Page = () => {
           >
             show
           </Button>
-        </div>
+        </BaseRow>
         <dialog
           ref={dialogRef}
         >
