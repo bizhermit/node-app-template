@@ -356,3 +356,9 @@ export const TabContainerIcon = svg("TabContainerIcon", (props, ref) => (
     <path d="M2,3H18V17H2Z M2,7H18 M10,3V7" fill="none" />
   </svg>
 ));
+
+export const SlideContainerIcon = svg("SlideContainerIcon", (props, ref) => (
+  <svg {...svgAttrs(props)} ref={ref}>
+    <path d="M4,4H16V16H4Z M1,4V16 M19,4V16" fill="none" />
+  </svg>
+));

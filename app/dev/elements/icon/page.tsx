@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import SelectBox from "#/client/elements/form/items/select-box";
 import TextBox from "#/client/elements/form/items/text-box";
-import { ButtonIcon, CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, ContainerIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, LeftIcon, LeftRightIcon, ListIcon, MagnifyingGlassIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, NavContainerIcon, PlusIcon, PopupIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SmileIcon, SyncIcon, TabContainerIcon, TextBoxIcon, TodayIcon, UndoIcon, UnloadIcon, UpDownIcon, UpIcon } from "#/client/elements/icon";
+import { ButtonIcon, CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, ContainerIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, LeftIcon, LeftRightIcon, ListIcon, MagnifyingGlassIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, NavContainerIcon, PlusIcon, PopupIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SlideContainerIcon, SmileIcon, SyncIcon, TabContainerIcon, TextBoxIcon, TodayIcon, UndoIcon, UnloadIcon, UpDownIcon, UpIcon } from "#/client/elements/icon";
 import { isEmpty } from "#/objects/string/empty";
 import { colors } from "#/utilities/sandbox";
 import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
@@ -116,6 +116,7 @@ const Page = () => {
               MagnifyingGlassIcon,
               TextBoxIcon,
               TabContainerIcon,
+              SlideContainerIcon,
             ].reverse().map(Component => {
               const name = Component.name;
               if (!isEmpty(filterText)) {
