@@ -3,15 +3,14 @@
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
-import SlideContainer from "#/client/elements/slide-container";
-import SlideContent from "#/client/elements/slide-container/content";
+import SlideContainer, { SlideContent } from "#/client/elements/slide-container";
 import generateArray from "#/objects/array/generator";
 import BaseLayout, { BaseRow } from "@/dev/_components/base-layout";
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
 
 const Page = () => {
-  const [key, setKey] = useState<number>();
+  const [key, setKey] = useState<string>();
   const [overlap, setOverlap] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState(false);
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
@@ -90,7 +89,7 @@ const Page = () => {
                 <Button
                   key={idx}
                   $fitContent
-                  onClick={() => setKey(idx)}
+                  onClick={() => setKey(`${idx}`)}
                 >
                   {idx}
                 </Button>
@@ -112,7 +111,7 @@ const Page = () => {
         $unmountDeselected={unmountDeselected}
       >
         <SlideContent
-          key={0}
+          key="0"
           className="bgc-primary"
           $label="slide0"
         >
@@ -120,7 +119,7 @@ const Page = () => {
           {generateArray(10, (idx) => <h3 key={idx}>hoge</h3>)}
         </SlideContent>
         <SlideContent
-          key={1}
+          key="1"
           className="bgc-secondary"
           $label="slide1"
         >
@@ -128,7 +127,7 @@ const Page = () => {
           {generateArray(15, (idx) => <h3 key={idx}>fuga</h3>)}
         </SlideContent>
         <SlideContent
-          key={2}
+          key="2"
           className="bgc-tertiary"
           $label="slide2"
         >
@@ -136,7 +135,7 @@ const Page = () => {
           {generateArray(20, (idx) => <h3 key={idx}>piyo</h3>)}
         </SlideContent>
         <SlideContent
-          key={3}
+          key="3"
           className="bgc-sub"
           $label="slide3"
         >

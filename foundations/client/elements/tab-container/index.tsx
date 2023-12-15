@@ -1,8 +1,8 @@
 "use client";
 
-import React, { ForwardedRef, forwardRef, useEffect, useRef, useState, type FC, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
+import type React from "react";
+import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
 import { attrs } from "../../utilities/attributes";
-import type { TabContentProps } from "./content";
 import Style from "./index.module.scss";
 
 type TabContainerOptions<K extends string = string> = {
@@ -124,7 +124,6 @@ const Content: FC<ContentProps> = ({
   children,
   ...props
 }) => {
-  const ref = useRef<HTMLDivElement>(null!);
   const [selected, setSelected] = useState($selected);
   const [mounted, setMounted] = useState($selected || $defaultMount);
 
@@ -147,7 +146,6 @@ const Content: FC<ContentProps> = ({
   return (
     <div
       {...attrs(props, Style.content)}
-      ref={ref}
       data-selected={selected}
       onTransitionEnd={transitionEnd}
     >
@@ -158,6 +156,20 @@ const Content: FC<ContentProps> = ({
 
 export const TabLabel: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
   return <div {...attrs(props, Style.label)} />;
+};
+
+type TabContentOptions = {
+  key: string;
+  $label: ReactNode;
+  $color?: Color;
+  $defaultMount?: boolean;
+  $unmountDeselected?: boolean;
+};
+
+type TabContentProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, TabContentOptions>;
+
+export const TabContent: FC<TabContentProps> = ({ children }) => {
+  return <>{children}</>;
 };
 
 export default TabContainer;

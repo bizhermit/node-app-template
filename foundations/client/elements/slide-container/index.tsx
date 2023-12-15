@@ -1,16 +1,16 @@
 "use client";
 
-import React, { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
+import type React from "react";
+import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
 import { attrs } from "../../utilities/attributes";
 import Text from "../text";
-import { SlideContentProps } from "./content";
 import Style from "./index.module.scss";
 
 type SlideState = "before" | "prev" | "current" | "next" | "after";
 type BreadcrumbsPosition = "top" | "left" | "bottom" | "right";
 type SlideDirection = "horizontal" | "horizontal-reverse" | "vertical" | "vertical-reverse";
 
-type SlideContainerOptions<K extends Key = Key> = {
+type SlideContainerOptions<K extends string = string> = {
   $key?: K;
   $direction?: SlideDirection;
   $defaultMount?: boolean;
@@ -18,20 +18,20 @@ type SlideContainerOptions<K extends Key = Key> = {
   $overlap?: boolean;
   $breadcrumbs?: boolean
   $breadcrumbsPosition?: BreadcrumbsPosition;
-  $onChange?: (key: Key) => void;
+  $onChange?: (key: K) => void;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
-export type SlideContainerProps<K extends Key = Key> =
+export type SlideContainerProps<K extends string = string> =
   OverwriteAttrs<HTMLAttributes<HTMLDivElement>, SlideContainerOptions<K>>;
 
 interface SlideContainerFC extends FunctionComponent<SlideContainerProps> {
-  <K extends Key = Key>(
+  <K extends string = string>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, SlideContainerProps<K>>
   ): ReactElement<any> | null;
 }
 
-const SlideContainer = forwardRef(<K extends Key = Key>({
+const SlideContainer = forwardRef(<K extends string = string>({
   $key,
   $direction,
   $defaultMount,
@@ -48,24 +48,23 @@ const SlideContainer = forwardRef(<K extends Key = Key>({
   const { breadcrumbs, bodys, key } = (() => {
     const breadcrumbs: Array<ReactNode> = [];
     const bodys: Array<ReactNode> = [];
-    let key = $key ?? contents[0]!.key!;
-    const keyStr = key.toString();
-    let prevKey: Key | null | undefined, nextKey: Key | null | undefined;
+    let key = $key ?? contents[0]?.key?.toString()!;
+    let prevKey: string | null | undefined, nextKey: string | null | undefined;
     let index: number = 0;
     for (let i = 0, il = contents.length; i < il; i++) {
       const content = contents[i]!;
-      if (content.key !== keyStr) continue;
+      if (content.key?.toString() !== key) continue;
       index = i;
-      key = content.key;
-      nextKey = contents[i + 1]?.key;
-      prevKey = contents[i - 1]?.key;
+      key = content.key.toString();
+      nextKey = contents[i + 1]?.key?.toString();
+      prevKey = contents[i - 1]?.key?.toString();
     }
 
     for (let i = 0, il = contents.length; i < il; i++) {
       const content = contents[i]!;
       const k = content.key?.toString()!;
       const state: SlideState = (() => {
-        if (k === keyStr) return "current";
+        if (k === key) return "current";
         if (k === prevKey) return "prev";
         if (k === nextKey) return "next";
         if (i < index) return "before";
@@ -101,7 +100,7 @@ const SlideContainer = forwardRef(<K extends Key = Key>({
   })();
 
   useEffect(() => {
-    $onChange?.(key);
+    $onChange?.(key as K);
   }, [key]);
 
   return (
@@ -164,6 +163,20 @@ const Content: FC<ContentProps> = ({
       {mounted && children}
     </div>
   );
+};
+
+type SlideCotentOptions = {
+  key: Key;
+  $label?: ReactNode;
+  $overlap?: boolean;
+  $defaultMount?: boolean;
+  $unmountDeselected?: boolean;
+};
+
+export type SlideContentProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, SlideCotentOptions>;
+
+export const SlideContent: FC<SlideContentProps> = ({ children }) => {
+  return <>{children}</>;
 };
 
 export default SlideContainer;
