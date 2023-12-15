@@ -1,82 +1,117 @@
 "use client";
 
-import { forwardRef, useEffect, useRef, useState, type FC, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import React, { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
+import { attrs } from "../../utilities/attributes";
 import Text from "../text";
+import { SlideContentProps } from "./content";
 import Style from "./index.module.scss";
 
-type SlideState = "before" | "previous" | "current" | "next" | "after";
-export type SlideDirection = "horizontal" | "horizontal-reverse" | "vertical" | "vertical-reverse";
+type SlideState = "before" | "prev" | "current" | "next" | "after";
+type BreadcrumbsPosition = "top" | "left" | "bottom" | "right";
+type SlideDirection = "horizontal" | "horizontal-reverse" | "vertical" | "vertical-reverse";
 
-type OmitAttributes = "color" | "children";
-export type SlideContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type SlideContainerOptions<K extends Key = Key> = {
+  $key?: K;
   $direction?: SlideDirection;
-  $index: number;
-  $onChange?: (index: number) => void;
   $defaultMount?: boolean;
-  $preventUnmountDeselected?: boolean;
-  $bodyColor?: Color;
-  $preventAnimation?: boolean;
+  $unmountDeselected?: boolean;
   $overlap?: boolean;
   $breadcrumbs?: boolean
-  $breadcrumbsPosition?: "top" | "left" | "bottom" | "right";
+  $breadcrumbsPosition?: BreadcrumbsPosition;
+  $onChange?: (key: Key) => void;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
-const calcState = (index: number, current: number): SlideState => {
-  if (index === current) return "current";
-  if (index === current - 1) return "previous";
-  if (index === current + 1) return "next";
-  if (index < current) return "before";
-  return "after";
-};
+export type SlideContainerProps<K extends Key = Key> =
+  OverwriteAttrs<HTMLAttributes<HTMLDivElement>, SlideContainerOptions<K>>;
 
-const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, ref) => {
-  const { breadcrumbs, bodys } = (() => {
-    const children = Array.isArray(props.children) ? props.children : [props.children];
+interface SlideContainerFC extends FunctionComponent<SlideContainerProps> {
+  <K extends Key = Key>(
+    attrs: ComponentAttrsWithRef<HTMLDivElement, SlideContainerProps<K>>
+  ): ReactElement<any> | null;
+}
+
+const SlideContainer = forwardRef(<K extends Key = Key>({
+  $key,
+  $direction,
+  $defaultMount,
+  $unmountDeselected,
+  $overlap,
+  $breadcrumbs,
+  $breadcrumbsPosition,
+  $onChange,
+  children,
+  ...props
+}: SlideContainerProps<K>, ref: ForwardedRef<HTMLDivElement>) => {
+  const contents = Array.isArray(children) ? children : [children];
+
+  const { breadcrumbs, bodys, key } = (() => {
     const breadcrumbs: Array<ReactNode> = [];
     const bodys: Array<ReactNode> = [];
-    const current = props.$index ?? 0;
-    for (let i = 0, il = children.length; i < il; i++) {
-      const state = calcState(i, current);
-      const child = children[i]!;
-      const preventAnimation = (child.props.preventAnimation ?? props.$preventAnimation) === true;
-      if (props.$breadcrumbs) {
+    let key = $key ?? contents[0]!.key!;
+    const keyStr = key.toString();
+    let prevKey: Key | null | undefined, nextKey: Key | null | undefined;
+    let index: number = 0;
+    for (let i = 0, il = contents.length; i < il; i++) {
+      const content = contents[i]!;
+      if (content.key !== keyStr) continue;
+      index = i;
+      key = content.key;
+      nextKey = contents[i + 1]?.key;
+      prevKey = contents[i - 1]?.key;
+    }
+
+    for (let i = 0, il = contents.length; i < il; i++) {
+      const content = contents[i]!;
+      const k = content.key?.toString()!;
+      const state: SlideState = (() => {
+        if (k === keyStr) return "current";
+        if (k === prevKey) return "prev";
+        if (k === nextKey) return "next";
+        if (i < index) return "before";
+        return "after";
+      })();
+      const { $label, ...cProps } = content.props as Omit<SlideContentProps, "key">;
+
+      if ($breadcrumbs) {
         breadcrumbs.push(
-          <Breadcrumb
-            key={i}
-            state={state}
-            preventAnimation={preventAnimation}
+          <div
+            key={k}
+            className={Style.breadcrumb}
+            data-state={state}
           >
-            {child?.props.label}
-          </Breadcrumb>
+            <Text>{$label}</Text>
+          </div>
         );
       }
       bodys.push(
         <Content
-          key={i}
-          current={props.$index}
-          overlap={child.props?.overlap ?? props.$overlap ?? false}
-          defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
-          preventAnimation={preventAnimation}
-          preventUnmountDeselected={child.props.preventUnmountDeselected ?? props.$preventUnmountDeselected ?? false}
-          state={state}
+          $overlap={$overlap}
+          $defaultMount={$defaultMount}
+          $unmountDeselected={$unmountDeselected}
+          {...cProps}
+          key={k}
+          $state={state}
         >
-          {child}
+          {content}
         </Content>
       );
     }
-    return { breadcrumbs, bodys };
+    return { breadcrumbs, bodys, key };
   })();
+
+  useEffect(() => {
+    $onChange?.(key);
+  }, [key]);
 
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
+      {...attrs(props, Style.wrap)}
       ref={ref}
-      data-direction={props.$direction || "horizontal"}
-      data-pos={props.$breadcrumbsPosition || "top"}
+      data-direction={$direction || "horizontal"}
+      data-pos={$breadcrumbsPosition || "top"}
     >
-      {props.$breadcrumbs &&
+      {$breadcrumbs &&
         <div className={Style.breadcrumbs}>
           {breadcrumbs}
         </div>
@@ -86,123 +121,47 @@ const SlideContainer = forwardRef<HTMLDivElement, SlideContainerProps>((props, r
       </div>
     </div>
   );
-});
+}) as SlideContainerFC;
 
-const Breadcrumb: FC<{
-  state: SlideState;
-  preventAnimation: boolean;
-  children?: ReactNode;
-}> = (props) => {
-  const ref = useRef<HTMLDivElement>(null!);
-  const [state, setState] = useState<SlideState>(props.state);
-
-  const animationEnd = (target: HTMLDivElement) => {
-    const state = target.getAttribute("data-state") as SlideState;
-    if (state === "next" || state === "after") {
-      target.style.visibility = "hidden";
-      target.style.opacity = "0";
-      target.style.width = "0";
-      target.style.height = "0";
-      target.style.padding = "0";
-    }
-  };
-
-  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    animationEnd(e.currentTarget);
-  };
-
-  useEffect(() => {
-    if (props.state === "current" || props.state === "before" || props.state === "previous") {
-      ref.current?.style.removeProperty("opacity");
-      ref.current?.style.removeProperty("visibility");
-      ref.current?.style.removeProperty("width");
-      ref.current?.style.removeProperty("height");
-      ref.current?.style.removeProperty("padding");
-    }
-    setState(props.state);
-  }, [props.state]);
-
-  useEffect(() => {
-    if (props.preventAnimation) {
-      animationEnd(ref.current);
-    }
-  }, [state]);
-
-  return (
-    <div
-      ref={ref}
-      className={Style.breadcrumb}
-      style={{
-        width: 0,
-        height: 0,
-        visibility: "hidden",
-        opacity: 0,
-        padding: 0,
-      }}
-      data-state={state}
-      data-animation={!props.preventAnimation}
-      onTransitionEnd={props.preventAnimation ? undefined : transitionEnd}
-    >
-      <Text>{props.children}</Text>
-    </div>
-  );
+type ContentProps = Omit<SlideContentProps, "$label"> & {
+  $state: SlideState;
 };
 
-const Content: FC<{
-  current: number;
-  state: SlideState;
-  defaultMount: boolean;
-  preventUnmountDeselected: boolean;
-  preventAnimation: boolean;
-  overlap: boolean;
-  children: ReactNode;
-}> = (props) => {
-  const ref = useRef<HTMLDivElement>(null!);
-  const [state, setState] = useState<SlideState>(props.state);
-  const [mounted, setMounted] = useState(state === "current" || props.defaultMount);
-
-  const animationEnd = (target: HTMLDivElement) => {
-    const state = target.getAttribute("data-state") as SlideState;
-    if (state !== "current") {
-      target.style.visibility = "hidden";
-      if (props.preventUnmountDeselected) return;
-      setMounted(false);
-    }
-  };
+const Content: FC<ContentProps> = ({
+  $overlap,
+  $defaultMount,
+  $unmountDeselected,
+  $state,
+  children,
+  ...props
+}) => {
+  const [state, setState] = useState($state);
+  const [mounted, setMounted] = useState(state === "current" || $defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    animationEnd(e.currentTarget);
+    if (
+      e.target === e.currentTarget &&
+      $unmountDeselected &&
+      e.currentTarget.getAttribute("data-state") !== "current"
+    ) {
+      setMounted(false);
+    }
+    props.onTransitionEnd?.(e);
   };
 
   useEffect(() => {
-    if (props.state === "current") {
-      setMounted(true);
-      ref.current?.style.removeProperty("visibility");
-    }
-    setState(props.state);
-  }, [props.state, props.current]);
-
-  useEffect(() => {
-    if (props.preventAnimation) {
-      animationEnd(ref.current);
-    }
-  }, [state]);
+    if ($state === "current") setMounted(true);
+    setState($state);
+  }, [$state]);
 
   return (
     <div
-      ref={ref}
-      className={Style.content}
-      style={{
-        visibility: "hidden",
-      }}
+      {...attrs(props, Style.content)}
       data-state={state}
-      data-overlap={props.overlap}
-      data-animation={!props.preventAnimation}
-      onTransitionEnd={props.preventAnimation ? undefined : transitionEnd}
+      data-overlap={$overlap}
+      onTransitionEnd={transitionEnd}
     >
-      {mounted && props.children}
+      {mounted && children}
     </div>
   );
 };

@@ -115,7 +115,7 @@ const TabContainer = forwardRef(<K extends string = string>({
 
 type ContentProps = Omit<TabContentProps, "$label" | "$color"> & {
   $selected: boolean;
-}
+};
 
 const Content: FC<ContentProps> = ({
   $selected,

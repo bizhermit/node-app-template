@@ -196,11 +196,6 @@ const Navigation: FC = () => {
               label: "Container",
               icon: "C",
               items: [{
-                key: "slide",
-                label: "Slide",
-                icon: "S",
-                pathname: "/sandbox/elements/container/slide-container",
-              }, {
                 key: "split",
                 label: "Split",
                 icon: "S",

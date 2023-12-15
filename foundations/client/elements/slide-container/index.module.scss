@@ -2,6 +2,7 @@
 
 $hTransitionTime: 0.8s;
 $vTransitionTime: 0.5s;
+$breadcrumbGap: 3rem;
 
 @layer base {
 
@@ -11,15 +12,25 @@ $vTransitionTime: 0.5s;
     justify-content: stretch;
     align-items: stretch;
     flex-wrap: nowrap;
+    min-height: 0;
+    min-width: 0;
+    --slide-trans-time: 0.8s;
 
     &:is([data-pos="top"], [data-pos="bottom"]) {
+      flex-direction: column;
+
       >.breadcrumbs {
         >.breadcrumb {
-          height: 100%;
+          margin-left: -#{$breadcrumbGap / 2};
+          transition: opacity var(--slide-trans-time),
+            margin-left var(--slide-trans-time);
+
+          &:is([data-state="before"], [data-state="prev"], [data-state="current"]) {
+            margin-left: 0;
+            opacity: 1;
+          }
 
           &:not(:first-child) {
-            padding-left: calc(var(--fs-m) * 2);
-
             &::before {
               box-sizing: border-box;
               position: absolute;
@@ -28,36 +39,31 @@ $vTransitionTime: 0.5s;
               flex-flow: row nowrap;
               justify-content: center;
               align-items: center;
-              height: 100%;
-              width: var(--fs-m);
-              left: calc(var(--fs-m) / 2);
-              top: 0;
-              padding-top: var(--pt-t);
-              color: var(--c-dull_);
+              left: -#{$breadcrumbGap * 0.66};
             }
           }
         }
       }
-    }
-
-    &[data-pos="top"] {
-      flex-direction: column;
-    }
-
-    &[data-pos="bottom"] {
-      flex-direction: column-reverse;
     }
 
     &:is([data-pos="left"], [data-pos="right"]) {
+      flex-direction: row;
+
       >.breadcrumbs {
+        flex-direction: row;
         writing-mode: vertical-rl;
 
         >.breadcrumb {
-          width: 100%;
+          margin-top: -#{$breadcrumbGap / 2};
+          transition: opacity var(--slide-trans-time),
+            margin-top var(--slide-trans-time);
+
+          &:is([data-state="before"], [data-state="prev"], [data-state="current"]) {
+            margin-top: 0;
+            opacity: 1;
+          }
 
           &:not(:first-child) {
-            padding-top: calc(var(--fs-m) * 2);
-
             &::before {
               box-sizing: border-box;
               position: absolute;
@@ -66,52 +72,43 @@ $vTransitionTime: 0.5s;
               flex-flow: row nowrap;
               justify-content: center;
               align-items: center;
-              width: 100%;
-              height: var(--fs-m);
+              top: -#{$breadcrumbGap * 0.66};
               left: 0;
-              top: calc(var(--fs-m) / 2);
-              color: var(--c-dull_);
             }
           }
         }
       }
+
+      >.body {
+        flex: 1 1 0rem;
+      }
     }
 
-    &[data-pos="left"] {
-      flex-direction: row;
-    }
+    &:is([data-pos="bottom"], [data-pos="right"]) {
+      >.breadcrumbs {
+        order: 2;
+      }
 
-    &[data-pos="right"] {
-      flex-direction: row-reverse;
+      >.body {
+        order: 1;
+      }
     }
 
     &[data-direction="horizontal"] {
       >.body {
         >.content {
           top: 0;
+          left: 0;
+          transition: left var(--slide-trans-time);
 
-          &[data-animation="true"] {
-            transition: left #{$hTransitionTime},
-            opacity #{$hTransitionTime};
-          }
-
-          &:is([data-state="before"], [data-state="previous"]) {
-            left: -100%;
-          }
-
-          &[data-state="current"] {
-            left: 0%;
+          &:is([data-state="before"], [data-state="prev"]) {
+            &:not([data-overlap="true"]) {
+              left: -100%;
+            }
           }
 
           &:is([data-state="next"], [data-state="after"]) {
             left: 100%;
-          }
-
-          &[data-overlap="true"] {
-
-            &:is([data-state="before"], [data-state="previous"]) {
-              left: 0%;
-            }
           }
         }
       }
@@ -121,29 +118,17 @@ $vTransitionTime: 0.5s;
       >.body {
         >.content {
           top: 0;
+          right: 0;
+          transition: right var(--slide-trans-time);
 
-          &[data-animation="true"] {
-            transition: left #{$hTransitionTime},
-            opacity #{$hTransitionTime};
-          }
-
-          &:is([data-state="before"], [data-state="previous"]) {
-            left: 100%;
-          }
-
-          &[data-state="current"] {
-            left: 0%;
+          &:is([data-state="before"], [data-state="prev"]) {
+            &:not([data-overlap="true"]) {
+              right: -100%;
+            }
           }
 
           &:is([data-state="next"], [data-state="after"]) {
-            left: -100%;
-          }
-
-          &[data-overlap="true"] {
-
-            &:is([data-state="before"], [data-state="previous"]) {
-              left: 0%;
-            }
+            right: 100%;
           }
         }
       }
@@ -152,30 +137,18 @@ $vTransitionTime: 0.5s;
     &[data-direction="vertical"] {
       >.body {
         >.content {
+          top: 0;
           left: 0;
+          transition: top var(--slide-trans-time);
 
-          &[data-animation="true"] {
-            transition: top #{$vTransitionTime},
-            opacity #{$vTransitionTime};
-          }
-
-          &:is([data-state="before"], [data-state="previous"]) {
-            top: -100%;
-          }
-
-          &[data-state="current"] {
-            top: 0%;
+          &:is([data-state="before"], [data-state="prev"]) {
+            &:not([data-overlap="true"]) {
+              top: -100%;
+            }
           }
 
           &:is([data-state="next"], [data-state="after"]) {
             top: 100%;
-          }
-
-          &[data-overlap="true"] {
-
-            &:is([data-state="before"], [data-state="previous"]) {
-              top: 0%;
-            }
           }
         }
       }
@@ -184,30 +157,18 @@ $vTransitionTime: 0.5s;
     &[data-direction="vertical-reverse"] {
       >.body {
         >.content {
+          bottom: 0;
           left: 0;
+          transition: bottom var(--slide-trans-time);
 
-          &[data-animation="true"] {
-            transition: top #{$vTransitionTime},
-            opacity #{$vTransitionTime};
-          }
-
-          &:is([data-state="before"], [data-state="previous"]) {
-            top: 100%;
-          }
-
-          &[data-state="current"] {
-            top: 0%;
+          &:is([data-state="before"], [data-state="prev"]) {
+            &:not([data-overlap="true"]) {
+              bottom: -100%;
+            }
           }
 
           &:is([data-state="next"], [data-state="after"]) {
-            top: -100%;
-          }
-
-          &[data-overlap="true"] {
-
-            &:is([data-state="before"], [data-state="previous"]) {
-              top: 0%;
-            }
+            bottom: 100%;
           }
         }
       }
@@ -217,12 +178,12 @@ $vTransitionTime: 0.5s;
   .breadcrumbs {
     box-sizing: border-box;
     flex: none;
-    min-width: var(--cs-m);
-    min-height: var(--cs-m);
     display: flex;
+    flex-flow: row nowrap;
     justify-content: stretch;
     align-items: flex-start;
-    flex-wrap: nowrap;
+    flex: none;
+    gap: $breadcrumbGap;
 
     @include mixins.scrollOverlay;
   }
@@ -234,53 +195,32 @@ $vTransitionTime: 0.5s;
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    white-space: nowrap;
-    overflow: hidden;
-    flex: none;
     opacity: 0;
-
-    &[data-animation="true"] {
-      transition: opacity #{$vTransitionTime};
-    }
-
-    &:is([data-state="before"], [data-state="previous"], [data-state="current"]) {
-      opacity: 1;
-    }
   }
 
   .body {
     box-sizing: border-box;
     position: relative;
-    flex: 1;
+    min-height: 0;
+    min-width: 0;
     overflow: hidden;
   }
 
   .content {
     box-sizing: border-box;
     position: absolute;
-    width: 100%;
+    min-width: 100%;
     min-height: 100%;
-    height: 100%;
     flex: none;
-    z-index: 0;
-    opacity: 0.99;
     overflow: auto;
-    background-color: var(--c-base);
+    background: var(--c-base);
 
     &[data-state="current"] {
       position: relative;
-      z-index: 1;
-      opacity: 1;
-    }
-
-    &:is([data-state="next"], [data-state="after"]) {
-      z-index: 2;
     }
 
     &:not([data-state="current"]) {
-      max-height: 100% !important;
-      pointer-events: none !important;
-      overflow: hidden !important;
+      pointer-events: none;
     }
   }
 
