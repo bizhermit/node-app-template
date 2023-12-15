@@ -13,13 +13,13 @@ import BaseLayout, { BaseRow } from "@/dev/_components/base-layout";
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
 
-type TabKey = "tab1" | "tab2" | "tab3" | 4;
+type TabKey = "tab1" | "tab2" | "tab3" | "4";
 type TabTextMode = "text" | "icon" | "texticon";
 
 const Page = () => {
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
   const [tabFill, setTabFill] = useState(false);
-  const [tabScroll, setTabScroll] = useState(false);
+  const [scroll, setScroll] = useState(false);
   const [key, setKey] = useState<TabKey>();
   const [unmountDeselected, setUnmountDeselected] = useState(false);
   const [tabTextMode, setTabTextMode] = useState<TabTextMode>();
@@ -27,11 +27,12 @@ const Page = () => {
   return (
     <BaseLayout
       title="Tab Container"
-      scroll={tabScroll}
+      scroll={scroll}
     >
       <ControlLayout>
         <ControlItem caption="position">
           <RadioButtons
+            $unselectable
             $source={[
               { value: "top", label: "top" },
               { value: "left", label: "left" },
@@ -44,8 +45,8 @@ const Page = () => {
         </ControlItem>
         <ControlItem caption="scroll">
           <ToggleBox
-            $value={tabScroll}
-            $onChange={v => setTabScroll(v!)}
+            $value={scroll}
+            $onChange={v => setScroll(v!)}
           />
         </ControlItem>
         <ControlItem caption="tab fill">
@@ -83,7 +84,7 @@ const Page = () => {
         // ref={ref}
         style={{
           width: "100%",
-          flex: tabScroll ? "1 1 0rem" : undefined,
+          flex: scroll ? "1 1 0rem" : undefined,
         }}
         $tabPosition={position}
         // $defaultMount

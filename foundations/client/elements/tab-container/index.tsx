@@ -1,11 +1,11 @@
 "use client";
 
-import type { TabContentProps } from "#/client/elements/tab-container/content";
-import { ForwardedRef, forwardRef, useEffect, useRef, useState, type FC, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
+import React, { ForwardedRef, forwardRef, useEffect, useRef, useState, type FC, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
 import { attrs } from "../../utilities/attributes";
+import type { TabContentProps } from "./content";
 import Style from "./index.module.scss";
 
-type TabContainerOptions<K extends Key = Key> = {
+type TabContainerOptions<K extends string = string> = {
   $defaultKey?: K;
   $key?: K;
   $tabPosition?: "top" | "left" | "right" | "bottom";
@@ -17,16 +17,16 @@ type TabContainerOptions<K extends Key = Key> = {
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
-export type TabContainerProps<K extends Key = Key> =
+export type TabContainerProps<K extends string = string> =
   OverwriteAttrs<HTMLAttributes<HTMLDivElement>, TabContainerOptions<K>>;
 
 interface TabContainerFC extends FunctionComponent<TabContainerProps> {
-  <K extends Key = Key>(
+  <K extends string = string>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, TabContainerProps<K>>
   ): ReactElement<any> | null;
 }
 
-const TabContainer = forwardRef(<K extends Key = Key>({
+const TabContainer = forwardRef(<K extends string = string>({
   $defaultKey,
   $key,
   $tabPosition,
@@ -52,18 +52,19 @@ const TabContainer = forwardRef(<K extends Key = Key>({
     let color = $color;
     for (let i = 0, il = contents.length; i < il; i++) {
       const content = contents[i]!;
+      const k = content.key?.toString()!;
       const { $label, $color, ...cProps } = content.props as Omit<TabContentProps, "key">;
-      const selected = content.key === key;
+      const selected = k === key;
       if (selected) color = $color;
 
       tabs.push(
         <div
-          key={content.key!}
+          key={k}
           className={Style.tab}
           role="button"
           data-selected={selected}
           data-color={$color}
-          onClick={() => setKey(content.key)}
+          onClick={() => setKey(k)}
         >
           {$label}
         </div>
@@ -73,7 +74,7 @@ const TabContainer = forwardRef(<K extends Key = Key>({
           $defaultMount={$defaultMount}
           $unmountDeselected={$unmountDeselected}
           {...cProps}
-          key={content.key!}
+          key={k}
           $selected={selected}
         >
           {content}
@@ -127,15 +128,16 @@ const Content: FC<ContentProps> = ({
   const [selected, setSelected] = useState($selected);
   const [mounted, setMounted] = useState($selected || $defaultMount);
 
-  useEffect(() => {
-    if (selected) {
-      return () => {
-        if ($unmountDeselected) {
-          setTimeout(() => setMounted(false), 300); // NOTE: wait animation
-        }
-      };
+  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (
+      e.target === e.currentTarget &&
+      $unmountDeselected &&
+      e.currentTarget.getAttribute("data-selected") !== "true"
+    ) {
+      setMounted(false);
     }
-  }, [selected]);
+    props.onTransitionEnd?.(e);
+  };
 
   useEffect(() => {
     if ($selected) setMounted(true);
@@ -147,6 +149,7 @@ const Content: FC<ContentProps> = ({
       {...attrs(props, Style.content)}
       ref={ref}
       data-selected={selected}
+      onTransitionEnd={transitionEnd}
     >
       {mounted && children}
     </div>

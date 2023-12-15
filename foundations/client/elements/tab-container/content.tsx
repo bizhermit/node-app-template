@@ -1,7 +1,7 @@
-import type { FC, HTMLAttributes, Key, ReactNode } from "react";
+import type { FC, HTMLAttributes, ReactNode } from "react";
 
 type TabContentOptions = {
-  key: Key;
+  key: string;
   $label: ReactNode;
   $color?: Color;
   $defaultMount?: boolean;
