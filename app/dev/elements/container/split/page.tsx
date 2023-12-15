@@ -9,7 +9,7 @@ import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
 
 const Page = () => {
-  const [direction, setDirection] = useState<"horizontal" | "vertical">(null!);
+  const [direction, setDirection] = useState<"horizontal" | "vertical">();
   const [reverse, setReverse] = useState(false);
   const [scroll, setScroll] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -18,7 +18,7 @@ const Page = () => {
 
   return (
     <BaseLayout
-      title="Slide Container"
+      title="Split Container"
       scroll={scroll}
     >
       <ControlLayout>

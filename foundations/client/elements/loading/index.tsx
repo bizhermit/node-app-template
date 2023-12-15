@@ -23,12 +23,13 @@ const Loading = forwardRef<HTMLDivElement, LoadingProps>(({
   $color,
   $absolute,
   $mask,
-  $appearance = "bar",
+  $appearance,
   ...props
 }, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const cref = useRef<HTMLDivElement>(null!);
+  const appearance = $appearance ?? "bar";
 
   useEffect(() => {
     if ($mask) {
@@ -44,17 +45,15 @@ const Loading = forwardRef<HTMLDivElement, LoadingProps>(({
         ref={ref}
         tabIndex={0}
         data-abs={$absolute}
-        data-appearance={$appearance}
+        data-appearance={appearance}
       >
-        {$appearance === "bar" &&
-          <div
-            className={Style.bar}
-            data-color={$color}
-          />
-        }
-        {$appearance === "circle" &&
+        {appearance === "circle" ?
           <div
             className={Style.circle}
+            data-color={$color}
+          /> :
+          <div
+            className={Style.bar}
             data-color={$color}
           />
         }
