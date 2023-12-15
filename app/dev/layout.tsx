@@ -1,14 +1,10 @@
 import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, TabContainerIcon, TextBoxIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
-// import NavigationContainer from "#/client/elements/navigation-container/fat";
 import Image from "next/image";
 
 const devMenus = (
   <Menu
-    style={{
-      minWidth: 280
-    }}
     iconSpace
     items={[
       {

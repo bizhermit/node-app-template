@@ -192,11 +192,6 @@ const Navigation: FC = () => {
                 pathname: "/sandbox/elements/form-items/credit-card-number-box"
               }]
             }, {
-              key: "loading",
-              label: "Loading",
-              icon: "L",
-              pathname: "/sandbox/elements/loading",
-            }, {
               key: "divider",
               label: "Divider",
               icon: "D",
