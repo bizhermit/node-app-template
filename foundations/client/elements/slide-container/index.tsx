@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
+import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
 import { attrs } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
@@ -166,14 +166,14 @@ const Content: FC<ContentProps> = ({
 };
 
 type SlideCotentOptions = {
-  key: Key;
+  key: string;
   $label?: ReactNode;
   $overlap?: boolean;
   $defaultMount?: boolean;
   $unmountDeselected?: boolean;
 };
 
-export type SlideContentProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, SlideCotentOptions>;
+type SlideContentProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, SlideCotentOptions>;
 
 export const SlideContent: FC<SlideContentProps> = ({ children }) => {
   return <>{children}</>;
