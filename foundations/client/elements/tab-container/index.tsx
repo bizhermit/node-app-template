@@ -6,14 +6,13 @@ import { attrs } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
 type TabContainerOptions<K extends Key = Key> = {
-  $tabPosition?: "top" | "left" | "right" | "bottom";
   $defaultKey?: K;
   $key?: K;
+  $tabPosition?: "top" | "left" | "right" | "bottom";
+  $tabFill?: boolean;
   $defaultMount?: boolean;
   $unmountDeselected?: boolean;
   $color?: Color;
-  $preventAnimation?: boolean;
-  $overlap?: boolean;
   $onChange?: (key: K) => void;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
@@ -28,14 +27,13 @@ interface TabContainerFC extends FunctionComponent<TabContainerProps> {
 }
 
 const TabContainer = forwardRef(<K extends Key = Key>({
-  $tabPosition,
   $defaultKey,
   $key,
+  $tabPosition,
+  $tabFill,
   $defaultMount,
   $unmountDeselected,
   $color,
-  $preventAnimation,
-  $overlap,
   $onChange,
   children,
   ...props
@@ -48,13 +46,15 @@ const TabContainer = forwardRef(<K extends Key = Key>({
     return contents[0]?.key;
   });
 
-  const { tabs, bodys } = (() => {
+  const { tabs, bodys, color } = (() => {
     const tabs: Array<ReactNode> = [];
     const bodys: Array<ReactNode> = [];
+    let color = $color;
     for (let i = 0, il = contents.length; i < il; i++) {
       const content = contents[i]!;
       const { $label, $color, ...cProps } = content.props as Omit<TabContentProps, "key">;
       const selected = content.key === key;
+      if (selected) color = $color;
 
       tabs.push(
         <div
@@ -70,9 +70,7 @@ const TabContainer = forwardRef(<K extends Key = Key>({
       );
       bodys.push(
         <Content
-          $overlap={$overlap}
           $defaultMount={$defaultMount}
-          $preventAnimation={$preventAnimation}
           $unmountDeselected={$unmountDeselected}
           {...cProps}
           key={content.key!}
@@ -82,7 +80,7 @@ const TabContainer = forwardRef(<K extends Key = Key>({
         </Content>
       );
     }
-    return { tabs, bodys };
+    return { tabs, bodys, color };
   })();
 
   useEffect(() => {
@@ -98,9 +96,12 @@ const TabContainer = forwardRef(<K extends Key = Key>({
       {...attrs(props, Style.wrap)}
       ref={ref}
       data-pos={$tabPosition || "top"}
-      data-color={$color}
+      data-color={color ?? $color}
     >
-      <div className={Style.header}>
+      <div
+        className={Style.header}
+        data-fill={$tabFill}
+      >
         {tabs}
       </div>
       <div className={Style.divider} />
@@ -111,69 +112,49 @@ const TabContainer = forwardRef(<K extends Key = Key>({
   );
 }) as TabContainerFC;
 
-const Content: FC<{ $selected: boolean; } & Omit<TabContentProps, "$label" | "$color">> = ({
+type ContentProps = Omit<TabContentProps, "$label" | "$color"> & {
+  $selected: boolean;
+}
+
+const Content: FC<ContentProps> = ({
   $selected,
   $defaultMount,
-  $overlap,
-  $preventAnimation,
   $unmountDeselected,
+  children,
   ...props
 }) => {
   const ref = useRef<HTMLDivElement>(null!);
   const [selected, setSelected] = useState($selected);
   const [mounted, setMounted] = useState($selected || $defaultMount);
 
-  const animationEnd = (target: HTMLDivElement) => {
-    if (target.getAttribute("data-selected") !== "true") {
-      target.style.visibility = "hidden";
-      target.style.removeProperty("top");
-      target.style.removeProperty("left");
-      if ($unmountDeselected) {
-        setMounted(false);
-      }
-    }
-  };
-
-  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) animationEnd(e.currentTarget);
-    props.onTransitionEnd?.(e);
-  };
-
   useEffect(() => {
-    if ($selected) {
-      setMounted(true);
-      ref.current?.style.removeProperty("visibility");
-    } else {
-      if ($overlap) {
-        ref.current.style.top = "0";
-        ref.current.style.left = "0";
-      }
-    }
-    setSelected($selected);
-  }, [$selected]);
-
-  useEffect(() => {
-    if ($preventAnimation) {
-      animationEnd(ref.current);
+    if (selected) {
+      return () => {
+        if ($unmountDeselected) {
+          setTimeout(() => setMounted(false), 300); // NOTE: wait animation
+        }
+      };
     }
   }, [selected]);
+
+  useEffect(() => {
+    if ($selected) setMounted(true);
+    setSelected($selected);
+  }, [$selected]);
 
   return (
     <div
       {...attrs(props, Style.content)}
       ref={ref}
-      style={{
-        ...props.style,
-        visibility: "hidden",
-      }}
-      data-preselected={$selected}
       data-selected={selected}
-      data-overlap={$overlap}
-      onTransitionEnd={transitionEnd}
     >
-      {mounted && props.children}
+      {mounted && children}
     </div>
   );
+};
+
+export const TabLabel: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
+  return <div {...attrs(props, Style.label)} />;
 };
 
 export default TabContainer;

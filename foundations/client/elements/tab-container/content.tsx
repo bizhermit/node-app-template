@@ -4,10 +4,8 @@ type TabContentOptions = {
   key: Key;
   $label: ReactNode;
   $color?: Color;
-  $overlap?: boolean;
   $defaultMount?: boolean;
   $unmountDeselected?: boolean;
-  $preventAnimation?: boolean;
 };
 
 export type TabContentProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, TabContentOptions>;

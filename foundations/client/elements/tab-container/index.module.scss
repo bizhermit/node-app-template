@@ -4,6 +4,7 @@
 $borderWidth: 0.2rem;
 $hTransitionTime: 0.8s;
 $vTransitionTime: 0.5s;
+$tabFlow: "normal"; // normal/flow
 
 @layer base {
 
@@ -30,22 +31,8 @@ $vTransitionTime: 0.5s;
       }
 
       >.divider {
-        margin-top: -#{$borderWidth};
-        width: 100%;
+        margin-top: -0.5px;
         height: #{$borderWidth};
-      }
-
-      >.body {
-        >.content {
-          left: 0;
-          top: -100%;
-          transition: top #{$vTransitionTime},
-          opacity #{$vTransitionTime};
-
-          &[data-selected="true"] {
-            top: 0%;
-          }
-        }
       }
     }
 
@@ -63,22 +50,8 @@ $vTransitionTime: 0.5s;
       }
 
       >.divider {
-        margin-bottom: -#{$borderWidth};
-        width: 100%;
+        margin-bottom: -0.5px;
         height: #{$borderWidth};
-      }
-
-      >.body {
-        >.content {
-          left: 0;
-          top: 100%;
-          transition: top #{$vTransitionTime},
-          opacity #{$vTransitionTime};
-
-          &[data-selected="true"] {
-            top: 0%;
-          }
-        }
       }
     }
 
@@ -86,8 +59,9 @@ $vTransitionTime: 0.5s;
       >.header {
         flex-direction: row;
 
-        >.tab {
-          flex: 1 1 calc(var(--cs-m) * 4);
+
+        .label {
+          min-width: calc(var(--cs-m) * 3);
           padding: calc(var(--pt-t) + #{$borderWidth}) #{var.$textPadding} 0 #{var.$textPadding};
         }
       }
@@ -107,22 +81,8 @@ $vTransitionTime: 0.5s;
       }
 
       >.divider {
-        margin-left: -#{$borderWidth};
+        margin-left: -0.5px;
         width: #{$borderWidth};
-        height: 100%;
-      }
-
-      >.body {
-        >.content {
-          top: 0;
-          left: -100%;
-          transition: left #{$hTransitionTime},
-          opacity #{$hTransitionTime};
-
-          &[data-selected="true"] {
-            left: 0%;
-          }
-        }
       }
     }
 
@@ -140,33 +100,29 @@ $vTransitionTime: 0.5s;
       }
 
       >.divider {
-        margin-right: -#{$borderWidth};
+        margin-right: -0.5px;
         width: #{$borderWidth};
-        height: 100%;
-      }
-
-      >.body {
-        >.content {
-          top: 0;
-          left: 100%;
-          transition: left #{$hTransitionTime},
-          opacity #{$hTransitionTime};
-
-          &[data-selected="true"] {
-            left: 0%;
-          }
-        }
       }
     }
 
     &:is([data-pos="left"], [data-pos="right"]) {
       >.header {
-        flex-direction: row;
-        writing-mode: vertical-rl;
+        @if $tabFlow =="flow" {
+          flex-direction: row;
+          writing-mode: vertical-rl;
 
-        .tab {
-          flex: 1 1 calc(var(--cs-m) * 4);
-          padding: #{var.$textPadding} 0.4rem #{var.$textPadding} 0;
+          .label {
+            padding: #{var.$textPadding} 0.4rem #{var.$textPadding} 0;
+          }
+        }
+
+        @else {
+          flex-direction: column;
+
+          .label {
+            min-width: calc(var(--cs-m) * 2.5);
+            padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
+          }
         }
       }
     }
@@ -184,6 +140,12 @@ $vTransitionTime: 0.5s;
     gap: var(--b-s);
 
     @include mixins.crossHover {}
+
+    &[data-fill="true"] {
+      >.tab {
+        flex: 1 1 0rem;
+      }
+    }
   }
 
   .tab {
@@ -193,13 +155,15 @@ $vTransitionTime: 0.5s;
     justify-content: center;
     align-items: center;
     user-select: none;
+    min-height: var(--cs-m);
+    min-width: var(--cs-m);
     transition: background-color #{var.$transitionTime},
     color #{var.$transitionTime},
     border-color #{var.$transitionTime};
 
     &[data-selected="true"] {
       border-color: var(--s-color, var(--c-main)) !important;
-      background-color: var(--s-color, var(--c-main));
+      background: var(--s-color, var(--c-main));
       color: var(--s-color_, var(--c-main_));
     }
 
@@ -235,20 +199,15 @@ $vTransitionTime: 0.5s;
 
   .content {
     box-sizing: border-box;
-    position: absolute;
     width: 100%;
     min-height: 100%;
     height: 100%;
     flex: none;
     z-index: 0;
-    opacity: 0.99;
+    opacity: 0;
     overflow: auto;
-    background-color: var(--c-base);
-
-    &[data-preselected="true"] {
-      z-index: 2;
-      opacity: 1;
-    }
+    background: var(--c-base);
+    transition: opacity #{var.$transitionTime};
 
     &[data-selected="true"] {
       z-index: 1;
@@ -257,10 +216,22 @@ $vTransitionTime: 0.5s;
     }
 
     &:not([data-selected="true"]) {
+      position: absolute;
+      top: 0;
+      left: 0;
       max-height: 100% !important;
-      pointer-events: none !important;
-      overflow: hidden !important;
+      pointer-events: none;
+      overflow: hidden;
     }
+  }
+
+  .label {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--b-s);
   }
 
 }

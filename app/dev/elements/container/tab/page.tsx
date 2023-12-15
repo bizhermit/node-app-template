@@ -4,8 +4,8 @@
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
-import { PlusIcon } from "#/client/elements/icon";
-import TabContainer from "#/client/elements/tab-container";
+import { FormIcon, HomeIcon, MagnifyingGlassIcon } from "#/client/elements/icon";
+import TabContainer, { TabLabel } from "#/client/elements/tab-container";
 import TabContent from "#/client/elements/tab-container/content";
 import Text from "#/client/elements/text";
 import generateArray from "#/objects/array/generator";
@@ -14,12 +14,15 @@ import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
 
 type TabKey = "tab1" | "tab2" | "tab3" | 4;
+type TabTextMode = "text" | "icon" | "texticon";
 
 const Page = () => {
   const [position, setPosition] = useState<"top" | "left" | "right" | "bottom">(null!);
+  const [tabFill, setTabFill] = useState(false);
   const [tabScroll, setTabScroll] = useState(false);
   const [key, setKey] = useState<TabKey>();
-  const [overlap, setOverlap] = useState(false);
+  const [unmountDeselected, setUnmountDeselected] = useState(false);
+  const [tabTextMode, setTabTextMode] = useState<TabTextMode>();
 
   return (
     <BaseLayout
@@ -39,16 +42,22 @@ const Page = () => {
             $onChange={v => setPosition(v!)}
           />
         </ControlItem>
-        <ControlItem caption="overlap">
-          <ToggleBox
-            $value={overlap}
-            $onChange={(v) => setOverlap(v!)}
-          />
-        </ControlItem>
         <ControlItem caption="scroll">
           <ToggleBox
             $value={tabScroll}
             $onChange={v => setTabScroll(v!)}
+          />
+        </ControlItem>
+        <ControlItem caption="tab fill">
+          <ToggleBox
+            $value={tabFill}
+            $onChange={v => setTabFill(v!)}
+          />
+        </ControlItem>
+        <ControlItem caption="unmount">
+          <ToggleBox
+            $value={unmountDeselected}
+            $onChange={v => setUnmountDeselected(v!)}
           />
         </ControlItem>
         <ControlItem caption="switch">
@@ -58,6 +67,17 @@ const Page = () => {
             <Button $fitContent onClick={() => setKey("tab3")}>Tab 3</Button>
           </BaseRow>
         </ControlItem>
+        <ControlItem caption="tab text">
+          <RadioButtons<TabTextMode>
+            $value={tabTextMode}
+            $onChange={v => setTabTextMode(v!)}
+            $source={[
+              "text",
+              "icon",
+              "icontext",
+            ].map(s => ({ value: s, label: s }))}
+          />
+        </ControlItem>
       </ControlLayout>
       <TabContainer<TabKey>
         // ref={ref}
@@ -66,20 +86,23 @@ const Page = () => {
           flex: tabScroll ? "1 1 0rem" : undefined,
         }}
         $tabPosition={position}
-        $overlap={overlap}
-        // $bodyColor="pure"
         // $defaultMount
-        // $unmountDeselected
         $color="primary"
         $key={key}
         $onChange={(key) => {
           // console.log(key, ref.current);
           setKey(key);
         }}
+        $tabFill={tabFill}
+        $unmountDeselected={unmountDeselected}
       >
         <TabContent
           key="tab1"
-          $label="Tab 1"
+          $label={
+            tabTextMode === "text" ? <TabLabel>HOME</TabLabel> :
+              tabTextMode === "icon" ? <HomeIcon /> :
+                <TabLabel><HomeIcon /><Text>HOME</Text></TabLabel>
+          }
           className="bgc-pure"
         >
           <div>
@@ -97,8 +120,8 @@ const Page = () => {
         </TabContent>
         <TabContent
           key="tab2"
-          $label="Tab 2"
-          $color="sub"
+          $label={<FormIcon />}
+          $color="main"
         >
           <div>
             <h2>Tab 2</h2>
@@ -115,7 +138,7 @@ const Page = () => {
         </TabContent>
         <TabContent
           key="tab3"
-          $label={<><PlusIcon /><Text>Tab3</Text></>}
+          $label={<MagnifyingGlassIcon />}
         >
           <h2>Tab 3</h2>
           <Button
