@@ -108,7 +108,7 @@ $minHoverToggle: true;
 
     // in .wrap
     >.nav {
-      z-index: 96;
+      z-index: 9996;
       top: var(--header-size);
       height: calc(100% - var(--header-size));
       width: fit-content;
@@ -207,7 +207,7 @@ $minHoverToggle: true;
       >.body {
         >.header {
           width: calc(100% + var(--nav-size));
-          z-index: 99;
+          z-index: 9999;
         }
       }
 
@@ -343,7 +343,7 @@ $minHoverToggle: true;
     width: var(--nav-min-size);
     flex: none;
     position: relative;
-    z-index: 98;
+    z-index: 9998;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -390,7 +390,7 @@ $minHoverToggle: true;
     height: 100%;
     width: 100%;
     background: var(--c-mask);
-    z-index: 95;
+    z-index: 9995;
     position: fixed;
     top: 0;
     left: 0;
@@ -405,7 +405,7 @@ $minHoverToggle: true;
 
   .nav {
     box-sizing: border-box;
-    z-index: 98;
+    z-index: 9998;
     position: fixed;
     top: var(--nav-top);
     height: calc(100% - var(--nav-top));
@@ -481,7 +481,7 @@ $minHoverToggle: true;
 
   .header {
     box-sizing: border-box;
-    z-index: 97;
+    z-index: 9997;
     width: 100%;
     height: var(--header-size);
     position: sticky;

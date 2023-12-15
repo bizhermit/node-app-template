@@ -24,7 +24,7 @@
   position: sticky;
   top: var(--h-size);
   height: var(--t-size);
-  z-index: 90;
+  z-index: 999;
   padding: 0 var(--b-m);
   display: flex;
   flex-flow: row wrap;
