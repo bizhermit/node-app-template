@@ -3,52 +3,59 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes } from "react";
 import { createPortal } from "react-dom";
 import usePortalElement from "../../hooks/portal-element";
-import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
+import { attributesWithoutChildren } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
-export type LoadingAppearance = "bar" | "circle";
+type LoadingAppearance = "bar" | "circle";
 
-type OmitAttributes = "color";
-export type LoadingProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type LoadingOptions = {
   $color?: Color;
-  $reverseColor?: boolean;
-  $fixed?: boolean;
+  $absolute?: boolean;
   $mask?: boolean;
   $appearance?: LoadingAppearance;
 };
 
-const Loading = forwardRef<HTMLDivElement, LoadingProps>((props, $ref) => {
-  const appearance = props.$appearance || "bar";
+type LoadingMaskProps = Pick<LoadingOptions, "$absolute">;
+
+export type LoadingProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, LoadingOptions>;
+
+const Loading = forwardRef<HTMLDivElement, LoadingProps>(({
+  $color,
+  $absolute,
+  $mask,
+  $appearance = "bar",
+  ...props
+}, $ref) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle($ref, () => ref.current);
   const cref = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    if (props.$mask) {
+    if ($mask) {
       (cref.current?.querySelector("button") ?? cref.current ?? ref.current)?.focus();
     }
   }, []);
 
   return (
     <>
-      {props.$mask && <Mask1 {...props} />}
+      {$mask && <Mask1 $absolute={$absolute} />}
       <div
         {...attributesWithoutChildren(props, Style.wrap)}
         ref={ref}
         tabIndex={0}
-        data-fixed={props.$fixed}
-        data-appearance={appearance}
+        data-abs={$absolute}
+        data-appearance={$appearance}
       >
-        {appearance === "bar" &&
+        {$appearance === "bar" &&
           <div
             className={Style.bar}
-            style={appendedColorStyle({ $color: props.$color })}
+            data-color={$color}
           />
         }
-        {appearance === "circle" &&
+        {$appearance === "circle" &&
           <div
             className={Style.circle}
-            style={appendedColorStyle({ $color: props.$color })}
+            data-color={$color}
           />
         }
       </div>
@@ -57,17 +64,17 @@ const Loading = forwardRef<HTMLDivElement, LoadingProps>((props, $ref) => {
           ref={cref}
           tabIndex={0}
           className={Style.content}
-          data-fixed={props.$fixed}
+          data-abs={$absolute}
         >
           {props.children}
         </div>
       }
-      {props.$mask && <Mask2 {...props} />}
+      {$mask && <Mask2 $absolute={$absolute} />}
     </>
   );
 });
 
-const Mask1: FC<LoadingProps> = (props) => {
+const Mask1: FC<LoadingMaskProps> = (props) => {
   const keydown = (e: React.KeyboardEvent) => {
     if (e.shiftKey && e.key === "Tab") e.preventDefault();
   };
@@ -75,14 +82,14 @@ const Mask1: FC<LoadingProps> = (props) => {
   return (
     <div
       className={Style.mask1}
-      data-fixed={props.$fixed}
+      data-abs={props.$absolute}
       tabIndex={0}
       onKeyDown={keydown}
     />
   );
 };
 
-const Mask2: FC<LoadingProps> = (props) => {
+const Mask2: FC<LoadingMaskProps> = (props) => {
   const keydown = (e: React.KeyboardEvent) => {
     if (!e.shiftKey && e.key === "Tab") e.preventDefault();
   };
@@ -90,7 +97,7 @@ const Mask2: FC<LoadingProps> = (props) => {
   return (
     <div
       className={Style.mask2}
-      data-fixed={props.$fixed}
+      data-fixed={props.$absolute}
       tabIndex={0}
       onKeyDown={keydown}
     />
@@ -101,11 +108,10 @@ export const ScreenLoading = forwardRef<HTMLDivElement, LoadingProps>((props, re
   const portal = usePortalElement({
     mount: (elem) => {
       elem.classList.add(Style.root);
-    }
+    },
   });
 
-  if (portal == null) return <></>;
-  return createPortal(<Loading {...props} ref={ref} $fixed />, portal);
+  return portal == null ? <></> : createPortal(<Loading {...props} ref={ref} $absolute />, portal);
 });
 
 export default Loading;

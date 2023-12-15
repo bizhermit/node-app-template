@@ -366,6 +366,13 @@ export const SplitContainerIcon: IconFC = (p) => (
 
 export const LoadingIcon: IconFC = (p) => (
   <svg {...svgAttrs(p)}>
-    <path d="M2,3H18V17H2Z M10,3V17" fill="none" />
+    <line x1="10" x2="10" y1="1" y2="5" />
+    <line x1="1" x2="5" y1="10" y2="10" opacity="0.9" />
+    <line x1="3.3" x2="6.4" y1="3.3" y2="6.4" opacity="0.8" />
+    <line x1="3.3" x2="6.4" y1="16.7" y2="13.6" opacity="0.7" />
+    <line x1="10" x2="10" y1="19" y2="15" opacity="0.6" />
+    <line x1="16.7" x2="13.6" y1="16.7" y2="13.6" opacity="0.5" />
+    <line x1="19" x2="15" y1="10" y2="10" opacity="0.4" />
+    <line x1="16.7" x2="13.6" y1="3.3" y2="6.4" opacity="0.3" />
   </svg>
 );

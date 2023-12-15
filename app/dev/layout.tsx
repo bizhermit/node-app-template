@@ -1,4 +1,4 @@
-import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, TabContainerIcon, TextBoxIcon } from "#/client/elements/icon";
+import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, TabContainerIcon, TextBoxIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 // import NavigationContainer from "#/client/elements/navigation-container/fat";
@@ -101,6 +101,12 @@ const devMenus = (
                 pathname: "/dev/elements/container/split"
               }
             ],
+          },
+          {
+            key: "loading",
+            icon: <LoadingIcon />,
+            label: "Loading",
+            pathname: "/dev/elements/loading",
           },
           {
             key: "popup",
