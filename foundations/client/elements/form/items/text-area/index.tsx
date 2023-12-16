@@ -167,7 +167,7 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       data-has={isNotEmpty(ctx.value)}
       $mainProps={{
         style: {

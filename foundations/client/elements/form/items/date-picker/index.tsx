@@ -699,7 +699,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       tabIndex={-1}
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $preventFieldLayout
       $useHidden
       $mainProps={{

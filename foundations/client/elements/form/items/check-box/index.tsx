@@ -145,7 +145,7 @@ const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
       $preventFieldLayout
       $clickable

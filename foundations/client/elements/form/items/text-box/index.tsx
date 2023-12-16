@@ -221,7 +221,7 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       data-round={props.$round}
       data-has={hasData}
       $mainProps={{

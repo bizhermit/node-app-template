@@ -321,7 +321,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $preventFieldLayout
       $useHidden={props.$typeof !== "file"}
       $mainProps={{

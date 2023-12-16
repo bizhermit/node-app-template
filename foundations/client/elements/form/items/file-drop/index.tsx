@@ -213,7 +213,7 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $mainProps={{
         className: Style.main,
         tabIndex: undefined,

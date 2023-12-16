@@ -373,7 +373,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
       data-has={hasLabel}
       $mainProps={{

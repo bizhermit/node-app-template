@@ -371,7 +371,7 @@ const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(<
       tabIndex={-1}
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $preventFieldLayout
       $useHidden
       $mainProps={{

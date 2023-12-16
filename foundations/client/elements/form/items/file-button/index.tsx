@@ -175,7 +175,7 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $preventFieldLayout
     >
       {ctx.editable &&

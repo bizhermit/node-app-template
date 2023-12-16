@@ -132,7 +132,7 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $preventFieldLayout
       $clickable
       $mainProps={{

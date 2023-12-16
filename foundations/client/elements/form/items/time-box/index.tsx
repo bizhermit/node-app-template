@@ -396,7 +396,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
       data-has={hasData}
       $mainProps={{

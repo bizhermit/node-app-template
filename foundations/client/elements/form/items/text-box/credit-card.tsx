@@ -98,7 +98,7 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       data-has={hasData}
     >
       <input

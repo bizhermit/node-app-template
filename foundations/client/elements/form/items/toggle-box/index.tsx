@@ -142,7 +142,7 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
       $preventFieldLayout
       $clickable

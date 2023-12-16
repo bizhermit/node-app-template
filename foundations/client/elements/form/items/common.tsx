@@ -2,16 +2,15 @@
 
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import type { FormItemProps } from "../$types";
-import { appendedColorStyle, attributes, attributesWithoutChildren } from "../../../utilities/attributes";
+import { appendedColorStyle, attributes } from "../../../utilities/attributes";
 import Tooltip from "../../tooltip";
 import { convertHiddenValue, isErrorObject } from "../utilities";
 import Style from "./form-item.module.scss";
 import type { useFormItemContext } from "./hooks";
 
 type FormItemWrapProps = FormItemProps<any, any, any, any> & {
-  $context: ReturnType<typeof useFormItemContext<any, any, any, any>>;
+  $ctx: ReturnType<typeof useFormItemContext<any, any, any, any>>;
   $preventFieldLayout?: boolean;
-  $className?: string;
   $clickable?: boolean;
   $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
   $useHidden?: boolean;
@@ -19,79 +18,88 @@ type FormItemWrapProps = FormItemProps<any, any, any, any> & {
   children?: ReactNode;
 };
 
-const inputAttributes = (props: Struct, ...classNames: Array<string | null | undefined>) => {
-  const ret = attributesWithoutChildren(props, ...classNames);
-  if ("name" in ret) delete ret.name;
-  if ("tabIndex" in ret) delete ret.placeholder;
-  if ("placeholder" in ret) delete ret.placeholder;
-  return ret;
-};
-
-export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>((props, ref) => {
-  const errorNode = props.$context.messageDisplayMode !== "none"
-    && props.$context.messageDisplayMode !== "hide"
-    && props.$context.editable
-    && ((props.$context.error !== "" && isErrorObject(props.$context.error)) || props.$context.messageDisplayMode === "bottom")
+export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
+  name,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  tabIndex,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  placeholder,
+  $ctx,
+  $preventFieldLayout,
+  $clickable,
+  $mainProps,
+  $useHidden,
+  $hideWhenNoError,
+  $tag,
+  $tagPosition,
+  $messagePosition,
+  children,
+  ...props
+}, ref) => {
+  const errorNode = $ctx.messageDisplayMode !== "none"
+    && $ctx.messageDisplayMode !== "hide"
+    && $ctx.editable
+    && (($ctx.error !== "" && isErrorObject($ctx.error)) || $ctx.messageDisplayMode === "bottom")
     && (
       <div
         className={Style.error}
-        data-mode={props.$context.messageDisplayMode}
+        data-mode={$ctx.messageDisplayMode}
       >
         <span
           className={Style.text}
-          data-nowrap={!props.$context.messageWrap}
+          data-nowrap={!$ctx.messageWrap}
         >
-          {props.$context.error}
+          {$ctx.error}
         </span>
       </div>
     );
 
   const attrs = {
-    ...attributes(props.$mainProps ?? {}, Style.main),
-    "data-editable": props.$context.editable,
-    "data-field": props.$preventFieldLayout !== true,
-    "data-disabled": props.$context.disabled,
-    "data-error": props.$context.messageDisplayMode === "none" ? undefined : isErrorObject(props.$context.error),
-    "data-clickable": props.$clickable,
+    ...attributes($mainProps ?? {}, Style.main),
+    "data-editable": $ctx.editable,
+    "data-field": $preventFieldLayout !== true,
+    "data-disabled": $ctx.disabled,
+    "data-error": $ctx.messageDisplayMode === "none" ? undefined : isErrorObject($ctx.error),
+    "data-clickable": $clickable,
   };
 
-  const tagPlaceholder = props.$context.editable && props.$tag != null && props.$tagPosition === "placeholder";
+  const tagPlaceholder = $ctx.editable && $tag != null && $tagPosition === "placeholder";
 
   return (
     <div
-      {...inputAttributes(props, Style.wrap, props.$className)}
+      {...attributes(props, Style.wrap)}
       style={appendedColorStyle(props)}
       ref={ref}
       data-tagpad={tagPlaceholder}
-      data-hidden={props.$hideWhenNoError ? !isErrorObject(props.$context.error) || props.$messagePosition === "none" : undefined}
+      data-hidden={$hideWhenNoError ? !isErrorObject($ctx.error) || $messagePosition === "none" : undefined}
     >
-      {props.$tag &&
+      {$tag &&
         <div
           className={Style.tag}
-          data-pos={!tagPlaceholder ? "top" : props.$tagPosition || "top"}
+          data-pos={!tagPlaceholder ? "top" : $tagPosition || "top"}
         >
-          {props.$tag}
+          {$tag}
         </div>
       }
-      {props.$useHidden && props.name &&
+      {$useHidden && name &&
         <input
-          name={props.name}
+          name={name}
           type="hidden"
-          value={convertHiddenValue(props.$context.value)}
+          value={convertHiddenValue($ctx.value)}
         />
       }
-      {props.$context.messageDisplayMode === "tooltip" ?
+      {$ctx.messageDisplayMode === "tooltip" ?
         <Tooltip
           {...attrs}
           $disabled={!errorNode}
           $popupClassName={Style.tooltip}
         >
-          {props.children}
+          {children}
           {errorNode}
         </Tooltip> :
         <>
           <div {...attrs}>
-            {props.children}
+            {children}
           </div>
           {errorNode}
         </>

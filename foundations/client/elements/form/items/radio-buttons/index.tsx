@@ -246,7 +246,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $preventFieldLayout
       $useHidden
       $mainProps={{

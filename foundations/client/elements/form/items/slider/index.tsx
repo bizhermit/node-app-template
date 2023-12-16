@@ -164,7 +164,7 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
       $preventFieldLayout
       $mainProps={{
