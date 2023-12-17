@@ -106,4 +106,8 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: var(--b-s);
+
+  &[data-middle="true"] {
+    align-items: center;
+  }
 }

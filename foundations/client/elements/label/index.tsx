@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
+import { attrs } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -8,16 +8,20 @@ type LabelProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
   $size?: Size;
 };
 
-const Label = forwardRef<HTMLDivElement, LabelProps>((props, ref) => {
+const Label = forwardRef<HTMLDivElement, LabelProps>(({
+  $color,
+  $size,
+  ...props
+}, ref) => {
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
-      style={appendedColorStyle(props)}
+      {...attrs(props, Style.wrap)}
       ref={ref}
+      data-color={$color}
     >
       <div
         className={Style.main}
-        data-size={props.$size || "m"}
+        data-size={$size || "m"}
       >
         <Text>{props.children}</Text>
       </div>

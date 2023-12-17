@@ -109,6 +109,12 @@ const devMenus = (
             icon: <PopupIcon />,
             label: "Popup",
             pathname: "/dev/elements/popup",
+          },
+          {
+            key: "label",
+            icon: "L",
+            label: "Label",
+            pathname: "/dev/elements/label",
           }
         ],
       }

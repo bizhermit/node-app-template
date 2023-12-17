@@ -54,10 +54,14 @@ export const BaseSection: FC<{
 };
 
 export const BaseRow: FC<{
+  $middle?: boolean;
   children?: ReactNode;
 }> = (props) => {
   return (
-    <div className={Style.row}>
+    <div
+      className={Style.row}
+      data-middle={props.$middle}
+    >
       {props.children}
     </div>
   );
