@@ -1,24 +1,34 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { attributes, isReactNode } from "../../utilities/attributes";
+import { attrs, isReactNode } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
-type TextProps = HTMLAttributes<HTMLElement> & {
+type TextOptions = {
   $iblock?: boolean; // inline-block
   $block?: boolean; // block
   $bold?: boolean; // bold
 };
 
-const Text = forwardRef<HTMLElement, TextProps>((props, ref) => {
-  if (props.children == null) return <></>;
-  if (isReactNode(props.children)) return <>{props.children}</>;
+type TextProps = OverwriteAttrs<HTMLAttributes<HTMLElement>, TextOptions>;
+
+const Text = forwardRef<HTMLElement, TextProps>(({
+  $iblock,
+  $block,
+  $bold,
+  children,
+  ...props
+}, ref) => {
+  if (children == null) return <></>;
+  if (isReactNode(children)) return <>{children}</>;
   return (
     <span
-      {...attributes(props, Style.main)}
+      {...attrs(props, Style.main)}
       ref={ref}
-      data-iblock={props.$iblock}
-      data-block={props.$block}
-      data-bold={props.$bold}
-    />
+      data-iblock={$iblock}
+      data-block={$block}
+      data-bold={$bold}
+    >
+      {children}
+    </span>
   );
 });
 
