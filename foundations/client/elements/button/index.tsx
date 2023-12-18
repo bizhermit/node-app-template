@@ -1,7 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { attrs, isNotReactNode } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
+import { isNotReactNode } from "../../utilities/attributes";
 import useForm from "../form/context";
 import Style from "./index.module.scss";
 
@@ -24,6 +25,7 @@ export type ButtonOptions = {
 export type ButtonProps = OverwriteAttrs<ButtonHTMLAttributes<HTMLButtonElement>, ButtonOptions>;
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
+  className,
   $size,
   $color,
   $round,
@@ -71,7 +73,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
 
   return (
     <button
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       type={props.type ?? "button"}
       disabled={props.disabled || submitDisabled || disabled}

@@ -5,13 +5,6 @@ export const joinClassNames = (...classNames: Array<string | null | undefined>) 
   return strJoin(" ", ...classNames);
 };
 
-export const attrs = <T extends { [v: string]: any } | null | undefined>(props: T, ...classNames: Array<string | null | undefined>): T => {
-  return {
-    ...props,
-    className: strJoin(" ", ...classNames, props?.className),
-  };
-};
-
 export const attributes = (props: Struct | null | undefined, ...classNames: Array<string | null | undefined>) => {
   const ret: Struct = {};
   if (props) {

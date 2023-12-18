@@ -2,8 +2,8 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes } from "react";
 import { createPortal } from "react-dom";
+import strJoin from "../../../objects/string/join";
 import usePortalElement from "../../hooks/portal-element";
-import { attrs } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
 type LoadingAppearance = "bar" | "circle";
@@ -20,6 +20,7 @@ type LoadingMaskProps = Pick<LoadingOptions, "$absolute">;
 export type LoadingProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, LoadingOptions>;
 
 const Loading = forwardRef<HTMLDivElement, LoadingProps>(({
+  className,
   $color,
   $absolute,
   $mask,
@@ -41,7 +42,8 @@ const Loading = forwardRef<HTMLDivElement, LoadingProps>(({
     <>
       {$mask && <Mask1 $absolute={$absolute} />}
       <div
-        {...attrs(props, Style.wrap)}
+        {...props}
+        className={strJoin(" ", Style.wrap, className)}
         ref={ref}
         tabIndex={0}
         data-abs={$absolute}

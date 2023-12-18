@@ -2,9 +2,9 @@
 
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FormHTMLAttributes, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import clone from "../../../objects/clone";
+import strJoin from "../../../objects/string/join";
 import { getValue } from "../../../objects/struct/get";
 import { setValue } from "../../../objects/struct/set";
-import { attrs } from "../../utilities/attributes";
 import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "./$types";
 import { FormContext, type UseFormItemContextOptions } from "./context";
 import Style from "./index.module.scss";
@@ -70,6 +70,7 @@ interface FormFC extends FunctionComponent<FormProps> {
 }
 
 const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = FormDataStruct>({
+  className,
   $type,
   $formRef,
   $bind,
@@ -351,7 +352,8 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
       getErrorMessages,
     }}>
       <form
-        {...attrs(props, Style.main)}
+        {...props}
+        className={strJoin(" ", Style.main, className)}
         ref={ref}
         method={method}
         data-layout={$layout}

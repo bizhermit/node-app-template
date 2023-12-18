@@ -1,7 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes, type ReactElement } from "react";
-import { attrs, convertSizeNumToStr } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
+import { convertSizeNumToStr } from "../../utilities/attributes";
 import Resizer from "../resizer";
 import Style from "./index.module.scss";
 
@@ -19,6 +20,7 @@ type SplitContainerOptions = {
 export type SplitContainerProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, SplitContainerOptions>;
 
 const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>(({
+  className,
   $direction,
   $reverse,
   $disabled,
@@ -33,8 +35,12 @@ const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>(({
 
   const direction = $direction || "horizontal";
   const reverse = $reverse ?? false;
-  const p0 = children[0].props as SlideContentProps;
   const {
+    className: cn0,
+    ...p0
+  } = children[0].props as SlideContentProps;
+  const {
+    className: cn1,
     $defaultSize,
     $maxSize,
     $minSize,
@@ -71,12 +77,13 @@ const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>(({
 
   return (
     <div
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       data-direction={direction}
       data-reverse={reverse}
     >
-      {!$hide0 && <div {...attrs(p0, Style.content0)} />}
+      {!$hide0 && <div {...p0} className={strJoin(" ", Style.content0, cn0)} />}
       {!$disabled && !$hide0 && !$hide1 &&
         <Resizer
           className={Style.handle}
@@ -87,7 +94,8 @@ const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>(({
       }
       {!$hide1 &&
         <div
-          {...attrs(p1, Style.content1)}
+          {...p1}
+          className={strJoin(" ", Style.content1, cn1)}
           ref={c1Ref}
         />
       }

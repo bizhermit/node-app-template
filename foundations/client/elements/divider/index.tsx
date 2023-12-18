@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { attrs, convertSizeNumToStr } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
+import { convertSizeNumToStr } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -14,6 +15,7 @@ type DividerOptions = {
 export type DividerProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, DividerOptions>;
 
 const Divider = forwardRef<HTMLDivElement, DividerProps>(({
+  className,
   $color,
   $reverseColor,
   $height,
@@ -26,7 +28,8 @@ const Divider = forwardRef<HTMLDivElement, DividerProps>(({
 
   return (
     <div
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       data-color={$color}
     >

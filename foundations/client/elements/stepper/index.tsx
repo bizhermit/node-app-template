@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type HTMLAttributes, type ReactNode } from "react";
-import { attrs } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -22,6 +22,7 @@ type StepperOptions = {
 export type StepperProps = OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, "children">, StepperOptions>;
 
 const Stepper = forwardRef<HTMLDivElement, StepperProps>(({
+  className,
   $step,
   $appearance,
   $color,
@@ -56,7 +57,8 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>(({
 
   return (
     <div
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       data-appearance={appearance}
       data-size={$size || "m"}

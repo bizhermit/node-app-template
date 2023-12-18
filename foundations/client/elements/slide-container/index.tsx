@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
-import { attrs } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -32,6 +32,7 @@ interface SlideContainerFC extends FunctionComponent<SlideContainerProps> {
 }
 
 const SlideContainer = forwardRef(<K extends string = string>({
+  className,
   $key,
   $direction,
   $defaultMount,
@@ -105,7 +106,8 @@ const SlideContainer = forwardRef(<K extends string = string>({
 
   return (
     <div
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       data-direction={$direction || "horizontal"}
       data-pos={$breadcrumbsPosition || "top"}
@@ -127,6 +129,7 @@ type ContentProps = Omit<SlideContentProps, "$label"> & {
 };
 
 const Content: FC<ContentProps> = ({
+  className,
   $overlap,
   $defaultMount,
   $unmountDeselected,
@@ -155,7 +158,8 @@ const Content: FC<ContentProps> = ({
 
   return (
     <div
-      {...attrs(props, Style.content)}
+      {...props}
+      className={strJoin(" ", Style.content, className)}
       data-state={state}
       data-overlap={$overlap}
       onTransitionEnd={transitionEnd}

@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { forwardRef, useEffect, useRef, type FC, type HTMLAttributes, type Key, type ReactNode } from "react";
 import equals from "../../../objects/equal";
-import { attrs } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
 import { MinusIcon, PlusIcon } from "../icon";
 import NextLink, { type Href } from "../link";
 import { useNavigation } from "../navigation-container/context";
@@ -42,6 +42,7 @@ type MenuOptions = MenuBaseOptions & {
 export type MenuProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, MenuOptions>;
 
 const Menu = forwardRef<HTMLDivElement, MenuProps>(({
+  className,
   items,
   direction,
   defaultOpenedIcon: openedIcon,
@@ -52,7 +53,8 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(({
 }, ref) => {
   return (
     <div
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
     >
       <MenuGroup
@@ -99,6 +101,7 @@ type MenuItemPropsImpl = MenuItemProps & {
 };
 
 const MenuItem: FC<MenuItemPropsImpl> = ({
+  className,
   items,
   pathname,
   query,
@@ -153,7 +156,8 @@ const MenuItem: FC<MenuItemPropsImpl> = ({
 
   const node = (
     <div
-      {...attrs(props, Style.content)}
+      {...props}
+      className={strJoin(" ", Style.content, className)}
       ref={ref}
       style={{
         ...props?.style,

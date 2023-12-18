@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { attrs, isReactNode } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
+import { isReactNode } from "../../utilities/attributes";
 import Style from "./index.module.scss";
 
 type TextOptions = {
@@ -11,6 +12,7 @@ type TextOptions = {
 type TextProps = OverwriteAttrs<HTMLAttributes<HTMLElement>, TextOptions>;
 
 const Text = forwardRef<HTMLElement, TextProps>(({
+  className,
   $iblock,
   $block,
   $bold,
@@ -21,7 +23,8 @@ const Text = forwardRef<HTMLElement, TextProps>(({
   if (isReactNode(children)) return <>{children}</>;
   return (
     <span
-      {...attrs(props, Style.main)}
+      {...props}
+      className={strJoin(" ", Style.main, className)}
       ref={ref}
       data-iblock={$iblock}
       data-block={$block}

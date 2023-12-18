@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import strJoin from "../../../objects/string/join";
 import structKeys from "../../../objects/struct/keys";
-import { attrs, isNotReactNode } from "../../utilities/attributes";
+import { isNotReactNode } from "../../utilities/attributes";
 import type { ButtonOptions } from "../button";
 import useForm from "../form/context";
 import NextLink, { replaceDynamicPathname, type NextLinkOptions, type NextLinkProps } from "../link";
@@ -17,6 +18,7 @@ export type LinkButtonOptions = Omit<ButtonOptions, "onClick" | "notDependsOnFor
 export type LinkButtonProps = OverwriteAttrs<NextLinkProps, LinkButtonOptions>;
 
 const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
+  className,
   $size,
   $color,
   $round,
@@ -81,7 +83,8 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
 
   return (
     <NextLink
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       role="button"
       disabled={props.disabled || submitDisabled || disabled}

@@ -1,21 +1,25 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { attrs } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
 import Text from "../text";
 import Style from "./index.module.scss";
 
-type LabelProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
+type LabelOptions = {
   $color?: Color;
   $size?: Size;
 };
 
+type LabelProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, LabelOptions>;
+
 const Label = forwardRef<HTMLDivElement, LabelProps>(({
+  className,
   $color,
   $size,
   ...props
 }, ref) => {
   return (
     <div
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       data-color={$color}
     >

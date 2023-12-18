@@ -1,5 +1,5 @@
 import { FC, type HTMLAttributes } from "react";
-import { attrs } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
 import Style from "./index.module.scss";
 
 type IconOptions = {
@@ -9,6 +9,7 @@ type IconOptions = {
 type IconProps = OverwriteAttrs<Omit<HTMLAttributes<SVGSVGElement>, "children">, IconOptions>;
 
 const svgAttrs = ({
+  className,
   $size,
   ...p
 }: IconProps) => {
@@ -31,7 +32,8 @@ const svgAttrs = ({
         height: $size,
       };
     })(),
-    ...attrs(p, Style.main),
+    ...p,
+    className: strJoin(" ", Style.main, className),
     viewBox: "0 0 20 20",
     xmlns: "http://www.w2.5.org/2000/svg",
   };

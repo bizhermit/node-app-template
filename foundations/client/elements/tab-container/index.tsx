@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
-import { attrs } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
 import Style from "./index.module.scss";
 
 type TabContainerOptions<K extends string = string> = {
@@ -27,6 +27,7 @@ interface TabContainerFC extends FunctionComponent<TabContainerProps> {
 }
 
 const TabContainer = forwardRef(<K extends string = string>({
+  className,
   $defaultKey,
   $key,
   $tabPosition,
@@ -94,7 +95,8 @@ const TabContainer = forwardRef(<K extends string = string>({
 
   return (
     <div
-      {...attrs(props, Style.wrap)}
+      {...props}
+      className={strJoin(" ", Style.wrap, className)}
       ref={ref}
       data-pos={$tabPosition || "top"}
       data-color={color ?? $color}
@@ -118,6 +120,7 @@ type ContentProps = Omit<TabContentProps, "$label" | "$color"> & {
 };
 
 const Content: FC<ContentProps> = ({
+  className,
   $selected,
   $defaultMount,
   $unmountDeselected,
@@ -145,7 +148,8 @@ const Content: FC<ContentProps> = ({
 
   return (
     <div
-      {...attrs(props, Style.content)}
+      {...props}
+      className={strJoin(" ", Style.content, className)}
       data-selected={selected}
       onTransitionEnd={transitionEnd}
     >
@@ -154,8 +158,8 @@ const Content: FC<ContentProps> = ({
   );
 };
 
-export const TabLabel: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
-  return <div {...attrs(props, Style.label)} />;
+export const TabLabel: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
+  return <div {...props} className={strJoin(" ", Style.label, className)} />;
 };
 
 type TabContentOptions = {

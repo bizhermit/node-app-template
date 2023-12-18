@@ -2,7 +2,8 @@
 
 import { forwardRef, useReducer, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
-import { attrs, convertRemToPxNum } from "../../utilities/attributes";
+import strJoin from "../../../objects/string/join";
+import { convertRemToPxNum } from "../../utilities/attributes";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, NavigationHeaderMode, NavigationMode, NavigationPosition, type NavigationContainerProps } from "../navigation-container/context";
 import Style from "./nav-cont.module.scss";
@@ -12,6 +13,7 @@ const toggleMinId = "navTglMin";
 const toggleMnuId = "navTglMnu";
 
 const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>(({
+  className,
   $name,
   $navPosition,
   $defaultNavMode,
@@ -113,7 +115,8 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         type="checkbox"
       />
       <div
-        {...attrs(props, Style.wrap)}
+        {...props}
+        className={strJoin(" ", Style.wrap, className)}
         ref={ref}
         data-pos={pos}
         data-mode={mode}
