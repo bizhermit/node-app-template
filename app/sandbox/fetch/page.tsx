@@ -6,7 +6,7 @@ import DateBox from "#/client/elements/form/items/date-box";
 import FileDrop from "#/client/elements/form/items/file-drop";
 import NumberBox from "#/client/elements/form/items/number-box";
 import TextBox from "#/client/elements/form/items/text-box";
-import GroupBox from "#/client/elements/group-box";
+import GroupContainer from "#/client/elements/group-container";
 import Loading from "#/client/elements/loading";
 import Row from "#/client/elements/row";
 import StructView from "#/client/elements/struct-view";
@@ -32,7 +32,7 @@ const Page = () => {
   return (
     <div className="flex p-xs g-s w-100">
       {process.ing && <Loading />}
-      <GroupBox
+      <GroupContainer
         $caption="/fetch"
         $bodyClassName="p-xs"
       >
@@ -118,8 +118,8 @@ const Page = () => {
             delete
           </Button>
         </Row>
-      </GroupBox>
-      <GroupBox
+      </GroupContainer>
+      <GroupContainer
         $caption="/fetch formdata"
         $bodyClassName="p-xs"
       >
@@ -183,8 +183,8 @@ const Page = () => {
             <Button type="submit" formMethod="delete">delete</Button>
           </Row>
         </Form>
-      </GroupBox>
-      <GroupBox
+      </GroupContainer>
+      <GroupContainer
         $caption="/pages/api"
         $bodyClassName="p-xs"
       >
@@ -205,7 +205,7 @@ const Page = () => {
             hello
           </Button>
         </Row>
-      </GroupBox>
+      </GroupContainer>
       <StructView
         $value={response}
       />

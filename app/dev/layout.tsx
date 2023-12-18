@@ -95,7 +95,13 @@ const devMenus = (
                 icon: <SplitContainerIcon />,
                 label: "Split",
                 pathname: "/dev/elements/container/split"
-              }
+              },
+              {
+                key: "group",
+                icon: "G",
+                label: "Group",
+                pathname: "/dev/elements/container/group",
+              },
             ],
           },
           {

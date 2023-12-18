@@ -5,6 +5,8 @@ $borderWidth: 0.1rem;
 @layer base {
 
   .wrap {
+    --c: var(--s-color, var(--c-border));
+
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -12,7 +14,6 @@ $borderWidth: 0.1rem;
     justify-content: flex-start;
     align-items: flex-start;
     border-radius: inherit;
-    --c: var(--s--color, var(--c-border));
   }
 
   .caption {
@@ -45,10 +46,13 @@ $borderWidth: 0.1rem;
     border-top-right-radius: var(--radius);
     border-right: #{$borderWidth} solid var(--c);
     margin-left: #{var.$textPadding};
-    flex: 1;
+    flex: 1 1 0rem;
   }
 
   .body {
+    --s-color: initial;
+    --s-color_: initial;
+
     box-sizing: border-box;
     border-left: #{$borderWidth} solid var(--c);
     border-bottom: #{$borderWidth} solid var(--c);
@@ -57,7 +61,7 @@ $borderWidth: 0.1rem;
     border-bottom-right-radius: var(--radius);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    flex: 1;
+    flex: 1 1 0rem;
     width: 100%;
 
     &:only-child {

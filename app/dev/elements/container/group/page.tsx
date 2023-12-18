@@ -1,11 +1,12 @@
-import GroupBox from "#/client/elements/group-box";
-import Button from "../../../../foundations/client/elements/button";
+import Button from "#/client/elements/button";
+import GroupContainer from "#/client/elements/group-container";
+import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
 
 const Page = () => {
   return (
-    <div className="flex w-100 h-100 p-xs g-s">
-      <div className="flex row bottom g-s">
-        <GroupBox
+    <BaseLayout title="GroupContainer">
+      <BaseSheet>
+        <GroupContainer
           $caption="GroupBox"
           $bodyClassName="pb-xs px-m r-m"
         >
@@ -15,8 +16,8 @@ const Page = () => {
           <h4>Header 4</h4>
           <h5>Header 5</h5>
           <h6>Header 6</h6>
-        </GroupBox>
-        <GroupBox
+        </GroupContainer>
+        <GroupContainer
           className="es-2"
           $caption="GroupBox"
           $color="primary"
@@ -29,8 +30,8 @@ const Page = () => {
           <h5>Header 5</h5>
           <h6>Header 6</h6>
           <Button>button</Button>
-        </GroupBox>
-        <GroupBox
+        </GroupContainer>
+        <GroupContainer
           className="es-4"
           $color="main"
           $bodyClassName="pb-xs px-m"
@@ -41,9 +42,9 @@ const Page = () => {
           <h4>Header 4</h4>
           <h5>Header 5</h5>
           <h6>Header 6</h6>
-        </GroupBox>
-      </div>
-    </div>
+        </GroupContainer>
+      </BaseSheet>
+    </BaseLayout>
   );
 };
 
