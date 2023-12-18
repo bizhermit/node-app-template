@@ -20,10 +20,10 @@
 
     &[data-editable="true"] {
       >.item {
-        cursor: pointer;
-        user-select: none;
-
         &[data-state="active"] {
+          cursor: pointer;
+          user-select: none;
+
           @include mixins.crossHover {
             &[data-appearance="button"] {
               @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
@@ -54,6 +54,8 @@
         }
 
         &:is([data-state="readonly"], [data-state="disabled"]) {
+          cursor: not-allowed;
+
           >.check {
             &::before {
               background-color: transparent !important;
