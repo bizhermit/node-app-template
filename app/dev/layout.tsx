@@ -73,6 +73,12 @@ const devMenus = (
             label: "Container",
             items: [
               {
+                key: "group",
+                icon: <ContainerIcon />,
+                label: "Group",
+                pathname: "/dev/elements/container/group",
+              },
+              {
                 key: "nav",
                 icon: <NavContainerIcon />,
                 label: "Navigation",
@@ -95,12 +101,6 @@ const devMenus = (
                 icon: <SplitContainerIcon />,
                 label: "Split",
                 pathname: "/dev/elements/container/split"
-              },
-              {
-                key: "group",
-                icon: "G",
-                label: "Group",
-                pathname: "/dev/elements/container/group",
               },
             ],
           },
