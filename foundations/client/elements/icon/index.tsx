@@ -389,3 +389,15 @@ export const StepperIcon: IconFC = (p) => (
     <path d="M10.5,7H17L19,10 17,13H10.5L13,10Z" fill="none" />
   </svg>
 );
+
+export const VerticalDividerIcon: IconFC = (p) => (
+  <svg {...svgAttrs(p)}>
+    <line x1="10" x2="10" y1="3" y2="17" />
+  </svg>
+);
+
+export const HorizontalDividerIcon: IconFC = (p) => (
+  <svg {...svgAttrs(p)}>
+    <line x1="3" x2="17" y1="10" y2="10" />
+  </svg>
+);

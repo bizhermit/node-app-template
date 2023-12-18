@@ -1,10 +1,9 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { appendedColorStyle, attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
+import { attrs, convertSizeNumToStr } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
-type OmitAttributes = "color";
-export type DividerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type DividerOptions = {
   $color?: Color;
   $reverseColor?: boolean;
   $height?: number | string;
@@ -12,36 +11,46 @@ export type DividerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> 
   $shortWidth?: number | string;
 };
 
-const Divider = forwardRef<HTMLDivElement, DividerProps>((props, ref) => {
-  const align = props.children ? props.$align || "center" : undefined;
+export type DividerProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, DividerOptions>;
+
+const Divider = forwardRef<HTMLDivElement, DividerProps>(({
+  $color,
+  $reverseColor,
+  $height,
+  $align,
+  $shortWidth,
+  children,
+  ...props
+}, ref) => {
+  const align = children ? $align || "center" : undefined;
 
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
-      style={appendedColorStyle(props)}
+      {...attrs(props, Style.wrap)}
       ref={ref}
+      data-color={$color}
     >
       <div
         className={Style.border}
         style={{
-          height: convertSizeNumToStr(props.$height),
-          width: align === "left" ? convertSizeNumToStr(props.$shortWidth) : undefined,
+          height: convertSizeNumToStr($height),
+          width: align === "left" ? convertSizeNumToStr($shortWidth) : undefined,
         }}
-        data-reverse={props.$reverseColor}
+        data-reverse={$reverseColor}
         data-short={align === "left"}
       />
-      {props.children &&
+      {children &&
         <>
           <div className={Style.children}>
-            <Text className={Style.text}>{props.children}</Text>
+            <Text className={Style.text}>{children}</Text>
           </div>
           <div
             className={Style.border}
             style={{
-              height: convertSizeNumToStr(props.$height),
-              width: align === "right" ? convertSizeNumToStr(props.$shortWidth) : undefined,
+              height: convertSizeNumToStr($height),
+              width: align === "right" ? convertSizeNumToStr($shortWidth) : undefined,
             }}
-            data-reverse={props.$reverseColor}
+            data-reverse={$reverseColor}
             data-short={align === "right"}
           />
         </>
