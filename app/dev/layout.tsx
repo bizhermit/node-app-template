@@ -1,4 +1,4 @@
-import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, TabContainerIcon, TextBoxIcon } from "#/client/elements/icon";
+import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, LabelIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, StepperIcon, TabContainerIcon, TextBoxIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import Image from "next/image";
@@ -112,9 +112,15 @@ const devMenus = (
           },
           {
             key: "label",
-            icon: "L",
+            icon: <LabelIcon />,
             label: "Label",
             pathname: "/dev/elements/label",
+          },
+          {
+            key: "Stepper",
+            icon: <StepperIcon />,
+            label: "Stepper",
+            pathname: "/dev/elements/stepper",
           }
         ],
       }

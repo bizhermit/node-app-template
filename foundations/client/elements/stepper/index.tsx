@@ -1,14 +1,13 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type HTMLAttributes, type ReactNode } from "react";
-import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
+import { attrs } from "../../utilities/attributes";
 import Text from "../text";
 import Style from "./index.module.scss";
 
-export type StepState = "done" | "current" | "future" | "prev" | "next";
+type StepState = "done" | "current" | "future" | "prev" | "next";
 
-type OmitAttributes = "color" | "children";
-export type StepperProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type StepperOptions = {
   $step: number;
   $appearance?: "line" | "arrow";
   $color?: {
@@ -20,52 +19,59 @@ export type StepperProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> 
   children: [ReactNode, ...Array<ReactNode>];
 };
 
-const Stepper = forwardRef<HTMLDivElement, StepperProps>((props, $ref) => {
+export type StepperProps = OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, "children">, StepperOptions>;
+
+const Stepper = forwardRef<HTMLDivElement, StepperProps>(({
+  $step,
+  $appearance,
+  $color,
+  $size,
+  children,
+  ...props
+}, $ref) => {
   const ref = useRef<HTMLInputElement>(null!);
   useImperativeHandle($ref, () => ref.current);
 
-  const appearance = props.$appearance || "line";
+  const appearance = $appearance || "line";
 
-  const getStateText = (index: number) => {
-    if (index === props.$step) return "current";
-    if (index === props.$step - 1) return "prev";
-    if (index < props.$step) return "done";
-    if (index === props.$step + 1) return "next";
+  const getStateText = (index: number): StepState => {
+    if (index === $step) return "current";
+    if (index === $step - 1) return "prev";
+    if (index < $step) return "done";
+    if (index === $step + 1) return "next";
     return "future";
   };
 
   const getStateColor = (state: StepState) => {
     switch (state) {
       case "current":
-        return props.$color?.current;
+        return $color?.current;
       case "done":
       case "prev":
-        return props.$color?.done;
+        return $color?.done;
       default:
-        return props.$color?.future;
+        return $color?.future;
     }
   };
 
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
+      {...attrs(props, Style.wrap)}
       ref={ref}
       data-appearance={appearance}
-      data-size={props.$size || "m"}
+      data-size={$size || "m"}
     >
-      {props.children.map((step, index) => {
+      {children.map((step, index) => {
         const state = getStateText(index);
-
         return (
           <div
             className={Style.step}
-            style={appendedColorStyle({ $color: getStateColor(state) })}
             key={index}
             data-state={state}
-            data-appearance={appearance}
+            data-color={getStateColor(state)}
           >
             {appearance === "arrow" ?
-              <div className={Style.arrow} /> :
+              <div className={Style.arrow}/> :
               <div className={Style.line}>
                 <div className={Style.point} />
               </div>

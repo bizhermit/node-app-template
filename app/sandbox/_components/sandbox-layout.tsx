@@ -217,11 +217,6 @@ const Navigation: FC = () => {
               icon: "M",
               pathname: "/sandbox/elements/menu",
             }, {
-              key: "stepper",
-              label: "Stepper",
-              icon: "S",
-              pathname: "/sandbox/elements/stepper",
-            }, {
               key: "badge",
               label: "Badge",
               icon: "B",

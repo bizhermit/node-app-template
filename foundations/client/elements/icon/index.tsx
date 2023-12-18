@@ -376,3 +376,16 @@ export const LoadingIcon: IconFC = (p) => (
     <line x1="16.7" x2="13.6" y1="3.3" y2="6.4" opacity="0.3" />
   </svg>
 );
+
+export const LabelIcon: IconFC = (p) => (
+  <svg {...svgAttrs(p)}>
+    <path d="M2,5H14L18,10 14,15H2Z" fill="none" />
+  </svg>
+);
+
+export const StepperIcon: IconFC = (p) => (
+  <svg {...svgAttrs(p)}>
+    <path d="M1,7H7.5L9.5,10 7.5,13H1L3,10Z" />
+    <path d="M10.5,7H17L19,10 17,13H10.5L13,10Z" fill="none" />
+  </svg>
+);
