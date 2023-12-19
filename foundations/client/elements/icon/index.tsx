@@ -410,3 +410,10 @@ export const TooltipIcon: IconFC = (p) => (
     <path d="M4,7H16V12L12,12L10,14L8,12H4Z" fill="none" />
   </svg>
 );
+
+export const BadgeIcon: IconFC = (p) => (
+  <svg {...svgAttrs(p)}>
+    <path d="M10,2H2V18H18V10" opacity=".6" fill="none" />
+    <circle cx="14" cy="6" r="5" fill="none" />
+  </svg>
+);
