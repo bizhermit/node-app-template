@@ -27,6 +27,12 @@ const devMenus = (
         pathname: "/dev",
       },
       {
+        key: "color",
+        icon: "C",
+        label: "Color",
+        pathname: "/dev/color",
+      },
+      {
         key: "elements",
         icon: <ElementIcon />,
         label: "Elements",
@@ -184,7 +190,45 @@ const devMenus = (
             ],
           },
         ],
-      }
+      },
+      {
+        key: "routing",
+        icon: "R",
+        label: "Routing",
+        items: [
+          {
+            key: "apps",
+            icon: "A",
+            label: "App Route",
+            pathname: "/dev/dynamic-route",
+          },
+          {
+            key: "pages",
+            icon: "P",
+            label: "Pages Route",
+            items: [
+              {
+                key: "pages",
+                icon: "P",
+                label: "/pages",
+                pathname: "/pages",
+              },
+              {
+                key: "root",
+                icon: "R",
+                label: "/root",
+                pathname: "/root",
+              },
+              {
+                key: "sandbox/pages",
+                icon: "SP",
+                label: "/sandbox/pages",
+                pathname: "/sandbox/pages",
+              }
+            ],
+          },
+        ]
+      },
     ]}
   />
 );

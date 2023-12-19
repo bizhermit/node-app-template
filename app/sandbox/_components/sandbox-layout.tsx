@@ -3,7 +3,6 @@
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import { FC, ReactNode } from "react";
-import { replaceDynamicPathname } from "../../../foundations/client/elements/link";
 
 const SandboxLayoutProvider: FC<{
   children?: ReactNode;
@@ -43,31 +42,6 @@ const Navigation: FC = () => {
           label: "Index",
           pathname: "/",
         }, {
-          key: "Dynmic",
-          icon: "D",
-          label: "Dynamic",
-          pathname: replaceDynamicPathname("/sandbox/dynamic/[id]", { id: 4 }),
-        }, {
-          key: "pages",
-          icon: "P",
-          label: "Pages Directory",
-          items: [{
-            key: "pages",
-            icon: "P",
-            label: "Pages",
-            pathname: "/pages",
-          }, {
-            key: "root",
-            icon: "R",
-            label: "Root",
-            pathname: "/root",
-          }, {
-            key: "sandbox/pages",
-            icon: "SP",
-            label: "SandBox/Pages",
-            pathname: "/sandbox/pages",
-          }],
-        }, {
           key: "sandbox",
           icon: "S",
           label: "SandBox",
@@ -76,16 +50,6 @@ const Navigation: FC = () => {
             icon: "I",
             label: "Index",
             pathname: "/sandbox",
-          }, {
-            key: "color",
-            icon: "C",
-            label: "Color",
-            pathname: "/sandbox/color",
-          }, {
-            key: "env",
-            icon: "E",
-            label: "Env",
-            pathname: "/sandbox/env",
           }, {
             key: "elements",
             icon: "E",
@@ -211,11 +175,6 @@ const Navigation: FC = () => {
             label: "Process",
             icon: "P",
             pathname: "/sandbox/process"
-          }, {
-            key: "dynamic",
-            label: "Dynamic",
-            icon: "D",
-            pathname: "/sandbox/dynamic",
           }, {
             key: "window",
             label: "Window",

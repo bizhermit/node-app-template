@@ -32,10 +32,10 @@ const Page: NextPageWithLayout = () => {
       </NextLink>
       <Button
         onClick={() => {
-          router.push("/sandbox/dynamic");
+          router.push("/dev/dynamic-route");
         }}
       >
-        /sandbox/dynamic
+        /dev/dynamic-route
       </Button>
     </div>
   );

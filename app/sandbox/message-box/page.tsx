@@ -63,7 +63,7 @@ const Page = () => {
             console.log("close");
           });
           setTimeout(() => {
-            router.push("/sandbox/color");
+            router.push("/dev/color");
           }, 1000);
           unlock();
         }}
