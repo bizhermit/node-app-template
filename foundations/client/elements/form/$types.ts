@@ -22,33 +22,28 @@ export type ValueType<T, D extends DataItem | undefined = undefined, V = undefin
     D extends undefined ? T : DataItemValueType<Exclude<D, undefined>, true, "client">
   ) : V;
 
-type InputOmitProps = "name"
-  | "inputMode"
-  | "defaultValue"
-  | "defaultChecked"
-  | "color"
-  | "onChange"
-  | "children";
+type FormItemSurfaceOptions = {
+  $focusWhenMounted?: boolean;
+};
 
-export type FormItemProps<
+type FormItemCoreOptions<
   T = any,
   D extends DataItem | undefined = DataItem,
   V = undefined,
   U extends Struct = {}
-> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & {
+> = {
   name?: string;
-  $ref?: FormItemHook<ValueType<T, D, V> | null | undefined> | FormItemHook<any | null | undefined>;
   $label?: string;
-  // $bind?: Struct;
+  $dataItem?: D;
   $disabled?: boolean;
   $readOnly?: boolean;
+  $messages?: Partial<FormItemMessages>;
+  $error?: string | null | undefined;
   $required?: boolean;
   $validations?: FormItemValidation<ValueType<T, D, V> | null | undefined> | Array<FormItemValidation<ValueType<T, D, V> | null | undefined>>;
   $interlockValidation?: boolean;
   $defaultValue?: ValueType<T, D, V> | null | undefined;
   $value?: ValueType<T, D, V> | null | undefined;
-  $messagePosition?: FormItemMessageDisplayMode;
-  $messageWrap?: boolean;
   $onChange?: (
     after: ValueType<T, D, V> | null | undefined,
     before: ValueType<T, D, V> | null | undefined,
@@ -61,15 +56,41 @@ export type FormItemProps<
     data: U & { errorMessage: string | null | undefined }
   ) => void;
   $preventMemorizeOnEdit?: boolean;
+  $preventFormBind?: boolean;
+  // $bind?: { [v: string | number | symbol]: any };
+  $ref?: FormItemHook<ValueType<T, D, V> | null | undefined> | FormItemHook<any | null | undefined>;
+};
+
+type FormItemUnderOptions = {
   $tag?: ReactNode;
   $tagPosition?: "top" | "placeholder";
   $color?: Color;
-  $preventFormBind?: boolean;
-  $error?: string | null | undefined;
-  $dataItem?: D;
-  $messages?: Partial<FormItemMessages>;
-  $focusWhenMounted?: boolean;
+  $messageWrap?: boolean;
+  $messagePosition?: FormItemMessageDisplayMode;
 };
+
+type FormItemOptions<
+  T = any,
+  D extends DataItem | undefined = DataItem,
+  V = undefined,
+  U extends { [v: string | number | symbol]: any } = {}
+> = FormItemCoreOptions<T, D, V, U> & FormItemUnderOptions & FormItemSurfaceOptions;
+
+type InputOmitProps =
+  | "name"
+  | "inputMode"
+  | "defaultValue"
+  | "defaultChecked"
+  | "color"
+  | "onChange"
+  | "children";
+
+export type FormItemProps<
+  T = any,
+  D extends DataItem | undefined = DataItem,
+  V = undefined,
+  U extends Struct = {}
+> = OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps>, FormItemOptions<T, D, V, U>>;
 
 export type FormItemHook<T, Q extends { [key: string]: any } = {}> = Omit<{
   focus: () => void;
