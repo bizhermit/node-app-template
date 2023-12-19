@@ -14,8 +14,6 @@ type Direction = "vertical" | "horizontal";
 
 type MenuBaseOptions = {
   items?: Array<MenuItemProps | null | undefined>;
-  defaultOpenedIcon?: ReactNode;
-  closedIcon?: ReactNode;
   defaultOpen?: boolean;
   iconSpace?: boolean;
 };
@@ -45,8 +43,6 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(({
   className,
   items,
   direction,
-  defaultOpenedIcon: openedIcon,
-  closedIcon,
   iconSpace,
   judgeSelected,
   ...props
@@ -60,8 +56,6 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(({
       <MenuGroup
         className={Style.root}
         items={items}
-        defaultOpenedIcon={openedIcon}
-        closedIcon={closedIcon}
         iconSpace={iconSpace}
         direction={direction || "vertical"}
         judgeSelected={judgeSelected}
@@ -74,7 +68,7 @@ const MenuGroup: FC<MenuProps & { nestLevel?: number }> = (props) => {
   if (props.items == null || props.items.length === 0) return <></>;
   return (
     <ul
-      className={Style.list}
+      className={joinCn(Style.list, props.className)}
       data-direction={props.direction}
     >
       {props.items.filter(item => item != null).map((item, index) =>
@@ -82,8 +76,6 @@ const MenuGroup: FC<MenuProps & { nestLevel?: number }> = (props) => {
           {...item}
           key={item!.key ?? index}
           nestLevel={props.nestLevel ?? 0}
-          defaultOpenedIcon={props.defaultOpenedIcon}
-          defaultClosedIcon={props.closedIcon}
           defaultIconSpace={props.iconSpace}
           judgeSelected={props.judgeSelected}
         />
@@ -94,8 +86,6 @@ const MenuGroup: FC<MenuProps & { nestLevel?: number }> = (props) => {
 
 type MenuItemPropsImpl = MenuItemProps & {
   nestLevel: number;
-  defaultOpenedIcon?: ReactNode;
-  defaultClosedIcon?: ReactNode;
   defaultIconSpace?: boolean;
   judgeSelected?: (props: MenuItemProps, nestLevel: number) => boolean
 };
@@ -107,8 +97,6 @@ const MenuItem: FC<MenuItemPropsImpl> = ({
   query,
   onClick,
   nestLevel,
-  defaultOpenedIcon,
-  defaultClosedIcon,
   defaultIconSpace,
   defaultOpen,
   judgeSelected,
@@ -215,8 +203,6 @@ const MenuItem: FC<MenuItemPropsImpl> = ({
             <MenuGroup
               items={items}
               nestLevel={nestLevel + 1}
-              defaultOpenedIcon={defaultOpenedIcon}
-              closedIcon={defaultClosedIcon}
               iconSpace={iconSpace}
             />
           </div>

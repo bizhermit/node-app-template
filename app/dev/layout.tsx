@@ -175,6 +175,12 @@ const devMenus = (
                 label: "DataList",
                 pathname: "/dev/elements/view/data-list",
               },
+              {
+                key: "menu",
+                icon: "M",
+                label: "Menu",
+                pathname: "/dev/elements/view/menu",
+              },
             ],
           },
         ],

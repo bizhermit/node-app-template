@@ -9,6 +9,7 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: stretch;
+    background: var(--c-pure);
 
     --size: var(--cs-m);
     --menu-nest-pad: calc(var(--cs-m) / 2);
@@ -33,7 +34,6 @@
     &[data-direction="horizontal"] {
       &.root {
         flex-direction: row;
-        flex-wrap: wrap;
         align-items: flex-start;
       }
 
@@ -157,11 +157,12 @@
       --menu-nest-pad: calc(var(--nav-min-size) / 2);
       --icon-size: var(--is-xl);
       width: 100%;
+      background: initial;
     }
 
     .content {
       &[data-selected="true"] {
-        background-color: var(--c-nav-selected);
+        background: var(--c-nav-selected);
         color: var(--c-nav-selected_);
       }
     }
