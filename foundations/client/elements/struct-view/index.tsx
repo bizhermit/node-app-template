@@ -1,7 +1,7 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import formatDate from "../../../objects/date/format";
 import formatNum from "../../../objects/number/format";
-import { appendedColorStyle, attributesWithoutChildren, joinClassNames } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 
 export type StructKey = {
@@ -13,14 +13,14 @@ export type StructKey = {
   children?: Array<StructKey>;
 };
 
-type OmitAttributes = "color" | "children";
-export type StructViewProps = Omit<HTMLAttributes<HTMLTableElement>, OmitAttributes> & {
+type StructViewOptions = {
   $keys?: Array<StructKey>;
-  $value?: Struct;
+  $value?: { [v: string]: any };
   $color?: Color;
-  $baseColor?: Color;
   $outline?: boolean;
 };
+
+export type StructViewProps = OverwriteAttrs<Omit<HTMLAttributes<HTMLTableElement>, "children">, StructViewOptions>;
 
 const emptyText = "(empty)";
 
@@ -29,7 +29,7 @@ const switchNode = (item: StructKey, value: any): ReactNode => {
   if (value == null) {
     return (
       <span
-        className={joinClassNames(Style.label, "fgc-dull")}
+        className={joinCn(Style.label, "fgc-dull")}
         data-align={align}
       >
         {emptyText}
@@ -51,11 +51,9 @@ const switchNode = (item: StructKey, value: any): ReactNode => {
     if (Array.isArray(value)) {
       return (
         <div>
-          {value.map((item, index) => {
-            return (
-              <div key={index}>{JSON.stringify(item)}</div>
-            );
-          })}
+          {value.map((item, index) => (
+            <div key={index}>{JSON.stringify(item)}</div>
+          ))}
         </div>
       );
     }
@@ -79,26 +77,30 @@ const switchNode = (item: StructKey, value: any): ReactNode => {
   return <span className={Style.label} data-align={align}>{value}</span>;
 };
 
-const StructView = forwardRef<HTMLTableElement, StructViewProps>((props, ref) => {
-  if (props.$value == null || Object.keys(props.$value).length === 0) return <></>;
+const StructView = forwardRef<HTMLTableElement, StructViewProps>(({
+  className,
+  $keys,
+  $value,
+  $color,
+  $outline,
+  ...props
+}, ref) => {
+  if ($value == null || Object.keys($value).length === 0) return <></>;
   return (
     <table
-      {...attributesWithoutChildren(props, Style.table)}
-      style={appendedColorStyle(props, true)}
+      {...props}
+      className={joinCn(Style.table, className)}
       ref={ref}
-      data-outline={props.$outline}
+      data-outline={$outline}
+      data-color={$color}
     >
       <tbody>
         {(() => {
-          if (props.$keys != null) return props.$keys;
-          if (props.$value == null) return [];
-          return Object.keys(props.$value).map(key => {
-            return {
-              key,
-            } as StructKey;
-          });
+          if ($keys) return $keys;
+          if ($value == null) return [];
+          return Object.keys($value).map(key => ({ key } as StructKey));
         })().map(item => {
-          const v = props.$value?.[item.key];
+          const v = $value?.[item.key];
           const node = (() => {
             if (item.format != null) {
               return item.format(v);

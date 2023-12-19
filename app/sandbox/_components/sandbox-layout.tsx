@@ -189,27 +189,7 @@ const Navigation: FC = () => {
                 label: "CreditCardNumberBox",
                 icon: "CC",
                 pathname: "/sandbox/elements/form-items/credit-card-number-box"
-              }]
-            }, {
-              key: "menu",
-              label: "Menu",
-              icon: "M",
-              pathname: "/sandbox/elements/menu",
-            }, {
-              key: "data-table",
-              label: "DataTable",
-              icon: "DT",
-              pathname: "/sandbox/elements/data-table",
-            }, {
-              key: "data-list",
-              label: "DataList",
-              icon: "DL",
-              pathname: "/sandbox/elements/data-list",
-            }, {
-              key: "struct-view",
-              label: "StructView",
-              icon: "SV",
-              pathname: "/sandbox/elements/struct-view",
+              }],
             }],
           }, {
             key: "message-box",

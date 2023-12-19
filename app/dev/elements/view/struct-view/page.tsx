@@ -1,10 +1,15 @@
+"use client";
+
 import Card from "#/client/elements/card";
-import Row from "#/client/elements/row";
+import ToggleBox from "#/client/elements/form/items/toggle-box";
 import StructView, { type StructKey } from "#/client/elements/struct-view";
 import generateArray from "#/objects/array/generator";
-import { useMemo } from "react";
+import BaseLayout, { BaseRow, BaseSheet } from "@/dev/_components/base-layout";
+import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
+import { useMemo, useState } from "react";
 
 const Page = () => {
+  const [outline, setOutline] = useState(true);
 
   const struct = useMemo(() => {
     const ret: Struct = {};
@@ -83,29 +88,48 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex w-100 p-xs g-s">
-      <Row className="g-s" $vAlign="top">
-        <StructView
-          style={{ width: 350 }}
-          $keys={keys}
-          $value={struct}
-          $outline
-        />
-        <Card
-          style={{ width: 400 }}
-          $color="sub"
-          $accordion
-        >
-          StructView (auto keys)
-          <div className="w-100">
-            <StructView
-              $color="sub-light"
-              $value={struct}
-            />
-          </div>
-        </Card>
-      </Row>
-    </div>
+    <BaseLayout title="StructView">
+      <ControlLayout>
+        <ControlItem caption="outline">
+          <ToggleBox
+            $value={outline}
+            $onChange={v => setOutline(v!)}
+          />
+        </ControlItem>
+      </ControlLayout>
+      <BaseSheet>
+        <BaseRow>
+          <StructView
+            style={{
+              minWidth: 350,
+            }}
+            $keys={keys}
+            $value={struct}
+            $outline={outline}
+          />
+          <Card
+            style={{
+              minWidth: 400,
+            }}
+            $color="sub"
+            $accordion
+            $header="StructView (auto keys)"
+          >
+            <div
+              style={{
+                padding: "var(--b-s)",
+              }}
+            >
+              <StructView
+                $color="sub-light"
+                $value={struct}
+                $outline={outline}
+              />
+            </div>
+          </Card>
+        </BaseRow>
+      </BaseSheet>
+    </BaseLayout>
   );
 };
 

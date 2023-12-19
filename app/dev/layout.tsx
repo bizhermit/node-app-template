@@ -151,7 +151,20 @@ const devMenus = (
             icon: <BadgeIcon />,
             label: "Badge",
             pathname: "/dev/elements/badge"
-          }
+          },
+          {
+            key: "view",
+            icon: "V",
+            label: "View",
+            items: [
+              {
+                key: "struct",
+                icon: "SV",
+                label: "StructView",
+                pathname: "/dev/elements/view/struct-view",
+              },
+            ],
+          },
         ],
       }
     ]}
@@ -164,7 +177,7 @@ const Layout: LayoutFC = ({ children }) => {
       $header="Node App Template / Development"
       $footer="&copy; 2023 bizhermit.com"
       $nav={devMenus}
-      // $defaultNavMode="minimize"
+    // $defaultNavMode="minimize"
     >
       {children}
     </NavigationContainer>
