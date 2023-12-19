@@ -14,17 +14,19 @@ import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
-type RadioButtonsHookAddon<Q extends { [key: string]: any } = { [key: string]: any }> = {
+type Data = { [v: string]: any };
+
+type RadioButtonsHookAddon<Q extends Data = Data> = {
   getData: () => (Q | null | undefined);
 };
 type RadioButtonsHook<
   T extends string | number | boolean,
-  Q extends { [key: string]: any } = { [key: string]: any }
+  Q extends Data = Data
 > = FormItemHook<T, RadioButtonsHookAddon<Q>>;
 
 export const useRadioButtons = <
   T extends string | number | boolean,
-  Q extends { [key: string]: any } = { [key: string]: any }
+  Q extends Data = Data
 >() => useFormItemBase<RadioButtonsHook<T, Q>>(e => {
   return {
     getData: () => {
@@ -33,11 +35,11 @@ export const useRadioButtons = <
   };
 });
 
-export type RadioButtonsProps<
+type RadioButtonsOptions<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
-  S extends { [key: string]: any } = { [key: string]: any }
-> = Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, "$tagPosition"> & {
+  S extends Data = Data
+> = {
   $ref?: RadioButtonsHook<ValueType<T, D, T>, S> | RadioButtonsHook<string | number | boolean, S>;
   $labelDataName?: string;
   $valueDataName?: string;
@@ -53,8 +55,14 @@ export type RadioButtonsProps<
   $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
 };
 
+export type RadioButtonsProps<
+  T extends string | number | boolean = string | number | boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  S extends Data = Data
+> = OverwriteAttrs<Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, "$tagPosition">, RadioButtonsOptions<T, D, S>>;
+
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
-  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends { [key: string]: any } = { [key: string]: any }>(
+  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Data = Data>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, RadioButtonsProps<T, D, S>>
   ): ReactElement<any> | null;
 }
@@ -62,13 +70,28 @@ interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
 const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
-  S extends { [key: string]: any } = { [key: string]: any }
->(p: RadioButtonsProps<T, D, S>, $ref: ForwardedRef<HTMLDivElement>) => {
+  S extends Data = Data
+>(p: RadioButtonsProps<T, D, S>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
+  useImperativeHandle(r, () => ref.current);
 
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    $labelDataName,
+    $valueDataName,
+    $colorDataName,
+    $stateDataName,
+    $direction,
+    $appearance,
+    $outline,
+    $source,
+    $preventSourceMemorize,
+    $allowNull,
+    $unselectable,
+    $tieInNames,
+    $focusWhenMounted,
+    ...props
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       if (dataItem.type === "boolean") {
         return {
@@ -94,12 +117,12 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     },
   });
 
-  const vdn = props.$valueDataName ?? "value";
-  const ldn = props.$labelDataName ?? "label";
-  const cdn = props.$colorDataName ?? "color";
-  const sdn = props.$stateDataName ?? "state";
-  const [source, loading] = useLoadableArray(props.$source, {
-    preventMemorize: props.$preventSourceMemorize,
+  const vdn = $valueDataName ?? "value";
+  const ldn = $labelDataName ?? "label";
+  const cdn = $colorDataName ?? "color";
+  const sdn = $stateDataName ?? "state";
+  const [source, loading] = useLoadableArray($source, {
+    preventMemorize: $preventSourceMemorize,
   });
   const [selectedData, setSelectedData] = useState<S>();
 
@@ -118,7 +141,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
 
   const select = (value: T) => {
     if (!ctx.editable || loading) return;
-    if (props.$allowNull && props.$unselectable) {
+    if ($allowNull && $unselectable) {
       if (ctx.valueRef.current === value) {
         ctx.change(undefined);
         return;
@@ -151,11 +174,11 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     }
   };
 
-  const outline = props.$appearance !== "button" && props.$outline;
+  const outline = $appearance !== "button" && $outline;
 
   const { nodes, selectedItem } = useMemo(() => {
-    let selectedItem: { [key: string]: any } | undefined = undefined;
-    const appearance = props.$appearance || "point";
+    let selectedItem: Data | undefined = undefined;
+    const appearance = $appearance || "point";
     const nodes = source.map(item => {
       const v = item[vdn] as T;
       const l = item[ldn] as ReactNode;
@@ -198,34 +221,46 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
       );
     });
     return { nodes, selectedItem };
-  }, [source, ctx.editable, ctx.value, props.$appearance, outline, ctx.change]);
+  }, [
+    source,
+    ctx.editable,
+    ctx.value,
+    $appearance,
+    outline,
+    ctx.change,
+  ]);
 
   useEffect(() => {
     ctx.change(ctx.valueRef.current, false, true);
   }, [source]);
 
   useEffect(() => {
-    if (loading || props.$allowNull || selectedItem != null || source.length === 0) return;
+    if (loading || $allowNull || selectedItem != null || source.length === 0) return;
     const v = ctx.valueRef.current ?? props.$defaultValue;
     const target = source.find(item => item[vdn] === v) ?? source[0];
     ctx.change(target[vdn], false);
-  }, [selectedItem, source, props.$allowNull, ctx.change]);
+  }, [
+    selectedItem,
+    source,
+    $allowNull,
+    ctx.change,
+  ]);
 
   useEffect(() => {
-    if (props.$tieInNames != null) {
+    if ($tieInNames != null) {
       const item = source.find(item => equals(item[vdn], ctx.valueRef.current));
       setSelectedData(item);
-      props.$tieInNames.forEach(tieItem => {
+      $tieInNames.forEach(tieItem => {
         const { dataName, hiddenName } =
           typeof tieItem === "string" ? { dataName: tieItem, hiddenName: tieItem } : tieItem;
-        // setValue(props.$bind, hiddenName, item?.[dataName]);
+        // setValue($bind, hiddenName, item?.[dataName]);
         setValue(ctx.bind, hiddenName, item?.[dataName]);
       });
     }
   }, [ctx.value, source]);
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       ((ref.current?.querySelector(`.${Style.item}[data-selected="true"][tabindex]`) ??
         ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
     }
@@ -252,13 +287,13 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
       $mainProps={{
         className: Style.main,
         onKeyDown: keydownMain,
-        "data-direction": props.$direction || "horizontal",
+        "data-direction": $direction || "horizontal",
         "data-outline": outline,
       }}
     >
       {nodes}
-      {props.$tieInNames != null &&
-        props.$tieInNames.map(item => {
+      {$tieInNames != null &&
+        $tieInNames.map(item => {
           const { dataName, hiddenName } =
             typeof item === "string" ? { dataName: item, hiddenName: item } : item;
           return (
