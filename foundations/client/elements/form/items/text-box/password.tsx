@@ -240,7 +240,7 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
           {type === "text" ? <CircleIcon /> : <CircleFillIcon />}
         </div>
       }
-      {props.$resize && <Resizer direction="x" />}
+      {props.$resize && <Resizer $direction="x" />}
     </FormItemWrap>
   );
 }) as PasswordBoxFC;

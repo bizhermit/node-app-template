@@ -260,7 +260,7 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
           <CrossIcon />
         </div>
       }
-      {props.$resize && <Resizer direction="x" />}
+      {props.$resize && <Resizer $direction="x" />}
     </FormItemWrap>
   );
 }) as TextBoxFC;

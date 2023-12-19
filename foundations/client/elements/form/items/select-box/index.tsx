@@ -429,7 +429,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
           </div>
         </>
       }
-      {props.$resize && <Resizer direction="x" />}
+      {props.$resize && <Resizer $direction="x" />}
       {props.$tieInNames != null &&
         props.$tieInNames.map(item => {
           const { dataName, hiddenName } =

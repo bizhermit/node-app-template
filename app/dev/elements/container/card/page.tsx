@@ -65,10 +65,12 @@ const Page = () => {
             $disabled={disabled}
           >
             <div style={{ padding: "var(--b-m)" }}>
-              resiezable x-y
+              <div style={{ position: "sticky", top: 0 }}>
+                resiezable x-y
+              </div>
               <div
                 style={{
-                  height: 300,
+                  height: 200,
                   // height: "10rem",
                   // height: "100%",
                   // width: "150vw",

@@ -118,6 +118,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(({
         className={Style.check}
         type="checkbox"
         checked={opened && mounted}
+        readOnly
       />
       <div
         className={Style.main}
@@ -130,7 +131,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(({
           {mounted && children}
         </div>
         {$resize &&
-          <Resizer direction={typeof $resize === "boolean" ? "xy" : $resize} />
+          <Resizer $direction={typeof $resize === "boolean" ? "xy" : $resize} />
         }
       </div>
       {$footer &&

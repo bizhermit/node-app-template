@@ -423,8 +423,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           {column.sort && <div className={Style.sort} data-direction={sort?.direction || ""} />}
           {(column.resize ?? true) &&
             <Resizer
-              direction="x"
-              resized={({ width }) => {
+              $direction="x"
+              $onResized={({ width }) => {
                 column.width = width;
                 setHeaderRev(r => r + 1);
                 setBodyRev(r => r + 1);

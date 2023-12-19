@@ -195,7 +195,7 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
         inputMode={props.$inputMode}
       />
       {props.$resize &&
-        <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
+        <Resizer $direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
       }
     </FormItemWrap>
   );

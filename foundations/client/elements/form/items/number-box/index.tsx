@@ -340,7 +340,7 @@ const NumberBox = forwardRef<HTMLDivElement, NumberBoxProps>(<
           </div>
         </div>
       }
-      {props.$resize && <Resizer direction="x" />}
+      {props.$resize && <Resizer $direction="x" />}
     </FormItemWrap>
   );
 }) as NumberBoxFC;

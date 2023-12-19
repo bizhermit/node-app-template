@@ -87,9 +87,9 @@ const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>(({
       {!$disabled && !$hide0 && !$hide1 &&
         <Resizer
           className={Style.handle}
-          targetRef={c1Ref}
-          direction={direction === "horizontal" ? "x" : "y"}
-          reverse={!reverse}
+          $targetRef={c1Ref}
+          $direction={direction === "horizontal" ? "x" : "y"}
+          $reverse={!reverse}
         />
       }
       {!$hide1 &&

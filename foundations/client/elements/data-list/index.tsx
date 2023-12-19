@@ -75,7 +75,7 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<
       ref={ref}
     >
       {useMemo(() => <div ref={eref} />, [])}
-      {props.$resize && <Resizer direction={props.$resize} />}
+      {props.$resize && <Resizer $direction={props.$resize} />}
     </div>
   );
 }) as DataListFC;
