@@ -417,3 +417,9 @@ export const BadgeIcon: IconFC = (p) => (
     <circle cx="14" cy="6" r="5" fill="none" />
   </svg>
 );
+
+export const CardIcon: IconFC = (p) => (
+  <svg {...svgAttrs(p)}>
+    <path d="M2,4H18V16H2Z M2,8H18" fill="none" />
+  </svg>
+);

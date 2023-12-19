@@ -1,176 +1,153 @@
 "use client";
 
-import { forwardRef, useEffect, useReducer, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
-import useToggleAnimation from "../../hooks/toggle-animation";
-import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
+import type React from "react";
+import { forwardRef, useEffect, useState, type HTMLAttributes, type ReactNode } from "react";
+import joinCn from "../../utilities/join-class-name";
 import { MinusIcon, PlusIcon } from "../icon";
 import Resizer from "../resizer";
-import Text from "../text";
 import Style from "./index.module.scss";
 
-type ReactNodeArray = Array<ReactNode>;
-type IconPosition = "start" | "end" | "both" | "none";
-type OmitAttributes = "color" | "children";
-export type CardProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type IconPosition = "start" | "end" | "none";
+
+type CardOptions = {
   $color?: Color;
+  $header?: ReactNode;
+  $footer?: ReactNode;
   $headerAlign?: "start" | "center" | "end";
   $footerAlign?: "start" | "center" | "end";
+  $headerIconPosition?: IconPosition;
+  $footerIconPosition?: IconPosition;
+  $preventHeaderToggle?: boolean;
+  $preventFooterToggle?: boolean;
   $accordion?: boolean;
   $disabled?: boolean;
   $openedIcon?: ReactNode;
   $closedIcon?: ReactNode;
-  $iconPosition?: IconPosition | {
-    header?: IconPosition;
-    footer?: IconPosition;
-  };
   $direction?: "vertical" | "horizontal";
   $defaultClosed?: boolean;
   $opened?: boolean;
   $defaultMount?: boolean;
-  $unmountBody?: boolean;
-  $toggleTriger?: "header" | "footer" | "h&f";
-  $onToggle?: (open: boolean) => void;
+  $unmountClosed?: boolean;
   $onToggled?: (open: boolean) => void;
   $resize?: boolean | "x" | "y" | "xy";
-  children?: ReactNode | [ReactNode] | [ReactNode, ReactNode] | [ReactNode, ReactNode, ReactNode];
+  children?: ReactNode;
 };
 
-const Card = forwardRef<HTMLDivElement, CardProps>((props, ref) => {
-  const bref = useRef<HTMLDivElement>(null!);
-  const [opened, setOpened] = useState(props.$accordion ? (props.$opened ?? props.$defaultClosed !== true) : true);
-  const mounted = useRef(props.$accordion ? (opened ? true : (props.$defaultMount ?? false)) : true);
-  const [mount, setMount] = useReducer((_: boolean, action: boolean) => {
-    return mounted.current = action;
-  }, mounted.current);
+export type CardProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, CardOptions>;
+
+const Card = forwardRef<HTMLDivElement, CardProps>(({
+  className,
+  $color,
+  $header,
+  $footer,
+  $headerAlign,
+  $footerAlign,
+  $headerIconPosition,
+  $footerIconPosition,
+  $preventHeaderToggle,
+  $preventFooterToggle,
+  $accordion,
+  $disabled,
+  $openedIcon,
+  $closedIcon,
+  $direction,
+  $defaultClosed,
+  $opened,
+  $defaultMount,
+  $unmountClosed,
+  $onToggled,
+  $resize,
+  children,
+  ...props
+}, ref) => {
+  const [_opened, setOpened] = useState($defaultClosed !== true);
+  const opened = !$accordion || ($opened ?? _opened);
+  const [mounted, setMounted] = useState(opened || $defaultMount);
 
   const toggle = () => {
-    if (!props.$accordion) return;
-    mounted.current = true;
-    if (props.$opened == null) {
-      setOpened(c => !c);
-      setMount(true);
-      props.$onToggle?.(!opened);
-      return;
-    }
-    props.$onToggle?.(!opened);
+    if (!$accordion || $disabled) return;
+    setOpened(c => !c);
+  };
+
+  const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    const checked = (e.currentTarget.previousElementSibling as HTMLInputElement).checked;
+    if ($unmountClosed && !checked) setMounted(false);
+    $onToggled?.(checked);
   };
 
   useEffect(() => {
-    if (!props.$accordion) return;
-    if (props.$opened == null) return;
-    if (props.$opened) setMount(true);
-    setOpened(props.$opened);
-  }, [props.$opened]);
+    if (opened) setMounted(true);
+  }, [opened]);
 
-  const toggleAnimationInitStyle = useToggleAnimation({
-    elementRef: bref,
-    open: opened || !props.$accordion,
-    direction: props.$direction || "vertical",
-    onToggled: (open) => {
-      if (!open && props.$unmountBody) setMount(false);
-      props.$onToggled?.(open);
-    }
-  });
-
-  const childCtx = (() => {
-    if (!Array.isArray(props.children)) {
-      return { body: -1 };
-    }
-    const hasHeader = props.children.length >= 2;
-    const hasFooter = props.children.length >= 3;
-    return {
-      header: hasHeader ? 0 : undefined,
-      body: hasHeader ? 1 : 0,
-      footer: hasFooter ? 2 : undefined,
-    };
-  })();
-
-  const toggleTriger = (() => {
-    if (!props.$accordion || props.$disabled) return { header: false, footer: false };
-    if (props.$toggleTriger === "h&f") return { header: true, footer: true };
-    if (props.$toggleTriger === "footer") return { header: false, footer: true };
-    return { header: true, footer: false };
-  })();
-
-  const iconNode = (
+  const iconNode = $accordion && !$disabled && (
     <div className={Style.icon}>
       {opened ?
-        props.$openedIcon ?? <MinusIcon /> :
-        props.$closedIcon ?? <PlusIcon />
+        $openedIcon ?? <MinusIcon /> :
+        $closedIcon ?? <PlusIcon />
       }
     </div>
   );
 
-  const iconPosCtx: { header: IconPosition; footer: IconPosition; } = (() => {
-    if (!props.$accordion) return { header: "none", footer: "none" };
-    if (props.$iconPosition == null) return { header: "start", footer: "start" };
-    if (typeof props.$iconPosition === "string") return { header: props.$iconPosition, footer: props.$iconPosition };
-    return {
-      header: props.$iconPosition.header || "start",
-      footer: props.$iconPosition.footer || "start",
-    };
-  })();
-
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
+      {...props}
       ref={ref}
-      data-direction={props.$direction || "vertical"}
+      className={joinCn(Style.wrap, className)}
+      data-direction={$direction ?? "vertical"}
+      data-accordion={$accordion}
+      data-color={$color}
     >
-      {childCtx.header != null &&
+      {$header &&
         <div
           className={Style.header}
-          style={appendedColorStyle({ $color: props.$color })}
-          data-accordion={toggleTriger.header}
-          data-icon={toggleTriger.header ? iconPosCtx.header : "none"}
-          onClick={toggleTriger.header ? toggle : undefined}
+          data-pos={$headerIconPosition ?? "start"}
+          data-clickable={$accordion && !$disabled && !$preventHeaderToggle}
+          onClick={$preventHeaderToggle ? undefined : toggle}
         >
-          {toggleTriger.header && (iconPosCtx.header === "start" || iconPosCtx.header === "both") && iconNode}
+          {iconNode}
           <div
-            className={Style.content}
-            data-align={props.$headerAlign || "start"}
+            className={Style.label}
+            data-align={$headerAlign ?? "start"}
           >
-            <Text className={Style.text}>
-              {(props.children as ReactNodeArray)[childCtx.header]}
-            </Text>
+            {$header}
           </div>
-          {toggleTriger.header && (iconPosCtx.header === "end" || iconPosCtx.header === "both") && iconNode}
         </div>
       }
+      <input
+        className={Style.check}
+        type="checkbox"
+        checked={opened && mounted}
+      />
       <div
-        className={Style.body}
-        style={toggleAnimationInitStyle}
-        ref={bref}
+        className={Style.main}
+        onTransitionEnd={transitionEnd}
+        data-first={!$header}
+        data-last={!$footer}
+        data-resize={$resize}
       >
-        {(mounted.current || opened) && mount &&
-          (childCtx.body === -1 ?
-            props.children :
-            (props.children as ReactNodeArray)[childCtx.body]
-          )
+        <div className={Style.content}>
+          {mounted && children}
+        </div>
+        {$resize &&
+          <Resizer direction={typeof $resize === "boolean" ? "xy" : $resize} />
         }
       </div>
-      {childCtx.footer != null &&
+      {$footer &&
         <div
           className={Style.footer}
-          style={appendedColorStyle({ $color: props.$color })}
-          data-accordion={toggleTriger.footer}
-          data-icon={toggleTriger.footer ? iconPosCtx.footer : "none"}
-          onClick={toggleTriger.footer ? toggle : undefined}
+          data-pos={$footerIconPosition ?? "start"}
+          data-clickable={$accordion && !$disabled && !$preventFooterToggle}
+          onClick={$preventFooterToggle ? undefined : toggle}
         >
-          {toggleTriger.footer && (iconPosCtx.footer === "start" || iconPosCtx.footer === "both") && iconNode}
+          {iconNode}
           <div
-            className={Style.content}
-            data-align={props.$footerAlign || "start"}
+            className={Style.label}
+            data-align={$footerAlign ?? "start"}
           >
-            <Text className={Style.text}>
-              {(props.children as ReactNodeArray)[childCtx.footer]}
-            </Text>
+            {$footer}
           </div>
-          {toggleTriger.footer && (iconPosCtx.footer === "end" || iconPosCtx.footer === "both") && iconNode}
         </div>
-      }
-      {props.$resize &&
-        <Resizer direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
       }
     </div>
   );

@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import SelectBox from "#/client/elements/form/items/select-box";
 import TextBox from "#/client/elements/form/items/text-box";
-import { BadgeIcon, ButtonIcon, CalendarIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, ContainerIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, HorizontalDividerIcon, LabelIcon, LeftIcon, LeftRightIcon, ListIcon, LoadingIcon, MagnifyingGlassIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, NavContainerIcon, PlusIcon, PopupIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, StepperIcon, SyncIcon, TabContainerIcon, TextBoxIcon, TodayIcon, TooltipIcon, UndoIcon, UnloadIcon, UpDownIcon, UpIcon, VerticalDividerIcon } from "#/client/elements/icon";
+import { BadgeIcon, ButtonIcon, CalendarIcon, CardIcon, CircleFillIcon, CircleIcon, ClearAllIcon, ClockIcon, CloudDownloadIcon, CloudIcon, CloudUploadIcon, ContainerIcon, CrossIcon, DoubleDownIcon, DoubleLeftIcon, DoubleRightIcon, DoubleUpIcon, DownIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, HorizontalDividerIcon, LabelIcon, LeftIcon, LeftRightIcon, ListIcon, LoadingIcon, MagnifyingGlassIcon, MenuIcon, MenuLeftIcon, MenuRightIcon, MinusIcon, NavContainerIcon, PlusIcon, PopupIcon, RedoIcon, ReloadIcon, RightIcon, SaveIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, StepperIcon, SyncIcon, TabContainerIcon, TextBoxIcon, TodayIcon, TooltipIcon, UndoIcon, UnloadIcon, UpDownIcon, UpIcon, VerticalDividerIcon } from "#/client/elements/icon";
 import { isEmpty } from "#/objects/string/empty";
 import { colors } from "#/utilities/sandbox";
 import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
@@ -125,6 +125,7 @@ const Page = () => {
               VerticalDividerIcon,
               TooltipIcon,
               BadgeIcon,
+              CardIcon
             ].reverse().map(Component => {
               const name = Component.name;
               if (!isEmpty(filterText)) {

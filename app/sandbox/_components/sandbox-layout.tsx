@@ -191,20 +191,10 @@ const Navigation: FC = () => {
                 pathname: "/sandbox/elements/form-items/credit-card-number-box"
               }]
             }, {
-              key: "card",
-              label: "Card",
-              icon: "C",
-              pathname: "/sandbox/elements/card",
-            }, {
               key: "menu",
               label: "Menu",
               icon: "M",
               pathname: "/sandbox/elements/menu",
-            }, {
-              key: "badge",
-              label: "Badge",
-              icon: "B",
-              pathname: "/sandbox/elements/badge",
             }, {
               key: "data-table",
               label: "DataTable",

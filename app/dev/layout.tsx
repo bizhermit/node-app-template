@@ -1,4 +1,4 @@
-import { BadgeIcon, ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, HorizontalDividerIcon, LabelIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, StepperIcon, TabContainerIcon, TextBoxIcon, TooltipIcon } from "#/client/elements/icon";
+import { BadgeIcon, ButtonIcon, CardIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, HorizontalDividerIcon, LabelIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, StepperIcon, TabContainerIcon, TextBoxIcon, TooltipIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import Image from "next/image";
@@ -108,6 +108,12 @@ const devMenus = (
                 label: "Popup",
                 pathname: "/dev/elements/popup",
               },
+              {
+                key: "card",
+                icon: <CardIcon />,
+                label: "Card",
+                pathname: "/dev/elements/container/card",
+              }
             ],
           },
           {
