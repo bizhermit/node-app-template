@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
-import strJoin from "../../../objects/string/join";
+import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 
 type TabContainerOptions<K extends string = string> = {
@@ -96,7 +96,7 @@ const TabContainer = forwardRef(<K extends string = string>({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       data-pos={$tabPosition || "top"}
       data-color={color ?? $color}
@@ -149,7 +149,7 @@ const Content: FC<ContentProps> = ({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.content, className)}
+      className={joinCn(Style.content, className)}
       data-selected={selected}
       onTransitionEnd={transitionEnd}
     >
@@ -159,7 +159,7 @@ const Content: FC<ContentProps> = ({
 };
 
 export const TabLabel: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
-  return <div {...props} className={strJoin(" ", Style.label, className)} />;
+  return <div {...props} className={joinCn(Style.label, className)} />;
 };
 
 type TabContentOptions = {

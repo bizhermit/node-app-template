@@ -1,8 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
-import strJoin from "../../../objects/string/join";
 import { isNotReactNode } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import useForm from "../form/context";
 import Style from "./index.module.scss";
 
@@ -74,7 +74,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   return (
     <button
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       type={props.type ?? "button"}
       disabled={props.disabled || submitDisabled || disabled}

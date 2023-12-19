@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { forwardRef, useEffect, useRef, type FC, type HTMLAttributes, type Key, type ReactNode } from "react";
 import equals from "../../../objects/equal";
-import strJoin from "../../../objects/string/join";
+import joinCn from "../../utilities/join-class-name";
 import { MinusIcon, PlusIcon } from "../icon";
 import NextLink, { type Href } from "../link";
 import { useNavigation } from "../navigation-container/context";
@@ -54,7 +54,7 @@ const Menu = forwardRef<HTMLDivElement, MenuProps>(({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
     >
       <MenuGroup
@@ -157,7 +157,7 @@ const MenuItem: FC<MenuItemPropsImpl> = ({
   const node = (
     <div
       {...props}
-      className={strJoin(" ", Style.content, className)}
+      className={joinCn(Style.content, className)}
       ref={ref}
       style={{
         ...props?.style,

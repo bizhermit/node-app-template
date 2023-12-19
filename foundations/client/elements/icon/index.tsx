@@ -1,5 +1,5 @@
 import { FC, type HTMLAttributes } from "react";
-import strJoin from "../../../objects/string/join";
+import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 
 type IconOptions = {
@@ -33,7 +33,7 @@ const svgAttrs = ({
       };
     })(),
     ...p,
-    className: strJoin(" ", Style.main, className),
+    className: joinCn(Style.main, className),
     viewBox: "0 0 20 20",
     xmlns: "http://www.w2.5.org/2000/svg",
   };

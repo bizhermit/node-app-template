@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import strJoin from "../../../objects/string/join";
 import structKeys from "../../../objects/struct/keys";
 import { isNotReactNode } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import type { ButtonOptions } from "../button";
 import useForm from "../form/context";
 import NextLink, { replaceDynamicPathname, type NextLinkOptions, type NextLinkProps } from "../link";
@@ -84,7 +84,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
   return (
     <NextLink
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       role="button"
       disabled={props.disabled || submitDisabled || disabled}

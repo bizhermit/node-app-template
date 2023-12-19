@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import strJoin from "../../../objects/string/join";
 import { convertSizeNumToStr } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -29,7 +29,7 @@ const Divider = forwardRef<HTMLDivElement, DividerProps>(({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       data-color={$color}
     >

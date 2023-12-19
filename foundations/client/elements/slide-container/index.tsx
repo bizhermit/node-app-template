@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
-import strJoin from "../../../objects/string/join";
+import joinCn from "../../utilities/join-class-name";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -107,7 +107,7 @@ const SlideContainer = forwardRef(<K extends string = string>({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       data-direction={$direction || "horizontal"}
       data-pos={$breadcrumbsPosition || "top"}
@@ -159,7 +159,7 @@ const Content: FC<ContentProps> = ({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.content, className)}
+      className={joinCn(Style.content, className)}
       data-state={state}
       data-overlap={$overlap}
       onTransitionEnd={transitionEnd}

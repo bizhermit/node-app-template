@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import strJoin from "../../../objects/string/join";
+import joinCn from "../../utilities/join-class-name";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -19,7 +19,7 @@ const Label = forwardRef<HTMLDivElement, LabelProps>(({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       data-color={$color}
     >

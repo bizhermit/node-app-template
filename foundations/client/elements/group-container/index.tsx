@@ -1,5 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import strJoin from "../../../objects/string/join";
+import joinCn from "../../utilities/join-class-name";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -22,7 +22,7 @@ const GroupContainer = forwardRef<HTMLDivElement, GroupContainerProps>(({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       data-color={$color}
     >
@@ -35,7 +35,7 @@ const GroupContainer = forwardRef<HTMLDivElement, GroupContainerProps>(({
           <div className={Style.next} />
         </div>
       }
-      <div className={strJoin(" ", Style.body, $bodyClassName)}>
+      <div className={joinCn(Style.body, $bodyClassName)}>
         {children}
       </div>
     </div>

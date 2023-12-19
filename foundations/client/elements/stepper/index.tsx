@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type HTMLAttributes, type ReactNode } from "react";
-import strJoin from "../../../objects/string/join";
+import joinCn from "../../utilities/join-class-name";
 import Text from "../text";
 import Style from "./index.module.scss";
 
@@ -58,7 +58,7 @@ const Stepper = forwardRef<HTMLDivElement, StepperProps>(({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       data-appearance={appearance}
       data-size={$size || "m"}

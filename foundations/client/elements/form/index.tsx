@@ -2,9 +2,9 @@
 
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useReducer, useRef, useState, type FormHTMLAttributes, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import clone from "../../../objects/clone";
-import strJoin from "../../../objects/string/join";
 import { getValue } from "../../../objects/struct/get";
 import { setValue } from "../../../objects/struct/set";
+import joinCn from "../../utilities/join-class-name";
 import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "./$types";
 import { FormContext, type UseFormItemContextOptions } from "./context";
 import Style from "./index.module.scss";
@@ -353,7 +353,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
     }}>
       <form
         {...props}
-        className={strJoin(" ", Style.main, className)}
+        className={joinCn(Style.main, className)}
         ref={ref}
         method={method}
         data-layout={$layout}

@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import strJoin from "../../../objects/string/join";
 import { isReactNode } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 
 type TextOptions = {
@@ -24,7 +24,7 @@ const Text = forwardRef<HTMLElement, TextProps>(({
   return (
     <span
       {...props}
-      className={strJoin(" ", Style.main, className)}
+      className={joinCn(Style.main, className)}
       ref={ref}
       data-iblock={$iblock}
       data-block={$block}

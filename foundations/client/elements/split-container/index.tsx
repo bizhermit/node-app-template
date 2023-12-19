@@ -1,8 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes, type ReactElement } from "react";
-import strJoin from "../../../objects/string/join";
 import { convertSizeNumToStr } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Resizer from "../resizer";
 import Style from "./index.module.scss";
 
@@ -78,12 +78,12 @@ const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>(({
   return (
     <div
       {...props}
-      className={strJoin(" ", Style.wrap, className)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       data-direction={direction}
       data-reverse={reverse}
     >
-      {!$hide0 && <div {...p0} className={strJoin(" ", Style.content0, cn0)} />}
+      {!$hide0 && <div {...p0} className={joinCn(Style.content0, cn0)} />}
       {!$disabled && !$hide0 && !$hide1 &&
         <Resizer
           className={Style.handle}
@@ -95,7 +95,7 @@ const SplitContainer = forwardRef<HTMLDivElement, SplitContainerProps>(({
       {!$hide1 &&
         <div
           {...p1}
-          className={strJoin(" ", Style.content1, cn1)}
+          className={joinCn(Style.content1, cn1)}
           ref={c1Ref}
         />
       }

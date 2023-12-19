@@ -2,8 +2,8 @@
 
 import { forwardRef, useReducer, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
-import strJoin from "../../../objects/string/join";
 import { convertRemToPxNum } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, NavigationHeaderMode, NavigationMode, NavigationPosition, type NavigationContainerProps } from "../navigation-container/context";
 import Style from "./nav-cont.module.scss";
@@ -116,7 +116,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
       />
       <div
         {...props}
-        className={strJoin(" ", Style.wrap, className)}
+        className={joinCn(Style.wrap, className)}
         ref={ref}
         data-pos={pos}
         data-mode={mode}

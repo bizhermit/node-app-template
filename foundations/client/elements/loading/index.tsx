@@ -2,8 +2,8 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes } from "react";
 import { createPortal } from "react-dom";
-import strJoin from "../../../objects/string/join";
 import usePortalElement from "../../hooks/portal-element";
+import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 
 type LoadingAppearance = "bar" | "circle";
@@ -43,7 +43,7 @@ const Loading = forwardRef<HTMLDivElement, LoadingProps>(({
       {$mask && <Mask1 $absolute={$absolute} />}
       <div
         {...props}
-        className={strJoin(" ", Style.wrap, className)}
+        className={joinCn(Style.wrap, className)}
         ref={ref}
         tabIndex={0}
         data-abs={$absolute}

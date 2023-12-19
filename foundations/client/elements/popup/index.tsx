@@ -1,11 +1,11 @@
 "use client";
 
-import strJoin from "#/objects/string/join";
 import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type ForwardedRef, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { convertSizeNumToStr } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import { dialogDown, dialogUp } from "../../utilities/top-layer";
 import Style from "./index.module.scss";
 
@@ -424,7 +424,7 @@ const Impl = ({
           <div
             {...props}
             ref={ref}
-            className={strJoin(" ", Style.main, className)}
+            className={joinCn(Style.main, className)}
             style={toggleAnimationInitStyle}
             data-show={$show}
             data-showed={showed}
