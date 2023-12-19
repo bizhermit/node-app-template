@@ -163,6 +163,12 @@ const devMenus = (
                 label: "StructView",
                 pathname: "/dev/elements/view/struct-view",
               },
+              {
+                key: "data-table",
+                icon: "DT",
+                label: "DataTable",
+                pathname: "/dev/elements/view/data-table",
+              }
             ],
           },
         ],

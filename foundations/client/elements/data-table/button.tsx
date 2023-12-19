@@ -15,7 +15,7 @@ const dataTableButtonColumn = <T extends Struct>(props: Props<T>): DataTableColu
     body: (bprops) => {
       return (
         <DataTableCellLabel
-          padding={props.padding}
+          $padding={props.padding}
         >
           <Button
             onClick={(unlock, event) => props.onClick?.(bprops, unlock, event)}
