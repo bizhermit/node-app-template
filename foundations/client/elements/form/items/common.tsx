@@ -1,8 +1,8 @@
 "use client";
 
-import joinCn from "#/client/utilities/join-class-name";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import type { FormItemProps } from "../$types";
+import joinCn from "../../../utilities/join-class-name";
 import Tooltip from "../../tooltip";
 import { convertHiddenValue, isErrorObject } from "../utilities";
 import Style from "./form-item.module.scss";
