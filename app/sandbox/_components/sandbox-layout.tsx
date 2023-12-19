@@ -2,7 +2,6 @@
 
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
-import { useNavigation } from "#/client/elements/navigation-container/context";
 import { FC, ReactNode } from "react";
 import { replaceDynamicPathname } from "../../../foundations/client/elements/link";
 
@@ -26,7 +25,7 @@ const SandboxLayoutProvider: FC<{
 };
 
 const Navigation: FC = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   return (
     <div
@@ -196,11 +195,6 @@ const Navigation: FC = () => {
               label: "Popup",
               icon: "P",
               pathname: "/sandbox/elements/popup",
-            }, {
-              key: "tooltip",
-              label: "Tooltip",
-              icon: "T",
-              pathname: "/sandbox/elements/tooltip",
             }, {
               key: "card",
               label: "Card",

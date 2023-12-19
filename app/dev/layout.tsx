@@ -1,4 +1,4 @@
-import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, HorizontalDividerIcon, LabelIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, StepperIcon, TabContainerIcon, TextBoxIcon } from "#/client/elements/icon";
+import { ButtonIcon, ContainerIcon, ElementIcon, ExLinkIcon, FormIcon, FormItemIcon, HomeIcon, HorizontalDividerIcon, LabelIcon, LoadingIcon, NavContainerIcon, PopupIcon, SlideContainerIcon, SmileIcon, SplitContainerIcon, StepperIcon, TabContainerIcon, TextBoxIcon, TooltipIcon } from "#/client/elements/icon";
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import Image from "next/image";
@@ -102,6 +102,12 @@ const devMenus = (
                 label: "Split",
                 pathname: "/dev/elements/container/split"
               },
+              {
+                key: "popup",
+                icon: <PopupIcon />,
+                label: "Popup",
+                pathname: "/dev/elements/popup",
+              },
             ],
           },
           {
@@ -109,12 +115,6 @@ const devMenus = (
             icon: <LoadingIcon />,
             label: "Loading",
             pathname: "/dev/elements/loading",
-          },
-          {
-            key: "popup",
-            icon: <PopupIcon />,
-            label: "Popup",
-            pathname: "/dev/elements/popup",
           },
           {
             key: "label",
@@ -133,7 +133,13 @@ const devMenus = (
             icon: <HorizontalDividerIcon />,
             label: "Divider",
             pathname: "/dev/elements/divider",
-          }
+          },
+          {
+            key: "tooltip",
+            icon: <TooltipIcon />,
+            label: "Tooltip",
+            pathname: "/dev/elements/tooltip",
+          },
         ],
       }
     ]}

@@ -2,10 +2,10 @@
 
 import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type ForwardedRef, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
-import parseNum from "../../../objects/number/parse";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
+import { dialogDown, dialogUp } from "../../utilities/top-layer";
 import Style from "./index.module.scss";
 
 type PopupContextProps = {
@@ -55,8 +55,6 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const baseZIndex = 10000000;
-const dialogAttrName = "data-dialog";
-const getDialogNum = () => parseNum(document.documentElement.getAttribute(dialogAttrName)) ?? 0;
 
 const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const [init, setInit] = useState(props.$show);
@@ -318,8 +316,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
 
       if (open) {
         showedRef.current = true;
-        const num = getDialogNum();
-        document.documentElement.setAttribute(dialogAttrName, String(num + 1));
+        if (props.$mask) dialogUp();
         updateZIndex.current();
         if (mref.current) {
           mref.current.style.removeProperty("display");
@@ -335,8 +332,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "1";
         }
-        const num = getDialogNum();
-        if (num < 2) document.documentElement.removeAttribute(dialogAttrName);
+        if (props.$mask) dialogDown();
       }
       props.$onToggle?.(open);
 
@@ -382,7 +378,9 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   if (portal == null) return <></>;
   return (
     <>
-      {props.$anchor === "parent" && <div className={Style.anchor} ref={aref} />}
+      {props.$anchor === "parent" &&
+        <div className={Style.anchor} ref={aref} />
+      }
       {createPortal(
         <PopupContext.Provider
           value={{

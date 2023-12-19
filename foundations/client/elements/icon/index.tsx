@@ -318,8 +318,8 @@ export const NavContainerIcon: IconFC = (p) => (
 
 export const PopupIcon: IconFC = (p) => (
   <svg {...svgAttrs(p)}>
-    <path d="M2,3H18V17H2Z" opacity=".6" fill="none" />
-    <path d="M4,5H16V13L12,13L10,15L8,13H4Z" fill="none" />
+    <path d="M1,2H19V18H1Z" opacity=".6" fill="none" />
+    <path d="M3.5,4.5H16.5V15.5H3.5Z" fill="none" />
   </svg>
 );
 
@@ -401,5 +401,12 @@ export const VerticalDividerIcon: IconFC = (p) => (
 export const HorizontalDividerIcon: IconFC = (p) => (
   <svg {...svgAttrs(p)}>
     <line x1="3" x2="17" y1="10" y2="10" />
+  </svg>
+);
+
+export const TooltipIcon: IconFC = (p) => (
+  <svg {...svgAttrs(p)}>
+    <path d="M2,3H18V17H2Z" opacity=".6" fill="none" />
+    <path d="M4,7H16V12L12,12L10,14L8,12H4Z" fill="none" />
   </svg>
 );
