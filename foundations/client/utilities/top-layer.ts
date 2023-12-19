@@ -9,6 +9,9 @@ export const dialogUp = () => {
 };
 
 export const dialogDown = () => {
-  if (getDialogNum() < 2) document.documentElement.removeAttribute(dialogAttrName);
+  const num = getDialogNum();
+  num < 2 ?
+    document.documentElement.removeAttribute(dialogAttrName) :
+    document.documentElement.setAttribute(dialogAttrName, String(num - 1));
 };
 

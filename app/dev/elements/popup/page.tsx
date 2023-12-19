@@ -1,94 +1,113 @@
 "use client";
 
 import Button from "#/client/elements/button";
-import useMessageBox from "#/client/elements/message-box";
+import Form from "#/client/elements/form";
+import DateBox from "#/client/elements/form/items/date-box";
+import SelectBox from "#/client/elements/form/items/select-box";
+import TextBox from "#/client/elements/form/items/text-box";
 import Popup from "#/client/elements/popup";
-import BaseLayout, { BaseRow, BaseSheet } from "@/dev/_components/base-layout";
-import { useRef, useState } from "react";
+import generateArray from "#/objects/array/generator";
+import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "@/dev/_components/base-layout";
+import { FC, useRef, useState } from "react";
 
-const Page = () => {
+const Component: FC = () => {
   const [show, setShow] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null!);
-  const dialogRef = useRef<HTMLDialogElement>(null!);
-  const contentRef = useRef<HTMLDivElement>(null!);
-  const msgBox = useMessageBox();
 
-  const onClick = () => {
-    // setShow(true);
-    dialogRef.current?.showModal();
-    // msgBox.alert("hogehoge");
-  };
+  return (
+    <BaseSheet>
+      <Button
+        ref={anchorRef}
+        onClick={() => {
+          setShow(true);
+        }}
+      >
+        show
+      </Button>
+      <Popup
+        $show={show}
+        $onToggle={(v) => {
+          setShow(v);
+        }}
+        $mask
+        $closeWhenClick
+        $preventClickEvent
+        $anchor={anchorRef}
+        $position={{
+          x: "inner",
+          y: "outer",
+          // absolute: true,
+        }}
+      // $animationDirection="horizontal"
+      // $animationDirection="vertical"
+      >
+        <BaseSection>
+          <Form
+            $layout="flex"
+            action="/api/form"
+            method="get"
+          >
+            <TextBox name="text" style={{ width: 300 }} />
+            <SelectBox
+              name="select"
+              $source={generateArray(10, (idx) => {
+                return {
+                  value: idx,
+                  label: `item${idx}`,
+                };
+              })}
+            />
+            <DateBox
+              name="date"
+            />
+            <BaseRow>
+              <Button type="submit">submit</Button>
+              <Button
+                onClick={() => {
+                  setShow(false);
+                }}
+              >
+                close
+              </Button>
+            </BaseRow>
+          </Form>
+          <Component />
+        </BaseSection>
+      </Popup>
+    </BaseSheet>
+  );
+};
 
+const Page = () => {
   return (
     <BaseLayout title="Popup">
       <BaseSheet>
-        <BaseRow>
-          <Button
-            onClick={() => {
-              msgBox.alert("!hogehoge!");
-            }}
-          >
-            alert
-          </Button>
-          <Button
-            // ref={anchorRef}
-            onClick={onClick}
-          >
-            show
-          </Button>
-        </BaseRow>
-        <dialog
-          ref={dialogRef}
-        >
-          <div
-            style={{
-              background: "var(--c-pure)",
-              height: "20rem",
-              width: "20rem",
-              top: 0,
-              left: 0,
-            }}
-          >
-            Popup
-          </div>
-        </dialog>
-        <Popup
-          $show={show}
-          $onToggle={setShow}
-          $mask
-          $closeWhenClick
-        >
-          <div
-            style={{
-              background: "var(--c-pure)",
-              height: "20rem",
-              width: "20rem",
-            }}
-          >
-            Popup
-          </div>
-        </Popup>
+        <Component />
         <div
           style={{
-            background: "var(--c-dull)",
-            height: "100vh",
+            height: "150vh",
             width: "100%",
+            position: "relative",
+            boxSizing: "border-box",
+            // height: "10rem",
+            // height: "100%",
+            // width: "150vw",
+            // width: "10rem",
+            // width: "100%",
+            background: "linear-gradient(-225deg, var(--c-main) 0%, var(--c-sub) 100%)",
+            color: "var(--c-main_)",
+            padding: "var(--b-m)",
+            zIndex: 1,
           }}
-        />
-        <div>
-          <Button
-            // ref={anchorRef}
-            onClick={onClick}
-          >
-            show
-          </Button>
-          <Button
-            onClick={() => {
-              msgBox.alert("!hogehoge!");
+        >
+          <div
+            style={{
+              display: "fixed",
+              zIndex: 1000000,
             }}
           >
-            alert
-          </Button>
+            hoge
+          </div>
         </div>
       </BaseSheet>
     </BaseLayout>

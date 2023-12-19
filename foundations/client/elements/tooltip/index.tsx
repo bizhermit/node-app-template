@@ -81,7 +81,7 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({
           $onToggle={showed => {
             if (!showed) leave();
           }}
-          $elevatation={!$preventElevatation}
+          $preventElevatation={!$preventElevatation}
           $anchor={pos.current}
           $position={{
             x: posX,

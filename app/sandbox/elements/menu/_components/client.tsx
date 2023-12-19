@@ -34,7 +34,7 @@ const MenuClient = () => {
       </Button>
       <Popup
         // className="es-3 r-s"
-        $elevatation
+        $preventElevatation
         $show={show}
         $onToggle={v => setShow(v)}
         $anchor={buttonRef}
