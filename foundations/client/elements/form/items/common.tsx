@@ -1,14 +1,14 @@
 "use client";
 
+import joinCn from "#/client/utilities/join-class-name";
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import type { FormItemProps } from "../$types";
-import { appendedColorStyle, attributes } from "../../../utilities/attributes";
 import Tooltip from "../../tooltip";
 import { convertHiddenValue, isErrorObject } from "../utilities";
 import Style from "./form-item.module.scss";
 import type { useFormItemContext } from "./hooks";
 
-type FormItemWrapProps = FormItemProps<any, any, any, any> & {
+type FormItemWrapOptions = {
   $ctx: ReturnType<typeof useFormItemContext<any, any, any, any>>;
   $preventFieldLayout?: boolean;
   $clickable?: boolean;
@@ -18,8 +18,21 @@ type FormItemWrapProps = FormItemProps<any, any, any, any> & {
   children?: ReactNode;
 };
 
+type FormItemWrapProps = OverwriteAttrs<FormItemProps<any, any, any, any>, FormItemWrapOptions>;
+
+const rmAttrs = (props: { [v: string]: any } | null | undefined) => {
+  const p: { [v: string]: any } = {};
+  if (props) {
+    Object.keys(props).forEach(k => {
+      if (k[0] !== "$") p[k] = props[k];
+    });
+  }
+  return p;
+};
+
 export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
   name,
+  className,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   tabIndex,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,6 +46,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
   $tag,
   $tagPosition,
   $messagePosition,
+  $color,
   children,
   ...props
 }, ref) => {
@@ -55,7 +69,8 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
     );
 
   const attrs = {
-    ...attributes($mainProps ?? {}, Style.main),
+    ...rmAttrs($mainProps),
+    className: joinCn(Style.main, $mainProps?.className),
     "data-editable": $ctx.editable,
     "data-field": $preventFieldLayout !== true,
     "data-disabled": $ctx.disabled,
@@ -67,9 +82,10 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
 
   return (
     <div
-      {...attributes(props, Style.wrap)}
-      style={appendedColorStyle(props)}
+      {...rmAttrs(props)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
+      data-color={$color}
       data-tagpad={tagPlaceholder}
       data-hidden={$hideWhenNoError ? !isErrorObject($ctx.error) || $messagePosition === "none" : undefined}
     >
