@@ -22,7 +22,7 @@ type Data = {
   col5?: string;
 };
 
-const DataTableClient = () => {
+const Page = () => {
   const columns = useMemo(() => {
     const cols: Array<DataTableColumn<Data>> = [];
     cols.push(
@@ -290,4 +290,4 @@ const DataTableClient = () => {
   );
 };
 
-export default DataTableClient;
+export default Page;

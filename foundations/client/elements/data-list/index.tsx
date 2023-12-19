@@ -2,13 +2,14 @@
 
 import { forwardRef, useEffect, useMemo, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import useLoadableArray from "../../hooks/loadable-array";
-import { attributes } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Resizer, { type ResizeDirection } from "../resizer";
 import DataListClass, { type DataListColumn } from "./class";
 import Style from "./index.module.scss";
 
-type OmitAttributes = "children";
-type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type Data = { [v: string | number | symbol]: any };
+
+type DataListOptions<T extends Data = Data> = {
   $columns?: Array<DataListColumn<T>>;
   $value?: LoadableArray<T>;
   $header?: boolean;
@@ -22,20 +23,35 @@ type DataListProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivEleme
   $resize?: ResizeDirection;
 };
 
+export type DataListProps<T extends Data = Data> =
+  OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, "children">, DataListOptions<T>>;
+
 interface DataListFC extends FunctionComponent<DataListProps> {
-  <T extends Struct = Struct>(
+  <T extends Data = Data>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, DataListProps<T>>
   ): ReactElement<any> | null;
 }
 
-const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<
-  T extends Struct = Struct
->(props: DataListProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
+const DataList: DataListFC = forwardRef(<T extends Data = Data>({
+  className,
+  $columns,
+  $value,
+  $header,
+  $headerHeight,
+  $footer,
+  $footerHeight,
+  $rowHeight,
+  $outline,
+  $rowBorder,
+  $cellBorder,
+  $resize,
+  ...props
+}: DataListProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
   const eref = useRef<HTMLDivElement>(null!);
   const dl = useRef<DataListClass<T>>(null!);
   const initRef = useRef(false);
 
-  const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
+  const [originItems] = useLoadableArray($value, { preventMemorize: true });
   const { items } = useMemo(() => {
     return {
       items: originItems,
@@ -44,16 +60,16 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<
 
   useEffect(() => {
     dl.current = new DataListClass<T>(eref.current, {
-      columns: props.$columns,
+      columns: $columns,
       value: items,
-      header: props.$header,
-      headerHeight: props.$headerHeight,
-      footer: props.$footer,
-      footerHeight: props.$footerHeight,
-      rowHeight: props.$rowHeight,
-      outline: props.$outline,
-      rowBorder: props.$rowBorder,
-      cellBorder: props.$cellBorder,
+      header: $header,
+      headerHeight: $headerHeight,
+      footer: $footer,
+      footerHeight: $footerHeight,
+      rowHeight: $rowHeight,
+      outline: $outline,
+      rowBorder: $rowBorder,
+      cellBorder: $cellBorder,
     });
     initRef.current = true;
     return () => {
@@ -62,8 +78,8 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<
   }, []);
 
   useEffect(() => {
-    dl.current.setColumns(props.$columns);
-  }, [props.$columns]);
+    dl.current.setColumns($columns);
+  }, [$columns]);
 
   useEffect(() => {
     dl.current.setValue(items);
@@ -71,11 +87,12 @@ const DataList: DataListFC = forwardRef<HTMLDivElement, DataListProps>(<
 
   return (
     <div
-      {...attributes(props, Style.wrap)}
+      {...props}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
     >
       {useMemo(() => <div ref={eref} />, [])}
-      {props.$resize && <Resizer $direction={props.$resize} />}
+      {$resize && <Resizer $direction={$resize} />}
     </div>
   );
 }) as DataListFC;

@@ -168,7 +168,13 @@ const devMenus = (
                 icon: "DT",
                 label: "DataTable",
                 pathname: "/dev/elements/view/data-table",
-              }
+              },
+              {
+                key: "data-list",
+                icon: "DL",
+                label: "DataList",
+                pathname: "/dev/elements/view/data-list",
+              },
             ],
           },
         ],

@@ -1,6 +1,5 @@
 "use client";
 
-import joinCn from "#/client/utilities/join-class-name";
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type Dispatch, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction } from "react";
 import formatDate from "../../../objects/date/format";
 import equals from "../../../objects/equal";
@@ -9,6 +8,7 @@ import { generateUuidV4 } from "../../../objects/string/generator";
 import { getValue } from "../../../objects/struct/get";
 import useLoadableArray from "../../hooks/loadable-array";
 import { convertSizeNumToStr } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Button from "../button";
 import { DoubleLeftIcon, DoubleRightIcon, LeftIcon, RightIcon } from "../icon";
 import NextLink, { type NextLinkProps } from "../link";
@@ -121,7 +121,8 @@ type DataTableOptions<T extends Data = Data> = {
   $dragScroll?: boolean | "vertical" | "horizontal";
 };
 
-export type DataTableProps<T extends Data = Data> = OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, "children">, DataTableOptions<T>>;
+export type DataTableProps<T extends Data = Data> =
+  OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, "children">, DataTableOptions<T>>;
 
 interface DataTableFC extends FunctionComponent<DataTableProps> {
   <T extends Data = Data>(
