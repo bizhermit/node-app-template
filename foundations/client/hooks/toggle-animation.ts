@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, type CSSProperties, type MutableRefObject } from "react";
 import { round } from "../../objects/number/float";
-import { convertSizeNumToStr } from "../utilities/attributes";
+import { convertSizeNumToStr } from "../utilities/size";
 
 type Props<T extends { [v: string | number | symbol]: any } = {}> = {
   disabled?: boolean;

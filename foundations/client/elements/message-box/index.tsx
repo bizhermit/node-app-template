@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type FC, type ReactElement, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import useToggleAnimation from "../../hooks/toggle-animation";
-import { convertSizeNumToStr } from "../../utilities/attributes";
+import { convertSizeNumToStr } from "../../utilities/size";
 import { dialogDown, dialogUp } from "../../utilities/top-layer";
 import Button, { type ButtonProps } from "../button";
 import Text from "../text";

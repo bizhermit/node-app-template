@@ -2,8 +2,8 @@
 
 import { forwardRef, useReducer, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
-import { convertRemToPxNum } from "../../utilities/attributes";
 import joinCn from "../../utilities/join-class-name";
+import { convertRemToPxNum } from "../../utilities/size";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
 import { NavigationContext, NavigationHeaderMode, NavigationMode, NavigationPosition, type NavigationContainerProps } from "../navigation-container/context";
 import Style from "./nav-cont.module.scss";

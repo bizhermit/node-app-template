@@ -1,8 +1,9 @@
 "use client";
 
 import type { FC, HTMLAttributes, MutableRefObject } from "react";
-import { convertSizeNumToStr, releaseCursor, setCursor } from "../../utilities/attributes";
+import { releaseCursor, setCursor } from "../../utilities/cursor";
 import joinCn from "../../utilities/join-class-name";
+import { convertSizeNumToStr } from "../../utilities/size";
 import Style from "./index.module.scss";
 
 export type ResizeDirection = "x" | "y" | "xy";

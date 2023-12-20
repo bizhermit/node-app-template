@@ -68,13 +68,13 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   $messagePosition,
   $messageWrap,
   ...props
-}: P, options?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
+}: P, opts?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
   const init = useRef(false);
   const id = useRef(generateUuidV4());
   const [error, setError] = useState<string | null | undefined>(undefined);
 
   const receive = (v: any) => {
-    return options?.receive ? options.receive(v) : v;
+    return opts?.receive ? opts.receive(v) : v;
   };
 
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
@@ -116,7 +116,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   if (!init.current) setBind(value);
 
   const getMessage = useCallback((key: keyof FormItemMessages, ...texts: Array<string>) => {
-    let m = $messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
+    let m = $messages?.[key] ?? opts?.messages?.[key] ?? formValidationMessages[key];
     m = m.replace(/\{label\}/g, $label || "値");
     texts.forEach((t, i) => m = m.replace(new RegExp(`\\{${i}\\}`, "g"), `${t ?? ""}`));
     return m;
@@ -127,8 +127,8 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
 
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<ValueType<T, D, V> | null | undefined>> = [];
-    if ($required && !options?.preventRequiredValidation) {
-      if (options?.multiple) {
+    if ($required && !opts?.preventRequiredValidation) {
+      if (opts?.multiple) {
         rets.push(v => {
           if (v == null) return getMessage("required");
           if (!Array.isArray(v)) return getMessage("typeMissmatch");
@@ -142,8 +142,8 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
         });
       }
     }
-    if (options?.validations) {
-      rets.push(...options.validations({
+    if (opts?.validations) {
+      rets.push(...opts.validations({
         getMessage,
         label: $label || "値",
         required: $required,
@@ -160,10 +160,10 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     return rets;
   }, [
     $required,
-    options?.multiple,
+    opts?.multiple,
     $validations,
     getMessage,
-    ...(options?.validationsDeps ?? []),
+    ...(opts?.validationsDeps ?? []),
   ]);
 
   const validation = useCallback(() => {
@@ -230,10 +230,10 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const before = valueRef.current;
     setCurrentValue(value);
     setBind(value);
-    const errorMessage = ($interlockValidation || ($interlockValidation !== false && options?.interlockValidation)) ?
+    const errorMessage = ($interlockValidation || ($interlockValidation !== false && opts?.interlockValidation)) ?
       form.validation(id.current) : validation();
     if ($onChange != null || ($onEdit != null && edit)) {
-      const data = options?.generateChangeCallbackData?.(valueRef.current, before) as U;
+      const data = opts?.generateChangeCallbackData?.(valueRef.current, before) as U;
       $onChange?.(valueRef.current, before, { ...data, errorMessage });
       if (edit) {
         $onEdit?.(valueRef.current, before, { ...data, errorMessage });
@@ -242,14 +242,14 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     if (edit) {
       form.effectSameNameItem(id.current, value);
     } else {
-      options?.effect?.(valueRef.current);
+      opts?.effect?.(valueRef.current);
     }
   }, [
     setBind,
     $preventMemorizeOnChange ? $onChange : undefined,
     $preventMemorizeOnEdit ? $onEdit : undefined,
     validation,
-    ...(options?.generateChangeCallbackDataDeps ?? []),
+    ...(opts?.generateChangeCallbackDataDeps ?? []),
   ]);
 
   const valueEffect = (v: any) => {
@@ -260,10 +260,10 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       $onChange?.(
         valueRef.current,
         before,
-        { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
+        { ...opts?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
       );
     }
-    options?.effect?.(valueRef.current);
+    opts?.effect?.(valueRef.current);
   };
 
   useEffect(() => {
@@ -298,7 +298,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       form.mount(id.current, props, {
         validation,
         change,
-      }, options ?? { effect: () => { } });
+      }, opts ?? { effect: () => { } });
       return () => {
         init.current = false;
         form.unmount(id.current);
@@ -310,8 +310,8 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   }, [validation, change]);
 
   useEffect(() => {
-    options?.effect?.(valueRef.current);
-  }, [...(options?.effectDeps ?? [])]);
+    opts?.effect?.(valueRef.current);
+  }, [...(opts?.effectDeps ?? [])]);
 
   useEffect(() => {
     validation();
@@ -324,7 +324,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     $ref.getValue = () => valueRef.current;
     $ref.setValue = (v: any) => change(
       receive(v == null ? undefined :
-        options?.multiple ? (Array.isArray(v) ? v : [v]) as any :
+        opts?.multiple ? (Array.isArray(v) ? v : [v]) as any :
           Array.isArray(v) ? v[0] : v
       ), false
     );
@@ -358,7 +358,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
       validation,
       error: error ?? $error,
       setError,
-      effect: options?.effect,
+      effect: opts?.effect,
       messagePosition: $messagePosition ?? form.messagePosition ?? "bottom-hide",
       messageWrap: $messageWrap ?? form.messageWrap,
     },

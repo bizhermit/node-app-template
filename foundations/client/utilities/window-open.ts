@@ -1,5 +1,5 @@
 import strJoin from "../../objects/string/join";
-import { getDynamicUrlContext, type DynamicUrlContextOptions } from "../../utilities/url";
+import { DynamicUrlOptions, getDynamicUrl } from "../../objects/url/dynamic-url";
 
 export type WindowOpenOptions = {
   closed?: () => void;
@@ -8,13 +8,13 @@ export type WindowOpenOptions = {
   popup?: boolean;
 };
 
-export const windowOpen = (href?: string | null | undefined, options?: WindowOpenOptions) => {
+export const windowOpen = (href?: string | null | undefined, opts?: WindowOpenOptions) => {
   const win = typeof window === "undefined" ?
-    undefined : window.open(href || "/loading", options?.target, (() => {
+    undefined : window.open(href || "/loading", opts?.target, (() => {
       return strJoin(
         ",",
         // "noreferrer",
-        options?.popup ? "popup" : undefined,
+        opts?.popup ? "popup" : undefined,
       );
     })());
   let showed = win != null;
@@ -23,18 +23,18 @@ export const windowOpen = (href?: string | null | undefined, options?: WindowOpe
     replace: (href: string) => {
       if (!showed) return;
       if (win) win.location.href = href;
-      options?.replaced?.();
+      opts?.replaced?.();
     },
     close: () => {
       if (!showed) return;
       if (win) win.close();
       showed = false;
-      options?.closed?.();
+      opts?.closed?.();
     },
     showed: () => showed,
   } as const;
 };
 
-export const pageOpen = (url: PagePath, params?: { [v: string | number | symbol]: any }, options?: DynamicUrlContextOptions) => {
-  return windowOpen(getDynamicUrlContext(url, params, options).url);
+export const pageOpen = (url: PagePath, params?: { [v: string | number | symbol]: any }, opts?: DynamicUrlOptions) => {
+  return windowOpen(getDynamicUrl(url, params, opts));
 };

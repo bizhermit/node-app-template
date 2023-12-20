@@ -1,8 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type HTMLAttributes, type ReactElement } from "react";
-import { convertSizeNumToStr } from "../../utilities/attributes";
 import joinCn from "../../utilities/join-class-name";
+import { convertSizeNumToStr } from "../../utilities/size";
 import Resizer from "../resizer";
 import Style from "./index.module.scss";
 

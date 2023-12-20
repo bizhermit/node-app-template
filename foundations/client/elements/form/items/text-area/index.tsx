@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponen
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
-import { convertSizeNumToStr } from "../../../../utilities/attributes";
+import { convertSizeNumToStr } from "../../../../utilities/size";
 import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";

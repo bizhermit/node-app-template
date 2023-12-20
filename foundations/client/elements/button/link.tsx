@@ -3,11 +3,12 @@
 import { useRouter } from "next/navigation";
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import structKeys from "../../../objects/struct/keys";
-import { isNotReactNode } from "../../utilities/attributes";
+import replaceDynamicPathname from "../../../objects/url/dynamic-pathname";
 import joinCn from "../../utilities/join-class-name";
+import { isNotReactNode } from "../../utilities/react-node";
 import type { ButtonOptions } from "../button";
 import useForm from "../form/context";
-import NextLink, { replaceDynamicPathname, type NextLinkOptions, type NextLinkProps } from "../link";
+import NextLink, { type NextLinkOptions, type NextLinkProps } from "../link";
 import Style from "./index.module.scss";
 
 export type LinkButtonOptions = Omit<ButtonOptions, "onClick" | "notDependsOnForm"> & Omit<NextLinkOptions, "onClick"> & {
@@ -61,7 +62,7 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
     e.preventDefault();
     res.then(res => {
       if (res === false) return;
-      const pathname = replaceDynamicPathname(props.href, props.params);
+      const pathname = replaceDynamicPathname(props.href!, props.params);
       if (pathname == null) return;
       const url = new URL(pathname, window.location.origin);
       structKeys(props.query).forEach(k => {
