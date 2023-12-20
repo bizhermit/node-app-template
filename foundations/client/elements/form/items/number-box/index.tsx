@@ -7,7 +7,7 @@ import { add, minus } from "../../../../../objects/number/calc";
 import formatNum from "../../../../../objects/number/format";
 import parseNum from "../../../../../objects/number/parse";
 import { isEmpty } from "../../../../../objects/string/empty";
-import { convertSizeNumToStr } from "../../../../utilities/attributes";
+import { convertSizeNumToStr } from "../../../../utilities/size";
 import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
 import Resizer from "../../../resizer";
 import useForm from "../../context";

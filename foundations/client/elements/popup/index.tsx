@@ -4,8 +4,8 @@ import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, 
 import { createPortal } from "react-dom";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
-import { convertSizeNumToStr } from "../../utilities/attributes";
 import joinCn from "../../utilities/join-class-name";
+import { convertSizeNumToStr } from "../../utilities/size";
 import { dialogDown, dialogUp } from "../../utilities/top-layer";
 import Style from "./index.module.scss";
 

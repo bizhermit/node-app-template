@@ -3,7 +3,7 @@
 import { forwardRef, useEffect, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { isNotEmpty } from "../../../../../objects/string/empty";
-import { releaseCursor, setCursor } from "../../../../utilities/attributes";
+import { releaseCursor, setCursor } from "../../../../utilities/cursor";
 import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "../../../icon";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";

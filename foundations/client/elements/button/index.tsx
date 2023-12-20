@@ -1,8 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { isNotReactNode } from "../../utilities/attributes";
 import joinCn from "../../utilities/join-class-name";
+import { isNotReactNode } from "../../utilities/react-node";
 import useForm from "../form/context";
 import Style from "./index.module.scss";
 

@@ -3,7 +3,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import parseNum from "../../../../../objects/number/parse";
-import { convertSizeNumToStr } from "../../../../utilities/attributes";
+import { convertSizeNumToStr } from "../../../../utilities/size";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import { FormItemWrap } from "../common";

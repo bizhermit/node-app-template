@@ -1,8 +1,8 @@
 import formatDate from "../../../objects/date/format";
 import formatNum from "../../../objects/number/format";
 import { getValue } from "../../../objects/struct/get";
-import { convertSizeNumToStr } from "../../utilities/attributes";
 import DomClassComponent, { cloneDomElement } from "../../utilities/dom-class-component";
+import { convertSizeNumToStr } from "../../utilities/size";
 import Style from "./index.module.scss";
 
 type DataType = { [v: string | number | symbol]: any };

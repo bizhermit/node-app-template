@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { convertSizeNumToStr } from "../../utilities/attributes";
 import joinCn from "../../utilities/join-class-name";
+import { convertSizeNumToStr } from "../../utilities/size";
 import Text from "../text";
 import Style from "./index.module.scss";
 
