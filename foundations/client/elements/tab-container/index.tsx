@@ -1,100 +1,113 @@
 "use client";
 
-import { ForwardedRef, forwardRef, useEffect, useRef, useState, type FC, type FunctionComponent, type HTMLAttributes, type Key, type ReactElement, type ReactNode } from "react";
-import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
+import type React from "react";
+import { forwardRef, useEffect, useState, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode } from "react";
+import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 
-type OmitAttributes = "color" | "children";
-export type TabContainerProps<K extends Key = Key> =
-  Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
-    $tabPosition?: "top" | "left" | "right" | "bottom";
-    $defaultKey?: K;
-    $key?: K;
-    $onChange?: (key: K) => void;
-    $defaultMount?: boolean;
-    $unmountDeselected?: boolean;
-    $color?: Color;
-    $preventAnimation?: boolean;
-    $overlap?: boolean;
-    children?: ReactElement | [ReactElement, ...Array<ReactElement>];
-  };
+type TabContainerOptions<K extends string = string> = {
+  $defaultKey?: K;
+  $key?: K;
+  $tabPosition?: "top" | "left" | "right" | "bottom";
+  $tabFill?: boolean;
+  $defaultMount?: boolean;
+  $unmountDeselected?: boolean;
+  $color?: Color;
+  $onChange?: (key: K) => void;
+  children?: ReactElement | [ReactElement, ...Array<ReactElement>];
+};
+
+export type TabContainerProps<K extends string = string> =
+  OverwriteAttrs<HTMLAttributes<HTMLDivElement>, TabContainerOptions<K>>;
 
 interface TabContainerFC extends FunctionComponent<TabContainerProps> {
-  <K extends Key = Key>(
+  <K extends string = string>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, TabContainerProps<K>>
   ): ReactElement<any> | null;
 }
 
-const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<
-  K extends Key = Key
->(props: TabContainerProps<K>, ref: ForwardedRef<HTMLDivElement>) => {
+const TabContainer = forwardRef(<K extends string = string>({
+  className,
+  $defaultKey,
+  $key,
+  $tabPosition,
+  $tabFill,
+  $defaultMount,
+  $unmountDeselected,
+  $color,
+  $onChange,
+  children,
+  ...props
+}: TabContainerProps<K>, ref: ForwardedRef<HTMLDivElement>) => {
+  const contents = Array.isArray(children) ? children : [children];
+
   const [key, setKey] = useState(() => {
-    if (props.$key != null) return props.$key;
-    if (props.$defaultKey != null) return props.$defaultKey;
-    const firstContent = Array.isArray(props.children) ? props.children[0] : props.children!;
-    return firstContent.key;
+    if ($key != null) return $key;
+    if ($defaultKey != null) return $defaultKey;
+    return contents[0]?.key;
   });
 
-  const { tabs, bodys } = (() => {
-    const children = Array.isArray(props.children) ? props.children : [props.children];
+  const { tabs, bodys, color } = (() => {
     const tabs: Array<ReactNode> = [];
     const bodys: Array<ReactNode> = [];
-    for (let i = 0, il = children.length; i < il; i++) {
-      const child = children[i]!;
-      const selected = child.key === key;
-      const preventAnimation = (child.props.preventAnimation ?? props.$preventAnimation) === true;
+    let color = $color;
+    for (let i = 0, il = contents.length; i < il; i++) {
+      const content = contents[i]!;
+      const k = content.key?.toString()!;
+      const { $label, $color, ...cProps } = content.props as Omit<TabContentProps, "key">;
+      const selected = k === key;
+      if (selected) color = $color;
+
       tabs.push(
         <div
-          key={child.key}
+          key={k}
           className={Style.tab}
+          role="button"
           data-selected={selected}
-          onClick={() => setKey(child?.key!)}
+          data-color={$color}
+          onClick={() => setKey(k)}
         >
-          {child?.props.label}
+          {$label}
         </div>
       );
       bodys.push(
         <Content
-          key={child.key}
-          selected={selected}
-          preventAnimation={preventAnimation}
-          overlap={child.props?.overlap ?? props.$overlap ?? false}
-          defaultMount={child.props.defaultMount ?? props.$defaultMount ?? false}
-          unmountDeselected={child.props.unmountDeselected ?? props.$unmountDeselected ?? false}
+          $defaultMount={$defaultMount}
+          $unmountDeselected={$unmountDeselected}
+          {...cProps}
+          key={k}
+          $selected={selected}
         >
-          {child}
+          {content}
         </Content>
       );
     }
-    return { tabs, bodys };
+    return { tabs, bodys, color };
   })();
 
   useEffect(() => {
-    if (props.$key != null) {
-      setKey(props.$key);
-    }
-  }, [props.$key]);
+    if ($key != null) setKey($key);
+  }, [$key]);
 
   useEffect(() => {
-    props.$onChange?.(key! as K);
+    $onChange?.(key! as K);
   }, [key]);
 
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
+      {...props}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
-      data-pos={props.$tabPosition || "top"}
+      data-pos={$tabPosition || "top"}
+      data-color={color ?? $color}
     >
       <div
         className={Style.header}
-        style={appendedColorStyle({ $color: props.$color })}
+        data-fill={$tabFill}
       >
         {tabs}
       </div>
-      <div
-        className={Style.divider}
-        style={appendedColorStyle({ $color: props.$color })}
-      />
+      <div className={Style.divider} />
       <div className={Style.body}>
         {bodys}
       </div>
@@ -102,68 +115,65 @@ const TabContainer = forwardRef<HTMLDivElement, TabContainerProps>(<
   );
 }) as TabContainerFC;
 
-const Content: FC<{
-  selected: boolean;
-  defaultMount: boolean;
-  unmountDeselected: boolean;
-  preventAnimation: boolean;
-  overlap: boolean;
-  children: ReactNode;
-}> = (props) => {
-  const ref = useRef<HTMLDivElement>(null!);
-  const [selected, setSelected] = useState(props.selected);
-  const [mounted, setMounted] = useState(props.selected || props.defaultMount);
+type ContentProps = Omit<TabContentProps, "$label" | "$color"> & {
+  $selected: boolean;
+};
 
-  const animationEnd = (target: HTMLDivElement) => {
-    if (target.getAttribute("data-selected") !== "true") {
-      target.style.visibility = "hidden";
-      target.style.removeProperty("top");
-      target.style.removeProperty("left");
-      if (props.unmountDeselected) {
-        setMounted(false);
-      }
-    }
-  };
+const Content: FC<ContentProps> = ({
+  className,
+  $selected,
+  $defaultMount,
+  $unmountDeselected,
+  children,
+  ...props
+}) => {
+  const [selected, setSelected] = useState($selected);
+  const [mounted, setMounted] = useState($selected || $defaultMount);
 
   const transitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    animationEnd(e.currentTarget);
+    if (
+      e.target === e.currentTarget &&
+      $unmountDeselected &&
+      e.currentTarget.getAttribute("data-selected") !== "true"
+    ) {
+      setMounted(false);
+    }
+    props.onTransitionEnd?.(e);
   };
 
   useEffect(() => {
-    if (props.selected) {
-      setMounted(true);
-      ref.current?.style.removeProperty("visibility");
-    } else {
-      if (props.overlap) {
-        ref.current.style.top = "0";
-        ref.current.style.left = "0";
-      }
-    }
-    setSelected(props.selected);
-  }, [props.selected]);
-
-  useEffect(() => {
-    if (props.preventAnimation) {
-      animationEnd(ref.current);
-    }
-  }, [selected]);
+    if ($selected) setMounted(true);
+    setSelected($selected);
+  }, [$selected]);
 
   return (
     <div
-      ref={ref}
-      className={Style.content}
-      style={{
-        visibility: "hidden",
-      }}
-      data-preselected={props.selected}
+      {...props}
+      className={joinCn(Style.content, className)}
       data-selected={selected}
-      data-overlap={props.overlap}
       onTransitionEnd={transitionEnd}
     >
-      {mounted && props.children}
+      {mounted && children}
     </div>
   );
+};
+
+export const TabLabel: FC<HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
+  return <div {...props} className={joinCn(Style.label, className)} />;
+};
+
+type TabContentOptions = {
+  key: string;
+  $label: ReactNode;
+  $color?: Color;
+  $defaultMount?: boolean;
+  $unmountDeselected?: boolean;
+};
+
+type TabContentProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, TabContentOptions>;
+
+export const TabContent: FC<TabContentProps> = ({ children }) => {
+  return <>{children}</>;
 };
 
 export default TabContainer;

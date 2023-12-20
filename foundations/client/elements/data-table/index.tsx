@@ -1,13 +1,14 @@
 "use client";
 
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type Dispatch, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributeAnchorTarget, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type Dispatch, type FC, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement, type ReactNode, type SetStateAction } from "react";
 import formatDate from "../../../objects/date/format";
 import equals from "../../../objects/equal";
 import formatNum from "../../../objects/number/format";
 import { generateUuidV4 } from "../../../objects/string/generator";
 import { getValue } from "../../../objects/struct/get";
 import useLoadableArray from "../../hooks/loadable-array";
-import { appendedColorStyle, attributes, convertSizeNumToStr } from "../../utilities/attributes";
+import { convertSizeNumToStr } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Button from "../button";
 import { DoubleLeftIcon, DoubleRightIcon, LeftIcon, RightIcon } from "../icon";
 import NextLink, { type NextLinkProps } from "../link";
@@ -15,7 +16,9 @@ import Resizer from "../resizer";
 import Text from "../text";
 import Style from "./index.module.scss";
 
-export type DataTableCellContext<T extends Struct = Struct> = {
+type Data = { [v: string | number | symbol]: any };
+
+export type DataTableCellContext<T extends Data = Data> = {
   column: DataTableColumn<T>;
   data: T;
   index: number;
@@ -25,7 +28,7 @@ export type DataTableCellContext<T extends Struct = Struct> = {
   setBodyRev: Dispatch<SetStateAction<number>>;
 };
 
-export type DataTableBaseColumn<T extends Struct = Struct> = {
+export type DataTableBaseColumn<T extends Data = Data> = {
   name: string;
   displayName?: string;
   label?: string;
@@ -33,12 +36,7 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   minWidth?: number | string;
   maxWidth?: number | string;
   align?: "left" | "center" | "right";
-  href?: (ctx: DataTableCellContext<T>) => NextLinkProps["href"];
-  hrefOptions?: {
-    target?: HTMLAttributeAnchorTarget;
-    decoration?: boolean;
-    rel?: string;
-  };
+  link?: (ctx: DataTableCellContext<T>) => NextLinkProps;
   border?: boolean;
   sort?: boolean | ((data1: T, data2: T) => (-1 | 0 | 1));
   sortNeutral?: boolean;
@@ -54,18 +52,18 @@ export type DataTableBaseColumn<T extends Struct = Struct> = {
   pointer?: boolean;
 };
 
-export type DataTableLabelColumn<T extends Struct = Struct> = DataTableBaseColumn<T>;
+export type DataTableLabelColumn<T extends Data = Data> = DataTableBaseColumn<T>;
 
-export type DataTableNumberColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
+export type DataTableNumberColumn<T extends Data = Data> = DataTableBaseColumn<T> & {
   thousandSseparator?: boolean;
   floatPadding?: number;
 };
 
-export type DataTableDateColumn<T extends Struct = Struct> = DataTableBaseColumn<T> & {
+export type DataTableDateColumn<T extends Data = Data> = DataTableBaseColumn<T> & {
   formatPattern?: string;
 };
 
-export type DataTableGroupColumn<T extends Struct = Struct> = {
+export type DataTableGroupColumn<T extends Data = Data> = {
   name: string;
   label?: string;
   rows: Array<Array<DataTableColumn<T>>>;
@@ -73,7 +71,7 @@ export type DataTableGroupColumn<T extends Struct = Struct> = {
   rowBorder?: boolean;
 };
 
-export type DataTableColumn<T extends Struct = Struct> =
+export type DataTableColumn<T extends Data = Data> =
   | ({ type?: "label" } & DataTableLabelColumn<T>)
   | ({ type: "number" } & DataTableNumberColumn<T>)
   | ({ type: "date" } & DataTableDateColumn<T>)
@@ -91,8 +89,7 @@ type Pagination = {
   perPage: number;
 };
 
-type OmitAttributes = "children";
-export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type DataTableOptions<T extends Data = Data> = {
   $columns?: Array<DataTableColumn<T>>;
   $value?: LoadableArray<T>;
   $idDataName?: string;
@@ -124,8 +121,11 @@ export type DataTableProps<T extends Struct = Struct> = Omit<HTMLAttributes<HTML
   $dragScroll?: boolean | "vertical" | "horizontal";
 };
 
+export type DataTableProps<T extends Data = Data> =
+  OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, "children">, DataTableOptions<T>>;
+
 interface DataTableFC extends FunctionComponent<DataTableProps> {
-  <T extends Struct = Struct>(
+  <T extends Data = Data>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, DataTableProps<T>>
   ): ReactElement<any> | null;
 }
@@ -142,7 +142,7 @@ const getColumnStyle = (column: DataTableColumn<any>, nestLevel = 0): CSSPropert
   if (w == null) {
     w = convertSizeNumToStr(column.minWidth) ?? defaultColumnWidth;
     return {
-      flex: "1",
+      flex: "1 1 0rem",
       width: w,
       minWidth: w,
       maxWidth: convertSizeNumToStr(column.maxWidth),
@@ -209,30 +209,59 @@ export const dataTableRowNumberColumn: DataTableColumn<any> = {
   body: props => <Text>{(props.index + props.pageFirstIndex) + 1}</Text>,
 } as const;
 
-const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
-  T extends Struct = Struct
->(props: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
+const DataTable = forwardRef(<T extends Data = Data>({
+  className,
+  $columns,
+  $value,
+  $idDataName,
+  $multiSort,
+  $sorts,
+  $onSort,
+  $preventSort,
+  $page,
+  $perPage,
+  $total,
+  $pagePosition,
+  $onChangePage,
+  $header,
+  $emptyText,
+  $color,
+  $rowHeight,
+  $rowMinHeight,
+  $rowMaxHeight,
+  $headerHeight,
+  $scroll,
+  $outline,
+  $rowBorder,
+  $cellBorder,
+  $onClick,
+  $rowPointer,
+  $radio,
+  $stripes,
+  $dragScroll,
+  ...props
+}: DataTableProps<T>, ref: ForwardedRef<HTMLDivElement>) => {
   const uniqueKey = useRef(generateUuidV4());
   const [headerRev, setHeaderRev] = useState(0);
   const [bodyRev, setBodyRev] = useState(0);
   const [pagination, setPagination] = useState<Pagination | undefined>(() => {
-    if (props.$page == null) return undefined;
-    if (typeof props.$page === "boolean") {
-      if (props.$page) {
+    if ($page == null) return undefined;
+    if (typeof $page === "boolean") {
+      if ($page) {
         return {
           index: 0,
-          perPage: props.$perPage ?? defaultPerPage,
+          perPage: $perPage ?? defaultPerPage,
         };
       }
       return undefined;
     }
     return {
-      index: props.$page,
+      index: $page,
       perPage: defaultPerPage,
     };
   });
-  const rowBorder = props.$rowBorder ?? true;
-  const cellBorder = props.$cellBorder ?? false;
+  const rowBorder = $rowBorder ?? true;
+  const cellBorder = $cellBorder ?? false;
 
   const columns = useRef<Array<DataTableColumn<T>>>(null!);
   columns.current = useMemo(() => {
@@ -253,17 +282,17 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
         };
       }) ?? [];
     };
-    return clone(props.$columns);
-  }, [props.$columns]);
-  const [sorts, setSorts] = useState<Array<DataTableSort>>(() => {
-    return props.$sorts ?? [];
-  });
-  const [originItems] = useLoadableArray(props.$value, { preventMemorize: true });
+    return clone($columns);
+  }, [$columns]);
+
+  const [sorts, setSorts] = useState<Array<DataTableSort>>($sorts ?? []);
+
+  const [originItems] = useLoadableArray($value, { preventMemorize: true });
   const { items, total, rowNumColWidth } = useMemo(() => {
     let rowNumColWidth = `${calcRowNumberColumnWidth(0)}rem`;
     const rowNumCol = findColumn(columns.current, rowNumberColumnName) as typeof dataTableRowNumberColumn;
     const items = (() => {
-      if (props.$preventSort) return originItems;
+      if ($preventSort) return originItems;
       const sortCols = sorts.map(s => {
         const col = findColumn(columns.current, s.name);
         if (!col) return undefined;
@@ -302,10 +331,16 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     }
     return {
       rowNumColWidth,
-      items: (pagination && props.$total == null) ? items.slice(firstIndex, lastIndex) : items,
-      total: props.$total ?? originItems.length,
+      items: (pagination && $total == null) ? items.slice(firstIndex, lastIndex) : items,
+      total: $total ?? originItems.length,
     };
-  }, [originItems, sorts, columns, pagination, props.$total]);
+  }, [
+    originItems,
+    sorts,
+    columns,
+    pagination,
+    $total,
+  ]);
 
   useEffect(() => {
     setPagination(state => {
@@ -317,20 +352,27 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
         index: lastIndex,
       };
     });
-  }, [total, pagination?.perPage]);
+  }, [
+    total,
+    pagination?.perPage,
+  ]);
 
   useEffect(() => {
-    setSorts(props.$sorts ?? []);
-  }, [props.$sorts]);
+    setSorts($sorts ?? []);
+  }, [$sorts]);
 
   const changeSort = useCallback((column: DataTableBaseColumn<T>, currentSort?: DataTableSort) => {
     const d = switchSortDirection(currentSort?.direction, column.sortNeutral === false);
-    const newSorts: Array<DataTableSort> = props.$multiSort ? sorts.filter(s => s.name !== column.name) : [];
+    const newSorts: Array<DataTableSort> = $multiSort ? sorts.filter(s => s.name !== column.name) : [];
     if (d) newSorts.push({ name: column.name, direction: d });
-    const ret = props.$onSort?.(newSorts);
+    const ret = $onSort?.(newSorts);
     if (ret === false) return;
     setSorts(newSorts);
-  }, [sorts, props.$multiSort, props.$onSort]);
+  }, [
+    sorts,
+    $multiSort,
+    $onSort,
+  ]);
 
   const headerRef = useRef<HTMLDivElement>(null!);
   const bodyRef = useRef<HTMLDivElement>(null!);
@@ -355,7 +397,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   };
 
   const header = useMemo(() => {
-    if (!props.$header) return undefined;
+    if (!$header) return undefined;
     const generateCell = (column: DataTableColumn<T>, nestLevel = 0) => {
       if ("rows" in column) {
         return (
@@ -428,8 +470,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           {column.sort && <div className={Style.sort} data-direction={sort?.direction || ""} />}
           {(column.resize ?? true) &&
             <Resizer
-              direction="x"
-              resized={({ width }) => {
+              $direction="x"
+              $onResized={({ width }) => {
                 column.width = width;
                 setHeaderRev(r => r + 1);
                 setBodyRev(r => r + 1);
@@ -444,7 +486,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
       <div
         className={Style.hrow}
         style={{
-          height: convertSizeNumToStr(props.$headerHeight),
+          height: convertSizeNumToStr($headerHeight),
         }}
         data-border={rowBorder}
       >
@@ -454,7 +496,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   }, [
     headerRev,
     columns.current,
-    props.$headerHeight,
+    $headerHeight,
     sorts,
     changeSort,
     rowBorder,
@@ -464,11 +506,11 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   ]);
 
   const body = useMemo(() => {
-    const idDn = props.$idDataName ?? "id";
+    const idDn = $idDataName ?? "id";
     const rowStyle: CSSProperties = {
-      height: convertSizeNumToStr(props.$rowHeight),
-      minHeight: convertSizeNumToStr(props.$rowMinHeight),
-      maxHeight: convertSizeNumToStr(props.$rowMaxHeight),
+      height: convertSizeNumToStr($rowHeight),
+      minHeight: convertSizeNumToStr($rowMinHeight),
+      maxHeight: convertSizeNumToStr($rowMaxHeight),
     };
     const generateCell = (index: number, data: T, column: DataTableColumn<T>, nestLevel = 0) => {
       if ("rows" in column) {
@@ -496,8 +538,8 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
 
       const CellLabel: FC = () => (
         <DataTableCellLabel
-          wrap={column.wrap}
-          padding={column.padding}
+          $wrap={column.wrap}
+          $padding={column.padding}
         >
           {column.prefix}
           {(() => {
@@ -543,9 +585,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           data-pointer={column.pointer}
           data-sticky={nestLevel === 0 && column.sticky}
         >
-          {column.href ?
+          {column.link ?
             <NextLink
-              href={column.href?.({
+              className={Style.link}
+              {...column.link({
                 column,
                 data,
                 index,
@@ -553,11 +596,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
                 items,
                 setHeaderRev,
                 setBodyRev,
-              }) as PagePath}
-              target={column.hrefOptions?.target}
-              rel={column.hrefOptions?.rel}
-              $noDecoration={column.hrefOptions?.decoration === false}
-              className={Style.link}
+              })}
             >
               {content}
             </NextLink> : content
@@ -572,10 +611,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           className={Style.brow}
           style={rowStyle}
           data-border={rowBorder}
-          data-stripes={props.$stripes}
-          data-pointer={props.$rowPointer}
+          data-stripes={$stripes}
+          data-pointer={$rowPointer}
         >
-          {props.$radio &&
+          {$radio &&
             <input
               className={Style.radio}
               type="radio"
@@ -590,29 +629,32 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     bodyRev,
     items,
     columns.current,
-    props.$rowHeight,
-    props.$rowMinHeight,
-    props.$rowMaxHeight,
+    $rowHeight,
+    $rowMinHeight,
+    $rowMaxHeight,
     rowBorder,
     cellBorder,
-    props.$stripes,
-    props.$rowPointer,
+    $stripes,
+    $rowPointer,
     rowNumColWidth,
   ]);
 
   const isEmpty = useMemo(() => {
-    if (!props.$emptyText || props.$value == null || !Array.isArray(props.$value)) return false;
-    return items.length === 0 || props.$value.length === 0;
-  }, [items, props.$emptyText]);
+    if (!$emptyText || $value == null || !Array.isArray($value)) return false;
+    return items.length === 0 || $value.length === 0;
+  }, [
+    items,
+    $emptyText,
+  ]);
 
   useEffect(() => {
-    if (props.$page == null) return;
-    if (typeof props.$page === "boolean") {
-      if (props.$page) {
+    if ($page == null) return;
+    if (typeof $page === "boolean") {
+      if ($page) {
         setPagination(state => {
           return {
             index: state?.index ?? 0,
-            perPage: props.$perPage ?? state?.perPage ?? defaultPerPage,
+            perPage: $perPage ?? state?.perPage ?? defaultPerPage,
           };
         });
         return;
@@ -622,17 +664,20 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     }
     setPagination(state => {
       return {
-        index: (props.$page as number),
-        perPage: props.$perPage ?? state?.perPage ?? defaultPerPage,
+        index: ($page as number),
+        perPage: $perPage ?? state?.perPage ?? defaultPerPage,
       };
     });
-  }, [props.$page, props.$perPage]);
+  }, [
+    $page,
+    $perPage,
+  ]);
 
   const clickPage = (pageIndex: number) => {
     setPagination(state => {
       const pindex = Math.min(Math.max(0, pageIndex), Math.floor(Math.max(0, total - 1) / state!.perPage));
-      if (props.$onChangePage) {
-        const res = props.$onChangePage(pindex);
+      if ($onChangePage) {
+        const res = $onChangePage(pindex);
         if (res !== true) return state;
       }
       return {
@@ -652,16 +697,16 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           disabled={index <= 0}
           $size="s"
           $outline
-          $color={props.$color}
-          $onClick={() => clickPage(0)}
+          $color={$color}
+          onClick={() => clickPage(0)}
           $icon={<DoubleLeftIcon />}
         />
         <Button
           disabled={index <= 0}
           $size="s"
           $outline
-          $color={props.$color}
-          $onClick={() => clickPage(index - 1)}
+          $color={$color}
+          onClick={() => clickPage(index - 1)}
           $icon={<LeftIcon />}
         />
         <div className={Style.number}>
@@ -673,16 +718,16 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
           disabled={index >= lastIndex}
           $size="s"
           $outline
-          $color={props.$color}
-          $onClick={() => clickPage(index + 1)}
+          $color={$color}
+          onClick={() => clickPage(index + 1)}
           $icon={<RightIcon />}
         />
         <Button
           disabled={index >= lastIndex}
           $size="s"
           $outline
-          $color={props.$color}
-          $onClick={() => clickPage(lastIndex)}
+          $color={$color}
+          onClick={() => clickPage(lastIndex)}
           $icon={<DoubleRightIcon />}
         />
       </>
@@ -708,10 +753,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     } while (elem);
     if (cellElem == null || elem == null) return;
     checkRadio(elem);
-    if (props.$onClick == null) return;
+    if ($onClick == null) return;
     const index = [].slice.call(elem.parentElement!.childNodes).indexOf(elem as never);
     const column = findColumn(columns.current, cellElem.getAttribute("data-name")!)!;
-    props.$onClick({
+    $onClick({
       column,
       data: items[index],
       index,
@@ -729,7 +774,7 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     calcStickyPosition(true);
   }, [body]);
 
-  const dragScrollEvent = !props.$dragScroll ? undefined : (e: React.MouseEvent<HTMLElement>) => {
+  const dragScrollEvent = !$dragScroll ? undefined : (e: React.MouseEvent<HTMLElement>) => {
     if (e.ctrlKey) return;
     const headElem = e.currentTarget.querySelector(`:scope>.${Style.header}`);
     let elem = e.target as HTMLElement;
@@ -749,10 +794,10 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
     const move = (e: MouseEvent) => {
       if (et) return;
       et = setTimeout(() => {
-        if (props.$dragScroll !== "vertical") {
+        if ($dragScroll !== "vertical") {
           rootElem.scrollLeft = posX - e.clientX + lastPosX;
         }
-        if (props.$dragScroll !== "horizontal") {
+        if ($dragScroll !== "horizontal") {
           rootElem.scrollTop = posY - e.clientY + lastPosY;
         }
         et = null;
@@ -772,44 +817,45 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
 
   return (
     <div
-      {...attributes(props, Style.wrap)}
+      {...props}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
     >
-      {pagination && props.$pagePosition !== "bottom" &&
+      {pagination && $pagePosition !== "bottom" &&
         <div className={Style.pagination}>
           {pageNodes()}
         </div>
       }
       <div
         className={Style.table}
-        data-border={props.$outline}
+        data-border={$outline}
         onMouseDown={dragScrollEvent}
-        data-drag-scroll={!!props.$dragScroll}
+        data-drag-scroll={!!$dragScroll}
       >
-        {props.$header &&
+        {$header &&
           <div
             className={Style.header}
-            style={appendedColorStyle({ $color: props.$color })}
             ref={headerRef}
+            data-color={$color}
           >
             {header}
           </div>
         }
         {isEmpty ?
           <div className={Style.empty}>
-            {props.$emptyText === true ? <DefaultEmptyText /> : props.$emptyText}
+            {$emptyText === true ? <DefaultEmptyText /> : $emptyText}
           </div> :
           <div
             className={Style.body}
             ref={bodyRef}
-            data-scroll={props.$scroll}
+            data-scroll={$scroll}
             onClick={clickBody}
           >
             {body}
           </div>
         }
       </div>
-      {pagination && props.$pagePosition !== "top" &&
+      {pagination && $pagePosition !== "top" &&
         <div className={Style.pagination}>
           {pageNodes()}
         </div>
@@ -818,19 +864,26 @@ const DataTable = forwardRef<HTMLDivElement, DataTableProps>(<
   );
 }) as DataTableFC;
 
-export const DataTableCellLabel: FC<{
-  wrap?: boolean;
-  padding?: boolean;
-  children?: ReactNode;
-}> = ({ wrap, padding, children }) => {
+type DataTableCellOptions = {
+  $wrap?: boolean;
+  $padding?: boolean;
+};
+
+type DataTableCellProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, DataTableCellOptions>;
+
+export const DataTableCellLabel: FC<DataTableCellProps> = ({
+  className,
+  $wrap,
+  $padding,
+  ...props
+}) => {
   return (
     <div
-      className={Style.label}
-      data-wrap={wrap === true}
-      data-padding={padding !== false}
-    >
-      {children}
-    </div>
+      {...props}
+      className={joinCn(Style.label, className)}
+      data-wrap={$wrap === true}
+      data-padding={$padding !== false}
+    />
   );
 };
 

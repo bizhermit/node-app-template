@@ -2,10 +2,11 @@
 
 import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type ForwardedRef, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
-import parseNum from "../../../objects/number/parse";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
-import { attributesWithoutChildren, convertSizeNumToStr } from "../../utilities/attributes";
+import { convertSizeNumToStr } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
+import { dialogDown, dialogUp } from "../../utilities/top-layer";
 import Style from "./index.module.scss";
 
 type PopupContextProps = {
@@ -35,7 +36,7 @@ export type PopupPosition = {
   marginY?: number;
 };
 
-export type PopupProps = HTMLAttributes<HTMLDivElement> & {
+type PopupOptions = {
   $show?: boolean;
   $mask?: boolean | "transparent";
   $anchor?: MutableRefObject<HTMLElement> | { pageX: number, pageY: number } | "parent";
@@ -47,16 +48,16 @@ export type PopupProps = HTMLAttributes<HTMLDivElement> & {
   $preventUnmount?: boolean;
   $closeWhenClick?: boolean;
   $zIndex?: number;
-  $elevatation?: boolean;
+  $preventElevatation?: boolean;
   $onToggle?: (show: boolean) => void;
   $onToggled?: (show: boolean) => void;
   $destructor?: (open: boolean) => void;
   $preventFocus?: boolean;
 };
 
+export type PopupProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, PopupOptions>;
+
 const baseZIndex = 10000000;
-const dialogAttrName = "data-dialog";
-const getDialogNum = () => parseNum(document.documentElement.getAttribute(dialogAttrName)) ?? 0;
 
 const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   const [init, setInit] = useState(props.$show);
@@ -69,7 +70,27 @@ const Popup = forwardRef<HTMLDivElement, PopupProps>((props, $ref) => {
   return <Impl {...props} $ref={$ref} />;
 });
 
-const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
+const Impl = ({
+  className,
+  $show,
+  $mask,
+  $anchor,
+  $position,
+  $animationDirection,
+  $animationDuration,
+  $animationInterval,
+  $preventClickEvent,
+  $preventUnmount,
+  $closeWhenClick,
+  $zIndex,
+  $preventElevatation,
+  $preventFocus,
+  $onToggle,
+  $onToggled,
+  $destructor,
+  children,
+  ...props
+}: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle(props.$ref, () => ref.current);
   const aref = useRef<HTMLDivElement>(null!);
@@ -79,7 +100,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   const removeZIndex = useRef(() => { });
   const portal = usePortalElement({
     mount: (elem) => {
-      const z = props.$zIndex ?? baseZIndex;
+      const z = $zIndex ?? baseZIndex;
       elem.classList.add("popup-root");
       elem.setAttribute("data-z", String(z));
       updateZIndex.current = () => {
@@ -102,10 +123,9 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   const [mount, setMount] = useState(showed);
 
   const click = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (props.$preventClickEvent) {
-      e.stopPropagation();
-    }
+    if ($preventClickEvent) e.stopPropagation();
     updateZIndex.current();
+    props.onClick?.(e);
   };
 
   const keydownMask1 = (e: React.KeyboardEvent) => {
@@ -117,33 +137,33 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   };
 
   useEffect(() => {
-    const show = props.$show === true;
+    const show = $show === true;
     if (show) setMount(true);
     setShowed(show);
-  }, [props.$show]);
+  }, [$show]);
 
   const resetPosition = () => {
     const winH = window.innerHeight;
     const winW = window.innerWidth;
     const hMax = ref.current.offsetHeight;
     const wMax = ref.current.offsetWidth;
-    let posX = props.$position?.x || "center";
-    let posY = props.$position?.y || "center";
-    const posAbs = props.$position?.absolute === true;
-    const marginX = props.$position?.marginX ?? 0;
-    const marginY = props.$position?.marginY ?? 0;
+    let posX = $position?.x || "center";
+    let posY = $position?.y || "center";
+    const posAbs = $position?.absolute === true;
+    const marginX = $position?.marginX ?? 0;
+    const marginY = $position?.marginY ?? 0;
     let rect = {
       top: 0, bottom: 0, left: 0, right: 0,
       width: winW, height: winH,
     };
-    if (props.$anchor == null) {
+    if ($anchor == null) {
       if (posX.startsWith("outer")) posX = "center";
       if (posY.startsWith("outer")) posY = "center";
-    } else if (props.$anchor === "parent") {
+    } else if ($anchor === "parent") {
       const anchor = aref.current?.parentElement as HTMLElement;
       rect = anchor.getBoundingClientRect();
-    } else if ("current" in props.$anchor) {
-      const anchor = props.$anchor.current;
+    } else if ("current" in $anchor) {
+      const anchor = $anchor.current;
       if (anchor == null) {
         if (posX.startsWith("outer")) posX = "center";
         if (posY.startsWith("outer")) posY = "center";
@@ -151,7 +171,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
         rect = anchor.getBoundingClientRect();
       }
     } else {
-      const anchor = props.$anchor;
+      const anchor = $anchor;
       rect.top = rect.bottom = anchor.pageY;
       rect.left = rect.right = anchor.pageX;
     }
@@ -287,11 +307,11 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
     elementRef: ref,
     open: showed,
     changeOpacity: true,
-    closeOpacityDelay: props.$animationDirection === "horizontal" || props.$animationDirection === "vertical",
-    animationInterval: props.$animationInterval ?? defaultAnimationInterval,
-    animationDuration: props.$animationDuration ?? defaultAnimationDuration,
+    closeOpacityDelay: $animationDirection === "horizontal" || $animationDirection === "vertical",
+    animationInterval: $animationInterval ?? defaultAnimationInterval,
+    animationDuration: $animationDuration ?? defaultAnimationDuration,
     style: props.style,
-    direction: props.$animationDirection,
+    direction: $animationDirection,
     onToggle: (open) => {
       const closeListener = (e: MouseEvent) => {
         let elem = e.target as HTMLElement;
@@ -318,15 +338,14 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
 
       if (open) {
         showedRef.current = true;
-        const num = getDialogNum();
-        document.documentElement.setAttribute(dialogAttrName, String(num + 1));
+        if ($mask) dialogUp();
         updateZIndex.current();
         if (mref.current) {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "0";
         }
         resetPosition();
-        if (props.$closeWhenClick) {
+        if ($closeWhenClick) {
           window.addEventListener("click", closeListener, true);
         }
         window.addEventListener("resize", resizeListener, true);
@@ -335,10 +354,9 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
           mref.current.style.removeProperty("display");
           mref.current.style.opacity = "1";
         }
-        const num = getDialogNum();
-        if (num < 2) document.documentElement.removeAttribute(dialogAttrName);
+        if ($mask) dialogDown();
       }
-      props.$onToggle?.(open);
+      $onToggle?.(open);
 
       return {
         closeListener,
@@ -353,19 +371,19 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
         if (mref.current) {
           mref.current.style.opacity = "1";
         }
-        if (props.$mask && !props.$preventFocus) {
+        if ($mask && !$preventFocus) {
           (document.activeElement as HTMLElement)?.blur?.();
           (ref.current.querySelector(`a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])`) as HTMLElement)?.focus?.();
         }
       } else {
         removeZIndex.current();
-        if (props.$preventUnmount !== true) setMount(false);
+        if ($preventUnmount !== true) setMount(false);
         if (mref.current) {
           mref.current.style.opacity = "0";
           mref.current.style.display = "none";
         }
       }
-      props.$onToggled?.(open);
+      $onToggled?.(open);
     },
     destructor: (open, params) => {
       if (params.closeListener != null) {
@@ -374,7 +392,7 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
       if (params.resizeListener != null) {
         window.removeEventListener("resize", params.resizeListener, true);
       }
-      props.$destructor?.(open);
+      $destructor?.(open);
     },
   });
 
@@ -382,7 +400,9 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   if (portal == null) return <></>;
   return (
     <>
-      {props.$anchor === "parent" && <div className={Style.anchor} ref={aref} />}
+      {$anchor === "parent" &&
+        <div className={Style.anchor} ref={aref} />
+      }
       {createPortal(
         <PopupContext.Provider
           value={{
@@ -391,28 +411,29 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
             resetPosition,
           }}
         >
-          {props.$mask &&
+          {$mask &&
             <div
               ref={mref}
               className={Style.mask1}
               tabIndex={0}
               onKeyDown={keydownMask1}
-              data-mode={props.$mask}
+              data-mode={$mask}
               style={{ display: "none" }}
             />
           }
           <div
-            {...attributesWithoutChildren(props, Style.main)}
+            {...props}
             ref={ref}
+            className={joinCn(Style.main, className)}
             style={toggleAnimationInitStyle}
-            data-show={props.$show}
+            data-show={$show}
             data-showed={showed}
-            data-elevatation={props.$elevatation}
+            data-elevatation={!$preventElevatation}
             onClick={click}
           >
-            {mount && props.children}
+            {mount && children}
           </div>
-          {props.$mask && showed &&
+          {$mask && showed &&
             <div
               className={Style.mask2}
               tabIndex={0}
@@ -420,7 +441,8 @@ const Impl = (props: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
             />
           }
         </PopupContext.Provider>
-        , portal)}
+        , portal
+      )}
     </>
   );
 };

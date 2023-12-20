@@ -18,7 +18,10 @@ const Page: NextPageWithLayout = () => {
       <NextLink href="/sandbox/route">
         sandbox/route
       </NextLink>
-      <NextLink href={{ pathname: "/sandbox/nest/[id]", params: { id: 10 } }}>
+      <NextLink
+        href="/sandbox/nest/[id]"
+        params={{ id: 10 }}
+      >
         sandbox/nest/[id]
       </NextLink>
       <NextLink href="/pages">
@@ -28,11 +31,11 @@ const Page: NextPageWithLayout = () => {
         root
       </NextLink>
       <Button
-        $onClick={() => {
-          router.push("/sandbox/dynamic");
+        onClick={() => {
+          router.push("/dev/dynamic-route");
         }}
       >
-        /sandbox/dynamic
+        /dev/dynamic-route
       </Button>
     </div>
   );

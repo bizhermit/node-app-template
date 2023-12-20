@@ -8,7 +8,7 @@ const isArray = <T>(loadableArray?: LoadableArray<T>): loadableArray is (Array<T
   return Array.isArray(loadableArray);
 };
 
-const useLoadableArray = <T = Struct>(loadableArray?: LoadableArray<T>, options?: Options) => {
+const useLoadableArray = <T = { [v: string | number | symbol]: any }>(loadableArray?: LoadableArray<T>, options?: Options) => {
   const initialized = useRef(false);
   const initPromise = useRef<Promise<Array<T>>>(null!);
   const [array, setArray] = useState<Array<T>>(() => {

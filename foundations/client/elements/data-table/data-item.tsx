@@ -1,7 +1,7 @@
 import { getValue } from "../../../objects/struct/get";
 import type { DataTableBaseColumn, DataTableColumn, DataTableDateColumn, DataTableNumberColumn } from "../data-table";
 
-const dataTableDataItemColumn = <T extends Struct, D extends DataItem>(
+const dataTableDataItemColumn = <T extends { [v: string | number | symbol]: any }, D extends DataItem>(
   dataItem: DataItem & { name: string },
   props?: Partial<
     D["type"] extends DataItem_String["type"] ? DataTableBaseColumn<T> :
@@ -54,7 +54,7 @@ const dataTableDataItemColumn = <T extends Struct, D extends DataItem>(
           align: "left",
           body: (props) => {
             const v = props.data[dataItem.name];
-            return <>{(dataItem.source as Array<Struct>).find(item => item.id === v)?.name}</>;
+            return <>{(dataItem.source as Array<{ [v: string | number | symbol]: any }>).find(item => item.id === v)?.name}</>;
           },
         };
       }

@@ -10,7 +10,7 @@ $space: 0.3rem;
     border-spacing: 0 #{$space};
 
     &[data-outline="true"] {
-      border: 0.1rem solid var(--c-border);
+      border: 0.1rem solid var(--s-color, var(--c-border));
       padding: 0 #{$space};
 
       >tbody {
@@ -44,8 +44,8 @@ $space: 0.3rem;
     padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     white-space: nowrap;
     width: 0;
-    background-color: var(--s--color, var(--c-main));
-    color: var(--s--color_, var(--c-main_));
+    background: var(--s-color, var(--c-main));
+    color: var(--s-color_, var(--c-main_));
   }
 
   .row {
@@ -80,9 +80,7 @@ $space: 0.3rem;
       height: 0;
       bottom: -#{$space / 2};
       left: 0;
-      border-bottom-width: 0.1rem;
-      border-bottom-style: solid;
-      border-bottom-color: inherit;
+      border-bottom: 0.1rem solid var(--s-color, var(--c-border));
     }
 
     >.table {

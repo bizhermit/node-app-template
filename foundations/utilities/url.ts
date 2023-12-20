@@ -11,13 +11,13 @@ export type DynamicUrlContextOptions = {
 type UrlPath = PagePath | `http${string}` | `tel:${string}` | `mailto:${string}` | ApiPath;
 
 export const getDynamicUrlContext = <
-  T extends Struct | FormData | undefined | null,
+  T extends { [v: string | number | symbol]: any } | FormData | undefined | null,
   U extends UrlPath = UrlPath
 >(pathName: U, params?: T, options?: DynamicUrlContextOptions): {
   url: U;
   data: T;
 } => {
-  const data: Struct | FormData = (options?.useOriginParams ? params : (() => {
+  const data: { [v: string | number | symbol]: any } | FormData = (options?.useOriginParams ? params : (() => {
     if (params == null) return {};
     if (params instanceof FormData) {
       const fd = new FormData();
@@ -95,7 +95,7 @@ export const getDynamicUrlContext = <
 };
 
 export const getDynamicUrl = <
-  T extends Struct | FormData | undefined | null,
+  T extends { [v: string | number | symbol]: any } | FormData | undefined | null,
   U extends UrlPath = UrlPath
 >(pathName: U, params?: T, options?: DynamicUrlContextOptions) => {
   return getDynamicUrlContext<T, U>(pathName, params, options).url;

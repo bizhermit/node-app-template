@@ -20,9 +20,7 @@ type TextBoxHook<T extends string | number> = FormItemHook<T>;
 
 export const useTextBox = <T extends string | number = string>() => useFormItemBase<FormItemHook<T>>();
 
-export type TextBoxProps<
-  D extends DataItem_String | DataItem_Number | undefined = undefined
-> = FormItemProps<string | number, D, string, {}> & {
+type TextBoxOptions<D extends DataItem_String | DataItem_Number | undefined = undefined> = {
   $ref?: TextBoxHook<ValueType<string | number, D, string>> | TextBoxHook<string | number>;
   $type?: InputType;
   $inputMode?: InputMode;
@@ -41,24 +39,48 @@ export type TextBoxProps<
   $align?: "left" | "center" | "right";
 };
 
+export type TextBoxProps<
+  D extends DataItem_String | DataItem_Number | undefined = undefined
+> = OverwriteAttrs<FormItemProps<string | number, D, string, {}>, TextBoxOptions<D>>;
+
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
   <D extends DataItem_String | DataItem_Number | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, TextBoxProps<D>>
   ): ReactElement<any> | null;
 }
 
-const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
+const TextBox = forwardRef(<
   D extends DataItem_String | DataItem_Number | undefined = undefined
->(p: TextBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: TextBoxProps<D>, r: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    placeholder,
+    $type,
+    $inputMode,
+    $length,
+    $preventInputWithinLength,
+    $minLength,
+    $maxLength,
+    $charType,
+    $round,
+    $resize,
+    $width,
+    $maxWidth,
+    $minWidth,
+    $hideClearButton,
+    $autoComplete,
+    $align,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ props, dataItem, method }) => {
-      const isSearch = method === "get";
+      const isGet = method === "get";
       switch (dataItem.type) {
         case "number":
           return {
-            $minLength: isSearch ? undefined : dataItem.minLength,
+            $minLength: isGet ? undefined : dataItem.minLength,
             $maxLength: dataItem.maxLength,
             $charType: "h-num" as StringCharType,
             $align: dataItem.align,
@@ -69,8 +91,8 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
           };
         default:
           return {
-            $length: isSearch ? undefined : dataItem.length,
-            $minLength: isSearch ? undefined : dataItem.minLength,
+            $length: isGet ? undefined : dataItem.length,
+            $minLength: isGet ? undefined : dataItem.minLength,
             $maxLength: dataItem.maxLength ?? dataItem.length,
             $charType: dataItem.charType,
             $align: dataItem.align,
@@ -122,23 +144,23 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
     },
   });
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: (_, label) => {
-      const validations: Array<FormItemValidation<Nullable<string>>> = [];
-      if (props.$length != null) {
-        validations.push(v => StringValidation.length(v, props.$length!, label));
+    validations: ({ label }) => {
+      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      if ($length != null) {
+        validations.push(v => StringValidation.length(v, $length!, label));
       } else {
-        if (props.$minLength != null) {
-          validations.push(v => StringValidation.minLength(v, props.$minLength!, label));
+        if ($minLength != null) {
+          validations.push(v => StringValidation.minLength(v, $minLength!, label));
         }
-        if (props.$maxLength != null) {
-          validations.push(v => StringValidation.maxLength(v, props.$maxLength!, label));
+        if ($maxLength != null) {
+          validations.push(v => StringValidation.maxLength(v, $maxLength!, label));
         }
       }
-      switch (props.$charType) {
+      switch ($charType) {
         case "h-num":
           validations.push(v => StringValidation.halfWidthNumeric(v, label));
           break;
@@ -190,10 +212,10 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
       return validations;
     },
     validationsDeps: [
-      props.$length,
-      props.$minLength,
-      props.$maxLength,
-      props.$charType,
+      $length,
+      $minLength,
+      $maxLength,
+      $charType,
     ],
   });
 
@@ -206,27 +228,27 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
   const hasData = isNotEmpty(ctx.value);
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       iref.current?.focus();
     }
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => iref.current?.focus();
+  if ($ref) {
+    $ref.focus = () => iref.current?.focus();
   }
 
   return (
     <FormItemWrap
       {...props}
-      ref={ref}
-      $context={ctx}
-      data-round={props.$round}
-      data-has={hasData}
+      ref={r}
+      $ctx={ctx}
+      $round={$round}
+      $hasData={hasData}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
+          width: convertSizeNumToStr($width),
+          maxWidth: convertSizeNumToStr($maxWidth),
+          minWidth: convertSizeNumToStr($minWidth),
         },
       }}
     >
@@ -234,31 +256,31 @@ const TextBox = forwardRef<HTMLDivElement, TextBoxProps>(<
         ref={iref}
         className={Style.input}
         name={props.name}
-        type={props.$type || "text"}
-        placeholder={ctx.editable ? props.placeholder : ""}
+        type={$type || "text"}
+        placeholder={ctx.editable ? placeholder : ""}
         disabled={ctx.disabled}
         readOnly={ctx.readOnly}
-        maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
-        tabIndex={props.tabIndex}
+        maxLength={$maxLength ?? ($preventInputWithinLength ? undefined : $length)}
+        tabIndex={tabIndex}
         defaultValue={ctx.value ?? ""}
         onChange={e => ctx.change(e.target.value)}
-        data-round={props.$round}
-        data-button={ctx.editable && props.$hideClearButton !== true}
-        data-align={props.$align}
-        autoComplete={props.$autoComplete ?? "off"}
-        inputMode={props.$inputMode}
+        data-round={$round}
+        data-button={ctx.editable && $hideClearButton !== true}
+        data-align={$align}
+        autoComplete={$autoComplete ?? "off"}
+        inputMode={$inputMode}
       />
-      {ctx.editable && props.$hideClearButton !== true &&
+      {ctx.editable && $hideClearButton !== true &&
         <div
           className={Style.button}
           onClick={clear}
           data-disabled={!hasData}
-          data-round={props.$round}
+          data-round={$round}
         >
           <CrossIcon />
         </div>
       }
-      {props.$resize && <Resizer direction="x" />}
+      {$resize && <Resizer $direction="x" />}
     </FormItemWrap>
   );
 }) as TextBoxFC;

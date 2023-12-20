@@ -10,12 +10,14 @@ import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
-export type CreditCardNumberBoxProps<
-  D extends DataItem_String | undefined = undefined
-> = FormItemProps<string, D, string> & {
+type CreditCardNumberBoxOptions = {
   $hideClearButton?: boolean;
   $autoComplete?: string;
 };
+
+export type CreditCardNumberBoxProps<
+  D extends DataItem_String | undefined = undefined
+> = OverwriteAttrs<FormItemProps<string, D, string>, CreditCardNumberBoxOptions>;
 
 interface CreditCardNumberBoxFC extends FunctionComponent<CreditCardNumberBoxProps> {
   <D extends DataItem_String | undefined = undefined>(
@@ -25,12 +27,19 @@ interface CreditCardNumberBoxFC extends FunctionComponent<CreditCardNumberBoxPro
 
 const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>(<
   D extends DataItem_String | undefined = undefined
->(p: CreditCardNumberBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: CreditCardNumberBoxProps<D>, r: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
-  const props = useDataItemMergedProps(form, p, {});
+  const {
+    tabIndex,
+    placeholder,
+    $hideClearButton,
+    $autoComplete,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {});
 
-  const toCreditCardNumber = (v?: Nullable<string>) => {
+  const toCreditCardNumber = (v: string | null | undefined) => {
     return (v?.replace(/\s/g, "") ?? "")
       .split("")
       .reduce((ccnumStr, numStr, index) => {
@@ -43,17 +52,17 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
     iref.current.value = toCreditCardNumber(ctx.valueRef.current);
   };
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     effect: renderFormattedValue,
-    validations: (_, label) => {
-      const validations: Array<FormItemValidation<Nullable<string>>> = [];
+    validations: ({ label }) => {
+      const validations: Array<FormItemValidation<string | null | undefined>> = [];
       validations.push(v => StringValidation.minLength(v, 14, label));
       validations.push(v => StringValidation.maxLength(v, 16, label));
       return validations;
     },
   });
 
-  const changeImpl = (value?: string, preventCommit?: boolean): Nullable<string> => {
+  const changeImpl = (value?: string, preventCommit?: boolean): string | null | undefined => {
     if (isEmpty(value)) {
       if (preventCommit !== true) ctx.change(undefined);
       return undefined;
@@ -85,39 +94,37 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
   const hasData = isNotEmpty(ctx.value);
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
-      iref.current?.focus();
-    }
+    if ($focusWhenMounted) iref.current?.focus();
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => iref.current?.focus();
+  if ($ref) {
+    $ref.focus = () => iref.current?.focus();
   }
 
   return (
     <FormItemWrap
       {...props}
-      ref={ref}
-      $context={ctx}
-      data-has={hasData}
+      ref={r}
+      $ctx={ctx}
+      $hasData={hasData}
     >
       <input
         ref={iref}
         className={Style.input}
         name={props.name}
         type="tel"
-        placeholder={ctx.editable ? props.placeholder : ""}
+        placeholder={ctx.editable ? placeholder : ""}
         disabled={ctx.disabled}
         readOnly={ctx.readOnly}
         maxLength={19}
-        tabIndex={props.tabIndex}
+        tabIndex={tabIndex}
         defaultValue={ctx.value ?? ""}
         onChange={e => changeImpl(e.target.value)}
-        data-button={ctx.editable && props.$hideClearButton !== true}
-        autoComplete={props.$autoComplete ?? "off"}
+        data-button={ctx.editable && $hideClearButton !== true}
+        autoComplete={$autoComplete ?? "off"}
         inputMode="tel"
       />
-      {ctx.editable && props.$hideClearButton !== true &&
+      {ctx.editable && $hideClearButton !== true &&
         <div
           className={Style.button}
           onClick={clear}

@@ -1,36 +1,4 @@
-import type { CSSProperties, ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
-import strJoin from "../../objects/string/join";
-
-export const joinClassNames = (...classNames: Array<string | null | undefined>) => {
-  return strJoin(" ", ...classNames);
-};
-
-export const attributes = (props: Struct | null | undefined, ...classNames: Array<string | null | undefined>) => {
-  const ret: Struct = {};
-  if (props) {
-    Object.keys(props).forEach(key => {
-      if (key[0] === "$") return;
-      ret[key] = props[key];
-    });
-  }
-  ret.className = strJoin(" ", ...classNames, props?.className) || undefined;
-  return ret;
-};
-
-export const attributesWithoutChildren = (props: Struct | null | undefined, ...classNames: Array<string | null | undefined>) => {
-  const ret = attributes(props, ...classNames);
-  if ("children" in ret) delete ret.children;
-  return ret;
-};
-
-export const appendedColorStyle = (props: { style?: CSSProperties; $color?: Color; }, preventChildren = false) => {
-  if (!props.$color) return props.style;
-  return {
-    [preventChildren ? "--s--color" : "--s-color"]: `var(--c-${props.$color})`,
-    [preventChildren ? "--s--color_" : "--s-color_"]: `var(--c-${props.$color}_)`,
-    ...props.style,
-  };
-};
+import type { ReactElement, ReactFragment, ReactNode, ReactPortal } from "react";
 
 export const isNotReactNode = (node: ReactNode, opts?: { ignoreBr: boolean; }): node is string | number | boolean => {
   if (Array.isArray(node)) {

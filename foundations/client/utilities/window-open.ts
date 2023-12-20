@@ -35,6 +35,6 @@ export const windowOpen = (href?: string | null | undefined, options?: WindowOpe
   } as const;
 };
 
-export const pageOpen = (url: PagePath, params?: Struct, options?: DynamicUrlContextOptions) => {
+export const pageOpen = (url: PagePath, params?: { [v: string | number | symbol]: any }, options?: DynamicUrlContextOptions) => {
   return windowOpen(getDynamicUrlContext(url, params, options).url);
 };

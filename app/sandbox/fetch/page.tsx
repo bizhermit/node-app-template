@@ -6,7 +6,7 @@ import DateBox from "#/client/elements/form/items/date-box";
 import FileDrop from "#/client/elements/form/items/file-drop";
 import NumberBox from "#/client/elements/form/items/number-box";
 import TextBox from "#/client/elements/form/items/text-box";
-import GroupBox from "#/client/elements/group-box";
+import GroupContainer from "#/client/elements/group-container";
 import Loading from "#/client/elements/loading";
 import Row from "#/client/elements/row";
 import StructView from "#/client/elements/struct-view";
@@ -32,13 +32,13 @@ const Page = () => {
   return (
     <div className="flex p-xs g-s w-100">
       {process.ing && <Loading />}
-      <GroupBox
+      <GroupContainer
         $caption="/fetch"
         $bodyClassName="p-xs"
       >
         <Row className="g-s">
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.get("/api/fetch", {
                   s_string: "tetetetette",
@@ -55,7 +55,7 @@ const Page = () => {
             get
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/api/fetch", {
                   s_string: "a",
@@ -73,7 +73,7 @@ const Page = () => {
             post as json
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/api/fetch", {
                   // text: "hoge",
@@ -90,7 +90,7 @@ const Page = () => {
             post as formData
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.put("/api/fetch", {
                 });
@@ -104,7 +104,7 @@ const Page = () => {
             put
           </Button>
           <Button
-            $onClick={async (unlock) => {
+            onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.delete("/api/fetch", {
                 });
@@ -118,15 +118,15 @@ const Page = () => {
             delete
           </Button>
         </Row>
-      </GroupBox>
-      <GroupBox
+      </GroupContainer>
+      <GroupContainer
         $caption="/fetch formdata"
         $bodyClassName="p-xs"
       >
         <Form
           className="flex g-s"
-          $submitDataType="formData"
-          $onSubmit={(formData, method) => {
+          $type="formData"
+          onSubmit={(formData, { method }) => {
             process(async () => {
               switch (method) {
                 case "get":
@@ -156,12 +156,12 @@ const Page = () => {
           <TextBox
             // name="text"
             $dataItem={sample_string}
-            // $validations={[
-            //   (...args) => {
-            //     console.log("validation-item:", args);
-            //     return undefined;
-            //   }
-            // ]}
+          // $validations={[
+          //   (...args) => {
+          //     console.log("validation-item:", args);
+          //     return undefined;
+          //   }
+          // ]}
           />
           <NumberBox
             $dataItem={sample_number}
@@ -183,13 +183,13 @@ const Page = () => {
             <Button type="submit" formMethod="delete">delete</Button>
           </Row>
         </Form>
-      </GroupBox>
-      <GroupBox
+      </GroupContainer>
+      <GroupContainer
         $caption="/pages/api"
         $bodyClassName="p-xs"
       >
         <Row className="g-s">
-          <Button $onClick={async (unlock) => {
+          <Button onClick={async (unlock) => {
             await process(async () => {
               const res = await api.get("/api/hello", {
                 hello: "hoge",
@@ -205,7 +205,7 @@ const Page = () => {
             hello
           </Button>
         </Row>
-      </GroupBox>
+      </GroupContainer>
       <StructView
         $value={response}
       />

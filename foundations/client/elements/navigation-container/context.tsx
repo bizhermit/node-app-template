@@ -14,7 +14,7 @@ type NavigationContextProps = {
   headerMode: NavigationHeaderMode;
   setHeaderMode: (mode: NavigationHeaderMode) => void;
   toggle: () => void;
-  resetRadio: () => void;
+  resetAuto: () => void;
   closeMenu: () => void;
   getHeaderSizeNum: () => number;
   scrollIntoView: (element: HTMLElement | null | undefined, arg?: boolean | ScrollIntoViewOptions) => void;
@@ -29,7 +29,7 @@ export const NavigationContext = createContext<NavigationContextProps>({
   headerMode: "fill",
   setHeaderMode: () => { },
   toggle: () => { },
-  resetRadio: () => { },
+  resetAuto: () => { },
   closeMenu: () => { },
   getHeaderSizeNum: () => 0,
   scrollIntoView: () => { },
@@ -40,15 +40,12 @@ export const useNavigation = () => {
   return useContext(NavigationContext);
 };
 
-type OmitAttributes = "color" | "children";
-export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+export type NavigationContainerOptions = {
   $name?: string;
-  $defaultNavPosition?: NavigationPosition;
   $navPosition?: NavigationPosition;
-  $defaultNavMode?: NavigationMode;
+  $defaultNavMode?: Extract<NavigationMode, "visible" | "minimize">;
   $navMode?: NavigationMode;
   $headerMode?: NavigationHeaderMode;
-  $defaultHeaderMode?: NavigationHeaderMode;
   $headerTag?: ElementType;
   $footerTag?: ElementType;
   $navTag?: ElementType;
@@ -56,6 +53,6 @@ export type NavigationContainerProps = Omit<HTMLAttributes<HTMLDivElement>, Omit
   $header?: ReactNode;
   $footer?: ReactNode;
   $nav?: ReactNode;
-  $navTitle?: ReactNode;
-  children: ReactNode;
 };
+
+export type NavigationContainerProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, NavigationContainerOptions>;

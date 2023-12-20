@@ -24,17 +24,11 @@ const useLoading = () => {
   };
 
   const hide = (absolute?: boolean) => {
-    if (absolute) {
-      ctx.hideAbsolute();
-      return;
-    }
-    ctx.hide(id.current);
+    absolute ? ctx.hideAbsolute() : ctx.hide(id.current);
   };
 
   useEffect(() => {
-    return () => {
-      hide();
-    };
+    return hide;
   }, []);
 
   return { show, hide, loading: ctx.showed };

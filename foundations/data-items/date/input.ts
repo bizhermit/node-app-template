@@ -30,27 +30,27 @@ namespace DateInput {
     }
   };
 
-  export const getMinDate = (props: FCPorps) => {
-    return withoutTime(parseDate(props.$min) ?? new Date(1900, 0, 1))!;
+  export const getMinDate = (min: FCPorps["$min"]) => {
+    return withoutTime(parseDate(min) ?? new Date(1900, 0, 1))!;
   };
 
-  export const getMaxDate = (props: FCPorps) => {
-    return withoutTime(parseDate(props.$max) ?? new Date(2100, 0, 0))!;
+  export const getMaxDate = (max: FCPorps["$max"]) => {
+    return withoutTime(parseDate(max) ?? new Date(2100, 0, 0))!;
   };
 
-  export const getInitValue = (props: FCPorps) => {
-    return withoutTime(parseDate(props.$initValue) || new Date())!;
+  export const getInitValue = (initValue: FCPorps["$initValue"]) => {
+    return withoutTime(parseDate(initValue) || new Date())!;
   };
 
-  export const selectableValidation = (props: FCPorps): ((date: Date) => boolean) => {
-    if (props.$validDays == null) return () => true;
-    const validModeIsAllow = props.$validDaysMode !== "disallow";
-    if (typeof props.$validDays === "function") return props.$validDays;
-    if (Array.isArray(props.$validDays)) {
-      const map: Struct<boolean> = {};
-      props.$validDays.forEach(day => {
+  export const selectableValidation = (validDays: FCPorps["$validDays"], validDaysMode: FCPorps["$validDaysMode"]): ((date: Date) => boolean) => {
+    if (validDays == null) return () => true;
+    const validModeIsAllow = validDaysMode !== "disallow";
+    if (typeof validDays === "function") return validDays;
+    if (Array.isArray(validDays)) {
+      const map: { [v: string]: boolean } = {};
+      validDays.forEach(day => {
         if (typeof day === "object") {
-          const { date, valid } = (day as Struct);
+          const { date, valid } = (day as { date: DateValue; valid?: boolean; });
           const d = parseDate(date);
           if (d == null) return;
           map[formatDate(d)!] = valid ?? validModeIsAllow;
@@ -66,15 +66,15 @@ namespace DateInput {
         return valid !== false;
       };
     }
-    if ((validModeIsAllow && props.$validDays === "weekday") || (!validModeIsAllow && props.$validDays === "holiday")) {
+    if ((validModeIsAllow && validDays === "weekday") || (!validModeIsAllow && validDays === "holiday")) {
       return (date: Date) => !(date.getDay() === 0 || date.getDay() === 6);
     }
-    if ((validModeIsAllow && props.$validDays === "holiday") || props.$validDays === "weekday") {
+    if ((validModeIsAllow && validDays === "holiday") || validDays === "weekday") {
       return (date: Date) => date.getDay() === 0 || date.getDay() === 6;
     }
-    if (props.$validDays.length !== 7) return () => true;
+    if (validDays.length !== 7) return () => true;
     const validWeeks = generateArray(7, index => {
-      if ((props.$validDays as string)[index] !== "1") {
+      if ((validDays as string)[index] !== "1") {
         return validModeIsAllow ? undefined : index;
       }
       return validModeIsAllow ? index : undefined;
@@ -101,7 +101,7 @@ namespace DateInput {
   export const contextValidation = (rangePair: DateRangePair, type: DateType, itemName?: string) => {
     const compare = (value: DateValue | any, pairDate: Date) =>
       DateValidation.context(parseDate(value), rangePair, { [rangePair.name]: pairDate }, type, itemName, undefined);
-    const getPairDate = (data: Struct) => {
+    const getPairDate = (data: { [v: string | number | symbol]: any }) => {
       if (data == null) return undefined;
       const pairValue = data[rangePair.name];
       if (pairValue == null || Array.isArray(pairValue)) return undefined;

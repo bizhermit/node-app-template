@@ -31,7 +31,7 @@ const PasswordBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -42,7 +42,7 @@ const PasswordBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -50,7 +50,7 @@ const PasswordBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -58,28 +58,28 @@ const PasswordBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue("set");
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "text-box-bind": "set" });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "text-box-form-bind": "set" });
           }}
         >
@@ -94,22 +94,22 @@ const PasswordBoxClient = () => {
           // $hideClearButton
           $ref={passwordBoxRef}
         />
-        <Button $onClick={() => passwordBoxRef.focus()}>
+        <Button onClick={() => passwordBoxRef.focus()}>
           focus
         </Button>
-        <Button $onClick={() => console.log(passwordBoxRef.getValue())}>
+        <Button onClick={() => console.log(passwordBoxRef.getValue())}>
           get value
         </Button>
-        <Button $onClick={() => passwordBoxRef.setValue("pass")}>
+        <Button onClick={() => passwordBoxRef.setValue("pass")}>
           set value
         </Button>
-        <Button $onClick={() => passwordBoxRef.setDefaultValue()}>
+        <Button onClick={() => passwordBoxRef.setDefaultValue()}>
           set default value
         </Button>
-        <Button $onClick={() => passwordBoxRef.clear()}>
+        <Button onClick={() => passwordBoxRef.clear()}>
           clear
         </Button>
-        <Button $onClick={() => passwordBoxRef.toggleMask()}>
+        <Button onClick={() => passwordBoxRef.toggleMask()}>
           toggle mask
         </Button>
         {/* <TextBox

@@ -39,7 +39,7 @@ const NumberBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -50,7 +50,7 @@ const NumberBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -58,7 +58,7 @@ const NumberBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -66,28 +66,28 @@ const NumberBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue(1001);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "number-box-bind": 1001 });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "number-box-form-bind": 1001 });
           }}
         >
@@ -105,7 +105,7 @@ const NumberBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.focus();
             numberBoxRef.focus();
           }}
@@ -113,7 +113,7 @@ const NumberBoxClient = () => {
           focus
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // console.log(formItemRef.getValue());
             console.log(numberBoxRef.getValue());
           }}
@@ -121,7 +121,7 @@ const NumberBoxClient = () => {
           get value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setValue("set from form-item hook");
             numberBoxRef.setValue(1);
           }}
@@ -129,7 +129,7 @@ const NumberBoxClient = () => {
           set value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setDefaultValue();
             numberBoxRef.setDefaultValue();
           }}
@@ -137,7 +137,7 @@ const NumberBoxClient = () => {
           set default value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.clear();
             numberBoxRef.clear();
           }}
@@ -145,21 +145,21 @@ const NumberBoxClient = () => {
           clear
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             numberBoxRef.up();
           }}
         >
           up
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             numberBoxRef.down();
           }}
         >
           down
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             numberBoxRef.add(123);
           }}
         >

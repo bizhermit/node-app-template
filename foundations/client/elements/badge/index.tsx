@@ -1,23 +1,37 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Text from "../text";
 import Style from "./index.module.scss";
 
-type OmitAttributes = "color";
-export type BadgeProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type BadgeOptions = {
   $position?: "left-top" | "right-top" | "left-bottom" | "right-bottom";
   $round?: boolean;
   $size?: Size;
+  $color?: Color;
+  $preventElevatation?: boolean;
 };
 
-const Badge = forwardRef<HTMLDivElement, BadgeProps>((props, ref) => {
+export type BadgeProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, BadgeOptions>;
+
+const Badge = forwardRef<HTMLDivElement, BadgeProps>(({
+  className,
+  $position,
+  $round,
+  $size,
+  $color,
+  $preventElevatation,
+  ...props
+}, ref) => {
   return (
     <div
-      {...attributesWithoutChildren(props, Style.main)}
+      {...props}
+      className={joinCn(Style.main, className)}
       ref={ref}
-      data-size={props.$size || "m"}
-      data-pos={props.$position || "right-top"}
-      data-round={props.$round}
+      data-size={$size || "m"}
+      data-pos={$position || "right-top"}
+      data-round={$round}
+      data-color={$color}
+      data-elevatation={!$preventElevatation}
     >
       <Text>{props.children}</Text>
     </div>

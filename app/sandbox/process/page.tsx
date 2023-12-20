@@ -74,7 +74,7 @@ const Page = () => {
       <Text>last: {last}</Text>
       <Row className="g-m">
         <Button
-          $onClick={() => {
+          onClick={() => {
             setCount(count + 1);
             func(count + 1);
           }}
@@ -82,7 +82,7 @@ const Page = () => {
           add sync process
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setCount(count + 1);
             func(count + 1, true);
           }}
@@ -90,7 +90,7 @@ const Page = () => {
           add wait process
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setCount(count + 1);
             func(count + 1, true, "process2");
           }}
@@ -98,7 +98,7 @@ const Page = () => {
           add wait process as other key
         </Button>
         <Button
-          $onClick={async (unlock) => {
+          onClick={async (unlock) => {
             setCount(count + 1);
             await func(count + 1);
             setCount(count + 2);
@@ -112,21 +112,21 @@ const Page = () => {
       </Row>
       <Row className="g-m">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("- cancel", process.cancel());
           }}
         >
           cancel waiting
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("- kill: ", process.kill());
           }}
         >
           kill running process
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("- kill all: ", process.destory());
           }}
         >

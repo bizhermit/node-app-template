@@ -6,38 +6,32 @@
     justify-content: stretch;
     align-items: stretch;
     flex-wrap: nowrap;
+    min-height: 0;
+    min-width: 0;
 
     &[data-direction="horizontal"] {
       flex-direction: row;
 
-      &[data-reverse="true"] {
-        flex-direction: row-reverse;
-      }
-
       >.handle {
         cursor: col-resize;
-      }
-
-      >:is(.content0, .content1) {
-        height: 100% !important;
-        max-width: 100%;
       }
     }
 
     &[data-direction="vertical"] {
       flex-direction: column;
 
-      &[data-reverse="true"] {
-        flex-direction: column-reverse;
-      }
-
       >.handle {
         cursor: row-resize;
       }
+    }
 
-      >:is(.content0, .content1) {
-        width: 100% !important;
-        max-height: 100%;
+    &[data-reverse="true"] {
+      >.content0 {
+        order: 3;
+      }
+
+      >.content1 {
+        order: 1;
       }
     }
   }
@@ -46,11 +40,13 @@
 
   .handle {
     box-sizing: border-box;
-    position: relative !important;
+    position: relative;
     width: auto !important;
+    height: auto !important;
     min-width: #{$handleSize};
     min-height: #{$handleSize};
-    background: var(--c-border) !important;
+    background: var(--c-border);
+    order: 2;
 
     &::before,
     &::after {
@@ -63,15 +59,20 @@
     box-sizing: border-box;
     position: relative;
     overflow: auto;
+    min-height: 0;
+    min-width: 0;
   }
 
   .content0 {
-    flex: 1;
+    order: 1;
+    flex: 1 1 0rem;
   }
 
   .content1 {
+    order: 2;
+
     &:only-child {
-      flex: 1;
+      flex: 1 1 0rem;
       height: 100% !important;
       max-height: 100% !important;
       min-height: 100% !important;

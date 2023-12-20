@@ -33,10 +33,10 @@ export const useCheckBox = <
   };
 });
 
-export type CheckBoxProps<
+type CheckBoxOptions<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
-> = Omit<FormItemProps<T, D>, "$tagPosition"> & {
+> = {
   $ref?: CheckBoxHook<ValueType<T, D, T>> | CheckBoxHook<string | number | boolean>;
   $checkedValue?: T;
   $uncheckedValue?: T;
@@ -46,21 +46,37 @@ export type CheckBoxProps<
   children?: ReactNode;
 };
 
+type OmitAttrs = "$tagPosition" | "placeholder";
+export type CheckBoxProps<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+> = OverwriteAttrs<Omit<FormItemProps<T, D>, OmitAttrs>, CheckBoxOptions<T, D>>;
+
 interface CheckBoxFC extends FunctionComponent<CheckBoxProps> {
   <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, CheckBoxProps<T, D>>
   ): ReactElement<any> | null;
 }
 
-const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
+const CheckBox = forwardRef(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
->(p: CheckBoxProps<T, D>, $ref: ForwardedRef<HTMLDivElement>) => {
+>(p: CheckBoxProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
+  useImperativeHandle(r, () => ref.current);
 
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    $checkedValue,
+    $uncheckedValue,
+    $fill,
+    $outline,
+    $circle,
+    $focusWhenMounted,
+    children,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       switch (dataItem.type) {
         case "string":
@@ -98,18 +114,21 @@ const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
     }
   });
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     preventRequiredValidation: true,
-    validations: () => {
-      if (!props.$required) return [];
+    validations: ({ required, getMessage }) => {
+      if (!required) return [];
       return [(v) => {
         if (v === checkedValue) return undefined;
-        return props.$messages?.required ?? "チェックを入れてください。";
+        return getMessage("required");
       }];
     },
+    messages: {
+      required: "チェックを入れてください。",
+    },
   });
-  const checkedValue = (props.$checkedValue ?? true) as T;
-  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
+  const checkedValue = ($checkedValue ?? true) as T;
+  const uncheckedValue = ($uncheckedValue ?? false) as T;
 
   const toggleCheck = (check?: boolean) => {
     if (check == null) {
@@ -129,23 +148,23 @@ const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
   };
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
     }
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
-    props.$ref.check = () => ctx.change(checkedValue, false);
-    props.$ref.uncheck = () => ctx.change(uncheckedValue, false);
-    props.$ref.toggle = () => ctx.change(ctx.valueRef.current === checkedValue ? uncheckedValue : checkedValue, false);
+  if ($ref) {
+    $ref.focus = () => (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
+    $ref.check = () => ctx.change(checkedValue, false);
+    $ref.uncheck = () => ctx.change(uncheckedValue, false);
+    $ref.toggle = () => ctx.change(ctx.valueRef.current === checkedValue ? uncheckedValue : checkedValue, false);
   }
 
   return (
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
       $preventFieldLayout
       $clickable
@@ -153,20 +172,20 @@ const CheckBox = forwardRef<HTMLDivElement, CheckBoxProps>(<
         className: Style.main,
         onClick: click,
         onKeyDown: keydown,
-        tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
-        "data-outline": props.$outline,
+        tabIndex: ctx.disabled ? undefined : tabIndex ?? 0,
+        "data-outline": $outline,
       }}
     >
       <div
         className={Style.body}
         data-checked={ctx.value === checkedValue}
-        data-circle={props.$circle}
-        data-fill={props.$fill}
+        data-circle={$circle}
+        data-fill={$fill}
       />
-      {props.children &&
+      {children &&
         <div className={Style.content}>
           <Text className={Style.label}>
-            {props.children}
+            {children}
           </Text>
         </div>
       }

@@ -47,8 +47,7 @@ export const useDateBox = <T extends DateValue>() => useFormItemBase<DateBoxHook
   };
 });
 
-type OmitAttributes = "placeholder";
-export type DateBoxProps<D extends DataItem_Date | undefined = undefined> = Omit<FormItemProps<DateValue, D>, OmitAttributes> & DateInput.FCPorps & {
+type DateBoxOptions<D extends DataItem_Date | undefined = undefined> = DateInput.FCPorps & {
   $ref?: DateBoxHook<ValueType<DateValue, D, DateValue>> | DateBoxHook<DateValue>;
   $typeof?: DateValueType;
   $disallowInput?: boolean;
@@ -58,6 +57,10 @@ export type DateBoxProps<D extends DataItem_Date | undefined = undefined> = Omit
   $dayPlaceholder?: string;
   $showSeparatorAlwarys?: boolean;
 };
+
+type OmitAttrs = "placeholder" | "tabIndex";
+export type DateBoxProps<D extends DataItem_Date | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<DateValue, D>, OmitAttrs>, DateBoxOptions<D>>;
 
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
@@ -70,11 +73,28 @@ interface DateBoxFC extends FunctionComponent<DateBoxProps> {
   ): ReactElement<any> | null;
 }
 
-const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
+const DateBox = forwardRef(<
   D extends DataItem_Date | undefined = undefined
 >(p: DateBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    $type,
+    $min,
+    $max,
+    $rangePair,
+    $validDays,
+    $validDaysMode,
+    $initValue,
+    $typeof,
+    $disallowInput,
+    $pickerButtonless,
+    $yearPlaceholder,
+    $monthPlaceholder,
+    $dayPlaceholder,
+    $showSeparatorAlwarys,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       return {
         $type: dataItem.type as DateType,
@@ -91,20 +111,20 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
     },
   });
 
-  const type = props.$type ?? "date";
+  const type = $type ?? "date";
   const minDate = useMemo(() => {
-    return DateInput.getMinDate(props);
-  }, [props.$min]);
+    return DateInput.getMinDate($min);
+  }, [$min]);
   const maxDate = useMemo(() => {
-    return DateInput.getMaxDate(props);
-  }, [props.$max]);
+    return DateInput.getMaxDate($max);
+  }, [$max]);
   const judgeValid = useMemo(() => {
-    return DateInput.selectableValidation(props);
-  }, [props.$validDays, props.$validDaysMode]);
+    return DateInput.selectableValidation($validDays, $validDaysMode);
+  }, [$validDays, $validDaysMode]);
 
   const initValue = useMemo(() => {
-    return DateInput.getInitValue(props);
-  }, [props.$initValue]);
+    return DateInput.getInitValue($initValue);
+  }, [$initValue]);
 
   const yref = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
@@ -115,16 +135,17 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   const cacheD = useRef<number>();
   const [showPicker, setShowPicker] = useState(false);
 
-  const ctx = useFormItemContext(form, props, {
-    interlockValidation: props.$rangePair != null,
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
+    interlockValidation: $rangePair != null,
     receive: (v): any => {
-      switch (props.$typeof) {
+      if (v == null) return v;
+      switch ($typeof) {
         case "date": return parseDate(v);
         case "number": return parseDate(v)?.getTime();
         default: return formatDate(v);
       }
     },
-    validations: (_, label) => {
+    validations: ({ label }) => {
       const validations: Array<FormItemValidation<any>> = [];
       const max = DateItemUtils.dateAsLast(maxDate, type);
       const min = DateItemUtils.dateAsFirst(minDate, type);
@@ -138,12 +159,12 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
           validations.push(DateInput.minValidation(min, type, label));
         }
       }
-      const rangePair = props.$rangePair;
+      const rangePair = $rangePair;
       if (rangePair != null) {
         const { validation } = DateInput.contextValidation(rangePair, type, label);
         validations.push(validation);
       }
-      if (props.$validDays) {
+      if ($validDays) {
         const judge = (value: DateValue | null) => {
           const date = parseDate(value);
           if (date == null) return undefined;
@@ -157,9 +178,9 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
       type,
       maxDate,
       minDate,
-      props.$rangePair?.name,
-      props.$rangePair?.position,
-      props.$rangePair?.disallowSame,
+      $rangePair?.name,
+      $rangePair?.position,
+      $rangePair?.disallowSame,
       judgeValid,
     ],
   });
@@ -193,7 +214,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
       else ctx.change(undefined, edit);
       return;
     }
-    const v = DateInput.convertDateToValue(date, props.$typeof);
+    const v = DateInput.convertDateToValue(date, $typeof);
     if (equals(v, ctx.valueRef.current)) setInputValues(v);
     else ctx.change(v, edit);
   };
@@ -364,12 +385,12 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   };
 
   const clickInputs = () => {
-    if (!props.$disallowInput) return;
+    if (!$disallowInput) return;
     picker();
   };
 
   const focus = () => {
-    if (props.$disallowInput) yref.current.parentElement?.focus();
+    if ($disallowInput) yref.current.parentElement?.focus();
     else (dref.current ?? mref.current ?? yref.current)?.focus();
   };
 
@@ -380,33 +401,31 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
   const hasData = ctx.value != null && ctx.value !== "";
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
-      focus();
-    }
+    if ($focusWhenMounted) focus();
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = focus;
-    props.$ref.addDay = (num = 1) => {
+  if ($ref) {
+    $ref.focus = focus;
+    $ref.addDay = (num = 1) => {
       updown(0, 0, num, false);
       return parseDate(ctx.valueRef.current)!;
     };
-    props.$ref.addMonth = (num = 1) => {
+    $ref.addMonth = (num = 1) => {
       updown(0, num, 0, false);
       return parseDate(ctx.valueRef.current)!;
     };
-    props.$ref.addYear = (num = 1) => {
+    $ref.addYear = (num = 1) => {
       updown(num, 0, 0, false);
       return parseDate(ctx.valueRef.current)!;
     };
-    props.$ref.setFirstDate = () => {
+    $ref.setFirstDate = () => {
       return setCache(new Date(
         cacheY.current == null ? initValue.getFullYear() : cacheY.current,
         (type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current)) - 1,
         1
       ), false);
     };
-    props.$ref.setLastDate = () => {
+    $ref.setLastDate = () => {
       return setCache(new Date(
         cacheY.current == null ? initValue.getFullYear() : cacheY.current,
         type === "year" ? 0 : (cacheM.current == null ? initValue.getMonth() + 1 : cacheM.current),
@@ -419,9 +438,9 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
-      data-has={hasData}
+      $hasData={hasData}
       $mainProps={{
         onBlur: blur,
       }}
@@ -429,7 +448,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
       <div
         className={Style.inputs}
         onClick={clickInputs}
-        data-input={!props.$disallowInput}
+        data-input={!$disallowInput}
         data-editable={ctx.editable}
       >
         <input
@@ -437,7 +456,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
           className={Style.y}
           type="text"
           disabled={ctx.disabled}
-          readOnly={props.$disallowInput || ctx.readOnly}
+          readOnly={$disallowInput || ctx.readOnly}
           maxLength={4}
           defaultValue={cacheY.current || ""}
           onChange={changeY}
@@ -445,14 +464,14 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
           onKeyDown={keydownY}
           autoComplete="off"
           inputMode="numeric"
-          placeholder={ctx.editable ? props.$yearPlaceholder : ""}
+          placeholder={ctx.editable ? $yearPlaceholder : ""}
         />
         {type !== "year" &&
           <>
             <span
               className={Style.sep}
               data-has={hasData}
-              data-show={hasData || props.$showSeparatorAlwarys === true}
+              data-show={hasData || $showSeparatorAlwarys === true}
             >
               /
             </span>
@@ -461,7 +480,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
               className={Style.m}
               type="text"
               disabled={ctx.disabled}
-              readOnly={props.$disallowInput || ctx.readOnly}
+              readOnly={$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheM.current || ""}
               onChange={changeM}
@@ -469,7 +488,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
               onKeyDown={keydownM}
               autoComplete="off"
               inputMode="numeric"
-              placeholder={ctx.editable ? props.$monthPlaceholder : ""}
+              placeholder={ctx.editable ? $monthPlaceholder : ""}
             />
           </>
         }
@@ -478,7 +497,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
             <span
               className={Style.sep}
               data-has={hasData}
-              data-show={hasData || props.$showSeparatorAlwarys === true}
+              data-show={hasData || $showSeparatorAlwarys === true}
             >
               /
             </span>
@@ -487,7 +506,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
               className={Style.d}
               type="text"
               disabled={ctx.disabled}
-              readOnly={props.$disallowInput || ctx.readOnly}
+              readOnly={$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheD.current || ""}
               onChange={changeD}
@@ -495,7 +514,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
               onKeyDown={keydownD}
               autoComplete="off"
               inputMode="numeric"
-              placeholder={ctx.editable ? props.$dayPlaceholder : ""}
+              placeholder={ctx.editable ? $dayPlaceholder : ""}
             />
           </>
         }
@@ -509,7 +528,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
           >
             <CrossIcon />
           </div>
-          {!props.$disallowInput &&
+          {!$disallowInput &&
             <div
               className={Style.picker}
               onClick={picker}
@@ -539,14 +558,14 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
           ref={pref}
           $value={ctx.value || initValue}
           $type={type}
-          $typeof={props.$typeof}
+          $typeof={$typeof}
           $multiple={false}
           $max={maxDate}
           $min={minDate}
-          $validDays={props.$validDays}
-          $validDaysMode={props.$validDaysMode}
+          $validDays={$validDays}
+          $validDaysMode={$validDaysMode}
           $skipValidation
-          $onClickPositive={(value: any) => {
+          $onClickPositive={(value) => {
             ctx.change(value);
             setShowPicker(false);
             setTimeout(focus);
@@ -556,7 +575,7 @@ const DateBox = forwardRef<HTMLDivElement, DateBoxProps>(<
             setTimeout(focus);
           }}
           $positiveButtonless
-          $buttonless={props.$pickerButtonless}
+          $buttonless={$pickerButtonless}
         />
       </Popup>
     </FormItemWrap>

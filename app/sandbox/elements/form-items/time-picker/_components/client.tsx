@@ -6,13 +6,13 @@ import Form from "#/client/elements/form";
 import TimePicker from "#/client/elements/form/items/time-picker";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_number, sample_string, sample_time } from "$/data-items/sample/item";
+import { sample_time } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const TimePickerClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<number>>();
+  const [value, setValue] = useState<Nullable<TimeValue>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState<Struct>({ "pair-time": "12:00" });
 
@@ -32,7 +32,7 @@ const TimePickerClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -43,7 +43,7 @@ const TimePickerClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -51,7 +51,7 @@ const TimePickerClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -59,7 +59,7 @@ const TimePickerClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind(cur => {
               return {
                 "pair-time": cur["pair-time"],
@@ -70,21 +70,21 @@ const TimePickerClient = () => {
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue(540);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "time-picker-bind": "10:00" });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind(cur => {
               return {
                 ...cur,
@@ -106,16 +106,6 @@ const TimePickerClient = () => {
           $tag="time"
           $dataItem={sample_time}
           $onChange={v => console.log("time: ", v)}
-        />
-        <TimePicker
-          $tag="number"
-          $dataItem={sample_number}
-          $onChange={v => console.log("number: ", v)}
-        />
-        <TimePicker
-          $tag="string"
-          $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
         />
       </Row>
       <Row $vAlign="top" className="g-s">

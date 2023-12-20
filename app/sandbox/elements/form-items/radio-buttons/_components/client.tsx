@@ -54,7 +54,7 @@ const RadioButtonsClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -65,7 +65,7 @@ const RadioButtonsClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -73,7 +73,7 @@ const RadioButtonsClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -81,28 +81,28 @@ const RadioButtonsClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue(1);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "radio-buttons-bind": 2 });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "radio-buttons-form-bind": "primary" });
           }}
         >
@@ -148,7 +148,7 @@ const RadioButtonsClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.focus();
             radioButtonsRef.focus();
           }}
@@ -156,7 +156,7 @@ const RadioButtonsClient = () => {
           focus
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // console.log(formItemRef.getValue());
             console.log(radioButtonsRef.getValue());
           }}
@@ -164,7 +164,7 @@ const RadioButtonsClient = () => {
           get value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setValue("set from form-item hook");
             radioButtonsRef.setValue(1);
           }}
@@ -172,7 +172,7 @@ const RadioButtonsClient = () => {
           set value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.setDefaultValue();
             radioButtonsRef.setDefaultValue();
           }}
@@ -180,7 +180,7 @@ const RadioButtonsClient = () => {
           set default value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // formItemRef.clear();
             radioButtonsRef.clear();
           }}
@@ -249,7 +249,7 @@ const RadioButtonsClient = () => {
         $readOnly={readOnly}
         action="/api/form"
         method="post"
-        $onSubmit={(data) => {
+        onSubmit={(data) => {
           console.log(data);
         }}
       >

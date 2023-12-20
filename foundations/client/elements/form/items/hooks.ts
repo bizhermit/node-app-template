@@ -46,21 +46,41 @@ export const useDataItemMergedProps = <
   } as P;
 };
 
-export const useFormItemContext = <
-  T,
-  D extends DataItem | undefined,
-  V = undefined,
-  U extends Struct = any,
-  P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>
->(form: ReturnType<typeof useForm>, props: P, options?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
+export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U extends { [v: string | number | symbol]: any } = any, P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>>(form: ReturnType<typeof useForm>, {
+  $label,
+  $dataItem,
+  $disabled,
+  $readOnly,
+  $messages,
+  $error,
+  $required,
+  $validations,
+  $interlockValidation,
+  // $bind,
+  // $defaultValue,
+  // $value,
+  $onChange,
+  $preventMemorizeOnChange,
+  $onEdit,
+  $preventMemorizeOnEdit,
+  $preventFormBind,
+  $ref,
+  $messagePosition,
+  $messageWrap,
+  ...props
+}: P, options?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
   const init = useRef(false);
   const id = useRef(generateUuidV4());
   const [error, setError] = useState<string | null | undefined>(undefined);
 
+  const receive = (v: any) => {
+    return options?.receive ? options.receive(v) : v;
+  };
+
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
-    const v = (() => {
+    return receive((() => {
       if (props == null) return undefined;
-      if ("$value" in props) return props.$value;
+      if ("$value" in props) return props.$value; // TODO:
       if (props.name) {
         // if (props.$bind) {
         //   const v = getValue(props.$bind, props.name);
@@ -73,9 +93,7 @@ export const useFormItemContext = <
       }
       if ("$defaultValue" in props) return props.$defaultValue;
       return undefined;
-    })();
-    if (v == null || options?.receive == null) return v;
-    return options.receive(v);
+    })());
   })());
   const [value, setValueImpl] = useState(valueRef.current);
   const setCurrentValue = (value: ValueType<T, D, V> | null | undefined) => {
@@ -83,34 +101,33 @@ export const useFormItemContext = <
   };
   const setBind = useCallback((value: ValueType<T, D, V> | null | undefined) => {
     if (!props.name) return;
-    // if (props.$bind) {
+    // if ($bind) {
     //   setValue(props.$bind, props.name, value);
     // }
-    if (form.bind && !props.$preventFormBind) {
+    if (form.bind && !$preventFormBind) {
       setValue(form.bind, props.name, value);
     }
   }, [
     props.name,
     // props.$bind,
     form.bind,
-    props.$preventFormBind
+    $preventFormBind,
   ]);
-  if (!init.current) {
-    setBind(value);
-  }
+  if (!init.current) setBind(value);
 
   const getMessage = useCallback((key: keyof FormItemMessages, ...texts: Array<string>) => {
-    let m = props.$messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
-    m = m.replace(/\{label\}/g, props.$label || "値");
+    let m = $messages?.[key] ?? options?.messages?.[key] ?? formValidationMessages[key];
+    m = m.replace(/\{label\}/g, $label || "値");
     texts.forEach((t, i) => m = m.replace(new RegExp(`\\{${i}\\}`, "g"), `${t ?? ""}`));
     return m;
   }, [
-    props.$label
+    $label,
+    // $messages,
   ]);
 
   const validations = useMemo(() => {
     const rets: Array<FormItemValidation<ValueType<T, D, V> | null | undefined>> = [];
-    if (props.$required && !options?.preventRequiredValidation) {
+    if ($required && !options?.preventRequiredValidation) {
       if (options?.multiple) {
         rets.push(v => {
           if (v == null) return getMessage("required");
@@ -126,20 +143,25 @@ export const useFormItemContext = <
       }
     }
     if (options?.validations) {
-      rets.push(...options.validations(getMessage, props.$label || "値"));
+      rets.push(...options.validations({
+        getMessage,
+        label: $label || "値",
+        required: $required,
+        messages: $messages,
+      }));
     }
-    if (props?.$validations) {
-      if (Array.isArray(props.$validations)) {
-        rets.push(...props.$validations);
+    if ($validations) {
+      if (Array.isArray($validations)) {
+        rets.push(...$validations);
       } else {
-        rets.push(props.$validations);
+        rets.push($validations);
       }
     }
     return rets;
   }, [
-    props.$required,
+    $required,
     options?.multiple,
-    props?.$validations,
+    $validations,
     getMessage,
     ...(options?.validationsDeps ?? []),
   ]);
@@ -150,7 +172,7 @@ export const useFormItemContext = <
     const bind = (() => {
       if (props == null) return {};
       // if ("$bind" in props) return props.$bind;
-      if (!props.$preventFormBind) return form.bind;
+      if (!$preventFormBind) return form.bind;
       return {};
     })();
     for (let i = 0, il = validations.length; i < il; i++) {
@@ -162,7 +184,7 @@ export const useFormItemContext = <
     }
     const msg = msgs[0];
     setError(msg);
-    if (!props?.$preventFormBind) {
+    if (!$preventFormBind) {
       form.setErrors(cur => {
         if (cur[id.current] === msg) return cur;
         if (isErrorObject(msg)) {
@@ -182,18 +204,18 @@ export const useFormItemContext = <
     validations,
     form.bind,
     props?.name,
-    // props?.$bind,
-    props?.$preventFormBind,
+    // props.$bind,
+    $preventFormBind,
     getMessage,
   ]);
 
   useEffect(() => {
     form.setExErrors(cur => {
-      if (isErrorObject(props?.$error)) {
-        if (equals(cur[id.current], props.$error)) return cur;
+      if (isErrorObject($error)) {
+        if (equals(cur[id.current], $error)) return cur;
         return {
           ...cur,
-          [id.current]: props.$error,
+          [id.current]: $error,
         };
       }
       if (!(id.current in cur)) return cur;
@@ -201,20 +223,20 @@ export const useFormItemContext = <
       delete ret[id.current];
       return ret;
     });
-  }, [props?.$error]);
+  }, [$error]);
 
   const change = useCallback((value: ValueType<T, D, V> | null | undefined, edit = true, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
     const before = valueRef.current;
     setCurrentValue(value);
     setBind(value);
-    const errorMessage = (props?.$interlockValidation || (props.$interlockValidation !== false && options?.interlockValidation)) ?
+    const errorMessage = ($interlockValidation || ($interlockValidation !== false && options?.interlockValidation)) ?
       form.validation(id.current) : validation();
-    if (props.$onChange != null || (props.$onEdit != null && edit)) {
+    if ($onChange != null || ($onEdit != null && edit)) {
       const data = options?.generateChangeCallbackData?.(valueRef.current, before) as U;
-      props?.$onChange?.(valueRef.current, before, { ...data, errorMessage });
+      $onChange?.(valueRef.current, before, { ...data, errorMessage });
       if (edit) {
-        props?.$onEdit?.(valueRef.current, before, { ...data, errorMessage });
+        $onEdit?.(valueRef.current, before, { ...data, errorMessage });
       }
     }
     if (edit) {
@@ -224,8 +246,8 @@ export const useFormItemContext = <
     }
   }, [
     setBind,
-    props?.$preventMemorizeOnChange ? props?.$onChange : undefined,
-    props?.$preventMemorizeOnEdit ? props.$onEdit : undefined,
+    $preventMemorizeOnChange ? $onChange : undefined,
+    $preventMemorizeOnEdit ? $onEdit : undefined,
     validation,
     ...(options?.generateChangeCallbackDataDeps ?? []),
   ]);
@@ -233,9 +255,9 @@ export const useFormItemContext = <
   const valueEffect = (v: any) => {
     const before = valueRef.current;
     setCurrentValue(v);
-    if (init.current || props.$onChange) {
+    if (init.current || $onChange) {
       const errorMessage = validation();
-      props.$onChange?.(
+      $onChange?.(
         valueRef.current,
         before,
         { ...options?.generateChangeCallbackData?.(valueRef.current, before) as U, errorMessage },
@@ -246,21 +268,29 @@ export const useFormItemContext = <
 
   useEffect(() => {
     const name = props?.name;
-    if (props == null || name == null || form.bind == null || "$bind" in props || "$value" in props || props.$preventFormBind) return;
+    if (props == null || name == null || form.bind == null || "$bind" in props || "$value" in props || $preventFormBind) return;
     valueEffect(getValue(form.bind, name));
-  }, [form.bind, props?.$preventFormBind]);
+  }, [
+    form.bind,
+    $preventFormBind,
+  ]);
 
   // useEffect(() => {
   //   const name = props?.name;
   //   if (props == null || name == null || props.$bind == null || "$value" in props) return;
   //   valueEffect(getValue(props.$bind, name))
-  // }, [props?.$bind]);
+  // }, [
+  //   props.$bind,
+  // ]);
 
   useEffect(() => {
     if (props == null || !("$value" in props) || equals(valueRef.current, props.$value)) return;
     setBind(props.$value);
     valueEffect(props.$value);
-  }, [props?.$value, setBind]);
+  }, [
+    props?.$value,
+    setBind,
+  ]);
 
   useEffect(() => {
     init.current = true;
@@ -287,28 +317,28 @@ export const useFormItemContext = <
     validation();
   }, [validation]);
 
-  const disabled = props?.$disabled || form.disabled;
-  const readOnly = props?.$readOnly || form.readOnly;
+  const disabled = $disabled || form.disabled;
+  const readOnly = $readOnly || form.readOnly;
 
-  if (props.$ref) {
-    props.$ref.getValue = () => valueRef.current;
-    props.$ref.setValue = (v: any) => change(
-      v == null ? undefined :
+  if ($ref) {
+    $ref.getValue = () => valueRef.current;
+    $ref.setValue = (v: any) => change(
+      receive(v == null ? undefined :
         options?.multiple ? (Array.isArray(v) ? v : [v]) as any :
-          Array.isArray(v) ? v[0] : v,
-      false
+          Array.isArray(v) ? v[0] : v
+      ), false
     );
-    props.$ref.setDefaultValue = () => props.$ref?.setValue(props.$defaultValue);
-    props.$ref.clear = () => change(undefined, false);
-    props.$ref.hasError = () => isErrorObject(error ?? props?.$error);
-    props.$ref.getErrorMessage = () => error ?? props.$error;
+    $ref.setDefaultValue = () => $ref?.setValue(props.$defaultValue);
+    $ref.clear = () => change(undefined, false);
+    $ref.hasError = () => isErrorObject(error ?? $error);
+    $ref.getErrorMessage = () => error ?? $error;
   }
 
   useEffect(() => {
     return () => {
-      if (props.$ref) {
-        structKeys(props.$ref).forEach(k => {
-          props.$ref![k] = () => {
+      if ($ref) {
+        structKeys($ref).forEach(k => {
+          $ref![k] = () => {
             throw formItemHookNotSetError;
           };
         });
@@ -317,22 +347,26 @@ export const useFormItemContext = <
   }, []);
 
   return {
-    ...form,
-    disabled,
-    readOnly,
-    editable: !disabled && !readOnly,
-    change,
-    valueRef,
-    value,
-    validation,
-    hasValidator: validations.length > 0,
-    error: error ?? props?.$error,
-    setError,
-    effect: options?.effect,
-    messageDisplayMode: props?.$messagePosition ?? form.messageDisplayMode ?? "bottom-hide",
-    messageWrap: props?.$messageWrap ?? form.messageWrap,
-    getMessage,
-  };
+    ctx: {
+      ...form,
+      disabled,
+      readOnly,
+      editable: !disabled && !readOnly,
+      change,
+      valueRef,
+      value,
+      validation,
+      error: error ?? $error,
+      setError,
+      effect: options?.effect,
+      messagePosition: $messagePosition ?? form.messagePosition ?? "bottom-hide",
+      messageWrap: $messageWrap ?? form.messageWrap,
+    },
+    props,
+    $ref: $ref as P["$ref"],
+    $dataItem,
+    $preventFormBind,
+  } as const;
 };
 
 // eslint-disable-next-line no-console

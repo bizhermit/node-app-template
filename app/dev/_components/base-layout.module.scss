@@ -7,6 +7,16 @@
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: stretch;
+
+  &[data-scroll="true"] {
+    height: 100%;
+
+    >.contents {
+      flex: 1 1 0rem;
+      overflow: auto;
+      --header-size: 0rem;
+    }
+  }
 }
 
 .title {
@@ -14,7 +24,7 @@
   position: sticky;
   top: var(--h-size);
   height: var(--t-size);
-  z-index: 90;
+  z-index: 999;
   padding: 0 var(--b-m);
   display: flex;
   flex-flow: row wrap;
@@ -47,6 +57,7 @@
   align-items: stretch;
   padding: var(--b-m) var(--b-m) var(--b-m) var(--b-m);
   gap: var(--b-s);
+  min-height: 0;
 }
 
 .sheet {
@@ -54,10 +65,49 @@
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
-  align-items: stretch;
+  align-items: flex-start;
   gap: var(--b-s);
   background: var(--c-pure);
   border-radius: var(--radius);
   padding: var(--b-m);
   filter: drop-shadow(0 0 0.2rem var(--c-shadow));
+  overflow-x: auto;
+
+  &[data-stretch="true"] {
+    align-items: stretch;
+  }
+}
+
+.section {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.content {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--b-s);
+
+  &[data-stretch="true"] {
+    align-items: stretch;
+  }
+}
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--b-s);
+
+  &[data-middle="true"] {
+    align-items: center;
+  }
 }

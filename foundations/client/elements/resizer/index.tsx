@@ -1,70 +1,96 @@
 "use client";
 
-import type { CSSProperties, FC, MutableRefObject } from "react";
+import type { FC, HTMLAttributes, MutableRefObject } from "react";
 import { convertSizeNumToStr, releaseCursor, setCursor } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 
 export type ResizeDirection = "x" | "y" | "xy";
-export type ResizerProps = {
-  className?: string;
-  style?: CSSProperties;
-  disabled?: boolean;
-  direction?: ResizeDirection;
-  reverse?: boolean;
-  targetRef?: MutableRefObject<HTMLElement>;
-  resizing?: (ctx: { width?: number; height?: number; }) => void;
-  resized?: (ctx: { width?: number; height?: number; }) => void;
-} & Struct;
 
-const Resizer: FC<ResizerProps> = (props) => {
-  const resizeStart = (elem: HTMLDivElement, cx: number, cy: number, isTouch?: boolean) => {
-    if (props.direction == null) return;
-    const pelem = props.targetRef?.current ?? elem.parentElement;
-    if (pelem == null) return;
+type ResizerOptions = {
+  $disabled?: boolean;
+  $direction?: ResizeDirection;
+  $reverse?: boolean;
+  $targetRef?: MutableRefObject<HTMLElement>;
+  $onResizing?: (ctx: { width?: number; height?: number; }) => void;
+  $onResized?: (ctx: { width?: number; height?: number; }) => void;
+};
+
+export type ResizerProps = OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, "children">, ResizerOptions>;
+
+const timeout = 10;
+const attrName = "data-resizing";
+
+const Resizer: FC<ResizerProps> = ({
+  className,
+  $disabled,
+  $direction,
+  $reverse,
+  $targetRef,
+  $onResizing,
+  $onResized,
+  ...props
+}) => {
+  const resizeStart = (ev: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>, cx: number, cy: number, isTouch?: boolean) => {
+    const callReturn = () => {
+      props[isTouch ? "onTouchStart" : "onMouseDown"]?.(ev as any);
+    };
+    if ($direction == null) return callReturn();
+    const elem = ev.currentTarget;
+    const pelem = $targetRef?.current ?? elem.parentElement;
+    if (pelem == null) return callReturn();
+    pelem.setAttribute(attrName, $direction);
     const prect = pelem.getBoundingClientRect();
-    const reverse = props.reverse === true;
+    const reverse = $reverse === true;
     let posX = cx, posY = cy, lastX = prect.width, lastY = prect.height, cursor = "";
-    let move: VoidFunc;
-    if (props.direction === "x") {
+    let move: (arg: any) => void, to: NodeJS.Timeout | null = null;
+    if ($direction === "x") {
       const moveImpl = (x: number) => {
-        const w = (x - posX) * (reverse ? -1 : 1) + lastX;
-        pelem.style.width = w + "px";
-        props.resizing?.({ width: w });
+        if (to) return;
+        to = setTimeout(() => {
+          const w = (x - posX) * (reverse ? -1 : 1) + lastX;
+          pelem.style.width = w + "px";
+          $onResizing?.({ width: w });
+          to = null;
+        }, timeout);
       };
       cursor = "col-resize";
-      if (isTouch) {
-        move = ((e: TouchEvent) => moveImpl(e.touches[0].clientX)) as VoidFunc;
-      } else {
-        move = ((e: MouseEvent) => moveImpl(e.clientX)) as VoidFunc;
-      }
-    } else if (props.direction === "y") {
+      move = isTouch ?
+        ((e: TouchEvent) => moveImpl(e.touches[0].clientX)) :
+        ((e: MouseEvent) => moveImpl(e.clientX));
+    } else if ($direction === "y") {
       const moveImpl = (y: number) => {
-        const h = (y - posY) * (reverse ? -1 : 1) + lastY;
-        pelem.style.height = h + "px";
-        props.resizing?.({ height: h });
+        if (to) return;
+        to = setTimeout(() => {
+          const h = (y - posY) * (reverse ? -1 : 1) + lastY;
+          pelem.style.height = h + "px";
+          $onResizing?.({ height: h });
+          to = null;
+        }, timeout);
       };
       cursor = "row-resize";
-      if (isTouch) {
-        move = ((e: TouchEvent) => moveImpl(e.touches[0].clientY)) as VoidFunc;
-      } else {
-        move = ((e: MouseEvent) => moveImpl(e.clientY)) as VoidFunc;
-      }
+      move = isTouch ?
+        ((e: TouchEvent) => moveImpl(e.touches[0].clientY)) :
+        ((e: MouseEvent) => moveImpl(e.clientY));
     } else {
       const moveImpl = (x: number, y: number) => {
-        const w = (x - posX) * (reverse ? -1 : 1) + lastX;
-        const h = (y - posY) * (reverse ? -1 : 1) + lastY;
-        pelem.style.width = w + "px";
-        pelem.style.height = h + "px";
-        props.resizing?.({ width: w, height: h });
+        if (to) return;
+        to = setTimeout(() => {
+          const w = (x - posX) * (reverse ? -1 : 1) + lastX;
+          const h = (y - posY) * (reverse ? -1 : 1) + lastY;
+          pelem.style.width = w + "px";
+          pelem.style.height = h + "px";
+          $onResizing?.({ width: w, height: h });
+          to = null;
+        }, timeout);
       };
       cursor = "nwse-resize";
-      if (isTouch) {
-        move = ((e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY)) as VoidFunc;
-      } else {
-        move = ((e: MouseEvent) => moveImpl(e.clientX, e.clientY)) as VoidFunc;
-      }
+      move = isTouch ?
+        ((e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY)) :
+        ((e: MouseEvent) => moveImpl(e.clientX, e.clientY));
     }
     const endImpl = () => {
+      pelem.removeAttribute(attrName);
       const width = pelem.style.width;
       const ctx: { width?: number; height?: number; } = {};
       if (width) {
@@ -81,7 +107,7 @@ const Resizer: FC<ResizerProps> = (props) => {
         window.removeEventListener("touchmove", move);
         window.removeEventListener("touchend", end);
         const ctx = endImpl();
-        props.resized?.(ctx);
+        $onResized?.(ctx);
       };
       window.addEventListener("touchend", end);
       window.addEventListener("touchmove", move);
@@ -92,19 +118,21 @@ const Resizer: FC<ResizerProps> = (props) => {
         window.removeEventListener("mouseup", end);
         releaseCursor();
         const ctx = endImpl();
-        props.resized?.(ctx);
+        $onResized?.(ctx);
       };
       window.addEventListener("mouseup", end);
       window.addEventListener("mousemove", move);
     }
+    callReturn();
   };
 
-  if (props.direction == null || props.disabled) return <></>;
+  if ($direction == null || $disabled) return <></>;
   return (
     <div
-      className={`${Style.main} ${Style[props.direction]}${props.className ? ` ${props.className}` : ""}`}
-      onMouseDown={e => resizeStart(e.currentTarget, e.clientX, e.clientY)}
-      onTouchStart={e => resizeStart(e.currentTarget, e.touches[0].clientX, e.touches[0].clientY, true)}
+      {...props}
+      className={joinCn(Style.main, Style[$direction], className)}
+      onMouseDown={e => resizeStart(e, e.clientX, e.clientY)}
+      onTouchStart={e => resizeStart(e, e.touches[0].clientX, e.touches[0].clientY, true)}
       onClick={e => e.stopPropagation()}
     />
   );

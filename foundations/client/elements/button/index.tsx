@@ -1,7 +1,8 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { appendedColorStyle, attributesWithoutChildren, isNotReactNode } from "../../utilities/attributes";
+import { isNotReactNode } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import useForm from "../form/context";
 import Style from "./index.module.scss";
 
@@ -10,92 +11,94 @@ export type ButtonOptions = {
   $color?: Color;
   $round?: boolean;
   $outline?: boolean;
+  $text?: boolean;
   $icon?: ReactNode;
   $iconPosition?: "left" | "right";
   $fillLabel?: boolean;
   $fitContent?: boolean;
   $noPadding?: boolean;
   $focusWhenMounted?: boolean;
+  $notDependsOnForm?: boolean;
+  onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void | boolean>);
 };
 
-type OmitAttributes = "onClick" | "color";
-export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, OmitAttributes> & ButtonOptions & {
-  $onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);
-  $ignoreFormValidation?: boolean;
-};
+export type ButtonProps = OverwriteAttrs<ButtonHTMLAttributes<HTMLButtonElement>, ButtonOptions>;
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, $ref) => {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
+  className,
+  $size,
+  $color,
+  $round,
+  $outline,
+  $text,
+  $icon,
+  $iconPosition,
+  $fillLabel,
+  $fitContent,
+  $noPadding,
+  $focusWhenMounted,
+  $notDependsOnForm,
+  onClick,
+  children,
+  ...props
+}, $ref) => {
   const ref = useRef<HTMLButtonElement>(null!);
   useImperativeHandle($ref, () => ref.current);
 
-  const disabledRef = useRef(false);
-  const [disabled, setDisabled] = useState(false);
   const form = useForm();
-
-  const lock = () => {
-    setDisabled(disabledRef.current = true);
-  };
-
-  const unlock = () => {
-    setDisabled(disabledRef.current = false);
-  };
-
-  const submitDisabled = props.$ignoreFormValidation !== true && (
+  const submitDisabled = $notDependsOnForm !== true && (
     (props.type === "submit" && props.formMethod !== "delete" && (form.hasError || form.disabled)) ||
     (props.type === "reset" && (form.disabled || form.readOnly))
   );
 
+  const disabledRef = useRef(false);
+  const [disabled, setDisabled] = useState(disabledRef.current);
+
   const click = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (props.disabled || disabledRef.current || submitDisabled) {
       e.preventDefault();
-      return false;
+      return;
     }
-    lock();
-    const res = props.$onClick?.(unlock, e);
+    setDisabled(disabledRef.current = true);
+    const unlock = () => setDisabled(disabledRef.current = false);
+    const res = onClick?.(unlock, e);
     if (res == null || typeof res === "boolean") {
       if (res !== true) unlock();
-      return res ?? false;
     }
-    return false;
   };
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
-      ref.current?.focus();
-    }
+    if ($focusWhenMounted) ref.current?.focus();
   }, []);
 
   return (
     <button
-      {...attributesWithoutChildren(props, Style.wrap)}
-      style={appendedColorStyle(props)}
+      {...props}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
       type={props.type ?? "button"}
       disabled={props.disabled || submitDisabled || disabled}
       onClick={click}
-      data-size={props.$size || "m"}
-      data-wide={!props.$fitContent && props.children != null}
-      data-round={props.$round}
+      data-color={$color}
+      data-size={$size || "m"}
+      data-wide={!$fitContent && children != null}
+      data-round={$round}
     >
       <div
         className={Style.main}
-        data-outline={props.$outline}
-        data-icon={props.$icon != null && (props.$iconPosition || "left")}
+        data-outline={$outline}
+        data-text={$text}
+        data-icon={$icon != null && ($iconPosition || "left")}
       >
-        {props.$icon != null && props.$iconPosition !== "right" &&
-          <div className={Style.icon}>{props.$icon}</div>
-        }
+        {$icon != null && <div className={Style.icon}>{$icon}</div>}
         <div
           className={Style.label}
-          data-fill={props.$fillLabel}
-          data-pt={isNotReactNode(props.children)}
-          data-pad={!props.$noPadding}
+          data-fill={$fillLabel}
+          data-pt={isNotReactNode(children)}
+          data-pad={!$noPadding}
         >
-          {props.children}
+          {children}
         </div>
-        {props.$icon != null && props.$iconPosition === "right" &&
-          <div className={Style.icon}>{props.$icon}</div>
-        }
       </div>
     </button>
   );

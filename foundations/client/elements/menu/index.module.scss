@@ -9,6 +9,7 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: stretch;
+    background: var(--c-pure);
 
     --size: var(--cs-m);
     --menu-nest-pad: calc(var(--cs-m) / 2);
@@ -33,7 +34,6 @@
     &[data-direction="horizontal"] {
       &.root {
         flex-direction: row;
-        flex-wrap: wrap;
         align-items: flex-start;
       }
 
@@ -80,6 +80,11 @@
     }
   }
 
+  .link {
+    text-decoration: none;
+    color: inherit;
+  }
+
   .content {
     box-sizing: border-box;
     display: flex;
@@ -89,12 +94,16 @@
     white-space: nowrap;
     height: var(--nav-min-size, var(--size));
     padding-left: var(--menu-pad, 0);
-    z-index: 0;
     overflow: visible;
 
+    $contentTransition: padding-left var(--nav-trans-time, #{var.$transitionTime});
     &[data-selectable="true"] {
-      @include mixins.listHover(padding-left var(--nav-trans-time, #{var.$transitionTime}));
+      @include mixins.listHover($contentTransition);
       cursor: pointer;
+    }
+
+    &:not([data-selectable="true"]) {
+      transition: $contentTransition;
     }
   }
 
@@ -148,19 +157,18 @@
       --menu-nest-pad: calc(var(--nav-min-size) / 2);
       --icon-size: var(--is-xl);
       width: 100%;
+      background: initial;
     }
 
     .content {
       &[data-selected="true"] {
-        background-color: var(--c-nav-selected);
+        background: var(--c-nav-selected);
         color: var(--c-nav-selected_);
       }
     }
 
-    &:is([data-mode="auto"], [data-mode="minimize"], [data-mode="manual"]) {
-      .content {
-        padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
-      }
+    .content {
+      padding-left: var(--nav-menu-pad, var(--menu-pad, 0));
     }
   }
 

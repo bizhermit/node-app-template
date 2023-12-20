@@ -1,0 +1,74 @@
+@use "../../styles/var" as var;
+
+$borderWidth: 0.1rem;
+
+@layer base {
+
+  .wrap {
+    --c: var(--s-color, var(--c-border));
+
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border-radius: inherit;
+  }
+
+  .caption {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .prev,
+  .next {
+    box-sizing: border-box;
+    min-width: calc(var(--cs-m) / 2);
+    min-height: calc(var(--cs-m) / 3);
+    height: 50%;
+    border-top: #{$borderWidth} solid var(--c);
+  }
+
+  .prev {
+    border-top-left-radius: var(--radius);
+    border-left: #{$borderWidth} solid var(--c);
+    margin-right: #{var.$textPadding};
+    flex: none;
+  }
+
+  .next {
+    border-top-right-radius: var(--radius);
+    border-right: #{$borderWidth} solid var(--c);
+    margin-left: #{var.$textPadding};
+    flex: 1 1 0rem;
+  }
+
+  .body {
+    --s-color: initial;
+    --s-color_: initial;
+
+    box-sizing: border-box;
+    border-left: #{$borderWidth} solid var(--c);
+    border-bottom: #{$borderWidth} solid var(--c);
+    border-right: #{$borderWidth} solid var(--c);
+    border-bottom-left-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    flex: 1 1 0rem;
+    width: 100%;
+
+    &:only-child {
+      border-top: #{$borderWidth} solid var(--c);
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+  }
+
+}

@@ -7,13 +7,13 @@ namespace DateValidation {
 
   const defaultItemName = "値";
 
-  export const required = (v: Nullable<Date>, itemName?: string) => {
+  export const required = (v: Date | null | undefined, itemName?: string) => {
     if (v == null) return `${itemName || defaultItemName}を入力してください。`;
     return undefined;
   };
 
   export const min = (
-    v: Nullable<Date>,
+    v: Date | null | undefined,
     min: DateValue,
     type: DateType = "date",
     itemName?: string,
@@ -26,7 +26,7 @@ namespace DateValidation {
   };
 
   export const max = (
-    v: Nullable<Date>,
+    v: Date | null | undefined,
     max: DateValue,
     type: DateType = "date",
     itemName?: string,
@@ -39,7 +39,7 @@ namespace DateValidation {
   };
 
   export const range = (
-    v: Nullable<Date>,
+    v: Date | null | undefined,
     min: DateValue,
     max: DateValue,
     type: DateType = "date",
@@ -55,7 +55,7 @@ namespace DateValidation {
   };
 
   export const context = (
-    v: Nullable<Date>,
+    v: Date | null | undefined,
     rangePair: DateRangePair,
     data: { [key: string]: any } | null | undefined,
     type: DateType = "date",

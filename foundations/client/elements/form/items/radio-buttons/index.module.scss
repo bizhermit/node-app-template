@@ -20,10 +20,10 @@
 
     &[data-editable="true"] {
       >.item {
-        cursor: pointer;
-        user-select: none;
-
         &[data-state="active"] {
+          cursor: pointer;
+          user-select: none;
+
           @include mixins.crossHover {
             &[data-appearance="button"] {
               @include mixins.buttonHoverAnimation(var(--s-color, var(--c-border)));
@@ -54,6 +54,8 @@
         }
 
         &:is([data-state="readonly"], [data-state="disabled"]) {
+          cursor: not-allowed;
+
           >.check {
             &::before {
               background-color: transparent !important;
@@ -91,8 +93,6 @@
       flex-wrap: wrap;
 
       >.item {
-        height: var(--cs-m);
-
         &[data-appearance="button"] {
           &:first-child {
             >.content {
@@ -177,7 +177,6 @@
     min-width: var(--cs-m);
     min-height: var(--cs-m);
     z-index: 0;
-    flex: 1 0 auto;
     border-radius: var(--radius);
 
     &:focus {
@@ -240,10 +239,6 @@
         }
 
         &::after {
-          top: 14%;
-          left: 32%;
-          width: 37%;
-          height: 60%;
           top: 22%;
           left: 37%;
           width: 28%;
@@ -319,7 +314,7 @@
     justify-content: flex-start;
     align-items: center;
     height: 100%;
-    flex: 1;
+    flex: 1 1 0rem;
     transition: background-color #{var.$transitionTime},
     color #{var.$transitionTime};
   }

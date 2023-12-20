@@ -10,8 +10,10 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    min-width: 0;
     min-height: fit-content;
     overflow: visible;
+    flex: none;
   }
 
   .border {

@@ -1,15 +1,19 @@
 "use client";
 
-import { type ForwardedRef, type ReactElement, type FunctionComponent, forwardRef } from "react";
+import { forwardRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemProps } from "../../$types";
 import useForm from "../../context";
-import { useDataItemMergedProps, useFormItemContext } from "../hooks";
-import { FormItemWrap } from "../common";
 import { convertHiddenValue } from "../../utilities";
+import { FormItemWrap } from "../common";
+import { useDataItemMergedProps, useFormItemContext } from "../hooks";
 
-export type HiddenProps<D extends DataItem | undefined = undefined> = FormItemProps<any, D, any> & {
+type HiddenOptions = {
   $show?: boolean;
 };
+
+type OmitAttrs = "$focusWhenMounted";
+export type HiddenProps<D extends DataItem | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<any, D, any>, OmitAttrs>, HiddenOptions>;
 
 interface HiddenFC extends FunctionComponent<HiddenProps> {
   <D extends DataItem | undefined = undefined>(
@@ -17,19 +21,19 @@ interface HiddenFC extends FunctionComponent<HiddenProps> {
   ): ReactElement<any> | null;
 }
 
-const Hidden = forwardRef<HTMLDivElement, HiddenProps>(<
+const Hidden = forwardRef(<
   D extends DataItem | undefined = undefined
 >(p: HiddenProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
-  const props = useDataItemMergedProps(form, p);
-  const ctx = useFormItemContext(form, props);
+  const { $show, ...$p } = useDataItemMergedProps(form, p);
+  const { ctx, props } = useFormItemContext(form, $p);
 
   return (
-    props.$show ?
+    $show ?
       <FormItemWrap
         {...props}
         ref={ref}
-        $context={ctx}
+        $ctx={ctx}
         $useHidden
         $preventFieldLayout
         $tag={undefined}

@@ -1,23 +1,31 @@
 import { forwardRef, type HTMLAttributes } from "react";
-import { appendedColorStyle, attributesWithoutChildren } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import Text from "../text";
 import Style from "./index.module.scss";
 
-type LabelProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
+type LabelOptions = {
   $color?: Color;
   $size?: Size;
 };
 
-const Label = forwardRef<HTMLDivElement, LabelProps>((props, ref) => {
+type LabelProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, LabelOptions>;
+
+const Label = forwardRef<HTMLDivElement, LabelProps>(({
+  className,
+  $color,
+  $size,
+  ...props
+}, ref) => {
   return (
     <div
-      {...attributesWithoutChildren(props, Style.wrap)}
-      style={appendedColorStyle(props)}
+      {...props}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
+      data-color={$color}
     >
       <div
         className={Style.main}
-        data-size={props.$size || "m"}
+        data-size={$size || "m"}
       >
         <Text>{props.children}</Text>
       </div>

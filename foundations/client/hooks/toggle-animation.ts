@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, type CSSProperties, type MutableRefObject }
 import { round } from "../../objects/number/float";
 import { convertSizeNumToStr } from "../utilities/attributes";
 
-type Props<T extends Struct = {}> = {
+type Props<T extends { [v: string | number | symbol]: any } = {}> = {
   disabled?: boolean;
   open: boolean;
   elementRef: MutableRefObject<HTMLElement>;
@@ -28,7 +28,7 @@ type Props<T extends Struct = {}> = {
 const defaultAnimationDuration = 150;
 const defaultAnimationInterval = 10;
 
-const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<any> = []) => {
+const useToggleAnimation = <T extends { [v: string | number | symbol]: any } = {}>(props: Props<T>, deps: Array<any> = []) => {
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -330,7 +330,7 @@ const useToggleAnimation = <T extends Struct = {}>(props: Props<T>, deps: Array<
     const defaultMin = "0";
     const changeOpacity = props.changeOpacity === true || aDirection === "none";
 
-    const ret: CSSProperties = {...props.style};
+    const ret: CSSProperties = { ...props.style };
     if (!props.open) {
       if (props.minVisible !== true) {
         ret.display = "none";

@@ -26,7 +26,7 @@ const Page = () => {
       <Divider className="my-xs" />
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("count up");
             session[1]((cur) => {
               return cur + 1;
@@ -39,7 +39,7 @@ const Page = () => {
           </Text>
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("reset");
             session[1](0);
             local[1](0);
@@ -48,7 +48,7 @@ const Page = () => {
           reset
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("save");
             session[2].save();
             local[2].save();
@@ -57,7 +57,7 @@ const Page = () => {
           save
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("clear");
             session[2].clear();
             local[2].clear();

@@ -2,7 +2,6 @@
 
 import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
-import { useNavigation } from "#/client/elements/navigation-container/context";
 import { FC, ReactNode } from "react";
 
 const SandboxLayoutProvider: FC<{
@@ -12,11 +11,11 @@ const SandboxLayoutProvider: FC<{
     <NavigationContainer
       $header={"Header"}
       $nav={<Navigation />}
-      $navTitle={
-        <div style={{ fontWeight: "bold", padding: "0 var(--b-m)" }}>
-          SandBox
-        </div>
-      }
+      // $navHeader={
+      //   <div style={{ fontWeight: "bold", padding: "0 var(--b-m)" }}>
+      //     SandBox
+      //   </div>
+      // }
       $footer={"Footer"}
     >
       {children}
@@ -25,7 +24,7 @@ const SandboxLayoutProvider: FC<{
 };
 
 const Navigation: FC = () => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   return (
     <div
@@ -35,33 +34,13 @@ const Navigation: FC = () => {
       }}
     >
       <Menu
-        $direction="vertical"
+        direction="vertical"
         // style={{ width: "100%" }}
-        $items={[{
+        items={[{
           key: "index",
           icon: "I",
           label: "Index",
           pathname: "/",
-        }, {
-          key: "pages",
-          icon: "P",
-          label: "Pages Directory",
-          items: [{
-            key: "pages",
-            icon: "P",
-            label: "Pages",
-            pathname: "/pages",
-          }, {
-            key: "root",
-            icon: "R",
-            label: "Root",
-            pathname: "/root",
-          }, {
-            key: "sandbox/pages",
-            icon: "SP",
-            label: "SandBox/Pages",
-            pathname: "/sandbox/pages",
-          }],
         }, {
           key: "sandbox",
           icon: "S",
@@ -72,34 +51,14 @@ const Navigation: FC = () => {
             label: "Index",
             pathname: "/sandbox",
           }, {
-            key: "color",
-            icon: "C",
-            label: "Color",
-            pathname: "/sandbox/color",
-          }, {
-            key: "env",
-            icon: "E",
-            label: "Env",
-            pathname: "/sandbox/env",
-          }, {
             key: "elements",
             icon: "E",
             label: "Elements",
             items: [{
-              key: "icon",
-              label: "Icon",
-              icon: "I",
-              pathname: "/sandbox/elements/icons"
-            }, {
               key: "form",
               label: "Form",
               icon: "F",
               items: [{
-                key: "form",
-                label: "Form",
-                icon: "F",
-                pathname: "/sandbox/elements/form",
-              }, {
                 key: "check-box",
                 label: "CheckBox",
                 icon: "C",
@@ -194,107 +153,7 @@ const Navigation: FC = () => {
                 label: "CreditCardNumberBox",
                 icon: "CC",
                 pathname: "/sandbox/elements/form-items/credit-card-number-box"
-              }]
-            }, {
-              key: "container",
-              label: "Container",
-              icon: "C",
-              items: [{
-                key: "tab",
-                label: "Tab",
-                icon: "T",
-                pathname: "/sandbox/elements/container/tab-container",
-              }, {
-                key: "slide",
-                label: "Slide",
-                icon: "S",
-                pathname: "/sandbox/elements/container/slide-container",
-              }, {
-                key: "split",
-                label: "Split",
-                icon: "S",
-                pathname: "/sandbox/elements/container/split-container",
-              }, {
-                key: "navigation",
-                label: "Navigation",
-                icon: "N",
-                pathname: "/sandbox/elements/container/navigation-container",
-              }]
-            }, {
-              key: "button",
-              label: "Button",
-              icon: "B",
-              pathname: "/sandbox/elements/button",
-            }, {
-              key: "link",
-              label: "NextLink",
-              icon: "L",
-              pathname: "/sandbox/elements/link",
-            }, {
-              key: "loading",
-              label: "Loading",
-              icon: "L",
-              pathname: "/sandbox/elements/loading",
-            }, {
-              key: "divider",
-              label: "Divider",
-              icon: "D",
-              pathname: "/sandbox/elements/divider"
-            }, {
-              key: "popup",
-              label: "Popup",
-              icon: "P",
-              pathname: "/sandbox/elements/popup",
-            }, {
-              key: "tooltip",
-              label: "Tooltip",
-              icon: "T",
-              pathname: "/sandbox/elements/tooltip",
-            }, {
-              key: "card",
-              label: "Card",
-              icon: "C",
-              pathname: "/sandbox/elements/card",
-            }, {
-              key: "menu",
-              label: "Menu",
-              icon: "M",
-              pathname: "/sandbox/elements/menu",
-            }, {
-              key: "stepper",
-              label: "Stepper",
-              icon: "S",
-              pathname: "/sandbox/elements/stepper",
-            }, {
-              key: "badge",
-              label: "Badge",
-              icon: "B",
-              pathname: "/sandbox/elements/badge",
-            }, {
-              key: "label",
-              label: "Label",
-              icon: "L",
-              pathname: "/sandbox/elements/label"
-            }, {
-              key: "group-box",
-              label: "GroupBox",
-              icon: "G",
-              pathname: "/sandbox/elements/group-box",
-            }, {
-              key: "data-table",
-              label: "DataTable",
-              icon: "DT",
-              pathname: "/sandbox/elements/data-table",
-            }, {
-              key: "data-list",
-              label: "DataList",
-              icon: "DL",
-              pathname: "/sandbox/elements/data-list",
-            }, {
-              key: "struct-view",
-              label: "StructView",
-              icon: "SV",
-              pathname: "/sandbox/elements/struct-view",
+              }],
             }],
           }, {
             key: "message-box",
@@ -316,11 +175,6 @@ const Navigation: FC = () => {
             label: "Process",
             icon: "P",
             pathname: "/sandbox/process"
-          }, {
-            key: "dynamic",
-            label: "Dynamic",
-            icon: "D",
-            pathname: "/sandbox/dynamic",
           }, {
             key: "window",
             label: "Window",

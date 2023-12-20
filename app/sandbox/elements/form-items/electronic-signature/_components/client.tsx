@@ -53,7 +53,7 @@ const ElectronicSignatureClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -64,7 +64,7 @@ const ElectronicSignatureClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -72,7 +72,7 @@ const ElectronicSignatureClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -80,7 +80,7 @@ const ElectronicSignatureClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
@@ -95,7 +95,7 @@ const ElectronicSignatureClient = () => {
         $color="main"
       />
       <Button
-        $onClick={() => {
+        onClick={() => {
           elecSignRef.focus();
         }}
       >

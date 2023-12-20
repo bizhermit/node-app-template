@@ -33,7 +33,7 @@ const SliderClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -44,7 +44,7 @@ const SliderClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null);
           }}
         >
@@ -52,7 +52,7 @@ const SliderClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -60,28 +60,28 @@ const SliderClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue(10);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "slider-bind": 50 });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "slider-form-bind": 100 });
           }}
         >

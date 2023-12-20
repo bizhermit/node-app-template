@@ -34,7 +34,7 @@ const FileDropClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -45,7 +45,7 @@ const FileDropClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null!);
           }}
         >
@@ -53,7 +53,7 @@ const FileDropClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -61,7 +61,7 @@ const FileDropClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
@@ -78,14 +78,14 @@ const FileDropClient = () => {
           $color="main"
         />
         <Button
-          $onClick={() => {
+          onClick={() => {
             fileDropRef.focus();
           }}
         >
           focus
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             fileDropRef.picker();
           }}
         >

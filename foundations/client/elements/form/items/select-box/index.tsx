@@ -17,17 +17,19 @@ import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
-type SelectBoxHookAddon<Q extends { [v: string]: any } = { [v: string]: any }> = {
+type Data = { [v: string]: any };
+
+type SelectBoxHookAddon<Q extends Data = Data> = {
   getData: () => (Q | null | undefined);
 };
 type SelectBoxHook<
   T extends string | number | boolean,
-  Q extends { [v: string | number]: any } = { [v: string | number]: any }
+  Q extends Data = Data
 > = FormItemHook<T, SelectBoxHookAddon<Q>>;
 
 export const useSelectBox = <
   T extends string | number | boolean,
-  Q extends { [v: string | number]: any } = { [v: string | number]: any }
+  Q extends Data = Data
 >() => useFormItemBase<SelectBoxHook<T, Q>>(e => {
   return {
     getData: () => {
@@ -36,11 +38,11 @@ export const useSelectBox = <
   };
 });
 
-export type SelectBoxProps<
+type SelectBoxOptions<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
-  S extends { [v: string | number]: any } = { [v: string | number]: any }
-> = FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }> & {
+  S extends Data = Data
+> = {
   $ref?: SelectBoxHook<ValueType<T, D, T>, S> | SelectBoxHook<string | number, S>;
   $labelDataName?: string;
   $valueDataName?: string;
@@ -58,19 +60,45 @@ export type SelectBoxProps<
   $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
 };
 
+type OmitAttrs = "";
+export type SelectBoxProps<
+  T extends string | number | boolean = string | number | boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  S extends Data = Data
+> = OverwriteAttrs<Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, SelectBoxOptions<T, D, S>>;
+
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
   <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends { [key: string]: any } = { [key: string]: any }>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, SelectBoxProps<T, D, S>>
   ): ReactElement<any> | null;
 }
 
-const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
+const SelectBox = forwardRef(<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
-  S extends { [v: string | number]: any } = { [v: string | number]: any }
+  S extends Data = Data
 >(p: SelectBoxProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    placeholder,
+    $labelDataName,
+    $valueDataName,
+    $source,
+    $preventSourceMemorize,
+    $hideClearButton,
+    $resize,
+    $width,
+    $maxWidth,
+    $minWidth,
+    $emptyItem,
+    $initValue,
+    $align,
+    $disallowInput,
+    $tieInNames,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       if (dataItem.type === "boolean") {
         return {
@@ -100,17 +128,17 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     },
   });
 
-  const vdn = props.$valueDataName ?? "value";
-  const ldn = props.$labelDataName ?? "label";
-  const [source, loading] = useLoadableArray(props.$source, {
-    preventMemorize: props.$preventSourceMemorize,
+  const vdn = $valueDataName ?? "value";
+  const ldn = $labelDataName ?? "label";
+  const [source, loading] = useLoadableArray($source, {
+    preventMemorize: $preventSourceMemorize,
   });
   const [bindSource, setBindSource] = useState(source);
   const emptyItem = (() => {
-    if (props.$emptyItem == null || props.$emptyItem === false) {
+    if ($emptyItem == null || $emptyItem === false) {
       return undefined;
     }
-    switch (typeof props.$emptyItem) {
+    switch (typeof $emptyItem) {
       case "boolean":
         return {
           [vdn]: undefined,
@@ -119,17 +147,17 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
       case "string":
         return {
           [vdn]: undefined,
-          [ldn]: props.$emptyItem || "",
+          [ldn]: $emptyItem || "",
         } as S;
       default:
         return {
-          [vdn]: props.$emptyItem.value,
-          [ldn]: props.$emptyItem.label,
+          [vdn]: $emptyItem.value,
+          [ldn]: $emptyItem.label,
         } as S;
     }
   })();
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     generateChangeCallbackData: (a, b) => {
       return {
         afterData: source.find(item => equals(item[vdn], a)),
@@ -154,8 +182,8 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const renderLabel = () => {
     const item = source.find(item => equals(item[vdn], ctx.valueRef.current)) ?? emptyItem;
     setSelectedData(item);
-    if (props.$tieInNames != null) {
-      props.$tieInNames.forEach(tieItem => {
+    if ($tieInNames != null) {
+      $tieInNames.forEach(tieItem => {
         const { dataName, hiddenName } = typeof tieItem === "string" ?
           { dataName: tieItem, hiddenName: tieItem } : tieItem;
         // setValue(props.$bind, hiddenName, item?.[dataName]);
@@ -191,11 +219,11 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const clear = () => {
     if (!ctx.editable) return;
     if (
-      props.$emptyItem != null &&
-      props.$emptyItem !== false &&
-      !(typeof props.$emptyItem === "boolean" || typeof props.$emptyItem === "string")
+      $emptyItem != null &&
+      $emptyItem !== false &&
+      !(typeof $emptyItem === "boolean" || typeof $emptyItem === "string")
     ) {
-      ctx.change(props.$emptyItem.value);
+      ctx.change($emptyItem.value);
       return;
     }
     ctx.change(undefined);
@@ -356,14 +384,14 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
   const hasData = !(ctx.value == null || ctx.value === "");
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       iref.current?.focus();
     }
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => iref.current?.focus();
-    props.$ref.getData = () => {
+  if ($ref) {
+    $ref.focus = () => iref.current?.focus();
+    $ref.getData = () => {
       const v = ctx.valueRef.current;
       return source.find(item => item[vdn] === v) as S;
     };
@@ -373,14 +401,14 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $useHidden
-      data-has={hasLabel}
+      $hasData={hasLabel}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
+          width: convertSizeNumToStr($width),
+          maxWidth: convertSizeNumToStr($maxWidth),
+          minWidth: convertSizeNumToStr($minWidth),
         },
         onBlur: blur,
       }}
@@ -391,22 +419,22 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
         defaultValue={label}
         type="text"
         disabled={ctx.disabled || loading}
-        readOnly={props.$disallowInput || !ctx.editable}
-        placeholder={ctx.editable ? props.placeholder : ""}
-        tabIndex={props.tabIndex}
+        readOnly={$disallowInput || !ctx.editable}
+        placeholder={ctx.editable ? placeholder : ""}
+        tabIndex={tabIndex}
         onClick={() => openPicker()}
         onChange={changeText}
         onKeyDown={keydown}
         autoComplete="off"
         data-has={!isEmptyValue}
-        data-align={props.$align}
+        data-align={$align}
         data-editable={ctx.editable}
-        data-input={!props.$disallowInput}
-        data-button={ctx.editable && !loading && (props.$hideClearButton !== true || true)}
+        data-input={!$disallowInput}
+        data-button={ctx.editable && !loading && ($hideClearButton !== true || true)}
       />
       {ctx.editable && !loading &&
         <>
-          {props.$hideClearButton !== true &&
+          {$hideClearButton !== true &&
             <div
               className={Style.button}
               onClick={clear}
@@ -429,9 +457,9 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
           </div>
         </>
       }
-      {props.$resize && <Resizer direction="x" />}
-      {props.$tieInNames != null &&
-        props.$tieInNames.map(item => {
+      {$resize && <Resizer $direction="x" />}
+      {$tieInNames != null &&
+        $tieInNames.map(item => {
           const { dataName, hiddenName } =
             typeof item === "string" ? { dataName: item, hiddenName: item } : item;
           return (
@@ -490,7 +518,7 @@ const SelectBox = forwardRef<HTMLDivElement, SelectBoxProps>(<
                 <ListItem
                   key={v ?? "_empty"}
                   empty={isEmpty}
-                  init={v === props.$initValue}
+                  init={v === $initValue}
                   index={index}
                   selected={v === ctx.valueRef.current}
                 >

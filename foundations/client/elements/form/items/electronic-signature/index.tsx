@@ -36,20 +36,25 @@ export const useElectronicSignature = <T extends string | File>() => useFormItem
   };
 });
 
-export type ElectronicSignatureProps<
+type ElectronicSignatureOptions<
   D extends DataItem_String | DataItem_File | undefined = undefined
-> = FormItemProps<string, D, string> & {
+> = {
   $ref?: ElectronicSignatureHook<ValueType<string, D, string>> | ElectronicSignatureHook<string | File>;
   $typeof?: FileValueType;
   $width?: number | string;
   $height?: number | string;
   $lineWidth?: number;
   $lineColor?: string | CanvasGradient | CanvasPattern;
-  $backgroundColor?: string | CanvasGradient | CanvasPattern;
+  // $backgroundColor?: string | CanvasGradient | CanvasPattern;
   $maxHistory?: number;
   $autoSave?: boolean;
   $buttonsPosition?: "hide" | "right" | "bottom" | "top" | "left";
 };
+
+type OmitAttrs = "tabIndex" | "placeholder";
+export type ElectronicSignatureProps<
+  D extends DataItem_String | DataItem_File | undefined = undefined
+> = OverwriteAttrs<Omit<FormItemProps<string, D, string>, OmitAttrs>, ElectronicSignatureOptions<D>>
 
 interface ElectronicSignatureFC extends FunctionComponent {
   <D extends DataItem_String | DataItem_File | undefined = undefined>(
@@ -57,11 +62,23 @@ interface ElectronicSignatureFC extends FunctionComponent {
   ): ReactElement<any> | null;
 }
 
-const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>(<
+const ElectronicSignature = forwardRef(<
   D extends DataItem_String | DataItem_File | undefined = undefined
 >(p: ElectronicSignatureProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    $typeof,
+    $width,
+    $height,
+    $lineWidth,
+    $lineColor,
+    // $backgroundColor,
+    $maxHistory,
+    $autoSave,
+    $buttonsPosition,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       switch (dataItem.type) {
         case "file":
@@ -97,12 +114,12 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
   const history = useRef<Array<ImageData>>([]);
   const nullValue = useRef("");
 
-  const ctx = useFormItemContext(form, props, {
-    multipartFormData: props.$typeof === "file",
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
+    multipartFormData: $typeof === "file",
     preventRequiredValidation: true,
-    validations: (getMessage) => {
-      const validations: Array<FormItemValidation<Nullable<string>>> = [];
-      if (props.$required) {
+    validations: ({ getMessage, required }) => {
+      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      if (required) {
         validations.push(v => {
           if (v == null || v === "" || v === nullValue.current) {
             return getMessage("required");
@@ -117,7 +134,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
     },
   });
 
-  const position = props.$buttonsPosition || "right";
+  const position = $buttonsPosition || "right";
   const canClear = isNotEmpty(ctx.value) && ctx.value !== nullValue.current;
   const canRedo = revision >= 0 && revision < history.current.length - 1;
   const canUndo = revision > 0;
@@ -129,7 +146,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
 
   const save = () => {
     if (cref.current == null) return;
-    if (props.$typeof === "file") {
+    if ($typeof === "file") {
       // TODO: convert to png
       // ctx.change(cref.current.toDataURL());
       return;
@@ -138,7 +155,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
   };
 
   const spillHistory = () => {
-    if (history.current.length > Math.max(0, props.$maxHistory ?? 100)) {
+    if (history.current.length > Math.max(0, $maxHistory ?? 100)) {
       history.current.splice(0, 1);
     }
   };
@@ -167,8 +184,8 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
   const drawStart = (baseX: number, baseY: number, isTouch?: boolean) => {
     if (!ctx.editable || cref.current == null) return;
     const canvas = get2DContext();
-    const lineWidth = Math.max(1, props.$lineWidth || 2);
-    const lineColor = props.$lineColor || "black";
+    const lineWidth = Math.max(1, $lineWidth || 2);
+    const lineColor = $lineColor || "black";
     canvas.strokeStyle = lineColor;
     canvas.fillStyle = lineColor;
     canvas.lineWidth = lineWidth;
@@ -193,7 +210,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
       canvas.stroke();
       canvas.closePath();
       pushHistory(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
-      if (props.$autoSave) save();
+      if ($autoSave) save();
     };
     if (isTouch) {
       const move = (e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY);
@@ -237,7 +254,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
     canvas.clearRect(0, 0, cref.current.width, cref.current.height);
     pushHistory(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
     if (history) clearHistory();
-    if (props.$autoSave) save();
+    if ($autoSave) save();
   };
 
   const redo = () => {
@@ -246,7 +263,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
     setRevision(r);
     const canvas = get2DContext();
     canvas.putImageData(history.current[r], 0, 0);
-    if (props.$autoSave) save();
+    if ($autoSave) save();
     return true;
   };
 
@@ -256,7 +273,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
     setRevision(r);
     const canvas = get2DContext();
     canvas.putImageData(history.current[r], 0, 0);
-    if (props.$autoSave) save();
+    if ($autoSave) save();
     return true;
   };
 
@@ -282,7 +299,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
     }
   }, [
     props.$value,
-    // props.$bind,
+    // $bind,
     ctx.bind,
   ]);
 
@@ -295,7 +312,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
   }, [ctx.editable]);
 
   useEffect(() => {
-    if (props.$typeof === "file" && href.current) {
+    if ($typeof === "file" && href.current) {
       const files = (Array.isArray(ctx.value) ? ctx.value : [ctx.value]).filter(file => file != null);
       const dt = new DataTransfer();
       files.forEach(file => dt.items.add(file));
@@ -304,26 +321,26 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
   }, [ctx.value]);
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       cref.current?.focus();
     }
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => cref.current?.focus();
-    props.$ref.save = () => save();
-    props.$ref.redo = () => redo();
-    props.$ref.undo = () => undo();
-    props.$ref.clearCanvas = (hist) => clearCanvas(hist);
+  if ($ref) {
+    $ref.focus = () => cref.current?.focus();
+    $ref.save = () => save();
+    $ref.redo = () => redo();
+    $ref.undo = () => undo();
+    $ref.clearCanvas = (hist) => clearCanvas(hist);
   }
 
   return (
     <FormItemWrap
       {...props}
       ref={ref}
-      $context={ctx}
+      $ctx={ctx}
       $preventFieldLayout
-      $useHidden={props.$typeof !== "file"}
+      $useHidden={$typeof !== "file"}
       $mainProps={{
         className: Style.main,
         "data-position": position,
@@ -334,14 +351,14 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
         className={Style.canvas}
         onMouseDown={mouseDown}
         onTouchStart={touchStart}
-        width={props.$width || 500}
-        height={props.$height || 200}
+        width={$width || 500}
+        height={$height || 200}
       />
       {ctx.editable && position !== "hide" &&
         <div
           className={Style.buttons}
         >
-          {props.$autoSave !== true &&
+          {$autoSave !== true &&
             <Button
               onClick={() => {
                 save();
@@ -398,7 +415,7 @@ const ElectronicSignature = forwardRef<HTMLDivElement, ElectronicSignatureProps>
 
 const Button: FC<{
   disabled?: boolean;
-  onClick: VoidFunc;
+  onClick: () => void;
   children?: ReactNode;
 }> = ({ disabled, onClick, children }) => {
   return (

@@ -3,16 +3,14 @@
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { NavigationHeaderMode, NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
-import BaseLayout from "@/dev/_components/base-layout";
+import BaseLayout, { BaseRow } from "@/dev/_components/base-layout";
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 
 const Page = () => {
   const nav = useNavigation();
 
   return (
-    <BaseLayout
-      title="Navigation Container"
-    >
+    <BaseLayout title="Navigation Container">
       <ControlLayout>
         <ControlItem caption="position">
           <RadioButtons<NavigationPosition>
@@ -60,29 +58,22 @@ const Page = () => {
           />
         </ControlItem>
       </ControlLayout>
-      <div
-        style={{
-          display: "flex",
-          flexFlow: "row wrap",
-          gap: "var(--b-s)",
-        }}
-      >
-        <Button
-          $onClick={() => {
-            nav.toggle();
-          }}
-        >
-          toggle
+      <BaseRow>
+        <Button onClick={nav.resetAuto}>
+          reset auto
+        </Button>
+        <Button onClick={nav.toggle}>
+          toggle (manual mode only)
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             // eslint-disable-next-line no-console
             console.log(nav.getHeaderSizeNum());
           }}
         >
           get header size
         </Button>
-      </div>
+      </BaseRow>
       <div
         style={{
           height: "150vh",

@@ -1,11 +1,10 @@
 "use client";
 
-import { forwardRef, useCallback, useImperativeHandle, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
-import { attributesWithoutChildren } from "../../utilities/attributes";
+import type React from "react";
+import { forwardRef, useCallback, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
 import Popup from "../popup";
 
-type OmitAttributes = "color" | "children";
-type TooltipProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
+type TooltipOptions = {
   $popupClassName?: string;
   $disabled?: boolean;
   $showDelay?: number;
@@ -14,74 +13,85 @@ type TooltipProps = Omit<HTMLAttributes<HTMLDivElement>, OmitAttributes> & {
     y?: "outer" | "outer-top" | "outer-bottom",
   },
   $animationDuration?: number;
+  $preventElevatation?: boolean;
   children: ReactNode | [ReactNode] | [ReactNode, ReactNode];
 };
 
+type TooltipProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, TooltipOptions>;
+
 type MousePosition = { pageX: number; pageY: number };
 
-const cursorMargin = 5;
+const cursorMargin = 10;
+const defaultShowDelay = 500;
 
-const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, $ref) => {
-  const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
-
+const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({
+  $popupClassName,
+  $disabled,
+  $showDelay,
+  $position,
+  $animationDuration,
+  $preventElevatation,
+  children,
+  ...props
+}, ref) => {
   const [showed, setShowed] = useState(false);
-  const mousePosition = useRef<MousePosition | undefined>();
-  const posX = props.$position?.x || "outer";
-  const posY = props.$position?.y || "outer";
+  const pos = useRef<MousePosition | undefined>();
+  const posX = $position?.x || "outer";
+  const posY = $position?.y || "outer";
 
   const move = useCallback((e: { pageX: number; pageY: number; }) => {
-    mousePosition.current = {
+    pos.current = {
       pageX: e.pageX - document.documentElement.scrollLeft - document.body.scrollLeft,
       pageY: e.pageY - document.documentElement.scrollTop - document.body.scrollTop,
     };
   }, []);
 
   const enter = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (props.$disabled) return;
+    if ($disabled) return;
     move(e);
     window.addEventListener("mousemove", move);
     setTimeout(() => {
-      if (mousePosition.current == null) return;
+      if (pos.current == null) return;
       setShowed(true);
-    }, props.$showDelay ?? 500);
+    }, $showDelay ?? defaultShowDelay);
+    props.onMouseEnter?.(e);
   };
 
-  const leave = () => {
+  const leave = (e?: React.MouseEvent<HTMLDivElement>) => {
     window.removeEventListener("mousemove", move);
-    mousePosition.current = undefined;
+    pos.current = undefined;
     setShowed(false);
+    if (e) props.onMouseLeave?.(e);
   };
 
   return (
     <>
       <div
-        {...attributesWithoutChildren(props)}
+        {...props}
         ref={ref}
         onMouseEnter={enter}
         onMouseLeave={leave}
       >
-        {Array.isArray(props.children) ? props.children[0] : props.children}
+        {Array.isArray(children) ? children[0] : children}
       </div>
-      {Array.isArray(props.children) && props.children[1] != null &&
+      {Array.isArray(children) && children[1] != null &&
         <Popup
-          className={props.$popupClassName}
-          $show={showed && mousePosition.current != null}
+          className={$popupClassName}
+          $show={showed && pos.current != null}
           $onToggle={showed => {
-            if (!showed) {
-              leave();
-            }
+            if (!showed) leave();
           }}
-          $anchor={mousePosition.current}
+          $preventElevatation={!$preventElevatation}
+          $anchor={pos.current}
           $position={{
             x: posX,
             y: posY,
             marginX: cursorMargin,
             marginY: cursorMargin,
           }}
-          $animationDuration={props.$animationDuration ?? 40}
+          $animationDuration={$animationDuration ?? 40}
         >
-          {props.children[1]}
+          {children[1]}
         </Popup>
       }
     </>

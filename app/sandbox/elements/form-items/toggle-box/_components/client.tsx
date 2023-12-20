@@ -32,7 +32,7 @@ const ToggleBoxClient = () => {
       </Row>
       <Row className="g-s">
         <Button
-          $onClick={() => {
+          onClick={() => {
             console.log("-------------------");
             console.log("useState: ", value);
             console.log("bind: ", bind);
@@ -43,7 +43,7 @@ const ToggleBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setValue(null!);
           }}
         >
@@ -51,7 +51,7 @@ const ToggleBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setBind({});
           }}
         >
@@ -59,28 +59,28 @@ const ToggleBoxClient = () => {
         </Button>
         <Button
           $outline
-          $onClick={() => {
+          onClick={() => {
             setFormBind({});
           }}
         >
           clear form bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setValue(true);
           }}
         >
           set state value
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setBind({ "toggle-box-bind": true });
           }}
         >
           set bind
         </Button>
         <Button
-          $onClick={() => {
+          onClick={() => {
             setFormBind({ "toggle-box-form-bind": true });
           }}
         >

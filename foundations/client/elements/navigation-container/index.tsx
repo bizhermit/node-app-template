@@ -1,40 +1,61 @@
 "use client";
 
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useReducer, useRef, useState } from "react";
 import parseNum from "../../../objects/number/parse";
-import { attributesWithoutChildren, convertRemToPxNum } from "../../utilities/attributes";
+import { convertRemToPxNum } from "../../utilities/attributes";
+import joinCn from "../../utilities/join-class-name";
 import { CrossIcon, MenuIcon, MenuLeftIcon, MenuRightIcon } from "../icon";
-import { NavigationContext, type NavigationContainerProps } from "../navigation-container/context";
-import Style from "./index.module.scss";
+import { NavigationContext, NavigationHeaderMode, NavigationMode, NavigationPosition, type NavigationContainerProps } from "../navigation-container/context";
+import Style from "./nav-cont.module.scss";
 
 const toggleVisId = "navTglVis";
 const toggleMinId = "navTglMin";
 const toggleMnuId = "navTglMnu";
 
-const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>((props, ref) => {
-  const cref = useRef<HTMLDivElement>(null!);
-  const nref = useRef<HTMLDivElement>(null!);
-  const mref = useRef<HTMLElement>(null!);
-  const [navPos, setPosition] = useState(props.$defaultNavPosition);
-  const [navMode, setMode] = useState(props.$defaultNavMode);
-  const [headerMode, setHeaderMode] = useState(props.$defaultHeaderMode);
+const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>(({
+  className,
+  $name,
+  $navPosition,
+  $defaultNavMode,
+  $navMode,
+  $headerMode,
+  $headerTag,
+  $footerTag,
+  $navTag,
+  $mainTag,
+  $header,
+  $footer,
+  $nav,
+  children,
+  ...props
+}, ref) => {
+  const HeaderTag = $headerTag ?? "header";
+  const FooterTag = $footerTag ?? "footer";
+  const NavTag = $navTag ?? "nav";
+  const MainTag = $mainTag ?? "main";
+  const name = $name ?? "nav";
 
-  const HeaderTag = props.$headerTag ?? "header";
-  const FooterTag = props.$footerTag ?? "footer";
-  const NavTag = props.$navTag ?? "nav";
-  const MainTag = props.$mainTag ?? "main";
-
-  const name = props.$name ?? "nav";
-  const pos = props.$navPosition ?? navPos ?? "left";
-  const mode = props.$navMode ?? navMode ?? "auto";
-  const hmode = props.$headerMode ?? headerMode ?? "fill";
-
-  const resetRadio = () => {
+  const resetAuto = () => {
     const visElem = document.getElementById(`${name}_${toggleVisId}`) as HTMLInputElement;
     if (visElem) visElem.checked = false;
     const minElem = document.getElementById(`${name}_${toggleMinId}`) as HTMLInputElement;
     if (minElem) minElem.checked = false;
   };
+
+  const cref = useRef<HTMLDivElement>(null!);
+  const nref = useRef<HTMLDivElement>(null!);
+  const mref = useRef<HTMLElement>(null!);
+  const [navPos, setPosition] = useState<NavigationPosition>();
+  const [navMode, setMode] = useReducer((state: NavigationMode, action: NavigationMode = "auto") => {
+    if (state === action) return state;
+    if (!action || action === "auto") resetAuto();
+    return action;
+  }, "auto");
+  const [headerMode, setHeaderMode] = useState<NavigationHeaderMode>();
+
+  const pos = $navPosition ?? navPos ?? "left";
+  const mode = $navMode ?? navMode ?? "auto";
+  const hmode = $headerMode ?? headerMode ?? "fill";
 
   const getHeaderSizeNum = () => {
     if (typeof window === "undefined" || mref.current == null) return 0;
@@ -44,12 +65,6 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
       )
     ) ?? 0;
   };
-
-  useEffect(() => {
-    if (mode === "auto") {
-      resetRadio();
-    }
-  }, [mode]);
 
   return (
     <NavigationContext.Provider
@@ -64,7 +79,7 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           if (!cref.current || getComputedStyle(cref.current).display === "none") return;
           (cref.current.querySelector(":scope>label") as HTMLElement)?.click();
         },
-        resetRadio,
+        resetAuto,
         closeMenu: () => {
           const mnuElem = document.getElementById(`${name}_${toggleMnuId}`) as HTMLInputElement;
           if (mnuElem) mnuElem.checked = false;
@@ -85,12 +100,14 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         id={`${name}_${toggleVisId}`}
         name={name}
         type="radio"
+        defaultChecked={$defaultNavMode === "visible"}
       />
       <input
         className={Style.tglMin}
         id={`${name}_${toggleMinId}`}
         name={name}
         type="radio"
+        defaultChecked={$defaultNavMode === "minimize"}
       />
       <input
         className={Style.tglMnu}
@@ -98,7 +115,8 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
         type="checkbox"
       />
       <div
-        {...attributesWithoutChildren(props, Style.wrap)}
+        {...props}
+        className={joinCn(Style.wrap, className)}
         ref={ref}
         data-pos={pos}
         data-mode={mode}
@@ -108,12 +126,8 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
           className={Style.mask}
           htmlFor={`${name}_${toggleMnuId}`}
         />
-        {props.$nav &&
-          <NavTag
-            className={Style.nav}
-            data-pos={pos}
-            data-mode={mode}
-          >
+        {$nav &&
+          <NavTag className={Style.nav}>
             <div className={Style.nheader}>
               <label
                 className={Style.btnVis}
@@ -134,22 +148,15 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               ref={nref}
               className={Style.nmain}
             >
-              {props.$nav}
+              {$nav}
             </div>
           </NavTag>
         }
-        <div
-          className={Style.body}
-          data-pos={pos}
-        >
-          <HeaderTag
-            className={Style.header}
-            data-pos={pos}
-          >
+        <div className={Style.body}>
+          <HeaderTag className={Style.header}>
             <div
               ref={cref}
               className={Style.corner}
-              data-mode={mode}
             >
               <label
                 className={`${Style.btn} ${Style.btnMnu}`}
@@ -160,19 +167,18 @@ const NavigationContainer = forwardRef<HTMLDivElement, NavigationContainerProps>
               </label>
             </div>
             <div className={Style.hcontent}>
-              {props.$header}
+              {$header}
             </div>
           </HeaderTag>
           <MainTag
             className={Style.main}
-            data-pos={pos}
             ref={mref}
           >
-            {props.children}
+            {children}
           </MainTag>
-          {props.$footer &&
+          {$footer &&
             <FooterTag className={Style.footer}>
-              {props.$footer}
+              {$footer}
             </FooterTag>
           }
         </div>
