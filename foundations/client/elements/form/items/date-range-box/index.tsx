@@ -1,10 +1,10 @@
-import rmAttrs from "#/client/utilities/remove-attrs";
 import { ForwardedRef, FunctionComponent, ReactElement, forwardRef, useCallback, useEffect, useMemo, useState, type HTMLAttributes } from "react";
 import { FormItemHook, ValueType } from "../../$types";
 import DateValidation from "../../../../../data-items/date/validations";
 import parseDate from "../../../../../objects/date/parse";
 import structKeys from "../../../../../objects/struct/keys";
 import joinCn from "../../../../utilities/join-class-name";
+import rmAttrs from "../../../../utilities/remove-attrs";
 import useForm from "../../context";
 import DateBox, { DateBoxProps, useDateBox } from "../date-box";
 import { formItemHookNotSetError, useFormItemBase } from "../hooks";
