@@ -6,7 +6,7 @@ import equals from "../../../../../objects/equal";
 import { getValue } from "../../../../../objects/struct/get";
 import { setValue } from "../../../../../objects/struct/set";
 import useLoadableArray from "../../../../hooks/loadable-array";
-import { appendedColorStyle, pressPositiveKey } from "../../../../utilities/attributes";
+import { pressPositiveKey } from "../../../../utilities/attributes";
 import Text from "../../..//text";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
@@ -55,11 +55,12 @@ type RadioButtonsOptions<
   $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
 };
 
+type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
 export type RadioButtonsProps<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Data = Data
-> = OverwriteAttrs<Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, "$tagPosition">, RadioButtonsOptions<T, D, S>>;
+> = OverwriteAttrs<Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, RadioButtonsOptions<T, D, S>>;
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
   <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Data = Data>(
@@ -67,7 +68,7 @@ interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
   ): ReactElement<any> | null;
 }
 
-const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
+const RadioButtons = forwardRef(<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Data = Data
@@ -90,7 +91,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     $unselectable,
     $tieInNames,
     $focusWhenMounted,
-    ...props
+    ...$p
   } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       if (dataItem.type === "boolean") {
@@ -126,7 +127,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
   });
   const [selectedData, setSelectedData] = useState<S>();
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     generateChangeCallbackData: (a, b) => {
       return {
         afterData: source.find(item => equals(item[vdn], a)),
@@ -209,7 +210,7 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
           data-appearance={appearance}
           data-outline={outline}
           data-state={s}
-          style={appendedColorStyle({ $color: c })}
+          data-color={c}
         >
           {(appearance === "point" || appearance === "check" || appearance === "check-fill") &&
             <div className={Style.check} />
@@ -259,19 +260,18 @@ const RadioButtons = forwardRef<HTMLDivElement, RadioButtonsProps>(<
     }
   }, [ctx.value, source]);
 
+  const focus = () => {
+    ((ref.current?.querySelector(`.${Style.item}[data-selected="true"][tabindex]`) ??
+      ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
+  };
+
   useEffect(() => {
-    if ($focusWhenMounted) {
-      ((ref.current?.querySelector(`.${Style.item}[data-selected="true"][tabindex]`) ??
-        ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
-    }
+    if ($focusWhenMounted) focus();
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => {
-      ((ref.current?.querySelector(`.${Style.item}[data-selected="true"][tabindex]`) ??
-        ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
-    };
-    props.$ref.getData = () => {
+  if ($ref) {
+    $ref.focus = focus;
+    $ref.getData = () => {
       const v = ctx.valueRef.current;
       return source.find(item => item[vdn] === v) as S;
     };

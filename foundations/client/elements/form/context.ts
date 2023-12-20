@@ -4,13 +4,21 @@ import { generateUuidV4 } from "../../../objects/string/generator";
 import { setValue } from "../../../objects/struct/set";
 import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "./$types";
 
-export type UseFormItemContextOptions<T = any, U extends Struct = {}> = {
+type Data = { [v: string | number | symbol]: any };
+type ErrorData = { [v: string]: string };
+
+export type UseFormItemContextOptions<T = any, U extends Data = {}> = {
   receive?: (v: any) => (T | null | undefined);
   effect?: (value: T | null | undefined) => void;
   effectDeps?: Array<any>;
   multiple?: boolean;
   multipartFormData?: boolean;
-  validations?: (getMessage: FormItemMessageFunc, label: string) => Array<FormItemValidation<T | null | undefined>>;
+  validations?: (ctx: {
+    getMessage: FormItemMessageFunc;
+    label: string;
+    required: boolean | undefined;
+    messages: Partial<FormItemMessages> | undefined;
+  }) => Array<FormItemValidation<T | null | undefined>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
@@ -20,14 +28,14 @@ export type UseFormItemContextOptions<T = any, U extends Struct = {}> = {
 };
 
 type FormContextProps = {
-  bind?: Struct;
+  bind?: Data;
   disabled?: boolean;
   readOnly?: boolean;
   method?: string;
-  errors: Struct;
-  setErrors: Dispatch<SetStateAction<Struct>>;
-  exErrors: Struct;
-  setExErrors: Dispatch<SetStateAction<Struct>>;
+  errors: ErrorData;
+  setErrors: Dispatch<SetStateAction<ErrorData>>;
+  exErrors: ErrorData;
+  setExErrors: Dispatch<SetStateAction<ErrorData>>;
   hasError: boolean;
   mount: (
     id: string,
@@ -37,7 +45,7 @@ type FormContextProps = {
   ) => string;
   unmount: (name: string) => void;
   validation: (returnId: string) => string | null | undefined;
-  messageDisplayMode: FormItemMessageDisplayMode;
+  messagePosition: FormItemMessageDisplayMode;
   messageWrap?: boolean;
   getValue: <T>(name: string) => T;
   setValue: (name: string, value: any, absolute?: boolean) => void;
@@ -58,7 +66,7 @@ export const FormContext = createContext<FormContextProps>({
   mount: () => "",
   unmount: () => { },
   validation: () => undefined,
-  messageDisplayMode: "bottom-hide",
+  messagePosition: "bottom-hide",
   // eslint-disable-next-line comma-spacing
   getValue: <T,>() => undefined as T,
   setValue: () => { },

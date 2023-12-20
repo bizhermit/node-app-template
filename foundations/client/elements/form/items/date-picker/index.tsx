@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type Key, type ReactElement, type ReactNode, type Ref } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type Key, type ReactElement, type ReactNode } from "react";
 import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import DateInput from "../../../../../data-items/date/input";
 import DateItemUtils from "../../../../../data-items/date/utilities";
@@ -27,10 +27,8 @@ type DatePickerHook<T extends DateValue | Array<DateValue>> = FormItemHook<T>;
 
 export const useDatePicker = <T extends DateValue | Array<DateValue>>() => useFormItemBase<DatePickerHook<T>>();
 
-export type DatePickerBaseProps<T extends DateValue | Array<DateValue>, D extends DataItem_Date | undefined = undefined> = FormItemProps<T, D> & DateInput.FCPorps & {
-  ref?: Ref<HTMLDivElement>;
-  $ref?: DatePickerHook<ValueType<DateValue | Array<DateValue>, D, DateValue | Array<DateValue>>>
-  | DatePickerHook<DateValue | Array<DateValue>>;
+type DatePickerBaseOptions<T extends DateValue | Array<DateValue>, D extends DataItem_Date | undefined = undefined> = DateInput.FCPorps & {
+  $ref?: DatePickerHook<ValueType<DateValue | Array<DateValue>, D, DateValue | Array<DateValue>>> | DatePickerHook<DateValue | Array<DateValue>>;
   $typeof?: DateValueType;
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -45,12 +43,17 @@ export type DatePickerBaseProps<T extends DateValue | Array<DateValue>, D extend
   $buttonless?: boolean;
 };
 
-export type DatePickerProps_Single<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<DateValue, D>;
-export type DatePickerProps_Multiple<D extends DataItem_Date | undefined = undefined> = DatePickerBaseProps<Array<DateValue>, D>;
+type DatePickerSingleOptions<D extends DataItem_Date | undefined = undefined> = DatePickerBaseOptions<DateValue, D> & { $multiple?: false; };
+type DatePickerMultipleOptions<D extends DataItem_Date | undefined = undefined> = DatePickerBaseOptions<Array<DateValue>, D> & { $multiple: true; };
+
+type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
+type DatePickerSingleProps<D extends DataItem_Date | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<DateValue, D>, OmitAttrs>, DatePickerSingleOptions<D>>;
+type DatePickerMultipleProps<D extends DataItem_Date | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<Array<DateValue>, D>, OmitAttrs>, DatePickerMultipleOptions<D>>;
 
 export type DatePickerProps<D extends DataItem_Date | undefined = undefined> =
-  | (DatePickerProps_Single<D> & { $multiple?: false; })
-  | (DatePickerProps_Multiple<D> & { $multiple: true; });
+  DatePickerSingleProps<D> | DatePickerMultipleProps<D>;
 
 const today = new Date();
 const threshold = 2;
@@ -61,14 +64,37 @@ interface DatePickerFC extends FunctionComponent<DatePickerProps> {
   ): ReactElement<any> | null;
 }
 
-const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
+const DatePicker = forwardRef(<
   D extends DataItem_Date | undefined = undefined
->(p: DatePickerProps<D>, $ref: ForwardedRef<HTMLDivElement>) => {
+>(p: DatePickerProps<D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
+  useImperativeHandle(r, () => ref.current);
 
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    $type,
+    $min,
+    $max,
+    $rangePair,
+    $validDays,
+    $validDaysMode,
+    $initValue,
+    $multiple,
+    $typeof,
+    $mode,
+    $firstWeek,
+    $monthTexts,
+    $weekTexts,
+    $onClickPositive,
+    $onClickNegative,
+    $positiveText,
+    $negativeText,
+    $skipValidation,
+    $positiveButtonless,
+    $buttonless,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       return {
         $type: dataItem.type,
@@ -98,46 +124,46 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
   const [showYear, setShowYear] = useState(false);
   const [showMonth, setShowMonth] = useState(false);
 
-  const type = props.$type ?? "date";
-  const multiple = props.$multiple === true;
+  const type = $type ?? "date";
+  const multiple = $multiple === true;
   const [mode, setMode] = useState<DatePickerMode>(() => {
     if (type === "year") return "list";
     if (multiple) return "calendar";
-    return props.$mode || "calendar";
+    return $mode || "calendar";
   });
   const monthTexts = useMemo(() => {
-    if (props.$monthTexts == null || props.$monthTexts === "num") return monthTextsNum;
-    if (props.$monthTexts === "en") return Month.en;
-    if (props.$monthTexts === "en-s") return Month.en;
-    if (props.$monthTexts === "ja") return Month.ja;
-    if (props.$monthTexts.length !== 12) return monthTextsNum;
-    return props.$monthTexts;
-  }, [props.$monthTexts]);
+    if ($monthTexts == null || $monthTexts === "num") return monthTextsNum;
+    if ($monthTexts === "en") return Month.en;
+    if ($monthTexts === "en-s") return Month.en;
+    if ($monthTexts === "ja") return Month.ja;
+    if ($monthTexts.length !== 12) return monthTextsNum;
+    return $monthTexts;
+  }, [$monthTexts]);
   const weekTexts = useMemo(() => {
-    if (props.$weekTexts == null || props.$weekTexts === "ja") return Week.ja_s;
-    if (props.$weekTexts === "en") return Week.en_s;
-    if (props.$weekTexts.length !== 7) return Week.ja_s;
-    return props.$weekTexts;
-  }, [props.$weekTexts]);
+    if ($weekTexts == null || $weekTexts === "ja") return Week.ja_s;
+    if ($weekTexts === "en") return Week.en_s;
+    if ($weekTexts.length !== 7) return Week.ja_s;
+    return $weekTexts;
+  }, [$weekTexts]);
   const minDate = useMemo(() => {
-    return DateInput.getMinDate(props);
-  }, [props.$min]);
+    return DateInput.getMinDate($min);
+  }, [$min]);
   const maxDate = useMemo(() => {
-    return DateInput.getMaxDate(props);
-  }, [props.$max]);
+    return DateInput.getMaxDate($max);
+  }, [$max]);
   const judgeValid = useMemo(() => {
-    return DateInput.selectableValidation(props);
-  }, [props.$validDays, props.$validDaysMode]);
+    return DateInput.selectableValidation($validDays, $validDaysMode);
+  }, [$validDays, $validDaysMode]);
 
   const initValue = useMemo(() => {
-    return DateInput.getInitValue(props);
-  }, [props.$initValue]);
+    return DateInput.getInitValue($initValue);
+  }, [$initValue]);
 
-  const ctx = useFormItemContext(form, props, {
-    interlockValidation: props.$rangePair != null,
-    multiple: props.$multiple,
-    validations: (_, label) => {
-      if (props.$skipValidation) return [];
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
+    interlockValidation: $rangePair != null,
+    multiple: $multiple,
+    validations: ({ label }) => {
+      if ($skipValidation) return [];
       const validations: Array<FormItemValidation<any>> = [];
       const maxTime = DateItemUtils.dateAsLast(maxDate, type);
       const minTime = DateItemUtils.dateAsFirst(minDate, type);
@@ -166,7 +192,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
           }
         }
       }
-      const rangePair = props.$rangePair;
+      const rangePair = $rangePair;
       if (rangePair != null) {
         const { compare, getPairDate, validation } = DateInput.contextValidation(rangePair, type, label);
         if (multiple) {
@@ -180,7 +206,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
           validations.push(validation);
         }
       }
-      if (props.$validDays) {
+      if ($validDays) {
         const judge = (value: DateValue | null) => {
           const date = parseDate(value);
           if (date == null) return undefined;
@@ -201,11 +227,11 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       maxDate,
       minDate,
       type,
-      props.$rangePair?.name,
-      props.$rangePair?.position,
-      props.$rangePair?.disallowSame,
+      $rangePair?.name,
+      $rangePair?.position,
+      $rangePair?.disallowSame,
       judgeValid,
-      props.$skipValidation,
+      $skipValidation,
     ],
   });
 
@@ -241,10 +267,10 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     };
     const select = (num: number, selected: boolean) => {
       if (!multiple) {
-        const v = DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof);
+        const v = DateInput.convertDateToValue(new Date(num, 0, 1), $typeof);
         ctx.change(v);
-        if ((props.$positiveButtonless || props.$buttonless) && props.$onClickPositive) {
-          props.$onClickPositive(v);
+        if (($positiveButtonless || $buttonless) && $onClickPositive) {
+          $onClickPositive(v as any);
         }
         return;
       }
@@ -256,7 +282,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         return;
       }
       const vals = [...getArrayValue()];
-      vals.push(DateInput.convertDateToValue(new Date(num, 0, 1), props.$typeof));
+      vals.push(DateInput.convertDateToValue(new Date(num, 0, 1), $typeof));
       ctx.change(vals.sort((d1, d2) => {
         return isBeforeDatetime(parseDate(d1)!, parseDate(d2)!) ? 1 : -1;
       }));
@@ -320,10 +346,10 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     };
     const select = (date: Date, selected: boolean) => {
       if (!multiple) {
-        const v = DateInput.convertDateToValue(date, props.$typeof);
+        const v = DateInput.convertDateToValue(date, $typeof);
         ctx.change(v);
-        if ((props.$positiveButtonless || props.$buttonless) && props.$onClickPositive) {
-          props.$onClickPositive?.(v);
+        if (($positiveButtonless || $buttonless) && $onClickPositive) {
+          $onClickPositive?.(v as any);
         }
         return;
       }
@@ -335,7 +361,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         return;
       }
       const vals = [...getArrayValue()];
-      vals.push(DateInput.convertDateToValue(date, props.$typeof));
+      vals.push(DateInput.convertDateToValue(date, $typeof));
       ctx.change(vals.sort((d1, d2) => {
         return isBeforeDatetime(parseDate(d1)!, parseDate(d2)!) ? 1 : -1;
       }));
@@ -403,10 +429,10 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     const select = (dateStr: string, selected: boolean) => {
       const date = parseDate(dateStr)!;
       if (!multiple) {
-        const v = DateInput.convertDateToValue(date, props.$typeof);
+        const v = DateInput.convertDateToValue(date, $typeof);
         ctx.change(v);
-        if ((props.$positiveButtonless || props.$buttonless) && props.$onClickPositive) {
-          props.$onClickPositive?.(v);
+        if (($positiveButtonless || $buttonless) && $onClickPositive) {
+          $onClickPositive?.(v as any);
         }
         return;
       }
@@ -418,7 +444,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         return;
       }
       const vals = [...getArrayValue()];
-      vals.push(DateInput.convertDateToValue(date, props.$typeof));
+      vals.push(DateInput.convertDateToValue(date, $typeof));
       ctx.change(vals.sort((d1, d2) => {
         return isBeforeDatetime(parseDate(d1)!, parseDate(d2)!) ? 1 : -1;
       }));
@@ -447,7 +473,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       );
     };
     if (mode === "calendar") {
-      let beforeLength = (cursor.getDay() - (props.$firstWeek ?? 0) + 7) % 7 || 7;
+      let beforeLength = (cursor.getDay() - ($firstWeek ?? 0) + 7) % 7 || 7;
       if (beforeLength < threshold) beforeLength += 7;
       addDay(cursor, beforeLength * -1);
       const m = cursor.getMonth();
@@ -491,7 +517,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     if (type !== "date") return [];
     const nodes = [];
     for (let i = 0; i < 7; i++) {
-      const week = (i + (props.$firstWeek ?? 0)) % 7;
+      const week = (i + ($firstWeek ?? 0)) % 7;
       nodes.push(
         <div
           key={week}
@@ -503,7 +529,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       );
     }
     return nodes;
-  }, [props.$firstWeek, type]);
+  }, [$firstWeek, type]);
 
   const prevYearDisabled = !ctx.editable || year == null || year - 1 < minDate.getFullYear();
   const prevYear = () => {
@@ -563,8 +589,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
       return;
     }
     ctx.change(undefined);
-    if (props.$positiveButtonless && props.$onClickPositive) {
-      props.$onClickPositive(undefined);
+    if ($positiveButtonless && $onClickPositive) {
+      $onClickPositive(undefined);
     }
   };
 
@@ -596,14 +622,14 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
         date = cloneDate(today);
         break;
     }
-    const v = DateInput.convertDateToValue(date, props.$typeof);
+    const v = DateInput.convertDateToValue(date, $typeof);
     if (multiple) {
       ctx.change([v]);
       return;
     }
     ctx.change(v);
-    if (props.$positiveButtonless && props.$onClickPositive) {
-      props.$onClickPositive?.(v);
+    if ($positiveButtonless && $onClickPositive) {
+      $onClickPositive?.(v as any);
     }
   };
 
@@ -680,18 +706,18 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
     }
   }, [
     props.$value,
-    // props.$bind,
+    // $bind,
     ctx.bind,
   ]);
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       ref.current?.focus();
     }
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => ref.current?.focus();
+  if ($ref) {
+    $ref.focus = () => ref.current?.focus();
   }
 
   return (
@@ -737,7 +763,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
           <>
             <div
               className={Style.yearmonth}
-              data-reverse={props.$monthTexts === "en" || props.$monthTexts === "en-s"}
+              data-reverse={$monthTexts === "en" || $monthTexts === "en-s"}
             >
               <div className={Style.label}>
                 <div
@@ -768,7 +794,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
                   {yearNodes}
                 </div>
               </div>
-              {(props.$monthTexts == null || props.$monthTexts === "num") && type === "date" && <span>/</span>}
+              {($monthTexts == null || $monthTexts === "num") && type === "date" && <span>/</span>}
               {type === "date" &&
                 <div className={Style.label}>
                   <div
@@ -825,7 +851,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
           </div>
         }
       </div>
-      {!props.$buttonless &&
+      {!$buttonless &&
         <div className={Style.buttons}>
           {ctx.editable &&
             <>
@@ -843,22 +869,22 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(<
               </div>
             </>
           }
-          {props.$onClickNegative != null &&
+          {$onClickNegative != null &&
             <div
               className={Style.negative}
-              onClick={props.$onClickNegative}
+              onClick={$onClickNegative}
             >
-              <Text>{props.$negativeText ?? "キャンセル"}</Text>
+              <Text>{$negativeText ?? "キャンセル"}</Text>
             </div>
           }
-          {props.$onClickPositive != null && !props.$positiveButtonless &&
+          {$onClickPositive != null && !$positiveButtonless &&
             <div
               className={Style.positive}
               onClick={() => {
-                props.$onClickPositive?.(ctx.value as never);
+                $onClickPositive?.(ctx.value);
               }}
             >
-              <Text>{props.$positiveText ?? "OK"}</Text>
+              <Text>{$positiveText ?? "OK"}</Text>
             </div>
           }
           {type !== "year" && !multiple && ctx.editable &&

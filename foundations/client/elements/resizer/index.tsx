@@ -43,7 +43,7 @@ const Resizer: FC<ResizerProps> = ({
     const prect = pelem.getBoundingClientRect();
     const reverse = $reverse === true;
     let posX = cx, posY = cy, lastX = prect.width, lastY = prect.height, cursor = "";
-    let move: VoidFunc, to: NodeJS.Timeout | null = null;
+    let move: (arg: any) => void, to: NodeJS.Timeout | null = null;
     if ($direction === "x") {
       const moveImpl = (x: number) => {
         if (to) return;
@@ -56,8 +56,8 @@ const Resizer: FC<ResizerProps> = ({
       };
       cursor = "col-resize";
       move = isTouch ?
-        ((e: TouchEvent) => moveImpl(e.touches[0].clientX)) as VoidFunc :
-        ((e: MouseEvent) => moveImpl(e.clientX)) as VoidFunc;
+        ((e: TouchEvent) => moveImpl(e.touches[0].clientX)) :
+        ((e: MouseEvent) => moveImpl(e.clientX));
     } else if ($direction === "y") {
       const moveImpl = (y: number) => {
         if (to) return;
@@ -70,8 +70,8 @@ const Resizer: FC<ResizerProps> = ({
       };
       cursor = "row-resize";
       move = isTouch ?
-        ((e: TouchEvent) => moveImpl(e.touches[0].clientY)) as VoidFunc :
-        ((e: MouseEvent) => moveImpl(e.clientY)) as VoidFunc;
+        ((e: TouchEvent) => moveImpl(e.touches[0].clientY)) :
+        ((e: MouseEvent) => moveImpl(e.clientY));
     } else {
       const moveImpl = (x: number, y: number) => {
         if (to) return;
@@ -86,8 +86,8 @@ const Resizer: FC<ResizerProps> = ({
       };
       cursor = "nwse-resize";
       move = isTouch ?
-        ((e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY)) as VoidFunc :
-        ((e: MouseEvent) => moveImpl(e.clientX, e.clientY)) as VoidFunc;
+        ((e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY)) :
+        ((e: MouseEvent) => moveImpl(e.clientX, e.clientY));
     }
     const endImpl = () => {
       pelem.removeAttribute(attrName);

@@ -343,7 +343,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
       mount,
       unmount,
       validation,
-      messageDisplayMode: $messageDisplayMode ?? "bottom-hide",
+      messagePosition: $messageDisplayMode ?? "bottom-hide",
       messageWrap: $messageWrap,
       getValue: get,
       setValue: set,

@@ -16,12 +16,13 @@ import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../
 import TimePicker from "../time-picker";
 import Style from "./index.module.scss";
 
-type TimeBoxHook<T extends number | string> = FormItemHook<T>;
+type TimeBoxHook<T extends TimeValue> = FormItemHook<T>;
 
-export const useTimeBox = <T extends number | string>() => useFormItemBase<TimeBoxHook<T>>();
+export const useTimeBox = <T extends TimeValue>() => useFormItemBase<TimeBoxHook<T>>();
 
-type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = FormItemProps<T, D> & TimeInput.FCProps & {
-  $ref?: TimeBoxHook<ValueType<number | string, D, number | string>> | TimeBoxHook<number | string>;
+type TimeBoxOptions<D extends DataItem_Time | undefined = undefined> = & TimeInput.FCProps & {
+  $ref?: TimeBoxHook<ValueType<TimeValue, D, TimeValue>> | TimeBoxHook<TimeValue>;
+  $typeof?: TimeValueType;
   $disallowInput?: boolean;
   $hourPlaceholder?: string;
   $minutePlaceholder?: string;
@@ -29,89 +30,67 @@ type TimeBoxBaseProps<T, D extends DataItem_Time | DataItem_Number | DataItem_St
   $showSeparatorAlwarys?: boolean;
 };
 
-type TimeBoxProps_TypeString<D extends DataItem_Time | DataItem_String | undefined = undefined> = TimeBoxBaseProps<string, D>;
-
-type TimeBoxProps_TypeNumber<D extends DataItem_Time | DataItem_Number | undefined = undefined> = TimeBoxBaseProps<number, D>;
-
-export type TimeBoxProps<D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined> = D extends undefined ?
-  (
-    (TimeBoxProps_TypeNumber & { $typeof?: "number" }) | (TimeBoxProps_TypeString & { $typeof: "string" })
-  ) : (
-    D extends { type: infer T } ? (
-      T extends DataItem_String["type"] ? (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof?: "string" }) :
-      T extends DataItem_Number["type"] ? (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" }) :
-      D extends { typeof: infer R } ? (
-        R extends "string" ? (TimeBoxProps_TypeString<Exclude<D, DataItem_Number>> & { $typeof?: "string" }) : (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" })
-      ) : (TimeBoxProps_TypeNumber<Exclude<D, DataItem_String>> & { $typeof?: "number" })
-    ) : (TimeBoxProps_TypeNumber & { $typeof?: "number" }) | (TimeBoxProps_TypeString & { $typeof: "string" })
-  );
+type OmitAttrs = "placeholder" | "tabIndex";
+export type TimeBoxProps<D extends DataItem_Time | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<TimeValue, D>, OmitAttrs>, TimeBoxOptions<D>>;
 
 const isNumericOrEmpty = (value?: string): value is string => {
   return isEmpty(value) || /^[0-9]+$/.test(value);
 };
 
 interface TimeBoxFC extends FunctionComponent<TimeBoxProps> {
-  <D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined>(
+  <D extends DataItem_Time | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, TimeBoxProps<D>>
   ): ReactElement<any> | null;
 }
 
-const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
-  D extends DataItem_Time | DataItem_Number | DataItem_String | undefined = undefined
+const TimeBox = forwardRef(<
+  D extends DataItem_Time | undefined = undefined
 >(p: TimeBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    $typeof,
+    $type,
+    $unit,
+    $min,
+    $max,
+    $rangePair,
+    $hourInterval,
+    $minuteInterval,
+    $secondInterval,
+    $disallowInput,
+    $hourPlaceholder,
+    $minutePlaceholder,
+    $secondPlaceholder,
+    $showSeparatorAlwarys,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
-      switch (dataItem.type) {
-        case "number":
-          return {
-            $typeof: "number",
-            $min: dataItem.min,
-            $max: dataItem.max,
-          } as TimeBoxProps<D>;
-        case "string":
-          return {
-            $typeof: "string",
-            $min: dataItem.minLength,
-            $max: dataItem.maxLength,
-          } as TimeBoxProps<D>;
-        default:
-          return {
-            $typeof: dataItem.typeof,
-            $min: dataItem.min,
-            $max: dataItem.max,
-            $rangePair: dataItem.rangePair,
-          } as TimeBoxProps<D>;
-      }
+      return {
+        $typeof: dataItem.typeof,
+        $min: dataItem.min,
+        $max: dataItem.max,
+        $rangePair: dataItem.rangePair,
+      } as TimeBoxProps<D>;
     },
     over: ({ dataItem, props }) => {
-      switch (dataItem.type) {
-        case "number":
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
-          } as TimeBoxProps<D>;
-        case "string":
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
-          } as TimeBoxProps<D>;
-        default:
-          return {
-            $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
-          } as TimeBoxProps<D>;
-      }
+      return {
+        $validations: dataItem.validations?.map(f => convertDataItemValidationToFormItemValidation(f, props, dataItem, v => v)),
+      } as TimeBoxProps<D>;
     },
   });
 
-  const type = props.$type ?? "hm";
+  const type = $type ?? "hm";
   const unit = useMemo(() => {
-    return TimeInput.getUnit(props, type);
-  }, [type, props.$unit]);
+    return TimeInput.getUnit($unit, type);
+  }, [type, $unit]);
   const minTime = useMemo(() => {
-    return TimeInput.getMinTime(props, unit);
-  }, [props.$min]);
+    return TimeInput.getMinTime($min, unit);
+  }, [$min]);
   const maxTime = useMemo(() => {
-    return TimeInput.getMaxTime(props, unit);
-  }, [props.$max]);
+    return TimeInput.getMaxTime($max, unit);
+  }, [$max]);
 
   const href = useRef<HTMLInputElement>(null!);
   const mref = useRef<HTMLInputElement>(null!);
@@ -125,9 +104,9 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
   const needS = type === "hms" || type === "ms";
   const [showPicker, setShowPicker] = useState(false);
 
-  const ctx = useFormItemContext(form, props, {
-    interlockValidation: props.$rangePair != null,
-    validations: (_, label) => {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
+    interlockValidation: $rangePair != null,
+    validations: ({ label }) => {
       const validations: Array<FormItemValidation<any>> = [];
       if (maxTime != null && minTime != null) {
         validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit, label));
@@ -139,7 +118,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
           validations.push(TimeInput.minValidation(minTime, type, unit, label));
         }
       }
-      const rangePair = props.$rangePair;
+      const rangePair = $rangePair;
       if (rangePair != null) {
         const { validation } = TimeInput.contextValidation(rangePair, type, unit, label);
         validations.push(validation);
@@ -151,9 +130,9 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
       unit,
       minTime,
       maxTime,
-      props.$rangePair?.name,
-      props.$rangePair?.position,
-      props.$rangePair?.disallowSame,
+      $rangePair?.name,
+      $rangePair?.position,
+      $rangePair?.disallowSame,
     ],
   });
 
@@ -180,19 +159,19 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
 
   const optimizedIntervalHour = (h: number | undefined) => {
     if (h == null) return h;
-    const i = props.$hourInterval ?? 1;
+    const i = $hourInterval ?? 1;
     return Math.floor(h / i) * i;
   };
 
   const optimizedIntervalMinute = (m: number | undefined) => {
     if (m == null) return m;
-    const i = props.$minuteInterval ?? 1;
+    const i = $minuteInterval ?? 1;
     return Math.floor(m / i) * i;
   };
 
   const optimizedIntervalSecond = (s: number | undefined) => {
     if (s == null) return s;
-    const i = props.$secondInterval ?? 1;
+    const i = $secondInterval ?? 1;
     return Math.floor(s / i) * i;
   };
 
@@ -209,7 +188,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
       (h ?? 0) * 3600 +
       (m ?? 0) * 60 +
       (s ?? 0)
-    ) * 1000, unit, type, props.$typeof);
+    ) * 1000, unit, type, $typeof);
     if (equals(v, ctx.valueRef.current)) {
       setInputValues(v);
     } else {
@@ -277,11 +256,11 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
         commitCache();
         break;
       case "ArrowUp":
-        updown((props.$hourInterval ?? 1), 0, 0);
+        updown(($hourInterval ?? 1), 0, 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown((props.$hourInterval ?? 1) * -1, 0, 0);
+        updown(($hourInterval ?? 1) * -1, 0, 0);
         e.preventDefault();
         break;
       default:
@@ -302,11 +281,11 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
         if (e.currentTarget.value.length === 0) href.current?.focus();
         break;
       case "ArrowUp":
-        updown(0, (props.$minuteInterval ?? 1), 0);
+        updown(0, ($minuteInterval ?? 1), 0);
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown(0, (props.$minuteInterval ?? 1) * -1, 0);
+        updown(0, ($minuteInterval ?? 1) * -1, 0);
         e.preventDefault();
         break;
       default:
@@ -327,11 +306,11 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
         if (e.currentTarget.value.length === 0) mref.current?.focus();
         break;
       case "ArrowUp":
-        updown(0, 0, (props.$secondInterval ?? 1));
+        updown(0, 0, ($secondInterval ?? 1));
         e.preventDefault();
         break;
       case "ArrowDown":
-        updown(0, 0, (props.$secondInterval ?? 1) * -1);
+        updown(0, 0, ($secondInterval ?? 1) * -1);
         e.preventDefault();
         break;
       default:
@@ -367,12 +346,12 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
   };
 
   const clickInputs = () => {
-    if (!props.$disallowInput) return;
+    if (!$disallowInput) return;
     picker();
   };
 
   const focus = () => {
-    if (props.$disallowInput) (href.current ?? mref.current ?? sref.current).parentElement?.focus();
+    if ($disallowInput) (href.current ?? mref.current ?? sref.current).parentElement?.focus();
     else (href.current ?? mref.current ?? sref.current)?.focus();
   };
 
@@ -383,13 +362,11 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
   const hasData = ctx.value != null && ctx.value !== "";
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
-      focus();
-    }
+    if ($focusWhenMounted) focus();
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => focus();
+  if ($ref) {
+    $ref.focus = () => focus();
   }
 
   return (
@@ -398,7 +375,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
       ref={ref}
       $ctx={ctx}
       $useHidden
-      data-has={hasData}
+      $hasData={hasData}
       $mainProps={{
         onBlur: blur,
       }}
@@ -406,7 +383,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
       <div
         className={Style.inputs}
         onClick={clickInputs}
-        data-input={!props.$disallowInput}
+        data-input={!$disallowInput}
         data-editable={ctx.editable}
       >
         {needH &&
@@ -415,7 +392,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             className={Style.h}
             type="text"
             disabled={ctx.disabled}
-            readOnly={props.$disallowInput || ctx.readOnly}
+            readOnly={$disallowInput || ctx.readOnly}
             maxLength={2}
             defaultValue={cacheH.current || ""}
             onFocus={focusInput}
@@ -423,13 +400,13 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onChange={changeH}
             autoComplete="off"
             inputMode="numeric"
-            placeholder={ctx.editable ? props.$hourPlaceholder : ""}
+            placeholder={ctx.editable ? $hourPlaceholder : ""}
           />
         }
         <span
           className={Style.sep}
           data-has={hasData}
-          data-show={hasData || props.$showSeparatorAlwarys === true}
+          data-show={hasData || $showSeparatorAlwarys === true}
         >
           :
         </span>
@@ -439,7 +416,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             className={Style.m}
             type="text"
             disabled={ctx.disabled}
-            readOnly={props.$disallowInput || ctx.readOnly}
+            readOnly={$disallowInput || ctx.readOnly}
             maxLength={2}
             defaultValue={cacheM.current || ""}
             onFocus={focusInput}
@@ -447,7 +424,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             onChange={changeM}
             autoComplete="off"
             inputMode="numeric"
-            placeholder={ctx.editable ? props.$minutePlaceholder : ""}
+            placeholder={ctx.editable ? $minutePlaceholder : ""}
           />
         }
         {needS &&
@@ -455,7 +432,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
             <span
               className={Style.sep}
               data-has={hasData}
-              data-show={hasData || props.$showSeparatorAlwarys === true}
+              data-show={hasData || $showSeparatorAlwarys === true}
             >
               :
             </span>
@@ -464,7 +441,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
               className={Style.s}
               type="text"
               disabled={ctx.disabled}
-              readOnly={props.$disallowInput || ctx.readOnly}
+              readOnly={$disallowInput || ctx.readOnly}
               maxLength={2}
               defaultValue={cacheS.current || ""}
               onFocus={focusInput}
@@ -472,7 +449,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
               onChange={changeS}
               autoComplete="off"
               inputMode="numeric"
-              placeholder={ctx.editable ? props.$secondPlaceholder : ""}
+              placeholder={ctx.editable ? $secondPlaceholder : ""}
             />
           </>
         }
@@ -486,7 +463,7 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
           >
             <CrossIcon />
           </div>
-          {!props.$disallowInput &&
+          {!$disallowInput &&
             <div
               className={Style.picker}
               onClick={picker}
@@ -517,14 +494,14 @@ const TimeBox = forwardRef<HTMLDivElement, TimeBoxProps>(<
           $value={ctx.value}
           $type={type}
           $unit={unit}
-          $typeof={props.$typeof}
-          $max={props.$max}
-          $min={props.$min}
-          $hourInterval={props.$hourInterval}
-          $minuteInterval={props.$minuteInterval}
-          $secondInterval={props.$secondInterval}
+          $typeof={$typeof}
+          $max={$max}
+          $min={$min}
+          $hourInterval={$hourInterval}
+          $minuteInterval={$minuteInterval}
+          $secondInterval={$secondInterval}
           $skipValidation
-          $onClickPositive={(value: any) => {
+          $onClickPositive={(value) => {
             ctx.change(value);
             setShowPicker(false);
             setTimeout(focus);

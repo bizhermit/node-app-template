@@ -5,9 +5,10 @@ import { convertSizeNumToStr } from "../../utilities/attributes";
 import DomClassComponent, { cloneDomElement } from "../../utilities/dom-class-component";
 import Style from "./index.module.scss";
 
+type DataType = { [v: string | number | symbol]: any };
 type DataListCellAlign = "left" | "center" | "right";
 
-export type DataListColumn<T extends Struct = Struct> = {
+export type DataListColumn<T extends DataType = DataType> = {
   name: string;
   displayName?: string;
   dataType?: "string" | "number" | "date";
@@ -35,7 +36,7 @@ export type DataListColumn<T extends Struct = Struct> = {
   toDisplay?: ((originData: T, column: Column<T>) => string) | null;
 };
 
-type Column<T extends Struct = Struct> = {
+type Column<T extends DataType = DataType> = {
   name: string;
   displayName: string;
   label: string;
@@ -70,16 +71,16 @@ type Column<T extends Struct = Struct> = {
   origin: DataListColumn<T> | null | undefined;
 };
 
-type Data<T extends Struct = Struct> = {
+type Data<T extends DataType = DataType> = {
   origin: T;
   display: { [key: string]: string };
   id: number;
   init: boolean;
   rowSelected: boolean;
-  cellSelected: Struct<boolean>;
+  cellSelected: { [v: string]: boolean };
 };
 
-type Cell<T extends Struct = Struct> = {
+type Cell<T extends DataType = DataType> = {
   element: HTMLDivElement;
   elements: Array<HTMLDivElement>;
   column: Column<T>;
@@ -90,18 +91,18 @@ type Cell<T extends Struct = Struct> = {
   };
 };
 
-type Row<T extends Struct = Struct> = {
+type Row<T extends DataType = DataType> = {
   element: HTMLDivElement;
   data: Data<T> | null;
   index: number;
   id: number;
-  cache: Struct<string>;
+  cache: { [v: string]: boolean };
   selected: boolean;
   oddEven: 0 | 1;
   cells: Array<Cell<T>>;
 };
 
-export type DataListClassProps<T extends Struct = Struct> = {
+export type DataListClassProps<T extends DataType = DataType> = {
   value?: Array<T>;
   columns?: Array<any>;
   header?: boolean;
@@ -115,7 +116,7 @@ export type DataListClassProps<T extends Struct = Struct> = {
   color?: Color;
 };
 
-class DataListClass<T extends Struct = Struct> extends DomClassComponent {
+class DataListClass<T extends DataType = DataType> extends DomClassComponent {
 
   protected initialized: boolean;
   protected resizeObserver: ResizeObserver;

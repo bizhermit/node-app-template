@@ -36,7 +36,7 @@ export const usePasswordBox = <T extends string | number = string>() => useFormI
   };
 });
 
-export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & Pick<TextBoxProps<D>,
+type PasswordBoxOptions<D extends DataItem_String | undefined = undefined> = Pick<TextBoxProps<D>,
   | "$minLength"
   | "$maxLength"
   | "$round"
@@ -61,18 +61,41 @@ export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> 
   $preventBlurToggle?: boolean;
 };
 
+export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> =
+  OverwriteAttrs<FormItemProps<string, D, string>, PasswordBoxOptions<D>>;
+
 interface PasswordBoxFC extends FunctionComponent<PasswordBoxProps> {
   <D extends DataItem_String | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, PasswordBoxProps<D>>
   ): ReactElement<any> | null;
 }
 
-const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
+const PasswordBox = forwardRef(<
   D extends DataItem_String | undefined = undefined
->(p: PasswordBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: PasswordBoxProps<D>, r: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    placeholder,
+    tabIndex,
+    $minLength,
+    $maxLength,
+    $round,
+    $resize,
+    $width,
+    $maxWidth,
+    $minWidth,
+    $hideClearButton,
+    $autoComplete,
+    $align,
+    $charType,
+    $inputMode,
+    $hideToggleButton,
+    $preventInputWithinLength,
+    $preventBlurToggle,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem, method, props }) => {
       const isSearch = method === "get";
       return {
@@ -116,19 +139,19 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
     },
   });
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: (_, label) => {
-      const validations: Array<FormItemValidation<Nullable<string>>> = [];
-      if (props.$minLength != null) {
-        validations.push(v => StringValidation.minLength(v, props.$minLength!, label));
+    validations: ({ label }) => {
+      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      if ($minLength != null) {
+        validations.push(v => StringValidation.minLength(v, $minLength!, label));
       }
-      if (props.$maxLength != null) {
-        validations.push(v => StringValidation.maxLength(v, props.$maxLength!, label));
+      if ($maxLength != null) {
+        validations.push(v => StringValidation.maxLength(v, $maxLength!, label));
       }
-      switch (props.$charType) {
+      switch ($charType) {
         case "h-num":
           validations.push(v => StringValidation.halfWidthNumeric(v, label));
           break;
@@ -147,9 +170,9 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
       return validations;
     },
     validationsDeps: [
-      props.$minLength,
-      props.$maxLength,
-      props.$charType,
+      $minLength,
+      $maxLength,
+      $charType,
     ],
   });
 
@@ -167,7 +190,7 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
   };
 
   const blur = (e: React.FocusEvent<HTMLDivElement>) => {
-    if (props.$preventBlurToggle) return;
+    if ($preventBlurToggle) return;
     if (includeElement(e.currentTarget, e.relatedTarget)) return;
     setType("password");
   };
@@ -175,28 +198,26 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
   const hasData = isNotEmpty(ctx.value);
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
-      iref.current?.focus();
-    }
+    if ($focusWhenMounted) iref.current?.focus();
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => iref.current?.focus();
-    props.$ref.toggleMask = () => toggle();
+  if ($ref) {
+    $ref.focus = () => iref.current?.focus();
+    $ref.toggleMask = () => toggle();
   }
 
   return (
     <FormItemWrap
       {...props}
-      ref={ref}
+      ref={r}
       $ctx={ctx}
-      data-round={props.$round}
-      data-has={hasData}
+      $round={$round}
+      $hasData={hasData}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
+          width: convertSizeNumToStr($width),
+          maxWidth: convertSizeNumToStr($maxWidth),
+          minWidth: convertSizeNumToStr($minWidth),
         },
         onBlur: blur,
       }}
@@ -206,41 +227,41 @@ const PasswordBox = forwardRef<HTMLDivElement, PasswordBoxProps>(<
         className={Style.input}
         name={props.name}
         type={type}
-        placeholder={ctx.editable ? props.placeholder : ""}
+        placeholder={ctx.editable ? placeholder : ""}
         disabled={ctx.disabled}
         readOnly={ctx.readOnly}
-        maxLength={props.$preventInputWithinLength ? undefined : props.$maxLength}
-        tabIndex={props.tabIndex}
+        maxLength={$preventInputWithinLength ? undefined : $maxLength}
+        tabIndex={tabIndex}
         defaultValue={ctx.value ?? ""}
         onChange={e => ctx.change(e.target.value)}
-        data-round={props.$round}
-        data-button={ctx.editable && (props.$hideClearButton !== true || props.$hideToggleButton !== true)}
-        data-align={props.$align}
-        autoComplete={props.$autoComplete ?? "off"}
-        inputMode={props.$inputMode}
+        data-round={$round}
+        data-button={ctx.editable && ($hideClearButton !== true || $hideToggleButton !== true)}
+        data-align={$align}
+        autoComplete={$autoComplete ?? "off"}
+        inputMode={$inputMode}
       />
-      {ctx.editable && props.$hideClearButton !== true &&
+      {ctx.editable && $hideClearButton !== true &&
         <div
           className={Style.button}
           onClick={clear}
           data-disabled={!hasData}
-          data-round={props.$hideToggleButton ? props.$round : undefined}
+          data-round={$hideToggleButton ? $round : undefined}
           tabIndex={-1}
         >
           <CrossIcon />
         </div>
       }
-      {ctx.editable && props.$hideToggleButton !== true &&
+      {ctx.editable && $hideToggleButton !== true &&
         <div
           className={Style.button}
           onClick={toggle}
-          data-round={props.$round}
+          data-round={$round}
           tabIndex={-1}
         >
           {type === "text" ? <CircleIcon /> : <CircleFillIcon />}
         </div>
       }
-      {props.$resize && <Resizer $direction="x" />}
+      {$resize && <Resizer $direction="x" />}
     </FormItemWrap>
   );
 }) as PasswordBoxFC;

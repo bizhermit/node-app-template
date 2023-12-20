@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
 import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import useLoadableArray from "../../../../hooks/loadable-array";
-import { joinClassNames } from "../../../../utilities/attributes";
+import joinCn from "../../../../utilities/join-class-name";
 import useForm from "../../context";
 import { convertHiddenValue } from "../../utilities";
 import CheckBox from "../check-box";
@@ -38,10 +38,10 @@ export const useCheckList = <
   };
 });
 
-export type CheckListProps<
+type CheckListOptions<
   T extends Array<string | number | boolean> = Array<string | number | boolean>,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
-> = Omit<FormItemProps<T, D, Array<ValueType<T, D>>>, "$tagPosition"> & {
+> = {
   $ref?: CheckListHook<ValueType<T, D, T>> | CheckListHook<Array<string | number | boolean>>;
   $labelDataName?: string;
   $valueDataName?: string;
@@ -51,12 +51,18 @@ export type CheckListProps<
   $fill?: boolean;
   $outline?: boolean;
   $circle?: boolean;
-  $source?: LoadableArray<Struct>;
+  $source?: LoadableArray<{ [v: string | number | symbol]: any }>;
   $preventSourceMemorize?: boolean;
   $mainClassName?: string;
   $itemClassName?: string;
   $direction?: "horizontal" | "vertical";
 };
+
+type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
+export type CheckListProps<
+  T extends Array<string | number | boolean> = Array<string | number | boolean>,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+> = OverwriteAttrs<Omit<FormItemProps<T, D, Array<ValueType<T, D>>>, OmitAttrs>, CheckListOptions<T, D>>;
 
 interface CheckListFC extends FunctionComponent<CheckListProps> {
   <T extends Array<string | number | boolean> = Array<string | number | boolean>, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
@@ -64,17 +70,33 @@ interface CheckListFC extends FunctionComponent<CheckListProps> {
   ): ReactElement<any> | null;
 }
 
-const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
+const CheckList = forwardRef(<
   V extends string | number | boolean = string | number | boolean,
   T extends Array<V> = Array<V>,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends { [v: string | number]: any } = { [v: string | number]: any }
->(p: CheckListProps<T, D>, $ref: ForwardedRef<HTMLDivElement>) => {
+>(p: CheckListProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
+  useImperativeHandle(r, () => ref.current);
 
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    $labelDataName,
+    $valueDataName,
+    $colorDataName,
+    $stateDataName,
+    $nowrap,
+    $fill,
+    $outline,
+    $circle,
+    $source,
+    $preventSourceMemorize,
+    $mainClassName,
+    $itemClassName,
+    $direction,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       if (dataItem.type === "boolean") {
         return {
@@ -95,15 +117,15 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
     },
   });
 
-  const vdn = props.$valueDataName ?? "value";
-  const ldn = props.$labelDataName ?? "label";
-  const cdn = props.$colorDataName ?? "color";
-  const sdn = props.$stateDataName ?? "state";
-  const [source, loading] = useLoadableArray(props.$source, {
-    preventMemorize: props.$preventSourceMemorize,
+  const vdn = $valueDataName ?? "value";
+  const ldn = $labelDataName ?? "label";
+  const cdn = $colorDataName ?? "color";
+  const sdn = $stateDataName ?? "state";
+  const [source, loading] = useLoadableArray($source, {
+    preventMemorize: $preventSourceMemorize,
   });
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref, $preventFormBind } = useFormItemContext(form, $p, {
     multiple: true,
     receive: (v) => {
       if (v === null || Array.isArray(v)) return v;
@@ -122,10 +144,10 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
     (ref.current?.querySelector(`div[tabindex]`) as HTMLDivElement)?.focus();
   };
 
-  if (props.$ref) {
-    props.$ref.focus = () => focus();
-    props.$ref.checkAll = () => ctx.change(source.map(item => item[vdn]), false);
-    props.$ref.uncheckAll = () => ctx.change([], false);
+  if ($ref) {
+    $ref.focus = () => focus();
+    $ref.checkAll = () => ctx.change(source.map(item => item[vdn]), false);
+    $ref.uncheckAll = () => ctx.change([], false);
   }
 
   return (
@@ -136,9 +158,9 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
       $preventFieldLayout
       $clickable
       $mainProps={{
-        className: joinClassNames(Style.main, props.$mainClassName),
-        "data-nowrap": props.$nowrap,
-        "data-direction": props.$direction || "horizontal",
+        className: joinCn(Style.main, $mainClassName),
+        "data-nowrap": $nowrap,
+        "data-direction": $direction || "horizontal",
       }}
     >
       {!loading && source.map((item, index) => {
@@ -161,10 +183,10 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
         return (
           <CheckBox
             key={v}
-            className={props.$itemClassName}
+            className={$itemClassName}
             $preventFormBind
-            $disabled={props.$disabled || ctx.disabled || s === "disabled"}
-            $readOnly={props.$readOnly || ctx.readOnly || s === "readonly"}
+            $disabled={ctx.disabled || s === "disabled"}
+            $readOnly={ctx.readOnly || s === "readonly"}
             $value={v === val}
             $onChange={(checked) => {
               const vals = getArrayValue();
@@ -180,16 +202,16 @@ const CheckList = forwardRef<HTMLDivElement, CheckListProps>(<
               }
             }}
             $color={c}
-            $fill={props.$fill}
-            $outline={props.$outline}
-            $circle={props.$circle}
-            $focusWhenMounted={index === 0 && props.$focusWhenMounted}
+            $fill={$fill}
+            $outline={$outline}
+            $circle={$circle}
+            $focusWhenMounted={index === 0 && $focusWhenMounted}
           >
             {item[ldn]}
           </CheckBox>
         );
       })}
-      {props.name && !props.$preventFormBind &&
+      {props.name && !$preventFormBind &&
         getArrayValue().map((v, idx) => {
           return (
             <input

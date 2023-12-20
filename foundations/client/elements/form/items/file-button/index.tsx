@@ -24,8 +24,8 @@ export const useFileButton = <T extends File | Array<File>>() => useFormItemBase
   };
 });
 
-type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & Omit<ButtonOptions, "onClick" | "$notDependsOnForm"> & {
-  $typeof?: FileValueType;
+type FileButtonBaseOptions = Omit<ButtonOptions, "onClick" | "$notDependsOnForm"> & {
+  // $typeof?: FileValueType;
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -34,18 +34,25 @@ type FileButtonBaseProps<T, D extends DataItem_File | undefined = undefined> = F
   children?: ReactNode;
 };
 
-export type FileButtonProps_Single<D extends DataItem_File | undefined = undefined> = FileButtonBaseProps<File, D> & {
+type FileButtonSingleOptions<D extends DataItem_File | undefined = undefined> = FileButtonBaseOptions & {
   $ref?: FileButtonHook<ValueType<File, D, File>> | FileButtonHook<File | Array<File>>;
   $append?: false;
+  $multiple?: false;
 };
-
-export type FileButtonProps_Multiple<D extends DataItem_File | undefined = undefined> = FileButtonBaseProps<Array<File>, D> & {
+type FileButtonMultipleOptions<D extends DataItem_File | undefined = undefined> = FileButtonBaseOptions & {
   $ref?: FileButtonHook<ValueType<Array<File>, D, Array<File>>> | FileButtonHook<File | Array<File>>;
   $append?: boolean;
+  $multiple: true;
 };
 
+type OmitAttrs = "placeholder";
+type FileButtonSingleProps<D extends DataItem_File | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<File, D>, OmitAttrs>, FileButtonSingleOptions<D>>;
+type FileButtonMultipleProps<D extends DataItem_File | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<Array<File>, D>, OmitAttrs>, FileButtonMultipleOptions<D>>;
+
 export type FileButtonProps<D extends DataItem_File | undefined = undefined> =
-  (FileButtonProps_Single<D> & { $multiple?: false; }) | (FileButtonProps_Multiple<D> & { $multiple: true });
+  FileButtonSingleProps<D> | FileButtonMultipleProps<D>;
 
 interface FileButtonFC extends FunctionComponent {
   <D extends DataItem_File | undefined = undefined>(
@@ -53,26 +60,37 @@ interface FileButtonFC extends FunctionComponent {
   ): ReactElement<any> | null;
 }
 
-const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
+const FileButton = forwardRef(<
   D extends DataItem_File | undefined = undefined
->({
-    $size: size,
-    $color: color,
-    $round: round,
-    $outline: outline,
-    $icon: icon,
-    $iconPosition: iconPosition,
-    $fillLabel: fillLabel,
-    $fitContent: fitContent,
-    $noPadding: noPadding,
-    $focusWhenMounted: focusWhenMounted,
-    ...p
-  }: FileButtonProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+>(p: FileButtonProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    $size,
+    $color,
+    $round,
+    $outline,
+    $text,
+    $icon,
+    $iconPosition,
+    $fillLabel,
+    $fitContent,
+    $noPadding,
+    $focusWhenMounted,
+    $append,
+    $multiple,
+    // $typeof,
+    $accept,
+    $fileSize,
+    $totalFileSize,
+    $hideFileName,
+    $hideClearButton,
+    children,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       return {
-        $typeof: dataItem.typeof,
+        // $typeof: dataItem.typeof,
         $accept: dataItem.accept,
         $fileSize: dataItem.fileSize,
         ...(dataItem.multiple ? {
@@ -95,19 +113,19 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
   const href = useRef<HTMLInputElement>(null!);
   const bref = useRef<HTMLButtonElement>(null!);
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     multipartFormData: true,
-    multiple: props.$multiple,
+    multiple: $multiple,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
-      if (props.$accept) {
-        validations.push(FileValidation.type(props.$accept));
+      if ($accept) {
+        validations.push(FileValidation.type($accept));
       }
-      if (props.$fileSize != null) {
-        validations.push(FileValidation.size(props.$fileSize));
+      if ($fileSize != null) {
+        validations.push(FileValidation.size($fileSize));
       }
-      if (props.$totalFileSize != null) {
-        validations.push(FileValidation.totalSize(props.$totalFileSize));
+      if ($totalFileSize != null) {
+        validations.push(FileValidation.totalSize($totalFileSize));
       }
       return validations;
     },
@@ -116,7 +134,7 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     },
   });
 
-  const multiable = props.$multiple === true;
+  const multiable = $multiple === true;
 
   const click = () => {
     if (!ctx.editable) return;
@@ -131,7 +149,7 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     const files = Array.from(e.currentTarget.files ?? []);
     if (files?.length === 0) return;
     if (multiable) {
-      if (props.$append) {
+      if ($append) {
         ctx.change([...(ctx.valueRef.current ?? []), ...files]);
         return;
       }
@@ -166,9 +184,9 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
     }
   }, [ctx.value]);
 
-  if (props.$ref) {
-    props.$ref.focus = () => bref.current?.focus();
-    props.$ref.click = () => click();
+  if ($ref) {
+    $ref.focus = () => bref.current?.focus();
+    $ref.click = () => click();
   }
 
   return (
@@ -184,26 +202,29 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
           className={Style.button}
           onClick={click}
           disabled={!ctx.editable}
-          $fillLabel={fillLabel}
-          $icon={icon}
-          $iconPosition={iconPosition}
-          $outline={outline}
-          $round={round}
-          $size={size}
-          $color={color}
-          $fitContent={fitContent}
-          $noPadding={noPadding}
-          $focusWhenMounted={focusWhenMounted}
+          tabIndex={tabIndex}
+          $fillLabel={$fillLabel}
+          $icon={$icon}
+          $iconPosition={$iconPosition}
+          $outline={$outline}
+          $text={$text}
+          $round={$round}
+          $size={$size}
+          $color={$color}
+          $fitContent={$fitContent}
+          $noPadding={$noPadding}
+          $focusWhenMounted={$focusWhenMounted}
+          $notDependsOnForm
         >
-          {props.children ?? "ファイルを選択"}
+          {children ?? "ファイルを選択"}
         </Button>
       }
-      {props.$hideFileName !== true && !props.$multiple && ctx.value != null &&
+      {$hideFileName !== true && !$multiple && ctx.value != null &&
         <div className={Style.label}>
           {ctx.value.name}
         </div>
       }
-      {ctx.editable && props.$hideClearButton !== true && ctx.value != null &&
+      {ctx.editable && $hideClearButton !== true && ctx.value != null &&
         <div
           className={Style.clear}
           onClick={clear}
@@ -215,9 +236,9 @@ const FileButton = forwardRef<HTMLDivElement, FileButtonProps>(<
         ref={iref}
         type="file"
         className={Style.file}
-        accept={props.$accept}
+        accept={$accept}
         onChange={change}
-        multiple={props.$multiple}
+        multiple={$multiple}
       />
       {props.name &&
         <input

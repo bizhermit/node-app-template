@@ -17,8 +17,8 @@ namespace TimeInput {
     $secondInterval?: number;
   };
 
-  export const getUnit = (props: FCProps, mode: TimeMode) => {
-    if (props.$unit) return props.$unit;
+  export const getUnit = (unit: FCProps["$unit"], mode: TimeMode) => {
+    if (unit) return unit;
     switch (mode) {
       case "h":
         return "hour";
@@ -70,13 +70,13 @@ namespace TimeInput {
     }
   };
 
-  export const getMinTime = (props: FCProps, unit: TimeUnit) => {
-    return TimeItemUtils.convertTime(props.$min, unit) ?? 0;
+  export const getMinTime = (min: FCProps["$min"], unit: TimeUnit) => {
+    return TimeItemUtils.convertTime(min, unit) ?? 0;
   };
 
   const max24 = (23 * 3600 + 59 * 60 + 59) * 1000;
-  export const getMaxTime = (props: FCProps, unit: TimeUnit) => {
-    return TimeItemUtils.convertTime(props.$max, unit) ?? max24;
+  export const getMaxTime = (max: FCProps["$max"], unit: TimeUnit) => {
+    return TimeItemUtils.convertTime(max, unit) ?? max24;
   };
 
   export const rangeValidation = (minTime: number, maxTime: number, mode: TimeMode, unit: TimeUnit, itemName?: string) => {
@@ -131,7 +131,7 @@ namespace TimeInput {
         undefined,
         undefined
       );
-    const getPairTime = (data: Struct) => {
+    const getPairTime = (data: { [v: string | number | symbol]: any }) => {
       if (data == null) return undefined;
       const pairValue = data[rangePair.name];
       if (pairValue == null || Array.isArray(pairValue)) return undefined;

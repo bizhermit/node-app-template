@@ -31,7 +31,7 @@ export const useSlider = <T extends number = number>() => useFormItemBase<Slider
   };
 });
 
-export type SliderProps<D extends DataItem_Number | undefined = undefined> = FormItemProps<number, D, number> & {
+type SliderOptions<D extends DataItem_Number | undefined = undefined> = {
   $ref?: SliderHook<ValueType<number, D, number>> | SliderHook<number>;
   $max?: number;
   $min?: number;
@@ -40,6 +40,10 @@ export type SliderProps<D extends DataItem_Number | undefined = undefined> = For
   $minWidth?: number | string;
   $maxWidth?: number | string;
 };
+
+type OmitAttrs = "$tagPosition" | "placeholder";
+export type SliderProps<D extends DataItem_Number | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<number, D, number>, OmitAttrs>, SliderOptions<D>>
 
 interface SliderFC extends FunctionComponent<SliderProps> {
   <D extends DataItem_Number | undefined = undefined>(
@@ -51,15 +55,25 @@ const defaultWidth = 160;
 const defaultMax = 100;
 const defaultMin = 0;
 
-const Slider = forwardRef<HTMLDivElement, SliderProps>(<
+const Slider = forwardRef(<
   D extends DataItem_Number | undefined = undefined
->(p: SliderProps<D>, $ref: ForwardedRef<HTMLDivElement>) => {
+>(p: SliderProps<D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
+  useImperativeHandle(r, () => ref.current);
 
   const railRef = useRef<HTMLDivElement>(null!);
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    $max,
+    $min,
+    $step,
+    $width,
+    $minWidth,
+    $maxWidth,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       return {
         $min: dataItem.min,
@@ -76,13 +90,13 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
     },
   });
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     preventRequiredValidation: true,
     receive: parseNum,
   });
 
-  const max = props.$max ?? defaultMax;
-  const min = props.$min ?? defaultMin;
+  const max = $max ?? defaultMax;
+  const min = $min ?? defaultMin;
 
   const rate = useMemo(() => {
     if (ctx.value == null) return "0%";
@@ -122,12 +136,12 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
     switch (e.key) {
       case "ArrowLeft":
         if (e.ctrlKey) ctx.change(min);
-        else ctx.change(Math.max(min, (ctx.value ?? min) - (props.$step ?? 1)));
+        else ctx.change(Math.max(min, (ctx.value ?? min) - ($step ?? 1)));
         e.preventDefault();
         break;
       case "ArrowRight":
         if (e.ctrlKey) ctx.change(max);
-        else ctx.change(Math.min(max, (ctx.value ?? min) + (props.$step ?? 1)));
+        else ctx.change(Math.min(max, (ctx.value ?? min) + ($step ?? 1)));
         e.preventDefault();
         break;
       default:
@@ -136,25 +150,23 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
   };
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
-      ref.current?.focus();
-    }
+    if ($focusWhenMounted) ref.current?.focus();
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => ref.current?.focus();
-    props.$ref.up = () => {
-      const v = Math.min(props.$max ?? max, Math.max(props.$min ?? min, (ctx.valueRef.current ?? min + (props.$step ?? 1))));
+  if ($ref) {
+    $ref.focus = () => ref.current?.focus();
+    $ref.up = () => {
+      const v = Math.min($max ?? max, Math.max($min ?? min, (ctx.valueRef.current ?? min + ($step ?? 1))));
       ctx.change(v, false);
       return v;
     };
-    props.$ref.down = () => {
-      const v = Math.min(props.$max ?? max, Math.max(props.$min ?? min, (ctx.valueRef.current ?? min + (props.$step ?? 1))));
+    $ref.down = () => {
+      const v = Math.min($max ?? max, Math.max($min ?? min, (ctx.valueRef.current ?? min + ($step ?? 1))));
       ctx.change(v, false);
       return v;
     };
-    props.$ref.add = (num) => {
-      const v = Math.min(props.$max ?? max, Math.max(props.$min ?? min, (ctx.valueRef.current ?? min + num)));
+    $ref.add = (num) => {
+      const v = Math.min($max ?? max, Math.max($min ?? min, (ctx.valueRef.current ?? min + num)));
       ctx.change(v, false);
       return v;
     };
@@ -170,12 +182,12 @@ const Slider = forwardRef<HTMLDivElement, SliderProps>(<
       $mainProps={{
         className: Style.main,
         style: {
-          width: convertSizeNumToStr(props.$width ?? defaultWidth),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
+          width: convertSizeNumToStr($width ?? defaultWidth),
+          maxWidth: convertSizeNumToStr($maxWidth),
+          minWidth: convertSizeNumToStr($minWidth),
         },
         onKeyDown: keydown,
-        tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
+        tabIndex: ctx.disabled ? undefined : tabIndex ?? 0,
       }}
     >
       <div

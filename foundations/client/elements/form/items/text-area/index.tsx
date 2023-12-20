@@ -18,7 +18,7 @@ type TextAreaHook<T extends string> = FormItemHook<T>;
 
 export const useTextBox = <T extends string = string>() => useFormItemBase<TextAreaHook<T>>();
 
-export type TextAreaProps<D extends DataItem_String | undefined = undefined> = FormItemProps<string, D, string> & {
+type TextAreaOptions<D extends DataItem_String | undefined = undefined> = {
   $ref?: TextAreaHook<ValueType<string, D, string>> | TextAreaHook<string>;
   $inputMode?: InputMode;
   $length?: number;
@@ -36,18 +36,41 @@ export type TextAreaProps<D extends DataItem_String | undefined = undefined> = F
   $autoComplete?: string;
 };
 
+type OmitAttrs = "";
+export type TextAreaProps<D extends DataItem_String | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<string, D, string>, OmitAttrs>, TextAreaOptions<D>>;
+
 interface TextAreaFC extends FunctionComponent<TextAreaProps> {
   <D extends DataItem_String | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, TextAreaProps<D>>
   ): ReactElement<any> | null;
 }
 
-const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
+const TextArea = forwardRef(<
   D extends DataItem_String | undefined = undefined
 >(p: TextAreaProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const iref = useRef<HTMLTextAreaElement>(null!);
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    placeholder,
+    $inputMode,
+    $length,
+    $preventInputWithinLength,
+    $minLength,
+    $maxLength,
+    $charType,
+    $resize,
+    $width,
+    $maxWidth,
+    $minWidth,
+    $height,
+    $maxHeight,
+    $minHeight,
+    $autoComplete,
+    $focusWhenMounted,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem, method, props }) => {
       const isSearch = method === "get";
       return {
@@ -82,23 +105,23 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
     },
   });
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     effect: (v) => {
       if (iref.current) iref.current.value = v || "";
     },
-    validations: (_, label) => {
-      const validations: Array<FormItemValidation<Nullable<string>>> = [];
-      if (props.$length != null) {
-        validations.push(v => StringValidation.length(v, props.$length!, label));
+    validations: ({ label }) => {
+      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      if ($length != null) {
+        validations.push(v => StringValidation.length(v, $length!, label));
       } else {
-        if (props.$minLength != null) {
-          validations.push(v => StringValidation.minLength(v, props.$minLength!, label));
+        if ($minLength != null) {
+          validations.push(v => StringValidation.minLength(v, $minLength!, label));
         }
-        if (props.$maxLength != null) {
-          validations.push(v => StringValidation.maxLength(v, props.$maxLength!, label));
+        if ($maxLength != null) {
+          validations.push(v => StringValidation.maxLength(v, $maxLength!, label));
         }
       }
-      switch (props.$charType) {
+      switch ($charType) {
         case "h-num":
           validations.push(v => StringValidation.halfWidthNumeric(v, label));
           break;
@@ -150,33 +173,35 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
       return validations;
     },
     validationsDeps: [
-      props.$length,
-      props.$minLength,
-      props.$maxLength,
-      props.$charType,
+      $length,
+      $minLength,
+      $maxLength,
+      $charType,
     ],
   });
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
-      iref.current?.focus();
-    }
+    if ($focusWhenMounted) iref.current?.focus();
   }, []);
+
+  if ($ref) {
+    $ref.focus = () => iref.current?.focus();
+  }
 
   return (
     <FormItemWrap
       {...props}
       ref={ref}
       $ctx={ctx}
-      data-has={isNotEmpty(ctx.value)}
+      $hasData={isNotEmpty(ctx.value)}
       $mainProps={{
         style: {
-          width: convertSizeNumToStr(props.$width),
-          maxWidth: convertSizeNumToStr(props.$maxWidth),
-          minWidth: convertSizeNumToStr(props.$minWidth),
-          height: convertSizeNumToStr(props.$height),
-          maxHeight: convertSizeNumToStr(props.$maxHeight),
-          minHeight: convertSizeNumToStr(props.$minHeight),
+          width: convertSizeNumToStr($width),
+          maxWidth: convertSizeNumToStr($maxWidth),
+          minWidth: convertSizeNumToStr($minWidth),
+          height: convertSizeNumToStr($height),
+          maxHeight: convertSizeNumToStr($maxHeight),
+          minHeight: convertSizeNumToStr($minHeight),
         }
       }}
     >
@@ -184,18 +209,18 @@ const TextArea = forwardRef<HTMLDivElement, TextAreaProps>(<
         ref={iref}
         className={Style.input}
         name={props.name}
-        placeholder={ctx.editable ? props.placeholder : ""}
+        placeholder={ctx.editable ? placeholder : ""}
         disabled={ctx.disabled}
         readOnly={ctx.readOnly}
-        maxLength={props.$maxLength ?? (props.$preventInputWithinLength ? undefined : props.$length)}
-        tabIndex={props.tabIndex}
+        maxLength={$maxLength ?? ($preventInputWithinLength ? undefined : $length)}
+        tabIndex={tabIndex}
         defaultValue={ctx.value ?? ""}
         onChange={e => ctx.change(e.target.value)}
-        autoComplete={props.$autoComplete ?? "off"}
-        inputMode={props.$inputMode}
+        autoComplete={$autoComplete ?? "off"}
+        inputMode={$inputMode}
       />
-      {props.$resize &&
-        <Resizer $direction={typeof props.$resize === "boolean" ? "xy" : props.$resize} />
+      {$resize &&
+        <Resizer $direction={typeof $resize === "boolean" ? "xy" : $resize} />
       }
     </FormItemWrap>
   );

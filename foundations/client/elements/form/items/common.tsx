@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
-import type { FormItemProps } from "../$types";
 import joinCn from "../../../utilities/join-class-name";
 import Tooltip from "../../tooltip";
 import { convertHiddenValue, isErrorObject } from "../utilities";
@@ -9,34 +8,24 @@ import Style from "./form-item.module.scss";
 import type { useFormItemContext } from "./hooks";
 
 type FormItemWrapOptions = {
-  $ctx: ReturnType<typeof useFormItemContext<any, any, any, any>>;
+  $ctx: ReturnType<typeof useFormItemContext<any, any, any, any>>["ctx"];
   $preventFieldLayout?: boolean;
   $clickable?: boolean;
-  $mainProps?: HTMLAttributes<HTMLDivElement> & Struct;
+  $mainProps?: HTMLAttributes<HTMLDivElement> & { [v: `data-${string}`]: string | number | boolean | null | undefined };
   $useHidden?: boolean;
   $hideWhenNoError?: boolean;
+  $round?: boolean;
+  $hasData?: boolean;
   children?: ReactNode;
 };
 
-type FormItemWrapProps = OverwriteAttrs<FormItemProps<any, any, any, any>, FormItemWrapOptions>;
-
-const rmAttrs = (props: { [v: string]: any } | null | undefined) => {
-  const p: { [v: string]: any } = {};
-  if (props) {
-    Object.keys(props).forEach(k => {
-      if (k[0] !== "$") p[k] = props[k];
-    });
-  }
-  return p;
-};
+type FormItemWrapProps = OverwriteAttrs<ReturnType<typeof useFormItemContext>["props"], FormItemWrapOptions>;
 
 export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
   name,
   className,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  tabIndex,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  placeholder,
+  // tabIndex,
+  // placeholder,
   $ctx,
   $preventFieldLayout,
   $clickable,
@@ -45,19 +34,25 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
   $hideWhenNoError,
   $tag,
   $tagPosition,
-  $messagePosition,
   $color,
+  $round,
+  $hasData,
+  // $bind,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  $value,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  $defaultValue,
   children,
   ...props
 }, ref) => {
-  const errorNode = $ctx.messageDisplayMode !== "none"
-    && $ctx.messageDisplayMode !== "hide"
+  const errorNode = $ctx.messagePosition !== "none"
+    && $ctx.messagePosition !== "hide"
     && $ctx.editable
-    && (($ctx.error !== "" && isErrorObject($ctx.error)) || $ctx.messageDisplayMode === "bottom")
+    && (($ctx.error !== "" && isErrorObject($ctx.error)) || $ctx.messagePosition === "bottom")
     && (
       <div
         className={Style.error}
-        data-mode={$ctx.messageDisplayMode}
+        data-mode={$ctx.messagePosition}
       >
         <span
           className={Style.text}
@@ -69,12 +64,12 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
     );
 
   const attrs = {
-    ...rmAttrs($mainProps),
+    ...$mainProps,
     className: joinCn(Style.main, $mainProps?.className),
     "data-editable": $ctx.editable,
     "data-field": $preventFieldLayout !== true,
     "data-disabled": $ctx.disabled,
-    "data-error": $ctx.messageDisplayMode === "none" ? undefined : isErrorObject($ctx.error),
+    "data-error": $ctx.messagePosition === "none" ? undefined : isErrorObject($ctx.error),
     "data-clickable": $clickable,
   };
 
@@ -82,12 +77,14 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
 
   return (
     <div
-      {...rmAttrs(props)}
+      {...props}
       className={joinCn(Style.wrap, className)}
       ref={ref}
       data-color={$color}
+      data-round={$round}
+      data-has={$hasData}
       data-tagpad={tagPlaceholder}
-      data-hidden={$hideWhenNoError ? !isErrorObject($ctx.error) || $messagePosition === "none" : undefined}
+      data-hidden={$hideWhenNoError ? !isErrorObject($ctx.error) || $ctx.messagePosition === "none" : undefined}
     >
       {$tag &&
         <div
@@ -104,7 +101,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
           value={convertHiddenValue($ctx.value)}
         />
       }
-      {$ctx.messageDisplayMode === "tooltip" ?
+      {$ctx.messagePosition === "tooltip" ?
         <Tooltip
           {...attrs}
           $disabled={!errorNode}

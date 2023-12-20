@@ -4,12 +4,12 @@ import { getValue } from "../../../objects/struct/get";
 import { setValue } from "../../../objects/struct/set";
 import CheckBox, { type CheckBoxProps } from "../form/items/check-box";
 
-type Props<T extends Struct> = DataTableBaseColumn<T> & {
+type Props<T extends { [v: string | number | symbol]: any }> = DataTableBaseColumn<T> & {
   checkBoxProps?: CheckBoxProps;
   bulk?: boolean;
 };
 
-const dataTableCheckBoxColumn = <T extends Struct>(props: Props<T>): DataTableColumn<T> => {
+const dataTableCheckBoxColumn = <T extends { [v: string | number | symbol]: any }>(props: Props<T>): DataTableColumn<T> => {
   let setBulkChecked: Dispatch<SetStateAction<boolean>> = () => { };
   const checkedValue = props.checkBoxProps?.$checkedValue ?? true;
   const uncheckedValue = props.checkBoxProps?.$uncheckedValue ?? false;

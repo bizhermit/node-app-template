@@ -33,15 +33,21 @@ export const useToggleBox = <
   };
 });
 
-export type ToggleBoxProps<
+type ToggleBoxOptions<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
-> = Omit<FormItemProps<T, D>, "$tagPosition"> & {
+> = {
   $ref?: ToggleBoxHook<ValueType<T, D, T>> | ToggleBoxHook<string | number | boolean>;
   $checkedValue?: T;
   $uncheckedValue?: T;
   children?: ReactNode;
 };
+
+type OmitAttrs = "$tagPosition" | "placeholder";
+export type ToggleBoxProps<
+  T extends string | number | boolean = boolean,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+> = OverwriteAttrs<Omit<FormItemProps<T, D>, OmitAttrs>, ToggleBoxOptions<T, D>>;
 
 interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
   <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
@@ -49,15 +55,22 @@ interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
   ): ReactElement<any> | null;
 }
 
-const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
+const ToggleBox = forwardRef(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
->(p: ToggleBoxProps<T, D>, $ref: ForwardedRef<HTMLDivElement>) => {
+>(p: ToggleBoxProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
-  useImperativeHandle($ref, () => ref.current);
+  useImperativeHandle(r, () => ref.current);
 
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    $checkedValue,
+    $uncheckedValue,
+    $focusWhenMounted,
+    children,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       switch (dataItem.type) {
         case "string":
@@ -95,18 +108,21 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
     }
   });
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     preventRequiredValidation: true,
-    validations: () => {
-      if (!props.$required) return [];
+    validations: ({ required, getMessage }) => {
+      if (!required) return [];
       return [(v) => {
         if (v === (checkedValue)) return undefined;
-        return props.$messages?.required ?? "有効にしてください。";
+        return getMessage("required");
       }];
     },
+    messages: {
+      required: "有効にしてください。",
+    },
   });
-  const checkedValue = (props.$checkedValue ?? true) as T;
-  const uncheckedValue = (props.$uncheckedValue ?? false) as T;
+  const checkedValue = ($checkedValue ?? true) as T;
+  const uncheckedValue = ($uncheckedValue ?? false) as T;
 
   const toggleCheck = (check?: boolean) => {
     if (check == null) {
@@ -126,16 +142,16 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
   };
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
     }
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
-    props.$ref.on = () => ctx.change(checkedValue, false);
-    props.$ref.off = () => ctx.change(uncheckedValue, false);
-    props.$ref.toggle = () => ctx.change(ctx.valueRef.current === checkedValue ? uncheckedValue : checkedValue, false);
+  if ($ref) {
+    $ref.focus = () => (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
+    $ref.on = () => ctx.change(checkedValue, false);
+    $ref.off = () => ctx.change(uncheckedValue, false);
+    $ref.toggle = () => ctx.change(ctx.valueRef.current === checkedValue ? uncheckedValue : checkedValue, false);
   }
 
   return (
@@ -150,7 +166,7 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
         className: Style.main,
         onClick: click,
         onKeyDown: keydown,
-        tabIndex: ctx.disabled ? undefined : props.tabIndex ?? 0,
+        tabIndex: ctx.disabled ? undefined : tabIndex ?? 0,
       }}
     >
       <div
@@ -163,10 +179,10 @@ const ToggleBox = forwardRef<HTMLDivElement, ToggleBoxProps>(<
         />
         <div className={Style.handle} />
       </div>
-      {props.children &&
+      {children &&
         <div className={Style.content}>
           <Text className={Style.label}>
-            {props.children}
+            {children}
           </Text>
         </div>
       }

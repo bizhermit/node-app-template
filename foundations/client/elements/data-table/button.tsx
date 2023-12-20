@@ -2,12 +2,12 @@ import type { ReactNode } from "react";
 import { DataTableCellLabel, type DataTableBaseColumn, type DataTableCellContext, type DataTableColumn } from ".";
 import Button, { ButtonOptions } from "../button";
 
-type Props<T extends Struct> = DataTableBaseColumn<T> & Omit<ButtonOptions, "onClick" | "$focusWhenMounted" | "$notDependsOnForm"> & {
+type Props<T extends { [v: string | number | symbol]: any }> = DataTableBaseColumn<T> & Omit<ButtonOptions, "onClick" | "$focusWhenMounted" | "$notDependsOnForm"> & {
   onClick?: (ctx: DataTableCellContext<T>, unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLButtonElement>) => (void | boolean | Promise<void>);
   buttonText?: ReactNode;
 };
 
-const dataTableButtonColumn = <T extends Struct>(props: Props<T>): DataTableColumn<T> => {
+const dataTableButtonColumn = <T extends { [v: string | number | symbol]: any }>(props: Props<T>): DataTableColumn<T> => {
   return {
     align: "center",
     width: "10rem",

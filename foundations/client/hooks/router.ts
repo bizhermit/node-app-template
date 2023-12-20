@@ -8,15 +8,15 @@ const useRouter = () => {
   return {
     ...router,
     pathname: pathname as PagePath,
-    push: (url: PagePath, params?: Struct, options?: DynamicUrlContextOptions) => {
+    push: (url: PagePath, params?: { [v: string | number | symbol]: any }, options?: DynamicUrlContextOptions) => {
       router.push(getDynamicUrlContext(url, params, options).url);
     },
     _push: router.push,
-    replace: (url: PagePath, params?: Struct, options?: DynamicUrlContextOptions) => {
+    replace: (url: PagePath, params?: { [v: string | number | symbol]: any }, options?: DynamicUrlContextOptions) => {
       router.replace(getDynamicUrlContext(url, params, options).url);
     },
     _replace: router.replace,
-    replaceUrl: (url: PagePath, params?: Struct, options?: DynamicUrlContextOptions) => {
+    replaceUrl: (url: PagePath, params?: { [v: string | number | symbol]: any }, options?: DynamicUrlContextOptions) => {
       if (typeof window === "undefined") return;
       window.history.replaceState({}, "", getDynamicUrlContext(url, params, options).url);
     },

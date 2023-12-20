@@ -8,7 +8,7 @@ export const pickQueryString = (val: string | string[] | undefined) => {
   return v;
 };
 
-export const useQueryParam = <S extends string = string>(pageProps: Struct, dataName = "id", init?: S | (() => S)) => {
+export const useQueryParam = <S extends string = string>(pageProps: { [v: string | number | symbol]: any }, dataName = "id", init?: S | (() => S)) => {
   const router = useRouter();
   const state = useState<S>(pageProps?.[dataName] ?? init);
 
@@ -26,7 +26,7 @@ export const getInitialQueryProps = <T = { id: string; }>(dataName: string | Arr
         [dataName]: pickQueryString(ctx.query[dataName]),
       } as T;
     }
-    const res: Struct = {};
+    const res: { [v: string | number | symbol]: any } = {};
     dataName.forEach(dn => {
       res[dn] = pickQueryString(ctx.query[dn]);
     });

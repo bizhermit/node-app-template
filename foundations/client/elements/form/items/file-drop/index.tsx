@@ -25,8 +25,8 @@ export const useFileDrop = <T extends File | Array<File>>() => useFormItemBase<F
   };
 });
 
-type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = FormItemProps<T, D> & {
-  $typeof?: FileValueType;
+type FileDropBaseProps = {
+  // $typeof?: FileValueType;
   $accept?: string;
   $fileSize?: number;
   $totalFileSize?: number;
@@ -35,18 +35,25 @@ type FileDropBaseProps<T, D extends DataItem_File | undefined = undefined> = For
   children?: ReactNode;
 };
 
-export type FileDropProps_Single<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<File, D> & {
+type FileDropSingleOptions<D extends DataItem_File | undefined = undefined> = FileDropBaseProps & {
   $ref?: FileDropHook<ValueType<File, D, File>> | FileDropHook<File | Array<File>>;
   $append?: false;
+  $multiple?: false;
 };
-
-export type FileDropProps_Multiple<D extends DataItem_File | undefined = undefined> = FileDropBaseProps<Array<File>, D> & {
+type FileDropMultipleOptions<D extends DataItem_File | undefined = undefined> = FileDropBaseProps & {
   $ref?: FileDropHook<ValueType<Array<File>, D, Array<File>>> | FileDropHook<File | Array<File>>;
   $append?: boolean;
+  $multiple: true;
 };
 
+type OmitAttrs = "placeholder";
+type FileDropSingleProps<D extends DataItem_File | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<File, D>, OmitAttrs>, FileDropSingleOptions<D>>;
+type FileDropMultipleProps<D extends DataItem_File | undefined = undefined> =
+  OverwriteAttrs<Omit<FormItemProps<Array<File>, D>, OmitAttrs>, FileDropMultipleOptions<D>>;
+
 export type FileDropProps<D extends DataItem_File | undefined = undefined> =
-  (FileDropProps_Single<D> & { $multiple?: false; }) | (FileDropProps_Multiple<D> & { $multiple: true });
+  FileDropSingleProps<D> | FileDropMultipleProps<D>;
 
 interface FileDropFC extends FunctionComponent {
   <D extends DataItem_File | undefined = undefined>(
@@ -54,14 +61,27 @@ interface FileDropFC extends FunctionComponent {
   ): ReactElement<any> | null;
 }
 
-const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
+const FileDrop = forwardRef(<
   D extends DataItem_File | undefined = undefined
 >(p: FileDropProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
-  const props = useDataItemMergedProps(form, p, {
+  const {
+    tabIndex,
+    $append,
+    $multiple,
+    // $typeof,
+    $accept,
+    $fileSize,
+    $totalFileSize,
+    $noFileDialog,
+    $hideClearButton,
+    $focusWhenMounted,
+    children,
+    ...$p
+  } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
       return {
-        $typeof: dataItem.typeof,
+        // $typeof: dataItem.typeof,
         $accept: dataItem.accept,
         $fileSize: dataItem.fileSize,
         ...(dataItem.multiple ? {
@@ -84,19 +104,19 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
   const href = useRef<HTMLInputElement>(null!);
   const bref = useRef<HTMLDivElement>(null);
 
-  const ctx = useFormItemContext(form, props, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     multipartFormData: true,
-    multiple: props.$multiple,
+    multiple: $multiple,
     validations: () => {
       const validations: Array<FormItemValidation<any>> = [];
-      if (props.$accept) {
-        validations.push(FileValidation.type(props.$accept));
+      if ($accept) {
+        validations.push(FileValidation.type($accept));
       }
-      if (props.$fileSize != null) {
-        validations.push(FileValidation.size(props.$fileSize));
+      if ($fileSize != null) {
+        validations.push(FileValidation.size($fileSize));
       }
-      if (props.$totalFileSize != null) {
-        validations.push(FileValidation.totalSize(props.$totalFileSize));
+      if ($totalFileSize != null) {
+        validations.push(FileValidation.totalSize($totalFileSize));
       }
       return validations;
     },
@@ -105,8 +125,8 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
     },
   });
 
-  const multiable = props.$multiple === true;
-  const fileDialog = props.$noFileDialog !== true;
+  const multiable = $multiple === true;
+  const fileDialog = $noFileDialog !== true;
 
   const click = () => {
     if (!ctx.editable || !fileDialog) return;
@@ -120,7 +140,7 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
     }
     const files = Array.from(fileList ?? []);
     if (multiable) {
-      if (props.$append) {
+      if ($append) {
         ctx.change([...(ctx.valueRef.current ?? []), ...files]);
         return;
       }
@@ -199,14 +219,14 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
   }, [ctx.value]);
 
   useEffect(() => {
-    if (props.$focusWhenMounted) {
+    if ($focusWhenMounted) {
       bref.current?.focus();
     }
   }, []);
 
-  if (props.$ref) {
-    props.$ref.focus = () => bref.current?.focus();
-    props.$ref.picker = () => click();
+  if ($ref) {
+    $ref.focus = () => bref.current?.focus();
+    $ref.picker = () => click();
   }
 
   return (
@@ -223,8 +243,8 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
         ref={iref}
         type="file"
         className={Style.file}
-        multiple={props.$multiple}
-        accept={props.$accept}
+        multiple={$multiple}
+        accept={$accept}
         onChange={change}
       />
       {props.name && ctx.value != null &&
@@ -242,15 +262,15 @@ const FileDrop = forwardRef<HTMLDivElement, FileDropProps>(<
         onDragOver={dragOver}
         onDragLeave={dragLeave}
         onDrop={drop}
-        tabIndex={ctx.disabled ? undefined : props.tabIndex ?? 0}
+        tabIndex={ctx.disabled ? undefined : tabIndex ?? 0}
         data-dialog={fileDialog}
         onKeyDown={keydown}
       >
         <Text>
-          {props.children}
+          {children}
         </Text>
       </div>
-      {ctx.editable && props.$hideClearButton !== true && ctx.value != null &&
+      {ctx.editable && $hideClearButton !== true && ctx.value != null &&
         <div
           className={Style.clear}
           onClick={clear}

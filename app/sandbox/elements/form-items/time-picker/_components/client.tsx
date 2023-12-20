@@ -6,13 +6,13 @@ import Form from "#/client/elements/form";
 import TimePicker from "#/client/elements/form/items/time-picker";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_number, sample_string, sample_time } from "$/data-items/sample/item";
+import { sample_time } from "$/data-items/sample/item";
 import { useState } from "react";
 
 const TimePickerClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
-  const [value, setValue] = useState<Nullable<number>>();
+  const [value, setValue] = useState<Nullable<TimeValue>>();
   const [bind, setBind] = useState({});
   const [formBind, setFormBind] = useState<Struct>({ "pair-time": "12:00" });
 
@@ -106,16 +106,6 @@ const TimePickerClient = () => {
           $tag="time"
           $dataItem={sample_time}
           $onChange={v => console.log("time: ", v)}
-        />
-        <TimePicker
-          $tag="number"
-          $dataItem={sample_number}
-          $onChange={v => console.log("number: ", v)}
-        />
-        <TimePicker
-          $tag="string"
-          $dataItem={sample_string}
-          $onChange={v => console.log("string: ", v)}
         />
       </Row>
       <Row $vAlign="top" className="g-s">

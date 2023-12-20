@@ -22,7 +22,7 @@ type DataItemValidation<T, D extends DataItem | DataContext> =
     parentDataContext?: DataContext | null | undefined;
   }) => ((Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
 
-type LoadableArray<T = Struct> = Array<T> | Readonly<Array<T>> | (() => Array<T>) | (() => Promise<Array<T>>);
+type LoadableArray<T = { [v: string | number | symbol]: any }> = Array<T> | Readonly<Array<T>> | (() => Array<T>) | (() => Promise<Array<T>>);
 type DataItemSource<V> = Array<{ value: V } & { [key: string]: any }> | LoadableArray
 
 type DataItem_Base<V = any> = {
@@ -45,11 +45,6 @@ type DataItem = Readonly<DataItem_Base & { type: "any" }>
   | DataItem_Array<any>
   | DataItem_Struct<any>
   ;
-
-type StringValue = string | number | boolean;
-type NumberValue = number | string;
-type BooleanValue = boolean | string | number;
-type DateValue = string | number | Date;
 
 type DataItemSourceKeyValue<D extends DataItem, T> =
   D extends { source: infer S } ? (
@@ -153,13 +148,15 @@ type DataProp<D extends DataItem> = D extends DataItem ? {
 
 type CrossDataProps<U> = Pick<U, keyof U>;
 type UnionToIntersection<A> = (A extends any ? (_: A) => void : never) extends ((_: infer B) => void) ? B : never;
-type DataProps<A extends (Struct<DataItem> | Array<DataItem>)> = A extends Struct<DataItem> ?
+type DataProps<A extends ({ [v: string | number | symbol]: DataItem } | Array<DataItem>)> = A extends { [v: string | number | symbol]: DataItem } ?
   { [P in keyof A]: DataItemValueType<A[P], true, "client"> } :
   CrossDataProps<UnionToIntersection<DataProp<A[number]>>>;
 
 /**
  * String
  */
+
+type StringValue = string | number | boolean;
 
 type StringCharType =
   | "int"
@@ -198,6 +195,8 @@ type DataItem_String<V extends string = string> = Readonly<DataItem_Base<V> & {
  * Number
  */
 
+type NumberValue = number | string;
+
 type DataItem_Number<V extends number = number> = Readonly<DataItem_Base<V> & {
   type: "number";
   validations?: DataItemValidation<number, DataItem_Number>;
@@ -218,6 +217,8 @@ type DataItem_Number<V extends number = number> = Readonly<DataItem_Base<V> & {
  * Boolean
  */
 
+type BooleanValue = boolean | string | number;
+
 type DataItem_Boolean<
   T extends boolean | number | string = boolean | number | string,
   F extends boolean | number | string = boolean | number | string
@@ -235,6 +236,7 @@ type DataItem_Boolean<
 
 type DateType = "date" | "month" | "year";
 type DateValueType = "string" | "number" | "date";
+type DateValue = string | number | Date;
 
 type DateRangePair = {
   name: string;
@@ -331,6 +333,6 @@ type DataItem_Array<T extends DataItem | DataContext = DataItem | DataContext> =
 
 type DataItem_Struct<T extends DataContext = DataContext> = Readonly<DataItem_Base & {
   type: "struct";
-  validations?: DataItemValidation<Struct<any>, DataItem_Struct<T>>;
+  validations?: DataItemValidation<{ [v: string | number | symbol]: any }, DataItem_Struct<T>>;
   item: T;
 }>;

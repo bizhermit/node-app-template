@@ -1,6 +1,6 @@
 import type { FormItemProps, ValueType } from "./$types";
 
-export const isErrorObject = (obj: any) => !(obj == null || obj === false);
+export const isErrorObject = (obj: any): obj is string => !(obj == null || obj === false);
 
 export const convertHiddenValue = (value: any) => {
   if (value == null) return "";
@@ -26,7 +26,7 @@ export const convertDataItemValidationToFormItemValidation = <T, U, P extends Fo
   $dataItem: D,
   convertValue?: (v: ValueType<T, D, V>) => U | null | undefined
 ) => {
-  return (v: any | null | undefined, bindData: Struct | undefined) => {
+  return (v: any | null | undefined, bindData: { [v: string | number | symbol]: any } | undefined) => {
     const res = func(convertValue ? convertValue(v) : v as U | null | undefined, {
       key: props?.name || $dataItem.name!,
       dataItem: $dataItem,

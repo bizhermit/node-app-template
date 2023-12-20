@@ -1,21 +1,14 @@
+import rmAttrs from "#/client/utilities/remove-attrs";
 import { ForwardedRef, FunctionComponent, ReactElement, forwardRef, useCallback, useEffect, useMemo, useState, type HTMLAttributes } from "react";
 import { FormItemHook, ValueType } from "../../$types";
 import DateValidation from "../../../../../data-items/date/validations";
 import parseDate from "../../../../../objects/date/parse";
 import structKeys from "../../../../../objects/struct/keys";
-import { attributes } from "../../../../utilities/attributes";
+import joinCn from "../../../../utilities/join-class-name";
 import useForm from "../../context";
 import DateBox, { DateBoxProps, useDateBox } from "../date-box";
 import { formItemHookNotSetError, useFormItemBase } from "../hooks";
 import Style from "./index.module.scss";
-
-type InputOmitProps = "name"
-  | "inputMode"
-  | "defaultValue"
-  | "defaultChecked"
-  | "color"
-  | "onChange"
-  | "children";
 
 type DateRangeBoxHookAddon = {
   focus: (target?: "from" | "to") => void;
@@ -24,11 +17,12 @@ type DateRangeBoxHook<T extends DateValue> = FormItemHook<{ from: T | null | und
 
 export const useDateRangeBox = <T extends DateValue>() => useFormItemBase<DateRangeBoxHook<T>>();
 
-type DateRangeBoxProps<D extends DataItem_Date | undefined = undefined> = Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps> & ({
+type DateBoxOmitProps = "$onChange" | "$onEdit" | "$value" | "$defaultValue" | "$initValue" | "$dataItem" | "$ref";
+type DateRangeBoxOptions<D extends DataItem_Date | undefined = undefined> = {
   $ref?: DateRangeBoxHook<ValueType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
   $from: DateBoxProps<D>;
   $to: DateBoxProps<D>;
-} | (Omit<DateBoxProps<D>, "$onChange" | "$onEdit" | "$value" | "$defaultValue" | "$initValue" | "$dataItem" | "$ref"> & {
+} | (Omit<DateBoxProps<D>, DateBoxOmitProps> & {
   $ref?: DateRangeBoxHook<ValueType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
   $dataItem?: D;
   $onChange?: (
@@ -47,7 +41,17 @@ type DateRangeBoxProps<D extends DataItem_Date | undefined = undefined> = Omit<H
   $toValue?: ValueType<DateValue, D> | null | undefined;
   $toDefaultValue?: ValueType<DateValue, D> | null | undefined;
   $toInitValue?: ValueType<DateValue, D> | null | undefined;
-}))
+});
+
+type OmitAttrs = "name"
+  | "inputMode"
+  | "defaultValue"
+  | "defaultChecked"
+  | "color"
+  | "onChange"
+  | "children";
+type DateRangeBoxProps<D extends DataItem_Date | undefined = undefined> =
+  OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, OmitAttrs>, DateRangeBoxOptions<D>>;
 
 interface DateRangeBoxFC extends FunctionComponent<DateRangeBoxProps<DataItem_Date | undefined>> {
   <D extends DataItem_Date | undefined = undefined>(
@@ -55,9 +59,11 @@ interface DateRangeBoxFC extends FunctionComponent<DateRangeBoxProps<DataItem_Da
   ): ReactElement<any> | null;
 }
 
-const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
-  D extends DataItem_Date | undefined = undefined
->(props: DateRangeBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
+const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined>({
+  className,
+  $ref,
+  ...props
+}: DateRangeBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const isFormItem = form.bind != null;
   const fromRef = useDateBox();
@@ -220,33 +226,33 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
     to.$preventMemorizeOnChange ? (props as any).$to?.$onChange : undefined,
   ]);
 
-  if (props.$ref) {
-    props.$ref.focus = (target = "from") => target === "to" ? toRef.focus() : fromRef.focus();
-    props.$ref.getValue = () => ({
+  if ($ref) {
+    $ref.focus = (target = "from") => target === "to" ? toRef.focus() : fromRef.focus();
+    $ref.getValue = () => ({
       from: fromRef.getValue() as ValueType<DateValue, D, DateValue>,
       to: toRef.getValue() as ValueType<DateValue, D, DateValue>
     });
-    props.$ref.setValue = (v) => {
+    $ref.setValue = (v) => {
       fromRef.setValue(v?.from);
       toRef.setValue(v?.to);
     };
-    props.$ref.setDefaultValue = () => {
+    $ref.setDefaultValue = () => {
       fromRef.setDefaultValue();
       toRef.setDefaultValue();
     };
-    props.$ref.clear = () => {
+    $ref.clear = () => {
       fromRef.clear();
       toRef.clear();
     };
-    props.$ref.hasError = () => fromRef.hasError() || toRef.hasError();
-    props.$ref.getErrorMessage = () => fromRef.getErrorMessage() || toRef.getErrorMessage();
+    $ref.hasError = () => fromRef.hasError() || toRef.hasError();
+    $ref.getErrorMessage = () => fromRef.getErrorMessage() || toRef.getErrorMessage();
   }
 
   useEffect(() => {
     return () => {
-      if (props.$ref) {
-        structKeys(props.$ref).forEach(k => {
-          props.$ref![k] = () => {
+      if ($ref) {
+        structKeys($ref).forEach(k => {
+          $ref![k] = () => {
             throw formItemHookNotSetError;
           };
         });
@@ -256,7 +262,8 @@ const DateRangeBox = forwardRef<HTMLDivElement, DateRangeBoxProps>(<
 
   return (
     <div
-      {...attributes(props, Style.wrap)}
+      {...rmAttrs(props)}
+      className={joinCn(Style.wrap, className)}
       ref={ref}
     >
       <DateBox

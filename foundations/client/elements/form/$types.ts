@@ -12,7 +12,7 @@ export type FormItemMessageFunc = (key: keyof FormItemMessages) => string;
 
 export type FormItemValidation<T> = (
   value: T,
-  bindData: Struct | undefined,
+  bindData: { [v: string | number | symbol]: any } | undefined,
   index: number,
   getMessage: FormItemMessageFunc
 ) => (boolean | string | null | undefined);
@@ -30,7 +30,7 @@ type FormItemCoreOptions<
   T = any,
   D extends DataItem | undefined = DataItem,
   V = undefined,
-  U extends Struct = {}
+  U extends { [v: string | number | symbol]: any } = {}
 > = {
   name?: string;
   $label?: string;
@@ -89,7 +89,7 @@ export type FormItemProps<
   T = any,
   D extends DataItem | undefined = DataItem,
   V = undefined,
-  U extends Struct = {}
+  U extends { [v: string | number | symbol]: any } = {}
 > = OverwriteAttrs<Omit<HTMLAttributes<HTMLDivElement>, InputOmitProps>, FormItemOptions<T, D, V, U>>;
 
 export type FormItemHook<T, Q extends { [key: string]: any } = {}> = Omit<{
