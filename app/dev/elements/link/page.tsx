@@ -6,8 +6,9 @@ import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import { HomeIcon } from "#/client/elements/icon";
-import NextLink, { NextLinkProps, replaceDynamicPathname } from "#/client/elements/link";
+import NextLink, { NextLinkProps } from "#/client/elements/link";
 import { isNotEmpty } from "#/objects/empty";
+import replaceDynamicPathname from "#/objects/url/dynamic-pathname";
 import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "@/dev/_components/base-layout";
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { type FC } from "react";
@@ -15,7 +16,7 @@ import { type FC } from "react";
 const NextDynamicRouteLink: FC<NextLinkProps> = (props) => {
   return (
     <NextLink {...props}>
-      {props.href} + {JSON.stringify(props.params ?? {})} = {replaceDynamicPathname(props.href, props.params)}
+      {props.href} + {JSON.stringify(props.params ?? {})} = {replaceDynamicPathname(props.href!, props.params)}
     </NextLink>
   );
 };
