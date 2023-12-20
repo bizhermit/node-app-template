@@ -13,7 +13,7 @@
     background: var(--c-base);
     color: var(--c-base_);
 
-    &[data-elevatation="true"] {
+    &[data-elevation="true"] {
       @include mixins.popupShadow;
     }
   }

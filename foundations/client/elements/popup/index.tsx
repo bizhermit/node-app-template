@@ -48,7 +48,7 @@ type PopupOptions = {
   $preventUnmount?: boolean;
   $closeWhenClick?: boolean;
   $zIndex?: number;
-  $preventElevatation?: boolean;
+  $preventElevation?: boolean;
   $onToggle?: (show: boolean) => void;
   $onToggled?: (show: boolean) => void;
   $destructor?: (open: boolean) => void;
@@ -83,7 +83,7 @@ const Impl = ({
   $preventUnmount,
   $closeWhenClick,
   $zIndex,
-  $preventElevatation,
+  $preventElevation,
   $preventFocus,
   $onToggle,
   $onToggled,
@@ -428,7 +428,7 @@ const Impl = ({
             style={toggleAnimationInitStyle}
             data-show={$show}
             data-showed={showed}
-            data-elevatation={!$preventElevatation}
+            data-elevation={!$preventElevation}
             onClick={click}
           >
             {mount && children}

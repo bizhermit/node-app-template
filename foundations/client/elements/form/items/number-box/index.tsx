@@ -292,9 +292,7 @@ const NumberBox = forwardRef(<
   const hasData = ctx.value != null;
 
   useEffect(() => {
-    if ($focusWhenMounted) {
-      iref.current?.focus();
-    }
+    if ($focusWhenMounted) iref.current?.focus();
   }, []);
 
   if ($ref) {

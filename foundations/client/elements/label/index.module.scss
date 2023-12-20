@@ -14,12 +14,12 @@
 
   .main {
     box-sizing: border-box;
-    border-radius: 9999px;
     width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
+    border-radius: 9999px;
     color: var(--s-color_, var(--c-main_));
     background: var(--s-color, var(--c-main));
 

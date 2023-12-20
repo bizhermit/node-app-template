@@ -384,9 +384,7 @@ const SelectBox = forwardRef(<
   const hasData = !(ctx.value == null || ctx.value === "");
 
   useEffect(() => {
-    if ($focusWhenMounted) {
-      iref.current?.focus();
-    }
+    if ($focusWhenMounted) iref.current?.focus();
   }, []);
 
   if ($ref) {

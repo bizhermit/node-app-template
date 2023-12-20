@@ -52,8 +52,8 @@ const dataTableDataItemColumn = <T extends { [v: string | number | symbol]: any 
       if ("source" in dataItem) {
         return {
           align: "left",
-          body: (props) => {
-            const v = props.data[dataItem.name];
+          body: ({ data, column }) => {
+            const v = data[column.name];
             return <>{(dataItem.source as Array<{ [v: string | number | symbol]: any }>).find(item => item.id === v)?.name}</>;
           },
         };

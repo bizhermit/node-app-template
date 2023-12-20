@@ -1,4 +1,4 @@
-import { FC, type HTMLAttributes } from "react";
+import type { FC, HTMLAttributes } from "react";
 import joinCn from "../../utilities/join-class-name";
 import Style from "./index.module.scss";
 

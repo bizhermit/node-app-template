@@ -57,7 +57,7 @@ $pushout: calc(var(--cs-m) * -0.25);
       border-radius: var(--radius);
     }
 
-    &[data-elevatation="true"] {
+    &[data-elevation="true"] {
       box-shadow: 0 .1rem .4rem 0 var(--c-shadow);
     }
   }
