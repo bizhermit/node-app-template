@@ -97,15 +97,15 @@ const CheckList = forwardRef(<
     $focusWhenMounted,
     ...$p
   } = useDataItemMergedProps(form, p, {
-    under: ({ dataItem }) => {
+    under: ({ dataItem, props }) => {
       if (dataItem.type === "boolean") {
         return {
           $source: (() => {
             if (dataItem.source) return dataItem.source;
             return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
               return {
-                [p.$valueDataName ?? "value"]: v,
-                [p.$labelDataName ?? "label"]: String(v ?? ""),
+                [props.$valueDataName ?? "value"]: v,
+                [props.$labelDataName ?? "label"]: String(v ?? ""),
               };
             });
           })() as LoadableArray<S>,

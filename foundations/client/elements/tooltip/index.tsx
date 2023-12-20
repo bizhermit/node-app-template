@@ -13,7 +13,7 @@ type TooltipOptions = {
     y?: "outer" | "outer-top" | "outer-bottom",
   },
   $animationDuration?: number;
-  $preventElevatation?: boolean;
+  $preventElevation?: boolean;
   children: ReactNode | [ReactNode] | [ReactNode, ReactNode];
 };
 
@@ -30,7 +30,7 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({
   $showDelay,
   $position,
   $animationDuration,
-  $preventElevatation,
+  $preventElevation,
   children,
   ...props
 }, ref) => {
@@ -81,7 +81,7 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(({
           $onToggle={showed => {
             if (!showed) leave();
           }}
-          $preventElevatation={!$preventElevatation}
+          $preventElevation={$preventElevation}
           $anchor={pos.current}
           $position={{
             x: posX,

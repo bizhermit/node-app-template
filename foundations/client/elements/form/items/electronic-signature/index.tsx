@@ -299,7 +299,7 @@ const ElectronicSignature = forwardRef(<
     }
   }, [
     props.$value,
-    // $bind,
+    // props.$bind,
     ctx.bind,
   ]);
 
@@ -321,9 +321,7 @@ const ElectronicSignature = forwardRef(<
   }, [ctx.value]);
 
   useEffect(() => {
-    if ($focusWhenMounted) {
-      cref.current?.focus();
-    }
+    if ($focusWhenMounted) cref.current?.focus();
   }, []);
 
   if ($ref) {

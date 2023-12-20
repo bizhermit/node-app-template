@@ -80,7 +80,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
     return receive((() => {
       if (props == null) return undefined;
-      if ("$value" in props) return props.$value; // TODO:
+      if ("$value" in props) return props.$value;
       if (props.name) {
         // if (props.$bind) {
         //   const v = getValue(props.$bind, props.name);
@@ -101,7 +101,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   };
   const setBind = useCallback((value: ValueType<T, D, V> | null | undefined) => {
     if (!props.name) return;
-    // if ($bind) {
+    // if (props.$bind) {
     //   setValue(props.$bind, props.name, value);
     // }
     if (form.bind && !$preventFormBind) {

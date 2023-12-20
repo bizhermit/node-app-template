@@ -706,14 +706,12 @@ const DatePicker = forwardRef(<
     }
   }, [
     props.$value,
-    // $bind,
+    // props.$bind,
     ctx.bind,
   ]);
 
   useEffect(() => {
-    if ($focusWhenMounted) {
-      ref.current?.focus();
-    }
+    if ($focusWhenMounted) ref.current?.focus();
   }, []);
 
   if ($ref) {

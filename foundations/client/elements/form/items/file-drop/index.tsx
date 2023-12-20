@@ -120,6 +120,11 @@ const FileDrop = forwardRef(<
       }
       return validations;
     },
+    validationsDeps: [
+      $accept,
+      $fileSize,
+      $totalFileSize,
+    ],
     messages: {
       required: "ファイルを選択してください。",
     },
@@ -219,9 +224,7 @@ const FileDrop = forwardRef(<
   }, [ctx.value]);
 
   useEffect(() => {
-    if ($focusWhenMounted) {
-      bref.current?.focus();
-    }
+    if ($focusWhenMounted) bref.current?.focus();
   }, []);
 
   if ($ref) {

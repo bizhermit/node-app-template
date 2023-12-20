@@ -113,7 +113,7 @@ const FileButton = forwardRef(<
   const href = useRef<HTMLInputElement>(null!);
   const bref = useRef<HTMLButtonElement>(null!);
 
-  const { ctx, props, $ref } = useFormItemContext(form, $p, {
+  const { ctx, props, $ref, $preventFormBind } = useFormItemContext(form, $p, {
     multipartFormData: true,
     multiple: $multiple,
     validations: () => {
@@ -129,6 +129,11 @@ const FileButton = forwardRef(<
       }
       return validations;
     },
+    validationsDeps: [
+      $accept,
+      $fileSize,
+      $totalFileSize,
+    ],
     messages: {
       required: "ファイルを選択してください。",
     },
@@ -240,7 +245,7 @@ const FileButton = forwardRef(<
         onChange={change}
         multiple={$multiple}
       />
-      {props.name &&
+      {!$preventFormBind && props.name &&
         <input
           className={Style.file}
           ref={href}

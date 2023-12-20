@@ -97,10 +97,10 @@ const PasswordBox = forwardRef(<
     ...$p
   } = useDataItemMergedProps(form, p, {
     under: ({ dataItem, method, props }) => {
-      const isSearch = method === "get";
+      const isGet = method === "get";
       return {
-        $length: isSearch ? undefined : dataItem.length,
-        $minLength: isSearch ? undefined : dataItem.minLength,
+        $length: isGet ? undefined : dataItem.length,
+        $minLength: isGet ? undefined : dataItem.minLength,
         $maxLength: dataItem.maxLength ?? dataItem.length,
         $charType: (() => {
           switch (dataItem.charType) {

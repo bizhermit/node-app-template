@@ -19,7 +19,7 @@ const useSource = <T extends { [key: string]: any }, K extends ApiPath>(
       const key = apiPath + JSON.stringify(params ?? {});
       if (!options?.noCache && key in cache) return [...cache[key]] as Array<T>;
       const res = await api.get(apiPath, params);
-      const ret = (res.data as { [key: string]: any })[options?.name || "value"] as Array<T>;
+      const ret = (res.data as { [v: string]: any })[options?.name || "value"] as Array<T>;
       if (!options?.noCache) cache[key] = ret;
       return [...ret];
     } catch {

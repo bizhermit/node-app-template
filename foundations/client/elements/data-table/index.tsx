@@ -31,7 +31,7 @@ export type DataTableCellContext<T extends Data = Data> = {
 export type DataTableBaseColumn<T extends Data = Data> = {
   name: string;
   displayName?: string;
-  label?: string;
+  label?: ReactNode;
   width?: number | string;
   minWidth?: number | string;
   maxWidth?: number | string;
@@ -828,7 +828,7 @@ const DataTable = forwardRef(<T extends Data = Data>({
       }
       <div
         className={Style.table}
-        data-border={$outline}
+        data-border={$outline !== true}
         onMouseDown={dragScrollEvent}
         data-drag-scroll={!!$dragScroll}
       >

@@ -8,7 +8,7 @@ type BadgeOptions = {
   $round?: boolean;
   $size?: Size;
   $color?: Color;
-  $preventElevatation?: boolean;
+  $preventElevation?: boolean;
 };
 
 export type BadgeProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, BadgeOptions>;
@@ -19,7 +19,7 @@ const Badge = forwardRef<HTMLDivElement, BadgeProps>(({
   $round,
   $size,
   $color,
-  $preventElevatation,
+  $preventElevation,
   ...props
 }, ref) => {
   return (
@@ -31,7 +31,7 @@ const Badge = forwardRef<HTMLDivElement, BadgeProps>(({
       data-pos={$position || "right-top"}
       data-round={$round}
       data-color={$color}
-      data-elevatation={!$preventElevatation}
+      data-elevation={!$preventElevation}
     >
       <Text>{props.children}</Text>
     </div>

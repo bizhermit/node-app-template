@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react";
 import joinCn from "../../utilities/join-class-name";
-import { isNotReactNode } from "../../utilities/react-node";
+import { isReactNode } from "../../utilities/react-node";
 import Style from "./index.module.scss";
 
 type TextOptions = {
@@ -20,7 +20,7 @@ const Text = forwardRef<HTMLElement, TextProps>(({
   ...props
 }, ref) => {
   if (children == null) return <></>;
-  if (isNotReactNode(children)) return <>{children}</>;
+  if (isReactNode(children)) return <>{children}</>;
   return (
     <span
       {...props}
