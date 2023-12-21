@@ -26,8 +26,8 @@ const apiMethodHandler = <
     }
 
     let statusCode: number | undefined = undefined;
-    const msgs: Array<Message> = [];
-    const method = (req.method.toLowerCase() ?? "get") as ApiMethods;
+    const msgs: Array<Api.Message> = [];
+    const method = (req.method.toLowerCase() ?? "get") as Api.Methods;
 
     try {
       const reqData = await (async () => {

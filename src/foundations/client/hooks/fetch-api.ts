@@ -2,16 +2,16 @@ import equals from "../../objects/equal";
 import fetchApi, { type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
 import useMessage, { type ProviderMessage } from "../providers/message/context";
 
-type FetchHookOptions<U extends ApiPath, M extends ApiMethods> = {
+type FetchHookOptions<U extends ApiPath, M extends Api.Methods> = {
   messageChecked?: (ctx: {
-    res: FetchApiResponse<ApiResponse<U, M>> | undefined;
+    res: FetchApiResponse<Api.Response<U, M>> | undefined;
     message: ProviderMessage;
     value: any;
   }) => void;
 };
 
-const optimizeMessages = (messages: Array<Message>) => {
-  const msgs: Array<Message> = [];
+const optimizeMessages = (messages: Array<Api.Message>) => {
+  const msgs: Array<Api.Message> = [];
   messages.forEach(msg => {
     const lastMsg = msgs[msgs.length - 1];
     if (lastMsg == null) {
@@ -30,18 +30,18 @@ const optimizeMessages = (messages: Array<Message>) => {
 const useFetch = () => {
   const msg = useMessage();
 
-  const handle = async <U extends ApiPath, M extends ApiMethods>(
+  const handle = async <U extends ApiPath, M extends Api.Methods>(
     url: U,
     method: M,
-    params?: ApiRequest<U, M> | FormData,
+    params?: Api.Request<U, M> | FormData,
     options?: FetchOptions & FetchHookOptions<U, M>
   ) => {
-    const getMsgChecked = (res?: FetchApiResponse<ApiResponse<U, M>>) => {
+    const getMsgChecked = (res?: FetchApiResponse<Api.Response<U, M>>) => {
       return (value: any, message: ProviderMessage) => options?.messageChecked?.({ res, message, value });
     };
 
     try {
-      const res = await fetchApi[method](url, params, options) as FetchApiResponse<ApiResponse<U, M>>;
+      const res = await fetchApi[method](url, params, options) as FetchApiResponse<Api.Response<U, M>>;
       const msgs = optimizeMessages(res.messages);
 
       if (res.ok) {
@@ -78,28 +78,28 @@ const useFetch = () => {
   return {
     get: <U extends ApiPath>(
       url: U,
-      params?: ApiRequest<U, "get"> | FormData,
+      params?: Api.Request<U, "get"> | FormData,
       options?: FetchOptions & FetchHookOptions<U, "get">
     ) => {
       return handle(url, "get", params, options);
     },
     put: <U extends ApiPath>(
       url: U,
-      params?: ApiRequest<U, "put"> | FormData,
+      params?: Api.Request<U, "put"> | FormData,
       options?: FetchOptions & FetchHookOptions<U, "put">
     ) => {
       return handle(url, "put", params, options);
     },
     post: <U extends ApiPath>(
       url: U,
-      params?: ApiRequest<U, "post"> | FormData,
+      params?: Api.Request<U, "post"> | FormData,
       options?: FetchOptions & FetchHookOptions<U, "post">
     ) => {
       return handle(url, "post", params, options);
     },
     delete: <U extends ApiPath>(
       url: U,
-      params?: ApiRequest<U, "delete"> | FormData,
+      params?: Api.Request<U, "delete"> | FormData,
       options?: FetchOptions & FetchHookOptions<U, "delete">
     ) => {
       return handle(url, "delete", params, options);

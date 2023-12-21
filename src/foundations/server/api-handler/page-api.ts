@@ -47,10 +47,10 @@ const apiHandler = <
 }>) => {
   return (async (req: NextApiRequest, res: NextApiResponse) => {
     let statusCode: number | undefined = undefined;
-    const msgs: Array<Message> = [];
+    const msgs: Array<Api.Message> = [];
 
     try {
-      const method = (req.method?.toLocaleLowerCase() ?? "get") as ApiMethods;
+      const method = (req.method?.toLocaleLowerCase() ?? "get") as Api.Methods;
       const handler = methods[method];
       if (handler == null) {
         res.status(404).json({});
