@@ -1,6 +1,6 @@
-import apiMiddleware from "middleware/api";
-import pageMiddleware from "middleware/page";
 import { NextMiddleware, NextResponse } from "next/server";
+import apiMiddleware from "./middleware/api";
+import pageMiddleware from "./middleware/page";
 
 export const config = {
   matcher: "/((?!_next|favicon).*)",

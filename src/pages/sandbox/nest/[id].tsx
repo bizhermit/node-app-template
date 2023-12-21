@@ -1,7 +1,7 @@
 import NextLink from "#/client/elements/link";
 import Text from "#/client/elements/text";
 import { getInitialQueryProps, useQueryParam } from "#/client/hooks/query-param";
-import { NextPageWithLayout } from "~/_app";
+import { NextPageWithLayout } from "types/next-page";
 
 const Page: NextPageWithLayout = (props) => {
   const [id] = useQueryParam(props, "id");

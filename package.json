@@ -52,7 +52,6 @@
   },
   "devDependencies": {
     "@bizhermit/minifier": "^2.0.0-rc.1",
-    "@styled-jsx/plugin-sass": "^4.0.2",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",
     "@types/csurf": "^1.11.2",

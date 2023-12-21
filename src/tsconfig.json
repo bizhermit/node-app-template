@@ -23,9 +23,6 @@
       "$/*": [
         "features/*"
       ],
-      "~/*": [
-        "pages/*"
-      ],
       "@/*": [
         "app/*"
       ]
@@ -40,9 +37,6 @@
     ]
   },
   "exclude": [
-    "node_modules",
-    "scripts",
-    "dist",
     "nexpress",
     "nextron",
     ".*"

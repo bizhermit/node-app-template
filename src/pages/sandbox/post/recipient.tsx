@@ -1,7 +1,7 @@
 import NextLink from "#/client/elements/link";
 import StructView from "#/client/elements/struct-view";
 import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
-import { NextPageWithLayout } from "~/_app";
+import type { NextPageWithLayout } from "types/next-page";
 
 type Props = {
   data: {

@@ -1,7 +1,7 @@
 import NextLink from "#/client/elements/link";
 import Text from "#/client/elements/text";
 import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
-import type { NextPageWithLayout } from "~/_app";
+import type { NextPageWithLayout } from "types/next-page";
 
 const Page: NextPageWithLayout = () => {
   return (

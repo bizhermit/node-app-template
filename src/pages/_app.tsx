@@ -5,13 +5,8 @@ import WindowProvider from "#/client/providers/window/provider";
 import "#/client/styles/color.scss";
 import "#/client/styles/global.scss";
 import "#/client/styles/root.scss";
-import type { NextPage } from "next";
 import type { AppProps } from "next/app";
-import type { ReactElement, ReactNode } from "react";
-
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  layout?: (page: ReactElement, props: P) => ReactNode;
-};
+import type { NextPageWithLayout } from "../types/next-page";
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
