@@ -4,7 +4,7 @@
     "module": "commonjs",
     "noEmit": false,
     "rootDir": "../",
-    "outDir": "../.server",
+    "outDir": "../../.server",
   },
   "exclude": [
     "node_modules"
