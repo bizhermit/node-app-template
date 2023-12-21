@@ -11,7 +11,7 @@ export type NextApiConfig = {
   };
 };
 
-const getSession = (req: NextApiRequest): SessionStruct => {
+const getSession = (req: NextApiRequest): { [v: string | number | symbol]: any } => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
@@ -19,8 +19,8 @@ type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: st
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
-    getCookies: <T extends QueryStruct = QueryStruct>() => T;
-    getSession: () => SessionStruct;
+    getCookies: <T extends { [v: string]: string | Array<string> } = { [v: string]: string | Array<string> }>() => T;
+    getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
     getData: () => DataItemValueType<Req, true, "page-api">;

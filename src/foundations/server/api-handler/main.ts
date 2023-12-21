@@ -22,7 +22,7 @@ type GetItemContext<D extends DataItem | DataContext> = {
 
 const getPushValidationMsgFunc = (msgs: Array<Message>, { key, index, dataItem, data }: GetItemContext<any>) => {
   const name = dataItem.label || dataItem.name || String(key);
-  const ret = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
+  const ret = (res: string | null | undefined | Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>, type: DataItemValidationResultType = "error") => {
     if (res) {
       if (type === "error") ret.hasError = true;
       if (typeof res === "string") {

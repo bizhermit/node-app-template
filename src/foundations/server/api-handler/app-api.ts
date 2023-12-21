@@ -2,7 +2,7 @@ import { type RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 import { getItem, getReturnMessages, hasError } from "./main";
 
-const getSession = (req: NextRequest): SessionStruct => {
+const getSession = (req: NextRequest): { [v: string | number | symbol]: any } => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
@@ -10,7 +10,7 @@ type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: st
   (context: {
     req: NextRequest;
     getCookies: () => RequestCookies;
-    getSession: () => SessionStruct;
+    getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
     getData: () => DataItemValueType<Req, true, "app-api">;
@@ -20,7 +20,7 @@ const apiMethodHandler = <
   Req extends DataContext = DataContext,
   Res extends { [key: string]: any } | void = void
 >(dataContext?: Req | null, process?: MethodProcess<Req, Res> | null) => {
-  return (async (req: NextRequest, { params }: { params: QueryStruct }) => {
+  return (async (req: NextRequest, { params }) => {
     if (process == null) {
       return NextResponse.json({}, { status: 404 });
     }
@@ -100,7 +100,7 @@ const apiMethodHandler = <
       });
     }
   }) as {
-    (req: NextRequest, ctx: { params: QueryStruct }): Promise<NextResponse>;
+    (req: NextRequest, ctx: { params: { [v: string]: string | Array<string> } }): Promise<NextResponse>;
     req: Req;
     res: Res;
   };
