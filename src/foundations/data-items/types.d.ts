@@ -224,14 +224,14 @@ type DataItem_Number<V extends number = number> = Readonly<DataItem_Base<V> & {
 type BooleanValue = boolean | string | number;
 
 type DataItem_Boolean<
-  T extends boolean | number | string = boolean | number | string,
-  F extends boolean | number | string = boolean | number | string
-> = Readonly<DataItem_Base<T | F> & {
+  True extends boolean | number | string = boolean | number | string,
+  False extends boolean | number | string = boolean | number | string
+> = Readonly<DataItem_Base<True | False> & {
   type: "boolean";
-  validations?: DI.Validation<T | F, DataItem_Boolean<T, F>>;
-  trueValue: T;
-  falseValue: F;
-  source?: DI.Source<T | F>;
+  validations?: DI.Validation<True | False, DataItem_Boolean<True, False>>;
+  trueValue: True;
+  falseValue: False;
+  source?: DI.Source<True | False>;
 }>;
 
 /**

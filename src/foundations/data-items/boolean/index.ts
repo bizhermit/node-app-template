@@ -1,13 +1,13 @@
 import { dataItemKey } from "..";
 
 const booleanItem = <
-  T extends boolean | number | string = boolean | number | string,
-  F extends boolean | number | string = boolean | number | string,
-  C extends Omit<DataItem_Boolean<T, F>, DI.Key | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
-  = Omit<DataItem_Boolean<T, F>, DI.Key | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
+  True extends boolean | number | string = boolean | number | string,
+  False extends boolean | number | string = boolean | number | string,
+  C extends Omit<DataItem_Boolean<True, False>, DI.Key | "type" | "trueValue" | "falseValue"> & { trueValue?: True; falseValue?: False; }
+  = Omit<DataItem_Boolean<True, False>, DI.Key | "type" | "trueValue" | "falseValue"> & { trueValue?: True; falseValue?: False; }
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
-    [dataItemKey]: T | F;
+    [dataItemKey]: True | False;
     type: "boolean";
     trueValue: C extends { trueValue: infer TrueValue } ? TrueValue : true;
     falseValue: C extends { falseValue: infer FalseValue } ? FalseValue : false;
