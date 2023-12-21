@@ -23,6 +23,7 @@ const NextDynamicRouteLink: FC<NextLinkProps> = (props) => {
 
 const Page: PageFC = ({ searchParams }) => {
   const disabled = isNotEmpty(searchParams?.disabled);
+  // const disabled = false;
 
   return (
     <BaseLayout title="NextLink">

@@ -14,7 +14,7 @@ import { BaseSection } from "@/dev/_components/base-layout";
 //     "xxx",
 //   ].map(slug => {
 //     return { slug };
-//   })
+//   });
 // };
 
 const Page: PageFC = ({ params }) => {

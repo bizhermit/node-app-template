@@ -7,7 +7,8 @@
     "outDir": "../../.server",
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "nextron"
   ],
   "include": [
     "**/*.ts",
