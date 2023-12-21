@@ -1,0 +1,22 @@
+{
+  "extends": "../../src/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "../../src/foundations/objects",
+    "outDir": "../../dist/libs/utils/dist",
+    "declaration": true,
+    "incremental": false,
+    "module": "es6",
+    "target": "esnext",
+    "types": [
+      "./dummy-types.d.ts",
+      "node"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "../../src/foundations/objects/**/*.ts"
+  ],
+}
