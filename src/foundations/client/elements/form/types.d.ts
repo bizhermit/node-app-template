@@ -89,7 +89,7 @@ declare namespace F {
     | "children"
   >, F.ItemOptions<T, D, V, U>>;
 
-  type ItemHook<T, Q extends { [key: string]: any } = {}> = Omit<{
+  type ItemHook<T, Q extends { [v: string]: any } = {}> = Omit<{
     focus: () => void;
     getValue: () => (T | null | undefined);
     setValue: (v: T | null | undefined) => void;

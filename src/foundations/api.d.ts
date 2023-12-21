@@ -7,7 +7,7 @@ declare namespace Api {
   type RequestObject<T extends { [v: string]: any } | FormData> =
     T extends { [v: string]: any } | FormData ? T : { [v: string]: any } | FormData;
 
-  type ResponseObject<T extends Object = Object> = T extends null | undefined | unknown ? Struct : T;
+  type ResponseObject<T extends Object = Object> = T extends null | undefined | unknown ? { [v: string]: any } : T;
 
   type MethodInterface = { req: Api.RequestObject; res: Api.ResponseObject; } | Api.ResponseObject;
 

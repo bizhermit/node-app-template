@@ -7,10 +7,10 @@ type NextPageWithLayout<P = {}, IP = P> = import("next").NextPage<P, IP> & {
   layout?: (page: React.ReactElement, props: P) => React.ReactNode;
 };
 
-type CFC<P extends { [key: string]: any } = { [key: string]: any }> = React.FC<P & { children?: React.ReactNode; }>;
+type CFC<P extends { [v: string]: any } = { [v: string]: any }> = React.FC<P & { children?: React.ReactNode; }>;
 
 type QueryString = undefined | string | string[];
-type QueryParams = { [key: string]: QueryString };
+type QueryParams = { [v: string]: QueryString };
 type ReturnNode = React.ReactNode | React.ReactElement;
 
 type LayoutWithSlotsFC<

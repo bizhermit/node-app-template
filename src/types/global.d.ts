@@ -1,4 +1,4 @@
-type Struct<T = any> = { [key: string]: T };
+type Struct<T = any> = { [v: string]: T };
 type VoidFunc = () => void;
 type Nullable<T> = T | null | undefined;
 type DeepReadonly<T> =

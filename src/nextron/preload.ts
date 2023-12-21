@@ -3,7 +3,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 
-const $global = global as { [key: string]: any };
+const $global = global as { [v: string]: any };
 
 process.once("loaded", () => {
   $global.ipcRenderer = ipcRenderer;
@@ -37,7 +37,7 @@ contextBridge.exposeInMainWorld("electron", {
   getLayoutColor: () => ipcRenderer.sendSync("getLayoutColor"),
   setLayoutDesign: (design: string) => ipcRenderer.invoke("setLayoutDesign", design),
   getLayoutDesign: () => ipcRenderer.sendSync("getLayoutDesign"),
-  saveConfig: (config: { [key: string]: any }) => ipcRenderer.invoke("saveConfig", config),
+  saveConfig: (config: { [v: string]: any }) => ipcRenderer.invoke("saveConfig", config),
   getConfig: (key?: string) => ipcRenderer.sendSync("getConfig", key),
   getSession: (key?: string) => ipcRenderer.sendSync("getSession", key),
   setSession: (key: string, value: any) => ipcRenderer.sendSync("setSession", key, value),

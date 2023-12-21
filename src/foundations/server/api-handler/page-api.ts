@@ -15,7 +15,7 @@ const getSession = (req: NextApiRequest): { [v: string | number | symbol]: any }
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [key: string]: any } | void = void> =
+type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
@@ -28,13 +28,13 @@ type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [key: stri
 
 const apiHandler = <
   GetReq extends DI.Context = DI.Context,
-  GetRes extends { [key: string]: any } | void = void,
+  GetRes extends { [v: string]: any } | void = void,
   PostReq extends DI.Context = DI.Context,
-  PostRes extends { [key: string]: any } | void = void,
+  PostRes extends { [v: string]: any } | void = void,
   PutReq extends DI.Context = DI.Context,
-  PutRes extends { [key: string]: any } | void = void,
+  PutRes extends { [v: string]: any } | void = void,
   DeleteReq extends DI.Context = DI.Context,
-  DeleteRes extends { [key: string]: any } | void = void
+  DeleteRes extends { [v: string]: any } | void = void
 >(methods: Readonly<{
   $get?: GetReq;
   get?: MethodProcess<GetReq, GetRes>;
@@ -59,7 +59,7 @@ const apiHandler = <
 
       const dataContext = methods[`$${method}`];
       const reqData = await (async () => {
-        let data: { [key: string]: any } = { ...req.query };
+        let data: { [v: string]: any } = { ...req.query };
         const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
         if (req.body == null) {
           if (method !== "get") {
@@ -85,7 +85,7 @@ const apiHandler = <
           if (contentType === "multipart/form-data") {
             const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
             if (key) {
-              const body: { [key: string]: any } = {};
+              const body: { [v: string]: any } = {};
               const items = (req.body as string).split(key);
               for (const item of items) {
                 if (item.startsWith("--")) continue;

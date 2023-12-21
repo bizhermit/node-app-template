@@ -73,7 +73,7 @@ type Column<T extends DataType = DataType> = {
 
 type Data<T extends DataType = DataType> = {
   origin: T;
-  display: { [key: string]: string };
+  display: { [v: string]: string };
   id: number;
   init: boolean;
   rowSelected: boolean;

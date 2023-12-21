@@ -17,12 +17,12 @@ type CheckListHookAddon<Q extends { [v: string]: any } = { [v: string]: any }> =
 };
 type CheckListHook<
   T extends Array<string | number | boolean>,
-  Q extends { [key: string]: any } = { [key: string]: any }
+  Q extends { [v: string]: any } = { [v: string]: any }
 > = F.ItemHook<T, CheckListHookAddon<Q>>;
 
 export const useCheckList = <
   T extends Array<string | number | boolean>,
-  Q extends { [key: string]: any } = { [key: string]: any }
+  Q extends { [v: string]: any } = { [v: string]: any }
 >() => useFormItemBase<CheckListHook<T, Q>>(e => {
   return {
     getData: () => {

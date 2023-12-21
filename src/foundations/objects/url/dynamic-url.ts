@@ -50,7 +50,7 @@ const getDynamicUrlContext = <
     const q = queryString.stringify((() => {
       if (data == null) return {};
       const sd = data instanceof FormData ? convertFormDataToStruct(data) : data;
-      const d: { [key: string]: any } = {};
+      const d: { [v: string]: any } = {};
       Object.keys(sd).forEach(key => {
         const v = sd[key];
         if (v == null) return;

@@ -6,7 +6,7 @@ const getSession = (req: NextRequest): { [v: string | number | symbol]: any } =>
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [key: string]: any } | void = void> =
+type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextRequest;
     getCookies: () => RequestCookies;
@@ -18,7 +18,7 @@ type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [key: stri
 
 const apiMethodHandler = <
   Req extends DI.Context = DI.Context,
-  Res extends { [key: string]: any } | void = void
+  Res extends { [v: string]: any } | void = void
 >(dataContext?: Req | null, process?: MethodProcess<Req, Res> | null) => {
   return (async (req: NextRequest, { params }) => {
     if (process == null) {
@@ -33,7 +33,7 @@ const apiMethodHandler = <
       const reqData = await (async () => {
         const data = await (async () => {
           const { searchParams } = new URL(req.url);
-          const queryData: { [key: string]: any } = {};
+          const queryData: { [v: string]: any } = {};
           Array.from(searchParams.keys()).forEach(key => {
             queryData[key] = searchParams.get(key);
           });
@@ -51,7 +51,7 @@ const apiMethodHandler = <
               ...(await req.json()),
             };
           }
-          const data: { [key: string]: any } = {
+          const data: { [v: string]: any } = {
             ...queryData,
             ...params,
           };

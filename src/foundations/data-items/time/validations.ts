@@ -62,7 +62,7 @@ namespace TimeValidation {
   export const context = (
     v: number | null | undefined,
     rangePair: TimeRangePair,
-    data: { [key: string]: any } | null | undefined,
+    data: { [v: string]: any } | null | undefined,
     mode: TimeMode,
     unit: TimeUnit,
     itemName?: string,

@@ -18,7 +18,7 @@ declare namespace DI {
     readonly ((v: T | null | undefined, ctx: {
       dataItem: D;
       key: string | number;
-      data: { [key: string]: any } | Array<any> | null | undefined;
+      data: { [v: string]: any } | Array<any> | null | undefined;
       index?: number;
       parentDataContext?: DI.Context | null | undefined;
     }) => ((Omit<DI.ValidationResult, "type" | "key" | "name"> & Partial<Pick<DI.ValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];

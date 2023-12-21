@@ -15,7 +15,7 @@ import { TimeUtils } from "../../objects/time/utilities";
 type GetItemContext<D extends DataItem | DI.Context> = {
   dataItem: D;
   key: string | number;
-  data: { [key: string]: any } | null | undefined;
+  data: { [v: string]: any } | null | undefined;
   index?: number;
   parentDataContext?: DI.Context | null | undefined;
 };
@@ -591,7 +591,7 @@ const getStructItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_St
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
 
-  const v = data?.[key] as { [key: string]: any } | null | undefined;
+  const v = data?.[key] as { [v: string]: any } | null | undefined;
 
   if (v != null && typeof v !== "object") {
     pushMsg(`${name}の形式が構造体ではありません。`);
