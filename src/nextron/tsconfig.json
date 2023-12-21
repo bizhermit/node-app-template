@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "noEmit": false,
+    "rootDir": "../",
+    "outDir": "../../.main"
+  },
+  "exclude": [
+    "node_modules",
+    "nxpress",
+    "foundations/client",
+    "**/*.tsx"
+  ],
+  "include": [
+    "**/*.ts",
+    "../types/*",
+    "../foundations/**/*.ts",
+    "../app/**/api/**/*.ts",
+    "../pages/**/api/**/*.ts",
+    "../features/**/*.ts"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "noEmit": false,
+    "rootDir": "../",
+    "outDir": "../../.server",
+  },
+  "exclude": [
+    "node_modules",
+    "nextron"
+  ],
+  "include": [
+    "**/*.ts",
+  ]
+}

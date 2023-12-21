@@ -1,4 +1,5 @@
 const path = require("path");
+const srcDir = path.join(__dirname, "src");
 
 module.exports = {
   extends: [
@@ -10,17 +11,16 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": path.join(srcDir, "tsconfig.json"),
   },
   root: true,
   settings: {
     "import/resolver": {
       alias: {
         map: [
-          ["#", path.join(__dirname, "./foundations")],
-          ["$", path.join(__dirname, "./features")],
-          ["~", path.join(__dirname, "./pages")],
-          ["@", path.join(__dirname, "./app")],
+          ["#", path.join(srcDir, "foundations")],
+          ["$", path.join(srcDir, "features")],
+          ["@", path.join(srcDir, "app")],
         ],
         extensions: [".json", ".js", ".jsx", ".ts", ".tsx"]
       }

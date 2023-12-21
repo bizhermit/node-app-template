@@ -7,19 +7,10 @@ COPY . /workspace
 RUN npm install \
   && npm run build \
   && npx rimraf \
-    foundations \
-    app \
-    pages \
-    features \
-    types \
-    middleware* \
-    nexpress \
-    nextron \
+    src \
     scripts \
-    .babelrc \
     .eslint* \
     .git* \
-    tsconfig* \
     .devcontainer \
     node_modules \
   && npm install --production
