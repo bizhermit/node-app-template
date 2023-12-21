@@ -30,7 +30,7 @@ declare namespace DI {
       S extends Array<infer V> ? (V["value"]) : T
     ) : T;
 
-  type Required<D extends DataItem, Strict extends boolean, StrictValue, Value = StrictValue> =
+  type PartialRequired<D extends DataItem, Strict extends boolean, StrictValue, Value = StrictValue> =
     Strict extends true ? (
       D["required"] extends true ? DI.SourceValue<D, StrictValue> : DI.SourceValue<D, StrictValue> | null | undefined
     ) : (
@@ -48,13 +48,13 @@ declare namespace DI {
   > =
     D extends { $$: any } ? (
       D["type"] extends DataItem_String["type"] ? (
-        DI.Required<D, Strict, string, StringValue>
+        DI.PartialRequired<D, Strict, string, StringValue>
       ) :
       D["type"] extends DataItem_Number["type"] ? (
-        DI.Required<D, Strict, number, NumberValue>
+        DI.PartialRequired<D, Strict, number, NumberValue>
       ) :
       D["type"] extends DataItem_Boolean["type"] ? (
-        DI.Required<
+        DI.PartialRequired<
           D,
           Strict,
           (D extends { trueValue: infer T } ? T : true) | (D extends { falseValue: infer F } ? F : false),
@@ -62,7 +62,7 @@ declare namespace DI {
         >
       ) :
       D["type"] extends DataItem_Date["type"] ? (
-        DI.Required<
+        DI.PartialRequired<
           D,
           Strict,
           D["typeof"] extends "date" ? Date :
@@ -73,7 +73,7 @@ declare namespace DI {
         >
       ) :
       D["type"] extends DataItem_Time["type"] ? (
-        DI.Required<
+        DI.PartialRequired<
           D,
           Strict,
           D["typeof"] extends "string" ? string :
@@ -83,7 +83,7 @@ declare namespace DI {
         >
       ) :
       D["type"] extends DataItem_File["type"] ? (
-        DI.Required<
+        DI.PartialRequired<
           D,
           Strict,
           D["multiple"] extends true ? (
@@ -99,14 +99,14 @@ declare namespace DI {
         >
       ) :
       D["type"] extends DataItem_Array["type"] ? (
-        DI.Required<
+        DI.PartialRequired<
           D,
           Strict,
           Array<DI.VType<D["item"], Strict, Side>>
         >
       ) :
       D["type"] extends DataItem_Struct["type"] ? (
-        DI.Required<
+        DI.PartialRequired<
           D,
           Strict,
           { [P in keyof D["item"]]: D["item"][P] },
