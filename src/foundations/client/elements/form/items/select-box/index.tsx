@@ -5,7 +5,7 @@ import equals from "../../../../../objects/equal";
 import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
 import { getValue } from "../../../../../objects/struct/get";
 import { setValue } from "../../../../../objects/struct/set";
-import useLoadableArray from "../../../../hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "../../../../hooks/loadable-array";
 import { convertSizeNumToStr } from "../../../../utilities/size";
 import { CrossIcon, DownIcon } from "../../../icon";
 import Popup from "../../../popup";

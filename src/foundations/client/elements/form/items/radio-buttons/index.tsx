@@ -4,7 +4,7 @@ import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, 
 import equals from "../../../../../objects/equal";
 import { getValue } from "../../../../../objects/struct/get";
 import { setValue } from "../../../../../objects/struct/set";
-import useLoadableArray from "../../../../hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "../../../../hooks/loadable-array";
 import { pressPositiveKey } from "../../../../utilities/press-positive-key";
 import Text from "../../..//text";
 import useForm from "../../context";

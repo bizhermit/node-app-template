@@ -15,7 +15,7 @@ const getSession = (req: NextApiRequest): { [v: string | number | symbol]: any }
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: string]: any } | void = void> =
+type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [key: string]: any } | void = void> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
@@ -23,17 +23,17 @@ type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: st
     getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => DataItemValueType<Req, true, "page-api">;
+    getData: () => DI.VType<Req, true, "page-api">;
   }) => Promise<Res>;
 
 const apiHandler = <
-  GetReq extends DataContext = DataContext,
+  GetReq extends DI.Context = DI.Context,
   GetRes extends { [key: string]: any } | void = void,
-  PostReq extends DataContext = DataContext,
+  PostReq extends DI.Context = DI.Context,
   PostRes extends { [key: string]: any } | void = void,
-  PutReq extends DataContext = DataContext,
+  PutReq extends DI.Context = DI.Context,
   PutRes extends { [key: string]: any } | void = void,
-  DeleteReq extends DataContext = DataContext,
+  DeleteReq extends DI.Context = DI.Context,
   DeleteRes extends { [key: string]: any } | void = void
 >(methods: Readonly<{
   $get?: GetReq;

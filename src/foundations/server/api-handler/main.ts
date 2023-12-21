@@ -12,17 +12,17 @@ import structKeys from "../../objects/struct/keys";
 import Time from "../../objects/time";
 import { TimeUtils } from "../../objects/time/utilities";
 
-type GetItemContext<D extends DataItem | DataContext> = {
+type GetItemContext<D extends DataItem | DI.Context> = {
   dataItem: D;
   key: string | number;
   data: { [key: string]: any } | null | undefined;
   index?: number;
-  parentDataContext?: DataContext | null | undefined;
+  parentDataContext?: DI.Context | null | undefined;
 };
 
 const getPushValidationMsgFunc = (msgs: Array<Api.Message>, { key, index, dataItem, data }: GetItemContext<any>) => {
   const name = dataItem.label || dataItem.name || String(key);
-  const ret = (res: string | null | undefined | Omit<DataItemValidationResult, "type" | "key" | "name"> & Partial<Pick<DataItemValidationResult, "type" | "key" | "name">>, type: DataItemValidationResultType = "error") => {
+  const ret = (res: string | null | undefined | Omit<DI.ValidationResult, "type" | "key" | "name"> & Partial<Pick<DI.ValidationResult, "type" | "key" | "name">>, type: DI.ValidationResultType = "error") => {
     if (res) {
       if (type === "error") ret.hasError = true;
       if (typeof res === "string") {
@@ -38,7 +38,7 @@ const getPushValidationMsgFunc = (msgs: Array<Api.Message>, { key, index, dataIt
 
 export const getItem = (
   msgs: Array<Api.Message>,
-  ctx: GetItemContext<DataItem | DataContext>
+  ctx: GetItemContext<DataItem | DI.Context>
 ) => {
   const { dataItem: di } = ctx;
   if (di == null) return;
@@ -75,23 +75,23 @@ export const getItem = (
     }
     return;
   }
-  structKeys(di as DataContext).forEach(k => {
+  structKeys(di as DI.Context).forEach(k => {
     if (ctx.key == null) {
       getItem(msgs, {
         key: k,
-        dataItem: (di as DataContext)[k],
+        dataItem: (di as DI.Context)[k],
         data: ctx.data,
         index: undefined,
-        parentDataContext: di as DataContext,
+        parentDataContext: di as DI.Context,
       });
       return;
     }
     getItem(msgs, {
       key: k,
-      dataItem: (di as DataContext)[k],
+      dataItem: (di as DI.Context)[k],
       data: ctx.data?.[ctx.key],
       index: undefined,
-      parentDataContext: di as DataContext,
+      parentDataContext: di as DI.Context,
     });
   });
 };

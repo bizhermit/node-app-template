@@ -1,6 +1,6 @@
 declare namespace Api {
 
-  type Message = DataItemValidationResult;
+  type Message = DI.ValidationResult;
 
   type Methods = "get" | "put" | "post" | "delete";
 
@@ -30,20 +30,20 @@ declare namespace Api {
   type Import<T extends TypeofApi> = {
     [P in keyof T]: {
       get: {
-        req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false>;
-        res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["GET"]["res"] : T[P]["default"]["get"], true>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false>;
+        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["GET"]["res"] : T[P]["default"]["get"], true>;
       };
       put: {
-        req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false>;
-        res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["PUT"]["res"] : T[P]["default"]["put"], true>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false>;
+        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["PUT"]["res"] : T[P]["default"]["put"], true>;
       };
       post: {
-        req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false>;
-        res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["POST"]["res"] : T[P]["default"]["post"], true>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false>;
+        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["POST"]["res"] : T[P]["default"]["post"], true>;
       };
       delete: {
-        req: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false>;
-        res: DataItemValueType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"], true>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false>;
+        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"], true>;
       };
     };
   };

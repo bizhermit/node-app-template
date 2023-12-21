@@ -15,7 +15,7 @@ import useProcess from "#/client/hooks/process";
 import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_date, sample_number, sample_string } from "$/data-items/sample/item";
 import { useState } from "react";
 
-type Hoge = DataProps<[
+type Hoge = DI.Props<[
   typeof sample_string,
   typeof sample_number,
   typeof sample_boolean,

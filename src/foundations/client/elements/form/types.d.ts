@@ -18,7 +18,7 @@ declare namespace F {
   ) => (boolean | string | null | undefined);
 
   type VType<T, D extends DataItem | undefined = undefined, V = undefined> =
-    V extends undefined ? (D extends undefined ? T : DataItemValueType<Exclude<D, undefined>, true, "client">) : V;
+    V extends undefined ? (D extends undefined ? T : DI.VType<Exclude<D, undefined>, true, "client">) : V;
 
   type ItemSurfaceOptions = {
     $focusWhenMounted?: boolean;

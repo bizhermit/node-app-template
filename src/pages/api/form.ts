@@ -19,9 +19,11 @@ export default apiHandler({
   },
   $post: {
     filedrop: fileItem({
+      name: "filedrop",
       multiple: true,
     }),
     filebutton: fileItem({
+      name: "filebutton",
       multiple: false,
     }),
   },

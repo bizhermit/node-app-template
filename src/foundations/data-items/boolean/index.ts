@@ -3,8 +3,8 @@ import { dataItemKey } from "..";
 const booleanItem = <
   T extends boolean | number | string = boolean | number | string,
   F extends boolean | number | string = boolean | number | string,
-  C extends Omit<DataItem_Boolean<T, F>, DataItemKey | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
-  = Omit<DataItem_Boolean<T, F>, DataItemKey | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
+  C extends Omit<DataItem_Boolean<T, F>, DI.Key | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
+  = Omit<DataItem_Boolean<T, F>, DI.Key | "type" | "trueValue" | "falseValue"> & { trueValue?: T; falseValue?: F; }
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: T | F;

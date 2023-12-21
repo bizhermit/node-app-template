@@ -19,7 +19,7 @@ export const multiValidationIterator = (v: any, func: (value: string | number | 
 };
 
 export const convertDataItemValidationToFormItemValidation = <T, U, P extends F.ItemProps<T, any, any, any>, D extends DataItem, V = P["$value"]>(
-  func: DataItemValidation<any, any>[number],
+  func: DI.Validation<any, any>[number],
   props: P,
   $dataItem: D,
   convertValue?: (v: F.VType<T, D, V>) => U | null | undefined

@@ -4,6 +4,8 @@ type Options = {
   preventMemorize?: boolean;
 };
 
+export type LoadableArray<T = { [v: string | number | symbol]: any }> = Array<T> | Readonly<Array<T>> | (() => Array<T>) | (() => Promise<Array<T>>);
+
 const isArray = <T>(loadableArray?: LoadableArray<T>): loadableArray is (Array<T> | Readonly<Array<T>>) => {
   return Array.isArray(loadableArray);
 };

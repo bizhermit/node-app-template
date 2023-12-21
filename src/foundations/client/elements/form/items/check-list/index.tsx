@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import useLoadableArray from "../../../../hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "../../../../hooks/loadable-array";
 import joinCn from "../../../../utilities/join-class-name";
 import useForm from "../../context";
 import { convertHiddenValue } from "../../utilities";

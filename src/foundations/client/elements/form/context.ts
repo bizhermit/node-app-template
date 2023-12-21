@@ -79,7 +79,7 @@ const useForm = () => {
 };
 
 type Value<D extends DataItem | any> =
-  D extends DataItem ? (DataItemValueType<D, true, "client"> | undefined) : (D | undefined);
+  D extends DataItem ? (DI.VType<D, true, "client"> | undefined) : (D | undefined);
 
 export const useFormValue = <D>(dataItemOrName: D | string, init?: Value<D> | (() => Value<D>)) => {
   const id = useRef(generateUuidV4());

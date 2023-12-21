@@ -6,18 +6,18 @@ const getSession = (req: NextRequest): { [v: string | number | symbol]: any } =>
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: string]: any } | void = void> =
+type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [key: string]: any } | void = void> =
   (context: {
     req: NextRequest;
     getCookies: () => RequestCookies;
     getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => DataItemValueType<Req, true, "app-api">;
+    getData: () => DI.VType<Req, true, "app-api">;
   }) => Promise<Res>;
 
 const apiMethodHandler = <
-  Req extends DataContext = DataContext,
+  Req extends DI.Context = DI.Context,
   Res extends { [key: string]: any } | void = void
 >(dataContext?: Req | null, process?: MethodProcess<Req, Res> | null) => {
   return (async (req: NextRequest, { params }) => {

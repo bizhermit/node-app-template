@@ -3,7 +3,7 @@ import { dataItemKey } from "..";
 export const dateDefaultTypeof: DateValueType = "string";
 
 const dateItem = <
-  C extends Omit<DataItem_Date, DataItemKey | "type">
+  C extends Omit<DataItem_Date, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
@@ -18,7 +18,7 @@ const dateItem = <
 };
 
 export const monthItem = <
-  C extends Omit<DataItem_Date, DataItemKey | "type">
+  C extends Omit<DataItem_Date, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
@@ -33,7 +33,7 @@ export const monthItem = <
 };
 
 export const yearItem = <
-  C extends Omit<DataItem_Date, DataItemKey | "type">
+  C extends Omit<DataItem_Date, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;

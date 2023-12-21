@@ -1,7 +1,7 @@
 import { dataItemKey } from "..";
 
 const fileItem = <
-  C extends Omit<DataItem_File, DataItemKey | "type">
+  C extends Omit<DataItem_File, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;
