@@ -6,7 +6,7 @@ import "#/client/styles/color.scss";
 import "#/client/styles/global.scss";
 import "#/client/styles/root.scss";
 import type { AppProps } from "next/app";
-import type { NextPageWithLayout } from "../types/next-page";
+import type { NextPageWithLayout } from "../types/next-component";
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;

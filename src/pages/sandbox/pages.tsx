@@ -3,7 +3,7 @@ import NextLink from "#/client/elements/link";
 import Text from "#/client/elements/text";
 import useRouter from "#/client/hooks/router";
 import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
-import type { NextPageWithLayout } from "types/next-page";
+import type { NextPageWithLayout } from "types/next-component";
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();
