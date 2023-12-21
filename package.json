@@ -35,6 +35,7 @@
     "dist:mac": "npm run dist -- --mac & npm run clean:nextron",
     "pack": "npm run dist -- --dir --win & npm run clean:nextron",
     "exec": "npm run dist:win && .\\dist\\pack\\win-unpacked\\node-app-template.exe",
+    "analyze": "npx cross-env ANALYZE=\"true\" npx next build",
     "export:utils": "npx rimraf dist/libs/utils && npx tsc -p scripts/export-utils/tsconfig.json && npx minifier dist/libs/utils && node scripts/export-utils"
   },
   "dependencies": {
@@ -53,6 +54,7 @@
   },
   "devDependencies": {
     "@bizhermit/minifier": "^2.0.0-rc.1",
+    "@next/bundle-analyzer": "^14.0.4",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",
     "@types/csurf": "^1.11.2",
