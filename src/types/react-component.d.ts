@@ -3,6 +3,10 @@ type CommonStyleProps = {
   style?: React.CSSProperties;
 };
 
+type NextPageWithLayout<P = {}, IP = P> = import("next").NextPage<P, IP> & {
+  layout?: (page: React.ReactElement, props: P) => React.ReactNode;
+};
+
 type CFC<P extends { [key: string]: any } = { [key: string]: any }> = React.FC<P & { children?: React.ReactNode; }>;
 
 type QueryString = undefined | string | string[];
