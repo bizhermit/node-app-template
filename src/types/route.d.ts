@@ -63,8 +63,8 @@ type AppApiPath = "/api/fetch"
  | "/api";
 
 type TypeofAppApi = {
-  "/api/fetch": typeof import("@/api/fetch/route");
-  "/api": typeof import("@/api/route");
+  "/api/fetch": typeof import("app/api/fetch/route");
+  "/api": typeof import("app/api/route");
 };
 
 type PagesRoutePath = "/404"
@@ -79,8 +79,8 @@ type PagesApiPath = "/api/form"
  | "/api/hello";
 
 type TypeofPagesApi = {
-  "/api/form": typeof import("~/api/form");
-  "/api/hello": typeof import("~/api/hello");
+  "/api/form": typeof import("pages/api/form");
+  "/api/hello": typeof import("pages/api/hello");
 };
 
 type PagePath = AppRoutePath | PagesRoutePath;
