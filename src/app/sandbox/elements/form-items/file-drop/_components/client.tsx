@@ -7,7 +7,7 @@ import CheckBox from "#/client/elements/form/items/check-box";
 import FileDrop, { useFileDrop } from "#/client/elements/form/items/file-drop";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_file } from "$/data-items/sample/item";
+import { sample_file } from "$/data-items/sample";
 import { useState } from "react";
 
 const FileDropClient = () => {

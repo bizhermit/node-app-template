@@ -1,7 +1,7 @@
 import fileItem from "#/data-items/file";
 import stringItem from "#/data-items/string";
 import apiMethodHandler from "#/server/api-handler/app-api";
-import { sample_date, sample_number, sample_string } from "$/data-items/sample/item";
+import { sample_date, sample_number, sample_string } from "$/data-items/sample";
 
 const text = stringItem({ name: "text", required: true });
 const blobFile = fileItem({ name: "blob", required: true });

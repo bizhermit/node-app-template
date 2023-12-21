@@ -12,7 +12,7 @@ import Row from "#/client/elements/row";
 import StructView from "#/client/elements/struct-view";
 import useFetch from "#/client/hooks/fetch-api";
 import useProcess from "#/client/hooks/process";
-import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_date, sample_number, sample_string } from "$/data-items/sample/item";
+import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_date, sample_number, sample_string } from "$/data-items/sample";
 import { useState } from "react";
 
 type Hoge = DI.Props<[

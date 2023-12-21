@@ -7,7 +7,7 @@ import { useTextBox } from "#/client/elements/form/items/text-box";
 import CreditCardNumberBox from "#/client/elements/form/items/text-box/credit-card";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_string } from "$/data-items/sample/item";
+import { sample_string } from "$/data-items/sample";
 import { useState } from "react";
 
 const CreditCardCreditCardNumberBoxClient = () => {
