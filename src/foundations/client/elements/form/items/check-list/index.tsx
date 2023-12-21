@@ -1,8 +1,7 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
-import useLoadableArray from "../../../../hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "../../../../hooks/loadable-array";
 import joinCn from "../../../../utilities/join-class-name";
 import useForm from "../../context";
 import { convertHiddenValue } from "../../utilities";
@@ -18,12 +17,12 @@ type CheckListHookAddon<Q extends { [v: string]: any } = { [v: string]: any }> =
 };
 type CheckListHook<
   T extends Array<string | number | boolean>,
-  Q extends { [key: string]: any } = { [key: string]: any }
-> = FormItemHook<T, CheckListHookAddon<Q>>;
+  Q extends { [v: string]: any } = { [v: string]: any }
+> = F.ItemHook<T, CheckListHookAddon<Q>>;
 
 export const useCheckList = <
   T extends Array<string | number | boolean>,
-  Q extends { [key: string]: any } = { [key: string]: any }
+  Q extends { [v: string]: any } = { [v: string]: any }
 >() => useFormItemBase<CheckListHook<T, Q>>(e => {
   return {
     getData: () => {
@@ -42,7 +41,7 @@ type CheckListOptions<
   T extends Array<string | number | boolean> = Array<string | number | boolean>,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 > = {
-  $ref?: CheckListHook<ValueType<T, D, T>> | CheckListHook<Array<string | number | boolean>>;
+  $ref?: CheckListHook<F.VType<T, D, T>> | CheckListHook<Array<string | number | boolean>>;
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
@@ -62,7 +61,7 @@ type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
 export type CheckListProps<
   T extends Array<string | number | boolean> = Array<string | number | boolean>,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
-> = OverwriteAttrs<Omit<FormItemProps<T, D, Array<ValueType<T, D>>>, OmitAttrs>, CheckListOptions<T, D>>;
+> = OverwriteAttrs<Omit<F.ItemProps<T, D, Array<F.VType<T, D>>>, OmitAttrs>, CheckListOptions<T, D>>;
 
 interface CheckListFC extends FunctionComponent<CheckListProps> {
   <T extends Array<string | number | boolean> = Array<string | number | boolean>, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(

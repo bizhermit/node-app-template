@@ -1,7 +1,7 @@
-export const dataItemKey: DataItemKey = "$$";
+export const dataItemKey: DI.Key = "$$";
 
 const dataItem = <
-  C extends Omit<DataItem, DataItemKey>
+  C extends Omit<DataItem, DI.Key>
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;

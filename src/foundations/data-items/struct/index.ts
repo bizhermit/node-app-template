@@ -1,7 +1,7 @@
 import { dataItemKey } from "..";
 
 const structItem = <
-  C extends Omit<DataItem_Struct, DataItemKey | "type">
+  C extends Omit<DataItem_Struct, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: undefined;

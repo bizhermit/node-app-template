@@ -6,7 +6,7 @@ import equals from "../../../objects/equal";
 import formatNum from "../../../objects/number/format";
 import { generateUuidV4 } from "../../../objects/string/generator";
 import { getValue } from "../../../objects/struct/get";
-import useLoadableArray from "../../hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "../../hooks/loadable-array";
 import joinCn from "../../utilities/join-class-name";
 import { convertSizeNumToStr } from "../../utilities/size";
 import Button from "../button";

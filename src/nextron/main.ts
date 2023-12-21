@@ -9,7 +9,7 @@ import type { NextResponse } from "next/server";
 import path from "path";
 import url from "url";
 
-const $global = global as { [key: string]: any };
+const $global = global as { [v: string]: any };
 const logFormat = (...contents: Array<string>) => `${formatDate(new Date(), "yyyy-MM-ddThh:mm:ss.SSS")} ${strJoin(" ", ...contents)}\n`;
 const log = {
   debug: (...contents: Array<string>) => {
@@ -89,7 +89,7 @@ app.on("ready", async () => {
     await mkdir(configDir, { recursive: true });
   }
   const configFileName = path.join(configDir, "config.json");
-  let config: { [key: string]: any } = { appDirname, isDev, layout: { color: undefined, design: undefined } };
+  let config: { [v: string]: any } = { appDirname, isDev, layout: { color: undefined, design: undefined } };
   const saveConfig = async () => {
     const c = { ...config };
     delete c.appDirname;
@@ -226,7 +226,7 @@ app.on("ready", async () => {
           return;
         }
         const uri = uriCtx[1];
-        const headers: { [key: string]: any } = {
+        const headers: { [v: string]: any } = {
           "content-type": "application/json;"
         };
         const req = {
@@ -235,7 +235,7 @@ app.on("ready", async () => {
           query: (() => {
             const str = uriCtx[2];
             if (!str) return {};
-            const query: { [key: string]: any } = {};
+            const query: { [v: string]: any } = {};
             str.split("&").forEach(item => {
               const [_, key, value] = item.match(/([^=]*)(?:=|$)(.*)/) ?? [];
               if (key in query) {
@@ -439,7 +439,7 @@ app.on("ready", async () => {
   setListener("getLayoutDesign", "on", (event) => {
     event.returnValue = $global._session.layoutDesign;
   });
-  setListener("saveConfig", "handle", async (_e, newConfig: { [key: string]: any }) => {
+  setListener("saveConfig", "handle", async (_e, newConfig: { [v: string]: any }) => {
     config = { ...config, ...newConfig };
     await saveConfig();
   });

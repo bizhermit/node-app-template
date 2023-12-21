@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import { isNotEmpty } from "../../../../../objects/string/empty";
 import { releaseCursor, setCursor } from "../../../../utilities/cursor";
 import { ClearAllIcon, CrossIcon, RedoIcon, SaveIcon, UndoIcon } from "../../../icon";
@@ -17,7 +16,7 @@ type ElectronicSignatureHookAddon = {
   undo: () => void;
   clearCanvas: (history?: boolean) => void;
 };
-type ElectronicSignatureHook<T extends string | File> = FormItemHook<T, ElectronicSignatureHookAddon>;
+type ElectronicSignatureHook<T extends string | File> = F.ItemHook<T, ElectronicSignatureHookAddon>;
 
 export const useElectronicSignature = <T extends string | File>() => useFormItemBase<ElectronicSignatureHook<T>>((e) => {
   return {
@@ -39,7 +38,7 @@ export const useElectronicSignature = <T extends string | File>() => useFormItem
 type ElectronicSignatureOptions<
   D extends DataItem_String | DataItem_File | undefined = undefined
 > = {
-  $ref?: ElectronicSignatureHook<ValueType<string, D, string>> | ElectronicSignatureHook<string | File>;
+  $ref?: ElectronicSignatureHook<F.VType<string, D, string>> | ElectronicSignatureHook<string | File>;
   $typeof?: FileValueType;
   $width?: number | string;
   $height?: number | string;
@@ -54,7 +53,7 @@ type ElectronicSignatureOptions<
 type OmitAttrs = "tabIndex" | "placeholder";
 export type ElectronicSignatureProps<
   D extends DataItem_String | DataItem_File | undefined = undefined
-> = OverwriteAttrs<Omit<FormItemProps<string, D, string>, OmitAttrs>, ElectronicSignatureOptions<D>>
+> = OverwriteAttrs<Omit<F.ItemProps<string, D, string>, OmitAttrs>, ElectronicSignatureOptions<D>>
 
 interface ElectronicSignatureFC extends FunctionComponent {
   <D extends DataItem_String | DataItem_File | undefined = undefined>(
@@ -90,7 +89,7 @@ const ElectronicSignature = forwardRef(<
       }
     },
     over: ({ dataItem, props }) => {
-      const common: FormItemProps = {
+      const common: F.ItemProps = {
         $messagePosition: "bottom-hide"
       };
       switch (dataItem.type) {
@@ -118,7 +117,7 @@ const ElectronicSignature = forwardRef(<
     multipartFormData: $typeof === "file",
     preventRequiredValidation: true,
     validations: ({ getMessage, required }) => {
-      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      const validations: Array<F.Validation<string | null | undefined>> = [];
       if (required) {
         validations.push(v => {
           if (v == null || v === "" || v === nullValue.current) {

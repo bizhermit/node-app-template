@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useMemo, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import useLoadableArray from "../../hooks/loadable-array";
+import useLoadableArray, { type LoadableArray } from "../../hooks/loadable-array";
 import joinCn from "../../utilities/join-class-name";
 import Resizer, { type ResizeDirection } from "../resizer";
 import DataListClass, { type DataListColumn } from "./class";

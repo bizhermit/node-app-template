@@ -12,17 +12,17 @@ import structKeys from "../../objects/struct/keys";
 import Time from "../../objects/time";
 import { TimeUtils } from "../../objects/time/utilities";
 
-type GetItemContext<D extends DataItem | DataContext> = {
+type GetItemContext<D extends DataItem | DI.Context> = {
   dataItem: D;
   key: string | number;
-  data: { [key: string]: any } | null | undefined;
+  data: { [v: string]: any } | null | undefined;
   index?: number;
-  parentDataContext?: DataContext | null | undefined;
+  parentDataContext?: DI.Context | null | undefined;
 };
 
-const getPushValidationMsgFunc = (msgs: Array<Message>, { key, index, dataItem, data }: GetItemContext<any>) => {
+const getPushValidationMsgFunc = (msgs: Array<Api.Message>, { key, index, dataItem, data }: GetItemContext<any>) => {
   const name = dataItem.label || dataItem.name || String(key);
-  const ret = (res: string | null | undefined | ValidationResult, type: DataItemValidationResultType = "error") => {
+  const ret = (res: string | null | undefined | Omit<DI.ValidationResult, "type" | "key" | "name"> & Partial<Pick<DI.ValidationResult, "type" | "key" | "name">>, type: DI.ValidationResultType = "error") => {
     if (res) {
       if (type === "error") ret.hasError = true;
       if (typeof res === "string") {
@@ -37,8 +37,8 @@ const getPushValidationMsgFunc = (msgs: Array<Message>, { key, index, dataItem, 
 };
 
 export const getItem = (
-  msgs: Array<Message>,
-  ctx: GetItemContext<DataItem | DataContext>
+  msgs: Array<Api.Message>,
+  ctx: GetItemContext<DataItem | DI.Context>
 ) => {
   const { dataItem: di } = ctx;
   if (di == null) return;
@@ -75,28 +75,28 @@ export const getItem = (
     }
     return;
   }
-  structKeys(di as DataContext).forEach(k => {
+  structKeys(di as DI.Context).forEach(k => {
     if (ctx.key == null) {
       getItem(msgs, {
         key: k,
-        dataItem: (di as DataContext)[k],
+        dataItem: (di as DI.Context)[k],
         data: ctx.data,
         index: undefined,
-        parentDataContext: di as DataContext,
+        parentDataContext: di as DI.Context,
       });
       return;
     }
     getItem(msgs, {
       key: k,
-      dataItem: (di as DataContext)[k],
+      dataItem: (di as DI.Context)[k],
       data: ctx.data?.[ctx.key],
       index: undefined,
-      parentDataContext: di as DataContext,
+      parentDataContext: di as DI.Context,
     });
   });
 };
 
-const getStringItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_String>) => {
+const getStringItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_String>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(ctx.key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
@@ -182,7 +182,7 @@ const getStringItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_String
   }
 };
 
-const getNumberItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Number>) => {
+const getNumberItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_Number>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
@@ -241,7 +241,7 @@ const getNumberItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Number
   }
 };
 
-const getBooleanItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Boolean>) => {
+const getBooleanItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_Boolean>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
@@ -278,7 +278,7 @@ const getBooleanItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Boole
   }
 };
 
-const getDateItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Date>) => {
+const getDateItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_Date>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
@@ -359,7 +359,7 @@ const getDateItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Date>) =
   }
 };
 
-const getTimeItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Time>) => {
+const getTimeItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_Time>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
@@ -431,7 +431,7 @@ const getTimeItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Time>) =
   }
 };
 
-const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) => {
+const getFileItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_File>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
@@ -523,7 +523,7 @@ const getFileItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_File>) =
   }
 };
 
-const getArrayItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Array>) => {
+const getArrayItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_Array>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
@@ -586,12 +586,12 @@ const getArrayItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Array>)
   });
 };
 
-const getStructItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Struct>) => {
+const getStructItem = (msgs: Array<Api.Message>, ctx: GetItemContext<DataItem_Struct>) => {
   const { dataItem: di, key, data } = ctx;
   const name = di.label || di.name || String(key);
   const pushMsg = getPushValidationMsgFunc(msgs, ctx);
 
-  const v = data?.[key] as { [key: string]: any } | null | undefined;
+  const v = data?.[key] as { [v: string]: any } | null | undefined;
 
   if (v != null && typeof v !== "object") {
     pushMsg(`${name}の形式が構造体ではありません。`);
@@ -620,10 +620,10 @@ const getStructItem = (msgs: Array<Message>, ctx: GetItemContext<DataItem_Struct
   });
 };
 
-export const hasError = (msgs: Array<Message>) => {
+export const hasError = (msgs: Array<Api.Message>) => {
   return msgs.some(msg => msg?.type === "error");
 };
 
-export const getReturnMessages = (msgs: Array<Message>) => {
+export const getReturnMessages = (msgs: Array<Api.Message>) => {
   return msgs.filter(msg => msg?.type === "error");
 };

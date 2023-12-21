@@ -4,9 +4,9 @@ export type MessageHookOptions = {
   checked?: (ret: any, message: ProviderMessage) => void;
 };
 
-export type ArgMessages = (Message & MessageHookOptions) | Array<(Message & MessageHookOptions) | null | undefined> | null | undefined;
+export type ArgMessages = (Api.Message & MessageHookOptions) | Array<(Api.Message & MessageHookOptions) | null | undefined> | null | undefined;
 
-export type ProviderMessage = Message & MessageHookOptions & {
+export type ProviderMessage = Api.Message & MessageHookOptions & {
   verified: boolean;
   displayed: boolean;
   timestamp: number;

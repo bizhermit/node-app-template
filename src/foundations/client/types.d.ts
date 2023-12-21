@@ -1,5 +1,4 @@
-type MRef<T> = React.MutableRefObject<T | null | undefined>;
-type ComponentAttrsWithRef<T, P = {}> = P & { ref?: MRef<T> };
+type ComponentAttrsWithRef<T, P = {}> = P & { ref?: React.MutableRefObject<T | null | undefined> };
 type OverwriteAttrs<T extends HTMLAttributes<any>, U> = Omit<T, keyof U> & U;
 
 type SystemColor =

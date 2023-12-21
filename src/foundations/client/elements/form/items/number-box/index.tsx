@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import NumberValidation from "../../../../../data-items/number/validations";
 import { add, minus } from "../../../../../objects/number/calc";
 import formatNum from "../../../../../objects/number/format";
@@ -21,7 +20,7 @@ type NumberBoxHookAddon = {
   down: (ctrl?: boolean) => number;
   add: (v: number) => number;
 };
-type NumberBoxHook<T extends number = number> = FormItemHook<T, NumberBoxHookAddon>;
+type NumberBoxHook<T extends number = number> = F.ItemHook<T, NumberBoxHookAddon>;
 
 export const useNumberBox = <T extends number = number>() => useFormItemBase<NumberBoxHook<T>>(e => {
   return {
@@ -38,7 +37,7 @@ export const useNumberBox = <T extends number = number>() => useFormItemBase<Num
 });
 
 type NumberBoxOptions<D extends DataItem_Number | undefined = undefined> = {
-  $ref?: NumberBoxHook<ValueType<number, D, number>> | NumberBoxHook<number>;
+  $ref?: NumberBoxHook<F.VType<number, D, number>> | NumberBoxHook<number>;
   $min?: number;
   $max?: number;
   $minLength?: number;
@@ -61,7 +60,7 @@ type NumberBoxOptions<D extends DataItem_Number | undefined = undefined> = {
 
 type OmitAttrs = "";
 export type NumberBoxProps<D extends DataItem_Number | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<number, D, number>, OmitAttrs>, NumberBoxOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<number, D, number>, OmitAttrs>, NumberBoxOptions<D>>;
 
 interface NumberBoxFC extends FunctionComponent<NumberBoxProps> {
   <D extends DataItem_Number | undefined = undefined>(
@@ -138,7 +137,7 @@ const NumberBox = forwardRef(<
       renderFormattedValue();
     },
     validations: ({ label }) => {
-      const validations: Array<FormItemValidation<number | null | undefined>> = [];
+      const validations: Array<F.Validation<number | null | undefined>> = [];
       if ($max != null && $min != null) {
         validations.push(v => NumberValidation.range(v, $min, $max, label));
       } else {

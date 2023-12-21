@@ -6,7 +6,7 @@ import Form from "#/client/elements/form";
 import TimeBox from "#/client/elements/form/items/time-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_time } from "$/data-items/sample/item";
+import { sample_time } from "$/data-items/sample";
 import { useState } from "react";
 
 const TimeBoxClient = () => {

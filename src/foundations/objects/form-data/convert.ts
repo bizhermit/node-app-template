@@ -3,9 +3,9 @@ type Options = {
 };
 
 export const convertFormDataToStruct = <
-  T extends { [key: string]: any } = { [key: string]: any }
+  T extends { [v: string]: any } = { [v: string]: any }
 >(formData: FormData | null | undefined, options?: Options) => {
-  const ret: { [key: string]: any } = {} as T;
+  const ret: { [v: string]: any } = {} as T;
   if (formData == null) return ret;
   Array.from(formData.keys()).forEach(key => {
     const v = formData.get(key);
@@ -29,7 +29,7 @@ export const convertFormDataToStruct = <
 
 export const appendStructData = (
   formData: FormData,
-  struct: { [key: string]: any } | null | undefined,
+  struct: { [v: string]: any } | null | undefined,
   options?: Options
 ) => {
   if (struct == null) return formData;
@@ -85,7 +85,7 @@ export const appendStructData = (
 };
 
 export const convertStructToFormData = (
-  struct: { [key: string]: any } | null | undefined,
+  struct: { [v: string]: any } | null | undefined,
   options?: Options
 ) => {
   return appendStructData(new FormData(), struct, options);

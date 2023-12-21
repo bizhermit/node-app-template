@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { FormItemHook, FormItemMessages, FormItemProps, FormItemValidation, ValueType } from "../$types";
 import equals from "../../../../objects/equal";
 import { generateUuidV4 } from "../../../../objects/string/generator";
 import { getValue } from "../../../../objects/struct/get";
@@ -9,7 +8,7 @@ import type useForm from "../context";
 import { type UseFormItemContextOptions } from "../context";
 import { isErrorObject } from "../utilities";
 
-const formValidationMessages: FormItemMessages = {
+const formValidationMessages: F.Message = {
   default: "入力エラーです。",
   required: "{label}を入力してください。",
   typeMissmatch: "{label}の型が不適切です。",
@@ -18,7 +17,7 @@ const formValidationMessages: FormItemMessages = {
 export const useDataItemMergedProps = <
   T,
   D extends DataItem | undefined,
-  P extends FormItemProps<T, D, any, any>
+  P extends F.ItemProps<T, D, any, any>
 >(form: ReturnType<typeof useForm>, props: P, merge?: {
   under?: (ctx: { props: P; dataItem: Exclude<P["$dataItem"], undefined>; method?: string; }) => Partial<P>;
   over?: (ctx: { props: P; dataItem: Exclude<P["$dataItem"], undefined>; method?: string; }) => Partial<P>;
@@ -46,7 +45,7 @@ export const useDataItemMergedProps = <
   } as P;
 };
 
-export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U extends { [v: string | number | symbol]: any } = any, P extends FormItemProps<T, D, V, U> = FormItemProps<T, D, V, U>>(form: ReturnType<typeof useForm>, {
+export const useFormItemContext = <T, D extends DataItem | undefined, V = undefined, U extends { [v: string | number | symbol]: any } = any, P extends F.ItemProps<T, D, V, U> = F.ItemProps<T, D, V, U>>(form: ReturnType<typeof useForm>, {
   $label,
   $dataItem,
   $disabled,
@@ -68,7 +67,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   $messagePosition,
   $messageWrap,
   ...props
-}: P, opts?: UseFormItemContextOptions<ValueType<T, D, V>, U>) => {
+}: P, opts?: UseFormItemContextOptions<F.VType<T, D, V>, U>) => {
   const init = useRef(false);
   const id = useRef(generateUuidV4());
   const [error, setError] = useState<string | null | undefined>(undefined);
@@ -77,7 +76,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     return opts?.receive ? opts.receive(v) : v;
   };
 
-  const valueRef = useRef<ValueType<T, D, V> | null | undefined>((() => {
+  const valueRef = useRef<F.VType<T, D, V> | null | undefined>((() => {
     return receive((() => {
       if (props == null) return undefined;
       if ("$value" in props) return props.$value;
@@ -96,10 +95,10 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     })());
   })());
   const [value, setValueImpl] = useState(valueRef.current);
-  const setCurrentValue = (value: ValueType<T, D, V> | null | undefined) => {
+  const setCurrentValue = (value: F.VType<T, D, V> | null | undefined) => {
     setValueImpl(valueRef.current = value);
   };
-  const setBind = useCallback((value: ValueType<T, D, V> | null | undefined) => {
+  const setBind = useCallback((value: F.VType<T, D, V> | null | undefined) => {
     if (!props.name) return;
     // if (props.$bind) {
     //   setValue(props.$bind, props.name, value);
@@ -115,7 +114,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   ]);
   if (!init.current) setBind(value);
 
-  const getMessage = useCallback((key: keyof FormItemMessages, ...texts: Array<string>) => {
+  const getMessage = useCallback((key: keyof F.Message, ...texts: Array<string>) => {
     let m = $messages?.[key] ?? opts?.messages?.[key] ?? formValidationMessages[key];
     m = m.replace(/\{label\}/g, $label || "値");
     texts.forEach((t, i) => m = m.replace(new RegExp(`\\{${i}\\}`, "g"), `${t ?? ""}`));
@@ -126,7 +125,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   ]);
 
   const validations = useMemo(() => {
-    const rets: Array<FormItemValidation<ValueType<T, D, V> | null | undefined>> = [];
+    const rets: Array<F.Validation<F.VType<T, D, V> | null | undefined>> = [];
     if ($required && !opts?.preventRequiredValidation) {
       if (opts?.multiple) {
         rets.push(v => {
@@ -225,7 +224,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     });
   }, [$error]);
 
-  const change = useCallback((value: ValueType<T, D, V> | null | undefined, edit = true, absolute?: boolean) => {
+  const change = useCallback((value: F.VType<T, D, V> | null | undefined, edit = true, absolute?: boolean) => {
     if (equals(valueRef.current, value) && !absolute) return;
     const before = valueRef.current;
     setCurrentValue(value);
@@ -372,10 +371,10 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
 // eslint-disable-next-line no-console
 export const formItemHookNotSetError = new Error("useFormItem not set");
 
-export const useFormItem = <T = any>() => useFormItemBase<FormItemHook<T, {}>>(() => ({}));
+export const useFormItem = <T = any>() => useFormItemBase<F.ItemHook<T, {}>>(() => ({}));
 
-export const useFormItemBase = <H extends FormItemHook<any, any>>(
-  addons?: (warningMessage: typeof formItemHookNotSetError) => Omit<H, keyof FormItemHook<any, {}>>
+export const useFormItemBase = <H extends F.ItemHook<any, any>>(
+  addons?: (warningMessage: typeof formItemHookNotSetError) => Omit<H, keyof F.ItemHook<any, {}>>
 ) => {
   return useMemo<H>(() => {
     return {

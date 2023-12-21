@@ -6,7 +6,7 @@ import Form from "#/client/elements/form";
 import NumberBox, { useNumberBox } from "#/client/elements/form/items/number-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_number } from "$/data-items/sample/item";
+import { sample_number } from "$/data-items/sample";
 import { useState } from "react";
 
 const NumberBoxClient = () => {

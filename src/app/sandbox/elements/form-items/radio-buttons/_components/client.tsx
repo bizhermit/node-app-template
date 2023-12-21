@@ -9,7 +9,7 @@ import { CalendarIcon, ClockIcon, CloudIcon, SaveIcon } from "#/client/elements/
 import Row from "#/client/elements/row";
 import generateArray from "#/objects/array/generator";
 import { colors } from "#/utilities/sandbox";
-import { sample_number, sample_string } from "$/data-items/sample/item";
+import { sample_number, sample_string } from "$/data-items/sample";
 import { useState } from "react";
 
 const RadioButtonsClient = () => {

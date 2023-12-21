@@ -1,4 +1,3 @@
-import type { FormItemValidation } from "../../client/elements/form/$types";
 import Time from "../../objects/time";
 import { TimeUtils } from "../../objects/time/utilities";
 import TimeItemUtils from "./utilities";
@@ -137,7 +136,7 @@ namespace TimeInput {
       if (pairValue == null || Array.isArray(pairValue)) return undefined;
       return TimeItemUtils.convertTime(pairValue, pairTimeUnit);
     };
-    const validation: FormItemValidation<any> = (v, t) => {
+    const validation: F.Validation<any> = (v, t) => {
       if (t == null) return undefined;
       const pairTime = getPairTime(t);
       if (pairTime == null) return undefined;

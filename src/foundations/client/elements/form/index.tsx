@@ -5,7 +5,6 @@ import clone from "../../../objects/clone";
 import { getValue } from "../../../objects/struct/get";
 import { setValue } from "../../../objects/struct/set";
 import joinCn from "../../utilities/join-class-name";
-import type { FormItemMessageDisplayMode, FormItemMountProps, FormItemProps } from "./$types";
 import { FormContext, type UseFormItemContextOptions } from "./context";
 import Style from "./index.module.scss";
 import { isErrorObject } from "./utilities";
@@ -51,7 +50,7 @@ type FormOptions<T extends FormDataStruct = FormDataStruct> = {
   $bind?: boolean | FormDataStruct | null | undefined;
   $disabled?: boolean;
   $readOnly?: boolean;
-  $messageDisplayMode?: FormItemMessageDisplayMode;
+  $messageDisplayMode?: F.MessagePosition;
   $messageWrap?: boolean;
   $preventEnterSubmit?: boolean;
   $layout?: "flex" | "grid";
@@ -100,14 +99,14 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
     return disabledRef.current = action;
   }, disabledRef.current);
-  const items = useRef<{ [v: string]: FormItemMountProps & { props: FormItemProps; options: UseFormItemContextOptions; } }>({});
+  const items = useRef<{ [v: string]: F.ItemMountProps & { props: F.ItemProps; options: UseFormItemContextOptions; } }>({});
   const [errors, setErrors] = useState<ErrorStruct>({});
   const [exErrors, setExErrors] = useState<ErrorStruct>({});
 
   const mount = (
     id: string,
-    itemProps: FormItemProps,
-    mountItemProps: FormItemMountProps,
+    itemProps: F.ItemProps,
+    mountItemProps: F.ItemMountProps,
     options: UseFormItemContextOptions
   ) => {
     items.current[id] = { ...mountItemProps, props: itemProps, options, };

@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import FileValidation from "../../../../../data-items/file/validations";
 import Button, { type ButtonOptions } from "../../../button";
 import { CrossIcon } from "../../../icon";
@@ -14,7 +13,7 @@ import Style from "./index.module.scss";
 type FileButtonHookAddon = {
   click: () => void;
 };
-type FileButtonHook<T extends File | Array<File>> = FormItemHook<T, FileButtonHookAddon>;
+type FileButtonHook<T extends File | Array<File>> = F.ItemHook<T, FileButtonHookAddon>;
 
 export const useFileButton = <T extends File | Array<File>>() => useFormItemBase<FileButtonHook<T>>((e) => {
   return {
@@ -35,21 +34,21 @@ type FileButtonBaseOptions = Omit<ButtonOptions, "onClick" | "$notDependsOnForm"
 };
 
 type FileButtonSingleOptions<D extends DataItem_File | undefined = undefined> = FileButtonBaseOptions & {
-  $ref?: FileButtonHook<ValueType<File, D, File>> | FileButtonHook<File | Array<File>>;
+  $ref?: FileButtonHook<F.VType<File, D, File>> | FileButtonHook<File | Array<File>>;
   $append?: false;
   $multiple?: false;
 };
 type FileButtonMultipleOptions<D extends DataItem_File | undefined = undefined> = FileButtonBaseOptions & {
-  $ref?: FileButtonHook<ValueType<Array<File>, D, Array<File>>> | FileButtonHook<File | Array<File>>;
+  $ref?: FileButtonHook<F.VType<Array<File>, D, Array<File>>> | FileButtonHook<File | Array<File>>;
   $append?: boolean;
   $multiple: true;
 };
 
 type OmitAttrs = "placeholder";
 type FileButtonSingleProps<D extends DataItem_File | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<File, D>, OmitAttrs>, FileButtonSingleOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<File, D>, OmitAttrs>, FileButtonSingleOptions<D>>;
 type FileButtonMultipleProps<D extends DataItem_File | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<Array<File>, D>, OmitAttrs>, FileButtonMultipleOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<Array<File>, D>, OmitAttrs>, FileButtonMultipleOptions<D>>;
 
 export type FileButtonProps<D extends DataItem_File | undefined = undefined> =
   FileButtonSingleProps<D> | FileButtonMultipleProps<D>;
@@ -117,7 +116,7 @@ const FileButton = forwardRef(<
     multipartFormData: true,
     multiple: $multiple,
     validations: () => {
-      const validations: Array<FormItemValidation<any>> = [];
+      const validations: Array<F.Validation<any>> = [];
       if ($accept) {
         validations.push(FileValidation.type($accept));
       }

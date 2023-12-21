@@ -7,7 +7,7 @@ import FileButton from "#/client/elements/form/items/file-button";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import { RightIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
-import { sample_file } from "$/data-items/sample/item";
+import { sample_file } from "$/data-items/sample";
 import { useState } from "react";
 
 const FileButtonClient = () => {

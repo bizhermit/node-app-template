@@ -2,7 +2,7 @@ import { dataItemKey } from "..";
 
 const numberItem = <
   V extends number,
-  C extends Omit<DataItem_Number<V>, DataItemKey | "type">
+  C extends Omit<DataItem_Number<V>, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<C & {
     [dataItemKey]: V;

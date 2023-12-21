@@ -1,46 +1,45 @@
-import { ForwardedRef, FunctionComponent, ReactElement, forwardRef, useCallback, useEffect, useMemo, useState, type HTMLAttributes } from "react";
-import { FormItemHook, ValueType } from "../../$types";
+import { forwardRef, useCallback, useEffect, useMemo, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import DateValidation from "../../../../../data-items/date/validations";
 import parseDate from "../../../../../objects/date/parse";
 import structKeys from "../../../../../objects/struct/keys";
 import joinCn from "../../../../utilities/join-class-name";
 import rmAttrs from "../../../../utilities/remove-attrs";
 import useForm from "../../context";
-import DateBox, { DateBoxProps, useDateBox } from "../date-box";
+import DateBox, { useDateBox, type DateBoxProps } from "../date-box";
 import { formItemHookNotSetError, useFormItemBase } from "../hooks";
 import Style from "./index.module.scss";
 
 type DateRangeBoxHookAddon = {
   focus: (target?: "from" | "to") => void;
 };
-type DateRangeBoxHook<T extends DateValue> = FormItemHook<{ from: T | null | undefined; to: T | null | undefined; }, DateRangeBoxHookAddon>;
+type DateRangeBoxHook<T extends DateValue> = F.ItemHook<{ from: T | null | undefined; to: T | null | undefined; }, DateRangeBoxHookAddon>;
 
 export const useDateRangeBox = <T extends DateValue>() => useFormItemBase<DateRangeBoxHook<T>>();
 
 type DateBoxOmitProps = "$onChange" | "$onEdit" | "$value" | "$defaultValue" | "$initValue" | "$dataItem" | "$ref";
 type DateRangeBoxOptions<D extends DataItem_Date | undefined = undefined> = {
-  $ref?: DateRangeBoxHook<ValueType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
+  $ref?: DateRangeBoxHook<F.VType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
   $from: DateBoxProps<D>;
   $to: DateBoxProps<D>;
 } | (Omit<DateBoxProps<D>, DateBoxOmitProps> & {
-  $ref?: DateRangeBoxHook<ValueType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
+  $ref?: DateRangeBoxHook<F.VType<DateValue, D, DateValue>> | DateRangeBoxHook<DateValue>;
   $dataItem?: D;
   $onChange?: (
-    after: { from: ValueType<DateValue, D>; to: ValueType<DateValue, D>; },
-    before: { from: ValueType<DateValue, D>; to: ValueType<DateValue, D>; },
+    after: { from: F.VType<DateValue, D>; to: F.VType<DateValue, D>; },
+    before: { from: F.VType<DateValue, D>; to: F.VType<DateValue, D>; },
     data: { errorMessage: string | null | undefined }
   ) => void;
   $onEdit?: (
-    after: { from: ValueType<DateValue, D>; to: ValueType<DateValue, D>; },
-    before: { from: ValueType<DateValue, D>; to: ValueType<DateValue, D>; },
+    after: { from: F.VType<DateValue, D>; to: F.VType<DateValue, D>; },
+    before: { from: F.VType<DateValue, D>; to: F.VType<DateValue, D>; },
     data: { errorMessage: string | null | undefined }
   ) => void;
-  $fromValue?: ValueType<DateValue, D> | null | undefined;
-  $fromDefaultValue?: ValueType<DateValue, D> | null | undefined;
-  $fromInitValue?: ValueType<DateValue, D> | null | undefined;
-  $toValue?: ValueType<DateValue, D> | null | undefined;
-  $toDefaultValue?: ValueType<DateValue, D> | null | undefined;
-  $toInitValue?: ValueType<DateValue, D> | null | undefined;
+  $fromValue?: F.VType<DateValue, D> | null | undefined;
+  $fromDefaultValue?: F.VType<DateValue, D> | null | undefined;
+  $fromInitValue?: F.VType<DateValue, D> | null | undefined;
+  $toValue?: F.VType<DateValue, D> | null | undefined;
+  $toDefaultValue?: F.VType<DateValue, D> | null | undefined;
+  $toInitValue?: F.VType<DateValue, D> | null | undefined;
 });
 
 type OmitAttrs = "name"
@@ -140,10 +139,10 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
         $interlockValidation: isFormItem,
         $dataItem: memorizedDataItem.from,
         ...(props.$onEdit && {
-          $onEdit: (a: ValueType<DateValue, D>, b: ValueType<DateValue, D>, data: any) => {
+          $onEdit: (a: F.VType<DateValue, D>, b: F.VType<DateValue, D>, data: any) => {
             props.$onEdit?.(
-              { from: a, to: toRef.getValue() as ValueType<DateValue, D> },
-              { from: b, to: toRef.getValue() as ValueType<DateValue, D> },
+              { from: a, to: toRef.getValue() as F.VType<DateValue, D> },
+              { from: b, to: toRef.getValue() as F.VType<DateValue, D> },
               data,
             );
           },
@@ -158,10 +157,10 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
         $interlockValidation: isFormItem,
         $dataItem: memorizedDataItem.to,
         ...(props.$onEdit && {
-          $onEdit: (a: ValueType<DateValue, D>, b: ValueType<DateValue, D>, data: any) => {
+          $onEdit: (a: F.VType<DateValue, D>, b: F.VType<DateValue, D>, data: any) => {
             props.$onChange?.(
-              { from: fromRef.getValue() as ValueType<DateValue, D>, to: a },
-              { from: toRef.getValue() as ValueType<DateValue, D>, to: b },
+              { from: fromRef.getValue() as F.VType<DateValue, D>, to: a },
+              { from: toRef.getValue() as F.VType<DateValue, D>, to: b },
               data,
             );
           },
@@ -170,7 +169,7 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
     } as const;
   })();
 
-  const contextValidation = useCallback((f: ValueType<DateValue, D>, t: ValueType<DateValue, D>) => {
+  const contextValidation = useCallback((f: F.VType<DateValue, D>, t: F.VType<DateValue, D>) => {
     const fromRangePair = from.$rangePair ?? from.$dataItem?.rangePair ?? { name: to.name!, position: "after" };
     const fromErr = !fromRangePair.name ? undefined : DateValidation.context(
       parseDate(f),
@@ -196,12 +195,12 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
     isFormItem,
   ]);
 
-  const fromChange = useCallback((a: ValueType<DateValue, D>, b: ValueType<DateValue, D>, data: any) => {
-    const fromErr = isFormItem ? undefined : contextValidation(a, toRef.getValue() as ValueType<DateValue, D>)?.fromErr;
+  const fromChange = useCallback((a: F.VType<DateValue, D>, b: F.VType<DateValue, D>, data: any) => {
+    const fromErr = isFormItem ? undefined : contextValidation(a, toRef.getValue() as F.VType<DateValue, D>)?.fromErr;
     if ("$onChange" in props) {
       props.$onChange?.(
-        { from: a, to: toRef.getValue() as ValueType<DateValue, D> },
-        { from: b, to: toRef.getValue() as ValueType<DateValue, D> },
+        { from: a, to: toRef.getValue() as F.VType<DateValue, D> },
+        { from: b, to: toRef.getValue() as F.VType<DateValue, D> },
         { errorMessage: data.errorMessage ?? fromErr },
       );
     }
@@ -211,12 +210,12 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
     from.$preventMemorizeOnChange ? (props as any).$from.$onChange : undefined,
   ]);
 
-  const toChange = useCallback((a: ValueType<DateValue, D>, b: ValueType<DateValue, D>, data: any) => {
-    const toErr = isFormItem ? undefined : contextValidation(fromRef.getValue() as ValueType<DateValue, D>, a).toErr;
+  const toChange = useCallback((a: F.VType<DateValue, D>, b: F.VType<DateValue, D>, data: any) => {
+    const toErr = isFormItem ? undefined : contextValidation(fromRef.getValue() as F.VType<DateValue, D>, a).toErr;
     if ("$onChange" in props) {
       props.$onChange?.(
-        { from: fromRef.getValue() as ValueType<DateValue, D>, to: a },
-        { from: toRef.getValue() as ValueType<DateValue, D>, to: b },
+        { from: fromRef.getValue() as F.VType<DateValue, D>, to: a },
+        { from: toRef.getValue() as F.VType<DateValue, D>, to: b },
         { errorMessage: data.errorMessage ?? toErr },
       );
     }
@@ -229,8 +228,8 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
   if ($ref) {
     $ref.focus = (target = "from") => target === "to" ? toRef.focus() : fromRef.focus();
     $ref.getValue = () => ({
-      from: fromRef.getValue() as ValueType<DateValue, D, DateValue>,
-      to: toRef.getValue() as ValueType<DateValue, D, DateValue>
+      from: fromRef.getValue() as F.VType<DateValue, D, DateValue>,
+      to: toRef.getValue() as F.VType<DateValue, D, DateValue>
     });
     $ref.setValue = (v) => {
       fromRef.setValue(v?.from);

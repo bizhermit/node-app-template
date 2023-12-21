@@ -3,9 +3,9 @@ import useFetch from "./fetch-api";
 
 const cache: { [v: string]: Array<any> } = {};
 
-const useSource = <T extends { [key: string]: any }, K extends ApiPath>(
+const useSource = <T extends { [v: string]: any }, K extends ApiPath>(
   apiPath: K,
-  params: ApiRequest<K, "get">,
+  params: Api.Request<K, "get">,
   options?: {
     name?: string;
     noCache?: boolean;

@@ -3,7 +3,9 @@ const fse = require("fs-extra");
 
 const srcRootPath = path.join(__dirname, "../src");
 const appRootPath = path.join(srcRootPath, "app");
+const appAlias = "app";
 const pageRootPath = path.join(srcRootPath, "pages");
+const pagesAlias = "pages";
 
 const pagesRoutes = [];
 const pagesApiRoutes = [];
@@ -96,7 +98,7 @@ type AppApiPath = ${(() => {
 type TypeofAppApi = {
 ${(() => {
   return appApiRoutes.map(pathname => {
-    return `  "${pathname}": typeof import("@${pathname}/route");`;
+    return `  "${pathname}": typeof import("${appAlias}${pathname}/route");`;
 }).join("\n");
 })()}
 };
@@ -122,7 +124,7 @@ type PagesApiPath = ${(() => {
 type TypeofPagesApi = {
 ${(() => {
   return pagesApiRoutes.map(pathname => {
-    return `  "${pathname}": typeof import("~${pathname}");`;
+    return `  "${pathname}": typeof import("${pagesAlias}${pathname}");`;
 }).join("\n");
 })()}
 };

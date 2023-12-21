@@ -11,30 +11,30 @@ export type NextApiConfig = {
   };
 };
 
-const getSession = (req: NextApiRequest): SessionStruct => {
+const getSession = (req: NextApiRequest): { [v: string | number | symbol]: any } => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: string]: any } | void = void> =
+type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
-    getCookies: <T extends QueryStruct = QueryStruct>() => T;
-    getSession: () => SessionStruct;
+    getCookies: <T extends { [v: string]: string | Array<string> } = { [v: string]: string | Array<string> }>() => T;
+    getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => DataItemValueType<Req, true, "page-api">;
+    getData: () => DI.VType<Req, true, "page-api">;
   }) => Promise<Res>;
 
 const apiHandler = <
-  GetReq extends DataContext = DataContext,
-  GetRes extends { [key: string]: any } | void = void,
-  PostReq extends DataContext = DataContext,
-  PostRes extends { [key: string]: any } | void = void,
-  PutReq extends DataContext = DataContext,
-  PutRes extends { [key: string]: any } | void = void,
-  DeleteReq extends DataContext = DataContext,
-  DeleteRes extends { [key: string]: any } | void = void
+  GetReq extends DI.Context = DI.Context,
+  GetRes extends { [v: string]: any } | void = void,
+  PostReq extends DI.Context = DI.Context,
+  PostRes extends { [v: string]: any } | void = void,
+  PutReq extends DI.Context = DI.Context,
+  PutRes extends { [v: string]: any } | void = void,
+  DeleteReq extends DI.Context = DI.Context,
+  DeleteRes extends { [v: string]: any } | void = void
 >(methods: Readonly<{
   $get?: GetReq;
   get?: MethodProcess<GetReq, GetRes>;
@@ -47,10 +47,10 @@ const apiHandler = <
 }>) => {
   return (async (req: NextApiRequest, res: NextApiResponse) => {
     let statusCode: number | undefined = undefined;
-    const msgs: Array<Message> = [];
+    const msgs: Array<Api.Message> = [];
 
     try {
-      const method = (req.method?.toLocaleLowerCase() ?? "get") as ApiMethods;
+      const method = (req.method?.toLocaleLowerCase() ?? "get") as Api.Methods;
       const handler = methods[method];
       if (handler == null) {
         res.status(404).json({});
@@ -59,7 +59,7 @@ const apiHandler = <
 
       const dataContext = methods[`$${method}`];
       const reqData = await (async () => {
-        let data: { [key: string]: any } = { ...req.query };
+        let data: { [v: string]: any } = { ...req.query };
         const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
         if (req.body == null) {
           if (method !== "get") {
@@ -85,7 +85,7 @@ const apiHandler = <
           if (contentType === "multipart/form-data") {
             const key = req.body.match(/([^(?:\r?\n)]*)/)?.[0];
             if (key) {
-              const body: { [key: string]: any } = {};
+              const body: { [v: string]: any } = {};
               const items = (req.body as string).split(key);
               for (const item of items) {
                 if (item.startsWith("--")) continue;

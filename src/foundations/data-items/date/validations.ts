@@ -57,7 +57,7 @@ namespace DateValidation {
   export const context = (
     v: Date | null | undefined,
     rangePair: DateRangePair,
-    data: { [key: string]: any } | null | undefined,
+    data: { [v: string]: any } | null | undefined,
     type: DateType = "date",
     itemName?: string,
     pairItemName?: string

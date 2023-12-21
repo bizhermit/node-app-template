@@ -7,7 +7,7 @@ import Slider from "#/client/elements/form/items/slider";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
-import { sample_number } from "$/data-items/sample/item";
+import { sample_number } from "$/data-items/sample";
 import { useState } from "react";
 
 const SliderClient = () => {

@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "../../../../elements/icon";
@@ -26,7 +25,7 @@ type InputMode = Extract<HTMLAttributes<HTMLInputElement>["inputMode"],
 type PasswordBoxHookAddon = {
   toggleMask: () => void;
 };
-type PasswordBoxHook<T extends string | number> = FormItemHook<T, PasswordBoxHookAddon>;
+type PasswordBoxHook<T extends string | number> = F.ItemHook<T, PasswordBoxHookAddon>;
 
 export const usePasswordBox = <T extends string | number = string>() => useFormItemBase<PasswordBoxHook<T>>(e => {
   return {
@@ -48,7 +47,7 @@ type PasswordBoxOptions<D extends DataItem_String | undefined = undefined> = Pic
   | "$autoComplete"
   | "$align"
 > & {
-  $ref?: PasswordBoxHook<ValueType<string | number, D, string>> | PasswordBoxHook<string | number>;
+  $ref?: PasswordBoxHook<F.VType<string | number, D, string>> | PasswordBoxHook<string | number>;
   $charType?: Extract<StringCharType,
     | "h-num"
     | "h-alpha"
@@ -62,7 +61,7 @@ type PasswordBoxOptions<D extends DataItem_String | undefined = undefined> = Pic
 };
 
 export type PasswordBoxProps<D extends DataItem_String | undefined = undefined> =
-  OverwriteAttrs<FormItemProps<string, D, string>, PasswordBoxOptions<D>>;
+  OverwriteAttrs<F.ItemProps<string, D, string>, PasswordBoxOptions<D>>;
 
 interface PasswordBoxFC extends FunctionComponent<PasswordBoxProps> {
   <D extends DataItem_String | undefined = undefined>(
@@ -144,7 +143,7 @@ const PasswordBox = forwardRef(<
       if (iref.current) iref.current.value = v || "";
     },
     validations: ({ label }) => {
-      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      const validations: Array<F.Validation<string | null | undefined>> = [];
       if ($minLength != null) {
         validations.push(v => StringValidation.minLength(v, $minLength!, label));
       }

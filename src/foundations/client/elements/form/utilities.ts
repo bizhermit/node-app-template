@@ -1,5 +1,3 @@
-import type { FormItemProps, ValueType } from "./$types";
-
 export const isErrorObject = (obj: any): obj is string => !(obj == null || obj === false);
 
 export const convertHiddenValue = (value: any) => {
@@ -20,11 +18,11 @@ export const multiValidationIterator = (v: any, func: (value: string | number | 
   return undefined;
 };
 
-export const convertDataItemValidationToFormItemValidation = <T, U, P extends FormItemProps<T, any, any, any>, D extends DataItem, V = P["$value"]>(
-  func: DataItemValidation<any, any>[number],
+export const convertDataItemValidationToFormItemValidation = <T, U, P extends F.ItemProps<T, any, any, any>, D extends DataItem, V = P["$value"]>(
+  func: DI.Validation<any, any>[number],
   props: P,
   $dataItem: D,
-  convertValue?: (v: ValueType<T, D, V>) => U | null | undefined
+  convertValue?: (v: F.VType<T, D, V>) => U | null | undefined
 ) => {
   return (v: any | null | undefined, bindData: { [v: string | number | symbol]: any } | undefined) => {
     const res = func(convertValue ? convertValue(v) : v as U | null | undefined, {

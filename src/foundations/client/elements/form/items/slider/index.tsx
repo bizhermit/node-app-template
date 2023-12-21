@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import parseNum from "../../../../../objects/number/parse";
 import { convertSizeNumToStr } from "../../../../utilities/size";
 import useForm from "../../context";
@@ -15,7 +14,7 @@ type SliderHookAddon = {
   down: () => number;
   add: (v: number) => number;
 };
-type SliderHook<T extends number = number> = FormItemHook<T, SliderHookAddon>;
+type SliderHook<T extends number = number> = F.ItemHook<T, SliderHookAddon>;
 
 export const useSlider = <T extends number = number>() => useFormItemBase<SliderHook<T>>(e => {
   return {
@@ -32,7 +31,7 @@ export const useSlider = <T extends number = number>() => useFormItemBase<Slider
 });
 
 type SliderOptions<D extends DataItem_Number | undefined = undefined> = {
-  $ref?: SliderHook<ValueType<number, D, number>> | SliderHook<number>;
+  $ref?: SliderHook<F.VType<number, D, number>> | SliderHook<number>;
   $max?: number;
   $min?: number;
   $step?: number;
@@ -43,7 +42,7 @@ type SliderOptions<D extends DataItem_Number | undefined = undefined> = {
 
 type OmitAttrs = "$tagPosition" | "placeholder";
 export type SliderProps<D extends DataItem_Number | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<number, D, number>, OmitAttrs>, SliderOptions<D>>
+  OverwriteAttrs<Omit<F.ItemProps<number, D, number>, OmitAttrs>, SliderOptions<D>>
 
 interface SliderFC extends FunctionComponent<SliderProps> {
   <D extends DataItem_Number | undefined = undefined>(

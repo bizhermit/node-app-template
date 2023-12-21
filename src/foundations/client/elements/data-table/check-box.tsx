@@ -55,7 +55,7 @@ const dataTableCheckBoxColumn = <T extends { [v: string | number | symbol]: any 
   };
 };
 
-const BulkCheckBox = <T extends { [key: string]: any }>({
+const BulkCheckBox = <T extends { [v: string]: any }>({
   dataName,
   items,
   checkedValue,
@@ -98,7 +98,7 @@ const BulkCheckBox = <T extends { [key: string]: any }>({
   );
 };
 
-const CheckBoxCell = <T extends { [key: string]: any }>({
+const CheckBoxCell = <T extends { [v: string]: any }>({
   dataName,
   bulk,
   data,

@@ -6,7 +6,7 @@ import Form from "#/client/elements/form";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
-import { sample_boolean, sample_boolean_num, sample_number, sample_string } from "$/data-items/sample/item";
+import { sample_boolean, sample_boolean_num, sample_number, sample_string } from "$/data-items/sample";
 import { useState } from "react";
 
 const ToggleBoxClient = () => {

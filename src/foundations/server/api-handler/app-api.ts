@@ -2,38 +2,38 @@ import { type RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 import { getItem, getReturnMessages, hasError } from "./main";
 
-const getSession = (req: NextRequest): SessionStruct => {
+const getSession = (req: NextRequest): { [v: string | number | symbol]: any } => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DataContext = DataContext, Res extends { [key: string]: any } | void = void> =
+type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextRequest;
     getCookies: () => RequestCookies;
-    getSession: () => SessionStruct;
+    getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
-    getData: () => DataItemValueType<Req, true, "app-api">;
+    getData: () => DI.VType<Req, true, "app-api">;
   }) => Promise<Res>;
 
 const apiMethodHandler = <
-  Req extends DataContext = DataContext,
-  Res extends { [key: string]: any } | void = void
+  Req extends DI.Context = DI.Context,
+  Res extends { [v: string]: any } | void = void
 >(dataContext?: Req | null, process?: MethodProcess<Req, Res> | null) => {
-  return (async (req: NextRequest, { params }: { params: QueryStruct }) => {
+  return (async (req: NextRequest, { params }) => {
     if (process == null) {
       return NextResponse.json({}, { status: 404 });
     }
 
     let statusCode: number | undefined = undefined;
-    const msgs: Array<Message> = [];
-    const method = (req.method.toLowerCase() ?? "get") as ApiMethods;
+    const msgs: Array<Api.Message> = [];
+    const method = (req.method.toLowerCase() ?? "get") as Api.Methods;
 
     try {
       const reqData = await (async () => {
         const data = await (async () => {
           const { searchParams } = new URL(req.url);
-          const queryData: { [key: string]: any } = {};
+          const queryData: { [v: string]: any } = {};
           Array.from(searchParams.keys()).forEach(key => {
             queryData[key] = searchParams.get(key);
           });
@@ -51,7 +51,7 @@ const apiMethodHandler = <
               ...(await req.json()),
             };
           }
-          const data: { [key: string]: any } = {
+          const data: { [v: string]: any } = {
             ...queryData,
             ...params,
           };
@@ -100,7 +100,7 @@ const apiMethodHandler = <
       });
     }
   }) as {
-    (req: NextRequest, ctx: { params: QueryStruct }): Promise<NextResponse>;
+    (req: NextRequest, ctx: { params: { [v: string]: string | Array<string> } }): Promise<NextResponse>;
     req: Req;
     res: Res;
   };

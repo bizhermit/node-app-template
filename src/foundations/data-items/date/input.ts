@@ -1,5 +1,4 @@
 import { dateDefaultTypeof } from ".";
-import type { FormItemValidation } from "../../client/elements/form/$types";
 import generateArray from "../../objects/array/generator";
 import formatDate from "../../objects/date/format";
 import parseDate from "../../objects/date/parse";
@@ -107,7 +106,7 @@ namespace DateInput {
       if (pairValue == null || Array.isArray(pairValue)) return undefined;
       return parseDate(pairValue);
     };
-    const validation: FormItemValidation<any> = (v, d) => {
+    const validation: F.Validation<any> = (v, d) => {
       if (d == null) return undefined;
       const pairDate = getPairDate(d);
       if (pairDate == null) return undefined;

@@ -7,7 +7,7 @@ import ElectronicSignature, { useElectronicSignature } from "#/client/elements/f
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_file, sample_string } from "$/data-items/sample/item";
+import { sample_file, sample_string } from "$/data-items/sample";
 import { useState } from "react";
 
 const ElectronicSignatureClient = () => {

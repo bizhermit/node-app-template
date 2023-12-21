@@ -8,7 +8,7 @@ import DateRangeBox, { useDateRangeBox } from "#/client/elements/form/items/date
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Row from "#/client/elements/row";
-import { sample_date, sample_month, sample_year } from "$/data-items/sample/item";
+import { sample_date, sample_month, sample_year } from "$/data-items/sample";
 import { useState } from "react";
 
 const DateBoxClient = () => {
