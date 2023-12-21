@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import TimeInput from "../../../../../data-items/time/input";
 import TimeItemUtils from "../../../../../data-items/time/utilities";
 import equals from "../../../../../objects/equal";
@@ -16,12 +15,12 @@ import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../
 import TimePicker from "../time-picker";
 import Style from "./index.module.scss";
 
-type TimeBoxHook<T extends TimeValue> = FormItemHook<T>;
+type TimeBoxHook<T extends TimeValue> = F.ItemHook<T>;
 
 export const useTimeBox = <T extends TimeValue>() => useFormItemBase<TimeBoxHook<T>>();
 
 type TimeBoxOptions<D extends DataItem_Time | undefined = undefined> = & TimeInput.FCProps & {
-  $ref?: TimeBoxHook<ValueType<TimeValue, D, TimeValue>> | TimeBoxHook<TimeValue>;
+  $ref?: TimeBoxHook<F.VType<TimeValue, D, TimeValue>> | TimeBoxHook<TimeValue>;
   $typeof?: TimeValueType;
   $disallowInput?: boolean;
   $hourPlaceholder?: string;
@@ -32,7 +31,7 @@ type TimeBoxOptions<D extends DataItem_Time | undefined = undefined> = & TimeInp
 
 type OmitAttrs = "placeholder" | "tabIndex";
 export type TimeBoxProps<D extends DataItem_Time | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<TimeValue, D>, OmitAttrs>, TimeBoxOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<TimeValue, D>, OmitAttrs>, TimeBoxOptions<D>>;
 
 const isNumericOrEmpty = (value?: string): value is string => {
   return isEmpty(value) || /^[0-9]+$/.test(value);
@@ -107,7 +106,7 @@ const TimeBox = forwardRef(<
   const { ctx, props, $ref } = useFormItemContext(form, $p, {
     interlockValidation: $rangePair != null,
     validations: ({ label }) => {
-      const validations: Array<FormItemValidation<any>> = [];
+      const validations: Array<F.Validation<any>> = [];
       if (maxTime != null && minTime != null) {
         validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit, label));
       } else {

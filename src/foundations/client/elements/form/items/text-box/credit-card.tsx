@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemProps, FormItemValidation } from "../../$types";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
 import { CrossIcon } from "../../../icon";
@@ -17,7 +16,7 @@ type CreditCardNumberBoxOptions = {
 
 export type CreditCardNumberBoxProps<
   D extends DataItem_String | undefined = undefined
-> = OverwriteAttrs<FormItemProps<string, D, string>, CreditCardNumberBoxOptions>;
+> = OverwriteAttrs<F.ItemProps<string, D, string>, CreditCardNumberBoxOptions>;
 
 interface CreditCardNumberBoxFC extends FunctionComponent<CreditCardNumberBoxProps> {
   <D extends DataItem_String | undefined = undefined>(
@@ -55,7 +54,7 @@ const CreditCardNumberBox = forwardRef<HTMLDivElement, CreditCardNumberBoxProps>
   const { ctx, props, $ref } = useFormItemContext(form, $p, {
     effect: renderFormattedValue,
     validations: ({ label }) => {
-      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      const validations: Array<F.Validation<string | null | undefined>> = [];
       validations.push(v => StringValidation.minLength(v, 14, label));
       validations.push(v => StringValidation.maxLength(v, 16, label));
       return validations;

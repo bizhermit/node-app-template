@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import { pressPositiveKey } from "../../../../utilities/press-positive-key";
 import Text from "../../../text";
 import useForm from "../../context";
@@ -15,7 +14,7 @@ type CheckBoxHookAddon = {
   uncheck: () => void;
   toggle: () => void;
 };
-type CheckBoxHook<T extends string | number | boolean = string | number | boolean> = FormItemHook<T, CheckBoxHookAddon>;
+type CheckBoxHook<T extends string | number | boolean = string | number | boolean> = F.ItemHook<T, CheckBoxHookAddon>;
 
 export const useCheckBox = <
   T extends string | number | boolean = string | number | boolean
@@ -37,7 +36,7 @@ type CheckBoxOptions<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 > = {
-  $ref?: CheckBoxHook<ValueType<T, D, T>> | CheckBoxHook<string | number | boolean>;
+  $ref?: CheckBoxHook<F.VType<T, D, T>> | CheckBoxHook<string | number | boolean>;
   $checkedValue?: T;
   $uncheckedValue?: T;
   $fill?: boolean;
@@ -50,7 +49,7 @@ type OmitAttrs = "$tagPosition" | "placeholder";
 export type CheckBoxProps<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
-> = OverwriteAttrs<Omit<FormItemProps<T, D>, OmitAttrs>, CheckBoxOptions<T, D>>;
+> = OverwriteAttrs<Omit<F.ItemProps<T, D>, OmitAttrs>, CheckBoxOptions<T, D>>;
 
 interface CheckBoxFC extends FunctionComponent<CheckBoxProps> {
   <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(

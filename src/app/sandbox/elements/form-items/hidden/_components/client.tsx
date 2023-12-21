@@ -3,7 +3,6 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import type { FormItemMessageDisplayMode } from "#/client/elements/form/$types";
 import Hidden from "#/client/elements/form/items/hidden";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import Row from "#/client/elements/row";
@@ -11,12 +10,12 @@ import { useState } from "react";
 
 const HiddenClient = () => {
   const [value, setValue] = useState<any>();
-  const [messagePos, setMessagePos] = useState<Nullable<FormItemMessageDisplayMode>>("bottom");
+  const [messagePos, setMessagePos] = useState<Nullable<F.MessagePosition>>("bottom");
 
   return (
     <div className="flex p-xs w-100 h-100 g-s">
       <Row>
-        <RadioButtons<FormItemMessageDisplayMode>
+        <RadioButtons<F.MessagePosition>
           $source={[
             { value: "tooltip" },
             { value: "bottom" },

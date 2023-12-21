@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemProps } from "../../$types";
 import useForm from "../../context";
 import { convertHiddenValue } from "../../utilities";
 import { FormItemWrap } from "../common";
@@ -13,7 +12,7 @@ type HiddenOptions = {
 
 type OmitAttrs = "$focusWhenMounted";
 export type HiddenProps<D extends DataItem | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<any, D, any>, OmitAttrs>, HiddenOptions>;
+  OverwriteAttrs<Omit<F.ItemProps<any, D, any>, OmitAttrs>, HiddenOptions>;
 
 interface HiddenFC extends FunctionComponent<HiddenProps> {
   <D extends DataItem | undefined = undefined>(

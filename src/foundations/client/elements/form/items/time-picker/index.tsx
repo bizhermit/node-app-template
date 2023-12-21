@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import TimeInput from "../../../../../data-items/time/input";
 import TimeItemUtils from "../../../../../data-items/time/utilities";
 import Time from "../../../../../objects/time";
@@ -13,12 +12,12 @@ import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
 import Style from "./index.module.scss";
 
-type TimePickerHook<T extends TimeValue> = FormItemHook<T>;
+type TimePickerHook<T extends TimeValue> = F.ItemHook<T>;
 
 export const useTimePicker = <T extends TimeValue>() => useFormItemBase<TimePickerHook<T>>();
 
 export type TimePickerBaseOptions<D extends DataItem_Time | undefined = undefined> = TimeInput.FCProps & {
-  $ref?: TimePickerHook<ValueType<TimeValue, D, TimeValue>> | TimePickerHook<TimeValue>;
+  $ref?: TimePickerHook<F.VType<TimeValue, D, TimeValue>> | TimePickerHook<TimeValue>;
   $typeof?: TimeValueType;
   $onClickPositive?: (value: TimeValue | null | undefined) => void;
   $onClickNegative?: () => void;
@@ -29,7 +28,7 @@ export type TimePickerBaseOptions<D extends DataItem_Time | undefined = undefine
 
 type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
 export type TimePickerProps<D extends DataItem_Time | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<TimeValue, D>, OmitAttrs>, TimePickerBaseOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<TimeValue, D>, OmitAttrs>, TimePickerBaseOptions<D>>;
 
 interface TimePickerFC extends FunctionComponent<TimePickerProps> {
   <D extends DataItem_Time | undefined = undefined>(
@@ -99,7 +98,7 @@ const TimePicker = forwardRef(<
     interlockValidation: $rangePair != null,
     validations: ({ label }) => {
       if ($skipValidation) return [];
-      const validations: Array<FormItemValidation<any>> = [];
+      const validations: Array<F.Validation<any>> = [];
       if (maxTime != null && minTime != null) {
         validations.push(TimeInput.rangeValidation(minTime, maxTime, type, unit, label));
       } else {

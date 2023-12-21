@@ -2,7 +2,6 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import equals from "../../../objects/equal";
 import { generateUuidV4 } from "../../../objects/string/generator";
 import { setValue } from "../../../objects/struct/set";
-import type { FormItemMessageDisplayMode, FormItemMessageFunc, FormItemMessages, FormItemMountProps, FormItemProps, FormItemValidation } from "./$types";
 
 type Data = { [v: string | number | symbol]: any };
 type ErrorData = { [v: string]: string };
@@ -14,17 +13,17 @@ export type UseFormItemContextOptions<T = any, U extends Data = {}> = {
   multiple?: boolean;
   multipartFormData?: boolean;
   validations?: (ctx: {
-    getMessage: FormItemMessageFunc;
+    getMessage: F.MessageSupplier;
     label: string;
     required: boolean | undefined;
-    messages: Partial<FormItemMessages> | undefined;
-  }) => Array<FormItemValidation<T | null | undefined>>;
+    messages: Partial<F.Message> | undefined;
+  }) => Array<F.Validation<T | null | undefined>>;
   validationsDeps?: Array<any>;
   preventRequiredValidation?: boolean;
   interlockValidation?: boolean;
   generateChangeCallbackData?: (after?: T | null | undefined, before?: T | null | undefined) => U;
   generateChangeCallbackDataDeps?: Array<any>;
-  messages?: Partial<FormItemMessages>;
+  messages?: Partial<F.Message>;
 };
 
 type FormContextProps = {
@@ -39,13 +38,13 @@ type FormContextProps = {
   hasError: boolean;
   mount: (
     id: string,
-    itemProps: FormItemProps<any, any, any, any>,
-    mountItemProps: FormItemMountProps,
+    itemProps: F.ItemProps<any, any, any, any>,
+    mountItemProps: F.ItemMountProps,
     options: UseFormItemContextOptions<any, any>
   ) => string;
   unmount: (name: string) => void;
   validation: (returnId: string) => string | null | undefined;
-  messagePosition: FormItemMessageDisplayMode;
+  messagePosition: F.MessagePosition;
   messageWrap?: boolean;
   getValue: <T>(name: string) => T;
   setValue: (name: string, value: any, absolute?: boolean) => void;

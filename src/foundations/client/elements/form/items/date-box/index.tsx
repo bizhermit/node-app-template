@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import DateInput from "../../../../../data-items/date/input";
 import DateItemUtils from "../../../../../data-items/date/utilities";
 import { isBeforeDate } from "../../../../../objects/date/compare";
@@ -25,7 +24,7 @@ type DateBoxHookAddon = {
   setFirstDate: () => Date;
   setLastDate: () => Date;
 };
-type DateBoxHook<T extends DateValue> = FormItemHook<T, DateBoxHookAddon>;
+type DateBoxHook<T extends DateValue> = F.ItemHook<T, DateBoxHookAddon>;
 
 export const useDateBox = <T extends DateValue>() => useFormItemBase<DateBoxHook<T>>(e => {
   return {
@@ -48,7 +47,7 @@ export const useDateBox = <T extends DateValue>() => useFormItemBase<DateBoxHook
 });
 
 type DateBoxOptions<D extends DataItem_Date | undefined = undefined> = DateInput.FCPorps & {
-  $ref?: DateBoxHook<ValueType<DateValue, D, DateValue>> | DateBoxHook<DateValue>;
+  $ref?: DateBoxHook<F.VType<DateValue, D, DateValue>> | DateBoxHook<DateValue>;
   $typeof?: DateValueType;
   $disallowInput?: boolean;
   $pickerButtonless?: boolean;
@@ -60,7 +59,7 @@ type DateBoxOptions<D extends DataItem_Date | undefined = undefined> = DateInput
 
 type OmitAttrs = "placeholder" | "tabIndex";
 export type DateBoxProps<D extends DataItem_Date | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<DateValue, D>, OmitAttrs>, DateBoxOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<DateValue, D>, OmitAttrs>, DateBoxOptions<D>>;
 
 const isNumericOrEmpty = (value?: string): value is string => {
   if (isEmpty(value)) return true;
@@ -146,7 +145,7 @@ const DateBox = forwardRef(<
       }
     },
     validations: ({ label }) => {
-      const validations: Array<FormItemValidation<any>> = [];
+      const validations: Array<F.Validation<any>> = [];
       const max = DateItemUtils.dateAsLast(maxDate, type);
       const min = DateItemUtils.dateAsFirst(minDate, type);
       if (max != null && min != null) {

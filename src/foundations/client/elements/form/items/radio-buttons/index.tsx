@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import equals from "../../../../../objects/equal";
 import { getValue } from "../../../../../objects/struct/get";
 import { setValue } from "../../../../../objects/struct/set";
@@ -22,7 +21,7 @@ type RadioButtonsHookAddon<Q extends Data = Data> = {
 type RadioButtonsHook<
   T extends string | number | boolean,
   Q extends Data = Data
-> = FormItemHook<T, RadioButtonsHookAddon<Q>>;
+> = F.ItemHook<T, RadioButtonsHookAddon<Q>>;
 
 export const useRadioButtons = <
   T extends string | number | boolean,
@@ -40,7 +39,7 @@ type RadioButtonsOptions<
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Data = Data
 > = {
-  $ref?: RadioButtonsHook<ValueType<T, D, T>, S> | RadioButtonsHook<string | number | boolean, S>;
+  $ref?: RadioButtonsHook<F.VType<T, D, T>, S> | RadioButtonsHook<string | number | boolean, S>;
   $labelDataName?: string;
   $valueDataName?: string;
   $colorDataName?: string;
@@ -60,7 +59,7 @@ export type RadioButtonsProps<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Data = Data
-> = OverwriteAttrs<Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, RadioButtonsOptions<T, D, S>>;
+> = OverwriteAttrs<Omit<F.ItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, RadioButtonsOptions<T, D, S>>;
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
   <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Data = Data>(

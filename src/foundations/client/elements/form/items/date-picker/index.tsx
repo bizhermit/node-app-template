@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, type ForwardedRef, type FunctionComponent, type Key, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import DateInput from "../../../../../data-items/date/input";
 import DateItemUtils from "../../../../../data-items/date/utilities";
 import generateArray from "../../../../../objects/array/generator";
@@ -23,12 +22,12 @@ import Style from "./index.module.scss";
 type DatePickerMode = "calendar" | "list";
 const monthTextsNum = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] as const;
 
-type DatePickerHook<T extends DateValue | Array<DateValue>> = FormItemHook<T>;
+type DatePickerHook<T extends DateValue | Array<DateValue>> = F.ItemHook<T>;
 
 export const useDatePicker = <T extends DateValue | Array<DateValue>>() => useFormItemBase<DatePickerHook<T>>();
 
 type DatePickerBaseOptions<T extends DateValue | Array<DateValue>, D extends DataItem_Date | undefined = undefined> = DateInput.FCPorps & {
-  $ref?: DatePickerHook<ValueType<DateValue | Array<DateValue>, D, DateValue | Array<DateValue>>> | DatePickerHook<DateValue | Array<DateValue>>;
+  $ref?: DatePickerHook<F.VType<DateValue | Array<DateValue>, D, DateValue | Array<DateValue>>> | DatePickerHook<DateValue | Array<DateValue>>;
   $typeof?: DateValueType;
   $mode?: DatePickerMode;
   $firstWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -48,9 +47,9 @@ type DatePickerMultipleOptions<D extends DataItem_Date | undefined = undefined> 
 
 type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
 type DatePickerSingleProps<D extends DataItem_Date | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<DateValue, D>, OmitAttrs>, DatePickerSingleOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<DateValue, D>, OmitAttrs>, DatePickerSingleOptions<D>>;
 type DatePickerMultipleProps<D extends DataItem_Date | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<Array<DateValue>, D>, OmitAttrs>, DatePickerMultipleOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<Array<DateValue>, D>, OmitAttrs>, DatePickerMultipleOptions<D>>;
 
 export type DatePickerProps<D extends DataItem_Date | undefined = undefined> =
   DatePickerSingleProps<D> | DatePickerMultipleProps<D>;
@@ -164,7 +163,7 @@ const DatePicker = forwardRef(<
     multiple: $multiple,
     validations: ({ label }) => {
       if ($skipValidation) return [];
-      const validations: Array<FormItemValidation<any>> = [];
+      const validations: Array<F.Validation<any>> = [];
       const maxTime = DateItemUtils.dateAsLast(maxDate, type);
       const minTime = DateItemUtils.dateAsFirst(minDate, type);
       if (maxTime != null && minTime != null) {

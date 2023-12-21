@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/size";
@@ -14,12 +13,12 @@ import Style from "./index.module.scss";
 
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
-type TextAreaHook<T extends string> = FormItemHook<T>;
+type TextAreaHook<T extends string> = F.ItemHook<T>;
 
 export const useTextBox = <T extends string = string>() => useFormItemBase<TextAreaHook<T>>();
 
 type TextAreaOptions<D extends DataItem_String | undefined = undefined> = {
-  $ref?: TextAreaHook<ValueType<string, D, string>> | TextAreaHook<string>;
+  $ref?: TextAreaHook<F.VType<string, D, string>> | TextAreaHook<string>;
   $inputMode?: InputMode;
   $length?: number;
   $preventInputWithinLength?: boolean;
@@ -38,7 +37,7 @@ type TextAreaOptions<D extends DataItem_String | undefined = undefined> = {
 
 type OmitAttrs = "";
 export type TextAreaProps<D extends DataItem_String | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<string, D, string>, OmitAttrs>, TextAreaOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<string, D, string>, OmitAttrs>, TextAreaOptions<D>>;
 
 interface TextAreaFC extends FunctionComponent<TextAreaProps> {
   <D extends DataItem_String | undefined = undefined>(
@@ -110,7 +109,7 @@ const TextArea = forwardRef(<
       if (iref.current) iref.current.value = v || "";
     },
     validations: ({ label }) => {
-      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      const validations: Array<F.Validation<string | null | undefined>> = [];
       if ($length != null) {
         validations.push(v => StringValidation.length(v, $length!, label));
       } else {

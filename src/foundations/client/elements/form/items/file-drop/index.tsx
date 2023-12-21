@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import FileValidation from "../../../../../data-items/file/validations";
 import { pressPositiveKey } from "../../../../utilities/press-positive-key";
 import { CrossIcon } from "../../../icon";
@@ -15,7 +14,7 @@ import Style from "./index.module.scss";
 type FileDropHookAddon = {
   picker: () => void;
 };
-type FileDropHook<T extends File | Array<File>> = FormItemHook<T, FileDropHookAddon>;
+type FileDropHook<T extends File | Array<File>> = F.ItemHook<T, FileDropHookAddon>;
 
 export const useFileDrop = <T extends File | Array<File>>() => useFormItemBase<FileDropHook<T>>((e) => {
   return {
@@ -36,21 +35,21 @@ type FileDropBaseProps = {
 };
 
 type FileDropSingleOptions<D extends DataItem_File | undefined = undefined> = FileDropBaseProps & {
-  $ref?: FileDropHook<ValueType<File, D, File>> | FileDropHook<File | Array<File>>;
+  $ref?: FileDropHook<F.VType<File, D, File>> | FileDropHook<File | Array<File>>;
   $append?: false;
   $multiple?: false;
 };
 type FileDropMultipleOptions<D extends DataItem_File | undefined = undefined> = FileDropBaseProps & {
-  $ref?: FileDropHook<ValueType<Array<File>, D, Array<File>>> | FileDropHook<File | Array<File>>;
+  $ref?: FileDropHook<F.VType<Array<File>, D, Array<File>>> | FileDropHook<File | Array<File>>;
   $append?: boolean;
   $multiple: true;
 };
 
 type OmitAttrs = "placeholder";
 type FileDropSingleProps<D extends DataItem_File | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<File, D>, OmitAttrs>, FileDropSingleOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<File, D>, OmitAttrs>, FileDropSingleOptions<D>>;
 type FileDropMultipleProps<D extends DataItem_File | undefined = undefined> =
-  OverwriteAttrs<Omit<FormItemProps<Array<File>, D>, OmitAttrs>, FileDropMultipleOptions<D>>;
+  OverwriteAttrs<Omit<F.ItemProps<Array<File>, D>, OmitAttrs>, FileDropMultipleOptions<D>>;
 
 export type FileDropProps<D extends DataItem_File | undefined = undefined> =
   FileDropSingleProps<D> | FileDropMultipleProps<D>;
@@ -108,7 +107,7 @@ const FileDrop = forwardRef(<
     multipartFormData: true,
     multiple: $multiple,
     validations: () => {
-      const validations: Array<FormItemValidation<any>> = [];
+      const validations: Array<F.Validation<any>> = [];
       if ($accept) {
         validations.push(FileValidation.type($accept));
       }

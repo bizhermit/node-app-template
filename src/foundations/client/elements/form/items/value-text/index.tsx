@@ -1,7 +1,6 @@
 "use client";
 
 import type { HTMLAttributes, ReactNode } from "react";
-import type { FormItemProps, ValueType } from "../../$types";
 import Text from "../../../text";
 import useForm from "../../context";
 import { useDataItemMergedProps } from "../hooks";
@@ -10,7 +9,7 @@ type ValueTextOptions<
   T extends string | number | boolean | Date | null | undefined = string | number | boolean | Date | null | undefined,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | DataItem_Date | undefined = undefined
 > = {
-  $format?: (v: ValueType<T, D, undefined>) => ReactNode;
+  $format?: (v: F.VType<T, D, undefined>) => ReactNode;
 };
 
 type OmitAttrs = "children";
@@ -18,7 +17,7 @@ export type ValueTextProps<
   T extends string | number | boolean | Date | null | undefined = string | number | boolean | Date | null | undefined,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | DataItem_Date | undefined = undefined
 > = OverwriteAttrs<
-  Omit<HTMLAttributes<HTMLDivElement> & Pick<FormItemProps<string | number | boolean, D, undefined>, "name" | "$dataItem">, OmitAttrs>,
+  Omit<HTMLAttributes<HTMLDivElement> & Pick<F.ItemProps<string | number | boolean, D, undefined>, "name" | "$dataItem">, OmitAttrs>,
   ValueTextOptions<T, D>
 >;
 

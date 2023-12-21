@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useMemo, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import equals from "../../../../../objects/equal";
 import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
 import { getValue } from "../../../../../objects/struct/get";
@@ -25,7 +24,7 @@ type SelectBoxHookAddon<Q extends Data = Data> = {
 type SelectBoxHook<
   T extends string | number | boolean,
   Q extends Data = Data
-> = FormItemHook<T, SelectBoxHookAddon<Q>>;
+> = F.ItemHook<T, SelectBoxHookAddon<Q>>;
 
 export const useSelectBox = <
   T extends string | number | boolean,
@@ -43,7 +42,7 @@ type SelectBoxOptions<
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Data = Data
 > = {
-  $ref?: SelectBoxHook<ValueType<T, D, T>, S> | SelectBoxHook<string | number, S>;
+  $ref?: SelectBoxHook<F.VType<T, D, T>, S> | SelectBoxHook<string | number, S>;
   $labelDataName?: string;
   $valueDataName?: string;
   $source?: LoadableArray<S>;
@@ -54,7 +53,7 @@ type SelectBoxOptions<
   $maxWidth?: number | string;
   $minWidth?: number | string;
   $emptyItem?: boolean | string | { value: T | null | undefined; label: string; };
-  $initValue?: ValueType<T, D, undefined> | null | undefined;
+  $initValue?: F.VType<T, D, undefined> | null | undefined;
   $align?: "left" | "center" | "right";
   $disallowInput?: boolean;
   $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
@@ -65,7 +64,7 @@ export type SelectBoxProps<
   T extends string | number | boolean = string | number | boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends Data = Data
-> = OverwriteAttrs<Omit<FormItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, SelectBoxOptions<T, D, S>>;
+> = OverwriteAttrs<Omit<F.ItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, SelectBoxOptions<T, D, S>>;
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
   <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends { [key: string]: any } = { [key: string]: any }>(

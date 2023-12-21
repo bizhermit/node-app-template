@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
-import type { FormItemHook, FormItemProps, FormItemValidation, ValueType } from "../../$types";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
 import { convertSizeNumToStr } from "../../../../utilities/size";
@@ -16,12 +15,12 @@ import Style from "./index.module.scss";
 type InputType = "email" | "password" | "search" | "tel" | "text" | "url";
 type InputMode = HTMLAttributes<HTMLInputElement>["inputMode"];
 
-type TextBoxHook<T extends string | number> = FormItemHook<T>;
+type TextBoxHook<T extends string | number> = F.ItemHook<T>;
 
-export const useTextBox = <T extends string | number = string>() => useFormItemBase<FormItemHook<T>>();
+export const useTextBox = <T extends string | number = string>() => useFormItemBase<F.ItemHook<T>>();
 
 type TextBoxOptions<D extends DataItem_String | DataItem_Number | undefined = undefined> = {
-  $ref?: TextBoxHook<ValueType<string | number, D, string>> | TextBoxHook<string | number>;
+  $ref?: TextBoxHook<F.VType<string | number, D, string>> | TextBoxHook<string | number>;
   $type?: InputType;
   $inputMode?: InputMode;
   $length?: number;
@@ -41,7 +40,7 @@ type TextBoxOptions<D extends DataItem_String | DataItem_Number | undefined = un
 
 export type TextBoxProps<
   D extends DataItem_String | DataItem_Number | undefined = undefined
-> = OverwriteAttrs<FormItemProps<string | number, D, string, {}>, TextBoxOptions<D>>;
+> = OverwriteAttrs<F.ItemProps<string | number, D, string, {}>, TextBoxOptions<D>>;
 
 interface TextBoxFC extends FunctionComponent<TextBoxProps> {
   <D extends DataItem_String | DataItem_Number | undefined = undefined>(
@@ -149,7 +148,7 @@ const TextBox = forwardRef(<
       if (iref.current) iref.current.value = v || "";
     },
     validations: ({ label }) => {
-      const validations: Array<FormItemValidation<string | null | undefined>> = [];
+      const validations: Array<F.Validation<string | null | undefined>> = [];
       if ($length != null) {
         validations.push(v => StringValidation.length(v, $length!, label));
       } else {

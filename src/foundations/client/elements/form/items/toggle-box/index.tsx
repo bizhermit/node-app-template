@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
-import type { FormItemHook, FormItemProps, ValueType } from "../../$types";
 import { pressPositiveKey } from "../../../../utilities/press-positive-key";
 import Text from "../../../text";
 import useForm from "../../context";
@@ -15,7 +14,7 @@ type ToggleBoxHookAddon = {
   off: () => void;
   toggle: () => void;
 };
-type ToggleBoxHook<T extends string | number | boolean = string | number | boolean> = FormItemHook<T, ToggleBoxHookAddon>;
+type ToggleBoxHook<T extends string | number | boolean = string | number | boolean> = F.ItemHook<T, ToggleBoxHookAddon>;
 
 export const useToggleBox = <
   T extends string | number | boolean = string | number | boolean
@@ -37,7 +36,7 @@ type ToggleBoxOptions<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 > = {
-  $ref?: ToggleBoxHook<ValueType<T, D, T>> | ToggleBoxHook<string | number | boolean>;
+  $ref?: ToggleBoxHook<F.VType<T, D, T>> | ToggleBoxHook<string | number | boolean>;
   $checkedValue?: T;
   $uncheckedValue?: T;
   children?: ReactNode;
@@ -47,7 +46,7 @@ type OmitAttrs = "$tagPosition" | "placeholder";
 export type ToggleBoxProps<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
-> = OverwriteAttrs<Omit<FormItemProps<T, D>, OmitAttrs>, ToggleBoxOptions<T, D>>;
+> = OverwriteAttrs<Omit<F.ItemProps<T, D>, OmitAttrs>, ToggleBoxOptions<T, D>>;
 
 interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
   <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
