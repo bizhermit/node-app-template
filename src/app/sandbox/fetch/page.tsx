@@ -41,7 +41,10 @@ const Page = () => {
             onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.get("/api/fetch", {
-                  s_string: "tetetetette",
+                  // s_string: undefined,
+                  // s_string: "hogehoge",
+                  // s_number: 0,
+                  // sample_date: new Date(),
                 }, {
                   contentType: "json",
                 });
@@ -58,8 +61,7 @@ const Page = () => {
             onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/api/fetch", {
-                  s_string: "a",
-                  // file: new File(),
+                  
                 }, {
                   contentType: "json",
                 });
@@ -76,7 +78,8 @@ const Page = () => {
             onClick={async (unlock) => {
               await process(async () => {
                 const res = await api.post("/api/fetch", {
-                  // text: "hoge",
+                  // text: 1,
+                  "list-str": []
                 }, {
                   contentType: "formData",
                 });

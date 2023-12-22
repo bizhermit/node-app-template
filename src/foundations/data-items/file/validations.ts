@@ -45,9 +45,9 @@ namespace FileValidation {
     };
   };
 
-  export const typeForServer = (accept: string) => {
+  export const typeForServer = <Side extends Exclude<DI.Location, "client">>(accept: string) => {
     const accepts = accept.split(",");
-    const validAccept = (file: FileValue) => {
+    const validAccept = (file: FileValue<Side>) => {
       if (file == null) return true;
       return accepts.some(accept => {
         if ("originalFilename" in file) {
@@ -59,7 +59,7 @@ namespace FileValidation {
         return (file.type || "").match(reg);
       });
     };
-    return (files: FileValue | Array<FileValue>) => {
+    return (files: FileValue<Side> | Array<FileValue<Side>>) => {
       const values = Array.isArray(files) ? files : [files];
       let ret: string | undefined;
       for (const file of values) {

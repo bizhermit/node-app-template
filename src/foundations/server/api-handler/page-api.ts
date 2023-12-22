@@ -1,6 +1,6 @@
 import formidable from "formidable";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getItem, getReturnMessages, hasError } from "./main";
+import { acceptData, getReturnMessages, hasError } from "./main";
 
 export type NextApiConfig = {
   api?: {
@@ -15,7 +15,7 @@ const getSession = (req: NextApiRequest): { [v: string | number | symbol]: any }
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string]: any } | void = void> =
+type MethodProcess<Req extends Api.RequestDataItems = Api.RequestDataItems, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
@@ -27,13 +27,13 @@ type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string
   }) => Promise<Res>;
 
 const apiHandler = <
-  GetReq extends DI.Context = DI.Context,
+  GetReq extends Api.RequestDataItems = Api.RequestDataItems,
   GetRes extends { [v: string]: any } | void = void,
-  PostReq extends DI.Context = DI.Context,
+  PostReq extends Api.RequestDataItems = Api.RequestDataItems,
   PostRes extends { [v: string]: any } | void = void,
-  PutReq extends DI.Context = DI.Context,
+  PutReq extends Api.RequestDataItems = Api.RequestDataItems,
   PutRes extends { [v: string]: any } | void = void,
-  DeleteReq extends DI.Context = DI.Context,
+  DeleteReq extends Api.RequestDataItems = Api.RequestDataItems,
   DeleteRes extends { [v: string]: any } | void = void
 >(methods: Readonly<{
   $get?: GetReq;
@@ -57,7 +57,7 @@ const apiHandler = <
         return;
       }
 
-      const dataContext = methods[`$${method}`];
+      const dataItems = methods[`$${method}`];
       const reqData = await (async () => {
         let data: { [v: string]: any } = { ...req.query };
         const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
@@ -134,12 +134,8 @@ const apiHandler = <
             data = { ...data, ...req.body };
           }
         }
-        if (dataContext == null) return data;
-        getItem(msgs, {
-          key: null!,
-          dataItem: dataContext,
-          data,
-        });
+        if (dataItems == null) return data;
+        acceptData(msgs, data, dataItems);
         return data;
       })();
       if (hasError(msgs)) {

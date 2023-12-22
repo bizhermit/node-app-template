@@ -28,6 +28,7 @@ type AppRoutePath = "/dev/color"
  | "/dev/elements/view/data-table"
  | "/dev/elements/view/menu"
  | "/dev/elements/view/struct-view"
+ | "/dev/fetch"
  | "/dev"
  | "/"
  | "/sandbox/group-a"
@@ -60,11 +61,13 @@ type AppRoutePath = "/dev/color"
  | "/sandbox/window";
 
 type AppApiPath = "/api/fetch"
- | "/api";
+ | "/api"
+ | "/dev/fetch/api";
 
 type TypeofAppApi = {
   "/api/fetch": typeof import("app/api/fetch/route");
   "/api": typeof import("app/api/route");
+  "/dev/fetch/api": typeof import("app/dev/fetch/api/route");
 };
 
 type PagesRoutePath = "/404"

@@ -17,16 +17,16 @@ export default apiHandler({
     console.log("--get--");
     console.log(ctx.getData());
   },
-  $post: {
-    filedrop: fileItem({
+  $post: [
+    fileItem({
       name: "filedrop",
       multiple: true,
     }),
-    filebutton: fileItem({
+    fileItem({
       name: "filebutton",
       multiple: false,
     }),
-  },
+  ],
   post: async (ctx) => {
     console.log("--post--");
     const data = ctx.getData();

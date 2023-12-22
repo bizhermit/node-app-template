@@ -1,12 +1,13 @@
 import { type RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
-import { getItem, getReturnMessages, hasError } from "./main";
+import { setValue } from "../../objects/struct/set";
+import { acceptData, getReturnMessages, hasError } from "./main";
 
 const getSession = (req: NextRequest): { [v: string | number | symbol]: any } => {
   return (req as any).session ?? (global as any)._session ?? {};
 };
 
-type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string]: any } | void = void> =
+type MethodProcess<Req extends Api.RequestDataItems = Api.RequestDataItems, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextRequest;
     getCookies: () => RequestCookies;
@@ -17,9 +18,9 @@ type MethodProcess<Req extends DI.Context = DI.Context, Res extends { [v: string
   }) => Promise<Res>;
 
 const apiMethodHandler = <
-  Req extends DI.Context = DI.Context,
+  Req extends Api.RequestDataItems = Api.RequestDataItems,
   Res extends { [v: string]: any } | void = void
->(dataContext?: Req | null, process?: MethodProcess<Req, Res> | null) => {
+>(dataItems?: Readonly<Req | null>, process?: MethodProcess<Req, Res> | null) => {
   return (async (req: NextRequest, { params }) => {
     if (process == null) {
       return NextResponse.json({}, { status: 404 });
@@ -35,7 +36,7 @@ const apiMethodHandler = <
           const { searchParams } = new URL(req.url);
           const queryData: { [v: string]: any } = {};
           Array.from(searchParams.keys()).forEach(key => {
-            queryData[key] = searchParams.get(key);
+            setValue(queryData, key, searchParams.get(key));
           });
           if (method === "get") {
             return {
@@ -57,16 +58,12 @@ const apiMethodHandler = <
           };
           const formData = await req.formData();
           Array.from(formData.keys()).forEach(key => {
-            data[key] = formData.get(key);
+            setValue(data, key, formData.get(key));
           });
           return data;
         })();
-        if (dataContext == null) return data;
-        getItem(msgs, {
-          key: null!,
-          dataItem: dataContext,
-          data,
-        });
+        if (dataItems == null) return data;
+        acceptData(msgs, data, dataItems);
         return data;
       })();
 

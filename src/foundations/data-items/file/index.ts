@@ -3,11 +3,9 @@ import { dataItemKey } from "..";
 const fileItem = <
   C extends Omit<DataItem_File, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & {
-    [dataItemKey]: undefined;
-    type: "file";
+  return Object.freeze<DI.Freeze<DataItem_File, C, {
     multiple: C extends { multiple: infer Multiple } ? Multiple : false;
-  }>({
+  }>>({
     multiple: false,
     ...(ctx as any),
     [dataItemKey]: undefined,

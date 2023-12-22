@@ -1,18 +1,18 @@
-import { NextMiddleware, NextResponse } from "next/server";
-import apiMiddleware from "./middleware/api";
-import pageMiddleware from "./middleware/page";
+import { NextResponse, type NextMiddleware } from "next/server";
+import formatDate from "./foundations/objects/date/format";
 
 export const config = {
   matcher: "/((?!_next|favicon).*)",
 };
 
-const middleware: NextMiddleware = (request, event) => {
+const middleware: NextMiddleware = (request) => {
   const { pathname } = request.nextUrl;
-  if (pathname.match(/^\/api($|\/.*)/)) {
-    return apiMiddleware(request, event);
-  }
-  if (pathname.match(/^\/($|(?!_next|.*\..*|api($|\/.*)).*)/)) {
-    return pageMiddleware(request, event);
+  if (pathname.match(/\/api($|\/)/)) {
+    // eslint-disable-next-line no-console
+    console.log(`[${formatDate(new Date(), "yyyy-MM-dd hh:mm:ss.SSS")}] api : ${pathname}`);
+  } else {
+    // eslint-disable-next-line no-console
+    console.log(`[${formatDate(new Date(), "yyyy-MM-dd hh:mm:ss.SSS")}] page: ${pathname}`);
   }
   return NextResponse.next();
 };

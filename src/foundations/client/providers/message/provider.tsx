@@ -1,8 +1,8 @@
 "use client";
 
-import { type FC, type ReactNode, useEffect, useReducer } from "react";
-import { MessageContext, type ArgMessages, type ProviderMessage, type MessageHookOptions } from "./context";
+import { useEffect, useReducer, type FC, type ReactNode } from "react";
 import useMessageBox from "../../elements/message-box";
+import { MessageContext, type ArgMessages, type MessageHookOptions, type ProviderMessage } from "./context";
 
 const arrangeMessages = (messages: ArgMessages, options?: MessageHookOptions): Array<ProviderMessage> => {
   if (messages == null) return [];
@@ -53,9 +53,7 @@ export const MessageProvider: FC<{
   const error = (e: any, options?: MessageHookOptions) => {
     append({
       type: "error",
-      title: "システムエラー",
-      name: "system",
-      key: "system",
+      title: "system",
       body: String(e),
     }, options);
   };
