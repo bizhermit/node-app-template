@@ -56,7 +56,10 @@ export const acceptData = (
   data: { [v: string]: any },
   dataItems: Readonly<Api.RequestDataItems>,
 ) => {
-  structItem(msgs, data, { dataItem: { $$: undefined, type: "struct", name: "", item: dataItems }, siblings: dataItems });
+  dataItems.forEach(item => {
+    if (!item) return;
+    switchType(msgs, data, { dataItem: item, siblings: dataItems });
+  });
 };
 
 const switchType: ConvertFunc<any> = (msgs, v, c) => {
@@ -169,7 +172,7 @@ const stringItem: ConvertFunc<DataItem_String> = (msgs, data, { dataItem, parent
     if (state.hasError) return;
   }
 
-  if (dataItem.source) {
+  if (v && dataItem.source) {
     if (!dataItem.source.find(item => equals(item.value, v))) {
       pushMsg(`${label}は有効な値ではありません。`);
       return;
@@ -223,7 +226,7 @@ const numberItem: ConvertFunc<DataItem_Number> = (msgs, data, { dataItem, parent
     if (pushMsg(NumberValidation.float(v, dataItem.float, label)) === "error") return;
   }
 
-  if (dataItem.source) {
+  if (v != null && dataItem.source) {
     if (!dataItem.source.find(item => equals(item.value, v))) {
       pushMsg(`${label}は有効な値ではありません。`);
       return;
@@ -260,7 +263,7 @@ const booleanItem: ConvertFunc<DataItem_Boolean> = (msgs, data, { dataItem, pare
     }
   }
 
-  if (dataItem.source) {
+  if (v != null && dataItem.source) {
     if (!dataItem.source.find(item => equals(item.value, v))) {
       pushMsg(`${label}は有効な値ではありません。`);
       return;

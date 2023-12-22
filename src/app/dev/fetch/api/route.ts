@@ -8,8 +8,10 @@ import { sample_string } from "$/data-items/sample";
 
 export const GET = apiMethodHandler([
   stringItem({
-    name: "text",
     // strict: true,
+    name: "text",
+    label: "テキスト",
+    required: true,
     source: [
       { value: "hoge", label: "HOGE" },
       { value: "fuga", label: "FUGA" },
@@ -17,8 +19,10 @@ export const GET = apiMethodHandler([
     ]
   }),
   numberItem({
-    name: "num",
     // strict: true,
+    name: "num",
+    label: "数値",
+    required: true,
     source: [
       { value: 1, label: "1" },
       { value: 2, label: "1" },
@@ -34,7 +38,7 @@ export const GET = apiMethodHandler([
 ], async (ctx) => {
   // console.log("get");
   const data = ctx.getData();
-  // console.log(data);
+  console.log(data);
   return {
     ...data,
   };
