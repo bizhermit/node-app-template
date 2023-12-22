@@ -8,10 +8,6 @@ declare namespace DI {
 
   type ValidationResult = {
     type: DI.ValidationResultType;
-    key?: string | number;
-    index?: number;
-    value?: any;
-    name?: string;
     title?: string;
     body: string;
   };
@@ -20,13 +16,12 @@ declare namespace DI {
     readonly ((v: T | null | undefined, ctx: {
       dataItem: D;
       key: string | number;
-      data: { [v: string]: any } | Array<any> | null | undefined;
-      index?: number;
-      parentDataContext?: Array<DataItem> | { [v: string | number | symbol]: DataItem } | null | undefined;
-    }) => ((Omit<DI.ValidationResult, "type" | "key" | "name"> & Partial<Pick<DI.ValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
+      data: { [v: string | number]: any } | null | undefined;
+      parent: DataItem_Array | DataItem_Struct | null | undefined;
+      siblings: Readonly<Array<DataItem>> | Array<DataItem> | null | undefined;
+    }) => (string | DI.ValidationResult | null | undefined))[];
 
-  type Source<V> = Array<{ value?: V } & { [v: string | number | symbol]: any }>
-    | import("../client/hooks/loadable-array").LoadableArray<Array<{ value?: V } & { [v: string | number | symbol]: any }>>;
+  type Source<V> = Array<{ value?: V } & { [v: string | number | symbol]: any }>;
 
   type SourceValue<D extends DataItem, T> =
     D extends { source: infer S } ? (S extends Array<infer V> ? (V["value"]) : T) : T;
@@ -379,7 +374,7 @@ type FileValue<Side extends DI.Location> =
 type DataItem_Array<T extends Exclude<DataItem, DataItem_Struct> | Array<DataItem> = Exclude<DataItem, DataItem_Struct> | Array<DataItem>> = Readonly<DataItem_Base & {
   type: "array";
   validations?: DI.Validation<Array<any>, DataItem_Array<T>>;
-  item: T;
+  item: T | Readonly<T>;
   length?: number;
   minLength?: number;
   maxLength?: number;
@@ -392,5 +387,5 @@ type DataItem_Array<T extends Exclude<DataItem, DataItem_Struct> | Array<DataIte
 type DataItem_Struct<T extends Array<DataItem> = Array<DataItem>> = Readonly<DataItem_Base & {
   type: "struct";
   validations?: DI.Validation<{ [v: string | number | symbol]: any }, DataItem_Struct<T>>;
-  item: T;
+  item: T | Readonly<T>;
 }>;

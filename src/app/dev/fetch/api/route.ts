@@ -4,12 +4,33 @@ import numberItem from "#/data-items/number";
 import stringItem from "#/data-items/string";
 import structItem from "#/data-items/struct";
 import apiMethodHandler from "#/server/api-handler/app-api";
-import { sample_date, sample_number, sample_string } from "$/data-items/sample";
+import { sample_string } from "$/data-items/sample";
 
 export const GET = apiMethodHandler([
-  sample_string,
-  sample_number,
-  sample_date,
+  stringItem({
+    name: "text",
+    // strict: true,
+    source: [
+      { value: "hoge", label: "HOGE" },
+      { value: "fuga", label: "FUGA" },
+      { value: "piyo", label: "PIYO" },
+    ]
+  }),
+  numberItem({
+    name: "num",
+    // strict: true,
+    source: [
+      { value: 1, label: "1" },
+      { value: 2, label: "1" },
+      { value: 3, label: "1" },
+    ],
+  }),
+  booleanItem({
+    name: "flag",
+    // strict: true,
+    trueValue: 1,
+    falseValue: 9,
+  }),
 ], async (ctx) => {
   // console.log("get");
   const data = ctx.getData();
@@ -18,18 +39,6 @@ export const GET = apiMethodHandler([
     ...data,
   };
 });
-
-const hoge = stringItem({
-  name: "text",
-  strict: true,
-  source: [
-    { value: "hoge", label: "HOGE" },
-    { value: "piyo", label: "PIYO" },
-    { value: "fuga", label: "FUGA" },
-  ]
-});
-
-hoge.label;
 
 export const POST = apiMethodHandler([
   stringItem({

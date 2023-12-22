@@ -1,6 +1,6 @@
 import formidable from "formidable";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { convertDIData, getReturnMessages, hasError } from "./main";
+import { acceptData, getReturnMessages, hasError } from "./main";
 
 export type NextApiConfig = {
   api?: {
@@ -57,7 +57,7 @@ const apiHandler = <
         return;
       }
 
-      const diProps = methods[`$${method}`];
+      const dataItems = methods[`$${method}`];
       const reqData = await (async () => {
         let data: { [v: string]: any } = { ...req.query };
         const contentType = req.headers?.["content-type"]?.match(/([^\;]*)/)?.[1];
@@ -134,8 +134,8 @@ const apiHandler = <
             data = { ...data, ...req.body };
           }
         }
-        if (diProps == null) return data;
-        convertDIData(msgs, diProps, data);
+        if (dataItems == null) return data;
+        acceptData(msgs, data, dataItems);
         return data;
       })();
       if (hasError(msgs)) {

@@ -1,7 +1,7 @@
 import { type RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
 import { setValue } from "../../objects/struct/set";
-import { convertDIData, getReturnMessages, hasError } from "./main";
+import { acceptData, getReturnMessages, hasError } from "./main";
 
 const getSession = (req: NextRequest): { [v: string | number | symbol]: any } => {
   return (req as any).session ?? (global as any)._session ?? {};
@@ -20,7 +20,7 @@ type MethodProcess<Req extends Api.RequestDataItems = Api.RequestDataItems, Res 
 const apiMethodHandler = <
   Req extends Api.RequestDataItems = Api.RequestDataItems,
   Res extends { [v: string]: any } | void = void
->(diProps?: Readonly<Req | null>, process?: MethodProcess<Req, Res> | null) => {
+>(dataItems?: Readonly<Req | null>, process?: MethodProcess<Req, Res> | null) => {
   return (async (req: NextRequest, { params }) => {
     if (process == null) {
       return NextResponse.json({}, { status: 404 });
@@ -62,8 +62,8 @@ const apiMethodHandler = <
           });
           return data;
         })();
-        if (diProps == null) return data;
-        convertDIData(msgs, diProps, data);
+        if (dataItems == null) return data;
+        acceptData(msgs, data, dataItems);
         return data;
       })();
 

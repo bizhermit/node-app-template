@@ -29,8 +29,8 @@ export const convertDataItemValidationToFormItemValidation = <T, U, P extends F.
       key: props?.name || $dataItem.name!,
       dataItem: $dataItem,
       data: bindData,
-      index: undefined,
-      parentDataContext: undefined
+      parent: undefined,
+      siblings: undefined,
     });
     if (res == null) return undefined;
     if (typeof res === "string") return res;

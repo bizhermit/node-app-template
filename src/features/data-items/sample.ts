@@ -37,7 +37,7 @@ export const sample_string = stringItem({
       return undefined;
     },
     (v) => {
-      if (v === "fuga") return { body: "not allow fuga" };
+      if (v === "fuga") return { body: "not allow fuga", type: "error" };
       return undefined;
     },
   ],

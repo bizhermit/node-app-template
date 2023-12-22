@@ -227,8 +227,14 @@ const devMenus = (
               }
             ],
           },
-        ]
+        ],
       },
+      {
+        key: "fetch",
+        icon: "F",
+        label: "Fetch",
+        pathname: "/dev/fetch",
+      }
     ]}
   />
 );
