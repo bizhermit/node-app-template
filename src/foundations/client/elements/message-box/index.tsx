@@ -290,6 +290,7 @@ const useMessageBox = (options?: { preventUnmountClose?: boolean; }) => {
         root.current?.render(<MessageBoxComponent showed={false} />);
         if (!showed.current) unmount();
         showed.current = false;
+        // TODO: クローズレンダーを待ってからresolveしたい
         resolve(params as T);
       };
       const MessageBoxComponent: FC<{ showed: boolean; }> = (props) => (
