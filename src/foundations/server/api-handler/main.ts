@@ -516,7 +516,7 @@ const arrayItem: ConvertFunc<DataItem_Array> = (msgs, data, { dataItem, parent, 
   const { key, label, pushMsg } = getController(msgs, { dataItem, parent, index });
   const v = data?.[key] as Array<any> | null | undefined;
 
-  if (getObjectType(v) !== "Array") {
+  if (v !== null && getObjectType(v) !== "Array") {
     pushMsg(`${label}のデータ型が配列ではありません。`);
     return;
   }
@@ -558,7 +558,7 @@ const structItem: ConvertFunc<DataItem_Struct> = (msgs, data, { dataItem, parent
   const { key, label, pushMsg } = getController(msgs, { dataItem, parent, index });
   const v = data?.[key] as { [key: string | number]: any };
 
-  if (getObjectType(v) !== "Object") {
+  if (v != null && getObjectType(v) !== "Object") {
     pushMsg(`${label}のデータ型が連想配列ではありません。`);
     return;
   }
