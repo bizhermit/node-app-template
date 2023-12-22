@@ -7,9 +7,9 @@ const hello = stringItem({
 });
 
 export default apiHandler({
-  $get: {
+  $get: [
     hello,
-  },
+  ],
   get: async () => {
     return {
       hello: "hello",

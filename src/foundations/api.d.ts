@@ -27,22 +27,24 @@ declare namespace Api {
       ) : Api.ResponseObject
     ) : Api.ResponseObject;
 
+  type RequestDataItems = Array<DataItem>;
+
   type Import<T extends TypeofApi> = {
     [P in keyof T]: {
       get: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false, "client">;
         res: DI.VType<P extends keyof TypeofAppApi ? T[P]["GET"]["res"] : T[P]["default"]["get"], true>;
       };
       put: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false, "client">;
         res: DI.VType<P extends keyof TypeofAppApi ? T[P]["PUT"]["res"] : T[P]["default"]["put"], true>;
       };
       post: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false, "client">;
         res: DI.VType<P extends keyof TypeofAppApi ? T[P]["POST"]["res"] : T[P]["default"]["post"], true>;
       };
       delete: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false>;
+        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false, "client">;
         res: DI.VType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"], true>;
       };
     };

@@ -9,6 +9,7 @@ import timeItem from "#/data-items/time";
 export const sample_string = stringItem({
   name: "s_string",
   label: "テキスト",
+  // strict: true,
   required: true,
   minLength: 5,
   maxLength: 16,

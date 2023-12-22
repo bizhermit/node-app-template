@@ -1,16 +1,16 @@
-import fileItem from "#/data-items/file";
+import arrayItem from "#/data-items/array";
+import numberItem from "#/data-items/number";
 import stringItem from "#/data-items/string";
+import structItem from "#/data-items/struct";
 import apiMethodHandler from "#/server/api-handler/app-api";
 import { sample_date, sample_number, sample_string } from "$/data-items/sample";
+import booleanItem from "../../../foundations/data-items/boolean";
 
-const text = stringItem({ name: "text", required: true });
-const blobFile = fileItem({ name: "blob", required: true });
-
-export const GET = apiMethodHandler({
-  [sample_string.name]: sample_string,
-  [sample_number.name]: sample_number,
-  [sample_date.name]: sample_date,
-}, async (ctx) => {
+export const GET = apiMethodHandler([
+  sample_string,
+  sample_number,
+  sample_date,
+], async (ctx) => {
   // console.log("get");
   const data = ctx.getData();
   // console.log(data);
@@ -19,10 +19,66 @@ export const GET = apiMethodHandler({
   };
 });
 
-export const POST = apiMethodHandler({
-  [sample_string.name]: sample_string,
-  file: blobFile,
-}, async (ctx) => {
+const hoge = stringItem({
+  name: "text",
+  strict: true,
+  source: [
+    { value: "hoge", label: "HOGE" },
+    { value: "piyo", label: "PIYO" },
+    { value: "fuga", label: "FUGA" },
+  ]
+});
+
+hoge.label;
+
+export const POST = apiMethodHandler([
+  stringItem({
+    name: "text",
+    strict: true,
+    source: [
+      { value: "hoge", label: "HOGE" },
+      { value: "piyo", label: "PIYO" },
+      { value: "fuga", label: "FUGA" },
+    ]
+  }),
+  numberItem({
+    name: "num",
+    strict: true,
+    source: [
+      { value: 1, label: "1" },
+      { value: 2, label: "1" },
+      { value: 3, label: "1" },
+    ],
+  }),
+  booleanItem({
+    name: "flag",
+    // strict: true,
+    trueValue: 1,
+    falseValue: 9,
+  }),
+  arrayItem({
+    name: "list-str",
+    item: stringItem({
+      name: "text",
+    }),
+  }),
+  arrayItem({
+    name: "list-struct",
+    item: [
+      stringItem({
+        name: "text",
+      })
+    ]
+  }),
+  structItem({
+    name: "struct",
+    item: [
+      stringItem({
+        name: "text",
+      }),
+    ]
+  }),
+] as const, async (ctx) => {
   // console.log("post");
   const data = ctx.getData();
   // console.log(data);
@@ -31,9 +87,9 @@ export const POST = apiMethodHandler({
   };
 });
 
-export const PUT = apiMethodHandler({
-  text,
-}, async (ctx) => {
+export const PUT = apiMethodHandler([
+  sample_string
+], async (ctx) => {
   // console.log("post");
   const data = ctx.getData();
   // console.log(data);

@@ -4,6 +4,8 @@ declare namespace DI {
 
   type ValidationResultType = "error" | "warning" | "information";
 
+  type Location = "client" | "app-api" | "page-api";
+
   type ValidationResult = {
     type: DI.ValidationResultType;
     key?: string | number;
@@ -14,37 +16,81 @@ declare namespace DI {
     body: string;
   };
 
-  type Validation<T, D extends DataItem | DI.Context> =
+  type Validation<T, D extends DataItem | Array<DataItem>> =
     readonly ((v: T | null | undefined, ctx: {
       dataItem: D;
       key: string | number;
       data: { [v: string]: any } | Array<any> | null | undefined;
       index?: number;
-      parentDataContext?: DI.Context | null | undefined;
+      parentDataContext?: Array<DataItem> | { [v: string | number | symbol]: DataItem } | null | undefined;
     }) => ((Omit<DI.ValidationResult, "type" | "key" | "name"> & Partial<Pick<DI.ValidationResult, "type" | "key" | "name">>) | string | null | undefined))[];
 
-  type Source<V> = Array<{ value: V } & { [v: string | number | symbol]: any }> | import("../client/hooks/loadable-array").LoadableArray;
+  type Source<V> = Array<{ value?: V } & { [v: string | number | symbol]: any }>
+    | import("../client/hooks/loadable-array").LoadableArray<Array<{ value?: V } & { [v: string | number | symbol]: any }>>;
 
   type SourceValue<D extends DataItem, T> =
-    D extends { source: infer S } ? (
-      S extends Array<infer V> ? (V["value"]) : T
-    ) : T;
+    D extends { source: infer S } ? (S extends Array<infer V> ? (V["value"]) : T) : T;
 
-  type PartialRequired<D extends DataItem, Strict extends boolean, StrictValue, Value = StrictValue> =
+  type PartialRequired<
+    D extends DataItem,
+    Strict extends boolean,
+    StrictValue,
+    Value = StrictValue
+  > =
     Strict extends true ? (
-      D["required"] extends true ? DI.SourceValue<D, StrictValue> : DI.SourceValue<D, StrictValue> | null | undefined
+      D["required"] extends true ?
+      DI.SourceValue<D, StrictValue> :
+      DI.SourceValue<D, StrictValue> | null | undefined
     ) : (
       D["strict"] extends true ? (
-        D["required"] extends true ? DI.SourceValue<D, StrictValue> : DI.SourceValue<D, StrictValue> | null | undefined
+        D["required"] extends true ?
+        DI.SourceValue<D, StrictValue> :
+        DI.SourceValue<D, StrictValue> | null | undefined
       ) : (
-        D["required"] extends true ? DI.SourceValue<D, Value> | Value : DI.SourceValue<D, Value> | Value | null | undefined
+        D["required"] extends true ?
+        DI.SourceValue<D, Value> | Value :
+        DI.SourceValue<D, Value> | Value | null | undefined
       )
     );
 
-  type VType<
-    D extends (DataItem | DI.Context),
+  type Prop<
+    D extends DataItem,
     Strict extends boolean = false,
-    Side extends "client" | "page-api" | "app-api" = "client"
+    Side extends DI.Location = "client"
+  > = D extends DataItem ? (
+    Strict extends true ? (
+      D["required"] extends true ?
+      { [P in D["name"]]: DI.VType<D, Strict, Side> } :
+      { [P in D["name"]]?: DI.VType<D, Strict, Side> }
+    ) : (
+      D["strict"] extends true ? (
+        D["required"] extends true ?
+        { [P in D["name"]]: DI.VType<D, Strict, Side> } :
+        { [P in D["name"]]?: DI.VType<D, Strict, Side> }
+      ) : (
+        { [P in D["name"]]?: DI.VType<D, Strict, Side> }
+      )
+    )
+  ) : never;
+
+  type CrossProps<U> = Pick<U, keyof U>;
+  type UnionToIntersection<A> = (A extends any ? (_: A) => void : never) extends ((_: infer B) => void) ? B : never;
+
+  type Props<
+    A extends ({ [v: string | number | symbol]: DataItem } | Array<DataItem>),
+    Strict extends boolean = false,
+    Side extends DI.Location = "client"
+  > = A extends Array<DataItem> ?
+    DI.CrossProps<DI.UnionToIntersection<DI.Prop<A[number], Strict, Side>>> : (
+      A[p]["required"] extends true ?
+      { [P in keyof A]: DI.VType<A[P], Strict, Side> } :
+      { [P in keyof A]?: DI.VType<A[P], Strict, Side> }
+    );
+
+  type VType<
+    D extends DataItem | Array<DataItem>,
+    Strict extends boolean = false,
+    Side extends DI.Location = "client"
   > =
     D extends { $$: any } ? (
       D["type"] extends DataItem_String["type"] ? (
@@ -88,14 +134,14 @@ declare namespace DI {
           Strict,
           D["multiple"] extends true ? (
             D["typeof"] extends "base64" ? Array<string> :
-            D["typeof"] extends "file" ? Array<(Side extends "client" ? File : FileValue<Side>)> :
+            D["typeof"] extends "file" ? Array<FileValue<Side>> :
             Array<any>
           ) : (
             D["typeof"] extends "base64" ? string :
-            D["typeof"] extends "file" ? (Side extends "client" ? File : FileValue<Side>) :
+            D["typeof"] extends "file" ? FileValue<Side> :
             any
           ),
-          D["multiple"] extends true ? Array<FileValue<Side>> : Array<FileValue<Side>>
+          D["multiple"] extends true ? Array<FileValue<Side> | string> : FileValue<Side | string>
         >
       ) :
       D["type"] extends DataItem_Array["type"] ? (
@@ -114,36 +160,37 @@ declare namespace DI {
         >
       ) :
       any
-    ) : (
-      Strict extends true ?
-      { [P in keyof D]: DI.VType<D[P], Strict, Side> } :
-      { [P in keyof D]?: DI.VType<D[P], Strict, Side> }
-    );
+    ) :
+    DI.Props<D, Strict, Side>;
 
-  type Prop<D extends DataItem> = D extends DataItem ? {
-    [P in D["name"]]: DI.VType<D, true, "client">;
-  } : never;
+  type Overwrite<T, U> = Omit<T, keyof U> & U;
 
-  type CrossProps<U> = Pick<U, keyof U>;
-  type UnionToIntersection<A> = (A extends any ? (_: A) => void : never) extends ((_: infer B) => void) ? B : never;
-
-  type Props<A extends ({ [v: string | number | symbol]: DataItem } | Array<DataItem>)> = A extends { [v: string | number | symbol]: DataItem } ?
-    { [P in keyof A]: DI.VType<A[P], true, "client"> } :
-    DI.CrossProps<DI.UnionToIntersection<DI.Prop<A[number]>>>;
-
-  type Context = { [v: string]: DataItem | DI.Context };
-
+  type Freeze<
+    D extends DataItem,
+    C extends Readonly<Omit<DataItem, DI.Key | "type">>,
+    O extends { [v: string]: any } = {}
+  > = Overwrite<Overwrite<
+    { [v in keyof D]: C extends { [v]: infer P } ? P extends unknown ? undefined : P : undefined },
+    {
+      $$: any;
+      type: D["type"];
+      name: C["name"];
+      label: C extends { label?: infer P } ? P : undefined;
+      required: C extends { required?: infer P } ? P : false;
+      strict: C extends { strict?: infer P } ? P : false;
+    }
+    & (C extends { source?: infer P } ? { source: P } : {})
+    & (C extends { item?: infer P } ? { item: P } : {})
+  >, O>
 }
 
 type DataItem_Base<V = any> = {
   $$: V;
-  name: string;
+  readonly name: string;
   label?: string;
   required?: boolean;
   strict?: boolean;
 };
-
-type DataContext = { [v: string]: DataItem | DI.Context };
 
 type DataItem = Readonly<DataItem_Base & { type: "any" }>
   | DataItem_String
@@ -307,22 +354,29 @@ type DataItem_File = Readonly<DataItem_Base & {
   validations?: DI.Validation<Array<File | FileValue> | (File | FileValue), DataItem_File>;
 }>;
 
-type FileValue<Side extends "page-api" | "app-api" = "page-api" | "app-api"> = Side extends "page-api" ? {
-  lastModifiedDate?: string;
-  filepath?: string;
-  newFilename?: string;
-  hashAlgorithm?: boolean,
-  originalFilename: string;
-  mimetype: string;
-  size: number;
-  content?: string;
-} : Blob;
+type FileValue<Side extends DI.Location> =
+  Side extends "app-api" ? (
+    Blob
+  ) : Side extends "page-api" ? (
+    {
+      lastModifiedDate?: string;
+      filepath?: string;
+      newFilename?: string;
+      hashAlgorithm?: boolean,
+      originalFilename: string;
+      mimetype: string;
+      size: number;
+      content?: string;
+    }
+  ) : (
+    File | Blob
+  )
 
 /**
  * Array
  */
 
-type DataItem_Array<T extends DataItem | DI.Context = DataItem | DI.Context> = Readonly<DataItem_Base & {
+type DataItem_Array<T extends Exclude<DataItem, DataItem_Struct> | Array<DataItem> = Exclude<DataItem, DataItem_Struct> | Array<DataItem>> = Readonly<DataItem_Base & {
   type: "array";
   validations?: DI.Validation<Array<any>, DataItem_Array<T>>;
   item: T;
@@ -335,7 +389,7 @@ type DataItem_Array<T extends DataItem | DI.Context = DataItem | DI.Context> = R
  * Struct
  */
 
-type DataItem_Struct<T extends DI.Context = DI.Context> = Readonly<DataItem_Base & {
+type DataItem_Struct<T extends Array<DataItem> = Array<DataItem>> = Readonly<DataItem_Base & {
   type: "struct";
   validations?: DI.Validation<{ [v: string | number | symbol]: any }, DataItem_Struct<T>>;
   item: T;

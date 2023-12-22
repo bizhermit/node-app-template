@@ -4,10 +4,7 @@ const stringItem = <
   V extends string,
   C extends Omit<DataItem_String<V>, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
-  return Object.freeze<C & {
-    [dataItemKey]: V;
-    type: "string";
-  }>({
+  return Object.freeze<DI.Freeze<DataItem_String, C>>({
     ...(ctx as any),
     [dataItemKey]: undefined,
     type: "string",
