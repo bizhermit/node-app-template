@@ -1,18 +1,15 @@
-import { NextMiddleware, NextResponse } from "next/server";
-import apiMiddleware from "./middleware/api";
-import pageMiddleware from "./middleware/page";
+import { NextResponse, type NextMiddleware } from "next/server";
 
 export const config = {
   matcher: "/((?!_next|favicon).*)",
 };
 
-const middleware: NextMiddleware = (request, event) => {
+const middleware: NextMiddleware = (request) => {
   const { pathname } = request.nextUrl;
-  if (pathname.match(/^\/api($|\/.*)/)) {
-    return apiMiddleware(request, event);
-  }
-  if (pathname.match(/^\/($|(?!_next|.*\..*|api($|\/.*)).*)/)) {
-    return pageMiddleware(request, event);
+  if (pathname.match(/\/api($|\/)/)) {
+    console.log(`[api ]: ${pathname}`);
+  } else {
+    console.log(`[page]: ${pathname}`);
   }
   return NextResponse.next();
 };
