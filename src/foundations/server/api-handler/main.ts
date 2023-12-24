@@ -1,3 +1,4 @@
+import ArrayValidation from "../../data-items/array/validations";
 import DateValidation from "../../data-items/date/validations";
 import FileValidation from "../../data-items/file/validations";
 import NumberValidation from "../../data-items/number/validations";
@@ -515,6 +516,7 @@ const fileItem: ConvertFunc<DataItem_File> = (msgs, data, { dataItem, parent, in
   }
 };
 
+const arrActLabel = "選択";
 const arrayItem: ConvertFunc<DataItem_Array> = (msgs, data, { dataItem, parent, index, siblings }) => {
   const { key, label, pushMsg } = getController(msgs, { dataItem, parent, index });
   const v = data?.[key] as Array<any> | null | undefined;
@@ -525,22 +527,21 @@ const arrayItem: ConvertFunc<DataItem_Array> = (msgs, data, { dataItem, parent, 
   }
 
   if (dataItem.required) {
-    if (v == null) {
-      pushMsg(`${label}を設定してください。`);
-      return;
-    }
+    if (pushMsg(ArrayValidation.required(v, label, arrActLabel)) === "error") return;
   }
 
   if (dataItem.length != null) {
-    if (v != null && v.length !== dataItem.length) {
-      pushMsg(`${label}は${dataItem.length}件で設定してください。`);
-    }
+    pushMsg(ArrayValidation.length(v, dataItem.length, label, arrActLabel));
   } else {
-    if (v != null && dataItem.minLength != null) {
-      pushMsg(`${label}は${dataItem.minLength}件以上を設定してください。`);
-    }
-    if (v != null && dataItem.maxLength != null) {
-      pushMsg(`${label}は${dataItem.maxLength}件以下を設定してください。`);
+    if (dataItem.minLength != null && dataItem.maxLength != null) {
+      pushMsg(ArrayValidation.range(v, dataItem.minLength, dataItem.maxLength, label, arrActLabel));
+    } else {
+      if (dataItem.minLength != null) {
+        pushMsg(ArrayValidation.minLength(v, dataItem.minLength, label, arrActLabel));
+      }
+      if (dataItem.maxLength != null) {
+        pushMsg(ArrayValidation.maxLength(v, dataItem.maxLength, label, arrActLabel));
+      }
     }
   }
 

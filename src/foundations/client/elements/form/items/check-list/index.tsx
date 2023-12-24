@@ -1,10 +1,12 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type ForwardedRef, type FunctionComponent, type ReactElement } from "react";
+import ArrayValidation from "../../../../../data-items/array/validations";
 import useLoadableArray, { type LoadableArray } from "../../../../hooks/loadable-array";
 import joinCn from "../../../../utilities/join-class-name";
 import useForm from "../../context";
-import { convertHiddenValue } from "../../utilities";
+import { convertHiddenValue, isErrorObject } from "../../utilities";
+import getSourceFromDataItem from "../../utilities/source";
 import CheckBox from "../check-box";
 import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
@@ -39,7 +41,7 @@ export const useCheckList = <
 
 type CheckListOptions<
   T extends Array<string | number | boolean> = Array<string | number | boolean>,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 > = {
   $ref?: CheckListHook<F.VType<T, D, T>> | CheckListHook<Array<string | number | boolean>>;
   $labelDataName?: string;
@@ -55,16 +57,19 @@ type CheckListOptions<
   $mainClassName?: string;
   $itemClassName?: string;
   $direction?: "horizontal" | "vertical";
+  $length?: number;
+  $minLength?: number;
+  $maxLength?: number;
 };
 
 type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
 export type CheckListProps<
   T extends Array<string | number | boolean> = Array<string | number | boolean>,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
 > = OverwriteAttrs<Omit<F.ItemProps<T, D, Array<F.VType<T, D>>>, OmitAttrs>, CheckListOptions<T, D>>;
 
 interface CheckListFC extends FunctionComponent<CheckListProps> {
-  <T extends Array<string | number | boolean> = Array<string | number | boolean>, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
+  <T extends Array<string | number | boolean> = Array<string | number | boolean>, D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, CheckListProps<T, D>>
   ): ReactElement<any> | null;
 }
@@ -72,7 +77,7 @@ interface CheckListFC extends FunctionComponent<CheckListProps> {
 const CheckList = forwardRef(<
   V extends string | number | boolean = string | number | boolean,
   T extends Array<V> = Array<V>,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
   S extends { [v: string | number]: any } = { [v: string | number]: any }
 >(p: CheckListProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
@@ -93,25 +98,28 @@ const CheckList = forwardRef(<
     $mainClassName,
     $itemClassName,
     $direction,
+    $length,
+    $minLength,
+    $maxLength,
     $focusWhenMounted,
     ...$p
   } = useDataItemMergedProps(form, p, {
     under: ({ dataItem, props }) => {
-      if (dataItem.type === "boolean") {
+      const sourceProps: Parameters<typeof getSourceFromDataItem>[1] = {
+        vdn: props.$valueDataName,
+        ldn: props.$labelDataName,
+      };
+      if (dataItem.type === "array") {
+        const di = dataItem.item;
         return {
-          $source: (() => {
-            if (dataItem.source) return dataItem.source;
-            return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
-              return {
-                [props.$valueDataName ?? "value"]: v,
-                [props.$labelDataName ?? "label"]: String(v ?? ""),
-              };
-            });
-          })() as LoadableArray<S>,
+          $source: getSourceFromDataItem<S>(di, sourceProps),
+          $length: dataItem.length,
+          $minLength: dataItem.minLength,
+          $maxLength: dataItem.maxLength,
         };
       }
       return {
-        $source: dataItem.source,
+        $source: getSourceFromDataItem<S>(dataItem, sourceProps),
       };
     },
   });
@@ -127,8 +135,34 @@ const CheckList = forwardRef(<
   const { ctx, props, $ref, $preventFormBind } = useFormItemContext(form, $p, {
     multiple: true,
     receive: (v) => {
-      if (v === null || Array.isArray(v)) return v;
+      if (v == null || Array.isArray(v)) return v;
       return [v];
+    },
+    validations: ({ label }) => {
+      const validations: Array<F.Validation<Array<string | number | boolean> | null | undefined>> = [];
+      if ($length != null) {
+        validations.push(v => ArrayValidation.length(v, $length, label));
+      } else {
+        if ($minLength != null && $maxLength != null) {
+          validations.push(v => ArrayValidation.range(v, $minLength, $maxLength, label));
+        } else {
+          if ($minLength != null) {
+            validations.push(v => ArrayValidation.minLength(v, $minLength, label));
+          }
+          if ($maxLength != null) {
+            validations.push(v => ArrayValidation.maxLength(v, $maxLength, label));
+          }
+        }
+      }
+      return validations;
+    },
+    validationsDeps: [
+      $length,
+      $minLength,
+      $maxLength,
+    ],
+    messages: {
+      required: "{label}を選択してください。",
     },
   });
 
@@ -148,6 +182,8 @@ const CheckList = forwardRef(<
     $ref.checkAll = () => ctx.change(source.map(item => item[vdn]), false);
     $ref.uncheckAll = () => ctx.change([], false);
   }
+
+  const hasError = isErrorObject(ctx.error);
 
   return (
     <FormItemWrap
@@ -204,6 +240,8 @@ const CheckList = forwardRef(<
             $fill={$fill}
             $outline={$outline}
             $circle={$circle}
+            $messagePosition="hide"
+            $error={hasError ? "" : undefined}
             $focusWhenMounted={index === 0 && $focusWhenMounted}
           >
             {item[ldn]}

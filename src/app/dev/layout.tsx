@@ -70,6 +70,12 @@ const devMenus = (
                 key: "text-box",
                 icon: <TextBoxIcon />,
                 label: "TextBox",
+              },
+              {
+                key: "check-list",
+                icon: "CL",
+                label: "CheckList",
+                pathname: "/dev/elements/form/item/check-list",
               }
             ],
           },
