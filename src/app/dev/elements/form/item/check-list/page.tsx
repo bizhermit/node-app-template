@@ -51,11 +51,15 @@ const Page = () => {
         <BaseSection title="data item">
           <CheckList
             $tag="str"
+            $readOnly={readOnly}
+            $disabled={disabled}
             $dataItem={strItem}
             $onChange={console.log}
           />
           <CheckList
             $tag="arr-str"
+            $readOnly={readOnly}
+            $disabled={disabled}
             $dataItem={arrStrItem}
             $onChange={console.log}
           />
