@@ -150,13 +150,13 @@ const TextBox = forwardRef(<
     validations: ({ label }) => {
       const validations: Array<F.Validation<string | null | undefined>> = [];
       if ($length != null) {
-        validations.push(v => StringValidation.length(v, $length!, label));
+        validations.push(v => StringValidation.length(v, $length, label));
       } else {
         if ($minLength != null) {
-          validations.push(v => StringValidation.minLength(v, $minLength!, label));
+          validations.push(v => StringValidation.minLength(v, $minLength, label));
         }
         if ($maxLength != null) {
-          validations.push(v => StringValidation.maxLength(v, $maxLength!, label));
+          validations.push(v => StringValidation.maxLength(v, $maxLength, label));
         }
       }
       switch ($charType) {
