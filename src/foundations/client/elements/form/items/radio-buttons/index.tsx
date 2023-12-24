@@ -9,6 +9,7 @@ import { pressPositiveKey } from "../../../../utilities/press-positive-key";
 import Text from "../../..//text";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
+import getSourceFromDataItem from "../../utilities/source";
 import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
@@ -93,21 +94,11 @@ const RadioButtons = forwardRef(<
     ...$p
   } = useDataItemMergedProps(form, p, {
     under: ({ dataItem }) => {
-      if (dataItem.type === "boolean") {
-        return {
-          $source: (() => {
-            if (dataItem.source) return dataItem.source;
-            return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
-              return {
-                [p.$valueDataName ?? "value"]: v,
-                [p.$labelDataName ?? "label"]: String(v ?? ""),
-              };
-            });
-          })() as LoadableArray<S>,
-        };
-      }
       return {
-        $source: dataItem.source as LoadableArray<S>,
+        $source: getSourceFromDataItem<S>(
+          dataItem,
+          { vdn: p.$valueDataName, ldn: p.$labelDataName }
+        ),
       };
     },
     over: ({ dataItem, props }) => {

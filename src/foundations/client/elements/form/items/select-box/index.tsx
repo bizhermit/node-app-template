@@ -12,6 +12,7 @@ import Popup from "../../../popup";
 import Resizer from "../../../resizer";
 import useForm from "../../context";
 import { convertDataItemValidationToFormItemValidation } from "../../utilities";
+import getSourceFromDataItem from "../../utilities/source";
 import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
@@ -98,22 +99,16 @@ const SelectBox = forwardRef(<
     $focusWhenMounted,
     ...$p
   } = useDataItemMergedProps(form, p, {
-    under: ({ dataItem }) => {
+    under: ({ dataItem, props }) => {
+      const $source = getSourceFromDataItem<S>(
+        dataItem,
+        { vdn: props.$valueDataName, ldn: props.$labelDataName }
+      );
       if (dataItem.type === "boolean") {
-        return {
-          $source: (() => {
-            if (dataItem.source) return dataItem.source;
-            return [dataItem.trueValue, dataItem.falseValue].map((v: any) => {
-              return {
-                [p.$valueDataName ?? "value"]: v,
-                [p.$labelDataName ?? "label"]: String(v ?? ""),
-              };
-            });
-          })() as LoadableArray<S>,
-        };
+        return { $source };
       }
       return {
-        $source: dataItem.source as LoadableArray<S>,
+        $source,
         $align: dataItem.align,
         $width: dataItem.width,
         $minWidth: dataItem.minWidth,
