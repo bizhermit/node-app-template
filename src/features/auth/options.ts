@@ -1,4 +1,5 @@
 import { isEmpty } from "#/objects/string/empty";
+import { signin_mailAddress, signin_password } from "$/data-items/signin";
 import type { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -18,12 +19,12 @@ const nextAuthOptions: NextAuthOptions = {
     Credentials({
       name: "signin",
       credentials: {
-        mail_address: {
-          label: "mail address",
+        [signin_mailAddress.name]: {
+          label: signin_mailAddress.label,
           type: "text",
         },
-        password: {
-          label: "password",
+        [signin_password.name]: {
+          label: signin_password.label,
           type: "password",
         },
       },
@@ -32,10 +33,11 @@ const nextAuthOptions: NextAuthOptions = {
           if (credentials == null) {
             throw credentialsError("not set inputs.");
           }
-          const { mail_address, password } = credentials;
+          const mailAddress = credentials[signin_mailAddress.name];
+          const password = credentials[signin_password.name];
           // eslint-disable-next-line no-console
-          console.log("sign-in:", { mail_address, password });
-          if (isEmpty(mail_address) || isEmpty(password)) {
+          console.log("sign-in:", { mailAddress, password });
+          if (isEmpty(mailAddress) || isEmpty(password)) {
             throw credentialsError("input empty.");
           }
           return {
@@ -43,7 +45,7 @@ const nextAuthOptions: NextAuthOptions = {
             data: {
               id: 1,
               name: "signin user",
-              mail_address,
+              mail_address: mailAddress,
             }
           };
         } catch (e) {
@@ -55,7 +57,7 @@ const nextAuthOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/signin",
+    signIn: "/sign-in",
   },
   callbacks: {
     jwt: ({ token, user }) => {
