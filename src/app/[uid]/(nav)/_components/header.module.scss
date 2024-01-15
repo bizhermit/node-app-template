@@ -1,0 +1,39 @@
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  font-weight: bold;
+  font-size: var(--fs-l);
+}
+
+.user {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  gap: var(--b-s);
+}
+
+.menu {
+  --s-color: var(--c-nav_);
+  --s-color_: var(--c-nav);
+}
+
+.popup {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--b-s);
+  padding: var(--b-s);
+  background: var(--c-base);
+}

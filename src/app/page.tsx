@@ -14,6 +14,16 @@ const Page = () => {
           development
         </NextLink>
       </div>
+      <div>
+        <NextLink href="/sign-in">
+          sign-in
+        </NextLink>
+      </div>
+      <div>
+        <NextLink href="/[uid]" params={{ uid: 1 }}>
+          signed-in page
+        </NextLink>
+      </div>
     </section>
   );
 };

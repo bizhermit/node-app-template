@@ -59,13 +59,17 @@ type AppRoutePath = "/dev/color"
  | "/sandbox/post/sender"
  | "/sandbox/process"
  | "/sandbox/storage"
- | "/sandbox/window";
+ | "/sandbox/window"
+ | "/sign-in"
+ | "/[uid]";
 
-type AppApiPath = "/api/fetch"
+type AppApiPath = "/api/auth/[...nextauth]"
+ | "/api/fetch"
  | "/api"
  | "/dev/fetch/api";
 
 type TypeofAppApi = {
+  "/api/auth/[...nextauth]": typeof import("app/api/auth/[...nextauth]/route");
   "/api/fetch": typeof import("app/api/fetch/route");
   "/api": typeof import("app/api/route");
   "/dev/fetch/api": typeof import("app/dev/fetch/api/route");

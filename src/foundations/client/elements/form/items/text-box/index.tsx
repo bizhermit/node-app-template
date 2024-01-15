@@ -227,10 +227,10 @@ const TextBox = forwardRef(<
   const hasData = isNotEmpty(ctx.value);
 
   useEffect(() => {
-    if ($focusWhenMounted) {
+    if ($focusWhenMounted && !form.disabled) {
       iref.current?.focus();
     }
-  }, []);
+  }, [form.disabled]);
 
   if ($ref) {
     $ref.focus = () => iref.current?.focus();

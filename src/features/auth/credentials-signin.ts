@@ -1,7 +1,7 @@
 import { convertFormDataToStruct } from "#/objects/form-data/convert";
 import { signIn } from "next-auth/react";
 
-const credentialsSignIn = async (inputs: FormData | { [v: string | number | symbol]: any } | null | undefined): Promise<{ ok: boolean; status: number; message?: string; }> => {
+const credentialsSignIn = async (inputs: FormData | { [v: string | number | symbol]: any } | null | undefined): Promise<{ ok: true; status: number; message?: undefined; } | { ok: false; status: number; message: string; }> => {
   const res = await signIn("credentials", {
     ...(inputs instanceof FormData ? convertFormDataToStruct(inputs) : inputs),
     redirect: false,
