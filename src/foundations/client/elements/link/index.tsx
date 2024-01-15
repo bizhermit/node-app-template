@@ -30,6 +30,7 @@ export const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>(({
   if (!href || disabled) {
     return <a {...props} aria-disabled="true" tabIndex={-1} />;
   }
+  const pathname = replaceDynamicPathname(href, params);
   return (
     <Link
       {...props}
@@ -41,10 +42,7 @@ export const NextLink = forwardRef<HTMLAnchorElement, NextLinkProps>(({
       prefetch={prefetch ?? false}
       locale={locale}
       legacyBehavior={legacyBehavior}
-      href={{
-        pathname: replaceDynamicPathname(href, params),
-        query,
-      }}
+      href={query ? { pathname, query } : pathname}
     />
   );
 });
