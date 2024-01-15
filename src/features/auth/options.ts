@@ -4,8 +4,8 @@ import Credentials from "next-auth/providers/credentials";
 
 const isDev = /^dev/.test(process.env.NODE_ENV);
 
-const credentialsError = (status = 401, message: string | null | undefined) => {
-  return new Error(JSON.stringify({ status, message }));
+const credentialsError = (message: string | null | undefined) => {
+  return new Error(JSON.stringify({ status: 401, message }));
 };
 
 const nextAuthOptions: NextAuthOptions = {
@@ -30,21 +30,21 @@ const nextAuthOptions: NextAuthOptions = {
       authorize: async (credentials) => {
         try {
           if (credentials == null) {
-            throw credentialsError(401, "not set inputs.");
+            throw credentialsError("not set inputs.");
           }
           const { mail_address, password } = credentials;
           // eslint-disable-next-line no-console
           console.log("sign-in:", { mail_address, password });
           if (isEmpty(mail_address) || isEmpty(password)) {
-            throw credentialsError(401, "input empty.");
+            throw credentialsError("input empty.");
           }
           return {
             id: 1,
-            user: {
+            data: {
               id: 1,
               name: "signin user",
               mail_address,
-            },
+            }
           };
         } catch (e) {
           // eslint-disable-next-line no-console
@@ -60,12 +60,14 @@ const nextAuthOptions: NextAuthOptions = {
   callbacks: {
     jwt: ({ token, user }) => {
       if (user) {
-        token.user = user.user;
+        token.email = user.data.mail_address;
+        token.picture = user.image;
+        token.user = user.data;
       }
       return token;
     },
-    session: ({ session, token }) => {
-      session.user = token.user;
+    session: ({ session, token: { user } }) => {
+      session.user = user;
       return session;
     },
   }
