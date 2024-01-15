@@ -1,3 +1,4 @@
+import pickUid from "$/auth/pick-uid";
 import { withAuth, type NextMiddlewareWithAuth } from "next-auth/middleware";
 import formatDate from "./foundations/objects/date/format";
 
@@ -30,8 +31,11 @@ const middleware: NextMiddlewareWithAuth = withAuth(
           // NOTE: skip signed-in check
           return true;
         }
-        return token?.user.id != null;
+        return token?.user.id?.toString() === pickUid(pathname);
       },
+    },
+    pages: {
+      signIn: "/sign-in",
     },
   },
 );

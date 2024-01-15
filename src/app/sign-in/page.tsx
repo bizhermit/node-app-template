@@ -7,11 +7,12 @@ import PasswordBox from "#/client/elements/form/items/text-box/password";
 import useMessageBox from "#/client/elements/message-box";
 import useRouter from "#/client/hooks/router";
 import credentialsSignIn from "$/auth/credentials-signin";
+import pickUid from "$/auth/pick-uid";
 import { signin_mailAddress, signin_password } from "$/data-items/signin";
 import { getSession } from "next-auth/react";
 import Style from "./_components/sign-in.module.scss";
 
-const Page = () => {
+const Page: PageFC = ({ searchParams }) => {
   const msgBox = useMessageBox();
   const router = useRouter();
 
@@ -26,9 +27,17 @@ const Page = () => {
             msgBox.alert(message);
             return;
           }
-          const session = await getSession();
-          router.push("/[uid]", { uid: session?.user.id });
           keepLock();
+          const uid = (await getSession())?.user.id;
+          const callbackUrl = searchParams?.callbackUrl;
+          if (callbackUrl) {
+            const href = Array.isArray(callbackUrl) ? callbackUrl[0] : callbackUrl;
+            if (uid?.toString() === pickUid(href)) {
+              location.href = href;
+              return;
+            }
+          }
+          router.push("/[uid]", { uid });
         }}
         $layout="flex"
         $messageDisplayMode="none"

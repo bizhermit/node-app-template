@@ -20,7 +20,7 @@ const Page = () => {
         </NextLink>
       </div>
       <div>
-        <NextLink href="/[uid]" params={{ uid: 1 }}>
+        <NextLink href="/[uid]" params={{ uid: 1 }} query={{ hoge: 1 }}>
           signed-in page
         </NextLink>
       </div>
