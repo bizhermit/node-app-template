@@ -222,9 +222,13 @@ const FileDrop = forwardRef(<
     if (iref.current) iref.current.value = "";
   }, [ctx.value]);
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) bref.current?.focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      bref.current?.focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => bref.current?.focus();

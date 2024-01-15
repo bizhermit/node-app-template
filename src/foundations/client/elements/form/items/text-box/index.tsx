@@ -225,12 +225,13 @@ const TextBox = forwardRef(<
   };
 
   const hasData = isNotEmpty(ctx.value);
+  const formEnable = !form.disabled && !form.readOnly;
 
   useEffect(() => {
-    if ($focusWhenMounted && !form.disabled) {
+    if ($focusWhenMounted && formEnable) {
       iref.current?.focus();
     }
-  }, [form.disabled]);
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => iref.current?.focus();

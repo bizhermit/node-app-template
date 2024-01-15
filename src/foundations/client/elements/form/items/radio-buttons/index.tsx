@@ -255,9 +255,13 @@ const RadioButtons = forwardRef(<
       ref.current?.querySelector(`.${Style.item}[tabindex]`)) as HTMLDivElement)?.focus();
   };
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = focus;

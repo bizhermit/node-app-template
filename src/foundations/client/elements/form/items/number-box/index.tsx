@@ -289,10 +289,13 @@ const NumberBox = forwardRef(<
   };
 
   const hasData = ctx.value != null;
+  const formEnable = !form.disabled && !form.readOnly;
 
   useEffect(() => {
-    if ($focusWhenMounted) iref.current?.focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      iref.current?.focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => iref.current?.focus();
