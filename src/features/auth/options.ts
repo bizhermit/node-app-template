@@ -1,5 +1,5 @@
 import { isEmpty } from "#/objects/string/empty";
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 const isDev = /^dev/.test(process.env.NODE_ENV);
