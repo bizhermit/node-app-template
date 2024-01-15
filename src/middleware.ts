@@ -2,11 +2,11 @@ import { withAuth, type NextMiddlewareWithAuth } from "next-auth/middleware";
 import formatDate from "./foundations/objects/date/format";
 
 export const config = {
-  matcher: "/((?!_next|favicon).*)",
+  matcher: "/((?!$|_next|favicon).*)",
 };
 
 const middleware: NextMiddlewareWithAuth = withAuth(
-  ({ nextUrl: { pathname }, nextauth: { token } }) => {
+  ({ nextUrl: { pathname } }) => {
     if (pathname.match(/\/api($|\/)/)) {
       // NOTE: API
       // eslint-disable-next-line no-console
@@ -17,9 +17,6 @@ const middleware: NextMiddlewareWithAuth = withAuth(
       console.log(`[${formatDate(new Date(), "yyyy-MM-dd hh:mm:ss.SSS")}] page: ${pathname}`);
     }
 
-    // eslint-disable-next-line no-console
-    console.log(`- token:`, token);
-
     // NOTE: redirect
     // return NextResponse.redirect(new URL("[new url]", url));
 
@@ -29,11 +26,11 @@ const middleware: NextMiddlewareWithAuth = withAuth(
   {
     callbacks: {
       authorized: ({ token, req: { nextUrl: { pathname } } }) => {
-        if (/^\/loggedin-page-path\/.*/.test(pathname)) {
-          // NOTE: loggedin check
-          return token?.user.id != null;
+        if (/^\/(dev|sandbox|sign-in)(\/|$)/.test(pathname)) {
+          // NOTE: skip signed-in check
+          return true;
         }
-        return true;
+        return token?.user.id != null;
       },
     },
   },
