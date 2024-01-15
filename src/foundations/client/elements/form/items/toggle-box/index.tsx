@@ -140,11 +140,13 @@ const ToggleBox = forwardRef(<
     pressPositiveKey(e, () => toggleCheck());
   };
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) {
+    if ($focusWhenMounted && formEnable) {
       (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();
     }
-  }, []);
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => (ref.current?.querySelector(`.${Style.main}[tabindex]`) as HTMLDivElement)?.focus();

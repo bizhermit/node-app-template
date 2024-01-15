@@ -67,9 +67,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
     }
   };
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) ref.current?.focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      ref.current?.focus();
+    }
+  }, [formEnable]);
 
   return (
     <button

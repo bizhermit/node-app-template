@@ -78,9 +78,13 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
     });
   };
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) ref.current?.focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      ref.current?.focus();
+    }
+  }, [formEnable]);
 
   return (
     <NextLink

@@ -319,9 +319,13 @@ const ElectronicSignature = forwardRef(<
     }
   }, [ctx.value]);
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) cref.current?.focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      cref.current?.focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => cref.current?.focus();

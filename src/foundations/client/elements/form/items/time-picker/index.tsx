@@ -334,9 +334,13 @@ const TimePicker = forwardRef(<
     (hourElemRef.current ?? minuteElemRef.current ?? secondElemRef.current)?.focus();
   };
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => focus();

@@ -40,7 +40,14 @@ export const useDataItemMergedProps = <
     ...useMemo(() => {
       const dataItem = props.$dataItem as Exclude<D, undefined>;
       if (dataItem == null || merge?.over == null) return {};
-      return merge.over({ props: p, dataItem, method: form.method });
+      return {
+        ...((props.$tag === true && dataItem.label) ? {
+          $tag: dataItem.label,
+        } : {
+          $tag: undefined,
+        }),
+        ...merge.over({ props: p, dataItem, method: form.method }),
+      };
     }, [props.$dataItem]),
   } as P;
 };

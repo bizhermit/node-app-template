@@ -60,7 +60,7 @@ declare namespace F {
   };
 
   type ItemUnderOptions = {
-    $tag?: React.ReactNode;
+    $tag?: React.ReactNode | boolean;
     $tagPosition?: "top" | "placeholder";
     $color?: Color;
     $messageWrap?: boolean;

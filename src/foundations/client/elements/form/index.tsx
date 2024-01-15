@@ -33,16 +33,21 @@ export const useFormRef = () => {
   return ref.current;
 };
 
+type SubmitCtxProps = {
+  method: string;
+  keepLock: () => () => void;
+}
+
 type PlainFormOptins = {
   $type: "formData";
   $appendNotMountedValue?: undefined;
-  onSubmit?: ((data: FormData, ctx: { method: string; }, e: React.FormEvent<HTMLFormElement>) => (void | boolean | Promise<void>)) | boolean;
+  onSubmit?: ((data: FormData, ctx: SubmitCtxProps, e: React.FormEvent<HTMLFormElement>) => (void | boolean | Promise<void>)) | boolean;
 };
 
 type StructFormOptions<T extends FormDataStruct = FormDataStruct> = {
   $type?: "struct" | null | undefined;
   $appendNotMountedValue?: boolean;
-  onSubmit?: ((data: T, ctx: { method: string; }, e: React.FormEvent<HTMLFormElement>) => (void | boolean | Promise<void>)) | boolean;
+  onSubmit?: ((data: T, ctx: SubmitCtxProps, e: React.FormEvent<HTMLFormElement>) => (void | boolean | Promise<void>)) | boolean;
 };
 
 type FormOptions<T extends FormDataStruct = FormDataStruct> = {
@@ -172,6 +177,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
       return;
     }
     if (onSubmit === true) return;
+    let keepLock = false;
     const ret = onSubmit(
       (() => {
         if ($type === "formData") return new FormData(e.currentTarget);
@@ -186,18 +192,24 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
       })() as FormData & T,
       {
         method: ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
+        keepLock: () => {
+          keepLock = true;
+          return () => setDisabled(false);
+        }
       },
       e
     );
     if (ret == null || ret === false) {
       e.preventDefault();
-      setDisabled(false);
+      if (!keepLock) setDisabled(false);
       return;
     }
     if (ret === true) return;
     e.preventDefault();
     if ("finally" in ret) {
-      ret.finally(() => setDisabled(false));
+      ret.finally(() => {
+        if (!keepLock) setDisabled(false);
+      });
     }
   };
 

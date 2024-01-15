@@ -1,0 +1,22 @@
+.wrap {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+}
+
+.form {
+  justify-content: center;
+  align-items: stretch;
+  width: 30rem;
+  max-width: 100%;
+}
+
+.button {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--b-m);
+}

@@ -709,9 +709,13 @@ const DatePicker = forwardRef(<
     ctx.bind,
   ]);
 
+  const formEnable = !form.disabled && !form.readOnly;
+
   useEffect(() => {
-    if ($focusWhenMounted) ref.current?.focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      ref.current?.focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => ref.current?.focus();

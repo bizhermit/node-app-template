@@ -195,10 +195,13 @@ const PasswordBox = forwardRef(<
   };
 
   const hasData = isNotEmpty(ctx.value);
+  const formEnable = !form.disabled && !form.readOnly;
 
   useEffect(() => {
-    if ($focusWhenMounted) iref.current?.focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      iref.current?.focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => iref.current?.focus();

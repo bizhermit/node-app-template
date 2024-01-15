@@ -359,10 +359,13 @@ const TimeBox = forwardRef(<
   }, [ctx.value, type, unit]);
 
   const hasData = ctx.value != null && ctx.value !== "";
+  const formEnable = !form.disabled && !form.readOnly;
 
   useEffect(() => {
-    if ($focusWhenMounted) focus();
-  }, []);
+    if ($focusWhenMounted && formEnable) {
+      focus();
+    }
+  }, [formEnable]);
 
   if ($ref) {
     $ref.focus = () => focus();
