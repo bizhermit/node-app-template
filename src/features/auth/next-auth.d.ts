@@ -1,7 +1,7 @@
 import "next-auth";
 import "next-auth/jwt";
 
-type LoginUser = {
+type SignInUser = {
   id: number;
   name: string;
   mail_address: string;
@@ -9,16 +9,16 @@ type LoginUser = {
 
 declare module "next-auth" {
   interface Session {
-    user: LoginUser;
+    user: SignInUser;
   }
   interface User {
     id: number;
-    user: LoginUser;
+    user: SignInUser;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    user: LoginUser;
+    user: SignInUser;
   }
 }
