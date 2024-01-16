@@ -3,8 +3,8 @@
 import Button from "#/client/elements/button";
 import { MenuIcon } from "#/client/elements/icon";
 import Popup from "#/client/elements/popup";
+import { useUser } from "@/[uid]/_components/signed-in-provider";
 import { useState } from "react";
-import { useUser } from "../../_components/signed-in-provider";
 import Style from "./header.module.scss";
 
 const UserControlButton = () => {
