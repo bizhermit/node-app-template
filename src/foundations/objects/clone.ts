@@ -6,7 +6,9 @@ const clone = <T = any>(o: T): T => {
     case "Array":
       return (o as Array<any>).map(v => clone(v)) as T;
     case "Object":
-      return Object.keys(o as HV).reduce((r, k) => r[k] = clone((o as HV)[k]), {} as HV) as T;
+      const r: HV = {};
+      Object.entries(o).forEach(([k, v]) => r[k] = clone(v));
+      return r as T;
     case "Date":
       return new Date((o as unknown as Date).getTime()) as T;
     case "Map":
