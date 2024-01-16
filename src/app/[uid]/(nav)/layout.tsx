@@ -1,8 +1,8 @@
 import Error404 from "#/client/elements/error/404";
-import Menu from "#/client/elements/menu";
 import NavigationContainer from "#/client/elements/navigation-container";
 import getSession from "$/auth/session";
-import NavHeader from "@/[uid]/(nav)/_components/header";
+import NavHeader from "./_components/header";
+import Nav from "./_components/nav";
 
 const Layout: LayoutFC = async ({ children }) => {
   const session = await getSession();
@@ -13,14 +13,7 @@ const Layout: LayoutFC = async ({ children }) => {
   return (
     <NavigationContainer
       $header={<NavHeader user={session.user} />}
-      $nav={
-        <Menu
-          iconSpace
-          items={[
-            { key: "index" }
-          ]}
-        />
-      }
+      $nav={<Nav user={session.user} />}
     >
       {children}
     </NavigationContainer>

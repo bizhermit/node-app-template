@@ -1,6 +1,5 @@
 "use client";
 
-import { SignInUser } from "$/auth/next-auth";
 import { signOut } from "next-auth/react";
 import { FC, ReactNode, createContext, useContext } from "react";
 

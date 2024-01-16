@@ -1,5 +1,4 @@
 import NextLink from "#/client/elements/link";
-import { SignInUser } from "$/auth/next-auth";
 import { FC } from "react";
 import UserControlButton from "./header-user-control";
 import Style from "./header.module.scss";
