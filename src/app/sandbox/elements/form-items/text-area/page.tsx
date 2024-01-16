@@ -1,4 +1,4 @@
-import TextAreaClient from "@/sandbox/elements/form-items/text-area/_components/client";
+import TextAreaClient from "./_components/client";
 
 const Page = () => {
   return (

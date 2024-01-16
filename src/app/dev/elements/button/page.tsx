@@ -8,9 +8,9 @@ import TextBox from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import { CloudDownloadIcon, CloudUploadIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
 import { colors } from "#/utilities/sandbox";
-import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
+import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
 const Page = () => {
   const [disabled, setDisabled] = useState(false);

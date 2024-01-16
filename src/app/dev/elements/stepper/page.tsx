@@ -7,9 +7,9 @@ import Stepper, { StepperProps } from "#/client/elements/stepper";
 import Text from "#/client/elements/text";
 import generateArray from "#/objects/array/generator";
 import { sizes } from "#/utilities/sandbox";
-import BaseLayout from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import React, { ReactNode, useMemo, useState } from "react";
+import BaseLayout from "../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
 const maxStep = 10;
 

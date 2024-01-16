@@ -1,7 +1,7 @@
 import "#/client/styles/color.scss";
 import "#/client/styles/global.scss";
 import "#/client/styles/root.scss";
-import RootProvider from "@/_components/root-provider";
+import RootProvider from "./_components/root-provider";
 
 export const metadata = {
   title: "NodeAppTemplate",

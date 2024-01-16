@@ -1,4 +1,4 @@
-import SelectBoxClient from "@/sandbox/elements/form-items/select-box/_components/client";
+import SelectBoxClient from "./_components/client";
 
 const Page = () => {
   return (

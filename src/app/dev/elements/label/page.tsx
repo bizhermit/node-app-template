@@ -2,7 +2,7 @@ import NumberBox from "#/client/elements/form/items/number-box";
 import TextBox from "#/client/elements/form/items/text-box";
 import Label from "#/client/elements/label";
 import { colors, sizes } from "#/utilities/sandbox";
-import BaseLayout, { BaseRow, BaseSheet } from "@/dev/_components/base-layout";
+import BaseLayout, { BaseRow, BaseSheet } from "../../_components/base-layout";
 
 const Page = () => {
   return (

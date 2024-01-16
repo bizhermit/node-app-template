@@ -1,8 +1,8 @@
 import Divider from "#/client/elements/divider";
 import TextBox from "#/client/elements/form/items/text-box";
 import { colors } from "#/utilities/sandbox";
-import BaseLayout, { BaseSection, BaseSheet } from "@/dev/_components/base-layout";
 import React from "react";
+import BaseLayout, { BaseSection, BaseSheet } from "../../_components/base-layout";
 
 const Page = () => {
   return (

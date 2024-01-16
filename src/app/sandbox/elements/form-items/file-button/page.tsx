@@ -1,4 +1,4 @@
-import FileButtonClient from "@/sandbox/elements/form-items/file-button/_components/client";
+import FileButtonClient from "./_components/client";
 
 const Page = () => {
   return (

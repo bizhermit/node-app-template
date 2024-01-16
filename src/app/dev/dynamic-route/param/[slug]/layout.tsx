@@ -1,4 +1,4 @@
-import { BaseSection } from "@/dev/_components/base-layout";
+import { BaseSection } from "../../../_components/base-layout";
 
 const Layout: LayoutFC = ({ children, params }) => {
   return (

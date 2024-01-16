@@ -5,9 +5,9 @@ import Button from "#/client/elements/button";
 import Form, { useFormRef } from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
-import BaseLayout, { BaseRow, BaseSheet } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
+import BaseLayout, { BaseRow, BaseSheet } from "../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
 const Page = () => {
   const [readOnly, setReadOnly] = useState(false);

@@ -2,7 +2,7 @@ import Button from "#/client/elements/button";
 import NextLink from "#/client/elements/link";
 import Text from "#/client/elements/text";
 import useRouter from "#/client/hooks/router";
-import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
+import SandboxLayoutProvider from "../../app/sandbox/_components/sandbox-layout";
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter();

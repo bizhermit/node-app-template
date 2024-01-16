@@ -4,9 +4,9 @@ import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import SplitContainer, { SplitContent } from "#/client/elements/split-container";
 import generateArray from "#/objects/array/generator";
-import BaseLayout from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
+import BaseLayout from "../../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../../_components/control-layout";
 
 const Page = () => {
   const [direction, setDirection] = useState<"horizontal" | "vertical">();

@@ -7,7 +7,7 @@ import { useFormItem } from "#/client/elements/form/items/hooks";
 import NumberBox from "#/client/elements/form/items/number-box";
 import TextBox from "#/client/elements/form/items/text-box";
 import useFetch from "#/client/hooks/fetch-api";
-import BaseLayout, { BaseSection, BaseSheet } from "@/dev/_components/base-layout";
+import BaseLayout, { BaseSection, BaseSheet } from "../_components/base-layout";
 
 const Page = () => {
   const api = useFetch();

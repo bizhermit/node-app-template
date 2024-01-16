@@ -1,4 +1,4 @@
-import DateBoxClient from "@/sandbox/elements/form-items/date-box/_components/client";
+import DateBoxClient from "./_components/client";
 
 const Page = () => {
   return (

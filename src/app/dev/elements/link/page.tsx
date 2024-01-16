@@ -9,9 +9,9 @@ import { HomeIcon } from "#/client/elements/icon";
 import NextLink, { NextLinkProps } from "#/client/elements/link";
 import { isNotEmpty } from "#/objects/empty";
 import replaceDynamicPathname from "#/objects/url/dynamic-pathname";
-import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { type FC } from "react";
+import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
 const NextDynamicRouteLink: FC<NextLinkProps> = (props) => {
   return (

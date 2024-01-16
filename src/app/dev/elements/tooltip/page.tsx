@@ -1,6 +1,6 @@
 import TextBox from "#/client/elements/form/items/text-box";
 import Tooltip from "#/client/elements/tooltip";
-import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
+import BaseLayout, { BaseSheet } from "../../_components/base-layout";
 
 const Page = () => {
   return (

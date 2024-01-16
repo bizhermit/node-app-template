@@ -9,9 +9,9 @@ import NumberBox from "#/client/elements/form/items/number-box";
 import SelectBox from "#/client/elements/form/items/select-box";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import generateArray from "#/objects/array/generator";
-import BaseLayout, { BaseRow } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useMemo, useState } from "react";
+import BaseLayout, { BaseRow } from "../../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../../_components/control-layout";
 
 type Data = {
   id: number;

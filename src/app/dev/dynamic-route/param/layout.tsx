@@ -1,6 +1,6 @@
 import NextLink from "#/client/elements/link";
-import BaseLayout, { BaseRow, BaseSection } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
+import BaseLayout, { BaseRow, BaseSection } from "../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
 const Layout: LayoutFC = ({ children, params }) => {
   return (

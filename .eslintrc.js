@@ -20,7 +20,6 @@ module.exports = {
         map: [
           ["#", path.join(srcDir, "foundations")],
           ["$", path.join(srcDir, "features")],
-          ["@", path.join(srcDir, "app")],
         ],
         extensions: [".json", ".js", ".jsx", ".ts", ".tsx"]
       }

@@ -7,9 +7,9 @@ import ToggleBox from "#/client/elements/form/items/toggle-box";
 import Loading from "#/client/elements/loading";
 import useLoading from "#/client/elements/loading/context";
 import { colors } from "#/utilities/sandbox";
-import BaseLayout, { BaseRow } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
+import BaseLayout, { BaseRow } from "../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
 const Page = () => {
   const loading = useLoading();
