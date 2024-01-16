@@ -26,6 +26,7 @@ const nextConfig = {
   webpack(config) {
     config.resolve.alias['#'] = path.join(srcDir, 'foundations');
     config.resolve.alias['$'] = path.join(srcDir, 'features');
+    config.resolve.alias['@'] = path.join(srcDir, 'app');
     return config;
   },
 };

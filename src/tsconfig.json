@@ -23,6 +23,9 @@
       "$/*": [
         "features/*"
       ],
+      "@/*": [
+        "app/*"
+      ],
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
