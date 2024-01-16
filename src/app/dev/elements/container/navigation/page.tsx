@@ -3,8 +3,8 @@
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { NavigationHeaderMode, NavigationMode, NavigationPosition, useNavigation } from "#/client/elements/navigation-container/context";
-import BaseLayout, { BaseRow } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
+import BaseLayout, { BaseRow } from "../../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../../_components/control-layout";
 
 const Page = () => {
   const nav = useNavigation();

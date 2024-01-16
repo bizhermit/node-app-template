@@ -1,4 +1,4 @@
-import CheckListClient from "@/sandbox/elements/form-items/check-list/_components/client";
+import CheckListClient from "./_components/client";
 
 const Page = () => {
   return <CheckListClient />;

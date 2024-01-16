@@ -1,6 +1,6 @@
 import Button from "#/client/elements/button";
 import GroupContainer from "#/client/elements/group-container";
-import BaseLayout, { BaseSheet } from "@/dev/_components/base-layout";
+import BaseLayout, { BaseSheet } from "../../../_components/base-layout";
 
 const Page = () => {
   return (

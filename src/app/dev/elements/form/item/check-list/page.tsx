@@ -5,9 +5,9 @@ import CheckList from "#/client/elements/form/items/check-list";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import arrayItem from "#/data-items/array";
 import stringItem from "#/data-items/string";
-import BaseLayout, { BaseSection, BaseSheet } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
+import BaseLayout, { BaseSection, BaseSheet } from "../../../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../../../_components/control-layout";
 
 const strItem = stringItem({
   name: "str",

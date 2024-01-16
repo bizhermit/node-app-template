@@ -1,5 +1,5 @@
 import NextLink from "#/client/elements/link";
-import BaseLayout, { BaseSection, BaseSheet } from "@/dev/_components/base-layout";
+import BaseLayout, { BaseSection, BaseSheet } from "../_components/base-layout";
 
 const Page = () => {
   return (

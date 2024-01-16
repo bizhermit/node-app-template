@@ -25,7 +25,7 @@
       ],
       "@/*": [
         "app/*"
-      ]
+      ],
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,

@@ -1,6 +1,6 @@
 import Divider from "#/client/elements/divider";
 import TimeBox from "#/client/elements/form/items/time-box";
-import TimeBoxClient from "@/sandbox/elements/form-items/time-box/_components/client";
+import TimeBoxClient from "./_components/client";
 
 const Page = () => {
   return (

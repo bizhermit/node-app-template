@@ -8,9 +8,9 @@ import { FormIcon, HomeIcon, MagnifyingGlassIcon } from "#/client/elements/icon"
 import TabContainer, { TabContent, TabLabel } from "#/client/elements/tab-container";
 import Text from "#/client/elements/text";
 import generateArray from "#/objects/array/generator";
-import BaseLayout, { BaseRow } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
+import BaseLayout, { BaseRow } from "../../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../../_components/control-layout";
 
 type TabKey = "tab1" | "tab2" | "tab3" | "4";
 type TabTextMode = "text" | "icon" | "texticon";

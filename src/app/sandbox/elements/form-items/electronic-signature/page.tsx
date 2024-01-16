@@ -1,4 +1,4 @@
-import ElectronicSignatureClient from "@/sandbox/elements/form-items/electronic-signature/_components/client";
+import ElectronicSignatureClient from "./_components/client";
 
 const Page = () => {
   return (

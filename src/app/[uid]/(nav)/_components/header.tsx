@@ -1,7 +1,6 @@
 import NextLink from "#/client/elements/link";
-import { SignInUser } from "$/auth/next-auth";
+import UserControlButton from "@/[uid]/(nav)/_components/header-user-control";
 import { FC } from "react";
-import UserControlButton from "./header-user-control";
 import Style from "./header.module.scss";
 
 const NavHeader: FC<{

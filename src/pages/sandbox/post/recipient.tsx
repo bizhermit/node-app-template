@@ -1,6 +1,6 @@
 import NextLink from "#/client/elements/link";
 import StructView from "#/client/elements/struct-view";
-import SandboxLayoutProvider from "@/sandbox/_components/sandbox-layout";
+import SandboxLayoutProvider from "../../../app/sandbox/_components/sandbox-layout";
 
 type Props = {
   data: {

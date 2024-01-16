@@ -7,8 +7,8 @@ import SelectBox from "#/client/elements/form/items/select-box";
 import TextBox from "#/client/elements/form/items/text-box";
 import Popup from "#/client/elements/popup";
 import generateArray from "#/objects/array/generator";
-import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "@/dev/_components/base-layout";
 import { FC, useRef, useState } from "react";
+import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "../../_components/base-layout";
 
 const Component: FC = () => {
   const [show, setShow] = useState(false);

@@ -1,4 +1,4 @@
-import TimePickerClient from "@/sandbox/elements/form-items/time-picker/_components/client";
+import TimePickerClient from "./_components/client";
 
 const Page = () => {
   return (

@@ -4,9 +4,9 @@ import Card from "#/client/elements/card";
 import ToggleBox from "#/client/elements/form/items/toggle-box";
 import StructView, { type StructKey } from "#/client/elements/struct-view";
 import generateArray from "#/objects/array/generator";
-import BaseLayout, { BaseRow, BaseSheet } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useMemo, useState } from "react";
+import BaseLayout, { BaseRow, BaseSheet } from "../../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../../_components/control-layout";
 
 const Page = () => {
   const [outline, setOutline] = useState(true);

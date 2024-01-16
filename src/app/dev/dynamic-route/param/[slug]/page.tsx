@@ -1,4 +1,4 @@
-import { BaseSection } from "@/dev/_components/base-layout";
+import { BaseSection } from "../../../_components/base-layout";
 
 // export const dynamic = "force-static";
 // export const generateStaticParams = async () => {

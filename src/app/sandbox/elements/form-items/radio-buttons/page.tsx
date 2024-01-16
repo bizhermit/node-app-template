@@ -1,4 +1,4 @@
-import RadioButtonsClient from "@/sandbox/elements/form-items/radio-buttons/_components/client";
+import RadioButtonsClient from "./_components/client";
 
 const Page = () => {
   return (

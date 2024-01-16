@@ -4,9 +4,9 @@ import Badge from "#/client/elements/badge";
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import { sizes } from "#/utilities/sandbox";
-import BaseLayout, { BaseRow, BaseSheet } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useState } from "react";
+import BaseLayout, { BaseRow, BaseSheet } from "../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
 const Page = () => {
   const [count, setCount] = useState(99);

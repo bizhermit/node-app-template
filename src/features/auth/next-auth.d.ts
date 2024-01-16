@@ -1,12 +1,6 @@
 import "next-auth";
 import "next-auth/jwt";
 
-type SignInUser = {
-  id: number;
-  name: string;
-  mail_address: string;
-}
-
 declare module "next-auth" {
   interface Session {
     user: SignInUser;

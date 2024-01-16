@@ -6,9 +6,9 @@ import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import Menu, { MenuProps } from "#/client/elements/menu";
 import Popup from "#/client/elements/popup";
 import Row from "#/client/elements/row";
-import BaseLayout, { BaseSection, BaseSheet } from "@/dev/_components/base-layout";
-import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useRef, useState } from "react";
+import BaseLayout, { BaseSection, BaseSheet } from "../../../_components/base-layout";
+import ControlLayout, { ControlItem } from "../../../_components/control-layout";
 
 const Page = () => {
   const buttonRef = useRef<HTMLButtonElement>(null!);

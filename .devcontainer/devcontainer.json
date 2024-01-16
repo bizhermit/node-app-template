@@ -30,6 +30,9 @@
       "settings": {
         "liveServer.settings.root": "/dist/out",
         "typescript.preferences.importModuleSpecifier": "non-relative",
+        "files.associations": {
+          ".env.*": "properties"
+        },
         "editor.codeActionsOnSave": {
           "source.fixAll.eslint": true,
           "source.organizeImports": true
