@@ -1,5 +1,7 @@
+import nextAuthOptions from "#/auth/options";
 import formidable from "formidable";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 import { acceptData, getReturnMessages, hasError } from "./main";
 
 export type NextApiConfig = {
@@ -11,16 +13,12 @@ export type NextApiConfig = {
   };
 };
 
-const getSession = (req: NextApiRequest): { [v: string | number | symbol]: any } => {
-  return (req as any).session ?? (global as any)._session ?? {};
-};
-
 type MethodProcess<Req extends Api.RequestDataItems = Api.RequestDataItems, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextApiRequest;
     res: NextApiResponse;
+    user: SignInUser | undefined;
     getCookies: <T extends { [v: string]: string | Array<string> } = { [v: string]: string | Array<string> }>() => T;
-    getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
     getData: () => DI.VType<Req, true, "page-api">;
@@ -50,6 +48,8 @@ const apiHandler = <
     const msgs: Array<Api.Message> = [];
 
     try {
+      const session = await getServerSession(req, res, nextAuthOptions);
+
       const method = (req.method?.toLocaleLowerCase() ?? "get") as Api.Methods;
       const handler = methods[method];
       if (handler == null) {
@@ -146,8 +146,8 @@ const apiHandler = <
       const resData = await handler({
         req,
         res,
+        user: session?.user,
         getCookies: () => req.cookies as any,
-        getSession: () => getSession(req),
         setStatus: (code: number) => statusCode = code,
         hasError: () => hasError(msgs),
         getData: () => reqData as any,

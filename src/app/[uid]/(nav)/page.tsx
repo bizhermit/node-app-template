@@ -1,4 +1,4 @@
-import getSession from "$/auth/session";
+import getSession from "#/auth/session";
 
 const Page: PageFC = async () => {
   const session = await getSession();

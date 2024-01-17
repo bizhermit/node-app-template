@@ -1,6 +1,6 @@
+import getSession from "#/auth/session";
 import Error404 from "#/client/elements/error/404";
 import NavigationContainer from "#/client/elements/navigation-container";
-import getSession from "$/auth/session";
 import NavHeader from "@/[uid]/(nav)/_components/header";
 import Nav from "@/[uid]/(nav)/_components/nav";
 

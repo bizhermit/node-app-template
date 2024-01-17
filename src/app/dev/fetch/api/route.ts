@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import arrayItem from "#/data-items/array";
 import booleanItem from "#/data-items/boolean";
 import numberItem from "#/data-items/number";
@@ -39,6 +40,7 @@ export const GET = apiMethodHandler({
   ],
   process: async (ctx) => {
     // console.log("get");
+    console.log(ctx.user);
     const data = ctx.getData();
     console.log(data);
     return {

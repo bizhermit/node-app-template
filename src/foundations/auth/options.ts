@@ -1,7 +1,7 @@
-import { isEmpty } from "#/objects/string/empty";
-import { signin_mailAddress, signin_password } from "$/data-items/signin";
 import type { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { isEmpty } from "../objects/string/empty";
+import { signin_mailAddress, signin_password } from "./data-items";
 
 const isDev = /^dev/.test(process.env.NODE_ENV);
 
@@ -44,7 +44,7 @@ const nextAuthOptions: NextAuthOptions = {
             throw credentialsError("password not matched.");
           }
           return {
-            id: 1,
+            id: "1",
             data: {
               id: 1,
               name: "signin user",

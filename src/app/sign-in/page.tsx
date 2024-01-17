@@ -1,14 +1,14 @@
 "use client";
 
+import credentialsSignIn from "#/auth/credentials-signin";
+import { signin_mailAddress, signin_password } from "#/auth/data-items";
+import pickUid from "#/auth/pick-uid";
 import Button from "#/client/elements/button";
 import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import PasswordBox from "#/client/elements/form/items/text-box/password";
 import useMessageBox from "#/client/elements/message-box";
 import useRouter from "#/client/hooks/router";
-import credentialsSignIn from "$/auth/credentials-signin";
-import pickUid from "$/auth/pick-uid";
-import { signin_mailAddress, signin_password } from "$/data-items/signin";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import Style from "./_components/sign-in.module.scss";

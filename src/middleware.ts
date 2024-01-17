@@ -1,4 +1,4 @@
-import pickUid from "$/auth/pick-uid";
+import pickUid from "#/auth/pick-uid";
 import { withAuth, type NextMiddlewareWithAuth } from "next-auth/middleware";
 import formatDate from "./foundations/objects/date/format";
 
