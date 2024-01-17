@@ -9,12 +9,29 @@ import useRouter from "#/client/hooks/router";
 import credentialsSignIn from "$/auth/credentials-signin";
 import pickUid from "$/auth/pick-uid";
 import { signin_mailAddress, signin_password } from "$/data-items/signin";
-import { getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 import Style from "./_components/sign-in.module.scss";
 
 const Page: PageFC = ({ searchParams }) => {
   const msgBox = useMessageBox();
   const router = useRouter();
+  const session = useSession();
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      const uid = session.data.user.id;
+      const callbackUrl = searchParams?.callbackUrl;
+      if (callbackUrl) {
+        const href = Array.isArray(callbackUrl) ? callbackUrl[0] : callbackUrl;
+        if (uid?.toString() === pickUid(href)) {
+          location.href = href;
+          return;
+        }
+      }
+      router.push("/[uid]", { uid });
+    }
+  }, [session.status]);
 
   return (
     <div className={Style.wrap}>
@@ -28,16 +45,6 @@ const Page: PageFC = ({ searchParams }) => {
             return;
           }
           keepLock();
-          const uid = (await getSession())?.user.id;
-          const callbackUrl = searchParams?.callbackUrl;
-          if (callbackUrl) {
-            const href = Array.isArray(callbackUrl) ? callbackUrl[0] : callbackUrl;
-            if (uid?.toString() === pickUid(href)) {
-              location.href = href;
-              return;
-            }
-          }
-          router.push("/[uid]", { uid });
         }}
         $layout="flex"
         $messageDisplayMode="none"
