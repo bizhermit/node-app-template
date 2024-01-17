@@ -31,7 +31,7 @@ const middleware: NextMiddlewareWithAuth = withAuth(
           // NOTE: skip signed-in check
           return true;
         }
-        return token?.user.id?.toString() === pickUid(pathname);
+        return token?.user.id != null && token?.user.id?.toString() === pickUid(pathname);
       },
     },
     pages: {

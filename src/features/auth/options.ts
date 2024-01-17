@@ -40,6 +40,9 @@ const nextAuthOptions: NextAuthOptions = {
           if (isEmpty(mailAddress) || isEmpty(password)) {
             throw credentialsError("input empty.");
           }
+          if (password !== "pass") {
+            throw credentialsError("password not matched.");
+          }
           return {
             id: 1,
             data: {
