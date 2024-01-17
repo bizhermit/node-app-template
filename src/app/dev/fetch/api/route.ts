@@ -6,107 +6,116 @@ import structItem from "#/data-items/struct";
 import apiMethodHandler from "#/server/api-handler/app-api";
 import { sample_string } from "$/data-items/sample";
 
-export const GET = apiMethodHandler([
-  stringItem({
-    // strict: true,
-    name: "text",
-    label: "テキスト",
-    required: true,
-    source: [
-      { value: "hoge", label: "HOGE" },
-      { value: "fuga", label: "FUGA" },
-      { value: "piyo", label: "PIYO" },
-    ]
-  }),
-  numberItem({
-    // strict: true,
-    name: "num",
-    label: "数値",
-    required: true,
-    source: [
-      { value: 1, label: "1" },
-      { value: 2, label: "1" },
-      { value: 3, label: "1" },
-    ],
-  }),
-  booleanItem({
-    name: "flag",
-    // strict: true,
-    trueValue: 1,
-    falseValue: 9,
-  }),
-], async (ctx) => {
-  // console.log("get");
-  const data = ctx.getData();
-  console.log(data);
-  return {
-    ...data,
-  };
+export const GET = apiMethodHandler({
+  dataItems: [
+    stringItem({
+      // strict: true,
+      name: "text",
+      label: "テキスト",
+      required: true,
+      source: [
+        { value: "hoge", label: "HOGE" },
+        { value: "fuga", label: "FUGA" },
+        { value: "piyo", label: "PIYO" },
+      ]
+    }),
+    numberItem({
+      // strict: true,
+      name: "num",
+      label: "数値",
+      required: true,
+      source: [
+        { value: 1, label: "1" },
+        { value: 2, label: "1" },
+        { value: 3, label: "1" },
+      ],
+    }),
+    booleanItem({
+      name: "flag",
+      // strict: true,
+      trueValue: 1,
+      falseValue: 9,
+    }),
+  ],
+  process: async (ctx) => {
+    // console.log("get");
+    const data = ctx.getData();
+    console.log(data);
+    return {
+      ...data,
+    };
+  },
 });
 
-export const POST = apiMethodHandler([
-  stringItem({
-    name: "text",
-    strict: true,
-    source: [
-      { value: "hoge", label: "HOGE" },
-      { value: "piyo", label: "PIYO" },
-      { value: "fuga", label: "FUGA" },
-    ]
-  }),
-  numberItem({
-    name: "num",
-    strict: true,
-    source: [
-      { value: 1, label: "1" },
-      { value: 2, label: "1" },
-      { value: 3, label: "1" },
-    ],
-  }),
-  booleanItem({
-    name: "flag",
-    // strict: true,
-    trueValue: 1,
-    falseValue: 9,
-  }),
-  arrayItem({
-    name: "list-str",
-    item: stringItem({
+export const POST = apiMethodHandler({
+  dataItems: [
+    stringItem({
       name: "text",
+      strict: true,
+      source: [
+        { value: "hoge", label: "HOGE" },
+        { value: "piyo", label: "PIYO" },
+        { value: "fuga", label: "FUGA" },
+      ]
     }),
-  }),
-  arrayItem({
-    name: "list-struct",
-    item: [
-      stringItem({
-        name: "text",
-      })
-    ]
-  }),
-  structItem({
-    name: "struct",
-    item: [
-      stringItem({
+    numberItem({
+      name: "num",
+      strict: true,
+      source: [
+        { value: 1, label: "1" },
+        { value: 2, label: "1" },
+        { value: 3, label: "1" },
+      ],
+    }),
+    booleanItem({
+      name: "flag",
+      // strict: true,
+      trueValue: 1,
+      falseValue: 9,
+    }),
+    arrayItem({
+      name: "list-str",
+      item: stringItem({
         name: "text",
       }),
-    ]
-  }),
-] as const, async (ctx) => {
-  // console.log("post");
-  const data = ctx.getData();
-  // console.log(data);
-  return {
-    ...data,
-  };
+    }),
+    arrayItem({
+      name: "list-struct",
+      item: [
+        stringItem({
+          name: "text",
+        })
+      ]
+    }),
+    structItem({
+      name: "struct",
+      item: [
+        stringItem({
+          name: "text",
+        }),
+      ]
+    }),
+  ],
+  process: async (ctx) => {
+    // console.log("post");
+    const data = ctx.getData();
+    // console.log(data);
+    return {
+      ...data,
+    };
+  },
 });
 
-export const PUT = apiMethodHandler([
-  sample_string
-], async (ctx) => {
-  // console.log("post");
-  const data = ctx.getData();
-  // console.log(data);
-  return {
-    ...data,
-  };
+export const PUT = apiMethodHandler({
+  dataItems: [
+    sample_string
+  ],
+  process: async (ctx) => {
+    // console.log("post");
+    const data = ctx.getData();
+    // console.log(data);
+    return {
+      ...data,
+    };
+  },
 });

@@ -20,9 +20,12 @@ type MethodProcess<Req extends Api.RequestDataItems = Api.RequestDataItems, Res 
 const apiMethodHandler = <
   Req extends Api.RequestDataItems = Api.RequestDataItems,
   Res extends { [v: string]: any } | void = void
->(dataItems?: Readonly<Req | null>, process?: MethodProcess<Req, Res> | null) => {
+>(props: {
+  dataItems?: Readonly<Req | null>;
+  process?: MethodProcess<Req, Res> | null;
+}) => {
   return (async (req: NextRequest, { params }) => {
-    if (process == null) {
+    if (props.process == null) {
       return NextResponse.json({}, { status: 404 });
     }
 
@@ -62,8 +65,8 @@ const apiMethodHandler = <
           });
           return data;
         })();
-        if (dataItems == null) return data;
-        acceptData(msgs, data, dataItems);
+        if (props.dataItems == null) return data;
+        acceptData(msgs, data, props.dataItems);
         return data;
       })();
 
@@ -72,7 +75,7 @@ const apiMethodHandler = <
         throw new Error("validation error");
       }
 
-      const resData = await process({
+      const resData = await props.process({
         req,
         getCookies: () => req.cookies,
         getSession: () => getSession(req),
