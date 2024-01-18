@@ -7,6 +7,7 @@ import Button from "#/client/elements/button";
 import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import PasswordBox from "#/client/elements/form/items/text-box/password";
+import Loading from "#/client/elements/loading";
 import useMessageBox from "#/client/elements/message-box";
 import useRouter from "#/client/hooks/router";
 import { useSession } from "next-auth/react";
@@ -33,6 +34,9 @@ const Page: PageFC = ({ searchParams }) => {
     }
   }, [session.status]);
 
+  if (session.status === "authenticated") {
+    return <Loading />;
+  }
   return (
     <div className={Style.wrap}>
       <Form

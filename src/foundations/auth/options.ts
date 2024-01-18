@@ -75,7 +75,7 @@ const nextAuthOptions: NextAuthOptions = {
       session.user = user;
       return session;
     },
-  }
+  },
 };
 
 export default nextAuthOptions;

@@ -256,7 +256,6 @@ app.on("ready", async () => {
           json: async () => {
             return JSON.parse((init as any)?.body ?? "{}");
           },
-          session: $global._session,
           cookies: {},
         };
         const returnValue: { json?: any; status?: number | undefined; } = {};
@@ -294,9 +293,11 @@ app.on("ready", async () => {
                 reject(new Error(getStatusText(404)));
                 return;
               }
-              (methodHandler(req, { params: {
-                // NOTE: no support.
-              } }) as Promise<any>).then(async (nextRes: NextResponse) => {
+              (methodHandler(req, {
+                params: {
+                  // NOTE: no support.
+                }
+              }) as Promise<any>).then(async (nextRes: NextResponse) => {
                 try {
                   res.json({ ...(await nextRes.json()) });
                   res.status(nextRes.status ?? 204);
@@ -316,6 +317,21 @@ app.on("ready", async () => {
       });
     });
   }
+
+  setListener("signIn", "handle", (_e, params: { [v: string]: any }) => {
+    log.info("sign-in", JSON.stringify(params, null, 2));
+    $global._session.user = {
+      id: 1,
+      name: "electron",
+      mail_address: "electron",
+    } as SignInUser;
+    return true;
+  });
+  setListener("signOut", "handle", (_e) => {
+    log.info("sign-out");
+    delete $global._session.user;
+    return true;
+  });
 
   setListener("setSize", "on", (event, params: { width?: number; height?: number; animate?: boolean; }) => {
     try {
