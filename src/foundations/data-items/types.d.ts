@@ -147,12 +147,7 @@ declare namespace DI {
         >
       ) :
       D["type"] extends DataItem_Struct["type"] ? (
-        DI.PartialRequired<
-          D,
-          Strict,
-          { [P in keyof D["item"]]: D["item"][P] },
-          { [P in keyof D["item"]]?: DI.VType<D["item"][P], Strict, Side> }
-        >
+        DI.Props<D["item"], Strict, Side>
       ) :
       any
     ) :

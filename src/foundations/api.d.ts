@@ -32,20 +32,20 @@ declare namespace Api {
   type Import<T extends TypeofApi> = {
     [P in keyof T]: {
       get: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["GET"]["req"] : T[P]["default"]["$get"], false, "client">;
-        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["GET"]["res"] : T[P]["default"]["get"], true>;
+        req: P extends keyof TypeofAppApi ? T[P]["GET"]["req"] : T[P]["default"]["$get"];
+        res: P extends keyof TypeofAppApi ? T[P]["GET"]["res"] : T[P]["default"]["get"];
       };
       put: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["PUT"]["req"] : T[P]["default"]["$put"], false, "client">;
-        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["PUT"]["res"] : T[P]["default"]["put"], true>;
+        req: P extends keyof TypeofAppApi ? T[P]["PUT"]["req"] : T[P]["default"]["$put"];
+        res: P extends keyof TypeofAppApi ? T[P]["PUT"]["res"] : T[P]["default"]["put"];
       };
       post: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["POST"]["req"] : T[P]["default"]["$post"], false, "client">;
-        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["POST"]["res"] : T[P]["default"]["post"], true>;
+        req: P extends keyof TypeofAppApi ? T[P]["POST"]["req"] : T[P]["default"]["$post"];
+        res: P extends keyof TypeofAppApi ? T[P]["POST"]["res"] : T[P]["default"]["post"];
       };
       delete: {
-        req: DI.VType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"], false, "client">;
-        res: DI.VType<P extends keyof TypeofAppApi ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"], true>;
+        req: P extends keyof TypeofAppApi ? T[P]["DELETE"]["req"] : T[P]["default"]["$delete"];
+        res: P extends keyof TypeofAppApi ? T[P]["DELETE"]["res"] : T[P]["default"]["delete"];
       };
     };
   };

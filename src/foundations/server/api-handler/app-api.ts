@@ -100,7 +100,7 @@ const apiMethodHandler = <
     }
   }) as {
     (req: NextRequest, ctx: { params: { [v: string]: string | Array<string> } }): Promise<NextResponse>;
-    req: Req;
+    req: DI.VType<Req, false, "client">;
     res: Res;
   };
 };
