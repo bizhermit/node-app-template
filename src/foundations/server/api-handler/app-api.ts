@@ -1,17 +1,14 @@
 import { type RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
 import { NextResponse, type NextRequest } from "next/server";
+import getSession from "../../auth/session";
 import { setValue } from "../../objects/struct/set";
 import { acceptData, getReturnMessages, hasError } from "./main";
-
-const getSession = (req: NextRequest): { [v: string | number | symbol]: any } => {
-  return (req as any).session ?? (global as any)._session ?? {};
-};
 
 type MethodProcess<Req extends Api.RequestDataItems = Api.RequestDataItems, Res extends { [v: string]: any } | void = void> =
   (context: {
     req: NextRequest;
+    user: SignInUser | undefined;
     getCookies: () => RequestCookies;
-    getSession: () => { [v: string | number | symbol]: any };
     setStatus: (code: number) => void;
     hasError: () => boolean;
     getData: () => DI.VType<Req, true, "app-api">;
@@ -20,9 +17,12 @@ type MethodProcess<Req extends Api.RequestDataItems = Api.RequestDataItems, Res 
 const apiMethodHandler = <
   Req extends Api.RequestDataItems = Api.RequestDataItems,
   Res extends { [v: string]: any } | void = void
->(dataItems?: Readonly<Req | null>, process?: MethodProcess<Req, Res> | null) => {
+>(props: {
+  dataItems?: Readonly<Req | null>;
+  process?: MethodProcess<Req, Res> | null;
+}) => {
   return (async (req: NextRequest, { params }) => {
-    if (process == null) {
+    if (props.process == null) {
       return NextResponse.json({}, { status: 404 });
     }
 
@@ -31,6 +31,8 @@ const apiMethodHandler = <
     const method = (req.method.toLowerCase() ?? "get") as Api.Methods;
 
     try {
+      const session = await getSession();
+
       const reqData = await (async () => {
         const data = await (async () => {
           const { searchParams } = new URL(req.url);
@@ -62,8 +64,8 @@ const apiMethodHandler = <
           });
           return data;
         })();
-        if (dataItems == null) return data;
-        acceptData(msgs, data, dataItems);
+        if (props.dataItems == null) return data;
+        acceptData(msgs, data, props.dataItems);
         return data;
       })();
 
@@ -72,10 +74,10 @@ const apiMethodHandler = <
         throw new Error("validation error");
       }
 
-      const resData = await process({
+      const resData = await props.process({
         req,
+        user: session?.user,
         getCookies: () => req.cookies,
-        getSession: () => getSession(req),
         setStatus: (code: number) => statusCode = code,
         hasError: () => hasError(msgs),
         getData: () => reqData as any,

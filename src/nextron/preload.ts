@@ -12,6 +12,8 @@ process.once("loaded", () => {
 contextBridge.exposeInMainWorld("electron", {
   test: () => ipcRenderer.sendSync("test"),
   fetch: (url: string, init?: RequestInit) => ipcRenderer.invoke("fetch", url, init),
+  signIn: (params: { [v: string]: any }) => ipcRenderer.invoke("signIn", params),
+  signOut: () => ipcRenderer.invoke("signOut"),
   setSize: (params: { width?: number; height?: number; animate?: boolean; }) => ipcRenderer.sendSync("setSize", params),
   getSize: () => ipcRenderer.sendSync("getSize"),
   setAlwaysOnTop: (alwaysOnTop: boolean) => ipcRenderer.sendSync("setAlwaysOnTop", alwaysOnTop),

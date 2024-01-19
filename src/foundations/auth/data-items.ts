@@ -1,4 +1,4 @@
-import stringItem from "#/data-items/string";
+import stringItem from "../data-items/string";
 
 export const signin_mailAddress = stringItem({
   name: "mail_address",
