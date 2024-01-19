@@ -6,7 +6,6 @@ declare module "next-auth" {
     user: SignInUser;
   }
   interface User {
-    id: number;
     data: SignInUser;
   }
 }

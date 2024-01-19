@@ -1,5 +1,6 @@
 "use client";
 
+import useRouter from "#/client/hooks/router";
 import { signOut } from "next-auth/react";
 import { FC, ReactNode, createContext, useContext } from "react";
 
@@ -19,12 +20,15 @@ export const SignedInProvider: FC<{
   user: SignInUser;
   children: ReactNode;
 }> = ({ user, children }) => {
+  const router = useRouter();
+
   return (
     <SignedInContext.Provider value={{
       data: user,
       signOut: async (unlock) => {
         try {
-          await signOut({ callbackUrl: "/sign-in" });
+          await signOut({ redirect: false });
+          router.push("/sign-in");
         } catch {
           unlock?.();
         }

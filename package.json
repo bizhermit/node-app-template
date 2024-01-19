@@ -27,7 +27,7 @@
     "build:nexpress": "npm run prenexpress && npm run build",
     "nexpress": "npm run build && node .server/nexpress/main.js",
     "clean:nextron": "npx rimraf .main .renderer",
-    "nextron": "npm run clean && npm run predist && npm run route && chcp 65001 && npx cross-env NODE_ENV=\"development\" npx electron .main/nextron/main.js",
+    "nextron": "npm run clean && npm run predist && npm run route && npx cross-env NODE_ENV=\"development\" npx electron .main/nextron/main.js",
     "predist": "npm run clean:nextron -- dist/pack && npx tsc -p src/nextron/tsconfig.json && npx tsc-alias -p src/nextron/tsconfig.json",
     "dist": "npx cross-env NEXT_OUTPUT=\"renderer\" npm run build && npx electron-builder",
     "dist:linux": "npm run dist -- --linux & npm run clean:nextron",

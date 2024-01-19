@@ -1,5 +1,5 @@
+import getSession from "#/auth/session";
 import Error404 from "#/client/elements/error/404";
-import getSession from "$/auth/session";
 import { SignedInProvider } from "@/[uid]/_components/signed-in-provider";
 
 const Layout: LayoutFC = async ({ children }) => {
