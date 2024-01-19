@@ -40,7 +40,7 @@ export const useSelectBox = <
 
 type SelectBoxOptions<
   T extends string | number | boolean = string | number | boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined,
   S extends Data = Data
 > = {
   $ref?: SelectBoxHook<F.VType<T, D, T>, S> | SelectBoxHook<string | number, S>;
@@ -63,19 +63,19 @@ type SelectBoxOptions<
 type OmitAttrs = "";
 export type SelectBoxProps<
   T extends string | number | boolean = string | number | boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined,
   S extends Data = Data
 > = OverwriteAttrs<Omit<F.ItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, SelectBoxOptions<T, D, S>>;
 
 interface SelectBoxFC extends FunctionComponent<SelectBoxProps> {
-  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends { [v: string]: any } = { [v: string]: any }>(
+  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined, S extends { [v: string]: any } = { [v: string]: any }>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, SelectBoxProps<T, D, S>>
   ): ReactElement<any> | null;
 }
 
 const SelectBox = forwardRef(<
   T extends string | number | boolean = string | number | boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined,
   S extends Data = Data
 >(p: SelectBoxProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();

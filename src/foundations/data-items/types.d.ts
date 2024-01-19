@@ -94,7 +94,7 @@ declare namespace DI {
       D["type"] extends DataItem_Number["type"] ? (
         DI.PartialRequired<D, Strict, number, NumberValue>
       ) :
-      D["type"] extends DataItem_Boolean["type"] ? (
+      D["type"] extends DataItem_Boolean<any, any>["type"] ? (
         DI.PartialRequired<
           D,
           Strict,

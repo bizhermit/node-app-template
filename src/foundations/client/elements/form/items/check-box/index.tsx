@@ -34,7 +34,7 @@ export const useCheckBox = <
 
 type CheckBoxOptions<
   T extends string | number | boolean = boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 > = {
   $ref?: CheckBoxHook<F.VType<T, D, T>> | CheckBoxHook<string | number | boolean>;
   $checkedValue?: T;
@@ -48,18 +48,18 @@ type CheckBoxOptions<
 type OmitAttrs = "$tagPosition" | "placeholder";
 export type CheckBoxProps<
   T extends string | number | boolean = boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 > = OverwriteAttrs<Omit<F.ItemProps<T, D>, OmitAttrs>, CheckBoxOptions<T, D>>;
 
 interface CheckBoxFC extends FunctionComponent<CheckBoxProps> {
-  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, CheckBoxProps<T, D>>
   ): ReactElement<any> | null;
 }
 
 const CheckBox = forwardRef(<
   T extends string | number | boolean = boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 >(p: CheckBoxProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle(r, () => ref.current);
