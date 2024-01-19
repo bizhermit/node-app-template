@@ -34,7 +34,7 @@ export const useToggleBox = <
 
 type ToggleBoxOptions<
   T extends string | number | boolean = boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 > = {
   $ref?: ToggleBoxHook<F.VType<T, D, T>> | ToggleBoxHook<string | number | boolean>;
   $checkedValue?: T;
@@ -45,18 +45,18 @@ type ToggleBoxOptions<
 type OmitAttrs = "$tagPosition" | "placeholder";
 export type ToggleBoxProps<
   T extends string | number | boolean = boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 > = OverwriteAttrs<Omit<F.ItemProps<T, D>, OmitAttrs>, ToggleBoxOptions<T, D>>;
 
 interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
-  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
+  <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, ToggleBoxProps<T, D>>
   ): ReactElement<any> | null;
 }
 
 const ToggleBox = forwardRef(<
   T extends string | number | boolean = boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 >(p: ToggleBoxProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle(r, () => ref.current);

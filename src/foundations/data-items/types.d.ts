@@ -73,7 +73,7 @@ declare namespace DI {
 
   type Props<
     A extends ({ [v: string | number | symbol]: DataItem } | Array<DataItem>),
-    Strict extends boolean = false,
+    Strict extends boolean = true,
     Side extends DI.Location = "client"
   > = A extends Array<DataItem> ?
     DI.CrossProps<DI.UnionToIntersection<DI.Prop<A[number], Strict, Side>>> : (
@@ -84,7 +84,7 @@ declare namespace DI {
 
   type VType<
     D extends DataItem | Array<DataItem>,
-    Strict extends boolean = false,
+    Strict extends boolean = true,
     Side extends DI.Location = "client"
   > =
     D extends { $$: any } ? (
@@ -94,7 +94,7 @@ declare namespace DI {
       D["type"] extends DataItem_Number["type"] ? (
         DI.PartialRequired<D, Strict, number, NumberValue>
       ) :
-      D["type"] extends DataItem_Boolean["type"] ? (
+      D["type"] extends DataItem_Boolean<any, any>["type"] ? (
         DI.PartialRequired<
           D,
           Strict,
@@ -147,12 +147,7 @@ declare namespace DI {
         >
       ) :
       D["type"] extends DataItem_Struct["type"] ? (
-        DI.PartialRequired<
-          D,
-          Strict,
-          { [P in keyof D["item"]]: D["item"][P] },
-          { [P in keyof D["item"]]?: DI.VType<D["item"][P], Strict, Side> }
-        >
+        DI.Props<D["item"], Strict, Side>
       ) :
       any
     ) :

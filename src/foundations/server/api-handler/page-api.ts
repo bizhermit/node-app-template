@@ -166,13 +166,13 @@ const apiHandler = <
     }
   }) as {
     (req: NextApiRequest, res: NextApiResponse): Promise<void>;
-    $get: GetReq;
+    $get: DI.VType<GetReq, false, "client">;
     get: GetRes;
-    $post: PostReq;
+    $post: DI.VType<PostReq, false, "client">;
     post: PostRes;
-    $put: PutReq;
+    $put: DI.VType<PutReq, false, "client">;
     put: PutRes;
-    $delete: DeleteReq;
+    $delete: DI.VType<DeleteReq, false, "client">;
     delete: DeleteRes;
   };
 };

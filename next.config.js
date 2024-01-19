@@ -31,7 +31,10 @@ const nextConfig = {
   },
 };
 
-module.exports = analyze ?
-  require('@next/bundle-analyzer')({
+if (analyze) {
+  module.exports = require('@next/bundle-analyzer')({
     enabled: true,
-  })(nextConfig) : nextConfig;
+  })(nextConfig);
+} else {
+  module.exports = nextConfig;
+}

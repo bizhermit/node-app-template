@@ -41,7 +41,7 @@ export const useCheckList = <
 
 type CheckListOptions<
   T extends Array<string | number | boolean> = Array<string | number | boolean>,
-  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean<any, any>> | DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 > = {
   $ref?: CheckListHook<F.VType<T, D, T>> | CheckListHook<Array<string | number | boolean>>;
   $labelDataName?: string;
@@ -65,11 +65,11 @@ type CheckListOptions<
 type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
 export type CheckListProps<
   T extends Array<string | number | boolean> = Array<string | number | boolean>,
-  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined
+  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean<any, any>> | DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 > = OverwriteAttrs<Omit<F.ItemProps<T, D, Array<F.VType<T, D>>>, OmitAttrs>, CheckListOptions<T, D>>;
 
 interface CheckListFC extends FunctionComponent<CheckListProps> {
-  <T extends Array<string | number | boolean> = Array<string | number | boolean>, D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined>(
+  <T extends Array<string | number | boolean> = Array<string | number | boolean>, D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean<any, any>> | DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, CheckListProps<T, D>>
   ): ReactElement<any> | null;
 }
@@ -77,7 +77,7 @@ interface CheckListFC extends FunctionComponent<CheckListProps> {
 const CheckList = forwardRef(<
   V extends string | number | boolean = string | number | boolean,
   T extends Array<V> = Array<V>,
-  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean> | DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_Array<DataItem_String | DataItem_Number | DataItem_Boolean<any, any>> | DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined,
   S extends { [v: string | number]: any } = { [v: string | number]: any }
 >(p: CheckListProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);

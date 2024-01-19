@@ -241,7 +241,7 @@ const numberItem: ConvertFunc<DataItem_Number> = (msgs, data, { dataItem, parent
   }
 };
 
-const booleanItem: ConvertFunc<DataItem_Boolean> = (msgs, data, { dataItem, parent, index, siblings }) => {
+const booleanItem: ConvertFunc<DataItem_Boolean<any, any>> = (msgs, data, { dataItem, parent, index, siblings }) => {
   const { key, label, pushMsg } = getController(msgs, { dataItem, parent, index });
 
   const tv = dataItem.trueValue ?? true;

@@ -37,7 +37,7 @@ export const useRadioButtons = <
 
 type RadioButtonsOptions<
   T extends string | number | boolean = string | number | boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined,
   S extends Data = Data
 > = {
   $ref?: RadioButtonsHook<F.VType<T, D, T>, S> | RadioButtonsHook<string | number | boolean, S>;
@@ -58,19 +58,19 @@ type RadioButtonsOptions<
 type OmitAttrs = "$tagPosition" | "placeholder" | "tabIndex";
 export type RadioButtonsProps<
   T extends string | number | boolean = string | number | boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined,
   S extends Data = Data
 > = OverwriteAttrs<Omit<F.ItemProps<T, D, undefined, { afterData: S | undefined; beforeData: S | undefined; }>, OmitAttrs>, RadioButtonsOptions<T, D, S>>;
 
 interface RadioButtonsFC extends FunctionComponent<RadioButtonsProps> {
-  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined, S extends Data = Data>(
+  <T extends string | number | boolean = string | number | boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined, S extends Data = Data>(
     attrs: ComponentAttrsWithRef<HTMLDivElement, RadioButtonsProps<T, D, S>>
   ): ReactElement<any> | null;
 }
 
 const RadioButtons = forwardRef(<
   T extends string | number | boolean = string | number | boolean,
-  D extends DataItem_String | DataItem_Number | DataItem_Boolean | undefined = undefined,
+  D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined,
   S extends Data = Data
 >(p: RadioButtonsProps<T, D, S>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);

@@ -36,7 +36,7 @@ export const useFormRef = () => {
 type SubmitCtxProps = {
   method: string;
   keepLock: () => () => void;
-}
+};
 
 type PlainFormOptins = {
   $type: "formData";

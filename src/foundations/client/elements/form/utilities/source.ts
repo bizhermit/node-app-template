@@ -8,7 +8,7 @@ const convertSourceItem = (vdn: string | null | undefined, ldn: string | null | 
 };
 
 const getSourceFromDataItem = <S extends { [v: string | number | symbol]: any }>(
-  di: DataItem_String | DataItem_Number | DataItem_Boolean,
+  di: DataItem_String | DataItem_Number | DataItem_Boolean<any, any>,
   p?: { vdn?: string | null | undefined; ldn?: string | null | undefined; }
 ) => {
   if (di.source) return di.source as LoadableArray<S>;
