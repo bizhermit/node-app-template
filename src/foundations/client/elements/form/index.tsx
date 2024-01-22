@@ -270,6 +270,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
       const item = items.current[id];
       if (item.props.name !== name) return;
       item.change(item.options.receive ? item.options.receive(v) : v, false);
+      isSet = true;
     });
     if (!isSet) setValue(bind, name, v);
   };
@@ -376,7 +377,8 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
               e.preventDefault();
             }
           }
-        } : undefined}
+          props.onKeyDown?.(e);
+        } : props.onKeyDown}
       />
     </FormContext.Provider>
   );
