@@ -38,7 +38,7 @@ namespace FileValidation {
       let ret: string | undefined;
       for (const file of values) {
         if (file == null || file.size <= fileSize) continue;
-        ret = `ファイルサイズは${getSizeText(fileSize)}以内でアップロードしてください`;
+        ret = `ファイルサイズは${getSizeText(fileSize)}以内でアップロードしてください。`;
         break;
       }
       return ret;
@@ -76,7 +76,7 @@ namespace FileValidation {
       const values = Array.isArray(files) ? files : [files];
       const sum = values.reduce((sum, file) => sum + (file?.size || 0), 0);
       if (sum <= totalFileSize) return undefined;
-      return `ファイル合計サイズは${getSizeText(totalFileSize)}以内でアップロードしてください`;
+      return `ファイル合計サイズは${getSizeText(totalFileSize)}以内でアップロードしてください。`;
     };
   };
 
