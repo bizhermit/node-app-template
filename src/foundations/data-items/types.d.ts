@@ -168,6 +168,7 @@ declare namespace DI {
       label: C extends { label?: infer P } ? P : undefined;
       required: C extends { required?: infer P } ? P : false;
       strict: C extends { strict?: infer P } ? P : false;
+      validations: C extends { validations?: infer P } ? P : undefined;
     }
     & (C extends { source?: infer P } ? { source: P } : {})
     & (C extends { item?: infer P } ? { item: P } : {})
