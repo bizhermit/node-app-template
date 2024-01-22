@@ -22,7 +22,7 @@ export const windowOpen = (href?: string | null | undefined, opts?: WindowOpenOp
     window: win,
     replace: (href: string) => {
       if (!showed) return;
-      if (win) win.location.href = href;
+      if (win) win.location.replace(href);
       opts?.replaced?.();
     },
     close: () => {
