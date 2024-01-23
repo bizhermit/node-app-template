@@ -208,6 +208,10 @@ $tabFlow: "normal"; // normal/flow
     overflow: auto;
     background: var(--c-base);
     transition: opacity #{var.$transitionTime};
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
 
     &[data-selected="true"] {
       z-index: 1;

@@ -215,6 +215,10 @@ $breadcrumbGap: 3rem;
     flex: none;
     overflow: auto;
     background: var(--c-base);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
 
     &[data-state="current"] {
       position: relative;
