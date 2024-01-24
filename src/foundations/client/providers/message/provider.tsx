@@ -2,9 +2,9 @@
 
 import { useEffect, useReducer, type FC, type ReactNode } from "react";
 import useMessageBox from "../../elements/message-box";
-import { MessageContext, type ArgMessages, type MessageHookOptions, type ProviderMessage } from "./context";
+import { MessageContext, type HookMessageOptions, type HookMessages, type ProviderMessage } from "./context";
 
-const arrangeMessages = (messages: ArgMessages, options?: MessageHookOptions): Array<ProviderMessage> => {
+const arrangeMessages = (messages: HookMessages, options?: HookMessageOptions): Array<ProviderMessage> => {
   if (messages == null) return [];
   const timestamp = Date.now();
   return (Array.isArray(messages) ? messages : [messages])
@@ -26,8 +26,8 @@ export const MessageProvider: FC<{
   const msgBox = useMessageBox({ preventUnmountClose: true });
   const [messages, setMessages] = useReducer((state: Array<ProviderMessage>, action: {
     mode: "set" | "append" | "clear";
-    messages?: ArgMessages;
-    options?: MessageHookOptions;
+    messages?: HookMessages;
+    options?: HookMessageOptions;
   }) => {
     const msgs = arrangeMessages(action.messages, action.options);
     switch (action.mode) {
@@ -42,15 +42,15 @@ export const MessageProvider: FC<{
     }
   }, []);
 
-  const set = (messages: ArgMessages, options?: MessageHookOptions) => {
+  const set = (messages: HookMessages, options?: HookMessageOptions) => {
     setMessages({ mode: "set", messages, options });
   };
 
-  const append = (messages: ArgMessages, options?: MessageHookOptions) => {
+  const append = (messages: HookMessages, options?: HookMessageOptions) => {
     setMessages({ mode: "append", messages, options });
   };
 
-  const error = (e: any, options?: MessageHookOptions) => {
+  const error = (e: any, options?: HookMessageOptions) => {
     append({
       type: "error",
       title: "system",
@@ -64,18 +64,20 @@ export const MessageProvider: FC<{
 
   useEffect(() => {
     const msg = messages[messages.length - 1];
-    if (msg && !msg.displayed) {
+    if (msg && !msg.displayed && msg.quiet !== true) {
       msg.displayed = true;
       msgBox.alert({
         header: msg.title,
         body: msg.body,
         color: (() => {
+          if (msg.color) return msg.color;
           switch (msg.type) {
             case "error": return "danger";
             case "warning": return "warning";
             default: return "main";
           }
         })(),
+        buttonProps: msg.buttonProps,
       }).then((ret) => {
         msg.checked?.(ret, msg);
       });

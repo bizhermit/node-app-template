@@ -24,15 +24,29 @@ const Page = () => {
               try {
                 // console.log(data);
                 const _res = await api.get("/dev/fetch/api", data, {
-                  messageChecked: () => {
-                    setTimeout(formItem.focus, 200);
+                  succeeded: () => {
+                    return {
+                      finally: async () => {
+                        console.log("succeeded");
+                        setTimeout(formItem.focus, 200);
+                      },
+                    };
+                  },
+                  failed: () => {
+                    return {
+                      // quiet: true,
+                      finally: async () => {
+                        console.log("failed.");
+                        setTimeout(formItem.focus, 200);
+                      },
+                    };
                   },
                 });
                 // const _res = await api.get("/dev/fetch/api", {
                 //   // text: "abcd",
                 // });
                 console.log(JSON.stringify(_res, null, 2));
-                setTimeout(formItem.focus, 0);
+                // setTimeout(formItem.focus, 0);
               } catch (e) {
                 // console.log(e);
               }

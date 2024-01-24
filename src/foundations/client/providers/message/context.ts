@@ -1,21 +1,28 @@
+import type { ButtonProps } from "#/client/elements/button";
 import { createContext, useContext } from "react";
 
-export type MessageHookOptions = {
+export type HookMessageOptions = {
+  quiet?: boolean;
+  color?: Color;
   checked?: (ret: any, message: ProviderMessage) => void;
 };
 
-export type ArgMessages = (Api.Message & MessageHookOptions) | Array<(Api.Message & MessageHookOptions) | null | undefined> | null | undefined;
+export type HookMessage = Api.Message & HookMessageOptions & {
+  buttonProps?: ButtonProps;
+};
 
-export type ProviderMessage = Api.Message & MessageHookOptions & {
+export type HookMessages = HookMessage | Array<HookMessage | null | undefined> | null | undefined;
+
+export type ProviderMessage = HookMessage & {
   verified: boolean;
   displayed: boolean;
   timestamp: number;
 };
 
 type MessageContextProps = {
-  set: (messages: ArgMessages, options?: MessageHookOptions) => void;
-  append: (messages: ArgMessages, options?: MessageHookOptions) => void;
-  error: (e: any, options?: MessageHookOptions) => void;
+  set: (messages: HookMessages, options?: HookMessageOptions) => void;
+  append: (messages: HookMessages, options?: HookMessageOptions) => void;
+  error: (e: any, options?: HookMessageOptions) => void;
   clear: () => void;
   messages: Array<ProviderMessage>;
 };
