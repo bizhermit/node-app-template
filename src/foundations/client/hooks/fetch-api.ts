@@ -1,11 +1,11 @@
 import useRouter from "#/client/hooks/router";
 import equals from "../../objects/equal";
-import fetchApi, { type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
+import fetchApi, { type FetchApiFailedResponse, type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
 import useMessage, { type HookMessage, type HookMessages, type ProviderMessage } from "../providers/message/context";
 
 type FetchHookCallbackReturnType = {
   quiet?: boolean;
-  redirect?: {
+  transition?: {
     pathname: PagePath;
     type?: "push" | "replace";
   };
@@ -23,7 +23,7 @@ type FetchHookOptions<U extends ApiPath, M extends Api.Methods> = {
     messages: Array<DI.ValidationResult>;
   }) => (void | FetchHookCallbackReturnType);
   failed?: (props?: {
-    res: FetchApiResponse<Api.Response<U, M>>;
+    res: FetchApiFailedResponse;
     messages: Array<DI.ValidationResult>;
   }) => (void | FetchHookCallbackReturnType);
 };
@@ -60,9 +60,9 @@ const useFetch = () => {
 
       const then = () => {
         result?.finally?.();
-        if (result?.redirect) {
-          if (result.redirect.type === "replace") router.replace(result.redirect.pathname);
-          else router.push(result.redirect.pathname);
+        if (result?.transition) {
+          if (result.transition.type === "replace") router.replace(result.transition.pathname);
+          else router.push(result.transition.pathname);
         }
       };
 
@@ -72,7 +72,7 @@ const useFetch = () => {
       ) {
         msg.append(message, {
           checked: (() => {
-            if (result?.redirect == null && result?.finally == null) {
+            if (result?.transition == null && result?.finally == null) {
               return result?.messageChecked;
             }
             return async (value, message) => {
@@ -88,7 +88,7 @@ const useFetch = () => {
     };
 
     try {
-      const res = await fetchApi[method](url, params, options) as FetchApiResponse<Api.Response<U, M>>;
+      const res = await fetchApi[method](url, params, options) as FetchApiResponse<Api.Response<U, M>> | FetchApiFailedResponse;
       const messages = optimizeMessages(res.messages);
 
       if (res.ok) {
