@@ -1,7 +1,7 @@
-import useRouter from "#/client/hooks/router";
 import equals from "../../objects/equal";
 import fetchApi, { type FetchApiFailedResponse, type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
 import useMessage, { type HookMessage, type HookMessages, type ProviderMessage } from "../providers/message/context";
+import useRouter from "./router";
 
 type FetchHookCallbackReturnType = {
   quiet?: boolean;

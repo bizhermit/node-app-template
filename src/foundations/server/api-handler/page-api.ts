@@ -1,7 +1,7 @@
-import nextAuthOptions from "#/auth/options";
 import formidable from "formidable";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
+import nextAuthOptions from "../../auth/options";
 import { acceptData, getReturnMessages, hasError } from "./main";
 
 export type NextApiConfig = {

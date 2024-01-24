@@ -1,5 +1,5 @@
-import type { ButtonProps } from "#/client/elements/button";
 import { createContext, useContext } from "react";
+import type { ButtonProps } from "../../elements/button";
 
 export type HookMessageOptions = {
   quiet?: boolean;
