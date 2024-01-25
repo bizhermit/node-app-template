@@ -21,7 +21,8 @@ declare namespace DI {
       siblings: Readonly<Array<DataItem>> | Array<DataItem> | null | undefined;
     }) => (string | DI.ValidationResult | null | undefined))[];
 
-  type Source<V> = Array<{ value?: V } & { [v: string | number | symbol]: any }>;
+  type Source<V> = (Array<{ value?: V } & { [v: string | number | symbol]: any }>)
+    | Readonly<Array<{ value?: V } & { [v: string | number | symbol]: any }>>;
 
   type SourceValue<D extends DataItem, T> =
     D extends { source: infer S } ? (S extends Array<infer V> ? (V["value"]) : T) : T;
