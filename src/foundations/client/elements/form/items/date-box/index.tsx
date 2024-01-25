@@ -138,7 +138,7 @@ const DateBox = forwardRef(<
 
   const { ctx, props, $ref } = useFormItemContext(form, $p, {
     interlockValidation: $rangePair != null,
-    receive: (v): any => {
+    receive: (v) => {
       if (v == null) return v;
       switch ($typeof) {
         case "date": return parseDate(v);
