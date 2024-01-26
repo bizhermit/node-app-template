@@ -22,7 +22,7 @@ export const convertDataItemValidationToFormItemValidation = <T, U, P extends F.
   func: DI.Validation<any, any>[number],
   props: P,
   $dataItem: D,
-  convertValue?: (v: F.VType<T, D, V>) => U | null | undefined
+  convertValue?: (v: (V extends undefined ? any : V) | null | undefined) => U | null | undefined
 ) => {
   return (v: any | null | undefined, bindData: { [v: string | number | symbol]: any } | undefined) => {
     const res = func(convertValue ? convertValue(v) : v as U | null | undefined, {

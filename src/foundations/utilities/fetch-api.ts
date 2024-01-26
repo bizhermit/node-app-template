@@ -5,12 +5,21 @@ import getDynamicUrlContext from "../objects/url/dynamic-url";
 export type FetchOptions = {
   contentType?: "json" | "formData";
 };
+
 export type FetchApiResponse<T> = {
-  ok: boolean;
+  ok: true;
   status: number;
   statusText: string;
   messages: Array<Api.Message>;
   data: T;
+};
+
+export type FetchApiFailedResponse = {
+  ok: false;
+  status: number;
+  statusText: string;
+  messages: Array<Api.Message>;
+  data: undefined;
 };
 
 const electron = (global as any).electron;
@@ -39,14 +48,14 @@ const handleResponse = <T>(
   status: number,
   statusText: string | null | undefined,
   text: string | null | undefined
-): FetchApiResponse<T> => {
+): (FetchApiResponse<T> | FetchApiFailedResponse) => {
   const json = toJson(text);
   return {
     ok,
     status,
     statusText: statusText || "",
     messages: json.messages ?? [],
-    data: (status === 204 ? undefined : json.data) as T,
+    data: (status === 204 ? undefined : json.data) as any,
   };
 };
 

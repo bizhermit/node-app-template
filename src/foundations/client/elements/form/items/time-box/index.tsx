@@ -23,6 +23,7 @@ type TimeBoxOptions<D extends DataItem_Time | undefined = undefined> = & TimeInp
   $ref?: TimeBoxHook<F.VType<TimeValue, D, TimeValue>> | TimeBoxHook<TimeValue>;
   $typeof?: TimeValueType;
   $disallowInput?: boolean;
+  $hideClearButton?: boolean;
   $hourPlaceholder?: string;
   $minutePlaceholder?: string;
   $secondPlaceholder?: string;
@@ -58,6 +59,7 @@ const TimeBox = forwardRef(<
     $minuteInterval,
     $secondInterval,
     $disallowInput,
+    $hideClearButton,
     $hourPlaceholder,
     $minutePlaceholder,
     $secondPlaceholder,
@@ -359,6 +361,7 @@ const TimeBox = forwardRef(<
   }, [ctx.value, type, unit]);
 
   const hasData = ctx.value != null && ctx.value !== "";
+  const hasButton = ctx.editable && ($hideClearButton !== true || !$disallowInput);
   const formEnable = !form.disabled && !form.readOnly;
 
   useEffect(() => {
@@ -403,6 +406,7 @@ const TimeBox = forwardRef(<
             autoComplete="off"
             inputMode="numeric"
             placeholder={ctx.editable ? $hourPlaceholder : ""}
+            data-button={type === "h" && hasButton}
           />
         }
         <span
@@ -427,6 +431,7 @@ const TimeBox = forwardRef(<
             autoComplete="off"
             inputMode="numeric"
             placeholder={ctx.editable ? $minutePlaceholder : ""}
+            data-button={type === "hm" && hasButton}
           />
         }
         {needS &&
@@ -452,19 +457,22 @@ const TimeBox = forwardRef(<
               autoComplete="off"
               inputMode="numeric"
               placeholder={ctx.editable ? $secondPlaceholder : ""}
+              data-button={type === "hms" && hasButton}
             />
           </>
         }
       </div>
       {ctx.editable &&
         <>
-          <div
-            className={Style.clear}
-            onClick={clear}
-            data-disabled={!hasData}
-          >
-            <CrossIcon />
-          </div>
+          {$hideClearButton !== true &&
+            <div
+              className={Style.clear}
+              onClick={clear}
+              data-disabled={!hasData}
+            >
+              <CrossIcon />
+            </div>
+          }
           {!$disallowInput &&
             <div
               className={Style.picker}

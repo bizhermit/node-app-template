@@ -41,7 +41,10 @@ const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(({
   const router = useRouter();
 
   const form = useForm();
-  const submitDisabled = $dependsOnForm && (form.disabled || ($dependsOnForm === "submit" && form.hasError));
+  const submitDisabled = $dependsOnForm && (
+    form.disabled ||
+    ($dependsOnForm === "submit" && (form.hasError || form.submitting))
+  );
 
   const disabledRef = useRef(false);
   const [disabled, setDisabeld] = useState(disabledRef.current);

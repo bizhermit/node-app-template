@@ -33,6 +33,7 @@
     border: none;
     box-shadow: 0 0.5rem 5rem 0 var(--c-shadow) !important;
     overflow: auto;
+    overscroll-behavior: contain;
   }
 
   .header {
@@ -56,6 +57,7 @@
     justify-content: flex-start;
     align-items: center;
     overflow: auto;
+    overscroll-behavior: contain;
   }
 
   .content {

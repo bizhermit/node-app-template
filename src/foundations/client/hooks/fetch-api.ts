@@ -1,13 +1,31 @@
 import equals from "../../objects/equal";
-import fetchApi, { type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
-import useMessage, { type ProviderMessage } from "../providers/message/context";
+import fetchApi, { type FetchApiFailedResponse, type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
+import useMessage, { type HookMessage, type HookMessages, type ProviderMessage } from "../providers/message/context";
+import useRouter from "./router";
 
-type FetchHookOptions<U extends ApiPath, M extends Api.Methods> = {
-  messageChecked?: (ctx: {
-    res: FetchApiResponse<Api.Response<U, M>> | undefined;
+type FetchHookCallbackReturnType = {
+  quiet?: boolean;
+  transition?: {
+    pathname: PagePath;
+    type?: "push" | "replace";
+  };
+  message?: HookMessage;
+  messageChecked?: (props: {
     message: ProviderMessage;
     value: any;
-  }) => void;
+  }) => Promise<void>;
+  finally?: () => void;
+};
+
+type FetchHookOptions<U extends ApiPath, M extends Api.Methods> = {
+  succeeded?: (props: {
+    res: FetchApiResponse<Api.Response<U, M>>;
+    messages: Array<DI.ValidationResult>;
+  }) => (void | FetchHookCallbackReturnType);
+  failed?: (props?: {
+    res: FetchApiFailedResponse;
+    messages: Array<DI.ValidationResult>;
+  }) => (void | FetchHookCallbackReturnType);
 };
 
 const optimizeMessages = (messages: Array<Api.Message>) => {
@@ -29,6 +47,7 @@ const optimizeMessages = (messages: Array<Api.Message>) => {
 
 const useFetch = () => {
   const msg = useMessage();
+  const router = useRouter();
 
   const handle = async <U extends ApiPath, M extends Api.Methods>(
     url: U,
@@ -36,40 +55,67 @@ const useFetch = () => {
     params?: Api.Request<U, M> | FormData,
     options?: FetchOptions & FetchHookOptions<U, M>
   ) => {
-    const getMsgChecked = (res?: FetchApiResponse<Api.Response<U, M>>) => {
-      return (value: any, message: ProviderMessage) => options?.messageChecked?.({ res, message, value });
+    const callback = (result: ReturnType<Exclude<FetchHookOptions<any, any>["succeeded" | "failed"], undefined>> | undefined, defaultMessage: () => HookMessages) => {
+      const message = (result != null && "message" in result) ? result.message : defaultMessage();
+
+      const then = () => {
+        result?.finally?.();
+        if (result?.transition) {
+          if (result.transition.type === "replace") router.replace(result.transition.pathname);
+          else router.push(result.transition.pathname);
+        }
+      };
+
+      if (
+        (Array.isArray(message) ? message.length > 0 : message != null) &&
+        !((Array.isArray(message) ? message[message.length - 1]?.quiet : message?.quiet) ?? result?.quiet ?? false)
+      ) {
+        msg.append(message, {
+          checked: (() => {
+            if (result?.transition == null && result?.finally == null) {
+              return result?.messageChecked;
+            }
+            return async (value, message) => {
+              await result?.messageChecked?.({ message, value });
+              then();
+            };
+          })() as HookMessage["checked"],
+          quiet: result?.quiet,
+        });
+        return;
+      }
+      then();
     };
 
     try {
-      const res = await fetchApi[method](url, params, options) as FetchApiResponse<Api.Response<U, M>>;
-      const msgs = optimizeMessages(res.messages);
+      const res = await fetchApi[method](url, params, options) as FetchApiResponse<Api.Response<U, M>> | FetchApiFailedResponse;
+      const messages = optimizeMessages(res.messages);
 
       if (res.ok) {
-        msg.append(msgs, {
-          checked: getMsgChecked(res),
-        });
+        callback(
+          options?.succeeded?.({ res, messages }),
+          () => messages
+        );
         return res;
       }
 
-      if (msgs.filter(msg => msg.type === "error").length > 0) {
-        msg.append(msgs, {
-          checked: getMsgChecked(res),
-        });
-      } else {
-        msg.append({
+      callback(
+        options?.failed?.({ res, messages }),
+        () => messages.filter(msg => msg.type === "error").length > 0 ? messages : {
           type: "error",
           title: "システムエラー",
           body: `[${res.status}] ${res.statusText}`,
-          checked: getMsgChecked(res),
-        });
-      }
+        }
+      );
     } catch (e) {
-      msg.append({
-        type: "error",
-        title: "システムエラー",
-        body: "fetch error",
-        checked: getMsgChecked(),
-      });
+      callback(
+        options?.failed?.(),
+        () => ({
+          type: "error",
+          title: "システムエラー",
+          body: "fetch error",
+        })
+      );
       throw e;
     }
     throw new Error("fetch api error.");

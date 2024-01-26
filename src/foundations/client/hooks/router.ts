@@ -1,5 +1,5 @@
 import { useRouter as $useRouter, usePathname } from "next/navigation";
-import { DynamicUrlOptions, getDynamicUrl } from "../../objects/url/dynamic-url";
+import { getDynamicUrl, type DynamicUrlOptions } from "../../objects/url/dynamic-url";
 
 const useRouter = () => {
   const router = $useRouter();

@@ -16,6 +16,10 @@ $tagMoveTransitionTime: 0.5s;
     overflow: visible;
     max-width: 100%;
 
+    &[data-hidden="true"] {
+      display: none;
+    }
+
     &[data-tagpad="true"] {
       padding-top: $tagHeight;
     }

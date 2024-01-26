@@ -13,7 +13,7 @@
     "clean": "npx rimraf .next",
     "clean:libs": "npx rimraf dist/libs",
     "clean:all": "npx rimraf .next .renderer .main .server dist",
-    "cleanup": "npx rimraf .next .main .renderer .server dist out package-lock.json node_modules",
+    "cleanup": "npx rimraf .next .main .renderer .server dist out node_modules",
     "route": "node scripts/generate-route-types",
     "lint": "npx next lint",
     "predev": "npm run route",

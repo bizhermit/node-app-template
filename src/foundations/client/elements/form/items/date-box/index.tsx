@@ -50,6 +50,7 @@ type DateBoxOptions<D extends DataItem_Date | undefined = undefined> = DateInput
   $ref?: DateBoxHook<F.VType<DateValue, D, DateValue>> | DateBoxHook<DateValue>;
   $typeof?: DateValueType;
   $disallowInput?: boolean;
+  $hideClearButton?: boolean;
   $pickerButtonless?: boolean;
   $yearPlaceholder?: string;
   $monthPlaceholder?: string;
@@ -86,6 +87,7 @@ const DateBox = forwardRef(<
     $initValue,
     $typeof,
     $disallowInput,
+    $hideClearButton,
     $pickerButtonless,
     $yearPlaceholder,
     $monthPlaceholder,
@@ -136,7 +138,7 @@ const DateBox = forwardRef(<
 
   const { ctx, props, $ref } = useFormItemContext(form, $p, {
     interlockValidation: $rangePair != null,
-    receive: (v): any => {
+    receive: (v) => {
       if (v == null) return v;
       switch ($typeof) {
         case "date": return parseDate(v);
@@ -398,6 +400,7 @@ const DateBox = forwardRef(<
   }, [ctx.value, type]);
 
   const hasData = ctx.value != null && ctx.value !== "";
+  const hasButton = ctx.editable && ($hideClearButton !== true || !$disallowInput);
   const formEnable = !form.disabled && !form.readOnly;
 
   useEffect(() => {
@@ -467,6 +470,7 @@ const DateBox = forwardRef(<
           autoComplete="off"
           inputMode="numeric"
           placeholder={ctx.editable ? $yearPlaceholder : ""}
+          data-button={type === "year" && hasButton}
         />
         {type !== "year" &&
           <>
@@ -491,6 +495,7 @@ const DateBox = forwardRef(<
               autoComplete="off"
               inputMode="numeric"
               placeholder={ctx.editable ? $monthPlaceholder : ""}
+              data-button={type === "month" && hasButton}
             />
           </>
         }
@@ -517,19 +522,22 @@ const DateBox = forwardRef(<
               autoComplete="off"
               inputMode="numeric"
               placeholder={ctx.editable ? $dayPlaceholder : ""}
+              data-button={hasButton}
             />
           </>
         }
       </div>
       {ctx.editable &&
         <>
-          <div
-            className={Style.clear}
-            onClick={clear}
-            data-disabled={!hasData}
-          >
-            <CrossIcon />
-          </div>
+          {$hideClearButton !== true &&
+            <div
+              className={Style.clear}
+              onClick={clear}
+              data-disabled={!hasData}
+            >
+              <CrossIcon />
+            </div>
+          }
           {!$disallowInput &&
             <div
               className={Style.picker}

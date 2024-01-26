@@ -52,15 +52,15 @@ namespace DateInput {
           const { date, valid } = (day as { date: DateValue; valid?: boolean; });
           const d = parseDate(date);
           if (d == null) return;
-          map[formatDate(d)!] = valid ?? validModeIsAllow;
+          map[formatDate(d)] = valid ?? validModeIsAllow;
           return;
         }
         const d = parseDate(day);
         if (d == null) return;
-        map[formatDate(d)!] = validModeIsAllow;
+        map[formatDate(d)] = validModeIsAllow;
       });
       return (date: Date) => {
-        const valid = map[formatDate(date)!];
+        const valid = map[formatDate(date)];
         if (validModeIsAllow) return valid === true;
         return valid !== false;
       };

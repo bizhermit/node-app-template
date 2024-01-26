@@ -8,13 +8,16 @@ type Props<T extends { [v: string | number | symbol]: any }> = DataTableBaseColu
   buttonText?: ReactNode;
 };
 
-const dataTableButtonColumn = <T extends { [v: string | number | symbol]: any }>(props: Props<T>): DataTableColumn<T> => {
+const dataTableButtonColumn = <T extends { [v: string | number | symbol]: any }>({
+  body,
+  ...props
+}: Props<T>): DataTableColumn<T> => {
   return {
     align: "center",
     width: "10rem",
     resize: false,
     body: (bprops) => {
-      return (
+      const children = (
         <DataTableCellLabel
           $padding={props.padding}
         >
@@ -34,6 +37,7 @@ const dataTableButtonColumn = <T extends { [v: string | number | symbol]: any }>
           </Button>
         </DataTableCellLabel>
       );
+      return body ? body({ ...bprops, children }) : children;
     },
     ...props,
   };

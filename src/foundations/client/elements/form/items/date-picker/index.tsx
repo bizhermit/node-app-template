@@ -260,7 +260,7 @@ const DatePicker = forwardRef(<
     };
     const isSelected = (num: number) => {
       if (days.length === findCount) return false;
-      const ret = days.find(v => parseDate(v)?.getFullYear() === num) != null;
+      const ret = days.find(v => parseDate(v).getFullYear() === num) != null;
       if (ret) findCount++;
       return ret;
     };
@@ -449,7 +449,7 @@ const DatePicker = forwardRef(<
       }));
     };
     const generateCellNode = (key: Key, date: Date, state: string) => {
-      const dateStr = formatDate(cursor)!;
+      const dateStr = formatDate(cursor);
       const selected = isSelected(cursor);
       const inRange = isInRange(date);
       return (

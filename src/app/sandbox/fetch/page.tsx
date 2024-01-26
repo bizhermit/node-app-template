@@ -135,9 +135,6 @@ const Page = () => {
                 case "get":
                   return await api.get("/api/fetch", formData, {
                     contentType: "formData",
-                    messageChecked: (ctx) => {
-                      console.log(ctx);
-                    },
                   });
                 case "post":
                   return await api.post("/api/fetch", formData, { contentType: "formData" });

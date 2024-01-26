@@ -1,9 +1,13 @@
 import { Week } from "./consts";
 import parseDate from "./parse";
 
-const formatDate = (date?: string | number | Date | null | undefined, pattern = "yyyy-MM-dd", week?: Array<string>) => {
+type FormattedString<T extends string | number | Date | null | undefined> = T extends Date ? string : T extends undefined | null ? undefined : string | undefined;
+
+const formatDate = <
+  T extends string | number | Date | null | undefined = string | number | Date | null | undefined
+>(date?: T, pattern = "yyyy-MM-dd", week?: Array<string>) => {
   const d = parseDate(date);
-  if (d == null) return undefined;
+  if (d == null) return undefined as FormattedString<T>;
   return pattern
     .replace(/yyyy/g, String(d.getFullYear()))
     .replace(/yy/g, `00${d.getFullYear()}`.slice(-2))
@@ -20,7 +24,7 @@ const formatDate = (date?: string | number | Date | null | undefined, pattern = 
     .replace(/SSS/g, `00${d.getMilliseconds()}`.slice(-3))
     .replace(/SS/g, `00${d.getMilliseconds()}`.slice(-3).slice(2))
     .replace(/S/g, String(d.getMilliseconds()))
-    .replace(/w/g, (week ?? Week.ja_s)[d.getDay()]);
+    .replace(/w/g, (week ?? Week.ja_s)[d.getDay()]) as FormattedString<T>;
 };
 
 export default formatDate;

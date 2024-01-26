@@ -140,7 +140,7 @@ const ElectronicSignature = forwardRef(<
   const canClearHist = history.current.length > 1;
 
   const get2DContext = () => {
-    return cref.current.getContext("2d", { willReadFrequently: true })!;
+    return cref.current?.getContext("2d", { willReadFrequently: true })!;
   };
 
   const save = () => {
@@ -162,6 +162,7 @@ const ElectronicSignature = forwardRef(<
   const clearHistory = () => {
     history.current.splice(0, history.current.length);
     const canvas = get2DContext();
+    if (canvas == null) return;
     history.current.push(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
     spillHistory();
     setRevision(0);
@@ -183,6 +184,7 @@ const ElectronicSignature = forwardRef(<
   const drawStart = (baseX: number, baseY: number, isTouch?: boolean) => {
     if (!ctx.editable || cref.current == null) return;
     const canvas = get2DContext();
+    if (canvas == null) return;
     const lineWidth = Math.max(1, $lineWidth || 2);
     const lineColor = $lineColor || "black";
     canvas.strokeStyle = lineColor;
@@ -249,6 +251,7 @@ const ElectronicSignature = forwardRef(<
   const clearCanvas = (history?: boolean) => {
     if (cref.current == null) return;
     const canvas = get2DContext();
+    if (canvas == null) return;
     popHistory();
     canvas.clearRect(0, 0, cref.current.width, cref.current.height);
     pushHistory(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
@@ -277,7 +280,7 @@ const ElectronicSignature = forwardRef(<
   };
 
   useEffect(() => {
-    nullValue.current = cref.current.toDataURL();
+    nullValue.current = cref.current?.toDataURL();
     if (history.current.length > 0) return;
     clearHistory();
   }, []);
@@ -285,6 +288,7 @@ const ElectronicSignature = forwardRef(<
   useEffect(() => {
     if (isNotEmpty(ctx.valueRef.current)) {
       const canvas = get2DContext();
+      if (canvas == null) return;
       const img = new Image();
       img.src = ctx.valueRef.current;
       img.onload = () => {
@@ -306,7 +310,7 @@ const ElectronicSignature = forwardRef(<
     const imageData = history.current[revision];
     if (imageData) {
       const canvas = get2DContext();
-      canvas.putImageData(imageData, 0, 0);
+      canvas?.putImageData(imageData, 0, 0);
     }
   }, [ctx.editable]);
 
