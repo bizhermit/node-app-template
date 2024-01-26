@@ -369,7 +369,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
         ref={ref}
         method={method}
         data-layout={$layout}
-        onSubmit={submit}
+        onSubmit={props.action == null ? submit : undefined}
         onReset={reset}
         onKeyDown={$preventEnterSubmit ? (e) => {
           if (e.key === "Enter") {
