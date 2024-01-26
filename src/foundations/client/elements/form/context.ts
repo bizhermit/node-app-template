@@ -28,8 +28,9 @@ export type UseFormItemContextOptions<T = any, U extends Data = {}> = {
 
 type FormContextProps = {
   bind?: Data;
-  disabled?: boolean;
-  readOnly?: boolean;
+  disabled: boolean;
+  readOnly: boolean;
+  submitting: boolean;
   method?: string;
   errors: ErrorData;
   setErrors: Dispatch<SetStateAction<ErrorData>>;
@@ -57,6 +58,7 @@ export const FormContext = createContext<FormContextProps>({
   bind: undefined,
   disabled: false,
   readOnly: false,
+  submitting: false,
   errors: {},
   setErrors: () => { },
   exErrors: {},

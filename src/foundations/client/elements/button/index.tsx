@@ -47,8 +47,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
 
   const form = useForm();
   const submitDisabled = $notDependsOnForm !== true && (
-    (props.type === "submit" && props.formMethod !== "delete" && (form.hasError || form.disabled)) ||
-    (props.type === "reset" && (form.disabled || form.readOnly))
+    form.disabled ||
+    (props.type === "submit" && props.formMethod !== "delete" && (form.hasError || form.submitting)) ||
+    (props.type === "reset" && (form.readOnly || form.submitting))
   );
 
   const disabledRef = useRef(false);

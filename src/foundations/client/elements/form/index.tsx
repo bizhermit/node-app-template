@@ -104,6 +104,11 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
   const [disabled, setDisabled] = useReducer((_: boolean, action: boolean) => {
     return disabledRef.current = action;
   }, disabledRef.current);
+  const submittingRef = useRef(false);
+  const [submitting, setSubmitting] = useReducer((_: boolean, action: boolean) => {
+    return submittingRef.current = action;
+  }, submittingRef.current);
+
   const items = useRef<{ [v: string]: F.ItemMountProps & { props: F.ItemProps; options: UseFormItemContextOptions; } }>({});
   const [errors, setErrors] = useState<ErrorStruct>({});
   const [exErrors, setExErrors] = useState<ErrorStruct>({});
@@ -150,11 +155,11 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
-    if ($disabled || disabledRef.current || hasError) {
+    if ($disabled || disabledRef.current || submittingRef.current || hasError) {
       e.preventDefault();
       return;
     }
-    setDisabled(true);
+    setSubmitting(true);
     if (props.encType) {
       e.currentTarget.enctype = props.encType;
     } else {
@@ -171,12 +176,12 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
         e.currentTarget.removeAttribute("enctype");
       }
     }
-    if (onSubmit == null || onSubmit === false) {
+    if (onSubmit === false) {
       e.preventDefault();
-      setDisabled(false);
+      setSubmitting(false);
       return;
     }
-    if (onSubmit === true) return;
+    if (onSubmit == null || onSubmit === true) return;
     let keepLock = false;
     const ret = onSubmit(
       (() => {
@@ -194,21 +199,21 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
         method: ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
         keepLock: () => {
           keepLock = true;
-          return () => setDisabled(false);
+          return () => setSubmitting(false);
         }
       },
       e
     );
     if (ret == null || ret === false) {
       e.preventDefault();
-      if (!keepLock) setDisabled(false);
+      if (!keepLock) setSubmitting(false);
       return;
     }
     if (ret === true) return;
     e.preventDefault();
     if ("finally" in ret) {
       ret.finally(() => {
-        if (!keepLock) setDisabled(false);
+        if (!keepLock) setSubmitting(false);
       });
     }
   };
@@ -231,7 +236,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
 
   const reset = (e: React.FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
-    if ($disabled || disabledRef.current) {
+    if ($disabled || disabledRef.current || $readOnly || submittingRef.current) {
       e.preventDefault();
       return;
     }
@@ -344,8 +349,9 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
   return (
     <FormContext.Provider value={{
       bind,
-      disabled: $disabled || disabled,
-      readOnly: $readOnly,
+      disabled: $disabled || disabled || submitting,
+      readOnly: !!$readOnly,
+      submitting,
       method,
       errors,
       setErrors,
@@ -369,7 +375,7 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
         ref={ref}
         method={method}
         data-layout={$layout}
-        onSubmit={props.action == null ? submit : undefined}
+        onSubmit={submit}
         onReset={reset}
         onKeyDown={$preventEnterSubmit ? (e) => {
           if (e.key === "Enter") {
