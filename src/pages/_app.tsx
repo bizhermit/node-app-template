@@ -1,7 +1,7 @@
 import LoadingProvider from "#/client/elements/loading/provider";
-import LayoutProvider from "#/client/providers/layout/provider";
-import MessageProvider from "#/client/providers/message/provider";
-import WindowProvider from "#/client/providers/window/provider";
+import LayoutProvider from "#/client/hooks/layout/provider";
+import MessageProvider from "#/client/hooks/message/provider";
+import WindowProvider from "#/client/hooks/window/provider";
 import "#/client/styles/color.scss";
 import "#/client/styles/global.scss";
 import "#/client/styles/root.scss";
