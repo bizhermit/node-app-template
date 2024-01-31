@@ -6,7 +6,7 @@ import WindowProvider from "#/client/hooks/window/provider";
 import "#/client/styles/color.scss";
 import "#/client/styles/root.scss";
 import "$/client/styles/global.scss";
-import SessionProvider from "./_components/session-provider";
+import SessionProvider from "../foundations/auth/client-session-provider";
 
 export const metadata = {
   title: "NodeAppTemplate",
