@@ -1,6 +1,6 @@
 import { dataItemKey } from "..";
 
-const stringItem = <
+const $str = <
   V extends string,
   C extends Omit<DataItem_String<V>, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
@@ -11,4 +11,4 @@ const stringItem = <
   });
 };
 
-export default stringItem;
+export default $str;

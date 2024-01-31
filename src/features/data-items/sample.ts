@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import booleanItem from "#/data-items/boolean";
-import dateItem, { monthItem, yearItem } from "#/data-items/date";
-import fileItem from "#/data-items/file";
-import numberItem from "#/data-items/number";
-import stringItem from "#/data-items/string";
-import timeItem from "#/data-items/time";
+import $bool from "#/data-items/boolean";
+import $date, { $month, $year } from "#/data-items/date";
+import $file from "#/data-items/file";
+import $num from "#/data-items/number";
+import $str from "#/data-items/string";
+import $time from "#/data-items/time";
 
-export const sample_string = stringItem({
+export const sample_string = $str({
   name: "s_string",
   label: "テキスト",
   // strict: true,
@@ -43,7 +43,7 @@ export const sample_string = stringItem({
   ],
 });
 
-export const sample_number = numberItem({
+export const sample_number = $num({
   name: "s_number",
   width: "20rem",
   source: [
@@ -65,7 +65,7 @@ export const sample_number = numberItem({
   ],
 });
 
-export const sample_boolean = booleanItem({
+export const sample_boolean = $bool({
   name: "s_boolean",
   required: true,
   // strict: true,
@@ -79,14 +79,14 @@ export const sample_boolean = booleanItem({
   ]
 });
 
-export const sample_boolean_num = booleanItem({
+export const sample_boolean_num = $bool({
   name: "s_boolean_num",
   trueValue: 1,
   falseValue: 0,
   required: true,
 });
 
-export const sample_boolean_str = booleanItem({
+export const sample_boolean_str = $bool({
   name: "s_boolean_str",
   trueValue: "1",
   falseValue: "9",
@@ -97,7 +97,7 @@ export const sample_boolean_str = booleanItem({
   required: true,
 });
 
-export const sample_date = dateItem({
+export const sample_date = $date({
   name: "sample_date",
   typeof: "string",
   // typeof: "date",
@@ -113,7 +113,7 @@ export const sample_date = dateItem({
   ],
 });
 
-export const sample_month = monthItem({
+export const sample_month = $month({
   name: "sample_month",
   validations: [
     (v) => {
@@ -125,7 +125,7 @@ export const sample_month = monthItem({
   ],
 });
 
-export const sample_year = yearItem({
+export const sample_year = $year({
   name: "sample_year",
   validations: [
     (v) => {
@@ -137,7 +137,7 @@ export const sample_year = yearItem({
   ],
 });
 
-export const sample_time = timeItem({
+export const sample_time = $time({
   name: "sample_time",
   validations: [
     (v) => {
@@ -147,7 +147,7 @@ export const sample_time = timeItem({
   ],
 });
 
-export const sample_file = fileItem({
+export const sample_file = $file({
   name: "sample_file",
   // accept: "image/*",
   multiple: true,

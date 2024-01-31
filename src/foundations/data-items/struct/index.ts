@@ -1,6 +1,6 @@
 import { dataItemKey } from "..";
 
-const structItem = <
+const $struct = <
   C extends Omit<DataItem_Struct, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<DI.Freeze<DataItem_Struct, C>>({
@@ -10,4 +10,4 @@ const structItem = <
   });
 };
 
-export default structItem;
+export default $struct;

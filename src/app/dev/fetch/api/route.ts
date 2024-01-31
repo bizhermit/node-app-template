@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
 import arrayItem from "#/data-items/array";
-import booleanItem from "#/data-items/boolean";
-import numberItem from "#/data-items/number";
-import stringItem from "#/data-items/string";
-import structItem from "#/data-items/struct";
+import $bool from "#/data-items/boolean";
+import $num from "#/data-items/number";
+import $str from "#/data-items/string";
+import $struct from "#/data-items/struct";
 import apiMethodHandler from "#/server/api-handler/app-api";
 import { sample_string } from "$/data-items/sample";
 
 export const GET = apiMethodHandler({
   dataItems: [
-    stringItem({
+    $str({
       // strict: true,
       name: "text",
       label: "テキスト",
@@ -20,7 +20,7 @@ export const GET = apiMethodHandler({
         { value: "piyo", label: "PIYO" },
       ]
     }),
-    numberItem({
+    $num({
       // strict: true,
       name: "num",
       label: "数値",
@@ -31,7 +31,7 @@ export const GET = apiMethodHandler({
         { value: 3, label: "1" },
       ],
     }),
-    booleanItem({
+    $bool({
       name: "flag",
       // strict: true,
       trueValue: 1,
@@ -51,7 +51,7 @@ export const GET = apiMethodHandler({
 
 export const POST = apiMethodHandler({
   dataItems: [
-    stringItem({
+    $str({
       name: "text",
       strict: true,
       source: [
@@ -60,7 +60,7 @@ export const POST = apiMethodHandler({
         { value: "fuga", label: "FUGA" },
       ]
     }),
-    numberItem({
+    $num({
       name: "num",
       strict: true,
       source: [
@@ -69,7 +69,7 @@ export const POST = apiMethodHandler({
         { value: 3, label: "1" },
       ],
     }),
-    booleanItem({
+    $bool({
       name: "flag",
       // strict: true,
       trueValue: 1,
@@ -77,22 +77,22 @@ export const POST = apiMethodHandler({
     }),
     arrayItem({
       name: "list-str",
-      item: stringItem({
+      item: $str({
         name: "text",
       }),
     }),
     arrayItem({
       name: "list-struct",
       item: [
-        stringItem({
+        $str({
           name: "text",
         })
       ]
     }),
-    structItem({
+    $struct({
       name: "struct",
       item: [
-        stringItem({
+        $str({
           name: "text",
         }),
       ]

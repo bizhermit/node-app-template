@@ -1,7 +1,7 @@
-import stringItem from "#/data-items/string";
+import $str from "#/data-items/string";
 import apiHandler from "#/server/api-handler/page-api";
 
-const hello = stringItem({
+const hello = $str({
   name: "hello",
   required: true,
 });

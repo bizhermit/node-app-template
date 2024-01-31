@@ -1,6 +1,6 @@
 import { dataItemKey } from "..";
 
-const fileItem = <
+const $file = <
   C extends Omit<DataItem_File, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<DI.Freeze<DataItem_File, C, {
@@ -13,4 +13,4 @@ const fileItem = <
   });
 };
 
-export default fileItem;
+export default $file;

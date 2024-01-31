@@ -2,7 +2,7 @@ import { dataItemKey } from "..";
 
 export const dateDefaultTypeof: DateValueType = "string";
 
-const dateItem = <
+const $date = <
   C extends Omit<DataItem_Date, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<DI.Freeze<DataItem_Date, C, {
@@ -16,7 +16,7 @@ const dateItem = <
   });
 };
 
-export const monthItem = <
+export const $month = <
   C extends Omit<DataItem_Date, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<DI.Freeze<DataItem_Date, C, {
@@ -30,7 +30,7 @@ export const monthItem = <
   });
 };
 
-export const yearItem = <
+export const $year = <
   C extends Omit<DataItem_Date, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
   return Object.freeze<DI.Freeze<DataItem_Date, C, {
@@ -44,4 +44,4 @@ export const yearItem = <
   });
 };
 
-export default dateItem;
+export default $date;
