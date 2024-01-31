@@ -12,13 +12,13 @@ const RootProvider: CFC = ({ children }) => {
     <SessionProvider>
       <WindowProvider>
         <LayoutProvider>
-          <MessageProvider>
-            <FetchApiProvider>
-              <LoadingProvider>
+          <LoadingProvider>
+            <MessageProvider>
+              <FetchApiProvider>
                 {children}
-              </LoadingProvider>
-            </FetchApiProvider>
-          </MessageProvider>
+              </FetchApiProvider>
+            </MessageProvider>
+          </LoadingProvider>
         </LayoutProvider>
       </WindowProvider>
     </SessionProvider>
