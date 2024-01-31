@@ -20,7 +20,7 @@ const arrangeMessages = (messages: HookMessages, options?: HookMessageOptions): 
     });
 };
 
-export const MessageProvider: FC<{
+const MessageProvider: FC<{
   children?: ReactNode;
 }> = ({ children }) => {
   const msgBox = useMessageBox({ preventUnmountClose: true });
