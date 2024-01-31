@@ -1,3 +1,4 @@
+import SessionProvider from "#/auth/client-session-provider";
 import LoadingProvider from "#/client/elements/loading/provider";
 import FetchApiProvider from "#/client/hooks/fetch-api/provider";
 import LayoutProvider from "#/client/hooks/layout/provider";
@@ -6,7 +7,6 @@ import WindowProvider from "#/client/hooks/window/provider";
 import "#/client/styles/color.scss";
 import "#/client/styles/root.scss";
 import "$/client/styles/global.scss";
-import SessionProvider from "../foundations/auth/client-session-provider";
 
 export const metadata = {
   title: "NodeAppTemplate",
