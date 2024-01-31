@@ -1,5 +1,5 @@
-import { LayoutContext } from "#/client/hooks/layout/context";
 import { useContext } from "react";
+import { LayoutContext } from "./context";
 
 const useLayout = () => {
   return useContext(LayoutContext);

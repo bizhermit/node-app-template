@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { windowOpen } from "../../utilities/window-open";
+import type { windowOpen } from "../../utilities/window-open";
 
 export type WindowOptions = {
   closeWhenUnmount?: boolean;
