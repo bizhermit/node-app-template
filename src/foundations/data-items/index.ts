@@ -1,6 +1,6 @@
 export const dataItemKey: DI.Key = "$$";
 
-const dataItem = <
+const $data = <
   C extends Omit<DataItem, DI.Key>
 >(ctx?: Readonly<C>) => {
   return Object.freeze<DI.Freeze<DataItem, C>>({
@@ -9,4 +9,4 @@ const dataItem = <
   });
 };
 
-export default dataItem;
+export default $data;

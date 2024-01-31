@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-import fileItem from "#/data-items/file";
+import $file from "#/data-items/file";
 import apiHandler, { type NextApiConfig } from "#/server/api-handler/page-api";
 
 export const config: NextApiConfig = {
@@ -18,11 +18,11 @@ export default apiHandler({
     console.log(ctx.getData());
   },
   $post: [
-    fileItem({
+    $file({
       name: "filedrop",
       multiple: true,
     }),
-    fileItem({
+    $file({
       name: "filebutton",
       multiple: false,
     }),

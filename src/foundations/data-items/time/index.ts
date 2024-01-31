@@ -2,7 +2,7 @@ import { dataItemKey } from "..";
 
 export const timeDefaultTypeof: TimeValueType = "number";
 
-const timeItem = <
+const $time = <
   C extends Omit<DataItem_Time, DI.Key | "type" | "mode" | "unit"> & Partial<Pick<DataItem_Time, "mode" | "unit">>
 >(ctx?: Readonly<C>) => {
   return Object.freeze<DI.Freeze<DataItem_Time, C, {
@@ -19,4 +19,4 @@ const timeItem = <
   });
 };
 
-export default timeItem;
+export default $time;

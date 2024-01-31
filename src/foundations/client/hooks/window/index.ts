@@ -1,24 +1,6 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { windowOpen, type WindowOpenOptions } from "../../utilities/window-open";
-
-export type WindowOptions = {
-  closeWhenUnmount?: boolean;
-  closeWhenPageMove?: boolean;
-  closeWhenTabClose?: boolean;
-};
-
-export type WindowContextParams = {
-  window: ReturnType<typeof windowOpen>;
-  options: WindowOptions | null | undefined;
-};
-
-type WindowContextProps = {
-  append: (ctx: ReturnType<typeof windowOpen>) => void;
-};
-
-export const WindowContext = createContext<WindowContextProps>({
-  append: () => { },
-});
+import { WindowContext, type WindowContextParams, type WindowOptions } from "./context";
 
 const useWindow = (defaultOptions: WindowOptions = { closeWhenTabClose: true }) => {
   const ctx = useContext(WindowContext);

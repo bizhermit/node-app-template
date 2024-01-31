@@ -1,32 +1,12 @@
-import equals from "../../objects/equal";
-import fetchApi, { type FetchApiFailedResponse, type FetchApiResponse, type FetchOptions } from "../../utilities/fetch-api";
-import useMessage, { type HookMessage, type HookMessages, type ProviderMessage } from "../providers/message/context";
-import useRouter from "./router";
+"use client";
 
-type FetchHookCallbackReturnType = {
-  quiet?: boolean;
-  transition?: {
-    pathname: PagePath;
-    type?: "push" | "replace";
-  };
-  message?: HookMessage;
-  messageChecked?: (props: {
-    message: ProviderMessage;
-    value: any;
-  }) => Promise<void>;
-  finally?: () => void;
-};
-
-type FetchHookOptions<U extends ApiPath, M extends Api.Methods> = {
-  succeeded?: (props: {
-    res: FetchApiResponse<Api.Response<U, M>>;
-    messages: Array<DI.ValidationResult>;
-  }) => (void | FetchHookCallbackReturnType);
-  failed?: (props?: {
-    res: FetchApiFailedResponse;
-    messages: Array<DI.ValidationResult>;
-  }) => (void | FetchHookCallbackReturnType);
-};
+import type { FC, ReactNode } from "react";
+import equals from "../../../objects/equal";
+import fetchApi, { type FetchApiFailedResponse, type FetchApiResponse, type FetchOptions } from "../../../utilities/fetch-api";
+import useMessage from "../message";
+import type { HookMessage, HookMessages } from "../message/context";
+import useRouter from "../router";
+import { FetchApiContext, type FetchHookOptions } from "./context";
 
 const optimizeMessages = (messages: Array<Api.Message>) => {
   const msgs: Array<Api.Message> = [];
@@ -45,7 +25,9 @@ const optimizeMessages = (messages: Array<Api.Message>) => {
   return msgs;
 };
 
-const useFetch = () => {
+const FetchApiProvider: FC<{
+  children?: ReactNode;
+}> = ({ children }) => {
   const msg = useMessage();
   const router = useRouter();
 
@@ -121,36 +103,16 @@ const useFetch = () => {
     throw new Error("fetch api error.");
   };
 
-  return {
-    get: <U extends ApiPath>(
-      url: U,
-      params?: Api.Request<U, "get"> | FormData,
-      options?: FetchOptions & FetchHookOptions<U, "get">
-    ) => {
-      return handle(url, "get", params, options);
-    },
-    put: <U extends ApiPath>(
-      url: U,
-      params?: Api.Request<U, "put"> | FormData,
-      options?: FetchOptions & FetchHookOptions<U, "put">
-    ) => {
-      return handle(url, "put", params, options);
-    },
-    post: <U extends ApiPath>(
-      url: U,
-      params?: Api.Request<U, "post"> | FormData,
-      options?: FetchOptions & FetchHookOptions<U, "post">
-    ) => {
-      return handle(url, "post", params, options);
-    },
-    delete: <U extends ApiPath>(
-      url: U,
-      params?: Api.Request<U, "delete"> | FormData,
-      options?: FetchOptions & FetchHookOptions<U, "delete">
-    ) => {
-      return handle(url, "delete", params, options);
-    },
-  };
+  return (
+    <FetchApiContext.Provider value={{
+      get: (url, params, options) => handle(url, "get", params, options),
+      put: (url, params, options) => handle(url, "put", params, options),
+      post: (url, params, options) => handle(url, "post", params, options),
+      delete: (url, params, options) => handle(url, "delete", params, options),
+    }}>
+      {children}
+    </FetchApiContext.Provider>
+  );
 };
 
-export default useFetch;
+export default FetchApiProvider;

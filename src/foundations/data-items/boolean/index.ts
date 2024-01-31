@@ -1,6 +1,6 @@
 import { dataItemKey } from "..";
 
-const booleanItem = <
+const $bool = <
   True extends boolean | number | string = boolean | number | string,
   False extends boolean | number | string = boolean | number | string,
   C extends Omit<DataItem_Boolean<True, False>, DI.Key | "type" | "trueValue" | "falseValue"> & { trueValue?: True; falseValue?: False; }
@@ -18,4 +18,4 @@ const booleanItem = <
   });
 };
 
-export default booleanItem;
+export default $bool;

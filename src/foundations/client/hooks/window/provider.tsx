@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useMemo, useRef, type FC, type ReactNode } from "react";
-import { windowOpen } from "../../utilities/window-open";
+import type { windowOpen } from "../../utilities/window-open";
 import { WindowContext } from "./context";
 import WindowProviderEventListener from "./listener";
 

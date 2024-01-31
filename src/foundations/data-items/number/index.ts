@@ -1,6 +1,6 @@
 import { dataItemKey } from "..";
 
-const numberItem = <
+const $num = <
   V extends number,
   C extends Omit<DataItem_Number<V>, DI.Key | "type">
 >(ctx?: Readonly<C>) => {
@@ -11,4 +11,4 @@ const numberItem = <
   });
 };
 
-export default numberItem;
+export default $num;

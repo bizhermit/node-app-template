@@ -2,7 +2,7 @@
 
 import Button from "#/client/elements/button";
 import Text from "#/client/elements/text";
-import useWindow from "#/client/providers/window/context";
+import useWindow from "#/client/hooks/window";
 import { windowOpen } from "#/client/utilities/window-open";
 import { useState } from "react";
 

@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext } from "react";
 import type { ButtonProps } from "../../elements/button";
 
 export type HookMessageOptions = {
@@ -34,9 +34,3 @@ export const MessageContext = createContext<MessageContextProps>({
   clear: () => { },
   messages: [],
 });
-
-const useMessage = () => {
-  return useContext(MessageContext);
-};
-
-export default useMessage;
