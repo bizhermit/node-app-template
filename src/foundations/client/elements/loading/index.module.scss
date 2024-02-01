@@ -5,6 +5,14 @@ $circleWidth: calc(var(--cs-m) / 3);
 
 @layer base {
 
+  html {
+    &:has(dialog[open]) {
+      .wrap {
+        visibility: hidden;
+      }
+    }
+  }
+
   .wrap {
     box-sizing: border-box;
     position: fixed;
