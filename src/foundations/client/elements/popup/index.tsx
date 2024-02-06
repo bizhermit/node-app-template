@@ -198,7 +198,7 @@ const Impl = ({
       case "inner":
         if (winW - rect.left < wMax && rect.left > winW - rect.right) {
           ref.current.style.removeProperty("left");
-          ref.current.style.right = convertSizeNumToStr(winW - rect.right);
+          ref.current.style.right = convertSizeNumToStr(winW - Math.max(rect.right, wMax));
         } else {
           ref.current.style.removeProperty("right");
           ref.current.style.left = convertSizeNumToStr(rect.left);
@@ -215,7 +215,7 @@ const Impl = ({
         ref.current.style.removeProperty("left");
         ref.current.style.right = convertSizeNumToStr(posAbs ?
           winW - rect.right :
-          Math.min(winW - rect.right, winW - wMax)
+          winW - Math.max(rect.right, wMax)
         );
         break;
       case "outer":
@@ -282,7 +282,7 @@ const Impl = ({
           ref.current.style.bottom = convertSizeNumToStr(winH - rect.top);
         } else {
           ref.current.style.removeProperty("bottom");
-          ref.current.style.top = convertSizeNumToStr(rect.bottom);
+          ref.current.style.top = convertSizeNumToStr(Math.min(rect.bottom, winH - hMax));
         }
         break;
       case "outer-top":
