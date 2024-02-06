@@ -192,7 +192,7 @@ const Impl = ({
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.left + rect.width / 2 - wMax / 2 + scrollLeft :
-          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2 + scrollLeft), winW - ref.current.offsetWidth + scrollLeft)
+          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2 + scrollLeft), winW - wMax + scrollLeft)
         );
         break;
       case "inner":
@@ -208,14 +208,14 @@ const Impl = ({
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.left :
-          Math.min(rect.left, winW - ref.current.offsetWidth)
+          Math.min(rect.left, winW - wMax)
         );
         break;
       case "inner-right":
         ref.current.style.removeProperty("left");
         ref.current.style.right = convertSizeNumToStr(posAbs ?
           winW - rect.right :
-          Math.min(winW - rect.right, winW - ref.current.offsetWidth)
+          Math.min(winW - rect.right, winW - wMax)
         );
         break;
       case "outer":
@@ -231,14 +231,14 @@ const Impl = ({
         ref.current.style.removeProperty("left");
         ref.current.style.right = convertSizeNumToStr(posAbs ?
           winW - rect.left :
-          Math.min(winW - rect.left, winW - ref.current.offsetWidth)
+          Math.min(winW - rect.left, winW - wMax)
         );
         break;
       case "outer-right":
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.right :
-          Math.min(rect.right, winW - ref.current.offsetWidth)
+          Math.min(rect.right, winW - wMax)
         );
         break;
       default: break;
@@ -250,7 +250,7 @@ const Impl = ({
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.top + rect.height / 2 - hMax / 2 + scrollTop :
-          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2 + scrollTop), winH - ref.current.offsetHeight + scrollTop)
+          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2 + scrollTop), winH - hMax + scrollTop)
         );
         break;
       case "inner":
@@ -266,14 +266,14 @@ const Impl = ({
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.top :
-          Math.min(rect.top, winH - ref.current.offsetHeight)
+          Math.min(rect.top, winH - hMax)
         );
         break;
       case "inner-bottom":
         ref.current.style.removeProperty("top");
         ref.current.style.bottom = convertSizeNumToStr(posAbs ?
           winH - rect.bottom :
-          Math.min(winH - rect.bottom, winH - ref.current.offsetHeight)
+          Math.min(winH - rect.bottom, winH - hMax)
         );
         break;
       case "outer":
@@ -289,14 +289,14 @@ const Impl = ({
         ref.current.style.removeProperty("top");
         ref.current.style.bottom = convertSizeNumToStr(posAbs ?
           winH - rect.top :
-          Math.min(winH - rect.top, winH - ref.current.offsetHeight)
+          Math.min(winH - rect.top, winH - hMax)
         );
         break;
       case "outer-bottom":
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.bottom :
-          Math.min(rect.bottom, winH - ref.current.offsetHeight)
+          Math.min(rect.bottom, winH - hMax)
         );
         break;
       default: break;
