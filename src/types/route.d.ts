@@ -1,8 +1,7 @@
 // generate by script
 // do not edit
 
-type AppRoutePath = "/[uid]"
- | "/dev/color"
+type AppRoutePath = "/dev/color"
  | "/dev/dynamic-route"
  | "/dev/dynamic-route/param/[slug]"
  | "/dev/dynamic-route/slug-param/[...slug]"
@@ -61,7 +60,8 @@ type AppRoutePath = "/[uid]"
  | "/sandbox/process"
  | "/sandbox/storage"
  | "/sandbox/window"
- | "/sign-in";
+ | "/sign-in"
+ | "/[uid]";
 
 type AppApiPath = "/api/auth/[...nextauth]"
  | "/api/fetch"
