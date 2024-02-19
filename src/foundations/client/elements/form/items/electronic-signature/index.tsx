@@ -204,32 +204,37 @@ const ElectronicSignature = forwardRef(<
       canvas.lineTo(curX, curY);
       canvas.lineWidth = lineWidth;
       canvas.stroke();
-      canvas.closePath();
     };
     const endImpl = () => {
       document.body.inert = false;
-      canvas.stroke();
-      canvas.closePath();
       pushHistory(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
       if ($autoSave) save();
     };
     if (isTouch) {
-      const move = (e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY);
-      const end = () => {
+      const move = (e: TouchEvent) => {
+        moveImpl(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault();
+      };
+      const end = (e: TouchEvent) => {
         endImpl();
         window.removeEventListener("touchmove", move);
         window.removeEventListener("touchend", end);
+        e.preventDefault();
       };
       window.addEventListener("touchend", end);
       window.addEventListener("touchmove", move);
     } else {
       setCursor("default");
-      const move = (e: MouseEvent) => moveImpl(e.clientX, e.clientY);
-      const end = () => {
+      const move = (e: MouseEvent) => {
+        moveImpl(e.clientX, e.clientY);
+        e.preventDefault();
+      };
+      const end = (e: MouseEvent) => {
         endImpl();
         window.removeEventListener("mousemove", move);
         window.removeEventListener("mouseup", end);
         releaseCursor();
+        e.preventDefault();
       };
       window.addEventListener("mouseup", end);
       window.addEventListener("mousemove", move);
@@ -242,10 +247,12 @@ const ElectronicSignature = forwardRef(<
 
   const mouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     drawStart(e.clientX, e.clientY);
+    e.preventDefault();
   };
   const touchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    const touch = e.touches[0];
-    drawStart(touch.clientX, touch.clientY, true);
+    const { clientX, clientY } = e.touches[0];
+    drawStart(clientX, clientY, true);
+    e.preventDefault();
   };
 
   const clearCanvas = (history?: boolean) => {
@@ -360,47 +367,35 @@ const ElectronicSignature = forwardRef(<
         height={$height || 200}
       />
       {ctx.editable && position !== "hide" &&
-        <div
-          className={Style.buttons}
-        >
+        <div className={Style.buttons}>
           {$autoSave !== true &&
             <Button
-              onClick={() => {
-                save();
-              }}
+              onClick={save}
             >
               <SaveIcon />
             </Button>
           }
           <Button
             disabled={!canUndo}
-            onClick={() => {
-              undo();
-            }}
+            onClick={undo}
           >
             <UndoIcon />
           </Button>
           <Button
             disabled={!canRedo}
-            onClick={() => {
-              redo();
-            }}
+            onClick={redo}
           >
             <RedoIcon />
           </Button>
           <Button
             disabled={!canClear}
-            onClick={() => {
-              clearCanvas();
-            }}
+            onClick={() => clearCanvas()}
           >
             <CrossIcon />
           </Button>
           <Button
             disabled={!canClearHist}
-            onClick={() => {
-              clearCanvas(true);
-            }}
+            onClick={() => clearCanvas(true)}
           >
             <ClearAllIcon />
           </Button>

@@ -54,6 +54,8 @@
     border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
     background-color: #fff;
     z-index: 0;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
 
   .buttons {
@@ -80,6 +82,7 @@
     background: transparent;
     z-index: 0;
     border-radius: var(--radius);
+    user-select: none;
     @include mixins.inputButtonHover;
   }
 
