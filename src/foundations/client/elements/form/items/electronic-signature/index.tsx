@@ -193,7 +193,6 @@ const ElectronicSignature = forwardRef(<
     const rect = cref.current.getBoundingClientRect();
     const posX = rect.left, posY = rect.top;
     let lastX = 0, lastY = 0, curX = baseX - posX, curY = baseY - posY;
-    document.body.inert = true;
     const moveImpl = (x: number, y: number) => {
       lastX = curX;
       lastY = curY;
@@ -206,7 +205,6 @@ const ElectronicSignature = forwardRef(<
       canvas.stroke();
     };
     const endImpl = () => {
-      document.body.inert = false;
       pushHistory(canvas.getImageData(0, 0, cref.current.width, cref.current.height));
       if ($autoSave) save();
     };
