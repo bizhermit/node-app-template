@@ -92,6 +92,10 @@
         }
       }
     }
+
+    &[data-wide="false"] {
+      width: fit-content;
+    }
   }
 
   .main {

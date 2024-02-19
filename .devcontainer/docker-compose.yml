@@ -11,6 +11,8 @@ services:
       - '../:/workspace'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+    environment:
+      - WATCHPACK_POLLING=true
     ports:
       - '${PORT:-3000}:${PORT:-3000}'
     command:

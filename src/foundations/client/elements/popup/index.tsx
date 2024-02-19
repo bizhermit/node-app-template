@@ -192,54 +192,54 @@ const Impl = ({
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.left + rect.width / 2 - wMax / 2 + scrollLeft :
-          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2 + scrollLeft), winW - ref.current.offsetWidth + scrollLeft)
-        )!;
+          Math.min(Math.max(0, rect.left + rect.width / 2 - wMax / 2 + scrollLeft), winW - wMax + scrollLeft)
+        );
         break;
       case "inner":
         if (winW - rect.left < wMax && rect.left > winW - rect.right) {
           ref.current.style.removeProperty("left");
-          ref.current.style.right = convertSizeNumToStr(winW - rect.right)!;
+          ref.current.style.right = convertSizeNumToStr(winW - Math.max(rect.right, wMax));
         } else {
           ref.current.style.removeProperty("right");
-          ref.current.style.left = convertSizeNumToStr(rect.left)!;
+          ref.current.style.left = convertSizeNumToStr(rect.left);
         }
         break;
       case "inner-left":
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.left :
-          Math.min(rect.left, winW - ref.current.offsetWidth)
-        )!;
+          Math.min(rect.left, winW - wMax)
+        );
         break;
       case "inner-right":
         ref.current.style.removeProperty("left");
         ref.current.style.right = convertSizeNumToStr(posAbs ?
           winW - rect.right :
-          Math.min(winW - rect.right, winW - ref.current.offsetWidth)
-        )!;
+          winW - Math.max(rect.right, wMax)
+        );
         break;
       case "outer":
         if (winW - rect.right < wMax && rect.left > winW - rect.right) {
           ref.current.style.removeProperty("left");
-          ref.current.style.right = convertSizeNumToStr(winW - rect.left)!;
+          ref.current.style.right = convertSizeNumToStr(winW - rect.left);
         } else {
           ref.current.style.removeProperty("right");
-          ref.current.style.left = convertSizeNumToStr(rect.right)!;
+          ref.current.style.left = convertSizeNumToStr(rect.right);
         }
         break;
       case "outer-left":
         ref.current.style.removeProperty("left");
         ref.current.style.right = convertSizeNumToStr(posAbs ?
           winW - rect.left :
-          Math.min(winW - rect.left, winW - ref.current.offsetWidth)
-        )!;
+          Math.min(winW - rect.left, winW - wMax)
+        );
         break;
       case "outer-right":
         ref.current.style.removeProperty("right");
         ref.current.style.left = convertSizeNumToStr(posAbs ?
           rect.right :
-          Math.min(rect.right, winW - ref.current.offsetWidth)
-        )!;
+          Math.min(rect.right, winW - wMax)
+        );
         break;
       default: break;
     }
@@ -250,54 +250,54 @@ const Impl = ({
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.top + rect.height / 2 - hMax / 2 + scrollTop :
-          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2 + scrollTop), winH - ref.current.offsetHeight + scrollTop)
-        )!;
+          Math.min(Math.max(0, rect.top + rect.height / 2 - hMax / 2 + scrollTop), winH - hMax + scrollTop)
+        );
         break;
       case "inner":
         if (winH - rect.top < hMax && rect.top > winH - rect.bottom) {
           ref.current.style.removeProperty("top");
-          ref.current.style.bottom = convertSizeNumToStr(winH - rect.bottom)!;
+          ref.current.style.bottom = convertSizeNumToStr(winH - rect.bottom);
         } else {
           ref.current.style.removeProperty("bottom");
-          ref.current.style.top = convertSizeNumToStr(rect.top)!;
+          ref.current.style.top = convertSizeNumToStr(rect.top);
         }
         break;
       case "inner-top":
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.top :
-          Math.min(rect.top, winH - ref.current.offsetHeight)
-        )!;
+          Math.min(rect.top, winH - hMax)
+        );
         break;
       case "inner-bottom":
         ref.current.style.removeProperty("top");
         ref.current.style.bottom = convertSizeNumToStr(posAbs ?
           winH - rect.bottom :
-          Math.min(winH - rect.bottom, winH - ref.current.offsetHeight)
-        )!;
+          Math.min(winH - rect.bottom, winH - hMax)
+        );
         break;
       case "outer":
         if (winH - rect.bottom < hMax && rect.top > winH - rect.bottom) {
           ref.current.style.removeProperty("top");
-          ref.current.style.bottom = convertSizeNumToStr(winH - rect.top)!;
+          ref.current.style.bottom = convertSizeNumToStr(winH - rect.top);
         } else {
           ref.current.style.removeProperty("bottom");
-          ref.current.style.top = convertSizeNumToStr(rect.bottom)!;
+          ref.current.style.top = convertSizeNumToStr(Math.min(rect.bottom, winH - hMax));
         }
         break;
       case "outer-top":
         ref.current.style.removeProperty("top");
         ref.current.style.bottom = convertSizeNumToStr(posAbs ?
           winH - rect.top :
-          Math.min(winH - rect.top, winH - ref.current.offsetHeight)
-        )!;
+          Math.min(winH - rect.top, winH - hMax)
+        );
         break;
       case "outer-bottom":
         ref.current.style.removeProperty("bottom");
         ref.current.style.top = convertSizeNumToStr(posAbs ?
           rect.bottom :
-          Math.min(rect.bottom, winH - ref.current.offsetHeight)
-        )!;
+          Math.min(rect.bottom, winH - hMax)
+        );
         break;
       default: break;
     }
