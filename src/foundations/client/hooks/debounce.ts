@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type DependencyList } from "react";
-import debounce from "../../utilities/debounce";
+import type debounce from "../../utilities/debounce";
 
 export const useDebounce = <T>(value: T, delay = 0) => {
   const [v, s] = useState(value);

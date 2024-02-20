@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type DependencyList } from "react";
-import throttle from "../../utilities/throttle";
+import type throttle from "../../utilities/throttle";
 
 export const useThrottle = <T>(value: T, timeout = 0) => {
   const [v, s] = useState(value);
