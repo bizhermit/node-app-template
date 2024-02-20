@@ -4,7 +4,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import RadioButtons, { useRadioButtons } from "#/client/elements/form/items/radio-buttons";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import { CalendarIcon, ClockIcon, CloudIcon, SaveIcon } from "#/client/elements/icon";
 import Row from "#/client/elements/row";
 import generateArray from "#/objects/array/generator";
@@ -25,12 +25,12 @@ const RadioButtonsClient = () => {
   return (
     <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
@@ -46,7 +46,7 @@ const RadioButtonsClient = () => {
           $value={appearance}
           $onChange={v => setAppearance(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="outline"
           $value={outline}
           $onChange={v => setOutline(v!)}

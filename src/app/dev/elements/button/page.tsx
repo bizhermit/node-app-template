@@ -5,7 +5,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import { CloudDownloadIcon, CloudUploadIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
@@ -19,7 +19,7 @@ const Page = () => {
     <BaseLayout title="Button">
       <ControlLayout>
         <ControlItem caption="disabled">
-          <ToggleBox
+          <ToggleSwitch
             $value={disabled}
             $onChange={v => setDisabled(v!)}
           />

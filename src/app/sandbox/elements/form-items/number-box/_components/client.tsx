@@ -4,7 +4,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import NumberBox, { useNumberBox } from "#/client/elements/form/items/number-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { sample_number } from "$/data-items/sample";
 import { useState } from "react";
@@ -21,17 +21,17 @@ const NumberBoxClient = () => {
   return (
     <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="disallow input"
           $value={disallowInput}
           $onChange={v => setDisallowInput(v!)}

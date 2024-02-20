@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import SelectBox from "#/client/elements/form/items/select-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Loading from "#/client/elements/loading";
 import useLoading from "#/client/elements/loading/context";
 import { colors } from "#/utilities/sandbox";
@@ -35,7 +35,7 @@ const Page = () => {
           />
         </ControlItem>
         <ControlItem caption="mask">
-          <ToggleBox
+          <ToggleSwitch
             $value={mask}
             $onChange={v => {
               setMask(v!);
@@ -44,7 +44,7 @@ const Page = () => {
           />
         </ControlItem>
         <ControlItem caption="absolute">
-          <ToggleBox
+          <ToggleSwitch
             $value={absolute}
             $onChange={v => {
               setAbsolute(v!);

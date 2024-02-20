@@ -3,7 +3,7 @@
 
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import { FormIcon, HomeIcon, MagnifyingGlassIcon } from "#/client/elements/icon";
 import TabContainer, { TabContent, TabLabel } from "#/client/elements/tab-container";
 import Text from "#/client/elements/text";
@@ -43,19 +43,19 @@ const Page = () => {
           />
         </ControlItem>
         <ControlItem caption="scroll">
-          <ToggleBox
+          <ToggleSwitch
             $value={scroll}
             $onChange={v => setScroll(v!)}
           />
         </ControlItem>
         <ControlItem caption="tab fill">
-          <ToggleBox
+          <ToggleSwitch
             $value={tabFill}
             $onChange={v => setTabFill(v!)}
           />
         </ControlItem>
         <ControlItem caption="unmount">
-          <ToggleBox
+          <ToggleSwitch
             $value={unmountDeselected}
             $onChange={v => setUnmountDeselected(v!)}
           />

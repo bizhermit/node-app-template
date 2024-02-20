@@ -3,7 +3,7 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import PasswordBox, { usePasswordBox } from "#/client/elements/form/items/text-box/password";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { useState } from "react";
 
@@ -18,12 +18,12 @@ const PasswordBoxClient = () => {
   return (
     <div className="flex p-xs g-s">
       <Row className="g-s">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}

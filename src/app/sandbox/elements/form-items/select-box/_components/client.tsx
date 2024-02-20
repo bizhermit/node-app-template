@@ -4,7 +4,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import SelectBox, { useSelectBox } from "#/client/elements/form/items/select-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import generateArray from "#/objects/array/generator";
 import { colors } from "#/utilities/sandbox";
@@ -25,17 +25,17 @@ const SelectBoxClient = () => {
     <div className="flex p-xs w-100 g-s">
       {/* <div style={{ height: "100vh" }}></div> */}
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="disallow input"
           $value={disallowInput}
           $onChange={v => setDisallowInput(v!)}

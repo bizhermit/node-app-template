@@ -2,7 +2,7 @@
 "use client";
 
 import Card from "#/client/elements/card";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import { useState } from "react";
 import BaseLayout, { BaseRow, BaseSheet } from "../../../_components/base-layout";
 import ControlLayout, { ControlItem } from "../../../_components/control-layout";
@@ -15,13 +15,13 @@ const Page = () => {
     <BaseLayout title="Card">
       <ControlLayout>
         <ControlItem caption="accordion">
-          <ToggleBox
+          <ToggleSwitch
             $value={accordion}
             $onChange={v => setAccordion(v!)}
           />
         </ControlItem>
         <ControlItem caption="disabled">
-          <ToggleBox
+          <ToggleSwitch
             $value={disabled}
             $onChange={v => setDisabled(v!)}
           />

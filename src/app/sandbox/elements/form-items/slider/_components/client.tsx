@@ -4,7 +4,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import Slider from "#/client/elements/form/items/slider";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
 import { sample_number } from "$/data-items/sample";
@@ -20,12 +20,12 @@ const SliderClient = () => {
   return (
     <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}

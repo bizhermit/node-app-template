@@ -6,7 +6,7 @@ import Form from "#/client/elements/form";
 import DatePicker from "#/client/elements/form/items/date-picker";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
 import TextBox from "#/client/elements/form/items/text-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { sample_date, sample_month, sample_year } from "$/data-items/sample";
 import { useState } from "react";
@@ -23,17 +23,17 @@ const DatePickerClient = () => {
   return (
     <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="buttonless"
           $value={buttonless}
           $onChange={v => setButtonless(v!)}
