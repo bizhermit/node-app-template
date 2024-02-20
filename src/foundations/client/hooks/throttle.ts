@@ -17,7 +17,7 @@ export const useThrottleCallback = <T extends Array<any>>(func: Parameters<typeo
     if (t) clearTimeout(t);
     ref.current.t = setTimeout(() => {
       func(...args);
-      ref.current.l = Date.now();
+      ref.current = { t: null, l: Date.now() };
     }, timeout - (Date.now() - l));
   }, deps);
 };

@@ -4,6 +4,7 @@ const debounce = <T extends Array<any>>(func: (...args: T) => void, delay = 0) =
     if (t) clearTimeout(t);
     t = setTimeout(() => {
       func(...args);
+      t = null;
     }, delay);
   };
 };
