@@ -274,7 +274,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
 
   useEffect(() => {
     const name = props?.name;
-    if (props == null || name == null || form.bind == null || "$bind" in props || "$value" in props || $preventFormBind) return;
+    if (props == null || name == null || form.bind == null /*|| "$bind" in props*/ || "$value" in props || $preventFormBind) return;
     valueEffect(getValue(form.bind, name));
   }, [
     form.bind,
