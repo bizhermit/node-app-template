@@ -40,6 +40,10 @@ module.exports = {
         "ignoreComments": true,
       }
     ],
+    "eol-last": [
+      "warn",
+      "always"
+    ],
     "semi": ["warn", "always"],
     "semi-spacing": [
       "warn",
