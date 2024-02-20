@@ -5,13 +5,21 @@
       "label": "format",
       "group": "none",
       "type": "shell",
-      "command": "npx eslint --fix ./"
+      "command": "npx eslint --fix ./src/"
     },
     {
       "label": "build route",
       "group": "none",
       "type": "shell",
       "command": "npm run route"
+    },
+    {
+      "label": "dev",
+      "group": "none",
+      "command": "npm run dev",
+      // "runOptions": {
+      //   "runOn": "folderOpen"
+      // }
     }
   ]
 }
