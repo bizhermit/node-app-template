@@ -112,7 +112,7 @@ const FileButton = forwardRef(<
   const href = useRef<HTMLInputElement>(null!);
   const bref = useRef<HTMLButtonElement>(null!);
 
-  const { ctx, props, $ref, $preventFormBind } = useFormItemContext(form, $p, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     multipartFormData: true,
     multiple: $multiple,
     validations: () => {
@@ -244,7 +244,7 @@ const FileButton = forwardRef(<
         onChange={change}
         multiple={$multiple}
       />
-      {!$preventFormBind && props.name &&
+      {!props.$preventFormBind && props.name &&
         <input
           className={Style.file}
           ref={href}

@@ -63,13 +63,10 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
   $validations,
   $interlockValidation,
   // $bind,
-  // $defaultValue,
-  // $value,
   $onChange,
   $preventMemorizeOnChange,
   $onEdit,
   $preventMemorizeOnEdit,
-  $preventFormBind,
   $ref,
   $messagePosition,
   $messageWrap,
@@ -110,14 +107,14 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     // if (props.$bind) {
     //   setValue(props.$bind, props.name, value);
     // }
-    if (form.bind && !$preventFormBind) {
+    if (form.bind && !props.$preventFormBind) {
       setValue(form.bind, props.name, value);
     }
   }, [
     props.name,
     // props.$bind,
     form.bind,
-    $preventFormBind,
+    props.$preventFormBind,
   ]);
   if (!init.current) setBind(value);
 
@@ -178,7 +175,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     const bind = (() => {
       if (props == null) return {};
       // if ("$bind" in props) return props.$bind;
-      if (!$preventFormBind) return form.bind;
+      if (!props.$preventFormBind) return form.bind;
       return {};
     })();
     for (let i = 0, il = validations.length; i < il; i++) {
@@ -190,7 +187,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     }
     const msg = msgs[0];
     setError(msg);
-    if (!$preventFormBind) {
+    if (!props.$preventFormBind) {
       form.setErrors(cur => {
         if (cur[id.current] === msg) return cur;
         if (isErrorObject(msg)) {
@@ -211,7 +208,7 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     form.bind,
     props?.name,
     // props.$bind,
-    $preventFormBind,
+    props.$preventFormBind,
     getMessage,
   ]);
 
@@ -274,11 +271,11 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
 
   useEffect(() => {
     const name = props?.name;
-    if (props == null || name == null || form.bind == null /*|| "$bind" in props*/ || "$value" in props || $preventFormBind) return;
+    if (props == null || name == null || form.bind == null /*|| "$bind" in props*/ || "$value" in props || props.$preventFormBind) return;
     valueEffect(getValue(form.bind, name));
   }, [
     form.bind,
-    $preventFormBind,
+    props.$preventFormBind,
   ]);
 
   // useEffect(() => {
@@ -371,7 +368,6 @@ export const useFormItemContext = <T, D extends DataItem | undefined, V = undefi
     props,
     $ref: $ref as P["$ref"],
     $dataItem,
-    $preventFormBind,
   } as const;
 };
 

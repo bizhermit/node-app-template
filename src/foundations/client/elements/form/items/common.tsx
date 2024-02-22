@@ -42,6 +42,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
   $value,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   $defaultValue,
+  $preventFormBind,
   children,
   ...props
 }, ref) => {
@@ -94,7 +95,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
           {$tag}
         </div>
       }
-      {$useHidden && name &&
+      {$useHidden && name && !$preventFormBind &&
         <input
           name={name}
           type="hidden"
