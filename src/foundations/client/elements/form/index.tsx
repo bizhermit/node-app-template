@@ -182,39 +182,44 @@ const Form = forwardRef<HTMLFormElement, FormProps>(<T extends FormDataStruct = 
       return;
     }
     if (onSubmit == null || onSubmit === true) return;
-    let keepLock = false;
-    const ret = onSubmit(
-      (() => {
-        if ($type === "formData") return new FormData(e.currentTarget);
-        if ($appendNotMountedValue) return clone(bind);
-        const ret = {};
-        Object.keys(items.current).forEach(k => {
-          const n = items.current[k].props.name;
-          if (!n) return;
-          setValue(ret, n, getValue(bind, n));
-        });
-        return ret;
-      })() as FormData & T,
-      {
-        method: ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
-        keepLock: () => {
-          keepLock = true;
-          return () => setSubmitting(false);
-        }
-      },
-      e
-    );
-    if (ret == null || ret === false) {
-      e.preventDefault();
-      if (!keepLock) setSubmitting(false);
-      return;
-    }
-    if (ret === true) return;
-    e.preventDefault();
-    if ("finally" in ret) {
-      ret.finally(() => {
+    try {
+      let keepLock = false;
+      const ret = onSubmit(
+        (() => {
+          if ($type === "formData") return new FormData(e.currentTarget);
+          if ($appendNotMountedValue) return clone(bind);
+          const ret = {};
+          Object.keys(items.current).forEach(k => {
+            const n = items.current[k].props.name;
+            if (!n) return;
+            setValue(ret, n, getValue(bind, n));
+          });
+          return ret;
+        })() as FormData & T,
+        {
+          method: ((e.nativeEvent as any).submitter as HTMLButtonElement)?.getAttribute("formmethod") || method,
+          keepLock: () => {
+            keepLock = true;
+            return () => setSubmitting(false);
+          }
+        },
+        e
+      );
+      if (ret == null || ret === false) {
+        e.preventDefault();
         if (!keepLock) setSubmitting(false);
-      });
+        return;
+      }
+      if (ret === true) return;
+      e.preventDefault();
+      if ("finally" in ret) {
+        ret.finally(() => {
+          if (!keepLock) setSubmitting(false);
+        });
+      }
+    } catch {
+      e.preventDefault();
+      setSubmitting(false);
     }
   };
 
