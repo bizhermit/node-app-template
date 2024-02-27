@@ -1,7 +1,7 @@
 "use client";
 
 import Card from "#/client/elements/card";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import StructView, { type StructKey } from "#/client/elements/struct-view";
 import generateArray from "#/objects/array/generator";
 import { useMemo, useState } from "react";
@@ -91,7 +91,7 @@ const Page = () => {
     <BaseLayout title="StructView">
       <ControlLayout>
         <ControlItem caption="outline">
-          <ToggleBox
+          <ToggleSwitch
             $value={outline}
             $onChange={v => setOutline(v!)}
           />

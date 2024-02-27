@@ -1,7 +1,7 @@
 "use client";
 
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import SplitContainer, { SplitContent } from "#/client/elements/split-container";
 import generateArray from "#/objects/array/generator";
 import { useState } from "react";
@@ -35,31 +35,31 @@ const Page = () => {
           />
         </ControlItem>
         <ControlItem caption="reverse">
-          <ToggleBox
+          <ToggleSwitch
             $value={reverse}
             $onChange={v => setReverse(v!)}
           />
         </ControlItem>
         <ControlItem caption="disabled">
-          <ToggleBox
+          <ToggleSwitch
             $value={disabled}
             $onChange={v => setDisabled(v!)}
           />
         </ControlItem>
         <ControlItem caption="scroll">
-          <ToggleBox
+          <ToggleSwitch
             $value={scroll}
             $onChange={v => setScroll(v!)}
           />
         </ControlItem>
         <ControlItem caption="hide0">
-          <ToggleBox
+          <ToggleSwitch
             $value={hide0}
             $onChange={v => setHide0(v!)}
           />
         </ControlItem>
         <ControlItem caption="hide1">
-          <ToggleBox
+          <ToggleSwitch
             $value={hide1}
             $onChange={v => setHide1(v!)}
           />

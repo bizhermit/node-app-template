@@ -3,13 +3,13 @@
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
 import { sample_boolean, sample_boolean_num, sample_number, sample_string } from "$/data-items/sample";
 import { useState } from "react";
 
-const ToggleBoxClient = () => {
+const ToggleSwitchClient = () => {
   const [disabled, setDisabled] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [value, setValue] = useState<boolean>();
@@ -19,12 +19,12 @@ const ToggleBoxClient = () => {
   return (
     <div className="flex p-xs w-100 g-s">
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
@@ -74,14 +74,14 @@ const ToggleBoxClient = () => {
         </Button>
         <Button
           onClick={() => {
-            setBind({ "toggle-box-bind": true });
+            setBind({ "toggle-switch-bind": true });
           }}
         >
           set bind
         </Button>
         <Button
           onClick={() => {
-            setFormBind({ "toggle-box-form-bind": true });
+            setFormBind({ "toggle-switch-form-bind": true });
           }}
         >
           set form bind
@@ -89,52 +89,52 @@ const ToggleBoxClient = () => {
       </Row>
       <Divider />
       <Row className="g-m">
-        <ToggleBox
+        <ToggleSwitch
           $onChange={v => console.log("no item: ", v)}
           $focusWhenMounted
         >
           no item
-        </ToggleBox>
-        <ToggleBox
+        </ToggleSwitch>
+        <ToggleSwitch
           $dataItem={sample_boolean}
           $onChange={v => console.log("boolean: ", v)}
         >
           boolean
-        </ToggleBox>
-        <ToggleBox
+        </ToggleSwitch>
+        <ToggleSwitch
           $dataItem={sample_number}
           $onChange={v => console.log("number: ", v)}
         >
           number
-        </ToggleBox>
-        <ToggleBox
+        </ToggleSwitch>
+        <ToggleSwitch
           $dataItem={sample_boolean_num}
           $onChange={v => console.log("boolean num: ", v)}
         >
           boolean num
-        </ToggleBox>
-        <ToggleBox
+        </ToggleSwitch>
+        <ToggleSwitch
           $dataItem={sample_string}
           $onChange={v => console.log("string: ", v)}
         >
           string
-        </ToggleBox>
+        </ToggleSwitch>
       </Row>
       <Row $vAlign="top" className="g-s">
-        <ToggleBox
+        <ToggleSwitch
           $tag="useState"
           $value={value}
           $onChange={v => setValue(v!)}
         >
           トグルボックス
-        </ToggleBox>
-        <ToggleBox
+        </ToggleSwitch>
+        <ToggleSwitch
           $tag="form bind"
-          name="toggle-box-bind"
+          name="toggle-switch-bind"
           // $bind={bind}
         >
           ToggleBox
-        </ToggleBox>
+        </ToggleSwitch>
         <Form
           className="flex g-s"
           $bind={formBind}
@@ -143,9 +143,9 @@ const ToggleBoxClient = () => {
           action="/api/form"
           method="post"
         >
-          <ToggleBox
+          <ToggleSwitch
             $tag="form bind"
-            name="toggle-box-form-bind"
+            name="toggle-switch-form-bind"
             $required
           />
           <Button type="submit">submit</Button>
@@ -154,9 +154,9 @@ const ToggleBoxClient = () => {
       {colors.map(color => {
         return (
           <Row key={color}>
-            <ToggleBox $color={color} $defaultValue>
+            <ToggleSwitch $color={color} $defaultValue>
               {color}
-            </ToggleBox>
+            </ToggleSwitch>
             <span className={`pt-t px-s c-${color}`}>{color}</span>
           </Row>
         );
@@ -165,4 +165,4 @@ const ToggleBoxClient = () => {
   );
 };
 
-export default ToggleBoxClient;
+export default ToggleSwitchClient;

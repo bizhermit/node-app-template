@@ -637,6 +637,7 @@ const DataTable = forwardRef(<T extends Data = Data>({
     $stripes,
     $rowPointer,
     rowNumColWidth,
+    $radio,
   ]);
 
   const isEmpty = useMemo(() => {

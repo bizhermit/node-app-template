@@ -5,7 +5,7 @@ import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import ElectronicSignature, { useElectronicSignature } from "#/client/elements/form/items/electronic-signature";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { sample_file, sample_string } from "$/data-items/sample";
 import { useState } from "react";
@@ -23,17 +23,17 @@ const ElectronicSignatureClient = () => {
   return (
     <div className="flex h-100 w-100 p-xs g-s">
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="auto save"
           $value={autoSave}
           $onChange={v => setAutoSave(v!)}

@@ -2,7 +2,7 @@
 "use client";
 
 import CheckList from "#/client/elements/form/items/check-list";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import arrayItem from "#/data-items/array";
 import $str from "#/data-items/string";
 import { useState } from "react";
@@ -35,13 +35,13 @@ const Page = () => {
     <BaseLayout title="CheckList">
       <ControlLayout>
         <ControlItem caption="readonly">
-          <ToggleBox
+          <ToggleSwitch
             $value={readOnly}
             $onChange={v => setReadOnly(v!)}
           />
         </ControlItem>
         <ControlItem caption="disabled">
-          <ToggleBox
+          <ToggleSwitch
             $value={disabled}
             $onChange={v => setDisabled(v!)}
           />

@@ -132,7 +132,7 @@ const CheckList = forwardRef(<
     preventMemorize: $preventSourceMemorize,
   });
 
-  const { ctx, props, $ref, $preventFormBind } = useFormItemContext(form, $p, {
+  const { ctx, props, $ref } = useFormItemContext(form, $p, {
     multiple: true,
     receive: (v) => {
       if (v == null || Array.isArray(v)) return v;
@@ -248,7 +248,7 @@ const CheckList = forwardRef(<
           </CheckBox>
         );
       })}
-      {props.name && !$preventFormBind &&
+      {props.name && !props.$preventFormBind &&
         getArrayValue().map((v, idx) => {
           return (
             <input

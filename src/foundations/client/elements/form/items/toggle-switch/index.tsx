@@ -9,16 +9,16 @@ import { FormItemWrap } from "../common";
 import { useDataItemMergedProps, useFormItemBase, useFormItemContext } from "../hooks";
 import Style from "./index.module.scss";
 
-type ToggleBoxHookAddon = {
+type ToggleSwitchHookAddon = {
   on: () => void;
   off: () => void;
   toggle: () => void;
 };
-type ToggleBoxHook<T extends string | number | boolean = string | number | boolean> = F.ItemHook<T, ToggleBoxHookAddon>;
+type ToggleSwitchHook<T extends string | number | boolean = string | number | boolean> = F.ItemHook<T, ToggleSwitchHookAddon>;
 
-export const useToggleBox = <
+export const useToggleSwitch = <
   T extends string | number | boolean = string | number | boolean
->() => useFormItemBase<ToggleBoxHook<T>>(e => {
+>() => useFormItemBase<ToggleSwitchHook<T>>(e => {
   return {
     on: () => {
       throw e;
@@ -32,32 +32,32 @@ export const useToggleBox = <
   };
 });
 
-type ToggleBoxOptions<
+type ToggleSwitchOptions<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
 > = {
-  $ref?: ToggleBoxHook<F.VType<T, D, T>> | ToggleBoxHook<string | number | boolean>;
+  $ref?: ToggleSwitchHook<F.VType<T, D, T>> | ToggleSwitchHook<string | number | boolean>;
   $checkedValue?: T;
   $uncheckedValue?: T;
   children?: ReactNode;
 };
 
 type OmitAttrs = "$tagPosition" | "placeholder";
-export type ToggleBoxProps<
+export type ToggleSwitchProps<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
-> = OverwriteAttrs<Omit<F.ItemProps<T, D>, OmitAttrs>, ToggleBoxOptions<T, D>>;
+> = OverwriteAttrs<Omit<F.ItemProps<T, D>, OmitAttrs>, ToggleSwitchOptions<T, D>>;
 
-interface ToggleBoxFC extends FunctionComponent<ToggleBoxProps> {
+interface ToggleSwitchFC extends FunctionComponent<ToggleSwitchProps> {
   <T extends string | number | boolean = boolean, D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined>(
-    attrs: ComponentAttrsWithRef<HTMLDivElement, ToggleBoxProps<T, D>>
+    attrs: ComponentAttrsWithRef<HTMLDivElement, ToggleSwitchProps<T, D>>
   ): ReactElement<any> | null;
 }
 
-const ToggleBox = forwardRef(<
+const ToggleSwitch = forwardRef(<
   T extends string | number | boolean = boolean,
   D extends DataItem_String | DataItem_Number | DataItem_Boolean<any, any> | undefined = undefined
->(p: ToggleBoxProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
+>(p: ToggleSwitchProps<T, D>, r: ForwardedRef<HTMLDivElement>) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle(r, () => ref.current);
 
@@ -189,6 +189,6 @@ const ToggleBox = forwardRef(<
       }
     </FormItemWrap>
   );
-}) as ToggleBoxFC;
+}) as ToggleSwitchFC;
 
-export default ToggleBox;
+export default ToggleSwitch;

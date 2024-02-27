@@ -4,7 +4,7 @@
 import Button from "#/client/elements/button";
 import Form, { useFormRef } from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import { useState } from "react";
 import BaseLayout, { BaseRow, BaseSheet } from "../../_components/base-layout";
 import ControlLayout, { ControlItem } from "../../_components/control-layout";
@@ -21,13 +21,13 @@ const Page = () => {
     <BaseLayout title="Form">
       <ControlLayout>
         <ControlItem caption="readonly">
-          <ToggleBox
+          <ToggleSwitch
             $value={readOnly}
             $onChange={v => setReadOnly(v!)}
           />
         </ControlItem>
         <ControlItem caption="disabled">
-          <ToggleBox
+          <ToggleSwitch
             $value={disabled}
             $onChange={v => setDisabled(v!)}
           />
@@ -58,7 +58,7 @@ const Page = () => {
           </BaseRow>
         </ControlItem>
         <ControlItem caption="prevent enter submit">
-          <ToggleBox
+          <ToggleSwitch
             $value={preventEnterSubmit}
             $onChange={v => setPreventEnterSubmit(v!)}
           />

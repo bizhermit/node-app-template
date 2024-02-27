@@ -7,7 +7,7 @@ import dataTableButtonColumn from "#/client/elements/data-table/button";
 import dataTableCheckBoxColumn from "#/client/elements/data-table/check-box";
 import NumberBox from "#/client/elements/form/items/number-box";
 import SelectBox from "#/client/elements/form/items/select-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import generateArray from "#/objects/array/generator";
 import { useMemo, useState } from "react";
 import BaseLayout, { BaseRow } from "../../../_components/base-layout";
@@ -162,50 +162,50 @@ const Page = () => {
     >
       <ControlLayout>
         <ControlItem caption="outline">
-          <ToggleBox
+          <ToggleSwitch
             $value={outline}
             $onChange={v => setOutline(v!)}
           />
         </ControlItem>
         <ControlItem caption="row border">
-          <ToggleBox
+          <ToggleSwitch
             $value={rowBorder}
             $onChange={v => setRowBorder(v!)}
           />
         </ControlItem>
         <ControlItem caption="cell border">
-          <ToggleBox
+          <ToggleSwitch
             $value={cellBorder}
             $onChange={v => setCellBorder(v!)}
           />
         </ControlItem>
         <ControlItem caption="radio">
-          <ToggleBox
+          <ToggleSwitch
             $value={radio}
             $onChange={v => setRadio(v!)}
           />
         </ControlItem>
         <ControlItem caption="stripes">
-          <ToggleBox
+          <ToggleSwitch
             $value={stripes}
             $onChange={v => setStripes(v!)}
           />
         </ControlItem>
         <ControlItem caption="multi sort">
-          <ToggleBox
+          <ToggleSwitch
             $value={multiSort}
             $onChange={v => setMultiSort(v!)}
           />
         </ControlItem>
         <ControlItem caption="scroll">
-          <ToggleBox
+          <ToggleSwitch
             $value={scroll}
             $onChange={v => setScroll(v!)}
           />
         </ControlItem>
         <ControlItem caption="page">
           <BaseRow>
-            <ToggleBox
+            <ToggleSwitch
               $value={page}
               $onChange={v => setPage(v!)}
             />

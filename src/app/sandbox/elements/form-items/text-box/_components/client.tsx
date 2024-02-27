@@ -5,7 +5,7 @@ import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import { useFormItem } from "#/client/elements/form/items/hooks";
 import TextBox, { useTextBox } from "#/client/elements/form/items/text-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
 import { sample_number, sample_string } from "$/data-items/sample";
@@ -24,12 +24,12 @@ const TextBoxClient = () => {
   return (
     <div className="flex p-xs g-s">
       <Row className="g-s">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}

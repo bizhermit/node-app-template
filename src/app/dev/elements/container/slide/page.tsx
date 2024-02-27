@@ -2,7 +2,7 @@
 
 import Button from "#/client/elements/button";
 import RadioButtons from "#/client/elements/form/items/radio-buttons";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import SlideContainer, { SlideContent } from "#/client/elements/slide-container";
 import generateArray from "#/objects/array/generator";
 import { useState } from "react";
@@ -53,25 +53,25 @@ const Page = () => {
           />
         </ControlItem>
         <ControlItem caption="breadcrumbs">
-          <ToggleBox
+          <ToggleSwitch
             $value={breadcrumbs}
             $onChange={v => setBreadcrumbs(v!)}
           />
         </ControlItem>
         <ControlItem caption="overlap">
-          <ToggleBox
+          <ToggleSwitch
             $value={overlap}
             $onChange={v => setOverlap(v!)}
           />
         </ControlItem>
         <ControlItem caption="scroll">
-          <ToggleBox
+          <ToggleSwitch
             $value={scroll}
             $onChange={v => setScroll(v!)}
           />
         </ControlItem>
         <ControlItem caption="unmount">
-          <ToggleBox
+          <ToggleSwitch
             $value={unmountDeselected}
             $onChange={v => setUnmountDeselected(v!)}
           />

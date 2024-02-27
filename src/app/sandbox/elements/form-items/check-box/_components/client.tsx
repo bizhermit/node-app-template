@@ -4,7 +4,7 @@ import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import CheckBox, { useCheckBox } from "#/client/elements/form/items/check-box";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import { colors } from "#/utilities/sandbox";
 import { sample_boolean, sample_boolean_num, sample_boolean_str, sample_number, sample_string } from "$/data-items/sample";
@@ -21,12 +21,12 @@ const CheckBoxClient = () => {
   return (
     <div className="flex p-xs w-100 h-100 g-s">
       <Row className="g-s" $vAlign="bottom">
-        <ToggleBox
+        <ToggleSwitch
           $tag="disabled"
           $value={disabled}
           $onChange={v => setDisabled(v!)}
         />
-        <ToggleBox
+        <ToggleSwitch
           $tag="readOnly"
           $value={readOnly}
           $onChange={v => setReadOnly(v!)}

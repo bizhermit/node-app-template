@@ -5,6 +5,7 @@ const throttle = <T extends Array<any>>(func: (...args: T) => void, timeout = 0)
     if (t) clearTimeout(t);
     t = setTimeout(() => {
       func(...args);
+      t = null;
       l = Date.now();
     }, timeout - (Date.now() - l));
   };

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type DependencyList } from "react";
-import throttle from "../../utilities/throttle";
+import type throttle from "../../utilities/throttle";
 
 export const useThrottle = <T>(value: T, timeout = 0) => {
   const [v, s] = useState(value);
@@ -17,7 +17,7 @@ export const useThrottleCallback = <T extends Array<any>>(func: Parameters<typeo
     if (t) clearTimeout(t);
     ref.current.t = setTimeout(() => {
       func(...args);
-      ref.current.l = Date.now();
+      ref.current = { t: null, l: Date.now() };
     }, timeout - (Date.now() - l));
   }, deps);
 };

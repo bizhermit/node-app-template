@@ -2,7 +2,7 @@
 
 import Button from "#/client/elements/button";
 import Divider from "#/client/elements/divider";
-import ToggleBox from "#/client/elements/form/items/toggle-box";
+import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import Row from "#/client/elements/row";
 import Text from "#/client/elements/text";
 import { useLocalState, useSessionState } from "#/client/hooks/storage";
@@ -16,12 +16,12 @@ const Page = () => {
   return (
     <div className="flex column p-xs">
       <Row>
-        <ToggleBox
+        <ToggleSwitch
           $value={autoSave}
           $onChange={v => setAutoSave(v!)}
         >
           Auto save
-        </ToggleBox>
+        </ToggleSwitch>
       </Row>
       <Divider className="my-xs" />
       <Row className="g-s">
