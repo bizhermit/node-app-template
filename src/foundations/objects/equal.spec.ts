@@ -129,6 +129,46 @@ describe("object equals", () => {
       expect(result).toBeFalsy();
     });
 
+    it("0n - 0", () => {
+      const result = equals(BigInt(0), 0);
+      expect(result).toBeFalsy();
+    });
+
+    it("0n - false", () => {
+      const result = equals(BigInt(0), false);
+      expect(result).toBeFalsy();
+    });
+
+    it("0n - '0'", () => {
+      const result = equals(BigInt(0), "0");
+      expect(result).toBeFalsy();
+    });
+
+    it("0n - '0n'", () => {
+      const result = equals(BigInt(0), "0n");
+      expect(result).toBeFalsy();
+    });
+
+    it("1n - 1", () => {
+      const result = equals(BigInt(1), 1);
+      expect(result).toBeFalsy();
+    });
+
+    it("1n - true", () => {
+      const result = equals(BigInt(1), true);
+      expect(result).toBeFalsy();
+    });
+
+    it("1n - '1'", () => {
+      const result = equals(BigInt(1), "1");
+      expect(result).toBeFalsy();
+    });
+
+    it("1n - '1n'", () => {
+      const result = equals(BigInt(1), "1n");
+      expect(result).toBeFalsy();
+    });
+
     describe("var", () => {
       let v = BigInt(0);
 
