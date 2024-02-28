@@ -1,6 +1,8 @@
 import queryString from "querystring";
+import clone from "../clone";
 import { convertFormDataToStruct } from "../form-data/convert";
 import { getValue } from "../struct/get";
+import replaceDynamicPathname from "./dynamic-pathname";
 
 type UrlPath = PagePath | `http${string}` | `tel:${string}` | `mailto:${string}` | ApiPath;
 
@@ -22,28 +24,18 @@ const getDynamicUrlContext = <
       params.forEach((v, k) => fd.append(k, v));
       return fd;
     }
-    return { ...params };
+    return clone(params);
   })()) ?? {};
 
-  const getDataValue = (key: string) => {
-    if (data instanceof FormData) {
-      const v = data.get(key);
-      if (opts?.leaveDynamicKey !== true) data.delete(key);
+  let url: string = replaceDynamicPathname(pathname, data, (d, k) => {
+    if (d instanceof FormData) {
+      const v = d.get(k);
+      if (opts?.leaveDynamicKey !== true) d.delete(k);
       return v;
     }
-    const v = getValue(data, key);
-    if (opts?.leaveDynamicKey !== true) delete data[key];
+    const v = getValue(d, k);
+    if (opts?.leaveDynamicKey !== true) delete d[k];
     return v;
-  };
-
-  let url: string = pathname.replace(/\[\[?([^\]]*)\]?\]/g, seg => {
-    const r = seg.match(/^\[{1,2}(\.{3})?([^\]]*)\]{1,2}$/)!;
-    const v = getDataValue(r[2]);
-    if (Array.isArray(v)) {
-      if (r[1]) return v.map(c => `${c}`).join("/");
-      return v[0];
-    }
-    return v ?? "";
   });
 
   if (opts?.appendQuery) {
