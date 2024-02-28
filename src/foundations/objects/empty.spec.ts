@@ -4,112 +4,112 @@ describe("empty", () => {
   describe("isNull", () => {
     it("Null", () => {
       const result = isNull(null);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("Undefined", () => {
       const result = isNull(undefined);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     describe("String", () => {
       it("blank", () => {
         const result = isNull("");
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("a", () => {
         const result = isNull("a");
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Number", () => {
       it("0", () => {
         const result = isNull(0);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("1", () => {
         const result = isNull(1);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("NaN", () => {
         const result = isNull(NaN);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("BigInt", () => {
       it("0n", () => {
         const result = isNull(BigInt(0));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("1n", () => {
         const result = isNull(BigInt(1));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Boolean", () => {
       it("false", () => {
         const result = isNull(false);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("true", () => {
         const result = isNull(true);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Array", () => {
       it("[]", () => {
         const result = isNull([]);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("[1]", () => {
         const result = isNull([1]);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Object", () => {
       it("{}", () => {
         const result = isNull({});
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("not empty", () => {
         const result = isNull({ "a": "" });
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Map", () => {
       it("empty", () => {
         const result = isNull(new Map());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("not empty", () => {
         const result = isNull(new Map([["a", ""]]));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Set", () => {
       it("empty", () => {
         const result = isNull(new Set());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("not empty", () => {
         const result = isNull(new Set(["a"]));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
   });
@@ -117,112 +117,112 @@ describe("empty", () => {
   describe("isNotNull", () => {
     it("Null", () => {
       const result = isNotNull(null);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("Undefined", () => {
       const result = isNotNull(undefined);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     describe("String", () => {
       it("blank", () => {
         const result = isNotNull("");
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("a", () => {
         const result = isNotNull("a");
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Number", () => {
       it("0", () => {
         const result = isNotNull(0);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("1", () => {
         const result = isNotNull(1);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("NaN", () => {
         const result = isNotNull(NaN);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("BigInt", () => {
       it("0n", () => {
         const result = isNotNull(BigInt(0));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("1n", () => {
         const result = isNotNull(BigInt(1));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Boolean", () => {
       it("false", () => {
         const result = isNotNull(false);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("true", () => {
         const result = isNotNull(true);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Array", () => {
       it("[]", () => {
         const result = isNotNull([]);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("[1]", () => {
         const result = isNotNull([1]);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Object", () => {
       it("{}", () => {
         const result = isNotNull({});
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("not empty", () => {
         const result = isNotNull({ "a": "" });
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Map", () => {
       it("empty", () => {
         const result = isNotNull(new Map());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("not empty", () => {
         const result = isNotNull(new Map([["a", ""]]));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Set", () => {
       it("empty", () => {
         const result = isNotNull(new Set());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("not empty", () => {
         const result = isNotNull(new Set(["a"]));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
   });
@@ -230,112 +230,112 @@ describe("empty", () => {
   describe("isEmpty", () => {
     it("Null", () => {
       const result = isEmpty(null);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("Undefined", () => {
       const result = isEmpty(undefined);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     describe("String", () => {
       it("blank", () => {
         const result = isEmpty("");
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("a", () => {
         const result = isEmpty("a");
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Number", () => {
       it("0", () => {
         const result = isEmpty(0);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("1", () => {
         const result = isEmpty(1);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("NaN", () => {
         const result = isEmpty(NaN);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("BigInt", () => {
       it("0n", () => {
         const result = isEmpty(BigInt(0));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("1n", () => {
         const result = isEmpty(BigInt(1));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Boolean", () => {
       it("false", () => {
         const result = isEmpty(false);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("true", () => {
         const result = isEmpty(true);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Array", () => {
       it("[]", () => {
         const result = isEmpty([]);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("[1]", () => {
         const result = isEmpty([1]);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Object", () => {
       it("{}", () => {
         const result = isEmpty({});
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("not empty", () => {
         const result = isEmpty({ "a": "" });
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Map", () => {
       it("empty", () => {
         const result = isEmpty(new Map());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("not empty", () => {
         const result = isEmpty(new Map([["a", ""]]));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("Set", () => {
       it("empty", () => {
         const result = isEmpty(new Set());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("not empty", () => {
         const result = isEmpty(new Set(["a"]));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
   });
@@ -343,112 +343,112 @@ describe("empty", () => {
   describe("isNotEmpty", () => {
     it("Null", () => {
       const result = isNotEmpty(null);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("Undefined", () => {
       const result = isNotEmpty(undefined);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     describe("String", () => {
       it("blank", () => {
         const result = isNotEmpty("");
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("a", () => {
         const result = isNotEmpty("a");
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Number", () => {
       it("0", () => {
         const result = isNotEmpty(0);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("1", () => {
         const result = isNotEmpty(1);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("NaN", () => {
         const result = isNotEmpty(NaN);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
 
     describe("BigInt", () => {
       it("0n", () => {
         const result = isNotEmpty(BigInt(0));
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("1n", () => {
         const result = isNotEmpty(BigInt(1));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Boolean", () => {
       it("false", () => {
         const result = isNotEmpty(false);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("true", () => {
         const result = isNotEmpty(true);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Array", () => {
       it("[]", () => {
         const result = isNotEmpty([]);
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("[1]", () => {
         const result = isNotEmpty([1]);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Object", () => {
       it("{}", () => {
         const result = isNotEmpty({});
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("not empty", () => {
         const result = isNotEmpty({ "a": "" });
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Map", () => {
       it("empty", () => {
         const result = isNotEmpty(new Map());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("not empty", () => {
         const result = isNotEmpty(new Map([["a", ""]]));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     describe("Set", () => {
       it("empty", () => {
         const result = isNotEmpty(new Set());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
 
       it("not empty", () => {
         const result = isNotEmpty(new Set(["a"]));
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
   });

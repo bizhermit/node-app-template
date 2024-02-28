@@ -4,59 +4,59 @@ describe("object equals", () => {
   describe("Null/Undefined", () => {
     it("null - null", () => {
       const result = equals(null, null);
-      expect(result).toEqual(true);
+      expect(result).toBe(true);
     });
 
     it("null - undefined", () => {
       const result = equals(null, undefined);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("null - blank", () => {
       const result = equals(null, "");
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("undefined - blank", () => {
       const result = equals(undefined, "");
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("null - 0", () => {
       const result = equals(null, 0);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("undefined - 0", () => {
       const result = equals(undefined, 0);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("null - false", () => {
       const result = equals(null, false);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("undefined - false", () => {
       const result = equals(undefined, false);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("blank - 0", () => {
       const result = equals("", 0);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
   });
 
   describe("String", () => {
     it("'a' - 'a'", () => {
       const result = equals("a", "a");
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("'' - 'a'", () => {
       const result = equals("", "a");
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     describe("var", () => {
@@ -67,7 +67,7 @@ describe("object equals", () => {
           v += "";
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("different", () => {
@@ -75,7 +75,7 @@ describe("object equals", () => {
           v += "z";
           return v;
         })());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
   });
@@ -83,12 +83,12 @@ describe("object equals", () => {
   describe("Number", () => {
     it("0 - 0", () => {
       const result = equals(0, 0);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("0 - 1", () => {
       const result = equals(0, 1);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     describe("var", () => {
@@ -99,7 +99,7 @@ describe("object equals", () => {
           v += 0;
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("different", () => {
@@ -107,7 +107,7 @@ describe("object equals", () => {
           v += 1;
           return v;
         })());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
   });
@@ -116,57 +116,57 @@ describe("object equals", () => {
     it("1n - 1n (same instance)", () => {
       const obj = BigInt(1);
       const result = equals(obj, obj);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("1n - 1n (different instance)", () => {
       const result = equals(BigInt(1), BigInt(1));
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("0n - 1n", () => {
       const result = equals(BigInt(0), BigInt(1));
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("0n - 0", () => {
       const result = equals(BigInt(0), 0);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("0n - false", () => {
       const result = equals(BigInt(0), false);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("0n - '0'", () => {
       const result = equals(BigInt(0), "0");
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("0n - '0n'", () => {
       const result = equals(BigInt(0), "0n");
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("1n - 1", () => {
       const result = equals(BigInt(1), 1);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("1n - true", () => {
       const result = equals(BigInt(1), true);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("1n - '1'", () => {
       const result = equals(BigInt(1), "1");
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     it("1n - '1n'", () => {
       const result = equals(BigInt(1), "1n");
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     describe("var", () => {
@@ -177,7 +177,7 @@ describe("object equals", () => {
           v += BigInt(0);
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("different", () => {
@@ -185,7 +185,7 @@ describe("object equals", () => {
           v += BigInt(1);
           return v;
         })());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
   });
@@ -193,12 +193,12 @@ describe("object equals", () => {
   describe("Boolean", () => {
     it("true - true", () => {
       const result = equals(true, true);
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     it("true - false", () => {
       const result = equals(true, false);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
 
     describe("var", () => {
@@ -209,7 +209,7 @@ describe("object equals", () => {
           v = false;
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("different", () => {
@@ -217,7 +217,7 @@ describe("object equals", () => {
           v = true;
           return v;
         })());
-        expect(result).toBeFalsy();
+        expect(result).toBe(false);
       });
     });
   });
@@ -228,7 +228,7 @@ describe("object equals", () => {
 
       it("same", () => {
         const result = equals(v, v);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("pushed", () => {
@@ -236,13 +236,13 @@ describe("object equals", () => {
           v.push("a");
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     it("different instance", () => {
       const result = equals([], []);
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
   });
 
@@ -252,7 +252,7 @@ describe("object equals", () => {
 
       it("same", () => {
         const result = equals(v, v);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("pushed", () => {
@@ -260,13 +260,13 @@ describe("object equals", () => {
           v["a"] = "";
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     it("different instance", () => {
       const result = equals({}, {});
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
   });
 
@@ -276,7 +276,7 @@ describe("object equals", () => {
 
       it("same", () => {
         const result = equals(v, v);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("set", () => {
@@ -284,13 +284,13 @@ describe("object equals", () => {
           v.set("a", "");
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     it("different instance", () => {
       const result = equals(new Map(), new Map());
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
   });
 
@@ -300,7 +300,7 @@ describe("object equals", () => {
 
       it("same", () => {
         const result = equals(v, v);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("added", () => {
@@ -308,13 +308,13 @@ describe("object equals", () => {
           v.add("a");
           return v;
         })());
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
     });
 
     it("different instance", () => {
       const result = equals(new Set(), new Set());
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
   });
 
@@ -324,7 +324,7 @@ describe("object equals", () => {
 
       it("same", () => {
         const result = equals(v, v);
-        expect(result).toBeTruthy();
+        expect(result).toBe(true);
       });
 
       it("new", () => {
@@ -332,13 +332,13 @@ describe("object equals", () => {
           v = new RegExp(".*");
           return v;
         })());
-        expect(result2).toBeFalsy();
+        expect(result2).toBe(false);
       });
     });
 
     it("different instance", () => {
       const result = equals(new RegExp(".*"), new RegExp(".*"));
-      expect(result).toBeFalsy();
+      expect(result).toBe(false);
     });
   });
 });
