@@ -9,7 +9,9 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
+    "../**/*.spec.ts",
     "**/*.test.ts",
+    "../**/*.test.ts",
     "nxpress",
     "foundations/client",
     "**/*.tsx"
