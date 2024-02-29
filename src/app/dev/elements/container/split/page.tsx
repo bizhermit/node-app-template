@@ -24,8 +24,7 @@ const Page = () => {
       <ControlLayout>
         <ControlItem caption="direction">
           <RadioButtons
-            $unselectable
-            $allowNull
+            $null="unselectable"
             $source={[
               { value: "horizontal", label: "horizontal" },
               { value: "vertical", label: "vertical" },

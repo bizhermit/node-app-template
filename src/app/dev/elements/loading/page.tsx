@@ -24,8 +24,7 @@ const Page = () => {
       <ControlLayout>
         <ControlItem caption="layout">
           <RadioButtons
-            $allowNull
-            $unselectable
+            $null="unselectable"
             $value={appearance}
             $onChange={v => setAppearance(v!)}
             $source={[

@@ -536,29 +536,35 @@ const DataTable = forwardRef(<T extends Data = Data>({
         );
       }
 
-      const CellLabel: FC = () => (
-        <DataTableCellLabel
-          $wrap={column.wrap}
-          $padding={column.padding}
-        >
-          {column.prefix}
-          {(() => {
-            const v = getValue(data, column.displayName || column.name);
-            switch (column.type) {
-              case "date":
-                return formatDate(v, column.formatPattern ?? "yyyy/MM/dd");
-              case "number":
-                return formatNum(v, {
-                  thou: column.thousandSseparator ?? true,
-                  fpad: column.floatPadding ?? 0,
-                });
-              default:
-                return v;
-            }
-          })()}
-          {column.suffix}
-        </DataTableCellLabel>
-      );
+      const CellLabel: FC = () => {
+        const text = (() => {
+          const v = getValue(data, column.displayName || column.name);
+          switch (column.type) {
+            case "date":
+              return formatDate(v, column.formatPattern ?? "yyyy/MM/dd");
+            case "number":
+              return formatNum(v, {
+                thou: column.thousandSseparator ?? true,
+                fpad: column.floatPadding ?? 0,
+              });
+            default:
+              return v;
+          }
+        })();
+
+        return (
+          <DataTableCellLabel
+            $wrap={column.wrap}
+            $padding={column.padding}
+          >
+            {text && <>
+              {column.prefix}
+              {text}
+              {column.suffix}
+            </>}
+          </DataTableCellLabel>
+        );
+      };
       const pageFirstIndex = pagination ? pagination.index * pagination.perPage : 0;
       const content = column.body ?
         <column.body

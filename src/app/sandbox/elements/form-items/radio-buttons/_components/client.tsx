@@ -120,8 +120,7 @@ const RadioButtonsClient = () => {
             return { value, label: `item ${value}` };
           })}
           $appearance={appearance}
-          $unselectable
-          $allowNull
+          $null="unselectable"
           $outline={outline}
         />
         <RadioButtons
@@ -135,8 +134,7 @@ const RadioButtonsClient = () => {
           $outline={outline}
         />
         <RadioButtons
-          $allowNull
-          $unselectable
+          $null="unselectable"
           $source={[{
             value: 1,
             label: "selected",
@@ -199,8 +197,7 @@ const RadioButtonsClient = () => {
         $value={value}
         $onChange={v => setValue(v)}
         $required
-        $allowNull
-        $unselectable
+        $null="unselectable"
         $messagePosition="bottom"
         $source={[{
           value: 0,
@@ -229,7 +226,6 @@ const RadioButtonsClient = () => {
         $disabled={disabled}
         $readOnly={readOnly}
         $required
-        $allowNull
         $messagePosition="bottom"
         $source={generateArray(5, idx => {
           return {

@@ -20,8 +20,7 @@ const Page = () => {
       <ControlLayout>
         <ControlItem caption="direction">
           <RadioButtons
-            $unselectable
-            $allowNull
+            $null="unselectable"
             $value={direction}
             $onChange={v => setDirection(v!)}
             $source={[
