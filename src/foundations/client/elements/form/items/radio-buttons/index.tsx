@@ -50,7 +50,7 @@ type RadioButtonsOptions<
   $outline?: boolean;
   $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
-  $null?: "unselectable" | "disabllow"
+  $null?: "unselectable" | "allow" | "disabllow";
   $tieInNames?: Array<string | { dataName: string; hiddenName: string; }>;
 };
 
@@ -128,9 +128,11 @@ const RadioButtons = forwardRef(<
     },
   });
 
+  const nullMode = $null ?? ($p.$required ? "disabllow" : "allow");
+
   const select = (value: T) => {
     if (!ctx.editable || loading) return;
-    if ($null === "unselectable") {
+    if (nullMode === "unselectable") {
       if (ctx.valueRef.current === value) {
         ctx.change(undefined);
         return;
@@ -224,14 +226,14 @@ const RadioButtons = forwardRef(<
   }, [source]);
 
   useEffect(() => {
-    if (loading || $null !== "disabllow" || selectedItem != null || source.length === 0) return;
+    if (loading || nullMode !== "disabllow" || selectedItem != null || source.length === 0) return;
     const v = ctx.valueRef.current ?? props.$defaultValue;
     const target = source.find(item => item[vdn] === v) ?? source[0];
     ctx.change(target[vdn], false);
   }, [
     selectedItem,
     source,
-    $null,
+    nullMode,
     ctx.change,
   ]);
 
