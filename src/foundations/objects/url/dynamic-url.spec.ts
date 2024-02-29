@@ -1,180 +1,105 @@
-import replaceDynamicPathname from "./dynamic-pathname";
+import getDynamicUrlContext from "./dynamic-url";
 
-describe(("dynamic-pathname"), () => {
-  describe("no slug", () => {
-    const pathname = "/hoge/fuga/piyo" as any;
+describe("dynamic-pathname", () => {
+  describe("dynamic url", () => {
+    describe("no slug", () => {
+      const pathname = "/hoge/fuga" as any;
+      const params = { hoge: 123, fuga: 345 };
+      const res = getDynamicUrlContext(pathname, params);
 
-    it("params is null", () => {
-      const replaced = replaceDynamicPathname(pathname, null);
-      expect(replaced).toBe(pathname);
+      it("url", () => {
+        expect(res.url).toBe("/hoge/fuga");
+      });
+
+      describe("params", () => {
+        it("instance", () => {
+          expect(res.data).not.toBe(params);
+        });
+
+        it("contents", () => {
+          expect(res.data).toStrictEqual(params);
+        });
+      });
     });
 
-    it("params is not null", () => {
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe(pathname);
+    describe("slug", () => {
+      const pathname = "/[hoge]/fuga" as any;
+      const params = { hoge: 123, fuga: 345 };
+      const res = getDynamicUrlContext(pathname, params);
+
+      it("url", () => {
+        expect(res.url).toBe("/123/fuga");
+      });
+
+      describe("params", () => {
+        it("instance", () => {
+          expect(res.data).not.toBe(params);
+        });
+
+        describe("contents", () => {
+          it("not equal", () => {
+            expect(res.data).not.toStrictEqual(params);
+          });
+
+          it("delete", () => {
+            expect(res.data).not.toHaveProperty("hoge");
+          });
+
+          it("not deleted", () => {
+            expect(res.data).toHaveProperty("fuga");
+          });
+        });
+      });
     });
   });
 
-  describe("[slug]", () => {
-    describe("replace", () => {
-      const pathname = "/[hoge]/fuga/piyo" as any;
+  describe("append query", () => {
+    describe("standard", () => {
+      const pathname = "/[hoge]/fuga" as any;
+      const params = { hoge: 123, fuga: 345, piyo: 789 };
+      const res = getDynamicUrlContext(pathname, params, { appendQuery: true });
 
-      it("params is null", () => {
-        const replaced = replaceDynamicPathname(pathname, null);
-        expect(replaced).toBe("//fuga/piyo"); // TODO: better to throw error?
+      it("url", () => {
+        expect(res.url).toBe("/123/fuga?fuga=345&piyo=789");
       });
 
-      it("params is not null / value is null", () => {
-        const replaced = replaceDynamicPathname(pathname, { fuga: 123 });
-        expect(replaced).toBe("//fuga/piyo"); // TODO: better to throw error?
-      });
+      describe("params", () => {
+        it("instance", () => {
+          expect(res.data).not.toBe(params);
+        });
 
-      it("params is not null / value is not null", () => {
-        const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-        expect(replaced).toBe("/123/fuga/piyo");
-      });
-    });
+        describe("contents", () => {
+          it("not equal", () => {
+            expect(res.data).not.toStrictEqual(params);
+          });
 
-    it("replace (duplicated)", () => {
-      const pathname = "/[hoge]/fuga/[hoge]/piyo" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/123/fuga/123/piyo");
-    });
-
-    describe("replace some", () => {
-      const pathname = "/[hoge]/[fuga]/piyo" as any;
-
-      it("params is null", () => {
-        const replaced = replaceDynamicPathname(pathname, null);
-        expect(replaced).toBe("///piyo"); // TODO: better to throw error?
-      });
-
-      it("params is not null / value is not null", () => {
-        const replaced = replaceDynamicPathname(pathname, { hoge: 123, fuga: 456 });
-        expect(replaced).toBe("/123/456/piyo");
+          it("delete", () => {
+            expect(Object.keys(res.data)).toHaveLength(0);
+          });
+        });
       });
     });
 
-    it("slug end", () => {
-      const pathname = "/[hoge]" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/123");
+    describe("array value", () => {
+      const pathname = "/[hoge]/fuga" as any;
+      const params = { hoge: 123, fuga: [456, 789] };
+      const res = getDynamicUrlContext(pathname, params, { appendQuery: true });
+
+      it("url", () => {
+        expect(res.url).toBe("/123/fuga?fuga%5B0%5D=456&fuga%5B1%5D=789");
+      });
     });
   });
 
-  describe("[...slug]", () => {
-    describe("replace", () => {
-      const pathname = "/[...hoge]/fuga/piyo" as any;
+  describe("leave dynamic key", () => {
 
-      it("params is null", () => {
-        const replaced = replaceDynamicPathname(pathname, null);
-        expect(replaced).toBe("//fuga/piyo"); // TODO: better to throw error?
-      });
-
-      it("params is not null / value is number", () => {
-        const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-        expect(replaced).toBe("/123/fuga/piyo");
-      });
-
-      it("params is not null / value is number array", () => {
-        const replaced = replaceDynamicPathname(pathname, { hoge: [123, 456] });
-        expect(replaced).toBe("/123/456/fuga/piyo");
-      });
-    });
-
-    it("replace some", () => {
-      const pathname = "/[hoge]/[...fuga]/piyo" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123, fuga: 456, piyo: 789 });
-      expect(replaced).toBe("/123/456/piyo");
-    });
-
-    it("slug end", () => {
-      const pathname = "/[...hoge]" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/123");
-    });
   });
 
-  describe("[[...slug]]", () => {
-    describe("replace", () => {
-      const pathname = "/[[...hoge]]/fuga/piyo" as any;
+  describe("use origin params", () => {
 
-      it("params is null", () => {
-        const replaced = replaceDynamicPathname(pathname, null);
-        expect(replaced).toBe("//fuga/piyo"); // TODO: better to throw error?
-      });
-
-      it("params is not null / value is number", () => {
-        const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-        expect(replaced).toBe("/123/fuga/piyo");
-      });
-
-      it("params is not null / value is number array", () => {
-        const replaced = replaceDynamicPathname(pathname, { hoge: [123, 456, 789] });
-        expect(replaced).toBe("/123/456/789/fuga/piyo");
-      });
-    });
-
-    it("replace some", () => {
-      const pathname = "/[hoge]/[...fuga]/[[...piyo]]" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123, fuga: 456, piyo: 789 });
-      expect(replaced).toBe("/123/456/789");
-    });
-
-    it("slug end", () => {
-      const pathname = "/[[...hoge]]" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/123");
-    });
   });
 
-  describe("miss pattern", () => {
-    it("not begin [slug]", () => {
-      const pathname = "/hoge]/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/hoge]/fuga");
-    });
+  describe("query array index", () => {
 
-    it("not close [slug]", () => {
-      const pathname = "/[hoge/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[hoge/fuga");
-    });
-
-    it("not close [...slug]", () => {
-      const pathname = "/[...hoge/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[...hoge/fuga");
-    });
-
-    it("not begin [...slug]", () => {
-      const pathname = "/...hoge]/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/...hoge]/fuga");
-    });
-
-    it("not close [[...slug]]", () => {
-      const pathname = "/[[...hoge/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[[...hoge/fuga");
-    });
-
-    it("not close [[...slug]] as single", () => {
-      const pathname = "/[[...hoge]/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[123/fuga");
-    });
-
-    it("not begin [[...slug]]", () => {
-      const pathname = "/...hoge]]/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/...hoge]]/fuga");
-    });
-
-    it("not begin [[...slug]] as single", () => {
-      const pathname = "/[...hoge]]/fuga" as any;
-      const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/123]/fuga");
-    });
   });
 });
