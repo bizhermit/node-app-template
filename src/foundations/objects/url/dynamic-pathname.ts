@@ -7,7 +7,7 @@ const replaceDynamicPathname = <
   P extends { [v: string | number | symbol]: any } | null | undefined
 >(pathname: T, params: P, get: ((params: P, key: string) => any) = getValue): T => {
   if (pathname == null) return pathname;
-  return pathname.replace(/\[\[?([^\]]*)\]?\]/g, seg => {
+  return encodeURI(pathname.replace(/\[\[?([^\]]*)\]?\]/g, seg => {
     const r = seg.match(/^\[{1,2}(\.{3})?([^\]]*)\]{1,2}$/)!;
     const v = get(params, r[2]);
     if (Array.isArray(v)) {
@@ -15,7 +15,7 @@ const replaceDynamicPathname = <
       return v[0];
     }
     return v ?? "";
-  }) as T;
+  })) as T;
 };
 
 export default replaceDynamicPathname;

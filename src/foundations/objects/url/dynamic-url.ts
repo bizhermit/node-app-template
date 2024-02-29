@@ -1,4 +1,3 @@
-import queryString from "querystring";
 import clone from "../clone";
 import { convertFormDataToStruct } from "../form-data/convert";
 import { getValue } from "../struct/get";
@@ -39,24 +38,22 @@ const getDynamicUrlContext = <
   });
 
   if (opts?.appendQuery) {
-    const q = queryString.stringify((() => {
-      if (data == null) return {};
+    const q = (() => {
+      if (data == null) return undefined;
       const sd = data instanceof FormData ? convertFormDataToStruct(data) : data;
-      const d: { [v: string]: any } = {};
-      Object.keys(sd).forEach(key => {
+      const enc = (v: string | number | boolean) => encodeURIComponent(v);
+      return Object.keys(sd).map(key => {
         const v = sd[key];
-        if (v == null) return;
-        if (opts.queryArrayIndex && Array.isArray(v)) {
-          v.forEach((val, i) => {
-            if (val == null) return;
-            d[`${key}[${i}]`] = val;
-          });
-          return;
+        if (v == null) return undefined;
+        if (Array.isArray(v)) {
+          if (opts.queryArrayIndex) {
+            return v.map((val, i) => `${enc(`${key}[${i}]`)}=${enc(val)}`);
+          }
+          return v.map(val => `${enc(key)}=${enc(val)}`);
         }
-        d[key] = v;
-      });
-      return d;
-    })());
+        return `${enc(key)}=${enc(v)}`;
+      }).flat(1).filter(s => s).join("&");
+    })();
     if (q) url += `?${q}`;
   }
 

@@ -132,49 +132,49 @@ describe(("dynamic-pathname"), () => {
     it("not begin [slug]", () => {
       const pathname = "/hoge]/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/hoge]/fuga");
+      expect(replaced).toBe("/hoge%5D/fuga");
     });
 
     it("not close [slug]", () => {
       const pathname = "/[hoge/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[hoge/fuga");
+      expect(replaced).toBe("/%5Bhoge/fuga");
     });
 
     it("not close [...slug]", () => {
       const pathname = "/[...hoge/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[...hoge/fuga");
+      expect(replaced).toBe("/%5B...hoge/fuga");
     });
 
     it("not begin [...slug]", () => {
       const pathname = "/...hoge]/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/...hoge]/fuga");
+      expect(replaced).toBe("/...hoge%5D/fuga");
     });
 
     it("not close [[...slug]]", () => {
       const pathname = "/[[...hoge/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[[...hoge/fuga");
+      expect(replaced).toBe("/%5B%5B...hoge/fuga");
     });
 
     it("not close [[...slug]] as single", () => {
       const pathname = "/[[...hoge]/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/[123/fuga");
+      expect(replaced).toBe("/%5B123/fuga");
     });
 
     it("not begin [[...slug]]", () => {
       const pathname = "/...hoge]]/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/...hoge]]/fuga");
+      expect(replaced).toBe("/...hoge%5D%5D/fuga");
     });
 
     it("not begin [[...slug]] as single", () => {
       const pathname = "/[...hoge]]/fuga" as any;
       const replaced = replaceDynamicPathname(pathname, { hoge: 123 });
-      expect(replaced).toBe("/123]/fuga");
+      expect(replaced).toBe("/123%5D/fuga");
     });
   });
 });
