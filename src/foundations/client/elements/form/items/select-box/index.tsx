@@ -174,6 +174,7 @@ const SelectBox = forwardRef(<
   const lref = useRef<HTMLDivElement>(null!);
   const [label, setLabel] = useState("");
   const [selectedData, setSelectedData] = useState<S>();
+  const mref = useRef<HTMLDivElement>(null!);
   const [openLoading, setOpenLoading] = useState(false);
 
   const renderLabel = () => {
@@ -249,6 +250,7 @@ const SelectBox = forwardRef(<
         callback: ({ ok, interruptted }) => {
           if (!ok && interruptted) return;
           setOpenLoading(false);
+          if (document.activeElement === mref.current) scrollToSelectedItem();
         },
       });
     }
@@ -366,6 +368,7 @@ const SelectBox = forwardRef(<
   const blur = (e: React.FocusEvent) => {
     if (
       (iref.current != null && e.relatedTarget === iref.current) ||
+      (mref.current != null && e.relatedTarget === mref.current) ||
       (lref.current != null && (e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current))
     ) return;
     closePicker();
@@ -506,8 +509,13 @@ const SelectBox = forwardRef(<
         }}
         $mask="transparent"
         $preventFocus
-        data-loading={openLoading}
       >
+        {<div
+          ref={mref}
+          className={Style.mask}
+          data-show={openLoading}
+          tabIndex={-1}
+        />}
         <div
           className={Style.list}
           ref={lref}
