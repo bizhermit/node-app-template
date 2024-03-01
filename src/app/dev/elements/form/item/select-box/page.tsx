@@ -8,18 +8,18 @@ import BaseLayout, { BaseSection, BaseSheet } from "@/dev/_components/base-layou
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useRef, useState } from "react";
 
-const generateSource = (len: number) => {
+const generateSource = (len: number, rev?: string | number) => {
   return generateArray(len, i => {
     return {
       value: i,
-      label: `item-${i}`,
+      label: `item-${i}${rev == null ? "" : ` (${rev})`}`,
     };
   });
 };
 
-const fetchSource = async (len: number) => {
+const fetchSource = async (len: number, rev?: string | number) => {
   await sleep(3000);
-  return generateSource(len);
+  return generateSource(len, rev);
 };
 
 const Page = () => {
@@ -68,7 +68,7 @@ const Page = () => {
               if (sourceLengthRef.current > 50) {
                 sourceLengthRef.current = 0;
               }
-              return await fetchSource(sourceLengthRef.current += 7);
+              return await fetchSource(sourceLengthRef.current += 7, sourceLengthRef.current);
             }}
             $reloadSourceWhenOpen
           />
