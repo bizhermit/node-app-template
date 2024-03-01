@@ -22,7 +22,7 @@ const Page = () => {
   const [readOnly, setReadOnly] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
-  const sourceLengthRef = useRef(3);
+  const sourceLengthRef = useRef(0);
 
   return (
     <BaseLayout title="SelectBox">
@@ -44,9 +44,12 @@ const Page = () => {
         <BaseSection title="source">
           <SelectBox
             $source={async () => {
-              return await fetchSource(sourceLengthRef.current++);
+              if (sourceLengthRef.current > 50) {
+                sourceLengthRef.current = 0;
+              }
+              return await fetchSource(sourceLengthRef.current += 7);
             }}
-            $updateSourceWhenOpen
+            $reloadSourceWhenOpen
           />
         </BaseSection>
       </BaseSheet>
