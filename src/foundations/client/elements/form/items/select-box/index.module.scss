@@ -36,10 +36,7 @@
     overflow: auto;
     outline: none;
     border-radius: var(--radius);
-
-    &[data-loading="true"] {
-      pointer-events: none;
-    }
+    z-index: 0;
   }
 
   .item {
@@ -76,6 +73,29 @@
   .popup {
     @include mixins.popupShadow;
     background: var(--c-input);
+
+    &::before {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: var(--c-mask);
+      transition: opacity 0.2s;
+    }
+
+    &[data-loading="true"] {
+      &::before {
+        opacity: 1;
+        pointer-events: all;
+        cursor: wait;
+      }
+    }
   }
 
 }

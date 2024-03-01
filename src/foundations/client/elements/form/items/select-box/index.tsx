@@ -506,6 +506,7 @@ const SelectBox = forwardRef(<
         }}
         $mask="transparent"
         $preventFocus
+        data-loading={openLoading}
       >
         <div
           className={Style.list}
@@ -514,7 +515,6 @@ const SelectBox = forwardRef(<
           tabIndex={-1}
           onClick={clickItem}
           onKeyDown={keydownItem}
-          data-loading={openLoading}
         >
           {useMemo(() => {
             if (emptyItem) {
