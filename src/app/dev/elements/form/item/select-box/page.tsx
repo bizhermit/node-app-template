@@ -48,6 +48,8 @@ const Page = () => {
         <BaseSection title="source">
           <h3>array</h3>
           <SelectBox
+            $readOnly={readOnly}
+            $disabled={disabled}
             $source={[
               { value: 0, label: `item-0` },
               { value: 1, label: `item-1` },
@@ -56,19 +58,25 @@ const Page = () => {
           />
           <h3>func</h3>
           <SelectBox
+            $readOnly={readOnly}
+            $disabled={disabled}
             $source={() => generateSource(10)}
           />
           <h3>await func</h3>
           <SelectBox
+            $readOnly={readOnly}
+            $disabled={disabled}
             $source={() => fetchSource(10)}
           />
           <h3>await func / reload when open</h3>
           <SelectBox
+            $readOnly={readOnly}
+            $disabled={disabled}
             $source={async () => {
-              if (sourceLengthRef.current > 50) {
+              if (sourceLengthRef.current > 20) {
                 sourceLengthRef.current = 0;
               }
-              return await fetchSource(sourceLengthRef.current += 7, sourceLengthRef.current);
+              return await fetchSource(sourceLengthRef.current += 5, sourceLengthRef.current);
             }}
             $reloadSourceWhenOpen
           />
