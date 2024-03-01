@@ -48,6 +48,7 @@ type SelectBoxOptions<
   $valueDataName?: string;
   $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
+  $updateSourceWhenOpen?: boolean;
   $hideClearButton?: boolean;
   $resize?: boolean;
   $width?: number | string;
@@ -86,6 +87,7 @@ const SelectBox = forwardRef(<
     $valueDataName,
     $source,
     $preventSourceMemorize,
+    $updateSourceWhenOpen,
     $hideClearButton,
     $resize,
     $width,
@@ -172,6 +174,7 @@ const SelectBox = forwardRef(<
   const lref = useRef<HTMLDivElement>(null!);
   const [label, setLabel] = useState("");
   const [selectedData, setSelectedData] = useState<S>();
+  const [openLoading, setOpenLoading] = useState($updateSourceWhenOpen === true);
 
   const renderLabel = () => {
     const item = source.find(item => equals(item[vdn], ctx.valueRef.current)) ?? emptyItem;
@@ -497,6 +500,7 @@ const SelectBox = forwardRef(<
           tabIndex={-1}
           onClick={clickItem}
           onKeyDown={keydownItem}
+          data-loading={openLoading}
         >
           {useMemo(() => {
             if (emptyItem) {
