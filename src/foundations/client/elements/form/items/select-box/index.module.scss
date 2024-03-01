@@ -39,19 +39,6 @@
 
     &[data-loading="true"] {
       pointer-events: none;
-      z-index: 0;
-
-      &::before{
-        box-sizing: border-box;
-        position: absolute;
-        content: "";
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--c-mask);
-        z-index: 1;
-      }
     }
   }
 

@@ -8,14 +8,18 @@ import BaseLayout, { BaseSection, BaseSheet } from "@/dev/_components/base-layou
 import ControlLayout, { ControlItem } from "@/dev/_components/control-layout";
 import { useRef, useState } from "react";
 
-const fetchSource = async (len: number) => {
-  await sleep(3000);
+const generateSource = (len: number) => {
   return generateArray(len, i => {
     return {
       value: i,
       label: `item-${i}`,
     };
   });
+};
+
+const fetchSource = async (len: number) => {
+  await sleep(3000);
+  return generateSource(len);
 };
 
 const Page = () => {
@@ -42,6 +46,23 @@ const Page = () => {
       </ControlLayout>
       <BaseSheet>
         <BaseSection title="source">
+          <h3>array</h3>
+          <SelectBox
+            $source={[
+              { value: 0, label: `item-0` },
+              { value: 1, label: `item-1` },
+              { value: 2, label: `item-2` },
+            ]}
+          />
+          <h3>func</h3>
+          <SelectBox
+            $source={() => generateSource(10)}
+          />
+          <h3>await func</h3>
+          <SelectBox
+            $source={() => fetchSource(10)}
+          />
+          <h3>await func / reload when open</h3>
           <SelectBox
             $source={async () => {
               if (sourceLengthRef.current > 50) {
