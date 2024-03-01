@@ -42,8 +42,7 @@ const Page = () => {
         </ControlItem>
         <ControlItem caption="appearance">
           <RadioButtons
-            $unselectable
-            $allowNull
+            $null="unselectable"
             $source={[
               { value: "line", label: "line" },
               { value: "arrow", label: "arrow" }

@@ -76,6 +76,12 @@ const devMenus = (
                 icon: "CL",
                 label: "CheckList",
                 pathname: "/dev/elements/form/item/check-list",
+              },
+              {
+                key: "select-box",
+                icon: "SB",
+                label: "SelectBox",
+                pathname: "/dev/elements/form/item/select-box",
               }
             ],
           },

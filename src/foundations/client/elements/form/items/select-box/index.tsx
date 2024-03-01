@@ -48,6 +48,7 @@ type SelectBoxOptions<
   $valueDataName?: string;
   $source?: LoadableArray<S>;
   $preventSourceMemorize?: boolean;
+  $reloadSourceWhenOpen?: boolean;
   $hideClearButton?: boolean;
   $resize?: boolean;
   $width?: number | string;
@@ -86,6 +87,7 @@ const SelectBox = forwardRef(<
     $valueDataName,
     $source,
     $preventSourceMemorize,
+    $reloadSourceWhenOpen,
     $hideClearButton,
     $resize,
     $width,
@@ -124,7 +126,7 @@ const SelectBox = forwardRef(<
 
   const vdn = $valueDataName ?? "value";
   const ldn = $labelDataName ?? "label";
-  const [source, loading] = useLoadableArray($source, {
+  const [source, loading, reloadSource] = useLoadableArray($source, {
     preventMemorize: $preventSourceMemorize,
   });
   const [bindSource, setBindSource] = useState(source);
@@ -172,6 +174,8 @@ const SelectBox = forwardRef(<
   const lref = useRef<HTMLDivElement>(null!);
   const [label, setLabel] = useState("");
   const [selectedData, setSelectedData] = useState<S>();
+  const mref = useRef<HTMLDivElement>(null!);
+  const [openLoading, setOpenLoading] = useState(false);
 
   const renderLabel = () => {
     const item = source.find(item => equals(item[vdn], ctx.valueRef.current)) ?? emptyItem;
@@ -239,6 +243,17 @@ const SelectBox = forwardRef(<
     const rect = iref.current.getBoundingClientRect();
     setMaxHeight((Math.max(window.innerHeight - rect.bottom, rect.top) - 10));
     setShowPicker(true);
+    if ($reloadSourceWhenOpen) {
+      if (typeof $source !== "function") return;
+      setOpenLoading(true);
+      reloadSource({
+        callback: ({ ok, interruptted }) => {
+          if (!ok && interruptted) return;
+          setOpenLoading(false);
+          if (document.activeElement === mref.current) scrollToSelectedItem();
+        },
+      });
+    }
   };
 
   const scrollToSelectedItem = () => {
@@ -305,7 +320,7 @@ const SelectBox = forwardRef(<
   };
 
   const clickItem = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ctx.editable) return;
+    if (!ctx.editable || openLoading) return;
     selectItem(isListItem(e.target as HTMLElement));
   };
 
@@ -316,27 +331,31 @@ const SelectBox = forwardRef(<
         closePicker();
         break;
       case "Enter":
-        selectItem(isListItem(e.target as HTMLElement));
+        if (!openLoading) selectItem(isListItem(e.target as HTMLElement));
         e.preventDefault();
         break;
       case "ArrowUp":
-        const prevElem = document.activeElement?.previousElementSibling as HTMLElement;
-        if (prevElem) {
-          const st = prevElem.offsetTop;
-          const curSt = lref.current.scrollTop;
-          if (st < curSt) lref.current.scrollTop = st;
-          prevElem.focus();
+        if (!openLoading) {
+          const prevElem = document.activeElement?.previousElementSibling as HTMLElement;
+          if (prevElem) {
+            const st = prevElem.offsetTop;
+            const curSt = lref.current.scrollTop;
+            if (st < curSt) lref.current.scrollTop = st;
+            prevElem.focus();
+          }
         }
         e.preventDefault();
         e.stopPropagation();
         break;
       case "ArrowDown":
-        const nextElem = document.activeElement?.nextElementSibling as HTMLElement;
-        if (nextElem) {
-          const st = nextElem.offsetTop - lref.current.clientHeight + nextElem.offsetHeight;
-          const curSt = lref.current.scrollTop;
-          if (st > curSt) lref.current.scrollTop = st;
-          nextElem.focus();
+        if (!openLoading) {
+          const nextElem = document.activeElement?.nextElementSibling as HTMLElement;
+          if (nextElem) {
+            const st = nextElem.offsetTop - lref.current.clientHeight + nextElem.offsetHeight;
+            const curSt = lref.current.scrollTop;
+            if (st > curSt) lref.current.scrollTop = st;
+            nextElem.focus();
+          }
         }
         e.preventDefault();
         e.stopPropagation();
@@ -349,6 +368,7 @@ const SelectBox = forwardRef(<
   const blur = (e: React.FocusEvent) => {
     if (
       (iref.current != null && e.relatedTarget === iref.current) ||
+      (mref.current != null && e.relatedTarget === mref.current) ||
       (lref.current != null && (e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current))
     ) return;
     closePicker();
@@ -490,6 +510,12 @@ const SelectBox = forwardRef(<
         $mask="transparent"
         $preventFocus
       >
+        {<div
+          ref={mref}
+          className={Style.mask}
+          data-show={openLoading}
+          tabIndex={-1}
+        />}
         <div
           className={Style.list}
           ref={lref}
