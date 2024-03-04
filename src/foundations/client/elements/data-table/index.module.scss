@@ -314,7 +314,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
     justify-content: center;
     align-items: center;
     flex: 1;
-    min-height: 0;
+    min-height: var(--cs-m);
     opacity: 0.5;
   }
 
