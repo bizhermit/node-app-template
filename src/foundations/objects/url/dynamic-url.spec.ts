@@ -124,14 +124,29 @@ describe("dynamic-url", () => {
   });
 
   describe("leave dynamic key", () => {
+    const pathname = "/[hoge]/fuga" as any;
+    const params = { hoge: 123, fuga: 456 };
+    const res = getDynamicUrlContext(pathname, params, { leaveDynamicKey: true });
 
+    it("has param", () => {
+      expect(res.data).not.toBe(params);
+      expect(res.data.hoge).not.toBeUndefined();
+      expect(res.data.hoge).not.toBeNull();
+      expect(res.data.hoge).toBe(params.hoge);
+    });
   });
 
   describe("use origin params", () => {
+    const pathname = "/[hoge]/fuga" as any;
+    const params = { hoge: 123, fuga: 456 };
+    const res = getDynamicUrlContext(pathname, params, { useOriginParams: true });
 
-  });
+    it("same instance", () => {
+      expect(res.data).toBe(params);
+    });
 
-  describe("query array index", () => {
-
+    it("deleted param", () => {
+      expect(params.hoge).toBeUndefined();
+    });
   });
 });
