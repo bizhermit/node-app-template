@@ -1,5 +1,6 @@
 "use client";
 
+import throttle from "#/utilities/throttle";
 import type { FC, HTMLAttributes, MutableRefObject } from "react";
 import { releaseCursor, setCursor } from "../../utilities/cursor";
 import joinCn from "../../utilities/join-class-name";
@@ -13,6 +14,7 @@ type ResizerOptions = {
   $direction?: ResizeDirection;
   $reverse?: boolean;
   $targetRef?: MutableRefObject<HTMLElement>;
+  $onResize?: (ctx: { element: HTMLElement; }) => void;
   $onResizing?: (ctx: { width?: number; height?: number; }) => void;
   $onResized?: (ctx: { width?: number; height?: number; }) => void;
 };
@@ -28,6 +30,7 @@ const Resizer: FC<ResizerProps> = ({
   $direction,
   $reverse,
   $targetRef,
+  $onResize,
   $onResizing,
   $onResized,
   ...props
@@ -44,51 +47,39 @@ const Resizer: FC<ResizerProps> = ({
     const prect = pelem.getBoundingClientRect();
     const reverse = $reverse === true;
     let posX = cx, posY = cy, lastX = prect.width, lastY = prect.height, cursor = "";
-    let move: (arg: any) => void, to: NodeJS.Timeout | null = null;
+    let move: (arg: any) => void;
     if ($direction === "x") {
       const moveImpl = (x: number) => {
-        if (to) return;
-        to = setTimeout(() => {
-          const w = (x - posX) * (reverse ? -1 : 1) + lastX;
-          pelem.style.width = w + "px";
-          $onResizing?.({ width: w });
-          to = null;
-        }, timeout);
+        const w = (x - posX) * (reverse ? -1 : 1) + lastX;
+        pelem.style.width = w + "px";
+        $onResizing?.({ width: w });
       };
       cursor = "col-resize";
       move = isTouch ?
-        ((e: TouchEvent) => moveImpl(e.touches[0].clientX)) :
-        ((e: MouseEvent) => moveImpl(e.clientX));
+        throttle((e: TouchEvent) => moveImpl(e.touches[0].clientX), timeout) :
+        throttle((e: MouseEvent) => moveImpl(e.clientX), timeout);
     } else if ($direction === "y") {
       const moveImpl = (y: number) => {
-        if (to) return;
-        to = setTimeout(() => {
-          const h = (y - posY) * (reverse ? -1 : 1) + lastY;
-          pelem.style.height = h + "px";
-          $onResizing?.({ height: h });
-          to = null;
-        }, timeout);
+        const h = (y - posY) * (reverse ? -1 : 1) + lastY;
+        pelem.style.height = h + "px";
+        $onResizing?.({ height: h });
       };
       cursor = "row-resize";
       move = isTouch ?
-        ((e: TouchEvent) => moveImpl(e.touches[0].clientY)) :
-        ((e: MouseEvent) => moveImpl(e.clientY));
+        throttle((e: TouchEvent) => moveImpl(e.touches[0].clientY), timeout) :
+        throttle((e: MouseEvent) => moveImpl(e.clientY), timeout);
     } else {
       const moveImpl = (x: number, y: number) => {
-        if (to) return;
-        to = setTimeout(() => {
-          const w = (x - posX) * (reverse ? -1 : 1) + lastX;
-          const h = (y - posY) * (reverse ? -1 : 1) + lastY;
-          pelem.style.width = w + "px";
-          pelem.style.height = h + "px";
-          $onResizing?.({ width: w, height: h });
-          to = null;
-        }, timeout);
+        const w = (x - posX) * (reverse ? -1 : 1) + lastX;
+        const h = (y - posY) * (reverse ? -1 : 1) + lastY;
+        pelem.style.width = w + "px";
+        pelem.style.height = h + "px";
+        $onResizing?.({ width: w, height: h });
       };
       cursor = "nwse-resize";
       move = isTouch ?
-        ((e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY)) :
-        ((e: MouseEvent) => moveImpl(e.clientX, e.clientY));
+        throttle((e: TouchEvent) => moveImpl(e.touches[0].clientX, e.touches[0].clientY), timeout) :
+        throttle((e: MouseEvent) => moveImpl(e.clientX, e.clientY), timeout);
     }
     const endImpl = () => {
       pelem.removeAttribute(attrName);
@@ -125,6 +116,7 @@ const Resizer: FC<ResizerProps> = ({
       window.addEventListener("mousemove", move);
     }
     callReturn();
+    $onResize?.({ element: pelem });
   };
 
   if ($direction == null || $disabled) return <></>;

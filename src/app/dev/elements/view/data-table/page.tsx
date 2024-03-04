@@ -92,8 +92,8 @@ const Page = () => {
         align: "center",
         // minWidth: "30rem",
         sort: true,
-        header: (props) => {
-          console.log(props);
+        header: (_props) => {
+          // console.log(props);
           return (
             <div>custom header</div>
           );

@@ -140,10 +140,10 @@ const getColumnStyle = (column: DataTableColumn<any>, nestLevel = 0): CSSPropert
   let w = column.width;
   if (nestLevel > 0 && w == null) w = defaultColumnWidth;
   if (w == null) {
-    w = convertSizeNumToStr(column.minWidth) ?? defaultColumnWidth;
+    w = convertSizeNumToStr(column.minWidth);
     return {
       flex: "1 1 0rem",
-      width: w,
+      width: w ?? defaultColumnWidth,
       minWidth: w,
       maxWidth: convertSizeNumToStr(column.maxWidth),
     };
@@ -471,7 +471,14 @@ const DataTable = forwardRef(<T extends Data = Data>({
           {(column.resize ?? true) &&
             <Resizer
               $direction="x"
+              $onResize={({ element }) => {
+                if (element.style.flex) {
+                  element.style.width = element.offsetWidth + "px";
+                  element.style.removeProperty("flex");
+                }
+              }}
               $onResized={({ width }) => {
+                if (width == null) return;
                 column.width = width;
                 setHeaderRev(r => r + 1);
                 setBodyRev(r => r + 1);
