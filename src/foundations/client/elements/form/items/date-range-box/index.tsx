@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, useCallback, useEffect, useMemo, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import DateValidation from "../../../../../data-items/date/validations";
 import parseDate from "../../../../../objects/date/parse";
