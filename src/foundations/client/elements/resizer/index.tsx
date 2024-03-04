@@ -92,14 +92,14 @@ const Resizer: FC<ResizerProps> = ({
     }
     const endImpl = () => {
       pelem.removeAttribute(attrName);
-      const width = pelem.style.width;
+      const width = pelem.offsetWidth;
       const ctx: { width?: number; height?: number; } = {};
-      if (width) {
-        pelem.style.width = convertSizeNumToStr(ctx.width = parseFloat(width))!;
+      if (width != null) {
+        pelem.style.width = convertSizeNumToStr(ctx.width = width);
       }
-      const height = pelem.style.height;
-      if (height) {
-        pelem.style.height = convertSizeNumToStr(ctx.height = parseFloat(height))!;
+      const height = pelem.offsetHeight;
+      if (height != null) {
+        pelem.style.height = convertSizeNumToStr(ctx.height = height);
       }
       return ctx;
     };
