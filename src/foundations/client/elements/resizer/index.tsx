@@ -1,7 +1,7 @@
 "use client";
 
-import throttle from "#/utilities/throttle";
 import type { FC, HTMLAttributes, MutableRefObject } from "react";
+import throttle from "../../../utilities/throttle";
 import { releaseCursor, setCursor } from "../../utilities/cursor";
 import joinCn from "../../utilities/join-class-name";
 import { convertSizeNumToStr } from "../../utilities/size";
