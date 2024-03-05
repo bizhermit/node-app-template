@@ -200,7 +200,7 @@ $borderStyle: #{$borderWidth} solid var(--c-border);
   .hcell,
   .bcell,
   .rcell {
-    &:not(:first-child) {
+    &:not(:first-of-type) {
       &[data-border="true"] {
         border-left: #{$borderStyle};
       }
