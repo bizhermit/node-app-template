@@ -431,7 +431,7 @@ const DataTable = forwardRef(<T extends Data = Data>({
                   className={Style.hrow}
                   data-border={column.rowBorder ?? rowBorder}
                 >
-                  {row?.map(c => generateCell(c))}
+                  {row?.map(c => generateCell(c, nestLevel + 1))}
                 </div>
               );
             })}
@@ -535,7 +535,7 @@ const DataTable = forwardRef(<T extends Data = Data>({
                   className={Style.grow}
                   data-border={column.rowBorder ?? rowBorder}
                 >
-                  {row?.map(c => generateCell(index, data, c))}
+                  {row?.map(c => generateCell(index, data, c, nestLevel + 1))}
                 </div>
               );
             })}
