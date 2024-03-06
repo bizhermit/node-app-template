@@ -4,6 +4,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useState, type ForwardedRe
 import DateValidation from "../../../../../data-items/date/validations";
 import parseDate from "../../../../../objects/date/parse";
 import structKeys from "../../../../../objects/struct/keys";
+import { pickOne } from "../../../../../objects/struct/pick";
 import joinCn from "../../../../utilities/join-class-name";
 import rmAttrs from "../../../../utilities/remove-attrs";
 import useForm from "../../context";
@@ -63,7 +64,7 @@ interface DateRangeBoxFC extends FunctionComponent<DateRangeBoxProps<DataItem_Da
 const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined>({
   className,
   $ref,
-  ...props
+  ...$$p
 }: DateRangeBoxProps<D>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const isFormItem = form.bind != null;
@@ -77,30 +78,57 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
       from: {} as Partial<DataItem_Date>,
       to: {} as Partial<DataItem_Date>,
     };
-  }, [(props as any)?.$dataItem]);
+  }, [($$p as any)?.$dataItem]);
 
-  const { from, to } = (() => {
-    if ("$from" in props) {
+  const { from, to, props } = (() => {
+    if ("$from" in $$p) {
+      const {
+        $from,
+        $to,
+        ...props
+      } = $$p;
       return {
-        from: props.$from,
-        to: props.$to,
+        from: $from,
+        to: $to,
+        props,
       };
     }
+
+    const {
+      name,
+      $max,
+      $min,
+      $typeof,
+      $dataItem,
+      $rangePair,
+      $onEdit,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      $fromValue,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      $fromDefaultValue,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      $fromInitValue,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      $toValue,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      $toDefaultValue,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      $toInitValue,
+      ...props
+    } = $$p;
     const dataItem = {
       $$: undefined,
       type: "date" as const,
-      name: props.name ?? "no_name",
-      max: props.$max,
-      min: props.$min,
-      typeof: props.$typeof,
-      label: props.$label,
-      ...props.$dataItem,
+      name: name ?? "no_name",
+      max: $max,
+      min: $min,
+      typeof: $typeof,
+      ...$dataItem,
     };
     const fromSuffixName = "from";
     const toSuffixName = "to";
-    const name = props.name || dataItem.name;
-    const fromName = `${name}_${fromSuffixName}`;
-    const toName = `${name}_${toSuffixName}`;
+    const fromName = `${dataItem.name}_${fromSuffixName}`;
+    const toName = `${dataItem.name}_${toSuffixName}`;
     const setFromDataItemValue = (k: string | number, v: any) => {
       (memorizedDataItem.from as { [v: string]: any })[k] = v;
     };
@@ -122,27 +150,27 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
     setFromDataItemValue("rangePair", {
       name: toName,
       position: "after",
-      disallowSame: props.$rangePair?.disallowSame,
+      disallowSame: $rangePair?.disallowSame,
     });
     setToDataItemValue("name", toName);
     setToDataItemValue("rangePair", {
       name: fromName,
       position: "before",
-      disallowSame: props.$rangePair?.disallowSame,
+      disallowSame: $rangePair?.disallowSame,
     });
 
     return {
       from: {
         ...props,
         name: fromName,
-        $value: props.$fromValue,
-        $defaultValue: props.$fromDefaultValue,
-        $initValue: props.$fromInitValue,
+        ...pickOne($$p, "$fromValue", "$value"),
+        ...pickOne($$p, "$fromDefaultValue", "$defaultValue"),
+        ...pickOne($$p, "$fromInitValue", "$initValue"),
         $interlockValidation: isFormItem,
         $dataItem: memorizedDataItem.from,
-        ...(props.$onEdit && {
+        ...($onEdit && {
           $onEdit: (a: F.VType<DateValue, D>, b: F.VType<DateValue, D>, data: any) => {
-            props.$onEdit?.(
+            $onEdit?.(
               { from: a, to: toRef.getValue() as F.VType<DateValue, D> },
               { from: b, to: toRef.getValue() as F.VType<DateValue, D> },
               data,
@@ -153,14 +181,14 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
       to: {
         ...props,
         name: toName,
-        $value: props.$toValue,
-        $defaultValue: props.$toDefaultValue,
-        $initValue: props.$toInitValue,
+        ...pickOne($$p, "$toValue", "$value"),
+        ...pickOne($$p, "$toDefaultValue", "$defaultValue"),
+        ...pickOne($$p, "$toInitValue", "$initValue"),
         $interlockValidation: isFormItem,
         $dataItem: memorizedDataItem.to,
-        ...(props.$onEdit && {
+        ...($onEdit && {
           $onEdit: (a: F.VType<DateValue, D>, b: F.VType<DateValue, D>, data: any) => {
-            props.$onChange?.(
+            $onEdit?.(
               { from: fromRef.getValue() as F.VType<DateValue, D>, to: a },
               { from: toRef.getValue() as F.VType<DateValue, D>, to: b },
               data,
@@ -168,11 +196,12 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
           },
         }),
       },
+      props,
     } as const;
   })();
 
   const contextValidation = useCallback((f: F.VType<DateValue, D>, t: F.VType<DateValue, D>) => {
-    const fromRangePair = from.$rangePair ?? from.$dataItem?.rangePair ?? { name: to.name!, position: "after" };
+    const fromRangePair = from.$dataItem?.rangePair ?? { name: to.name!, position: "after" };
     const fromErr = !fromRangePair.name ? undefined : DateValidation.context(
       parseDate(f),
       fromRangePair,
@@ -182,7 +211,7 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
       to.$label ?? to.$dataItem?.label,
     );
     setFromError(fromErr);
-    const toRangePair = to.$rangePair ?? to.$dataItem?.rangePair ?? { name: from.name!, position: "before" };
+    const toRangePair = to.$dataItem?.rangePair ?? { name: from.name!, position: "before" };
     const toErr = !toRangePair.name ? undefined : DateValidation.context(
       parseDate(t),
       toRangePair,
@@ -208,8 +237,7 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
     }
   }, [
     contextValidation,
-    from.$preventMemorizeOnChange ? (props as any).$onChange : undefined,
-    from.$preventMemorizeOnChange ? (props as any).$from.$onChange : undefined,
+    from.$preventMemorizeOnChange ? from.$onChange : undefined,
   ]);
 
   const toChange = useCallback((a: F.VType<DateValue, D>, b: F.VType<DateValue, D>, data: any) => {
@@ -223,8 +251,7 @@ const DateRangeBox = forwardRef(<D extends DataItem_Date | undefined = undefined
     }
   }, [
     contextValidation,
-    to.$preventMemorizeOnChange ? (props as any).$onChange : undefined,
-    to.$preventMemorizeOnChange ? (props as any).$to?.$onChange : undefined,
+    to.$preventMemorizeOnChange ? to.$onChange : undefined,
   ]);
 
   if ($ref) {
