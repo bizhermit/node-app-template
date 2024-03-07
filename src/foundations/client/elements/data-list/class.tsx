@@ -1,6 +1,7 @@
 import formatDate from "../../../objects/date/format";
 import formatNum from "../../../objects/number/format";
 import { getValue } from "../../../objects/struct/get";
+import throttle from "../../../utilities/throttle";
 import DomClassComponent, { cloneDomElement } from "../../utilities/dom-class-component";
 import { convertSizeNumToStr } from "../../utilities/size";
 import Style from "./index.module.scss";
@@ -230,14 +231,9 @@ class DataListClass<T extends DataType = DataType> extends DomClassComponent {
       this.element.appendChild(elem);
     }) : undefined;
 
-    let et: NodeJS.Timeout | null = null;
-    this.addEvent(this.element, "scroll", () => {
-      if (et) return;
-      et = setTimeout(() => {
-        this.renderWhenScrolled();
-        et = null;
-      }, 5);
-    }, { passive: true });
+    this.addEvent(this.element, "scroll", throttle(() => {
+      this.renderWhenScrolled();
+    }, 5), { passive: true });
 
     this.resizeObserver = new ResizeObserver(() => {
       this.renderWhenResized();
