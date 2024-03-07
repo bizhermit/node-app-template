@@ -6,6 +6,7 @@ import equals from "../../../objects/equal";
 import formatNum from "../../../objects/number/format";
 import { generateUuidV4 } from "../../../objects/string/generator";
 import { getValue } from "../../../objects/struct/get";
+import throttle from "../../../utilities/throttle";
 import useLoadableArray, { type LoadableArray } from "../../hooks/loadable-array";
 import joinCn from "../../utilities/join-class-name";
 import { convertSizeNumToStr } from "../../utilities/size";
@@ -804,19 +805,14 @@ const DataTable = forwardRef(<T extends Data = Data>({
     }
     const rootElem = e.currentTarget as HTMLDivElement;
     const lastPosX = rootElem.scrollLeft, lastPosY = rootElem.scrollTop, posX = e.clientX, posY = e.clientY;
-    let et: NodeJS.Timeout | null = null;
-    const move = (e: MouseEvent) => {
-      if (et) return;
-      et = setTimeout(() => {
-        if ($dragScroll !== "vertical") {
-          rootElem.scrollLeft = posX - e.clientX + lastPosX;
-        }
-        if ($dragScroll !== "horizontal") {
-          rootElem.scrollTop = posY - e.clientY + lastPosY;
-        }
-        et = null;
-      }, 20);
-    };
+    const move = throttle((e: MouseEvent) => {
+      if ($dragScroll !== "vertical") {
+        rootElem.scrollLeft = posX - e.clientX + lastPosX;
+      }
+      if ($dragScroll !== "horizontal") {
+        rootElem.scrollTop = posY - e.clientY + lastPosY;
+      }
+    }, 20);
     document.onselectstart = () => false;
     rootElem.setAttribute("data-dragging", "");
     const end = () => {
