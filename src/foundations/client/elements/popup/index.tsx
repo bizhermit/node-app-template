@@ -2,6 +2,7 @@
 
 import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState, type ForwardedRef, type HTMLAttributes, type MutableRefObject } from "react";
 import { createPortal } from "react-dom";
+import throttle from "../../../utilities/throttle";
 import usePortalElement from "../../hooks/portal-element";
 import useToggleAnimation from "../../hooks/toggle-animation";
 import joinCn from "../../utilities/join-class-name";
@@ -327,14 +328,9 @@ const Impl = ({
           setShowed(false);
         }
       };
-      let resizeTimeout: NodeJS.Timeout | null = null;
-      const resizeListener = () => {
-        if (resizeTimeout) return;
-        resizeTimeout = setTimeout(() => {
-          resetPosition();
-          resizeTimeout = null;
-        }, 40);
-      };
+      const resizeListener = throttle(() => {
+        resetPosition();
+      }, 40);
 
       if (open) {
         showedRef.current = true;
