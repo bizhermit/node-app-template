@@ -9,6 +9,7 @@ import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
 import { CloudDownloadIcon, CloudUploadIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
+import SelectButton from "../../../../foundations/client/elements/button/select";
 import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "../../_components/base-layout";
 import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
@@ -143,6 +144,82 @@ const Page = () => {
               </BaseRow>
             );
           })}
+        </BaseSection>
+        <Divider />
+        <BaseSection title="select button">
+          <BaseRow>
+            <SelectButton
+              $disabled={disabled}
+              $source={[
+                {
+                  onClick: () => {
+                    console.log("click 1");
+                  },
+                  children: "Click 1",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 2");
+                  },
+                  children: "Click 2",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 3");
+                  },
+                  children: "Click 3",
+                },
+              ]}
+            />
+            <SelectButton
+              $disabled={disabled}
+              $outline
+              $source={[
+                {
+                  onClick: () => {
+                    console.log("click 1");
+                  },
+                  children: "Click 1",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 2");
+                  },
+                  children: "Click 2",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 3");
+                  },
+                  children: "Click 3",
+                },
+              ]}
+            />
+            <SelectButton
+              $disabled={disabled}
+              $text
+              $source={[
+                {
+                  onClick: () => {
+                    console.log("click 1");
+                  },
+                  children: "Click 1",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 2");
+                  },
+                  children: "Click 2",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 3");
+                  },
+                  children: "Click 3",
+                },
+              ]}
+            />
+          </BaseRow>
         </BaseSection>
       </BaseSheet>
     </BaseLayout>

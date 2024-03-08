@@ -25,16 +25,18 @@
       cursor: pointer;
 
       &:focus {
-        >.main {
-          @include mixins.focusOutline(var(--c));
-          outline-offset: 0.1rem;
-        }
+        @include mixins.focusOutline(var(--c));
+        outline-offset: 0.1rem;
       }
 
       @include mixins.crossHover {
-        >.main {
-          @include mixins.buttonHoverAnimation(var(--c));
+        @include mixins.buttonHoverAnimation(var(--c));
 
+        &:active {
+          @include mixins.buttonHoverActive;
+        }
+
+        >.main {
           &::after {
             opacity: 0.8;
           }
@@ -43,10 +45,6 @@
             &::after {
               opacity: 0.15;
             }
-          }
-
-          &:active {
-            @include mixins.buttonHoverActive;
           }
         }
       }
@@ -90,6 +88,10 @@
             }
           }
         }
+
+        +.pull {
+          width: var(--cs-#{$size});
+        }
       }
     }
 
@@ -109,6 +111,7 @@
     height: 100%;
     width: 100%;
     color: var(--c_);
+    border: 0.15rem solid var(--c);
 
     &::after {
       box-sizing: border-box;
@@ -124,16 +127,16 @@
       z-index: 0;
     }
 
-    &[data-outline="true"] {
-      border: 0.15rem solid var(--c);
-    }
-
     &:is([data-outline="true"], [data-text="true"]) {
       color: var(--c);
 
       &::after {
         opacity: 0;
       }
+    }
+
+    &[data-text="true"] {
+      border-color: transparent;
     }
 
     &[data-icon="left"] {
@@ -193,6 +196,107 @@
     &:only-child {
       width: 100%;
     }
+  }
+
+  .select {
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    align-items: stretch;
+
+    >.wrap {
+      flex: 1 1 0rem;
+
+      >.main {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+  }
+
+  .pull {
+    --c: var(--s-color, var(--c-main));
+    --c_: var(--s-color_, var(--c-main_));
+    box-sizing: border-box;
+    position: relative;
+    flex: none;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    color: var(--c_);
+    border-top-right-radius: var(--radius);
+    border-bottom-right-radius: var(--radius);
+    border: 0.15rem solid var(--c);
+    border-left: none;
+
+    &::before {
+      box-sizing: border-box;
+      position: absolute;
+      content: "";
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: var(--c);
+      z-index: 0;
+    }
+
+    &:not(:is([data-outline="true"], [data-text="true"])) {
+      &::after {
+        box-sizing: border-box;
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0.1rem;
+        background: var(--c_);
+        opacity: 0.6;
+      }
+    }
+
+    &[data-outline="true"] {
+      color: var(--c);
+
+      &::before {
+        opacity: 0;
+      }
+    }
+
+    &[data-text="true"] {
+      color: var(--c-);
+      border-color: transparent;
+
+      &::before {
+        opacity: 0;
+      }
+    }
+
+    &:not([data-disabled="true"]) {
+      cursor: pointer;
+
+      @include mixins.crossHover {
+        &::before {
+          opacity: 0.8;
+        }
+
+        &:is([data-outline="true"], [data-text="true"]) {
+          &::before {
+            opacity: 0.15;
+          }
+        }
+      }     
+    }
+
+    &[data-disabled="true"] {
+      opacity: #{var.$disabledOpacity};
+    }
+  }
+
+  .down {
+    z-index: 2;
   }
 
 }
