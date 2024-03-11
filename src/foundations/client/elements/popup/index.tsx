@@ -50,8 +50,8 @@ type PopupOptions = {
   $closeWhenClick?: boolean;
   $zIndex?: number;
   $preventElevation?: boolean;
-  $onToggle?: (show: boolean) => void;
-  $onToggled?: (show: boolean) => void;
+  $onToggle?: (show: boolean, ctx: { anchorElement: HTMLElement; popupElement: HTMLDivElement; }) => void;
+  $onToggled?: (show: boolean, ctx: { anchorElement: HTMLElement; popupElement: HTMLDivElement; }) => void;
   $destructor?: (open: boolean) => void;
   $preventFocus?: boolean;
 };
@@ -94,7 +94,8 @@ const Impl = ({
 }: PopupProps & { $ref: ForwardedRef<HTMLDivElement> }) => {
   const ref = useRef<HTMLDivElement>(null!);
   useImperativeHandle(props.$ref, () => ref.current);
-  const aref = useRef<HTMLDivElement>(null!);
+  const paref = useRef<HTMLDivElement>(null!);
+  const aref = useRef<HTMLElement>(null!);
   const mref = useRef<HTMLDivElement>(null!);
   const zIndex = useRef<number>(0);
   const updateZIndex = useRef(() => { });
@@ -161,20 +162,17 @@ const Impl = ({
       if (posX.startsWith("outer")) posX = "center";
       if (posY.startsWith("outer")) posY = "center";
     } else if ($anchor === "parent") {
-      const anchor = aref.current?.parentElement as HTMLElement;
-      rect = anchor.getBoundingClientRect();
+      rect = (aref.current = paref.current?.parentElement as HTMLElement).getBoundingClientRect();
     } else if ("current" in $anchor) {
-      const anchor = $anchor.current;
-      if (anchor == null) {
+      if ((aref.current = $anchor.current) == null) {
         if (posX.startsWith("outer")) posX = "center";
         if (posY.startsWith("outer")) posY = "center";
       } else {
-        rect = anchor.getBoundingClientRect();
+        rect = aref.current.getBoundingClientRect();
       }
     } else {
-      const anchor = $anchor;
-      rect.top = rect.bottom = anchor.pageY;
-      rect.left = rect.right = anchor.pageX;
+      rect.top = rect.bottom = $anchor.pageY;
+      rect.left = rect.right = $anchor.pageX;
     }
     if (marginX) {
       rect.width += marginX * 2;
@@ -352,7 +350,10 @@ const Impl = ({
         }
         if ($mask) dialogDown();
       }
-      $onToggle?.(open);
+      $onToggle?.(open, {
+        anchorElement: aref.current,
+        popupElement: ref.current,
+      });
 
       return {
         closeListener,
@@ -379,7 +380,10 @@ const Impl = ({
           mref.current.style.display = "none";
         }
       }
-      $onToggled?.(open);
+      $onToggled?.(open, {
+        anchorElement: aref.current,
+        popupElement: ref.current,
+      });
     },
     destructor: (open, params) => {
       if (params.closeListener != null) {
@@ -397,7 +401,7 @@ const Impl = ({
   return (
     <>
       {$anchor === "parent" &&
-        <div className={Style.anchor} ref={aref} />
+        <div className={Style.anchor} ref={paref} />
       }
       {createPortal(
         <PopupContext.Provider

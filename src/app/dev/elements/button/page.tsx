@@ -6,9 +6,12 @@ import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
-import { CloudDownloadIcon, CloudUploadIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
+import { CloudDownloadIcon, CloudUploadIcon, CrossIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
+import SelectButton from "../../../../foundations/client/elements/button/select";
+import Text from "../../../../foundations/client/elements/text";
+import sleep from "../../../../foundations/utilities/sleep";
 import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "../../_components/base-layout";
 import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
@@ -143,6 +146,100 @@ const Page = () => {
               </BaseRow>
             );
           })}
+        </BaseSection>
+        <Divider />
+        <BaseSection title="select button">
+          <BaseRow>
+            <SelectButton
+              $disabled={disabled}
+              $source={[
+                {
+                  onClick: async (unlock) => {
+                    await sleep(2000);
+                    console.log("create pull request");
+                    unlock();
+                  },
+                  children: "Create pull request",
+                  listItemChildren: (
+                    <>
+                      <Text $bold>Creat pull request</Text>
+                      <Text>Open a pull request that is ready for review</Text>
+                    </>
+                  ),
+                },
+                {
+                  onClick: async (unlock) => {
+                    await sleep(2000);
+                    console.log("create draft pull request");
+                    unlock();
+                  },
+                  children: "Draft pull request",
+                  listItemChildren: (
+                    <>
+                      <Text $bold>Create draft pull request</Text>
+                      <Text>Cannot be merged until marked ready for review</Text>
+                    </>
+                  ),
+                },
+                {
+                  onClick: () => {
+                    console.log("Not create");
+                  },
+                  children: "Not create",
+                  $icon: <CrossIcon />,
+                },
+              ]}
+            />
+            <SelectButton
+              $disabled={disabled}
+              $outline
+              $source={[
+                {
+                  onClick: () => {
+                    console.log("click 1");
+                  },
+                  children: "Click 1",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 2");
+                  },
+                  children: "Click 2",
+                  disabled: true,
+                },
+                {
+                  onClick: () => {
+                    console.log("click 3");
+                  },
+                  children: "Click 3",
+                },
+              ]}
+            />
+            <SelectButton
+              $disabled={disabled}
+              $text
+              $source={[
+                {
+                  onClick: () => {
+                    console.log("click 1");
+                  },
+                  children: "Click 1",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 2");
+                  },
+                  children: "Click 2",
+                },
+                {
+                  onClick: () => {
+                    console.log("click 3");
+                  },
+                  children: "Click 3",
+                },
+              ]}
+            />
+          </BaseRow>
         </BaseSection>
       </BaseSheet>
     </BaseLayout>
