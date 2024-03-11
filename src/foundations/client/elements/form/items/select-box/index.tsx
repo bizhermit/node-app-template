@@ -169,7 +169,6 @@ const SelectBox = forwardRef(<
   const iref = useRef<HTMLInputElement>(null!);
   const [showPicker, setShowPicker] = useState(false);
   const doScroll = useRef(false);
-  const [width, setWidth] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const lref = useRef<HTMLDivElement>(null!);
   const [label, setLabel] = useState("");
@@ -239,7 +238,6 @@ const SelectBox = forwardRef(<
     if (showPicker) return;
     if (opts?.scroll != null) doScroll.current = opts.scroll;
     if (!opts?.preventBindSource) setBindSource(source);
-    setWidth((iref.current.parentElement as HTMLElement).offsetWidth);
     const rect = iref.current.getBoundingClientRect();
     setMaxHeight((Math.max(window.innerHeight - rect.bottom, rect.top) - 10));
     setShowPicker(true);
@@ -490,14 +488,18 @@ const SelectBox = forwardRef(<
       <Popup
         className={Style.popup}
         $show={showPicker && ctx.editable && !loading}
-        $onToggle={setShowPicker}
+        $onToggle={(show, { anchorElement, popupElement }) => {
+          if (show && anchorElement && popupElement) {
+            popupElement.style.width = convertSizeNumToStr(anchorElement.offsetWidth);
+          }
+          setShowPicker(show);
+        }}
         $anchor="parent"
         $position={{
           x: "inner",
           y: "outer",
         }}
         $animationDuration={80}
-        style={{ width }}
         $preventUnmount
         $animationDirection="vertical"
         $onToggled={(open) => {
