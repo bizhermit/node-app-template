@@ -83,9 +83,7 @@
           }
 
           >.icon {
-            &:not(:only-child) {
-              min-width: var(--cs-#{$size});
-            }
+            min-width: min(100%, var(--cs-#{$size}));
           }
         }
 
@@ -228,8 +226,7 @@
     color: var(--c_);
     border-top-right-radius: var(--radius);
     border-bottom-right-radius: var(--radius);
-    border: 0.15rem solid var(--c);
-    border-left: none;
+    margin-left: -0.15rem;
 
     &::before {
       box-sizing: border-box;
@@ -244,21 +241,25 @@
     }
 
     &:not(:is([data-outline="true"], [data-text="true"])) {
+      border: 0.15rem solid var(--c);
+
       &::after {
         box-sizing: border-box;
         position: absolute;
         content: "";
         top: 0;
-        left: 0;
+        left: -0.1rem;
         height: 100%;
         width: 0.1rem;
         background: var(--c_);
         opacity: 0.6;
+        z-index: 10;
       }
     }
 
     &[data-outline="true"] {
       color: var(--c);
+      border: 0.15rem solid var(--c);
 
       &::before {
         opacity: 0;
@@ -266,8 +267,7 @@
     }
 
     &[data-text="true"] {
-      color: var(--c-);
-      border-color: transparent;
+      color: var(--c);
 
       &::before {
         opacity: 0;
@@ -292,7 +292,7 @@
             opacity: 0.15;
           }
         }
-      }     
+      }
     }
 
     &[data-disabled="true"] {
