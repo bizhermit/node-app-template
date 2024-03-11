@@ -1,8 +1,12 @@
-import { ButtonHTMLAttributes, forwardRef, useEffect, useRef, useState, type HTMLAttributes } from "react";
+import { forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes, type HTMLAttributes } from "react";
+import { isNotNull } from "../../../objects/empty";
+import parseNum from "../../../objects/number/parse";
 import joinCn from "../../utilities/join-class-name";
 import { isNotReactNode } from "../../utilities/react-node";
+import { convertSizeNumToStr } from "../../utilities/size";
 import useForm from "../form/context";
 import { DownIcon } from "../icon";
+import Popup from "../popup";
 import type { ButtonOptions } from "./index";
 import Style from "./index.module.scss";
 
@@ -62,6 +66,8 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
   const bref = useRef<HTMLButtonElement>(null!);
   const [buttonIndex, setButtonIndex] = useState(0);
   const button = $source[buttonIndex];
+  const [showPicker, setShowPicker] = useState(false);
+  const lref = useRef<HTMLDivElement>(null!);
 
   const form = useForm();
   const submitDisabled = $notDependsOnForm !== true && (
@@ -84,6 +90,110 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
     if (res == null || typeof res === "boolean") {
       if (res !== true) unlock();
     }
+  };
+
+  const openPicker = () => {
+    setShowPicker(true);
+  };
+
+  const closePicker = () => {
+    setShowPicker(false);
+    bref.current?.focus();
+  };
+
+  const selectItem = (elem: HTMLElement) => {
+    if (elem == null) return;
+    try {
+      const index = parseNum(elem.getAttribute("data-index"));
+      if (isNotNull(index)) setButtonIndex(index);
+      closePicker();
+    } catch {
+      return;
+    }
+  };
+
+  const isListItem = (element: HTMLElement) => {
+    let elem = element;
+    while (elem != null) {
+      if (elem.tagName === "DIV" && elem.hasAttribute("data-index")) break;
+      elem = elem.parentElement as HTMLElement;
+    }
+    return elem;
+  };
+
+  const scrollToSelectedItem = () => {
+    if (lref.current == null) return;
+    let elem = lref.current.querySelector(`div[data-current="true"]`) as HTMLElement;
+    if (elem == null) elem = lref.current.querySelector("div[data-index]") as HTMLElement;
+    if (elem) {
+      lref.current.scrollTop = elem.offsetTop + elem.offsetHeight / 2 - lref.current.clientHeight / 2;
+      elem.focus();
+    } else {
+      lref.current.focus();
+    }
+  };
+
+  const keyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    switch (e.code) {
+      case "Escape":
+        closePicker();
+        break;
+      case "F2":
+        openPicker();
+        break;
+      case "ArrowUp":
+      case "ArrowDown":
+        if (showPicker && lref.current) {
+          scrollToSelectedItem();
+        } else {
+          openPicker();
+        }
+        e.stopPropagation();
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const keyDonwItem = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    switch (e.code) {
+      case "ArrowUp":
+        const prevElem = document.activeElement?.previousElementSibling as HTMLElement;
+        if (prevElem) {
+          const st = prevElem.offsetTop;
+          const curSt = lref.current.scrollTop;
+          if (st < curSt) lref.current.scrollTop = st;
+          prevElem.focus();
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      case "ArrowDown":
+        const nextElem = document.activeElement?.nextElementSibling as HTMLElement;
+        if (nextElem) {
+          const st = nextElem.offsetTop - lref.current.clientHeight + nextElem.offsetHeight;
+          const curSt = lref.current.scrollTop;
+          if (st > curSt) lref.current.scrollTop = st;
+          nextElem.focus();
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+      case "Escape":
+        closePicker();
+        break;
+      case "Enter":
+        selectItem(isListItem(e.target as HTMLElement));
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const clickItem = (e: React.MouseEvent<HTMLDivElement>) => {
+    selectItem(isListItem(e.target as HTMLElement));
   };
 
   const formEnable = !form.disabled && !form.readOnly;
@@ -110,6 +220,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
         data-size={$size || "m"}
         data-wide={!$fitContent && button.children != null}
         data-round={$round}
+        onKeyDown={keyDown}
       >
         <div
           className={Style.main}
@@ -134,9 +245,57 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
         data-outline={$outline}
         data-text={$text}
         data-disabled={$disabled || button.disabled || submitDisabled || disabled}
+        onClick={() => {
+          if (!showPicker) openPicker();
+        }}
+        tabIndex={-1}
       >
         <DownIcon className={Style.down} />
       </div>
+      <Popup
+        className={Style.popup}
+        $show={showPicker && !($disabled || button.disabled || submitDisabled || disabled)}
+        $onToggle={(open, { anchorElement, popupElement }) => {
+          if (open && anchorElement && popupElement) {
+            popupElement.style.width = convertSizeNumToStr(anchorElement.offsetWidth);
+          }
+          open ? openPicker() : closePicker();
+        }}
+        $onToggled={(open) => {
+          if (open) scrollToSelectedItem();
+        }}
+        $anchor="parent"
+        $position={{
+          x: "inner",
+          y: "outer",
+        }}
+        $animationDuration={80}
+        $animationDirection="vertical"
+        $mask="transparent"
+        $preventFocus
+        $closeWhenClick
+      >
+        <div
+          className={Style.list}
+          ref={lref}
+          onKeyDown={keyDonwItem}
+          onClick={clickItem}
+          tabIndex={-1}
+        >
+          {$source.map((item, i) => {
+            return (
+              <div
+                key={i}
+                tabIndex={0}
+                data-index={i}
+                data-current={i === buttonIndex}
+              >
+                {item.children}
+              </div>
+            );
+          })}
+        </div>
+      </Popup>
     </div>
   );
 });
