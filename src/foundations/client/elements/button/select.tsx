@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes, type HTMLAttributes } from "react";
+import { ReactNode, forwardRef, useEffect, useRef, useState, type ButtonHTMLAttributes, type HTMLAttributes } from "react";
 import { isNotNull } from "../../../objects/empty";
 import parseNum from "../../../objects/number/parse";
 import joinCn from "../../utilities/join-class-name";
@@ -24,7 +24,9 @@ type SelectButtonSourceItem = Pick<ButtonHTMLAttributes<HTMLButtonElement>,
   | "$noPadding"
   | "$notDependsOnForm"
   | "onClick"
->;
+> & {
+  listItemChildren?: ReactNode;
+};
 
 export type SelectButtonOptions = {
   $source: [SelectButtonSourceItem, ...Array<SelectButtonSourceItem>];
@@ -257,7 +259,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
         $show={showPicker && !($disabled || button.disabled || submitDisabled || disabled)}
         $onToggle={(open, { anchorElement, popupElement }) => {
           if (open && anchorElement && popupElement) {
-            popupElement.style.width = convertSizeNumToStr(anchorElement.offsetWidth);
+            popupElement.style.minWidth = convertSizeNumToStr(anchorElement.offsetWidth);
           }
           open ? openPicker() : closePicker();
         }}
@@ -285,12 +287,13 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
           {$source.map((item, i) => {
             return (
               <div
+                className={Style.item}
                 key={i}
                 tabIndex={0}
                 data-index={i}
                 data-current={i === buttonIndex}
               >
-                {item.children}
+                {item.listItemChildren ?? item.children}
               </div>
             );
           })}

@@ -10,6 +10,7 @@ import { CloudDownloadIcon, CloudUploadIcon, DownIcon, HomeIcon, PlusIcon } from
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
 import SelectButton from "../../../../foundations/client/elements/button/select";
+import Text from "../../../../foundations/client/elements/text";
 import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "../../_components/base-layout";
 import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
@@ -153,21 +154,33 @@ const Page = () => {
               $source={[
                 {
                   onClick: () => {
-                    console.log("click 1");
+                    console.log("create pull request");
                   },
-                  children: "Click 1",
+                  children: "Create pull request",
+                  listItemChildren: (
+                    <div style={{ display: "flex", flexFlow: "column nowrap" }}>
+                      <Text $bold>Creat pull request</Text>
+                      <Text>Open a pull request that is ready for review</Text>
+                    </div>
+                  ),
                 },
                 {
                   onClick: () => {
-                    console.log("click 2");
+                    console.log("create draft pull request");
                   },
-                  children: "Click 2",
+                  children: "Draft pull request",
+                  listItemChildren: (
+                    <div style={{ display: "flex", flexFlow: "column nowrap" }}>
+                      <Text $bold>Create draft pull request</Text>
+                      <Text>Cannot be merged until marked ready for review</Text>
+                    </div>
+                  ),
                 },
                 {
                   onClick: () => {
-                    console.log("click 3");
+                    console.log("Not create");
                   },
-                  children: "Click 3",
+                  children: "Not create",
                 },
               ]}
             />
