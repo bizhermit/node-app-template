@@ -277,6 +277,11 @@
     &:not([data-disabled="true"]) {
       cursor: pointer;
 
+      &:focus {
+        @include mixins.focusOutline(var(--c));
+        outline-offset: 0.1rem;
+      }
+
       @include mixins.crossHover {
         &::before {
           opacity: 0.8;

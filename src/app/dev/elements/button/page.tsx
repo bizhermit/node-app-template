@@ -199,6 +199,7 @@ const Page = () => {
                     console.log("click 2");
                   },
                   children: "Click 2",
+                  disabled: true,
                 },
                 {
                   onClick: () => {

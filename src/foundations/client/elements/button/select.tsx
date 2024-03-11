@@ -6,11 +6,13 @@ import { isNotReactNode } from "../../utilities/react-node";
 import { convertSizeNumToStr } from "../../utilities/size";
 import useForm from "../form/context";
 import { DownIcon } from "../icon";
-import Popup from "../popup";
+import Popup, { type PopupPosition } from "../popup";
 import type { ButtonOptions } from "./index";
 import Style from "./index.module.scss";
 
-type SelectButtonSourceItem = Pick<ButtonHTMLAttributes<HTMLButtonElement>,
+type SelectButtonSourceItem = {
+  listItemChildren?: ReactNode;
+} & Pick<ButtonHTMLAttributes<HTMLButtonElement>,
   | "type"
   | "formMethod"
   | "disabled"
@@ -24,13 +26,12 @@ type SelectButtonSourceItem = Pick<ButtonHTMLAttributes<HTMLButtonElement>,
   | "$noPadding"
   | "$notDependsOnForm"
   | "onClick"
-> & {
-  listItemChildren?: ReactNode;
-};
+>;
 
 export type SelectButtonOptions = {
   $source: [SelectButtonSourceItem, ...Array<SelectButtonSourceItem>];
   $disabled?: boolean;
+  $position?: PopupPosition;
 } & Pick<ButtonOptions,
   | "$size"
   | "$color"
@@ -63,6 +64,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
   $focusWhenMounted,
   $notDependsOnForm,
   $source,
+  $position,
   ...props
 }, $ref) => {
   const bref = useRef<HTMLButtonElement>(null!);
@@ -72,7 +74,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
   const lref = useRef<HTMLDivElement>(null!);
 
   const form = useForm();
-  const submitDisabled = $notDependsOnForm !== true && (
+  const submitDisabled = (button.$notDependsOnForm ?? $notDependsOnForm) !== true && (
     form.disabled ||
     (button.type === "submit" && button.formMethod !== "delete" && (form.hasError || form.submitting)) ||
     (button.type === "reset" && (form.readOnly || form.submitting))
@@ -95,12 +97,15 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
   };
 
   const openPicker = () => {
+    if ($disabled || disabled) return;
     setShowPicker(true);
   };
 
   const closePicker = () => {
     setShowPicker(false);
-    bref.current?.focus();
+    if (!bref.current) return;
+    if (bref.current.disabled) (bref.current.nextElementSibling as HTMLElement)?.focus();
+    else bref.current?.focus();
   };
 
   const selectItem = (elem: HTMLElement) => {
@@ -141,8 +146,6 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
         closePicker();
         break;
       case "F2":
-        openPicker();
-        break;
       case "ArrowUp":
       case "ArrowDown":
         if (showPicker && lref.current) {
@@ -218,9 +221,9 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
         type={button.type ?? "button"}
         disabled={$disabled || button.disabled || submitDisabled || disabled}
         onClick={click}
-        data-color={$color}
+        data-color={button.$color ?? $color}
         data-size={$size || "m"}
-        data-wide={!$fitContent && button.children != null}
+        data-wide={!(button.$fitContent ?? $fitContent) && button.children != null}
         data-round={$round}
         onKeyDown={keyDown}
       >
@@ -228,14 +231,14 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
           className={Style.main}
           data-outline={$outline}
           data-text={$text}
-          data-icon={button.$icon != null && ($iconPosition || "left")}
+          data-icon={button.$icon != null && (button.$iconPosition || $iconPosition || "left")}
         >
           {button.$icon != null && <div className={Style.icon}>{button.$icon}</div>}
           <div
             className={Style.label}
-            data-fill={$fillLabel}
+            data-fill={button.$fillLabel ?? $fillLabel}
             data-pt={isNotReactNode(button.children)}
-            data-pad={!$noPadding}
+            data-pad={!(button.$noPadding ?? $noPadding)}
           >
             {button.children}
           </div>
@@ -246,17 +249,20 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
         data-color={$color}
         data-outline={$outline}
         data-text={$text}
-        data-disabled={$disabled || button.disabled || submitDisabled || disabled}
+        data-disabled={$disabled || disabled}
         onClick={() => {
           if (!showPicker) openPicker();
         }}
-        tabIndex={-1}
+        onKeyDown={e => {
+          if (e.code === "Space" || e.code === "Enter" || e.code === "F2" || e.code === "ArrowUp" || e.code === "ArrowDown") openPicker();
+        }}
+        tabIndex={($disabled || button.disabled || submitDisabled || disabled) ? 0 : -1}
       >
         <DownIcon className={Style.down} />
       </div>
       <Popup
         className={Style.popup}
-        $show={showPicker && !($disabled || button.disabled || submitDisabled || disabled)}
+        $show={showPicker && !($disabled || disabled)}
         $onToggle={(open, { anchorElement, popupElement }) => {
           if (open && anchorElement && popupElement) {
             popupElement.style.minWidth = convertSizeNumToStr(anchorElement.offsetWidth);
@@ -267,7 +273,7 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
           if (open) scrollToSelectedItem();
         }}
         $anchor="parent"
-        $position={{
+        $position={$position ?? {
           x: "inner",
           y: "outer",
         }}
