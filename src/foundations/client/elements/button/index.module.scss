@@ -319,9 +319,9 @@
   .item {
     box-sizing: border-box;
     display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: center;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-start;
     padding: var(--pt-t) #{var.$textPadding} 0 #{var.$textPadding};
     min-height: var(--cs-m);
     flex: none;

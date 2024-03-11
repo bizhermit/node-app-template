@@ -161,10 +161,10 @@ const Page = () => {
                   },
                   children: "Create pull request",
                   listItemChildren: (
-                    <div style={{ display: "flex", flexFlow: "column nowrap" }}>
+                    <>
                       <Text $bold>Creat pull request</Text>
                       <Text>Open a pull request that is ready for review</Text>
-                    </div>
+                    </>
                   ),
                 },
                 {
@@ -175,10 +175,10 @@ const Page = () => {
                   },
                   children: "Draft pull request",
                   listItemChildren: (
-                    <div style={{ display: "flex", flexFlow: "column nowrap" }}>
+                    <>
                       <Text $bold>Create draft pull request</Text>
                       <Text>Cannot be merged until marked ready for review</Text>
-                    </div>
+                    </>
                   ),
                 },
                 {
