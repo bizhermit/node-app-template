@@ -6,7 +6,7 @@ import Divider from "#/client/elements/divider";
 import Form from "#/client/elements/form";
 import TextBox from "#/client/elements/form/items/text-box";
 import ToggleSwitch from "#/client/elements/form/items/toggle-switch";
-import { CloudDownloadIcon, CloudUploadIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
+import { CloudDownloadIcon, CloudUploadIcon, CrossIcon, DownIcon, HomeIcon, PlusIcon } from "#/client/elements/icon";
 import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
 import SelectButton from "../../../../foundations/client/elements/button/select";
@@ -186,6 +186,7 @@ const Page = () => {
                     console.log("Not create");
                   },
                   children: "Not create",
+                  $icon: <CrossIcon />,
                 },
               ]}
             />
