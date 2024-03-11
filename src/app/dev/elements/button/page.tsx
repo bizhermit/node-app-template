@@ -11,6 +11,7 @@ import { colors } from "#/utilities/sandbox";
 import { useState } from "react";
 import SelectButton from "../../../../foundations/client/elements/button/select";
 import Text from "../../../../foundations/client/elements/text";
+import sleep from "../../../../foundations/utilities/sleep";
 import BaseLayout, { BaseRow, BaseSection, BaseSheet } from "../../_components/base-layout";
 import ControlLayout, { ControlItem } from "../../_components/control-layout";
 
@@ -153,8 +154,10 @@ const Page = () => {
               $disabled={disabled}
               $source={[
                 {
-                  onClick: () => {
+                  onClick: async (unlock) => {
+                    await sleep(2000);
                     console.log("create pull request");
+                    unlock();
                   },
                   children: "Create pull request",
                   listItemChildren: (
@@ -165,8 +168,10 @@ const Page = () => {
                   ),
                 },
                 {
-                  onClick: () => {
+                  onClick: async (unlock) => {
+                    await sleep(2000);
                     console.log("create draft pull request");
+                    unlock();
                   },
                   children: "Draft pull request",
                   listItemChildren: (
