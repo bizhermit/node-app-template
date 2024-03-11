@@ -254,7 +254,11 @@ const SelectButton = forwardRef<HTMLDivElement, SelectButtonProps>(({
           if (!showPicker) openPicker();
         }}
         onKeyDown={e => {
-          if (e.code === "Space" || e.code === "Enter" || e.code === "F2" || e.code === "ArrowUp" || e.code === "ArrowDown") openPicker();
+          if (e.code === "Space" || e.code === "Enter" || e.code === "F2" || e.code === "ArrowUp" || e.code === "ArrowDown") {
+            openPicker();
+            e.preventDefault();
+            e.stopPropagation();
+          }
         }}
         tabIndex={($disabled || button.disabled || submitDisabled || disabled) ? 0 : -1}
       >
