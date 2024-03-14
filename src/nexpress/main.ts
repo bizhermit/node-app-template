@@ -54,7 +54,7 @@ if (isDev) {
 log.debug(JSON.stringify(process.env, null, 2));
 
 const basePath = process.env.BASE_PATH || "";
-const port = Number(process.env.PORT || (isDev ? 8000 : 80));
+const port = Number(process.env.NEXT_PORT || (isDev ? 8000 : 80));
 const sessionName = process.env.SESSION_NAME || undefined;
 const sessionSecret = process.env.SESSION_SECRET || generateUuidV4();
 const cookieParserSecret = process.env.COOKIE_PARSER_SECRET || generateUuidV4();

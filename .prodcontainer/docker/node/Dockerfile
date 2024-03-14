@@ -15,4 +15,4 @@ RUN npm install \
     node_modules \
   && npm install --production
 
-CMD [ "npx", "next", "start" ]
+CMD [ "npx", "next", "start", "-p", "$NEXT_PORT" ]
