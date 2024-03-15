@@ -11,6 +11,7 @@
     "vscode": {
       "extensions": [
         "MS-CEINTL.vscode-language-pack-ja",
+        "ms-azuretools.vscode-docker",
         "eamodio.gitlens",
         "mhutchie.git-graph",
         "dbaeumer.vscode-eslint",
