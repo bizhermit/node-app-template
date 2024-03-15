@@ -1,23 +1,14 @@
-FROM node:18-bullseye
+FROM node:20-bullseye
 
 WORKDIR /workspace
 
-COPY . /workspace
-
 RUN apt-get update -y \
   && apt-get upgrade -y \
-  # && apt-get install -y --no-install-recommends \
+  && apt-get install -y --no-install-recommends \
+    sudo \
   && apt-get -y clean \
   && rm -rf /var/lib/apt/lists/* \
-  && npm install \
-  && npm run build \
-  && npx rimraf \
-    src \
-    scripts \
-    .eslint* \
-    .git* \
-    .devcontainer \
-    node_modules \
-  && npm install --production
+  && echo 'node:node' | chpasswd \
+  && gpasswd -a node sudo
 
-CMD [ "npx", "next", "start", "-p", "$NEXT_PORT" ]
+USER node

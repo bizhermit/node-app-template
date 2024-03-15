@@ -9,6 +9,7 @@ services:
     tty: true
     volumes:
       - '../:/workspace'
+      - 'node_dev_node_modules:/workspace/node_modules'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     environment:
@@ -21,4 +22,6 @@ services:
     ports:
       - '${NEXT_PORT:-3000}:${NEXT_PORT:-3000}'
     command:
-      /bin/bash -c "npm i && npm run dev"
+      bash -c 'sh /workspace/.devcontainer/postCreatedCommand.sh && npm i && npm run dev && bash'
+volumes:
+  node_dev_node_modules:

@@ -3,7 +3,8 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "node",
   "workspaceFolder": "/workspace",
-  "postStartCommand": "npm install",
+  "postCreateCommand": "sh ./.devcontainer/postCreatedCommand.sh",
+  "postStartCommand": "npm i",
   "remoteUser": "node",
   "overrideCommand": true,
   "customizations": {
