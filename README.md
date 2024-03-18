@@ -31,7 +31,7 @@ npm run lint
 
 ### debug start
 
-```bash
+```bashp
 npm run dev
 ```
 
@@ -141,4 +141,30 @@ docker-compose stop
 
 ```bash
 docker-compose down --rmi all --volumes --remove-orphans
+```
+
+---
+
+## Use this template
+
+Merge what is generated from this repository to the generated repository.
+
+1. navigate to the workspace of the generated repository
+   
+2. add this repository as a remote
+
+```bash
+git remote add node-app-template git@github.com:bizhermit/node-app-template.git
+```
+
+3. fetch the node-app-template
+
+```bash
+git fetch node-app-template
+```
+
+4. merge node-app-template into the generated repository.
+
+```bash
+git merge --allow-unrelated-histories node-app-template/main
 ```
