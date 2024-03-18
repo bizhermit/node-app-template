@@ -507,6 +507,8 @@ const SelectBox = forwardRef(<
             if (!doScroll.current) return;
             doScroll.current = false;
             scrollToSelectedItem();
+          } else {
+            setBindSource(source);
           }
         }}
         $mask="transparent"
