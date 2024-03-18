@@ -838,7 +838,7 @@ const DataTable = forwardRef(<T extends Data = Data>({
       }
       <div
         className={Style.table}
-        data-border={$outline !== true}
+        data-border={$outline !== false}
         onMouseDown={dragScrollEvent}
         data-drag-scroll={!!$dragScroll}
       >
