@@ -1,6 +1,12 @@
 {
   "version": "2.0.0",
   "tasks": [
+    // {
+    //   "label": "fetch & merge node-app-template/main",
+    //   "group": "none",
+    //   "type": "shell",
+    //   "command": "git fetch node-app-template && git merge --allow-unrelated-histories node-app-template/main"
+    // },
     {
       "label": "format",
       "group": "none",
