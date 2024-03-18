@@ -269,10 +269,27 @@ const SelectBox = forwardRef(<
     }
   };
 
+  const selectItemByText = () => {
+    if (!iref.current) return;
+    const label = iref.current.value;
+    const item = source.find(item => equals(item[ldn], label));
+    if (item) {
+      if (!equals(item[vdn], ctx.valueRef.current)) {
+        ctx.change(item[vdn]);
+        return;
+      }
+    }
+    renderLabel();
+  };
+
   const keydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     switch (e.key) {
       case "Escape":
         closePicker();
+        renderLabel();
+        break;
+      case "Enter":
+        selectItemByText();
         break;
       case "F2":
         openPicker({ scroll: true });
@@ -370,16 +387,7 @@ const SelectBox = forwardRef(<
       (lref.current != null && (e.relatedTarget === lref.current || e.relatedTarget?.parentElement === lref.current))
     ) return;
     closePicker();
-    if (!iref.current) return;
-    const label = iref.current.value;
-    const item = source.find(item => equals(item[ldn], label));
-    if (item) {
-      if (!equals(item[vdn], ctx.valueRef.current)) {
-        ctx.change(item[vdn]);
-        return;
-      }
-    }
-    renderLabel();
+    selectItemByText();
   };
 
   useEffect(() => {
