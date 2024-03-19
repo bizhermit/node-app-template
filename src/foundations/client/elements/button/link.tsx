@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import type { ButtonOptions } from ".";
 import structKeys from "../../../objects/struct/keys";
 import replaceDynamicPathname from "../../../objects/url/dynamic-pathname";
 import joinCn from "../../utilities/join-class-name";
 import { isNotReactNode } from "../../utilities/react-node";
-import type { ButtonOptions } from "../button";
 import useForm from "../form/context";
 import NextLink, { type NextLinkOptions, type NextLinkProps } from "../link";
 import Style from "./index.module.scss";

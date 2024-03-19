@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useState, type FC, type ReactNode } from "react";
-import Loading, { type LoadingProps } from "../loading";
-import { LoadingContext } from "../loading/context";
+import Loading, { type LoadingProps } from ".";
+import { LoadingContext } from "./context";
 
 const LoadingProvider: FC<{ children?: ReactNode; } & LoadingProps> = ({
   children,
