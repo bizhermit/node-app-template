@@ -8,6 +8,18 @@
     //   "command": "git fetch node-app-template && git merge --allow-unrelated-histories node-app-template/main"
     // },
     {
+      "label": "cleanup branch",
+      "group": "none",
+      "type": "shell",
+      "command": "git switch main && git pull && git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d"
+    },
+    {
+      "label": "delete devcontainer docker",
+      "group": "none",
+      "type": "shell",
+      "command": "sh ./.devcontainer/deleteVolumes.sh",
+    },
+    {
       "label": "format",
       "group": "none",
       "type": "shell",
@@ -19,17 +31,5 @@
       "type": "shell",
       "command": "npm run route"
     },
-    {
-      "label": "delete devcontainer docker",
-      "group": "none",
-      "type": "shell",
-      "command": "sh ./.devcontainer/deleteVolumes.sh",
-    },
-    {
-      "label": "cleanup branch",
-      "group": "none",
-      "type": "shell",
-      "command": "git switch main && git pull && git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d"
-    }
   ]
 }
