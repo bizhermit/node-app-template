@@ -289,6 +289,7 @@ const SelectBox = forwardRef(<
         renderLabel();
         break;
       case "Enter":
+        closePicker();
         selectItemByText();
         break;
       case "F2":
