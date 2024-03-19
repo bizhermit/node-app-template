@@ -1,11 +1,11 @@
 version: '3'
 services:
   node:
-    container_name: 'node_prod'
+    container_name: 'node-app-template'
     build:
       context: '../'
       dockerfile: '.prodcontainer/docker/node/Dockerfile'
-    image: 'node_prod_image'
+    image: 'node-app-template'
     tty: true
     extra_hosts:
       - 'host.docker.internal:host-gateway'

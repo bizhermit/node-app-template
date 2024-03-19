@@ -1,15 +1,17 @@
 version: '3'
 services:
   node:
-    container_name: 'node_dev'
+    container_name: 'node-app-template_dev'
     build:
       context: '../'
       dockerfile: '.devcontainer/docker/node/Dockerfile'
-    image: 'node_dev_image'
+    image: 'node-app-template_dev'
     tty: true
     volumes:
-      - '../:/workspace'
-      - 'node_dev_node_modules:/workspace/node_modules'
+      - '../:/workspace:delegated'
+      - 'node-app-template_dev_node_modules:/workspace/node_modules'
+      - 'node-app-template_dev_next:/workspace/.next'
+      - 'node-app-template_dev_server:/workspace/.server'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     environment:
@@ -24,4 +26,6 @@ services:
     command:
       bash -c 'sh /workspace/.devcontainer/postCreatedCommand.sh && npm i && npm run dev && bash'
 volumes:
-  node_dev_node_modules:
+  node-app-template_dev_node_modules:
+  node-app-template_dev_next:
+  node-app-template_dev_server:

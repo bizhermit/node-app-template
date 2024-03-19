@@ -1,12 +1,12 @@
 {
-  "name": "node_dev",
+  "name": "node-app-template",
   "dockerComposeFile": "docker-compose.yml",
   "service": "node",
   "workspaceFolder": "/workspace",
   "postCreateCommand": "sh ./.devcontainer/postCreatedCommand.sh",
   "postStartCommand": "npm i",
-  "remoteUser": "node",
   "overrideCommand": true,
+  "remoteUser": "node",
   "customizations": {
     "vscode": {
       "extensions": [
