@@ -20,12 +20,10 @@
       "command": "npm run route"
     },
     {
-      "label": "dev",
+      "label": "delete devcontainer docker",
       "group": "none",
-      "command": "npm run dev",
-      // "runOptions": {
-      //   "runOn": "folderOpen"
-      // }
+      "type": "shell",
+      "command": "sh ./.devcontainer/deleteVolumes.sh",
     }
   ]
 }
