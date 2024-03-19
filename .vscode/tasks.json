@@ -29,7 +29,7 @@
       "label": "cleanup branch",
       "group": "none",
       "type": "shell",
-      "command": "git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d"
+      "command": "git switch main && git pull && git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d"
     }
   ]
 }
