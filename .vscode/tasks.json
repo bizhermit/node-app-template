@@ -14,7 +14,7 @@
       "command": "npx eslint --fix ./src/"
     },
     {
-      "label": "build route",
+      "label": "build next route",
       "group": "none",
       "type": "shell",
       "command": "npm run route"
@@ -24,6 +24,12 @@
       "group": "none",
       "type": "shell",
       "command": "sh ./.devcontainer/deleteVolumes.sh",
+    },
+    {
+      "label": "cleanup branch",
+      "group": "none",
+      "type": "shell",
+      "command": "git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d"
     }
   ]
 }
