@@ -1,5 +1,8 @@
 const path = require('path');
 
+const isDev = !(process.env.NODE_ENV ?? "").startsWith("prod");
+process.stdout.write(`NODE_ENV: ${process.env.NODE_ENV}\n\n`);
+
 const mode = process.env.NEXT_OUTPUT;
 process.stdout.write(`NEXT_OUTPUT: ${mode}\n\n`);
 
@@ -29,6 +32,7 @@ const nextConfig = {
     config.resolve.alias['@'] = path.join(srcDir, 'app');
     return config;
   },
+  pageExtensions: ["tsx", "ts", ...(isDev ? ["dev.tsx", "dev.ts"] : [])],
 };
 
 if (analyze) {
