@@ -31,6 +31,8 @@ type AppRoutePath = "/[uid]"
  | "/dev/elements/view/data-table"
  | "/dev/elements/view/menu"
  | "/dev/elements/view/struct-view"
+ | "/dev/extensions/hoge"
+ | "/dev/extensions"
  | "/dev/fetch"
  | "/dev"
  | "/"
@@ -67,18 +69,22 @@ type AppRoutePath = "/[uid]"
 type AppApiPath = "/api/auth/[...nextauth]"
  | "/api/fetch"
  | "/api"
+ | "/dev/fetch/api/dev"
  | "/dev/fetch/api";
 
 type TypeofAppApi = {
   "/api/auth/[...nextauth]": typeof import("app/api/auth/[...nextauth]/route");
   "/api/fetch": typeof import("app/api/fetch/route");
   "/api": typeof import("app/api/route");
+  "/dev/fetch/api/dev": typeof import("app/dev/fetch/api/dev/route");
   "/dev/fetch/api": typeof import("app/dev/fetch/api/route");
 };
 
 type PagesRoutePath = "/404"
  | "/pages"
  | "/root"
+ | "/sandbox/extensions"
+ | "/sandbox/extensions/hoge"
  | "/sandbox/nest/[id]"
  | "/sandbox/pages"
  | "/sandbox/post/recipient"
