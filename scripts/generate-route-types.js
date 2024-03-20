@@ -26,7 +26,8 @@ const findNextPathName = (fileName, findPathname) => {
 const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
   const items = fse.readdirSync(dirName);
   items.sort((a, b) => {
-    
+    if (fse.statSync(path.join(dirName, a)).isDirectory()) return 1;
+    if (fse.statSync(path.join(dirName, b)).isDirectory()) return -1;
     if (findNextPathName(a, "index")) return -1;
     if (findNextPathName(b, "index")) return 1;
     return 0;
@@ -59,6 +60,8 @@ if (fse.existsSync(appRootPath)) mainForApp(appRootPath);
 const mainForPages = (dirName, nestLevel = 0, isApi = false) => {
   const items = fse.readdirSync(dirName);
   items.sort((a, b) => {
+    if (fse.statSync(path.join(dirName, a)).isDirectory()) return 1;
+    if (fse.statSync(path.join(dirName, b)).isDirectory()) return -1;
     if (findNextPathName(a, "index")) return -1;
     if (findNextPathName(b, "index")) return 1;
     return 0;
