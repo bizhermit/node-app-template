@@ -1,15 +1,14 @@
 export const isNull = (o: any | null | undefined): o is null | undefined => {
-  return o == null;
+  return o == null || (typeof o === "number" && isNaN(o));
 };
 
 export const isNotNull = <T = any>(o: T | null | undefined): o is Exclude<T, null | undefined> => {
-  return o != null;
+  return !isNull(o);
 };
 
 export const isEmpty = (o: any | null | undefined) => {
-  if (o == null) return true;
+  if (isNull(o) || o === "" || o === 0 || o === BigInt(0)) return true;
   const t = typeof o;
-  if (t === "string") return o === "";
   if (t !== "object") return false;
   switch (toString.call(o).slice(8, -1)) {
     case "Array":
