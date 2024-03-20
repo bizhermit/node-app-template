@@ -1,15 +1,17 @@
 {
-  "name": "node_dev",
+  "name": "node-app-template",
   "dockerComposeFile": "docker-compose.yml",
   "service": "node",
   "workspaceFolder": "/workspace",
-  "postStartCommand": "npm install",
-  "remoteUser": "node",
+  "postCreateCommand": "sh ./.devcontainer/postCreatedCommand.sh",
+  "postStartCommand": "npm i",
   "overrideCommand": true,
+  "remoteUser": "node",
   "customizations": {
     "vscode": {
       "extensions": [
         "MS-CEINTL.vscode-language-pack-ja",
+        "ms-azuretools.vscode-docker",
         "eamodio.gitlens",
         "mhutchie.git-graph",
         "dbaeumer.vscode-eslint",

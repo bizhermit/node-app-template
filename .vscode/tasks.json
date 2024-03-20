@@ -1,6 +1,24 @@
 {
   "version": "2.0.0",
   "tasks": [
+    // {
+    //   "label": "fetch & merge node-app-template/main",
+    //   "group": "none",
+    //   "type": "shell",
+    //   "command": "git fetch node-app-template && git merge --allow-unrelated-histories node-app-template/main"
+    // },
+    {
+      "label": "cleanup branch",
+      "group": "none",
+      "type": "shell",
+      "command": "git switch main && git pull && git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d"
+    },
+    {
+      "label": "delete devcontainer docker",
+      "group": "none",
+      "type": "shell",
+      "command": "sh ./.devcontainer/deleteVolumes.sh",
+    },
     {
       "label": "format",
       "group": "none",
@@ -8,18 +26,10 @@
       "command": "npx eslint --fix ./src/"
     },
     {
-      "label": "build route",
+      "label": "build next route",
       "group": "none",
       "type": "shell",
       "command": "npm run route"
     },
-    {
-      "label": "dev",
-      "group": "none",
-      "command": "npm run dev",
-      // "runOptions": {
-      //   "runOn": "folderOpen"
-      // }
-    }
   ]
 }
