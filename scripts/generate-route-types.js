@@ -7,16 +7,34 @@ const appAlias = "app";
 const pageRootPath = path.join(srcRootPath, "pages");
 const pagesAlias = "pages";
 
+const nextConfig = require("../next.config");
+const extensions = (nextConfig.pageExtensions ?? ["ts", "tsx"]).sort((a, b) => b.length - a.length);
+
 const pagesRoutes = [];
 const pagesApiRoutes = [];
 const appRoutes = [];
 const appApiRoutes = [];
 
+const isNextPathName = (fileName) => {
+  return extensions.find(ex => fileName.endsWith("." + ex));
+};
+
+const findNextPathName = (fileName, findPathname) => {
+  return extensions.find(ex => fileName === `${findPathname}.${ex}`);
+};
+
+const pickNextPathName = (fileName) => {
+  const ex = isNextPathName(fileName);
+  if (ex) return fileName.replace(`.${ex}`, "");;
+  return "";
+};
+
 const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
   const items = fse.readdirSync(dirName);
   items.sort((a, b) => {
-    if (/index.ts[x]?$/.test(a)) return -1;
-    if (/index.ts[x]?$/.test(b)) return 1;
+    
+    if (findNextPathName(a, "index")) return -1;
+    if (findNextPathName(b, "index")) return 1;
     return 0;
   }).forEach(name => {
     let api = underApi;
@@ -28,14 +46,16 @@ const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
       mainForApp(fullName, nestLevel + 1, api);
       return;
     }
+    
+    if (!isNextPathName(name)) return;
 
     if (api) {
-      if (/route.ts$/.test(name)) {
+      if (findNextPathName(name, "route")) {
         appApiRoutes.push(`/${path.relative(appRootPath, dirName).replace(/\\/g, "/")}`);
       }
     }
 
-    if (/page.ts[x]?$/.test(name)) {
+    if (findNextPathName(name, "page")) {
       appRoutes.push(`/${path.relative(appRootPath, dirName).replace(/\\/g, "/").replace(/\/\([^)]*\)/g, "")}`);
     }
   });
@@ -45,8 +65,8 @@ if (fse.existsSync(appRootPath)) mainForApp(appRootPath);
 const mainForPages = (dirName, nestLevel = 0, isApi = false) => {
   const items = fse.readdirSync(dirName);
   items.sort((a, b) => {
-    if (/index.ts[x]?$/.test(a)) return -1;
-    if (/index.ts[x]?$/.test(b)) return 1;
+    if (findNextPathName(a, "index")) return -1;
+    if (findNextPathName(b, "index")) return 1;
     return 0;
   }).forEach(name => {
     let api = isApi;
@@ -60,7 +80,7 @@ const mainForPages = (dirName, nestLevel = 0, isApi = false) => {
       return;
     }
 
-    const pathName = path.join(dirName, /index.ts[x]?$/.test(name) ? "" : path.basename(name, path.extname(name)));
+    const pathName = path.join(dirName, findNextPathName(name, "index") ? "" : pickNextPathName(name));
 
     if (api) {
       const relativePathName = `/${path.relative(pageRootPath, pathName).replace(/\\/g, "/")}`;
