@@ -57,6 +57,25 @@ const Page = () => {
             <Button type="submit">submit</Button>
           </Form>
         </BaseSection>
+        <BaseSection>
+          <Form
+            method="get"
+            $layout="flex"
+            onSubmit={async (data) => {
+              const _res = await api.get("/dev/fetch/api/dev", data, {
+                succeeded: () => {
+                  console.log("succeeded failed.");
+                },
+                failed: () => {
+                  console.log("dev failed.");
+                },
+              });
+            }}
+          >
+            <h3>dev route</h3>
+            <Button type="submit">submit</Button>
+          </Form>
+        </BaseSection>
       </BaseSheet>
     </BaseLayout>
   );

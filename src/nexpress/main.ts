@@ -27,7 +27,7 @@ const log = {
 };
 
 const appRoot = path.join(__dirname, "../../");
-const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
+const isDev = !(process.env.NODE_ENV ?? "").startsWith("prod");
 log.info(`::: nexpress :::${isDev ? " [dev]" : ""}`);
 
 dotenv.config({
