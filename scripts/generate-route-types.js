@@ -107,7 +107,7 @@ type AppRoutePath = ${(() => {
     const pn = pickNextPathName(pathName).match(/(.*)\/page/)[1] || "/";
     process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
-  }).join("\n | ");
+  }).join("\n  | ");
 })()};
 
 type AppApiPath = ${(() => {
@@ -117,7 +117,7 @@ type AppApiPath = ${(() => {
     const pn = pickNextPathName(pathName).match(/(.*)\/route/)[1] || "/";
     process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
-  }).join("\n | ");
+  }).join("\n  | ");
 })()};
 
 type TypeofAppApi = {
@@ -136,7 +136,7 @@ type PagesRoutePath = ${(() => {
     const pn = pickNextPathNameAsPages(pathName);
     process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
-  }).join("\n | ");
+  }).join("\n  | ");
 })()};
 
 type PagesApiPath = ${(() => {
@@ -146,7 +146,7 @@ type PagesApiPath = ${(() => {
     const pn = pickNextPathNameAsPages(pathName);
     process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
-  }).join("\n | ");
+  }).join("\n  | ");
 })()};
 
 type TypeofPagesApi = {
