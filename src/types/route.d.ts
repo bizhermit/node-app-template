@@ -73,11 +73,11 @@ type AppApiPath = "/api/auth/[...nextauth]"
  | "/dev/fetch/api";
 
 type TypeofAppApi = {
-  "/api/auth/[...nextauth]": typeof import("app/api/auth/[...nextauth]/route");
-  "/api/fetch": typeof import("app/api/fetch/route");
-  "/api": typeof import("app/api/route");
-  "/dev/fetch/api/dev": typeof import("app/dev/fetch/api/dev/route");
-  "/dev/fetch/api": typeof import("app/dev/fetch/api/route");
+  "/api/auth/[...nextauth]": typeof import("app/api/auth/[...nextauth]/route.ts");
+  "/api/fetch": typeof import("app/api/fetch/route.ts");
+  "/api": typeof import("app/api/route.ts");
+  "/dev/fetch/api/dev": typeof import("app/dev/fetch/api/dev/route.dev.ts");
+  "/dev/fetch/api": typeof import("app/dev/fetch/api/route.ts");
 };
 
 type PagesRoutePath = "/404"
@@ -94,8 +94,8 @@ type PagesApiPath = "/api/form"
  | "/api/hello";
 
 type TypeofPagesApi = {
-  "/api/form": typeof import("pages/api/form");
-  "/api/hello": typeof import("pages/api/hello");
+  "/api/form": typeof import("pages/api/form.ts");
+  "/api/hello": typeof import("pages/api/hello.ts");
 };
 
 type PagePath = AppRoutePath | PagesRoutePath;

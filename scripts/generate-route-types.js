@@ -23,12 +23,6 @@ const findNextPathName = (fileName, findPathname) => {
   return extensions.find(ex => fileName === `${findPathname}.${ex}`);
 };
 
-const pickNextPathName = (fileName) => {
-  const ex = isNextPathName(fileName);
-  if (ex) return fileName.replace(`.${ex}`, "");;
-  return "";
-};
-
 const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
   const items = fse.readdirSync(dirName);
   items.sort((a, b) => {
@@ -51,12 +45,12 @@ const mainForApp = (dirName, nestLevel = 0, underApi = false) => {
 
     if (api) {
       if (findNextPathName(name, "route")) {
-        appApiRoutes.push(`/${path.relative(appRootPath, dirName).replace(/\\/g, "/")}`);
+        appApiRoutes.push(`/${path.relative(appRootPath, fullName).replace(/\\/g, "/")}`);
       }
     }
 
     if (findNextPathName(name, "page")) {
-      appRoutes.push(`/${path.relative(appRootPath, dirName).replace(/\\/g, "/").replace(/\/\([^)]*\)/g, "")}`);
+      appRoutes.push(`/${path.relative(appRootPath, fullName).replace(/\\/g, "/").replace(/\/\([^)]*\)/g, "")}`);
     }
   });
 };
@@ -80,19 +74,28 @@ const mainForPages = (dirName, nestLevel = 0, isApi = false) => {
       return;
     }
 
-    const pathName = path.join(dirName, findNextPathName(name, "index") ? "" : pickNextPathName(name));
-
     if (api) {
-      const relativePathName = `/${path.relative(pageRootPath, pathName).replace(/\\/g, "/")}`;
+      const relativePathName = `/${path.relative(pageRootPath, fullName).replace(/\\/g, "/")}`;
       pagesApiRoutes.push(relativePathName);
       return;
     }
 
-    pagesRoutes.push(`/${path.relative(pageRootPath, pathName).replace(/\\/g, "/")}`);
+    pagesRoutes.push(`/${path.relative(pageRootPath, fullName).replace(/\\/g, "/")}`);
     return;
   });
 }
 if (fse.existsSync(pageRootPath)) mainForPages(pageRootPath);
+
+const pickNextPathName = (fileName) => {
+  const ex = isNextPathName(fileName);
+  if (ex) return fileName.replace(`.${ex}`, "");
+  return "";
+};
+
+const pickNextPathNameAsPages = (fileName) => {
+  const pn = pickNextPathName(fileName);
+  return pn.match(/(.*)\/index/)?.[1] ?? pn;
+};
 
 const contents = `// generate by script
 // do not edit
@@ -101,8 +104,9 @@ type AppRoutePath = ${(() => {
   process.stdout.write(`-- app route -- ${appRoutes.length}\n`);
   if (appRoutes.length === 0) return "\"\"";
   return appRoutes.map(pathName => {
-    process.stdout.write(`${pathName}\n`);
-    return `"${pathName}"`;
+    const pn = pickNextPathName(pathName).match(/(.*)\/page/)[1] || "/";
+    process.stdout.write(`${pathName} -> ${pn}\n`);
+    return `"${pn}"`;
   }).join("\n | ");
 })()};
 
@@ -110,15 +114,17 @@ type AppApiPath = ${(() => {
   process.stdout.write(`\n-- app api -- ${appApiRoutes.length}\n`);
   if (appApiRoutes.length === 0) return "\"\"";
   return appApiRoutes.map(pathName => {
-    process.stdout.write(`${pathName}\n`);
-    return `"${pathName}"`;
+    const pn = pickNextPathName(pathName).match(/(.*)\/route/)[1] || "/";
+    process.stdout.write(`${pathName} -> ${pn}\n`);
+    return `"${pn}"`;
   }).join("\n | ");
 })()};
 
 type TypeofAppApi = {
 ${(() => {
-  return appApiRoutes.map(pathname => {
-    return `  "${pathname}": typeof import("${appAlias}${pathname}/route");`;
+  return appApiRoutes.map(pathName => {
+    const pn = pickNextPathName(pathName).match(/(.*)\/route/)[1] || "/";
+    return `  "${pn}": typeof import("${appAlias}${pathName}");`;
 }).join("\n");
 })()}
 };
@@ -127,8 +133,9 @@ type PagesRoutePath = ${(() => {
   process.stdout.write(`\n-- pages route -- ${pagesRoutes.length}\n`);
   if (pagesRoutes.length === 0) return "\"\"";
   return pagesRoutes.map(pathName => {
-    process.stdout.write(`${pathName}\n`);
-    return `"${pathName}"`;
+    const pn = pickNextPathNameAsPages(pathName);
+    process.stdout.write(`${pathName} -> ${pn}\n`);
+    return `"${pn}"`;
   }).join("\n | ");
 })()};
 
@@ -136,15 +143,17 @@ type PagesApiPath = ${(() => {
   process.stdout.write(`\n-- pages api -- ${pagesApiRoutes.length}\n`);
   if (pagesApiRoutes.length === 0) return "\"\"";
   return pagesApiRoutes.map(pathName => {
-    process.stdout.write(`${pathName}\n`);
-    return `"${pathName}"`;
+    const pn = pickNextPathNameAsPages(pathName);
+    process.stdout.write(`${pathName} -> ${pn}\n`);
+    return `"${pn}"`;
   }).join("\n | ");
 })()};
 
 type TypeofPagesApi = {
 ${(() => {
-  return pagesApiRoutes.map(pathname => {
-    return `  "${pathname}": typeof import("${pagesAlias}${pathname}");`;
+  return pagesApiRoutes.map(pathName => {
+    const pn = pickNextPathNameAsPages(pathName);
+    return `  "${pn}": typeof import("${pagesAlias}${pathName}");`;
 }).join("\n");
 })()}
 };
