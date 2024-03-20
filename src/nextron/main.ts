@@ -24,7 +24,7 @@ const log = {
   },
 };
 
-const isDev = (process.env.NODE_ENV ?? "").startsWith("dev");
+const isDev = !(process.env.NODE_ENV ?? "").startsWith("prod");
 log.info(`::: nexton :::${isDev ? " [dev]" : ""}`);
 
 const appRoot = path.join(__dirname, "../../");
