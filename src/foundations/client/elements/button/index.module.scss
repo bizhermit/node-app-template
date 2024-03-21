@@ -190,6 +190,7 @@
     align-items: center;
     height: 100%;
     z-index: 1;
+    flex: none;
 
     &:only-child {
       width: 100%;
