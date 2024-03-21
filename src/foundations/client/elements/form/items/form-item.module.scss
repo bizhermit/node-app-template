@@ -106,9 +106,7 @@ $tagMoveTransitionTime: 0.5s;
         content: "";
         height: 100%;
         width: 100%;
-        border-width: #{var.$inputBorderWidth};
-        border-style: solid;
-        border-color: var(--s-color, var(--c-border));
+        border: #{var.$inputBorderWidth} solid var(--s-color, var(--c-border));
         border-radius: var(--radius);
         z-index: 0;
         transition: background-color #{var.$transitionTime},
