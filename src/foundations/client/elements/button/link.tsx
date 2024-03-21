@@ -11,7 +11,7 @@ import useForm from "../form/context";
 import NextLink, { type NextLinkOptions, type NextLinkProps } from "../link";
 import Style from "./index.module.scss";
 
-export type LinkButtonOptions = Omit<ButtonOptions, "onClick" | "notDependsOnForm"> & Omit<NextLinkOptions, "onClick"> & {
+export type LinkButtonOptions = Omit<ButtonOptions, "onClick" | "$notDependsOnForm"> & Omit<NextLinkOptions, "onClick"> & {
   $dependsOnForm?: boolean | "submit";
   onClick?: (unlock: (preventFocus?: boolean) => void, event: React.MouseEvent<HTMLAnchorElement>) => (void | boolean | Promise<void | boolean>);
 };
