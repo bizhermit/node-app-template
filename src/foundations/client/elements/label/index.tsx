@@ -6,6 +6,7 @@ import Style from "./index.module.scss";
 type LabelOptions = {
   $color?: Color;
   $size?: Size;
+  $outline?: boolean;
 };
 
 type LabelProps = OverwriteAttrs<HTMLAttributes<HTMLDivElement>, LabelOptions>;
@@ -14,21 +15,18 @@ const Label = forwardRef<HTMLDivElement, LabelProps>(({
   className,
   $color,
   $size,
+  children,
   ...props
 }, ref) => {
   return (
     <div
       {...props}
-      className={joinCn(Style.wrap, className)}
+      className={joinCn(Style.main, className)}
       ref={ref}
       data-color={$color}
+      data-size={$size || "m"}
     >
-      <div
-        className={Style.main}
-        data-size={$size || "m"}
-      >
-        <Text>{props.children}</Text>
-      </div>
+      <Text>{children}</Text>
     </div>
   );
 });

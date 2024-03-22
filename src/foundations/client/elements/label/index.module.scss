@@ -2,7 +2,7 @@
 
 @layer base {
 
-  .wrap {
+  .main {
     box-sizing: border-box;
     display: flex;
     flex-flow: row nowrap;
@@ -10,15 +10,6 @@
     align-items: center;
     flex: none;
     min-width: 0;
-  }
-
-  .main {
-    box-sizing: border-box;
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
     border-radius: 9999px;
     color: var(--s-color_, var(--c-main_));
     background: var(--s-color, var(--c-main));
