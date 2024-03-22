@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
+import { nonNullStruct } from "../../../../../objects/struct/convert";
 import { convertSizeNumToStr } from "../../../../utilities/size";
 import Resizer from "../../../resizer";
 import useForm from "../../context";
@@ -51,6 +52,7 @@ const TextArea = forwardRef(<
   const iref = useRef<HTMLTextAreaElement>(null!);
   const form = useForm();
   const {
+    style,
     tabIndex,
     placeholder,
     $inputMode,
@@ -191,22 +193,30 @@ const TextArea = forwardRef(<
     $ref.focus = () => iref.current?.focus();
   }
 
+  const widthStyles = nonNullStruct({
+    width: convertSizeNumToStr($width),
+    maxWidth: convertSizeNumToStr($maxWidth),
+    minWidth: convertSizeNumToStr($minWidth),
+  });
+  const heightStyles = nonNullStruct({
+    height: convertSizeNumToStr($height),
+    maxHeight: convertSizeNumToStr($maxHeight),
+    minHeight: convertSizeNumToStr($minHeight),
+  });
+
   return (
     <FormItemWrap
       {...props}
+      style={{
+        ...widthStyles,
+        ...heightStyles,
+        ...style,
+      }}
       ref={ref}
       $ctx={ctx}
       $hasData={isNotEmpty(ctx.value)}
-      $mainProps={{
-        style: {
-          width: convertSizeNumToStr($width),
-          maxWidth: convertSizeNumToStr($maxWidth),
-          minWidth: convertSizeNumToStr($minWidth),
-          height: convertSizeNumToStr($height),
-          maxHeight: convertSizeNumToStr($maxHeight),
-          minHeight: convertSizeNumToStr($minHeight),
-        }
-      }}
+      data-width={widthStyles != null}
+      data-height={heightStyles != null}
     >
       <textarea
         ref={iref}
