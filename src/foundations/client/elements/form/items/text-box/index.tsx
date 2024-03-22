@@ -256,6 +256,7 @@ const TextBox = forwardRef(<
       $ctx={ctx}
       $round={$round}
       $hasData={hasData}
+      data-width={widthStyles != null}
     >
       <input
         ref={iref}

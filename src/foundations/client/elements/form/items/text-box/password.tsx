@@ -230,6 +230,7 @@ const PasswordBox = forwardRef(<
       $mainProps={{
         onBlur: blur,
       }}
+      data-width={widthStyles != null}
     >
       <input
         ref={iref}
