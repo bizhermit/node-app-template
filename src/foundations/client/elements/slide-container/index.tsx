@@ -19,6 +19,7 @@ type SlideContainerOptions<K extends string = string> = {
   $breadcrumbs?: boolean
   $breadcrumbsPosition?: BreadcrumbsPosition;
   $onChange?: (key: K) => void;
+  $onChanged?: (key: K) => void;
   children?: ReactElement | [ReactElement, ...Array<ReactElement>];
 };
 
@@ -41,6 +42,7 @@ const SlideContainer = forwardRef(<K extends string = string>({
   $breadcrumbs,
   $breadcrumbsPosition,
   $onChange,
+  $onChanged,
   children,
   ...props
 }: SlideContainerProps<K>, ref: ForwardedRef<HTMLDivElement>) => {
@@ -63,7 +65,7 @@ const SlideContainer = forwardRef(<K extends string = string>({
 
     for (let i = 0, il = contents.length; i < il; i++) {
       const content = contents[i]!;
-      const k = content.key?.toString()!;
+      const k = content.key?.toString()! as K;
       const state: SlideState = (() => {
         if (k === key) return "current";
         if (k === prevKey) return "prev";
@@ -92,6 +94,7 @@ const SlideContainer = forwardRef(<K extends string = string>({
           {...cProps}
           key={k}
           $state={state}
+          $onChanged={() => $onChanged?.(k)}
         >
           {content}
         </Content>
@@ -126,6 +129,7 @@ const SlideContainer = forwardRef(<K extends string = string>({
 
 type ContentProps = Omit<SlideContentProps, "$label"> & {
   $state: SlideState;
+  $onChanged: () => void;
 };
 
 const Content: FC<ContentProps> = ({
@@ -134,6 +138,7 @@ const Content: FC<ContentProps> = ({
   $defaultMount,
   $unmountDeselected,
   $state,
+  $onChanged,
   children,
   ...props
 }) => {
@@ -155,6 +160,10 @@ const Content: FC<ContentProps> = ({
     if ($state === "current") setMounted(true);
     setState($state);
   }, [$state]);
+
+  useEffect(() => {
+    if (state === "current") $onChanged();
+  }, [state]);
 
   return (
     <div
