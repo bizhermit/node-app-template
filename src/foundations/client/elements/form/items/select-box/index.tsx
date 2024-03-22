@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useMemo, useRef, useState, type FC, type ForwardedRef, type FunctionComponent, type ReactElement, type ReactNode } from "react";
 import equals from "../../../../../objects/equal";
 import { isEmpty, isNotEmpty } from "../../../../../objects/string/empty";
+import { nonNullStruct } from "../../../../../objects/struct/convert";
 import { getValue } from "../../../../../objects/struct/get";
 import { setValue } from "../../../../../objects/struct/set";
 import useLoadableArray, { type LoadableArray } from "../../../../hooks/loadable-array";
@@ -81,6 +82,7 @@ const SelectBox = forwardRef(<
 >(p: SelectBoxProps<T, D, S>, ref: ForwardedRef<HTMLDivElement>) => {
   const form = useForm();
   const {
+    style,
     tabIndex,
     placeholder,
     $labelDataName,
@@ -419,21 +421,27 @@ const SelectBox = forwardRef(<
     };
   }
 
+  const widthStyles = nonNullStruct({
+    width: convertSizeNumToStr($width),
+    maxWidth: convertSizeNumToStr($maxWidth),
+    minWidth: convertSizeNumToStr($minWidth),
+  });
+
   return (
     <FormItemWrap
       {...props}
+      style={{
+        ...widthStyles,
+        ...style,
+      }}
       ref={ref}
       $ctx={ctx}
       $useHidden
       $hasData={hasLabel}
       $mainProps={{
-        style: {
-          width: convertSizeNumToStr($width),
-          maxWidth: convertSizeNumToStr($maxWidth),
-          minWidth: convertSizeNumToStr($minWidth),
-        },
         onBlur: blur,
       }}
+      data-width={widthStyles != null}
     >
       <input
         ref={iref}

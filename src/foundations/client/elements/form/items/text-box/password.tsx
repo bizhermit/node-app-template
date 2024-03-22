@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useRef, useState, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
+import { nonNullStruct } from "../../../../../objects/struct/convert";
 import { CircleFillIcon, CircleIcon, CrossIcon } from "../../../../elements/icon";
 import Resizer from "../../../../elements/resizer";
 import { includeElement } from "../../../../utilities/parent-child";
@@ -75,6 +76,7 @@ const PasswordBox = forwardRef(<
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
   const {
+    style,
     placeholder,
     tabIndex,
     $minLength,
@@ -208,19 +210,24 @@ const PasswordBox = forwardRef(<
     $ref.toggleMask = () => toggle();
   }
 
+  const widthStyles = nonNullStruct({
+    width: convertSizeNumToStr($width),
+    maxWidth: convertSizeNumToStr($maxWidth),
+    minWidth: convertSizeNumToStr($minWidth),
+  });
+
   return (
     <FormItemWrap
       {...props}
+      style={{
+        ...widthStyles,
+        ...style,
+      }}
       ref={r}
       $ctx={ctx}
       $round={$round}
       $hasData={hasData}
       $mainProps={{
-        style: {
-          width: convertSizeNumToStr($width),
-          maxWidth: convertSizeNumToStr($maxWidth),
-          minWidth: convertSizeNumToStr($minWidth),
-        },
         onBlur: blur,
       }}
     >

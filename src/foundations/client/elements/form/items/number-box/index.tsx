@@ -6,6 +6,7 @@ import { add, minus } from "../../../../../objects/number/calc";
 import formatNum from "../../../../../objects/number/format";
 import parseNum from "../../../../../objects/number/parse";
 import { isEmpty } from "../../../../../objects/string/empty";
+import { nonNullStruct } from "../../../../../objects/struct/convert";
 import { convertSizeNumToStr } from "../../../../utilities/size";
 import { CrossIcon, DownIcon, UpIcon } from "../../../icon";
 import Resizer from "../../../resizer";
@@ -74,6 +75,7 @@ const NumberBox = forwardRef(<
   const iref = useRef<HTMLInputElement>(null!);
   const form = useForm();
   const {
+    style,
     tabIndex,
     placeholder,
     $min,
@@ -308,20 +310,24 @@ const NumberBox = forwardRef(<
     };
   }
 
+  const widthStyles = nonNullStruct({
+    width: convertSizeNumToStr($width),
+    maxWidth: convertSizeNumToStr($maxWidth),
+    minWidth: convertSizeNumToStr($minWidth),
+  });
+
   return (
     <FormItemWrap
       {...props}
+      style={{
+        ...widthStyles,
+        ...style,
+      }}
       ref={ref}
       $ctx={ctx}
       $useHidden
       $hasData={hasData}
-      $mainProps={{
-        style: {
-          width: convertSizeNumToStr($width),
-          maxWidth: convertSizeNumToStr($maxWidth),
-          minWidth: convertSizeNumToStr($minWidth),
-        },
-      }}
+      data-width={widthStyles != null}
     >
       <input
         ref={iref}

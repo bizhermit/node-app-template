@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useRef, type ForwardedRef, type FunctionComponent, type HTMLAttributes, type ReactElement } from "react";
 import StringValidation from "../../../../../data-items/string/validations";
 import { isNotEmpty } from "../../../../../objects/string/empty";
+import { nonNullStruct } from "../../../../../objects/struct/convert";
 import { convertSizeNumToStr } from "../../../../utilities/size";
 import { CrossIcon } from "../../../icon";
 import Resizer from "../../../resizer";
@@ -54,6 +55,7 @@ const TextBox = forwardRef(<
   const form = useForm();
   const iref = useRef<HTMLInputElement>(null!);
   const {
+    style,
     tabIndex,
     placeholder,
     $type,
@@ -237,20 +239,23 @@ const TextBox = forwardRef(<
     $ref.focus = () => iref.current?.focus();
   }
 
+  const widthStyles = nonNullStruct({
+    width: convertSizeNumToStr($width),
+    maxWidth: convertSizeNumToStr($maxWidth),
+    minWidth: convertSizeNumToStr($minWidth),
+  });
+
   return (
     <FormItemWrap
       {...props}
+      style={{
+        ...widthStyles,
+        ...style,
+      }}
       ref={r}
       $ctx={ctx}
       $round={$round}
       $hasData={hasData}
-      $mainProps={{
-        style: {
-          width: convertSizeNumToStr($width),
-          maxWidth: convertSizeNumToStr($maxWidth),
-          minWidth: convertSizeNumToStr($minWidth),
-        },
-      }}
     >
       <input
         ref={iref}

@@ -67,8 +67,6 @@ const CheckBox = forwardRef(<
   const form = useForm();
   const {
     tabIndex,
-    $checkedValue,
-    $uncheckedValue,
     $fill,
     $outline,
     $circle,
@@ -126,8 +124,10 @@ const CheckBox = forwardRef(<
       required: "チェックを入れてください。",
     },
   });
-  const checkedValue = ($checkedValue ?? true) as T;
-  const uncheckedValue = ($uncheckedValue ?? false) as T;
+  const checkedValue = ("$checkedValue" in props ? props.$checkedValue : true) as T;
+  const uncheckedValue = ("$uncheckedValue" in props ? props.$uncheckedValue : false) as T;
+  delete props.$checkedValue;
+  delete props.$uncheckedValue;
 
   const toggleCheck = (check?: boolean) => {
     if (check == null) {

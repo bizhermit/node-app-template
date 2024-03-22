@@ -85,7 +85,7 @@ export const FormItemWrap = forwardRef<HTMLDivElement, FormItemWrapProps>(({
       data-round={$round}
       data-has={$hasData}
       data-tagpad={tagPlaceholder}
-      data-hidden={$hideWhenNoError ? !isErrorObject($ctx.error) || $ctx.messagePosition === "none" : undefined}
+      data-hidden={$hideWhenNoError ? (!isErrorObject($ctx.error) || $ctx.messagePosition === "none") : undefined}
     >
       {$tag &&
         <div
