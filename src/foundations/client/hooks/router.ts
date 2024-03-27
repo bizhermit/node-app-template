@@ -18,7 +18,7 @@ const useRouter = () => {
     _replace: router.replace,
     replaceUrl: (url: PagePath, params?: { [v: string | number | symbol]: any }, opts?: DynamicUrlOptions & { stateData?: any; }) => {
       if (typeof window === "undefined") return;
-      window.history.replaceState(opts?.stateData, "", getDynamicUrl(url, params, opts));
+      window.history.replaceState(opts?.stateData ?? window.history.state, "", getDynamicUrl(url, params, opts));
     },
   } as const;
 };
