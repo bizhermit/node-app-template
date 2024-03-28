@@ -8,8 +8,10 @@
 ## Docker (VSCode Remote)
 
 1. Install [Docker](https://www.docker.com/) and start.
-2. [Reopen in Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) at [Visual Studio Code](https://code.visualstudio.com/).
+2. [Reopen in Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) at [Visual Studio Code](https://code.visualstudio.com/)[^1].
 3. Execute commands.
+
+[^1] config `dev.containers.mountWaylandSocket` set `false` when use windows and wsl.
 
 # Commands
 
