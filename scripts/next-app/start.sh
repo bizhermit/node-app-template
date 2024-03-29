@@ -13,4 +13,4 @@ if [ -z "$NEXT_PORT" ]; then
   export NEXT_PORT=3000
 fi
 
-npm run clean && npm run route && npx next dev -p $NEXT_PORT
+npm run clean && npm run build && npx next start -p $NEXT_PORT

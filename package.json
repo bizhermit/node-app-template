@@ -19,7 +19,7 @@
     "dev": "bash scripts/next-app/dev.sh",
     "prebuild": "npm run route",
     "build": "npx next build",
-    "next": "npm run clean && npm run build && npx next start -p $NEXT_PORT",
+    "next": "bash scripts/next-app/start.sh",
     "export": "npm run clean && npx rimraf dist/out && npx cross-env NEXT_OUTPUT=\"dist\" npm run build",
     "prenexpress": "npm run clean && npx rimraf .server/* && npx tsc -p src/nexpress/tsconfig.json && npx tsc-alias -p src/nexpress/tsconfig.json",
     "dev:nexpress": "npm run prenexpress && npm run route && npx cross-env NODE_ENV=\"development\" node .server/nexpress/main.js",
