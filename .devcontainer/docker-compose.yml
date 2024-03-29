@@ -3,8 +3,10 @@ services:
   node:
     container_name: 'node-app-template_dev'
     env_file:
-      - '../.env'
-      - '../.env.local'
+      - path: '../.env'
+        required: true
+      - path: '../.env.local'
+        required: false
     build:
       context: '../'
       dockerfile: '.devcontainer/docker/node/Dockerfile'
