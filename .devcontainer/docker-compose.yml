@@ -2,6 +2,11 @@ version: '3'
 services:
   node:
     container_name: 'node-app-template_dev'
+    env_file:
+      - path: '../.env'
+        required: true
+      - path: '../.env.local'
+        required: false
     build:
       context: '../'
       dockerfile: '.devcontainer/docker/node/Dockerfile'
@@ -17,10 +22,6 @@ services:
     environment:
       - 'WATCHPACK_POLLING=true'
       - 'LOCALHOST=${LOCALHOST:-host.docker.internal}'
-      - 'NEXT_PORT=${NEXT_PORT:-3000}'
-      - 'NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}'
-      - 'NEXTAUTH_URL_INTERNAL=${NEXTAUTH_URL_INTERNAL:-http://localhost:3000}'
-      - 'NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-secret}'
     ports:
       - '${NEXT_PORT:-3000}:${NEXT_PORT:-3000}'
     command:

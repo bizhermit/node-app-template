@@ -2,14 +2,17 @@
 
 ## Local
 
-1. Install [Node.js](https://nodejs.org/) over v16
+1. Install [Node.js](https://nodejs.org/) over v18
 2. Execute commands.
 
 ## Docker (VSCode Remote)
 
 1. Install [Docker](https://www.docker.com/) and start.
-2. [Reopen in Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) at [Visual Studio Code](https://code.visualstudio.com/).
+2. [Reopen in Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) at [Visual Studio Code](https://code.visualstudio.com/)[^1][^2].
 3. Execute commands.
+
+[^1] config `dev.containers.mountWaylandSocket` set `false` when use windows and wsl.
+[^2] docker-compose version is over 2.24
 
 # Commands
 

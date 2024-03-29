@@ -1,6 +1,8 @@
 const path = require("path");
 const fse = require("fs-extra");
 
+const quiet = true;
+
 const srcRootPath = path.join(__dirname, "../src");
 const appRootPath = path.join(srcRootPath, "app");
 const appAlias = "app";
@@ -104,21 +106,21 @@ const contents = `// generate by script
 // do not edit
 
 type AppRoutePath = ${(() => {
-  process.stdout.write(`-- app route -- ${appRoutes.length}\n`);
+  !quiet && process.stdout.write(`-- app route -- ${appRoutes.length}\n`);
   if (appRoutes.length === 0) return "\"\"";
   return appRoutes.map(pathName => {
     const pn = pickNextPathName(pathName).match(/(.*)\/page/)[1] || "/";
-    process.stdout.write(`${pathName} -> ${pn}\n`);
+    !quiet && process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
   }).join("\n  | ");
 })()};
 
 type AppApiPath = ${(() => {
-  process.stdout.write(`\n-- app api -- ${appApiRoutes.length}\n`);
+  !quiet && process.stdout.write(`\n-- app api -- ${appApiRoutes.length}\n`);
   if (appApiRoutes.length === 0) return "\"\"";
   return appApiRoutes.map(pathName => {
     const pn = pickNextPathName(pathName).match(/(.*)\/route/)[1] || "/";
-    process.stdout.write(`${pathName} -> ${pn}\n`);
+    !quiet && process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
   }).join("\n  | ");
 })()};
@@ -133,21 +135,21 @@ ${(() => {
 };
 
 type PagesRoutePath = ${(() => {
-  process.stdout.write(`\n-- pages route -- ${pagesRoutes.length}\n`);
+  !quiet && process.stdout.write(`\n-- pages route -- ${pagesRoutes.length}\n`);
   if (pagesRoutes.length === 0) return "\"\"";
   return pagesRoutes.map(pathName => {
     const pn = pickNextPathNameAsPages(pathName);
-    process.stdout.write(`${pathName} -> ${pn}\n`);
+    !quiet && process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
   }).join("\n  | ");
 })()};
 
 type PagesApiPath = ${(() => {
-  process.stdout.write(`\n-- pages api -- ${pagesApiRoutes.length}\n`);
+  !quiet && process.stdout.write(`\n-- pages api -- ${pagesApiRoutes.length}\n`);
   if (pagesApiRoutes.length === 0) return "\"\"";
   return pagesApiRoutes.map(pathName => {
     const pn = pickNextPathNameAsPages(pathName);
-    process.stdout.write(`${pathName} -> ${pn}\n`);
+    !quiet && process.stdout.write(`${pathName} -> ${pn}\n`);
     return `"${pn}"`;
   }).join("\n  | ");
 })()};
