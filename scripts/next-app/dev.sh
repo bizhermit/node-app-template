@@ -1,21 +1,17 @@
 #!/bin/bash
 
-# DEV_CONT_ENV_FILE=".devcontainer/.env"
-# if [ -f "$DEV_CONT_ENV_FILE" ]; then
-#   source "$DEV_CONT_ENV_FILE"
-# fi
+ENV_FILE=".env"
+ENV_LOCAL_FILE=".env.local"
 
-# if [ -z "$NEXT_PORT" ]; then
-#   export NEXT_PORT=3000
-# fi
+source "$ENV_FILE"
 
-# if [ -z "$NEXTAUTH_URL" ]; then
-#   export NEXTAUTH_URL="http://localhost:$NEXT_PORT"
-# fi
+if [ -f "$ENV_LOCAL_FILE" ]; then
+  source "$ENV_LOCAL_FILE"
+fi
 
-# if [ -z "$NEXTAUTH_SECRET" ]; then
-#   export NEXTAUTH_SECRET="secret"
-# fi
+if [ -z "$NEXT_PORT" ]; then
+  export NEXT_PORT=3000
+fi
 
 npm run clean
 npm run route
