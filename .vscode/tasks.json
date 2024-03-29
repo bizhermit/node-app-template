@@ -23,7 +23,7 @@
       "label": "delete devcontainer docker",
       "group": "none",
       "type": "shell",
-      "command": "sh ./.devcontainer/deleteVolumes.sh",
+      "command": "bash ./.devcontainer/deleteVolumes.sh",
     },
     {
       "label": "format",
