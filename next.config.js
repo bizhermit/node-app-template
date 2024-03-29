@@ -3,10 +3,6 @@ const path = require('path');
 const isDev = !(process.env.NODE_ENV ?? "").startsWith("prod");
 process.stdout.write(`NODE_ENV: ${process.env.NODE_ENV}\n\n`);
 
-console.log("-------- next port ----------");
-console.log(process.env.NEXT_PORT);
-console.log("----------------------------");
-
 const mode = process.env.NEXT_OUTPUT;
 process.stdout.write(`NEXT_OUTPUT: ${mode}\n\n`);
 
