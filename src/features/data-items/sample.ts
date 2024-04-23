@@ -103,14 +103,14 @@ export const sample_date = $date({
   // typeof: "date",
   // typeof: "number",
   required: true,
-  validations: [
-    (v) => {
-      console.log("date validation: ", typeof v, v);
-      if (v == null) return undefined;
-      if (v instanceof Date) return undefined;
-      return "not typeof date";
-    },
-  ],
+  // validations: [
+  //   (v) => {
+  //     console.log("date validation: ", typeof v, v);
+  //     if (v == null) return undefined;
+  //     if (v instanceof Date) return undefined;
+  //     return "not typeof date";
+  //   },
+  // ],
 });
 
 export const sample_month = $month({

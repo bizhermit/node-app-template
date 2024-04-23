@@ -28,7 +28,8 @@
         "shd101wyy.markdown-preview-enhanced",
         "GrapeCity.gc-excelviewer",
         "hediet.vscode-drawio",
-        "ritwickdey.LiveServer"
+        "ritwickdey.LiveServer",
+        "Postman.postman-for-vscode"
       ],
       "settings": {
         "liveServer.settings.root": "/dist/out",
