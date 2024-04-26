@@ -27,7 +27,7 @@ const middleware: NextMiddlewareWithAuth = withAuth(
   {
     callbacks: {
       authorized: ({ token, req: { nextUrl: { pathname } } }) => {
-        if (/^\/(dev|sandbox|sign-in)(\/|$)/.test(pathname)) {
+        if (/^\/(dev|sandbox|sign-in|api|api\/fetch)(\/|$)/.test(pathname)) {
           // NOTE: skip signed-in check
           return true;
         }

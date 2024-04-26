@@ -2,7 +2,6 @@
 // do not edit
 
 type AppRoutePath = "/"
-  | "/[uid]"
   | "/dev"
   | "/dev/color"
   | "/dev/dynamic-route"
@@ -64,7 +63,8 @@ type AppRoutePath = "/"
   | "/sandbox/process"
   | "/sandbox/storage"
   | "/sandbox/window"
-  | "/sign-in";
+  | "/sign-in"
+  | "/[uid]";
 
 type AppApiPath = "/api"
   | "/api/auth/[...nextauth]"
