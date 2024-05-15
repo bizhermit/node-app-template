@@ -1,5 +1,5 @@
 /.eslintrc.js
-/next.config.js
+/*.config.js
 /src/pages/sandbox/*
 /src/app/sandbox/*
 /src/nextron

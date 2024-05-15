@@ -1,6 +1,7 @@
-import queryString from "querystring";
+import clone from "../clone";
 import { convertFormDataToStruct } from "../form-data/convert";
 import { getValue } from "../struct/get";
+import replaceDynamicPathname from "./dynamic-pathname";
 
 type UrlPath = PagePath | `http${string}` | `tel:${string}` | `mailto:${string}` | ApiPath;
 
@@ -22,49 +23,37 @@ const getDynamicUrlContext = <
       params.forEach((v, k) => fd.append(k, v));
       return fd;
     }
-    return { ...params };
+    return clone(params);
   })()) ?? {};
 
-  const getDataValue = (key: string) => {
-    if (data instanceof FormData) {
-      const v = data.get(key);
-      if (opts?.leaveDynamicKey !== true) data.delete(key);
+  let url: string = replaceDynamicPathname(pathname, data, (d, k) => {
+    if (d instanceof FormData) {
+      const v = d.get(k);
+      if (opts?.leaveDynamicKey !== true) d.delete(k);
       return v;
     }
-    const v = getValue(data, key);
-    if (opts?.leaveDynamicKey !== true) delete data[key];
+    const v = getValue(d, k);
+    if (opts?.leaveDynamicKey !== true) delete d[k];
     return v;
-  };
-
-  let url: string = pathname.replace(/\[\[?([^\]]*)\]?\]/g, seg => {
-    const r = seg.match(/^\[{1,2}(\.{3})?([^\]]*)\]{1,2}$/)!;
-    const v = getDataValue(r[2]);
-    if (Array.isArray(v)) {
-      if (r[1]) return v.map(c => `${c}`).join("/");
-      return v[0];
-    }
-    return v ?? "";
   });
 
   if (opts?.appendQuery) {
-    const q = queryString.stringify((() => {
-      if (data == null) return {};
+    const q = (() => {
+      if (data == null) return undefined;
       const sd = data instanceof FormData ? convertFormDataToStruct(data) : data;
-      const d: { [v: string]: any } = {};
-      Object.keys(sd).forEach(key => {
+      const enc = (v: string | number | boolean) => encodeURIComponent(v);
+      return Object.keys(sd).map(key => {
         const v = sd[key];
-        if (v == null) return;
-        if (opts.queryArrayIndex && Array.isArray(v)) {
-          v.forEach((val, i) => {
-            if (val == null) return;
-            d[`${key}[${i}]`] = val;
-          });
-          return;
+        if (v == null) return undefined;
+        if (Array.isArray(v)) {
+          if (opts.queryArrayIndex) {
+            return v.map((val, i) => `${enc(`${key}[${i}]`)}=${enc(val)}`);
+          }
+          return v.map(val => `${enc(key)}=${enc(val)}`);
         }
-        d[key] = v;
-      });
-      return d;
-    })());
+        return `${enc(key)}=${enc(v)}`;
+      }).flat(1).filter(s => s).join("&");
+    })();
     if (q) url += `?${q}`;
   }
 
