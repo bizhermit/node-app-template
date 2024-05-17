@@ -22,6 +22,7 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
   const mref = useRef<HTMLDivElement>(null!);
   const [showed, setShowed] = useState(false);
   const [mount, setMount] = useState(false);
+  const disposed = useRef(false);
 
   const keydownMask1 = (e: React.KeyboardEvent) => {
     if (e.shiftKey && e.key === "Tab") e.preventDefault();
@@ -29,6 +30,12 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
 
   const keydownMask2 = (e: React.KeyboardEvent) => {
     if (!e.shiftKey && e.key === "Tab") e.preventDefault();
+  };
+
+  const dispose = () => {
+    if (disposed.current) return;
+    disposed.current = true;
+    dialogDown();
   };
 
   const style = useToggleAnimation({
@@ -48,7 +55,7 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
           mref.current.style.removeProperty("display");
         }
       } else {
-        dialogDown();
+        dispose();
       }
     },
     onToggling: (ctx) => {
@@ -84,6 +91,7 @@ const MessageBox: FC<MessageBoxFCProps> = (props) => {
   useEffect(() => {
     return () => {
       ref.current?.close?.();
+      dispose();
     };
   }, []);
 
